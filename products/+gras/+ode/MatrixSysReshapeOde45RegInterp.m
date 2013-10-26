@@ -64,16 +64,30 @@ classdef MatrixSysReshapeOde45RegInterp
             %           equations.
             %       timeVec: double[1,nPoints] - time range, same meaning 
             %           as in ode45
-            %   Output:
-            %       timeVec: double[nPoints,1] - time grid, same meaning
-            %           as in ode45
-            %       outArg1: any[]
-            %           ...
-            %       outArgPenult: any[] - these variables contains
-            %           nEquations*nFuncs arrays of dobule (nEquations
-            %           for each function), each of which is a solution of
-            %           the corresponding equation for the corresponding
-            %           function.
+            % Output:
+            %   timeVec: double[nPoints,1] - time grid, same meaning
+            %       as in ode45
+            %   outArg1: any[]
+            %       ...
+            %   outArgPenult: any[] - these variables contains
+            %       nEquations*nFuncs arrays of dobule (nEquations
+            %       for each function), each of which is a solution of
+            %       the corresponding equation for the corresponding
+            %       function.
+            %
+            % Example:
+            %   solveObj=gras.ode.MatrixSysODERegInterpSolver(...
+            %        sizeVecList,@(varargin)fSolver(varargin{:},...
+            %        odeset(odePropList{:})),varargin{:});
+            %    resList=cell(1,length(sizeVecList)*...
+            %        length(fDerivFuncList));
+            %    resInterpList = resList;
+            %    [resTimeVec,resList{:},...
+            %        objMatrixSysReshapeOde45RegInterp]=solveObj.solve(...
+            %        fDerivFuncList,timeVec,initValList{:});
+            %   [resInterpTimeVec,resInterpList{:}] = ...
+            %        objMatrixSysReshapeOde45RegInterp.evaluate(timeVec);
+            %
             %
             % $Author: Vadim Danilov  <vadimdanilov93@gmail.com>
             % $	$Date: 24-oct-2013$

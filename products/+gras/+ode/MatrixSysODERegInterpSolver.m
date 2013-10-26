@@ -69,6 +69,17 @@ classdef MatrixSysODERegInterpSolver < gras.ode.MatrixSysODESolver
             %           number of functions; in fact it is shell of 
             %           gras.ode.VecOde45RegInterp for system of matrix
             %           equations.
+            % Example:
+            %   solveObj=gras.ode.MatrixSysODERegInterpSolver(...
+            %       sizeVecList,@(varargin)fSolver(varargin{:},...
+            %        odeset(odePropList{:})),varargin{:});
+            %   resList=cell(1,length(sizeVecList)*...
+            %        length(fDerivFuncList));
+            %   resInterpList = resList;
+            %   [resTimeVec,resList{:},...
+            %        objMatrixSysReshapeOde45RegInterp]=solveObj.solve(...
+            %        fDerivFuncList,timeVec,initValList{:});
+            %
             % $Author: Vadim Danilov <vadimdanilov93@gmail.com> $  
             % $Date: 24-oct-2013$
             % $Copyright: Moscow State University,
