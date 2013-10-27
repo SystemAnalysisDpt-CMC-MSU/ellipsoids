@@ -71,12 +71,16 @@ u_1[k]\\
 u_2[k]\end{array}\right], ~~~ x[0]\in{\mathcal X}_0, ~~~ u[k]\in U, ~~~ k\geqslant0,\end{split}\]</div>
 <p>where <span class="math">\({\mathcal X}_0\)</span> is the set of initial conditions, and
 <span class="math">\(U\)</span> is the control set.</p>
+<div class="figure align-center" id="ellpolyfig" style="width: 70%">
+<img alt="approximation" src="_images/ellpoly.png" />
+<p class="caption">Figure 1: Reach set computation performance comparison.</p>
+</div>
 <p>Let <span class="math">\({\mathcal X}_0\)</span> and <span class="math">\(U\)</span> be unit boxes in
 <span class="math">\({\bf R}^2\)</span>, and compute the reach set using the polytope method
-implemented in MPT ( (“Multi-Parametric Toolbox Homepage”)). With every
+implemented in MPT (“Multi-Parametric Toolbox Homepage”). With every
 time step the number of vertices of the reach set polytope increases by
 <span class="math">\(4\)</span>. The complexity of the convex hull computation increases
-exponentially with number of vertices. In figure [ellpolyfig], the time
+exponentially with number of vertices. In <a class="pageref" href="#ellpolyfig">figure  1</a>, the time
 required to compute the reach set for different time steps using
 polytopes is shown in red.</p>
 <p>To compute the reach set of the system using <em>Ellipsoidal Toolbox</em>, we
@@ -84,16 +88,43 @@ assume <span class="math">\({\mathcal X}_0\)</span> and <span class="math">\(U\)
 <span class="math">\({\bf R}^2\)</span>, fix any number of initial direction values that
 corresponds to the number of ellipsoidal approximations, and obtain
 external and internal ellipsoidal approximations of the reach set:</p>
-<p>In figure [ellpolyfig], the time required to compute both external and
+<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">aMat</span> <span class="o">=</span> <span class="p">[</span><span class="n">cos</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">sin</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span> <span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">cos</span><span class="p">(</span><span class="mi">1</span><span class="p">)];</span>
+<span class="n">uBoundsEllObj</span> <span class="o">=</span> <span class="n">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="o">%</span> <span class="n">control</span> <span class="n">bounds</span>
+<span class="o">%</span> <span class="n">define</span> <span class="n">linear</span> <span class="n">discrete</span><span class="o">-</span><span class="n">time</span> <span class="n">system</span>
+<span class="n">lsys</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysFactory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">uBoundsEllObj</span><span class="p">,...</span>
+    <span class="p">[],</span> <span class="p">[],</span> <span class="sc">&#39;d&#39;</span><span class="p">);</span>
+<span class="n">x0EllObj</span> <span class="o">=</span> <span class="n">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="o">%</span> <span class="n">set</span> <span class="n">of</span> <span class="n">initial</span> <span class="n">conditions</span>
+<span class="n">dirsMat</span> <span class="o">=</span> <span class="p">[</span><span class="n">cos</span><span class="p">(</span><span class="mi">0</span><span class="o">:</span><span class="mf">0.1</span><span class="o">:</span><span class="n">pi</span><span class="p">);</span> <span class="n">sin</span><span class="p">(</span><span class="mi">0</span><span class="o">:</span><span class="mf">0.1</span><span class="o">:</span><span class="n">pi</span><span class="p">)];</span>  <span class="o">%</span> <span class="mi">32</span> <span class="n">initial</span> <span class="n">directions</span>
+<span class="n">nSteps</span>  <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>  <span class="o">%</span> <span class="n">number</span> <span class="n">of</span> <span class="n">time</span> <span class="n">steps</span>
+
+<span class="o">%</span> <span class="n">compute</span> <span class="n">the</span> <span class="n">reach</span> <span class="n">set</span>
+<span class="n">rsObj</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachDiscrete</span><span class="p">(</span><span class="n">lsys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span> <span class="n">nSteps</span><span class="p">]);</span>
+</pre></div>
+</td></tr></table></div>
+<p>In <a class="pageref" href="#ellpolyfig">figure  1</a>, the time required to compute both external and
 internal ellipsoidal approximations, with <span class="math">\(32\)</span> ellipsoids each,
 for different number of time steps is shown in blue.</p>
-<p>Figure [ellpolyfig] illustrates the fact that the complexity of polytope
+<p><a class="pageref" href="#ellpolyfig">Figure  1</a> illustrates the fact that the complexity of polytope
 method grows exponentially with number of time steps, whereas the
 complexity of ellipsoidal method grows linearly.</p>
 </div>
 <div class="section" id="system-with-disturbance">
 <h2>System with Disturbance<a class="headerlink" href="#system-with-disturbance" title="Permalink to this headline">¶</a></h2>
-<p>The mechanical system presented in figure [springmassfig], is described
+<div class="figure align-center" id="springmassfig" style="width: 70%">
+<img alt="spmass" src="_images/springmass.png" />
+<p class="caption">Figure 2: Spring-mass system.</p>
+</div>
+<p>The mechanical system presented in <a class="pageref" href="#springmassfig">figure  2</a>, is described
 by the following system of equations:</p>
 <div class="math" id="equation-spmass1">
 <span class="eqno">(1)</span>\[\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 &amp; = &amp; u_1,\end{split}\]</div>
@@ -128,19 +159,79 @@ u_1\\
 u_2\end{array}\right].\end{split}\]</div>
 <p>Now we can compute the reach set of system <a href="#equation-spmass1">(1)</a>-<a href="#equation-spmass2">(2)</a> for
 given time by computing the reach set of the linear system <a href="#equation-spmassls">(3)</a>
-and taking its projection onto <span class="math">\((x_1, x_2)\)</span> subspace. Figure
-[mechreachfig](a) shows the reach set of the system
+and taking its projection onto <span class="math">\((x_1, x_2)\)</span> subspace.</p>
+<div class="figure align-center" id="mechreachfig" style="width: 60%">
+<img alt="reachmech" src="_images/reachmech.png" />
+<p class="caption">Figure 3: Spring-mass system without disturbance:
+(a) reach tube for time <span class="math">\(t\in[0,4]\)</span>; (b) reach set at time <span class="math">\(t=4\)</span>.
+Spring-mass system with disturbance:
+(c) reach tube for time <span class="math">\(t\in[0,4]\)</span>; (d) reach set at time <span class="math">\(t=4\)</span>.</p>
+</div>
+<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">k1</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>  <span class="n">k2</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
+<span class="n">m1</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">;</span> <span class="n">m2</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="o">%</span> <span class="n">define</span> <span class="n">matrices</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">and</span> <span class="n">control</span> <span class="n">bounds</span> <span class="n">uBoundsEll</span><span class="o">:</span>
+<span class="n">aMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="p">(</span><span class="n">k1</span><span class="o">+</span><span class="n">k2</span><span class="p">)</span><span class="o">/</span><span class="n">m1</span> <span class="n">k2</span><span class="o">/</span><span class="n">m1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k2</span><span class="o">/</span><span class="n">m2</span> <span class="o">-</span><span class="p">(</span><span class="n">k1</span><span class="o">+</span><span class="n">k2</span><span class="p">)</span><span class="o">/</span><span class="n">m2</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">bMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="o">/</span><span class="n">m1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="o">/</span><span class="n">m2</span><span class="p">];</span>
+<span class="n">uBoundsEllObj</span> <span class="o">=</span> <span class="n">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="o">%</span> <span class="n">linear</span> <span class="n">system</span>
+<span class="n">lsys</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">uBoundsEllObj</span><span class="p">);</span>  
+<span class="n">timeVec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">4</span><span class="p">];</span>  <span class="o">%</span> <span class="n">time</span> <span class="n">interval</span><span class="o">%</span> <span class="n">initial</span> <span class="n">conditions</span><span class="o">:</span>
+<span class="n">x0EllObj</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">].</span><span class="err">&#39;</span> <span class="o">+</span> <span class="n">ellipsoid</span><span class="p">([</span><span class="mf">0.01</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mf">0.01</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;...</span>
+           <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]);</span>
+<span class="o">%</span> <span class="n">initial</span> <span class="n">directions</span> <span class="p">(</span><span class="n">some</span> <span class="n">random</span> <span class="n">vectors</span> <span class="n">in</span> <span class="n">R</span><span class="o">^</span><span class="mi">4</span><span class="p">)</span><span class="o">:</span>
+<span class="n">dirsMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">1</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">].</span><span class="err">&#39;</span><span class="p">;</span>
+<span class="o">%</span> <span class="n">reach</span> <span class="n">set</span>
+<span class="n">rsObj</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachContinuous</span><span class="p">(</span><span class="n">lsys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,...</span>
+    <span class="err">&#39;</span><span class="n">isRegEnabled</span><span class="err">&#39;</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">isJustCheck</span><span class="err">&#39;</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">regTol</span><span class="err">&#39;</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">);</span>  
+<span class="n">basisMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span><span class="err">&#39;</span><span class="p">;</span>  <span class="o">%</span> <span class="n">orthogonal</span> <span class="n">basis</span> <span class="n">of</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span> <span class="n">subspace</span>
+<span class="n">psObj</span> <span class="o">=</span> <span class="n">rsObj</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">basisMat</span><span class="p">);</span>  <span class="o">%</span> <span class="n">reach</span> <span class="n">set</span> <span class="n">projection</span>
+<span class="o">%</span> <span class="n">plot</span> <span class="n">projection</span> <span class="n">of</span> <span class="n">reach</span> <span class="n">set</span> <span class="n">external</span> <span class="n">approximation</span><span class="o">:</span>
+
+<span class="n">psObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="sc">&#39;g&#39;</span><span class="p">);</span>  <span class="o">%</span> <span class="n">plot</span> <span class="n">the</span> <span class="n">whole</span> <span class="n">reach</span> <span class="n">tube</span>
+
+<span class="o">%</span>
+<span class="o">%</span> <span class="n">ReachContinuous</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">cut</span><span class="p">()</span> <span class="n">doesn</span><span class="err">&#39;</span><span class="n">t</span> <span class="n">work</span> <span class="n">with</span> <span class="n">projections</span><span class="o">:</span>
+<span class="n">psObj</span> <span class="o">=</span> <span class="n">psObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="n">psObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="sc">&#39;g&#39;</span><span class="p">);</span>  <span class="o">%</span> <span class="n">plot</span> <span class="n">reach</span> <span class="n">set</span> <span class="n">approximation</span> <span class="n">at</span> <span class="n">time</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">4</span>
+</pre></div>
+</td></tr></table></div>
+<p><a class="pageref" href="#mechreachfig">Figure  3</a> (a) shows the reach set of the system
 <a href="#equation-spmass1">(1)</a>-<a href="#equation-spmass2">(2)</a> evolving in time from <span class="math">\(t=0\)</span> to <span class="math">\(t=4\)</span>.
-Figure [mechreachfig](b) presents a snapshot of this reach set at time
+<a class="pageref" href="#mechreachfig">Figure  3</a> (b) presents a snapshot of this reach set at time
 <span class="math">\(t=4\)</span>.</p>
 <p>So far we considered an ideal system without any disturbance, such as
 friction. We introduce disturbance to <a href="#equation-spmass1">(1)</a>-<a href="#equation-spmass2">(2)</a> by adding
 extra terms, <span class="math">\(v_1\)</span> and <span class="math">\(v_2\)</span>,</p>
-<div class="math">
-\[\begin{split}\begin{aligned}
-m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 &amp; = &amp; u_1 + v_1, \label{smdist1}\\
-m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 &amp; = &amp; u_2 + v_2, \label{smdist2}\end{aligned}\end{split}\]</div>
-<p>which results in equation ([spmassls]) getting an extra term</p>
+<div class="math" id="equation-smdist1">
+<span class="eqno">(4)</span>\[\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 &amp; = &amp; u_1 + v_1,\end{split}\]</div>
+<div class="math" id="equation-smdist2">
+<span class="eqno">(5)</span>\[\begin{split}m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 &amp; = &amp; u_2 + v_2,\end{split}\]</div>
+<p>which results in equation <a href="#equation-spmassls">(3)</a> getting an extra term</p>
 <div class="math">
 \[\begin{split}\left[\begin{array}{cc}
 0 &amp; 0\\
@@ -152,15 +243,46 @@ v_2\end{array}\right].\end{split}\]</div>
 <p>Assuming that <span class="math">\([v_1 ~~ v_2]^T\)</span> is unknown but bounded by
 ellipsoid <span class="math">\({\mathcal E}(0, \frac{1}{4}I)\)</span>, we can compute the
 closed-loop reach set of the system with disturbance.</p>
-<p>Figure [mechreachfig](c) shows the reach set of the system
-([smdist1]-[smdist2]) evolving in time from <span class="math">\(t=0\)</span> to <span class="math">\(t=4\)</span>.
-Figure [mechreachfig](d) presents a snapshot of this reach set at time
-<span class="math">\(t=4\)</span>.</p>
+<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% define disturbance:</span>
+<span class="n">gMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">];</span>
+<span class="n">vEllObj</span> <span class="p">=</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="c">% linear system with disturbance</span>
+<span class="n">lsysd</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">uBoundsEllObj</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">gMat</span><span class="p">,</span> <span class="n">vEllObj</span><span class="p">);</span> 
+<span class="c">% reach set</span>
+<span class="n">rsdObj</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachContinuous</span><span class="p">(</span><span class="n">lsysd</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">timeVec</span><span class="p">,</span> <span class="s">&#39;isRegEnabled&#39;</span><span class="p">,</span> <span class="n">true</span><span class="p">,</span> <span class="s">&#39;isJustCheck&#39;</span><span class="p">,</span> <span class="n">false</span><span class="p">,</span> <span class="s">&#39;regTol&#39;</span><span class="p">,</span> <span class="mf">1e-1</span><span class="p">);</span> 
+<span class="n">psdObj</span> <span class="p">=</span> <span class="n">rsdObj</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">basisMat</span><span class="p">);</span>  <span class="c">% reach set projection onto (x1, x2)</span>
+<span class="c">% plot projection of reach set external approximation:</span>
+<span class="n">psdObj</span><span class="p">.</span><span class="n">plotEa</span><span class="p">();</span>  <span class="c">% plot the whole reach tube</span>
+<span class="n">psdCutObj</span> <span class="p">=</span> <span class="n">psdObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="n">psdCutObj</span><span class="p">.</span><span class="n">plotEa</span><span class="p">();</span>  <span class="c">% plot reach set approximation at time t = 4</span>
+</pre></div>
+</td></tr></table></div>
+<p> to <span class="math">\(t=4\)</span>.
+.</p>
 </div>
 <div class="section" id="switched-system">
 <h2>Switched System<a class="headerlink" href="#switched-system" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center" id="rlcfig" style="width: 60%">
+<img alt="rlc" src="_images/rlc.png" />
+<p class="caption">Figure 4: RLC circuit with two inputs.</p>
+</div>
 <p>By <em>switched systems</em> we mean systems whose dynamics changes at known
-times. Consider the RLC circuit shown in figure [rlcfig]. It has two
+times. Consider the RLC circuit shown in <a class="pageref" href="#rlcfig">figure  4</a>. It has two
 inputs - the voltage (<span class="math">\(v\)</span>) and current (<span class="math">\(i\)</span>) sources. Define</p>
 <ul class="simple">
 <li><span class="math">\(x_1\)</span> - voltage across capacitor <span class="math">\(C_1\)</span>, so
@@ -172,8 +294,8 @@ across the inductor is <span class="math">\(L\dot{x}_3\)</span>.</li>
 </ul>
 <p>Applying Kirchoff current and voltage laws we arrive at the linear
 system,</p>
-<div class="math">
-\[\begin{split}\left[\begin{array}{c}
+<div class="math" id="equation-rlceq">
+<span class="eqno">(6)</span>\[\begin{split}\left[\begin{array}{c}
 \dot{x}_1\\
 \dot{x}_2\\
 \dot{x}_3\end{array}\right] = \left[\begin{array}{ccc}
@@ -188,18 +310,18 @@ x_3\end{array}\right] + \left[\begin{array}{cc}
 0 &amp; 0\\
 0 &amp; 0\end{array}\right]\left[\begin{array}{c}
 v\\
-i\end{array}\right]. \label{rlceq}\end{split}\]</div>
+i\end{array}\right].\end{split}\]</div>
 <p>The parameters <span class="math">\(R_1\)</span>, <span class="math">\(R_2\)</span>, <span class="math">\(C_1\)</span>, <span class="math">\(C_2\)</span> and
 <span class="math">\(L\)</span>, as well as the inputs, may depend on time. Suppose, for time
-<span class="math">\(0\leqslantt&lt;2\)</span>, <span class="math">\(R_1=2\)</span> Ohm, <span class="math">\(R_2=1\)</span> Ohm,
+<span class="math">\(0\leqslant t&lt;2\)</span>, <span class="math">\(R_1=2\)</span> Ohm, <span class="math">\(R_2=1\)</span> Ohm,
 <span class="math">\(C_1=3\)</span> F, <span class="math">\(C_2=7\)</span> F, <span class="math">\(L=2\)</span> H, both inputs, <span class="math">\(v\)</span>
 and <span class="math">\(i\)</span> are present and bounded by ellipsoid
 <span class="math">\({\mathcal E}(0,I)\)</span>; and for time <span class="math">\(t\geqslant2\)</span>,
 <span class="math">\(R_1=R_2=2\)</span> Ohm, <span class="math">\(C_1=C_2=3\)</span> F, <span class="math">\(L=6\)</span> H, the current
-source is turned off, and <span class="math">\(|v|\leqslant1\)</span>. Then, system ([rlceq])
+source is turned off, and <span class="math">\(|v|\leqslant1\)</span>. Then, system <a href="#equation-rlceq">(6)</a>
 can be rewritten as</p>
-<div class="math">
-\[\begin{split}\left[\begin{array}{c}
+<div class="math" id="equation-rlceq2">
+<span class="eqno">(7)</span>\[\begin{split}\left[\begin{array}{c}
 \dot{x}_1\\
 \dot{x}_2\\
 \dot{x}_3\end{array}\right] = \left\{\begin{array}{ll}
@@ -215,7 +337,7 @@ x_3\end{array}\right] + \left[\begin{array}{cc}
 0 &amp; 0\\
 0 &amp; 0\end{array}\right]\left[\begin{array}{c}
 v\\
-i\end{array}\right], &amp; 0\leqslantt&lt; 2, \\
+i\end{array}\right], &amp; 0\leqslant t&lt; 2, \\
 \left[\begin{array}{ccc}
 -\frac{1}{6} &amp; 0 &amp; -\frac{1}{3}\\
 0 &amp; 0 &amp; \frac{1}{3}\\
@@ -226,31 +348,180 @@ x_2\\
 x_3\end{array}\right] + \left[\begin{array}{c}
 \frac{1}{6} \\
 0 \\
-0 \end{array}\right]v, &amp; 2\leqslantt. \end{array}\right.
-\label{rlceq2}\end{split}\]</div>
-<p>We can compute the reach set of ([rlceq2]) for some time <span class="math">\(t&gt;2\)</span>,
+0 \end{array}\right]v, &amp; 2\leqslant t. \end{array}\right.\end{split}\]</div>
+<p>We can compute the reach set of <a href="#equation-rlceq2">(7)</a> for some time <span class="math">\(t&gt;2\)</span>,
 say, <span class="math">\(t=3\)</span>.</p>
-<p>Figure [rlcreachfig](a) shows how the reach set projection onto
-<span class="math">\((x_1, x_2)\)</span> of system ([rlceq2]) evolves in time from <span class="math">\(t=0\)</span>
+<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% define system 1</span>
+<span class="n">firstAMat</span> <span class="p">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="o">/</span><span class="mi">7</span><span class="p">;</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">];</span>
+<span class="n">firstBMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">firstUBoundsEllObj</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="nb">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+<span class="n">firstSys</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">firstAMat</span><span class="p">,</span> <span class="n">firstBMat</span><span class="p">,</span><span class="c">...</span>
+       <span class="n">firstUBoundsEllObj</span><span class="p">);</span>
+<span class="c">% define system 2:</span>
+<span class="n">secAMat</span> <span class="p">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span> <span class="mi">1</span><span class="o">/</span><span class="mi">6</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">];</span>
+<span class="n">secBMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span><span class="p">;</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">secUBoundsEllObj</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">secondSys</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">secAMat</span><span class="p">,</span> <span class="n">secBMat</span><span class="p">,</span><span class="c">....</span>
+         <span class="n">secUBoundsEllObj</span><span class="p">);</span>
+<span class="n">x0EllObj</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="mf">0.01</span><span class="o">*</span><span class="nb">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>  <span class="c">% set of initial states</span>
+<span class="n">dirsMat</span> <span class="p">=</span> <span class="nb">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>  <span class="c">% 3 initial directions</span>
+<span class="n">switchTime</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>  <span class="c">% time of switch</span>
+<span class="n">termTime</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span>  <span class="c">% terminating time</span>
+
+<span class="c">% compute the reach set:</span>
+<span class="n">firstRsObj</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachContinuous</span><span class="p">(</span><span class="n">firstSys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span><span class="c">...</span>
+ <span class="p">[</span><span class="mi">0</span> <span class="n">switchTime</span><span class="p">],</span> <span class="s">&#39;isRegEnabled&#39;</span><span class="p">,</span> <span class="n">true</span><span class="p">,</span> <span class="s">&#39;isJustCheck&#39;</span><span class="p">,</span> <span class="n">false</span><span class="p">,</span><span class="c">...</span>
+ <span class="s">&#39;regTol&#39;</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">);</span>  <span class="c">% reach set of the first system</span>
+<span class="c">% computation of the second reach set starts</span>
+<span class="c">% where the first left off</span>
+<span class="n">secRsObj</span> <span class="p">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">evolve</span><span class="p">(</span><span class="n">termTime</span><span class="p">,</span> <span class="n">secondSys</span><span class="p">);</span>
+
+<span class="c">% obtain projections onto (x1, x2) subspace:</span>
+<span class="n">basisMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">]</span><span class="o">&#39;</span><span class="p">;</span>  <span class="c">% (x1, x2) subspace basis</span>
+<span class="n">firstPsObj</span> <span class="p">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">basisMat</span><span class="p">);</span>
+<span class="n">secPsObj</span> <span class="p">=</span> <span class="n">secRsObj</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">basisMat</span><span class="p">);</span>
+
+<span class="c">% plot the results:</span>
+
+<span class="n">firstPsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;r&#39;</span><span class="p">);</span>  <span class="c">% external apprx. of reach set 1 (red)</span>
+<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
+<span class="n">firstPsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">);</span>  <span class="c">% internal apprx. of reach set 1 (green)</span>
+<span class="n">secPsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">);</span>  <span class="c">% external apprx. of reach set 2 (yellow)</span>
+<span class="n">secPsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">);</span>  <span class="c">% internal apprx. of reach set 2 (blue)</span>
+<span class="c">% plot the 3-dimensional reach set at time t = 3:</span>
+<span class="n">secRsObj</span> <span class="p">=</span> <span class="n">secRsObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="n">secRsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">);</span>
+<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
+<span class="n">secRsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="figure align-center" id="rlcreachfig" style="width: 60%">
+<img alt="rlcreach" src="_images/rlcreach.png" />
+<p class="caption">Figure 5: Forward and backward reach sets of the switched system
+(external and internal approximations).</p>
+</div>
+<p><a class="pageref" href="#rlcreachfig">Figure  5</a> (a) shows how the reach set projection onto
+<span class="math">\((x_1, x_2)\)</span> of system <a href="#equation-rlceq2">(7)</a> evolves in time from <span class="math">\(t=0\)</span>
 to <span class="math">\(t=3\)</span>. The external reach set approximation for the first
 dynamics is in red, the internal approximation is in green. The dynamics
 switches at <span class="math">\(t=2\)</span>. The external reach set approximation for the
 second dynamics is in yellow, its internal approximation is in blue. The
 full three-dimensional external (yellow) and internal (blue)
-approximations of the reach set are shown in figure [rlcreachfig](b).</p>
+approximations of the reach set are shown in <a class="pageref" href="#rlcreachfig">figure  5</a> (b).</p>
 <p>To find out where the system should start at time <span class="math">\(t=0\)</span> in order
 to reach a neighborhood M of the origin at time <span class="math">\(t=3\)</span>, we compute
-the backward reach set from <span class="math">\(t=3\)</span> to <span class="math">\(t=0\)</span>. Figure
-[rlcreachfig](c) presents the evolution of the reach set projection onto
+the backward reach set from <span class="math">\(t=3\)</span> to <span class="math">\(t=0\)</span>.</p>
+<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">mEllObj</span>  <span class="o">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="mf">0.01</span><span class="o">*</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>  <span class="o">%</span> <span class="n">terminating</span> <span class="n">set</span>
+<span class="n">termTime</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>  <span class="o">%</span> <span class="n">terminating</span> <span class="n">time</span>
+
+<span class="o">%</span> <span class="n">compute</span> <span class="n">backward</span> <span class="n">reach</span> <span class="n">set</span><span class="o">:</span>
+<span class="o">%</span> <span class="n">compute</span> <span class="n">the</span> <span class="n">reach</span> <span class="n">set</span><span class="o">:</span>
+<span class="n">secBrsObj</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachContinuous</span><span class="p">(</span><span class="n">secondSys</span><span class="p">,</span> <span class="n">mEllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,...</span>
+ <span class="p">[</span><span class="n">termTime</span> <span class="n">switchTime</span><span class="p">],</span> <span class="err">&#39;</span><span class="n">isRegEnabled</span><span class="err">&#39;</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">isJustCheck</span><span class="err">&#39;</span><span class="p">,</span> <span class="nb">false</span><span class="p">,...</span>
+ <span class="err">&#39;</span><span class="n">regTol</span><span class="err">&#39;</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">);</span>  <span class="o">%</span> <span class="n">second</span> <span class="n">system</span> <span class="n">comes</span> <span class="n">first</span>
+<span class="n">firstBrsObj</span> <span class="o">=</span> <span class="n">secBrsObj</span><span class="p">.</span><span class="n">evolve</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">firstSys</span><span class="p">);</span>  <span class="o">%</span> <span class="n">then</span> <span class="n">the</span> <span class="n">first</span> <span class="n">system</span>
+
+<span class="o">%</span> <span class="n">obtain</span> <span class="n">projections</span> <span class="n">onto</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span> <span class="n">subspace</span><span class="o">:</span>
+<span class="n">firstBpsObj</span> <span class="o">=</span> <span class="n">firstBrsObj</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">basisMat</span><span class="p">);</span>
+<span class="n">secBpsObj</span> <span class="o">=</span> <span class="n">secBrsObj</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">basisMat</span><span class="p">);</span>
+
+<span class="o">%</span> <span class="n">plot</span> <span class="n">the</span> <span class="n">results</span><span class="o">:</span>
+
+<span class="n">firstBpsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="sc">&#39;r&#39;</span><span class="p">);</span> <span class="o">%</span> <span class="n">external</span> <span class="n">apprx</span><span class="p">.</span> <span class="n">of</span> <span class="n">backward</span> <span class="n">reach</span> <span class="n">set</span> <span class="mi">1</span> <span class="p">(</span><span class="n">red</span><span class="p">)</span>
+<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
+<span class="n">firstBpsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="sc">&#39;g&#39;</span><span class="p">);</span> <span class="o">%</span> <span class="n">internal</span> <span class="n">apprx</span><span class="p">.</span> <span class="n">of</span> <span class="n">backward</span> <span class="n">reach</span> <span class="n">set</span> <span class="mi">1</span> <span class="p">(</span><span class="n">green</span><span class="p">)</span>
+<span class="n">secBpsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="sc">&#39;y&#39;</span><span class="p">);</span> <span class="o">%</span> <span class="n">external</span> <span class="n">apprx</span><span class="p">.</span> <span class="n">of</span> <span class="n">backward</span> <span class="n">reach</span> <span class="n">set</span> <span class="mi">2</span> <span class="p">(</span><span class="n">yellow</span><span class="p">)</span>
+<span class="n">secBpsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="sc">&#39;b&#39;</span><span class="p">);</span> <span class="o">%</span> <span class="n">internal</span> <span class="n">apprx</span><span class="p">.</span> <span class="n">of</span> <span class="n">backward</span> <span class="n">reach</span> <span class="n">set</span> <span class="mi">2</span> <span class="p">(</span><span class="n">blue</span><span class="p">)</span>
+
+<span class="o">%</span> <span class="n">plot</span> <span class="n">the</span> <span class="mi">3</span><span class="o">-</span><span class="n">dimensional</span> <span class="n">backward</span> <span class="n">reach</span> <span class="n">set</span> <span class="n">at</span> <span class="n">time</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="o">:</span>
+
+<span class="n">firstBrsObj</span> <span class="o">=</span> <span class="n">firstBrsObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">firstBrsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="sc">&#39;r&#39;</span><span class="p">);</span>
+<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
+<span class="n">firstBrsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="sc">&#39;g&#39;</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p><a class="pageref" href="#rlcreachfig">Figure  5</a> (c) presents the evolution of the reach set projection onto
 <span class="math">\((x_1, x_2)\)</span> in backward time. Again, external and internal
 approximations corresponding to the first dynamics are shown in red and
 green, and to the second dynamics in yellow and blue. The full
 dimensional backward reach set external and internal approximations of
-system ([rlceq2]) at time <span class="math">\(t=0\)</span> is shown in figure
-[rlcreachfig](d).</p>
+system <a href="#equation-rlceq2">(7)</a> at time <span class="math">\(t=0\)</span> is shown in <a class="pageref" href="#rlcreachfig">figure  5</a> (d).</p>
 </div>
 <div class="section" id="hybrid-system">
 <h2>Hybrid System<a class="headerlink" href="#hybrid-system" title="Permalink to this headline">¶</a></h2>
+<div class="figure align-center" id="hwfig" style="width: 70%">
+<img alt="highway" src="_images/hw.png" />
+<p class="caption">Figure 6: Highway model. Adapted from L.Muñoz et al. (2003).</p>
+</div>
 <p>There is no explicit implementation of the reachability analysis for
 hybrid systems in the <em>Ellipsoidal Toolbox</em>. Nonetheless, the operations
 of intersection available in the toolbox allow us to work with certain
@@ -259,7 +530,7 @@ dynamics whose guards are ellipsoids, hyperplanes, halfspaces or
 polytopes.</p>
 <p>We consider the <em>switching-mode model</em> of highway traffic presented in
 L.Muñoz et al. (2003). The highway segment is divided into <span class="math">\(N\)</span>
-cells as shown in figure [hwfig]. In this particular case, <span class="math">\(N=4\)</span>.
+cells as shown in <a class="pageref" href="#hwfig">figure  6</a>. In this particular case, <span class="math">\(N=4\)</span>.
 The traffic density in cell <span class="math">\(i\)</span> is <span class="math">\(x_i\)</span> vehicles per mile,
 <span class="math">\(i=1,2,3,4\)</span>.</p>
 <p>Define</p>
@@ -283,8 +554,8 @@ vehicles per hour (vph);</li>
 <p>Highway traffic operates in two modes: <em>free-flow</em> in normal operation;
 and <em>congested</em> mode, when there is a jam. Traffic flow in free-flow
 mode is described by</p>
-<div class="math">
-\[\begin{split}\begin{aligned}
+<div class="math" id="equation-fflow">
+<span class="eqno">(8)</span>\[\begin{split}\begin{aligned}
 \left[\begin{array}{c}
 x_1[t+1]\\
 x_2[t+1]\\
@@ -306,10 +577,10 @@ x_4[t]\end{array}\right] \nonumber\\
 0 &amp; 0 &amp; 0\end{array}\right]\left[\begin{array}{c}
 u_1\\
 u_2\\
-u_3\end{array}\right]. \label{fflow}\end{aligned}\end{split}\]</div>
+u_3\end{array}\right].\end{aligned}\end{split}\]</div>
 <p>The equation for the congested mode is</p>
-<div class="math">
-\[\begin{split}\begin{aligned}
+<div class="math" id="equation-cflow">
+<span class="eqno">(9)</span>\[\begin{split}\begin{aligned}
 \left[\begin{array}{c}
 x_1[t+1]\\
 x_2[t+1]\\
@@ -341,39 +612,193 @@ u_3\end{array}\right] \nonumber\\
 x_{M1}\\
 x_{M2}\\
 x_{M3}\\
-x_{M4}\end{array}\right]. \label{cflow}\end{aligned}\end{split}\]</div>
+x_{M4}\end{array}\right].\end{aligned}\end{split}\]</div>
 <p>The switch from the free-flow to the congested mode occurs when the
 density <span class="math">\(x_2\)</span> reaches <span class="math">\(x_{M2}\)</span>. In other words, the
 hyperplane <span class="math">\(H([0 ~ 1 ~ 0 ~ 0]^T, x_{M2})\)</span> is the guard.</p>
 <p>We indicate how to implement the reach set computation of this hybrid
 system. We first define the two linear systems and the guard.</p>
+<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% assign parameter values:</span>
+<span class="n">v1</span> <span class="p">=</span> <span class="mi">65</span><span class="p">;</span> <span class="n">v2</span> <span class="p">=</span> <span class="mi">60</span><span class="p">;</span> <span class="n">v3</span> <span class="p">=</span> <span class="mi">63</span><span class="p">;</span> <span class="n">v4</span> <span class="p">=</span> <span class="mi">65</span><span class="p">;</span>  <span class="c">% mph</span>
+<span class="n">w1</span> <span class="p">=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">w2</span> <span class="p">=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">w3</span> <span class="p">=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">w4</span> <span class="p">=</span> <span class="mi">10</span><span class="p">;</span>  <span class="c">% mph</span>
+<span class="n">d1</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">d2</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">d3</span> <span class="p">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">d4</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>  <span class="c">% miles</span>
+<span class="n">Ts</span> <span class="p">=</span> <span class="mi">2</span><span class="o">/</span><span class="mi">3600</span><span class="p">;</span>  <span class="c">% sampling time in hours</span>
+<span class="n">xM1</span> <span class="p">=</span> <span class="mi">200</span><span class="p">;</span> <span class="n">xM2</span> <span class="p">=</span> <span class="mi">200</span><span class="p">;</span> <span class="n">xM3</span> <span class="p">=</span> <span class="mi">200</span><span class="p">;</span> <span class="n">xM4</span> <span class="p">=</span> <span class="mi">200</span><span class="p">;</span>  <span class="c">% vehicles per lane</span>
+<span class="n">b</span> <span class="p">=</span> <span class="mf">0.4</span><span class="p">;</span>
+
+<span class="n">firstAMat</span> <span class="p">=</span> <span class="p">[(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">v1</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d1</span><span class="p">))</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span>
+         <span class="p">(</span><span class="n">v1</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d2</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">v2</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d2</span><span class="p">))</span> <span class="mi">0</span> <span class="mi">0</span>
+         <span class="mi">0</span> <span class="p">(</span><span class="n">v2</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d3</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">v3</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d3</span><span class="p">))</span> <span class="mi">0</span>
+         <span class="mi">0</span> <span class="mi">0</span> <span class="p">((</span><span class="mi">1</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">v3</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d4</span><span class="p">))</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">v4</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d4</span><span class="p">))];</span>
+<span class="n">firstBMat</span> <span class="p">=</span> <span class="p">[</span><span class="n">v1</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="n">v2</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d2</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">firstUBoundsEllObj</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">([</span><span class="mi">180</span><span class="p">;</span> <span class="mi">150</span><span class="p">;</span> <span class="mi">50</span><span class="p">],</span> <span class="p">[</span><span class="mi">100</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">100</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">25</span><span class="p">]);</span>
+
+<span class="n">secAMat</span> <span class="p">=</span> <span class="p">[(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">w1</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d1</span><span class="p">))</span> <span class="p">(</span><span class="n">w2</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d1</span><span class="p">)</span> <span class="mi">0</span> <span class="mi">0</span>
+         <span class="mi">0</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">w2</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d2</span><span class="p">))</span> <span class="p">(</span><span class="n">w3</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d2</span><span class="p">)</span> <span class="mi">0</span>
+         <span class="mi">0</span> <span class="mi">0</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">w3</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d3</span><span class="p">))</span> <span class="p">((</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">b</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">w4</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d3</span><span class="p">))</span>
+         <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="n">w4</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d4</span><span class="p">))];</span>
+<span class="n">secBMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="n">w1</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="o">-</span><span class="n">w4</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d4</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">secUBoundsEllObj</span> <span class="p">=</span> <span class="n">firstUBoundsEllObj</span><span class="p">;</span>
+<span class="n">gMat</span> <span class="p">=</span> <span class="p">[(</span><span class="n">w1</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d1</span><span class="p">)</span> <span class="p">(</span><span class="o">-</span><span class="n">w2</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d1</span><span class="p">)</span> <span class="mi">0</span> <span class="mi">0</span>
+         <span class="mi">0</span> <span class="p">(</span><span class="n">w2</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d2</span><span class="p">)</span> <span class="p">(</span><span class="o">-</span><span class="n">w3</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d2</span><span class="p">)</span> <span class="mi">0</span>
+         <span class="mi">0</span> <span class="mi">0</span> <span class="p">(</span><span class="n">w3</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d3</span><span class="p">)</span> <span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">b</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">w4</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d3</span><span class="p">))</span>
+         <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="p">(</span><span class="n">w4</span><span class="o">*</span><span class="n">Ts</span><span class="o">/</span><span class="n">d4</span><span class="p">)];</span>
+<span class="n">vVec</span> <span class="p">=</span> <span class="p">[</span><span class="n">xM1</span><span class="p">;</span> <span class="n">xM2</span><span class="p">;</span> <span class="n">xM3</span><span class="p">;</span> <span class="n">xM4</span><span class="p">];</span>
+<span class="c">% define linear systems:</span>
+<span class="c">% free-flow mode</span>
+<span class="n">firstSys</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysDiscrete</span><span class="p">(</span><span class="n">firstAMat</span><span class="p">,</span> <span class="n">firstBMat</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">firstUBoundsEllObj</span><span class="p">);</span>
+<span class="c">% congestion mode </span>
+<span class="n">secSys</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysDiscrete</span><span class="p">(</span><span class="n">secAMat</span><span class="p">,</span> <span class="n">secBMat</span><span class="p">,</span><span class="c">...</span>
+ <span class="n">secUBoundsEllObj</span><span class="p">,</span> <span class="n">gMat</span><span class="p">,</span> <span class="n">vVec</span><span class="p">);</span> 
+<span class="c">% define guard:</span>
+<span class="n">grdHypObj</span> <span class="p">=</span> <span class="n">hyperplane</span><span class="p">([</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">xM2</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
 <p>We assume that initially the system is in free-flow mode. Given a set of
 initial conditions, we compute the reach set according to dynamics
-([fflow]) for certain number of time steps. We will consider the
+<a href="#equation-fflow">(8)</a> for certain number of time steps. We will consider the
 external approximation of the reach set by a single ellipsoid.</p>
+<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="o">%</span><span class="n">initial</span> <span class="n">conditions</span><span class="o">:</span>
+<span class="n">x0EllObj</span> <span class="o">=</span> <span class="p">[</span><span class="mi">170</span><span class="p">;</span> <span class="mi">180</span><span class="p">;</span> <span class="mi">175</span><span class="p">;</span> <span class="mi">170</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span><span class="o">*</span><span class="n">ell_unitball</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+
+<span class="n">dirsMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">;</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span><span class="p">];</span>  <span class="o">%</span> <span class="n">single</span> <span class="n">initial</span> <span class="n">direction</span>
+<span class="n">nSteps</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>  <span class="o">%</span> <span class="n">number</span> <span class="n">of</span> <span class="n">time</span> <span class="n">steps</span>
+
+<span class="o">%</span> <span class="n">free</span><span class="o">-</span><span class="n">flow</span> <span class="n">reach</span> <span class="n">set</span>
+<span class="n">ffrsObj</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachDiscrete</span><span class="p">(</span><span class="n">firstSys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span> <span class="n">nSteps</span><span class="p">]);</span>  
+<span class="n">externalEllMat</span> <span class="o">=</span> <span class="n">ffrsObj</span><span class="p">.</span><span class="n">get_ea</span><span class="p">();</span>  <span class="o">%</span> <span class="mi">101</span><span class="n">x1</span> <span class="n">array</span> <span class="n">of</span> <span class="n">external</span> <span class="n">ellipsoids</span>
+</pre></div>
+</td></tr></table></div>
 <p>Having obtained the ellipsoidal array externalEllMat representing the
 reach set evolving in time, we determine the ellipsoids in the array
 that intersect the guard.</p>
+<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% some of the intersections are empty</span>
+<span class="n">intersectEllVec</span> <span class="p">=</span> <span class="n">externalEllMat</span><span class="p">.</span><span class="n">hpintersection</span><span class="p">(</span><span class="n">grdHypObj</span><span class="p">);</span>  
+<span class="c">% determine nonempty intersections</span>
+<span class="n">indNonEmptyVec</span> <span class="p">=</span> <span class="nb">find</span><span class="p">(</span><span class="o">~</span><span class="n">isEmpty</span><span class="p">(</span><span class="n">intersectEllVec</span><span class="p">));</span> 
+<span class="c">%</span>
+<span class="n">min</span><span class="p">(</span><span class="n">indNonEmptyVec</span><span class="p">)</span>
+
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%       19</span>
+
+<span class="n">max</span><span class="p">(</span><span class="n">indNonEmptyVec</span><span class="p">)</span>
+
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%       69</span>
+</pre></div>
+</td></tr></table></div>
+<div class="figure align-center" id="hwreachfig" style="width: 70%">
+<img alt="highway" src="_images/hwreach.png" />
+<p class="caption">Figure 7: Reach set of the free-flow system is blue, reach set of the congested
+system is green, the guard is red.
+(a) Reach set of the free-flow system at <span class="math">\(t = 10\)</span>, before reaching the guard
+(projection onto <span class="math">\((x_1,x_2,x_3)\)</span>).
+(b) Reach set of the free-flow system at <span class="math">\(t = 50\)</span>, crossing the guard.
+(projection onto <span class="math">\((x_1,x_2,x_3)\)</span>).
+(c) Reach set of the free-flow system at <span class="math">\(t = 80\)</span>, after the guard is crossed.
+(projection onto <span class="math">\((x_1,x_2,x_3)\)</span>).
+(d) Reach set trace from <span class="math">\(t=0\)</span> to <cite>t=100</cite>, free-flow system in blue,
+congested system in green; bounds of initial conditions are marked with magenta
+(projection onto <span class="math">\((x_1,x_2)\)</span>).</p>
+</div>
 <p>Analyzing the values in array dVec, we conclude that the free-flow reach
 set has nonempty intersection with hyperplane grdHyp at <span class="math">\(t=18\)</span> for
 the first time, and at <span class="math">\(t=68\)</span> for the last time. Between
-<span class="math">\(t=18\)</span> and <span class="math">\(t=68\)</span> it crosses the guard. Figure
-[hwreachfig](a) shows the free-flow reach set projection onto
+<span class="math">\(t=18\)</span> and <span class="math">\(t=68\)</span> it crosses the guard. <a class="pageref" href="#hwreachfig">Figure  7</a> (a)
+shows the free-flow reach set projection onto
 <span class="math">\((x_1,x_2,x_3)\)</span> subspace for <span class="math">\(t=10\)</span>, before the guard
-crossing; figure [hwreachfig](b) for <span class="math">\(t=50\)</span>, during the guard
-crossing; and figure [hwreachfig](c) for <span class="math">\(t=80\)</span>, after the guard
+crossing; <a class="pageref" href="#hwreachfig">figure  7</a> (b) for <span class="math">\(t=50\)</span>, during the guard
+crossing; and <a class="pageref" href="#hwreachfig">figure  7</a> (c) for <span class="math">\(t=80\)</span>, after the guard
 was crossed.</p>
 <p>For each time step that the intersection of the free-flow reach set and
 the guard is nonempty, we establish a new initial time and a set of
 initial conditions for the reach set computation according to dynamics
-([cflow]). The initial time is the array index minus one, and the set of
+<a href="#equation-cflow">(9)</a>. The initial time is the array index minus one, and the set of
 initial conditions is the intersection of the free-flow reach set with
 the guard.</p>
+<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">crsObjVec</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="k">for</span> <span class="n">iInd</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">size</span><span class="p">(</span><span class="n">indNonEmptyVec</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">curTimeLimVec</span><span class="o">=</span><span class="p">[</span><span class="n">indNonEmptyVec</span><span class="p">(</span><span class="n">iInd</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="n">nSteps</span><span class="p">];</span>
+     <span class="n">rsObj</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachDiscrete</span><span class="p">(</span><span class="n">secSys</span><span class="p">,...</span>
+         <span class="n">intersectEllVec</span><span class="p">(</span><span class="n">indNonEmptyVec</span><span class="p">(</span><span class="n">iInd</span><span class="p">)),</span> <span class="p">...</span>
+             <span class="n">dirsMat</span><span class="p">,</span> <span class="n">curTimeLimVec</span><span class="p">,</span><span class="err">&#39;</span><span class="n">isRegEnabled</span><span class="err">&#39;</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+     <span class="n">crsObjVec</span> <span class="o">=</span> <span class="p">[</span><span class="n">crsObjVec</span> <span class="n">rsObj</span><span class="p">];</span>
+<span class="n">end</span>
+</pre></div>
+</td></tr></table></div>
 <p>The union of reach sets in array crs forms the reach set for the
 congested dynamics.</p>
 <p>A summary of the reach set computation of the linear hybrid system
-([fflow]-[cflow]) for <span class="math">\(N=100\)</span> time steps with one guard crossing
-is given in figure [hwreachfig](d), which shows the projection of the
+<a href="#equation-fflow">(8)</a>-<a href="#equation-cflow">(9)</a> for <span class="math">\(N=100\)</span> time steps with one guard crossing
+is given in <a class="pageref" href="#hwreachfig">figure  7</a> (d), which shows the projection of the
 reach set trace onto <span class="math">\((x_1,x_2)\)</span> subspace. The system starts
 evolving in time in free-flow mode from a set of initial conditions at
 <span class="math">\(t=0\)</span>, whose boundary is shown in magenta. The free-flow reach set

@@ -333,8 +333,11 @@ sum can be computed explicitely and plotted:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellMat</span><span class="p">.</span><span class="n">minksum</span><span class="p">();</span>
 </pre></div>
 </td></tr></table></div>
-<p>Figure
-<span class="math">\(\ref{minksumPic}\)</span> displays the geometric sum of ellipsoids. If
+<div class="figure" id="minksumpic" style="width: 60%">
+<img alt="approximation" src="_images/minksum.png" />
+<p class="caption">Figure 1: The geometric sum of ellipsoids.</p>
+</div>
+<p>Figure  displays the geometric sum of ellipsoids. If
 the dimension of the space in which the ellipsoids are defined exceeds
 <span class="math">\(3\)</span>, an error is returned. The result of the geometric sum
 operation is not generally an ellipsoid, but it can be approximated by
@@ -414,8 +417,11 @@ can be computed explicitely and plotted for ellipsoids in
 <span class="n">firstEllObj</span><span class="p">.</span><span class="n">minkdiff</span><span class="p">(</span><span class="n">fourthEllObj</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
-<p>Figure
-<span class="math">\(\ref{minkdiffPic}\)</span> shows the geometric difference of ellipsoids.</p>
+<div class="figure" id="minkdiffpic" style="width: 60%">
+<img alt="approximation" src="_images/minkdiff.png" />
+<p class="caption">Figure 2: The geometric difference of ellipsoids.</p>
+</div>
+<p>Figure  shows the geometric difference of ellipsoids.</p>
 <p>Similar to minksum, minkdiff is there for visualization purpose. It
 works only for dimensions <span class="math">\(1\)</span>, <span class="math">\(2\)</span> and <span class="math">\(3\)</span>, and for
 higher dimensions it returns an error. For arbitrary dimensions, the
@@ -499,6 +505,12 @@ of arbitrary dimension.</p>
 <span class="n">firstEllObj</span><span class="p">.</span><span class="n">minkmp</span><span class="p">(</span><span class="n">thirdEllObj</span><span class="p">,</span> <span class="n">secEllObj</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
+<div class="figure" id="minkpmpic">
+<img alt="_images/minkpm.png" src="_images/minkpm.png" />
+</div>
+<div class="figure" id="minkmppic">
+<img alt="_images/minkmp.png" src="_images/minkmp.png" />
+</div>
 <p>Figure <span class="math">\(\ref{minkPic}\)</span> displays results of
 the implementation of minkpm and minkmp operations.</p>
 <p>Similarly, operation
@@ -1104,6 +1116,12 @@ by the cut function:</p>
 </td></tr></table></div>
 <p>We can compute the projection of the ellipsoidal
 tube onto time-dependent subspace.</p>
+<div class="figure" id="stat-proj">
+<img alt="_images/reachTubeStatProj.png" src="_images/reachTubeStatProj.png" />
+</div>
+<div class="figure" id="dyn-proj">
+<img alt="_images/reachTubeDynProj.png" src="_images/reachTubeDynProj.png" />
+</div>
 <p>Figure <span class="math">\(\ref{project}\)</span> displays static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.</p>
 <p>We can compute tubes by the instant of time using methodfromEllTubes:</p>
@@ -1162,8 +1180,11 @@ Also we can see projections of good directions for ellipsoidal tubes.</p>
  <span class="nx">end</span>
 </pre></div>
 </td></tr></table></div>
-<p>Figure <span class="math">\(\ref{unionTubeStatProj}\)</span> shows projection of ellipsoidal
-tubes by the instant of time. ellipsoidal tutbes.</p>
+<div class="figure" id="uniontubestatproj">
+<img alt="_images/unionTubeStatProj.png" src="_images/unionTubeStatProj.png" />
+</div>
+<p>Figure  shows projection of ellipsoidal
+tubes by the instant of time.</p>
 <p>Also we can get initial data from the resulting tube:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
@@ -1209,7 +1230,10 @@ to display a content of ellipsoidal tubes.</p>
 <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">dispOnUI</span><span class="p">();</span>
 </pre></div>
 </td></tr></table></div>
-<p>Figure <span class="math">\(\ref{dispPic}\)</span>
+<div class="figure" id="disppic">
+<img alt="_images/dispPic.png" src="_images/dispPic.png" />
+</div>
+<p>Figure 
 displays all fields of the ellipsoidal tube.</p>
 <p>There are several methods to find the tubes with necessary parameters.</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1

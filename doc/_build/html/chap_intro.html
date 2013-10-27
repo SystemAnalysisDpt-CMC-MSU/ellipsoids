@@ -95,26 +95,26 @@ of time steps. For example, consider the system,</p>
 and <span class="math">\(x_0 \in \{x\in {\bf R}^2 ~|~ \|x\|_{\infty}\leqslant1\}\)</span>.</p>
 <p>Starting with a rectangular initial set, the number of vertices of the
 reach set polytope is <span class="math">\(4k + 4\)</span> at the <span class="math">\(k\)</span>th step.</p>
-<p>In <span class="math">\(d/dt\)</span> (“$d/dt$ Homepage”), the reach set is approximated by
+<p>In <span class="math">\(d/dt\)</span> (“<span class="math">\(d/dt\)</span> Homepage”), the reach set is approximated by
 unions of rectangular polytopes E.Asarin et al. (2000).</p>
-<div class="figure align-center" style="width: 50%">
+<div class="figure align-center" id="ddtfig" style="width: 50%">
 <img alt="approximation" src="_images/ddt.png" />
-<p class="caption">Reach set approximation by union of rectangles.</p>
+<p class="caption">Figure 1: Reach set approximation by union of rectangles</p>
 </div>
 <p>The algorithm works as follows. First, given the set of initial
 conditions defined as a polytope, the evolution in time of the
-polytope’s extreme points is computed (figure [ddtfig](a)).
-<span class="math">\(R(t_1)\)</span> in figure [ddtfig](a) is the reach set of the system at
+polytope’s extreme points is computed (<a class="pageref" href="#ddtfig">figure  1</a> (a)).</p>
+<p><span class="math">\(R(t_1)\)</span> in <a class="pageref" href="#ddtfig">figure  1</a> (a) is the reach set of the system at
 time <span class="math">\(t_1\)</span>, and <span class="math">\(R[t_0, t_1]\)</span> is the set of all points that
 can be reached during <span class="math">\([t_0, t_1]\)</span>. Second, the algorithm computes
 the convex hull of vertices of both, the initial polytope and
-<span class="math">\(R(t_1)\)</span> (figure [ddtfig](b)). The resulting polytope is then
-bloated to include all the reachable states in <span class="math">\([t_0,t_1]\)</span> (figure
-[ddtfig](c)). Finally, this overapproximating polytope is in its turn
-overapproximated by the union of rectangles (figure [ddtfig](d)). The
+<span class="math">\(R(t_1)\)</span> (<a class="pageref" href="#ddtfig">figure  1</a> (b)). The resulting polytope is then
+bloated to include all the reachable states in <span class="math">\([t_0,t_1]\)</span> (<a class="pageref" href="#ddtfig">figure  1</a> (c)).
+Finally, this overapproximating polytope is in its turn
+overapproximated by the union of rectangles (<a class="pageref" href="#ddtfig">figure  1</a> (d)). The
 same procedure is repeated for the next time interval <span class="math">\([t_1,t_2]\)</span>,
-and the union of both rectangular approximations is taken (figure
-[ddtfig](e,f)), and so on. Rectangular polytopes are easy to represent
+and the union of both rectangular approximations is taken (<a class="pageref" href="#ddtfig">figure  1</a> (e,f)),
+and so on. Rectangular polytopes are easy to represent
 and the number of facets grows linearly with dimension, but a large
 number of rectangles must be used to assure the approximation is not
 overly conservative. Besides, the important part of this method is again

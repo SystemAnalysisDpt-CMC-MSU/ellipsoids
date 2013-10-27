@@ -50,30 +50,33 @@ and :math:`x_0 \in \{x\in {\bf R}^2 ~|~ \|x\|_{\infty}\leqslant1\}`.
 Starting with a rectangular initial set, the number of vertices of the
 reach set polytope is :math:`4k + 4` at the :math:`k`\ th step.
 
-In :math:`d/dt` (“$d/dt$ Homepage”), the reach set is approximated by
+In :math:`d/dt` (“:math:`d/dt` Homepage”), the reach set is approximated by
 unions of rectangular polytopes E.Asarin et al. (2000).
+
+.. _ddtfig:
 
 .. figure:: ddt.png
    :align: center
    :alt: approximation
    :figwidth: 50 %
 
-   Reach set approximation by union of rectangles.
+   Reach set approximation by union of rectangles
 
 The algorithm works as follows. First, given the set of initial
 conditions defined as a polytope, the evolution in time of the
-polytope’s extreme points is computed (figure [ddtfig](a)).
-:math:`R(t_1)` in figure [ddtfig](a) is the reach set of the system at
+polytope’s extreme points is computed (:num:`figure #ddtfig` (a)).
+
+:math:`R(t_1)` in :num:`figure #ddtfig` (a) is the reach set of the system at
 time :math:`t_1`, and :math:`R[t_0, t_1]` is the set of all points that
 can be reached during :math:`[t_0, t_1]`. Second, the algorithm computes
 the convex hull of vertices of both, the initial polytope and
-:math:`R(t_1)` (figure [ddtfig](b)). The resulting polytope is then
-bloated to include all the reachable states in :math:`[t_0,t_1]` (figure
-[ddtfig](c)). Finally, this overapproximating polytope is in its turn
-overapproximated by the union of rectangles (figure [ddtfig](d)). The
+:math:`R(t_1)` (:num:`figure #ddtfig` (b)). The resulting polytope is then
+bloated to include all the reachable states in :math:`[t_0,t_1]` (:num:`figure #ddtfig` (c)). 
+Finally, this overapproximating polytope is in its turn
+overapproximated by the union of rectangles (:num:`figure #ddtfig` (d)). The
 same procedure is repeated for the next time interval :math:`[t_1,t_2]`,
-and the union of both rectangular approximations is taken (figure
-[ddtfig](e,f)), and so on. Rectangular polytopes are easy to represent
+and the union of both rectangular approximations is taken (:num:`figure #ddtfig` (e,f)), 
+and so on. Rectangular polytopes are easy to represent
 and the number of facets grows linearly with dimension, but a large
 number of rectangles must be used to assure the approximation is not
 overly conservative. Besides, the important part of this method is again
@@ -235,3 +238,5 @@ future toolbox development. The functions provided by the toolbox
 together with their descriptions are listed in appendix A.
 
 .. |image| image:: ddt.png
+
+

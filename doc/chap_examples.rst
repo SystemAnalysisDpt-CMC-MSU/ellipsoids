@@ -26,12 +26,22 @@ Consider the system from chapter 1:
 where :math:`{\mathcal X}_0` is the set of initial conditions, and
 :math:`U` is the control set.
 
+.. _ellpolyfig:
+
+.. figure:: ellpoly.png
+   :align: center
+   :alt: approximation
+   :figwidth: 70 %
+
+   Reach set computation performance comparison.
+
+
 Let :math:`{\mathcal X}_0` and :math:`U` be unit boxes in
 :math:`{\bf R}^2`, and compute the reach set using the polytope method
-implemented in MPT ( (“Multi-Parametric Toolbox Homepage”)). With every
+implemented in MPT (“Multi-Parametric Toolbox Homepage”). With every
 time step the number of vertices of the reach set polytope increases by
 :math:`4`. The complexity of the convex hull computation increases
-exponentially with number of vertices. In figure [ellpolyfig], the time
+exponentially with number of vertices. In :num:`figure #ellpolyfig`, the time
 required to compute the reach set for different time steps using
 polytopes is shown in red.
 
@@ -41,21 +51,35 @@ assume :math:`{\mathcal X}_0` and :math:`U` to be unit balls in
 corresponds to the number of ellipsoidal approximations, and obtain
 external and internal ellipsoidal approximations of the reach set:
 
-In figure [ellpolyfig], the time required to compute both external and
+.. literalinclude:: /mcodesnippets/s_chapter06_section01_snippet01.m
+   :language: guess
+   :linenos:
+
+In :num:`figure #ellpolyfig`, the time required to compute both external and
 internal ellipsoidal approximations, with :math:`32` ellipsoids each,
 for different number of time steps is shown in blue.
 
-Figure [ellpolyfig] illustrates the fact that the complexity of polytope
+:num:`Figure #ellpolyfig` illustrates the fact that the complexity of polytope
 method grows exponentially with number of time steps, whereas the
 complexity of ellipsoidal method grows linearly.
 
 System with Disturbance
 -----------------------
 
-The mechanical system presented in figure [springmassfig], is described
+.. _springmassfig:
+
+.. figure:: springmass.png
+   :align: center
+   :alt: spmass
+   :figwidth: 70 %
+
+   Spring-mass system.
+
+
+The mechanical system presented in :num:`figure #springmassfig`, is described
 by the following system of equations:
 
-.. math::
+.. math:: 
    :label: spmass1
 
    m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1, 
@@ -98,10 +122,28 @@ be taken as :math:`x_1(0)=0`, :math:`x_2(0)=2`. Defining
 
 Now we can compute the reach set of system :eq:`spmass1`-:eq:`spmass2` for
 given time by computing the reach set of the linear system :eq:`spmassls`
-and taking its projection onto :math:`(x_1, x_2)` subspace. Figure
-[mechreachfig](a) shows the reach set of the system
+and taking its projection onto :math:`(x_1, x_2)` subspace. 
+
+.. _mechreachfig:
+
+.. figure:: reachmech.png
+   :align: center
+   :alt: reachmech
+   :figwidth: 60 %
+
+   Spring-mass system without disturbance:
+   (a) reach tube for time :math:`t\in[0,4]`; (b) reach set at time :math:`t=4`.
+   Spring-mass system with disturbance:
+   (c) reach tube for time :math:`t\in[0,4]`; (d) reach set at time :math:`t=4`.
+
+.. literalinclude:: /mcodesnippets/s_chapter06_section02_snippet01.m
+   :language: guess
+   :linenos:
+
+  
+:num:`Figure #mechreachfig` (a) shows the reach set of the system
 :eq:`spmass1`-:eq:`spmass2` evolving in time from :math:`t=0` to :math:`t=4`.
-Figure [mechreachfig](b) presents a snapshot of this reach set at time
+:num:`Figure #mechreachfig` (b) presents a snapshot of this reach set at time
 :math:`t=4`.
 
 So far we considered an ideal system without any disturbance, such as
@@ -109,12 +151,16 @@ friction. We introduce disturbance to :eq:`spmass1`-:eq:`spmass2` by adding
 extra terms, :math:`v_1` and :math:`v_2`,
 
 .. math::
+   :label: smdist1
 
-   \begin{aligned}
-   m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1 + v_1, \label{smdist1}\\
-   m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 + v_2, \label{smdist2}\end{aligned}
+   m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1 + v_1,
+   
+.. math::
+   :label: smdist2
+   
+   m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 + v_2,
 
-which results in equation ([spmassls]) getting an extra term
+which results in equation :eq:`spmassls` getting an extra term
 
 .. math::
 
@@ -130,16 +176,30 @@ Assuming that :math:`[v_1 ~~ v_2]^T` is unknown but bounded by
 ellipsoid :math:`{\mathcal E}(0, \frac{1}{4}I)`, we can compute the
 closed-loop reach set of the system with disturbance.
 
-Figure [mechreachfig](c) shows the reach set of the system
+.. literalinclude:: /mcodesnippets/s_chapter06_section02_snippet02.m
+   :language: guess
+   :linenos:
+
+
+:num:`Figure #mechreachfig`(c) shows the reach set of the system
 ([smdist1]-[smdist2]) evolving in time from :math:`t=0` to :math:`t=4`.
-Figure [mechreachfig](d) presents a snapshot of this reach set at time
+:num:`Figure #mechreachfig`(d) presents a snapshot of this reach set at time
 :math:`t=4`.
 
 Switched System
 ---------------
 
+.. _rlcfig:
+
+.. figure:: rlc.png
+   :align: center
+   :alt: rlc
+   :figwidth: 60 %
+
+   RLC circuit with two inputs.
+
 By *switched systems* we mean systems whose dynamics changes at known
-times. Consider the RLC circuit shown in figure [rlcfig]. It has two
+times. Consider the RLC circuit shown in :num:`figure #rlcfig`. It has two
 inputs - the voltage (:math:`v`) and current (:math:`i`) sources. Define
 
 -  :math:`x_1` - voltage across capacitor :math:`C_1`, so
@@ -155,6 +215,7 @@ Applying Kirchoff current and voltage laws we arrive at the linear
 system,
 
 .. math::
+   :label: rlceq
 
    \left[\begin{array}{c}
    \dot{x}_1\\
@@ -171,19 +232,20 @@ system,
    0 & 0\\
    0 & 0\end{array}\right]\left[\begin{array}{c}
    v\\
-   i\end{array}\right]. \label{rlceq}
+   i\end{array}\right].
 
 The parameters :math:`R_1`, :math:`R_2`, :math:`C_1`, :math:`C_2` and
 :math:`L`, as well as the inputs, may depend on time. Suppose, for time
-:math:`0\leqslantt<2`, :math:`R_1=2` Ohm, :math:`R_2=1` Ohm,
+:math:`0\leqslant t<2`, :math:`R_1=2` Ohm, :math:`R_2=1` Ohm,
 :math:`C_1=3` F, :math:`C_2=7` F, :math:`L=2` H, both inputs, :math:`v`
 and :math:`i` are present and bounded by ellipsoid
 :math:`{\mathcal E}(0,I)`; and for time :math:`t\geqslant2`,
 :math:`R_1=R_2=2` Ohm, :math:`C_1=C_2=3` F, :math:`L=6` H, the current
-source is turned off, and :math:`|v|\leqslant1`. Then, system ([rlceq])
+source is turned off, and :math:`|v|\leqslant1`. Then, system :eq:`rlceq`
 can be rewritten as
 
 .. math::
+   :label: rlceq2
 
    \left[\begin{array}{c}
    \dot{x}_1\\
@@ -201,7 +263,7 @@ can be rewritten as
    0 & 0\\
    0 & 0\end{array}\right]\left[\begin{array}{c}
    v\\
-   i\end{array}\right], & 0\leqslantt< 2, \\
+   i\end{array}\right], & 0\leqslant t< 2, \\
    \left[\begin{array}{ccc}
    -\frac{1}{6} & 0 & -\frac{1}{3}\\
    0 & 0 & \frac{1}{3}\\
@@ -212,34 +274,62 @@ can be rewritten as
    x_3\end{array}\right] + \left[\begin{array}{c}
    \frac{1}{6} \\
    0 \\
-   0 \end{array}\right]v, & 2\leqslantt. \end{array}\right.
-   \label{rlceq2}
+   0 \end{array}\right]v, & 2\leqslant t. \end{array}\right.
 
-We can compute the reach set of ([rlceq2]) for some time :math:`t>2`,
+
+We can compute the reach set of :eq:`rlceq2` for some time :math:`t>2`,
 say, :math:`t=3`.
 
-Figure [rlcreachfig](a) shows how the reach set projection onto
-:math:`(x_1, x_2)` of system ([rlceq2]) evolves in time from :math:`t=0`
+.. literalinclude:: /mcodesnippets/s_chapter06_section03_snippet01.m
+   :language: guess
+   :linenos:
+   
+.. _rlcreachfig:
+
+.. figure:: rlcreach.png
+   :align: center
+   :alt: rlcreach
+   :figwidth: 60 %
+
+   Forward and backward reach sets of the switched system
+   (external and internal approximations).
+
+
+:num:`Figure #rlcreachfig` (a) shows how the reach set projection onto
+:math:`(x_1, x_2)` of system :eq:`rlceq2` evolves in time from :math:`t=0`
 to :math:`t=3`. The external reach set approximation for the first
 dynamics is in red, the internal approximation is in green. The dynamics
 switches at :math:`t=2`. The external reach set approximation for the
 second dynamics is in yellow, its internal approximation is in blue. The
 full three-dimensional external (yellow) and internal (blue)
-approximations of the reach set are shown in figure [rlcreachfig](b).
+approximations of the reach set are shown in :num:`figure #rlcreachfig` (b).
 
 To find out where the system should start at time :math:`t=0` in order
 to reach a neighborhood M of the origin at time :math:`t=3`, we compute
-the backward reach set from :math:`t=3` to :math:`t=0`. Figure
-[rlcreachfig](c) presents the evolution of the reach set projection onto
+the backward reach set from :math:`t=3` to :math:`t=0`. 
+
+.. literalinclude:: /mcodesnippets/s_chapter06_section03_snippet02.m
+   :language: guess
+   :linenos:
+
+:num:`Figure #rlcreachfig` (c) presents the evolution of the reach set projection onto
 :math:`(x_1, x_2)` in backward time. Again, external and internal
 approximations corresponding to the first dynamics are shown in red and
 green, and to the second dynamics in yellow and blue. The full
 dimensional backward reach set external and internal approximations of
-system ([rlceq2]) at time :math:`t=0` is shown in figure
-[rlcreachfig](d).
+system :eq:`rlceq2` at time :math:`t=0` is shown in :num:`figure #rlcreachfig` (d).
 
 Hybrid System
 -------------
+
+.. _hwfig:
+
+.. figure:: hw.png
+   :align: center
+   :alt: highway
+   :figwidth: 70 %
+
+   Highway model. Adapted from L.Muñoz et al. (2003).
 
 There is no explicit implementation of the reachability analysis for
 hybrid systems in the *Ellipsoidal Toolbox*. Nonetheless, the operations
@@ -250,7 +340,7 @@ polytopes.
 
 We consider the *switching-mode model* of highway traffic presented in
 L.Muñoz et al. (2003). The highway segment is divided into :math:`N`
-cells as shown in figure [hwfig]. In this particular case, :math:`N=4`.
+cells as shown in :num:`figure #hwfig`. In this particular case, :math:`N=4`.
 The traffic density in cell :math:`i` is :math:`x_i` vehicles per mile,
 :math:`i=1,2,3,4`.
 
@@ -285,6 +375,7 @@ and *congested* mode, when there is a jam. Traffic flow in free-flow
 mode is described by
 
 .. math::
+   :label: fflow
 
    \begin{aligned}
    \left[\begin{array}{c}
@@ -308,11 +399,12 @@ mode is described by
    0 & 0 & 0\end{array}\right]\left[\begin{array}{c}
    u_1\\
    u_2\\
-   u_3\end{array}\right]. \label{fflow}\end{aligned}
+   u_3\end{array}\right].\end{aligned}
 
 The equation for the congested mode is
 
 .. math::
+   :label: cflow
 
    \begin{aligned}
    \left[\begin{array}{c}
@@ -346,7 +438,7 @@ The equation for the congested mode is
    x_{M1}\\
    x_{M2}\\
    x_{M3}\\
-   x_{M4}\end{array}\right]. \label{cflow}\end{aligned}
+   x_{M4}\end{array}\right].\end{aligned}
 
 The switch from the free-flow to the congested mode occurs when the
 density :math:`x_2` reaches :math:`x_{M2}`. In other words, the
@@ -355,38 +447,73 @@ hyperplane :math:`H([0 ~ 1 ~ 0 ~ 0]^T, x_{M2})` is the guard.
 We indicate how to implement the reach set computation of this hybrid
 system. We first define the two linear systems and the guard.
 
+.. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet01.m
+   :language: guess
+   :linenos:
+
 We assume that initially the system is in free-flow mode. Given a set of
 initial conditions, we compute the reach set according to dynamics
-([fflow]) for certain number of time steps. We will consider the
+:eq:`fflow` for certain number of time steps. We will consider the
 external approximation of the reach set by a single ellipsoid.
+
+.. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet02.m
+   :language: guess
+   :linenos:
 
 Having obtained the ellipsoidal array externalEllMat representing the
 reach set evolving in time, we determine the ellipsoids in the array
 that intersect the guard.
 
+.. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet03.m
+   :language: guess
+   :linenos:
+   
+.. _hwreachfig:
+
+.. figure:: hwreach.png
+   :align: center
+   :alt: highway
+   :figwidth: 70 %
+
+   Reach set of the free-flow system is blue, reach set of the congested
+   system is green, the guard is red.
+   (a) Reach set of the free-flow system at :math:`t = 10`, before reaching the guard
+   (projection onto :math:`(x_1,x_2,x_3)`).
+   (b) Reach set of the free-flow system at :math:`t = 50`, crossing the guard.
+   (projection onto :math:`(x_1,x_2,x_3)`).
+   (c) Reach set of the free-flow system at :math:`t = 80`, after the guard is crossed.
+   (projection onto :math:`(x_1,x_2,x_3)`).
+   (d) Reach set trace from :math:`t=0` to `t=100`, free-flow system in blue,
+   congested system in green; bounds of initial conditions are marked with magenta
+   (projection onto :math:`(x_1,x_2)`).
+
 Analyzing the values in array dVec, we conclude that the free-flow reach
 set has nonempty intersection with hyperplane grdHyp at :math:`t=18` for
 the first time, and at :math:`t=68` for the last time. Between
-:math:`t=18` and :math:`t=68` it crosses the guard. Figure
-[hwreachfig](a) shows the free-flow reach set projection onto
+:math:`t=18` and :math:`t=68` it crosses the guard. :num:`Figure #hwreachfig` (a) 
+shows the free-flow reach set projection onto
 :math:`(x_1,x_2,x_3)` subspace for :math:`t=10`, before the guard
-crossing; figure [hwreachfig](b) for :math:`t=50`, during the guard
-crossing; and figure [hwreachfig](c) for :math:`t=80`, after the guard
+crossing; :num:`figure #hwreachfig` (b) for :math:`t=50`, during the guard
+crossing; and :num:`figure #hwreachfig` (c) for :math:`t=80`, after the guard
 was crossed.
 
 For each time step that the intersection of the free-flow reach set and
 the guard is nonempty, we establish a new initial time and a set of
 initial conditions for the reach set computation according to dynamics
-([cflow]). The initial time is the array index minus one, and the set of
+:eq:`cflow`. The initial time is the array index minus one, and the set of
 initial conditions is the intersection of the free-flow reach set with
 the guard.
+
+.. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet04.m
+   :language: guess
+   :linenos:
 
 The union of reach sets in array crs forms the reach set for the
 congested dynamics.
 
 A summary of the reach set computation of the linear hybrid system
-([fflow]-[cflow]) for :math:`N=100` time steps with one guard crossing
-is given in figure [hwreachfig](d), which shows the projection of the
+:eq:`fflow`-:eq:`cflow` for :math:`N=100` time steps with one guard crossing
+is given in :num:`figure #hwreachfig` (d), which shows the projection of the
 reach set trace onto :math:`(x_1,x_2)` subspace. The system starts
 evolving in time in free-flow mode from a set of initial conditions at
 :math:`t=0`, whose boundary is shown in magenta. The free-flow reach set
