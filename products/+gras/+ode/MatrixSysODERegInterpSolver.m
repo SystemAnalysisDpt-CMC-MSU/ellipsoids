@@ -54,31 +54,38 @@ classdef MatrixSysODERegInterpSolver < gras.ode.MatrixSysODESolver
             %       timeVec: double[nPoints,1] - time grid, same meaning
             %           as in ode45
             %   optional:
-            %       outArg1: any[]
+            %       outArg1: double[sizeEqList{1}]
             %           ...
-            %       outArgPenult: any[] - these variables contains
-            %           nEquations*nFuncs arrays of dobule (nEquations
-            %           for each function), each of which is a solution of
-            %           the corresponding equation for the corresponding
-            %           function.
-            %       outArgLast: 
+            %       outArgN: double[sizeEqList{nEquations*nFuncs}] -
+            %           these variables contains nEquations*nFuncs arrays
+            %           of dobule (nEquations for each function), each of
+            %           which is a solution of the corresponding equation 
+            %           for the corresponding function. (here N in the
+            %           name outArgN equal nEquations*nFuncs)
+            %       interpObj: 
             %           gras.ode.MatrixSysReshapeOde45RegInterp[1,1] - 
             %           all the data nessecary for calculation on an
             %           arbitrary time grid is stored in this object,
             %           including the dimensionality of the system and the 
             %           number of functions; in fact it is shell of 
             %           gras.ode.VecOde45RegInterp for system of matrix
-            %           equations.
+            %           equations (here N in the name outArgN equal 
+            %           nEquations*nFuncs+1)
             % Example:
+            %   % Example corresponds to four equations and two derivatives
+            %   % functions
+            %   
             %   solveObj=gras.ode.MatrixSysODERegInterpSolver(...
             %       sizeVecList,@(varargin)fSolver(varargin{:},...
-            %        odeset(odePropList{:})),varargin{:});
-            %   resList=cell(1,length(sizeVecList)*...
-            %        length(fDerivFuncList));
-            %   resInterpList = resList;
-            %   [resTimeVec,resList{:},...
-            %        objMatrixSysReshapeOde45RegInterp]=solveObj.solve(...
-            %        fDerivFuncList,timeVec,initValList{:});
+            %       odeset(odePropList{:})),varargin{:});
+            %   % make interpObj
+            %   [resInterpTimeVec,resSolveSimpleFuncArray1,...
+            %       resSolveSimpleFuncArray2,resSolveSimpleFuncArray3,...
+            %       resSolveSimpleFuncArray4,resSolveRegFuncArray5,...
+            %       resSolveRegFuncArray6,resSolveRegFuncArray7,...
+            %       resSolveRegFuncArray8,...
+            %       objMatrixSysReshapeOde45RegInterp]=solveObj.solve(...
+            %       fDerivFuncList,timeVec,initValList{:});
             %
             % $Author: Vadim Danilov <vadimdanilov93@gmail.com> $  
             % $Date: 24-oct-2013$

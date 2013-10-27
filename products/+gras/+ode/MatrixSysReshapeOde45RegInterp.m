@@ -37,16 +37,15 @@ classdef MatrixSysReshapeOde45RegInterp
             %  Science, System Analysis Department 2013 $
             
           	import modgen.common.throwerror;
-            if(isequal(class(objVecOde45RegInterp),...
-                    'gras.ode.VecOde45RegInterp'))
-                interpObj.objVecOde45RegInterp = objVecOde45RegInterp;
-                interpObj.sizeEqList = sizeEqList;
-                interpObj.nFuncs = nFuncs;
-            else
-                throwerror('wrongInput',['the first argument ' ...
-                    'gras.ode.MatrixSysReshapeOde45RegInterp should ',...
-                    'be object of class gras.ode.VecOde45RegInterp']);
-            end;
+            import modgen.common.checkvar;
+            modgen.common.checkvar(objVecOde45RegInterp,@(x)isa(x,...
+                'gras.ode.VecOde45RegInterp'),'interpObj',...
+                'errorTag','wrongInput:badType','errorMessage',...
+                ['First argument should be gras.ode.VecOde45RegInterp ',...
+                'class object']);
+            interpObj.objVecOde45RegInterp = objVecOde45RegInterp;
+            interpObj.sizeEqList = sizeEqList;
+            interpObj.nFuncs = nFuncs;
         end
         
         function [timeVec,varargout] = evaluate(self,timeVec)
@@ -65,28 +64,36 @@ classdef MatrixSysReshapeOde45RegInterp
             %       timeVec: double[1,nPoints] - time range, same meaning 
             %           as in ode45
             % Output:
-            %   timeVec: double[nPoints,1] - time grid, same meaning
-            %       as in ode45
-            %   outArg1: any[]
-            %       ...
-            %   outArgPenult: any[] - these variables contains
-            %       nEquations*nFuncs arrays of dobule (nEquations
-            %       for each function), each of which is a solution of
-            %       the corresponding equation for the corresponding
-            %       function.
-            %
+            %    regular:
+            %       timeVec: double[nPoints,1] - time grid, same meaning
+            %           as in ode45
+            %    optional:
+            %        outArg1: double[sizeEqList{1}]
+            %            ...
+            %        outArgN: double[sizeEqList{nEquations*nFuncs}] -
+            %            these variables contains nEquations*nFuncs arrays
+            %            of dobule (nEquations for each function), each of
+            %            which is a solution of the corresponding equation 
+            %            for the corresponding function. (here N in the
+            %            name outArgN equal nEquations*nFuncs)
             % Example:
+            %   % Example corresponds to four equations and two derivatives
+            %   % functions
+            %
             %   solveObj=gras.ode.MatrixSysODERegInterpSolver(...
-            %        sizeVecList,@(varargin)fSolver(varargin{:},...
-            %        odeset(odePropList{:})),varargin{:});
-            %    resList=cell(1,length(sizeVecList)*...
-            %        length(fDerivFuncList));
-            %    resInterpList = resList;
-            %    [resTimeVec,resList{:},...
-            %        objMatrixSysReshapeOde45RegInterp]=solveObj.solve(...
-            %        fDerivFuncList,timeVec,initValList{:});
-            %   [resInterpTimeVec,resInterpList{:}] = ...
-            %        objMatrixSysReshapeOde45RegInterp.evaluate(timeVec);
+            %       sizeVecList,@(varargin)fSolver(varargin{:},...
+            %       odeset(odePropList{:})),varargin{:});
+            %   % make interpObj
+            %   [resTimeVec,~,~,~,~,~,~,~,~,...
+            %       objMatrixSysReshapeOde45RegInterp]=solveObj.solve(...
+            %       fDerivFuncList,timeVec,initValList{:});
+            %   % use interpObj
+            %   [resInterpTimeVec,resSolveSimpleFuncArray1,...
+            %       resSolveSimpleFuncArray2,resSolveSimpleFuncArray3,...
+            %       resSolveSimpleFuncArray4,resSolveRegFuncArray5,...
+            %       resSolveRegFuncArray6,resSolveRegFuncArray7,...
+            %       resSolveRegFuncArray8] = ...
+            %       objMatrixSysReshapeOde45RegInterp.evaluate(timeVec);
             %
             %
             % $Author: Vadim Danilov  <vadimdanilov93@gmail.com>
