@@ -1,5 +1,5 @@
 function chapter05_section01_minksum_gen
-%     MINKSUM_GEN - creates picture "chapter05_section01_minksum.eps" in doc/pic     
+%     MINKSUM_GEN - creates picture "chapter05_section01_minksum.eps"      
 % $Author: <Elena Shcherbakova>  <shcherbakova415@gmail.com> $    $Date: <27 September 2013> $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
@@ -9,5 +9,5 @@ function chapter05_section01_minksum_gen
     elltool.doc.snip.s_chapter05_section01_snippet02;
     elltool.doc.snip.s_chapter05_section01_snippet15;
     hfigHandle = findobj('Type','figure');
-    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(hfigHandle, 0.4, 0.5);
+    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(hfigHandle, 0.4, 0.5, 1, 1);
 end

@@ -18,9 +18,16 @@ basisMat = [1 0 0 0; 0 1 0 0]';  % orthogonal basis of (x1, x2) subspace
 psObj = rsObj.projection(basisMat);  % reach set projection
 % plot projection of reach set external approximation:
 
-psObj.plotByEa('g');  % plot the whole reach tube
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_tube_without_disturbance%d',x));
+% plot the whole reach tube:
+psObj.plotByEa('g', plObj); % to have the use of plObj isn't necessary 
+%psObj.plotByEa('g');
 
 %
 % ReachContinuous's cut() doesn't work with projections:
 psObj = psObj.cut(4);
-psObj.plotByEa('g');  % plot reach set approximation at time t = 4
+
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_set_without_disturbance%d',x));
+% plot reach set approximation at time t = 4:
+psObj.plotByEa('g', plObj); % to have the use of plObj isn't necessary
+%psObj.plotByEa('g');

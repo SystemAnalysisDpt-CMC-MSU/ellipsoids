@@ -26,46 +26,59 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
             modgen.common.obj.StaticPropStorage.flushInternal(branchName);
          end 
          
-         function hcombinedFig = createCombinedFigure(hfigHandleVec, figPositionsVec, cameraPositionsMat)
+         function hcombinedFig = createCombinedFigure(hFigHandleVec, nFigRows, nFigCols, figRegExpList, cameraPositionsList, viewAngleList)
             % CREATECOMBINEDFIGURE - combines figures from hfigHandleVec forming one 
             % combined figure with 4 axes.
             % Input:
             %   regular:
             %       hfigHandleVec:  double [,1] - figures to combine.
-            %       figPositionsVec:   double [1,] - vector of axes' numbers 
-            %       in combined figure for copying figure from hfigHandleVec.
-            %       cameraPositionsMat:  double [4,3] - defines 'CameraPosition'
-            %       property for each axes. If it is empty, then 'default' value
-            %       is used. 
+            %       nFigRows:  double [1,1] - number of axes' rows (first
+            %                  parameter in subplot).
+            %       nFigCols: double [1,1] - number of axes' columnes
+            %                 (second parameter in subplot).
+            %       figRegExpList: cell [1, nFigRows*nFigCols] of char [1,] - list of
+            %                      regular expressions for searching figures to copy in
+            %                      axes of combined figure.
+            %       cameraPositionsList: cell [nFigRows*nFigCols, 1] of double [1, 3]/{} -
+            %                      list of camera's positions for axes.
+            %       viewAngleList: cell [nFigRows*nFigCols, 1] of double[1,1]/[]/double [1,2]
+            %                      - list of values for axes' view properties in combined figure.
             % Output:
             %    regular:
             %        hcombinedFig: double [1,1] - combined figure.
             % Example:
-            %   elltool.doc.picgen.PicGenController.createCombinedFigure(hfigHandleVec, figPositionsVec, cameraPositionsMat)
+            %   elltool.doc.picgen.PicGenController.createCombinedFigure(hFigHandleVec,...
+            %   nFigRows, nFigCols, figRegExpList, cameraPositionsList, viewAngleList);
             %
             hcombinedFig = figure;
-            axesTitlesVec = ['a'; 'b'; 'c'; 'd'];
-            axesPositionsMat = [ 0.1300    0.5838    0.3005    0.3412;...
-                                 0.5703    0.5838    0.3347    0.3412;...
-                                 0.1300    0.1100    0.3005    0.3412;...
-                                 0.5703    0.1100    0.3347    0.3412];
-            for iElem = 1:4                 
-            movedContent = findobj(hfigHandleVec(find(figPositionsVec == iElem, 1)),...
-                           'Type','axes');
-            axesVec(iElem) = copyobj(movedContent, hcombinedFig);
+            iElemVec = 1:nFigRows*nFigCols;                 
+            axesTitlesVec(iElemVec) = char(96+iElemVec);
+   
+            for iElem = 1:nFigRows*nFigCols                 
+            axesVec(iElem) = subplot(nFigRows, nFigCols, iElem);
+            grid on
             title(axesVec(iElem), axesTitlesVec(iElem));
-            set(axesVec(iElem),  'Position', axesPositionsMat(iElem, 1:4));
-            if   ~isempty(cameraPositionsMat)
+            if   ~isempty(viewAngleList{iElem})
+                view(viewAngleList{iElem});
+            end
+            if   ~isempty(cameraPositionsList)
                   set(axesVec(iElem),  'CameraPosition',...
-                      cameraPositionsMat(iElem, 1:3));
+                      cameraPositionsList{iElem});
             end
-            cla(axesVec(iElem));
-            end
+            hFigVec =  findobj(hFigHandleVec, '-regexp','Name',...
+            figRegExpList{iElem});
 
-            for iElem = 1:size(hfigHandleVec, 1)
-                 movedContent = get(findobj(hfigHandleVec(iElem),'Type','axes'), 'Children');
-                 copyobj(movedContent, axesVec(figPositionsVec(iElem)));
-            end    
+            for jElem = 1:size(hFigVec, 1)
+                 movedContent = get(findobj(hFigVec(jElem),'Type','axes'), 'Children');
+                 copyobj(movedContent, axesVec(iElem));
+                 xlabel = copyobj(get(findobj(hFigVec(jElem),'Type','axes'), 'XLabel'), axesVec(iElem));
+                 set(axesVec(iElem), 'XLabel', xlabel);
+                 ylabel = copyobj(get(findobj(hFigVec(jElem),'Type','axes'), 'YLabel'), axesVec(iElem));
+                 set(axesVec(iElem), 'YLabel', ylabel);
+                 zlabel = copyobj(get(findobj(hFigVec(jElem),'Type','axes'), 'ZLabel'), axesVec(iElem));
+                 set(axesVec(iElem), 'ZLabel', zlabel);
+            end
+            end   
                  
          end 
          
@@ -89,25 +102,52 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
                                filesep picFileName];
         end
         
-        function savePicFileNameByCaller(figHandle, figWidth, figHeight)
+        function savePicFileNameByCaller(hFigHandleVec, figWidth, figHeight, nFigRows, nFigCols, varargin)
             
-        % SAVEPICFILENAMEBYCALLER - changes figure's size and then
-        % saves it in doc/pic.
+        % SAVEPICFILENAMEBYCALLER - combines figures from hFigHandleVec in one, 
+        % changes combined figure's size and then saves it.
         % Input:
         %   regular:
-        %       figHandle:  double [1,1] - figure to save.
-        %       figWidth:   double [1,1] - figure's width to set. 
-        %       figHeight:  double [1,1] - figure's height to set.
+        %       figHandle:  double [1,1] - figures to combine.
+        %       figWidth:   double [1,1] - combined figure's width to set. 
+        %       figHeight:  double [1,1] - combined figure's height to set.
+        %       nFigRows:  double [1,1] - number of axes' rows in combined
+        %       figure.
+        %       nFigCols: double [1,1] - number of axes' columnes in
+        %                 combined figure.
+        %    properties:
+        %       'figRegExpList': cell [1, nFigRows*nFigCols] - list of
+        %                        regular expressions for searching figures
+        %                        to copy in axes of combined figure. Default value is
+        %                        '[a-zA-Z_0-9:;,-\]\[\s]*'.
+        %       'cameraPositionsList': cell [nFigRows*nFigCols, 1] of double [1, 3]/{} -
+        %                              list of camera's positions for axes.
+        %                              Default value is {}.
+        %       'viewAngleList': cell [nFigRows*nFigCols, 1] of double[1,1]/[]/double [1,2]
+        %                        - list of values for axes' view properties
+        %                        in combined figure. Default value is {}.
         % Example:
-        % elltool.doc.picgen.PicGenController.savePicFileNameByCaller(figHandle)
+        % elltool.doc.picgen.PicGenController.savePicFileNameByCaller(hFigHandleVec, 0.6, 0.6, 2, 2,...
+        % 'figRegExpList', figRegExpList, 'cameraPositionsList', cameraPositionsList,...
+        % 'viewAngleList', viewAngleList);
         %
-            
+            [~,~,figRegExpList, cameraPositionsList,...
+            viewAngleList]= modgen.common.parseparext(varargin,...
+            {'figRegExpList','cameraPositionsList','viewAngleList';...
+            {'[a-zA-Z_0-9:;,-\]\[\s]*'},{},{}});
+            if nFigRows == 1 && nFigCols == 1
+                hfigHandle = findobj('Type','figure', '-regexp','Name',...
+                figRegExpList{1});
+            else
+                hfigHandle = elltool.doc.picgen.PicGenController.createCombinedFigure(hFigHandleVec,...
+                nFigRows, nFigCols, figRegExpList, cameraPositionsList, viewAngleList);
+            end
             picFileName = elltool.doc.picgen.PicGenController.getPicFileNameByCaller();
-            set(figHandle, 'Units','normalized');
-            set(figHandle,'WindowStyle','normal'); 
-            set(figHandle, 'Position', [0.2 0.2 figWidth figHeight]);
-            set(figHandle, 'Position', [0.2 0.2 figWidth figHeight]);
-            print(figHandle,'-depsc', picFileName);
+            set(hfigHandle, 'Units','normalized');
+            set(hfigHandle,'WindowStyle','normal'); 
+            set(hfigHandle, 'Position', [0.2 0.2 figWidth figHeight]);
+            set(hfigHandle, 'Position', [0.2 0.2 figWidth figHeight]);
+            print(hfigHandle,'-depsc', picFileName);
         end
         
         

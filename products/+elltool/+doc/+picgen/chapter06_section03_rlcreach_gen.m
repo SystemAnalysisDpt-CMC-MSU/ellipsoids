@@ -1,6 +1,6 @@
 function chapter06_section03_rlcreach_gen
-%     RLCREACH_GEN - creates picture "chapter06_section03_rlcreach.eps" in
-%     doc/pic   
+%     RLCREACH_GEN - creates picture "chapter06_section03_rlcreach.eps"
+%      
 % $Author: <Elena Shcherbakova>  <shcherbakova415@gmail.com> $    $Date: <9 October 2013> $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
@@ -9,12 +9,12 @@ function chapter06_section03_rlcreach_gen
     elltool.doc.snip.s_chapter06_section03_snippet01;
     elltool.doc.snip.s_chapter06_section03_snippet02;
 
-    hfigHandleVec = findobj('Type','figure');
-    figPositionsVec(1:2) = 4;
-    figPositionsVec(3:6) = 3;
-    figPositionsVec(7:8) = 2;
-    figPositionsVec(9:12) = 1;
-    hcombinedFig = elltool.doc.picgen.PicGenController.createCombinedFigure(hfigHandleVec, figPositionsVec, []); 
-    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(hcombinedFig, 0.6, 0.6);
+    hFigHandleVec = findobj('Type','figure');
+    viewAngleList = {3, 3, 3, 3};
+    figRegExpList = {'[a-zA-Z_0-9:;,-\]\[\s]*_forward_reach_set_proj\w*', '[a-zA-Z_0-9:;,-\]\[\s]*_forward_reach_set_3D\w*',...
+                     '[a-zA-Z_0-9:;,-\]\[\s]*_backward_reach_set_proj\w*', '[a-zA-Z_0-9-:;,\]\[\s]*_backward_reach_set_3D\w*'};
+    elltool.doc.picgen.PicGenController.savePicFileNameByCaller(hFigHandleVec, 0.6, 0.6, 2, 2,...
+    'figRegExpList', figRegExpList, 'cameraPositionsList', {},...
+    'viewAngleList', viewAngleList);
 
 end

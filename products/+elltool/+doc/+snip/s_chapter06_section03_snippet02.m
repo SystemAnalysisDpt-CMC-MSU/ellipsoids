@@ -14,15 +14,36 @@ secBpsObj = secBrsObj.projection(basisMat);
 
 % plot the results:
 
-firstBpsObj.plotByEa('r'); % external apprx. of backward reach set 1 (red)
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_backward_reach_set_proj1%d',x));
+% to have the use of plObj isn't necessary 
+firstBpsObj.plotByEa('r', plObj); % external apprx. of backward reach set 1 (red)
+% firstBpsObj.plotByEa('r');
 hold on;
-firstBpsObj.plotByIa('g'); % internal apprx. of backward reach set 1 (green)
-secBpsObj.plotByEa('y'); % external apprx. of backward reach set 2 (yellow)
-secBpsObj.plotByIa('b'); % internal apprx. of backward reach set 2 (blue)
+
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_backward_reach_set_proj2%d',x));
+% to have the use of plObj isn't necessary 
+firstBpsObj.plotByIa('g', plObj); % internal apprx. of backward reach set 1 (green)
+% firstBpsObj.plotByIa('g');
+
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_backward_reach_set_proj3%d',x));
+% to have the use of plObj isn't necessary 
+secBpsObj.plotByEa('y', plObj); % external apprx. of backward reach set 2 (yellow)
+% secBpsObj.plotByEa('y');
+
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_backward_reach_set_proj4%d',x));
+% to have the use of plObj isn't necessary 
+secBpsObj.plotByIa('b', plObj); % internal apprx. of backward reach set 2 (blue)
+% secBpsObj.plotByIa('b');
 
 % plot the 3-dimensional backward reach set at time t = 0:
 
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_backward_reach_set_3D_1%d',x));
+% to have the use of plObj isn't necessary 
 firstBrsObj = firstBrsObj.cut(0);
-firstBrsObj.plotByEa('r');
+firstBrsObj.plotByEa('r', plObj);
+% firstBrsObj.plotByEa('r');
 hold on;
-firstBrsObj.plotByIa('g');
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_backward_reach_set_3D_2%d',x));
+% to have the use of plObj isn't necessary 
+firstBrsObj.plotByIa('g', plObj);
+% firstBrsObj.plotByIa('g');
