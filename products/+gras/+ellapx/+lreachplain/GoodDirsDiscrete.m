@@ -46,14 +46,18 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
             %
             for iTime = 2:nTimePoints
                 dataXtt0Arr(:, :, iTime) = ...
-                    fAtMat(timeVec(iTime - 1 + isBack)) * ...
-                    dataXtt0Arr(:, :, iTime - 1);
+                    dataXtt0Arr(:, :, iTime - 1) * fAtMat(timeVec(iTime - 1 + isBack));
                 dataXtt0NormVec(iTime) = realsqrt(matdot(...
                     dataXtt0Arr(:, :, iTime), dataXtt0Arr(:, :, iTime)));
                 dataRtt0Arr(:, :, iTime) = dataXtt0Arr(:, :, iTime) ./ ...
                     dataXtt0NormVec(iTime);
             end
             %
+            if isBack
+                dataXtt0Arr=flipdim(dataXtt0Arr,3);
+                dataRtt0Arr=flipdim(dataRtt0Arr,3);
+                dataXtt0NormVec=fliplr(dataXtt0NormVec);
+            end
             XstDynamics = MatrixInterpolantFactory.createInstance(...
                 'column', dataXtt0Arr, timeVec);
             RstDynamics = MatrixInterpolantFactory.createInstance(...
