@@ -234,6 +234,21 @@ EPSrel -  используетс€ при вычислении скал€рного произведени€.
     результату присваиваетс€ значение 0. ѕо умолчанию 1.е-5.
 INF - используетс€ в качестве бесконечности.ѕо умолчанию 1.е6.
 
+¬ программах дл€ среды matlab используютс€ другие имена дл€ управл€ющих параметров.
+¬от соответстви€ между ними:
+    add_top - nAddTopElems
+    EPSset - approxPrec
+    RCHECK - errorCheckMode
+    RFREE - freeMemoryMode
+    INCHECK - discardIneqMode
+    RHYPER - incDim
+    EPSdif - faceDist
+    ERSin - inApproxDist
+    EPSest - ApproxDist
+    EPScheck - precTest
+    EPSrel - relPrec
+    INF - inftyDef
+
    4. —ообщени€ об окончании работы и их возможные причины
 
     ƒо начала непосредственного построени€ проекции могут воз-
