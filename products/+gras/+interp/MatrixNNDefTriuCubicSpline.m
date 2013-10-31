@@ -7,22 +7,32 @@ classdef MatrixNNDefTriuCubicSpline<gras.interp.MatrixColTriuSymmCubicSpline
     properties (Access=private)
         zeroEigTol
     end
-    methods 
-        function resArray=evaluate(self,timeVec)
-            absTol=self.zeroEigTol;
-            resArray=evaluate@...
-                gras.interp.MatrixColTriuSymmCubicSpline(self,timeVec);
-            nTimes=size(resArray,3);
-            for iTime=1:nTimes
-                [oMat,dMat]=eig(resArray(:,:,iTime));
-                dVec=diag(dMat);
-                isLessVec=dVec<=absTol;
+    methods
+        function resArray = evaluate(self,timeVec)
+            absTol = self.zeroEigTol;
+            resArray = evaluate@...
+                gras.interp.MatrixColTriuSymmCubicSpline(self, timeVec);
+            nOldTimes = size(resArray, 3);
+            if(self.nDims == 1)
+                resArray = reshape(resArray, self.nRows, nOldTimes);
+            end
+            
+            nTimes = size(resArray, 3);
+            for iTime = 1 : nTimes
+                [oMat, dMat] = eig(resArray(:, :, iTime));
+                dVec = diag(dMat);
+                isLessVec = dVec <= absTol;
                 if any(isLessVec)
-                    dVec(isLessVec)=absTol;
-                    dMat=diag(dVec);
-                    resArray(:,:,iTime)=oMat*dMat*oMat.';
+                    dVec(isLessVec) = absTol;
+                    dMat = diag(dVec);
+                    resArray(:, :, iTime) = oMat * dMat * oMat.';
                 end
             end
+            if(self.nDims == 1)
+                resArray = reshape(resArray, self.nRows, self.nCols,...
+                    nOldTimes);
+            end
+            
         end
     end
     methods
@@ -41,7 +51,7 @@ classdef MatrixNNDefTriuCubicSpline<gras.interp.MatrixColTriuSymmCubicSpline
             %           input matrix at some time moment is less than this
             %           value it is considered to be equal to zero
             %
-            ZERO_EIG_TOL=0;            
+            ZERO_EIG_TOL=0;
             import modgen.common.parseparext;
             [reg,~,absTol]=parseparext(varargin,{'zeroEigTol';ZERO_EIG_TOL;...
                 'isscalar(x)&&isnumeric(x)&&(x>=0)'});
