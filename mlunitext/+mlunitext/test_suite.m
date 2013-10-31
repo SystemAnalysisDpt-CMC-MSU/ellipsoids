@@ -130,9 +130,7 @@ classdef test_suite<handle
             %       it is displayed in the messages indicating start and
             %           end of test runs
             %
-            % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Computational Mathematics and Cybernetics, System Analysis
-            % Department, 7-October-2012, <pgagarinov@gmail.com>$
+            % $Author: Peter Gagarinov, 7-October-2012, <pgagarinov@gmail.com>$
             %
             [reg,prop]=modgen.common.parseparams(varargin,...
                 {'nParallelProcesses','hExecFunc',...
@@ -229,9 +227,7 @@ classdef test_suite<handle
                 %       specified, these tests are assigned to the copy suite,
                 %       instead of the tests in the original suite
                 %
-                % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-                % Faculty of Computational Mathematics and Cybernetics, System Analysis
-                % Department, 7-October-2012, <pgagarinov@gmail.com>$
+                % $Author: Peter Gagarinov, 7-October-2012, <pgagarinov@gmail.com>$
                 %
                 import modgen.common.throwerror;
                 [reg,prop]=modgen.common.parseparams(varargin);
@@ -528,10 +524,7 @@ classdef test_suite<handle
             %
             % $Authors: Peter Gagarinov <pgagarinov@gmail.com>
             % $Date: March-2013 $
-            % $Copyright: Moscow State University,
-            %             Faculty of Computational Mathematics
             %             and Computer Science,
-            %             System Analysis Department 2012-2013$
             %
             import modgen.logging.log4j.Log4jConfigurator;
             DISP_VERT_SEP_STR='--------------------------';
