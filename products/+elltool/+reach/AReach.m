@@ -457,7 +457,7 @@ classdef AReach < elltool.reach.IReach
                 {'showDiscrete','nSpacePartPoins' ;...
                 false, self.nPlot3dPoints;
                 @(x)isa(x,'logical'),@(x)isa(x,'double')});
-            [colorVec, shade, lineWidth, isFill,reg] =...
+            [colorVec, shade, lineWidth, isFill,plObj,reg] =...
                 parceInputForPlot(approxType,reg{:});
             
             
@@ -477,7 +477,7 @@ classdef AReach < elltool.reach.IReach
                     plotter = projReachObj.ellTubeRel...
                         .getTuplesFilteredBy(...
                         F.APPROX_TYPE, approxType)...
-                        .plotInt(reg{:},'fGetColor',...
+                        .plotInt(plObj,reg{:},'fGetColor',...
                         @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
                         'fGetLineWidth', @(x)(lineWidth),...
                         'fGetFill', @(x)(isFill),...
@@ -498,7 +498,7 @@ classdef AReach < elltool.reach.IReach
                     plotter = projReachObj.ellTubeRel...
                         .getTuplesFilteredBy(...
                         F.APPROX_TYPE, approxType)...
-                        .plotExt(reg{:},'fGetColor',...
+                        .plotExt(plObj,reg{:},'fGetColor',...
                         @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
                         'fGetLineWidth', @(x)(lineWidth),...
                         'fGetFill', @(x)(isFill),...
@@ -605,46 +605,37 @@ classdef AReach < elltool.reach.IReach
                 projOrthMatTransArray=repmat(projMat.',[1 1 nTimes]);
             end
         end
-        function plotter = plotApprox(self, approxType, varargin)
+        function plObj = plotApprox(self, approxType, varargin)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            
-            [colorVec, shade, lineWidth, isFill,reg] =...
+            %
+            [colorVec, shade, lineWidth, isFill,plObj,reg] =...
                 parceInputForPlot(approxType,varargin{:});
             %
             [~, dim] = self.dimension();
-            
-            
             if self.isProj
-                
                 if dim < 2 || dim > 3
                     throwerror('wrongInput',...
                         'Dimension of projection must be 2 or 3.');
                 else
-                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
-                        APPROX_TYPE, approxType).plot(reg{:}, 'fGetColor',...
+                    plObj = self.ellTubeRel.getTuplesFilteredBy(...
+                        APPROX_TYPE, approxType).plot(plObj,reg{:}, 'fGetColor',...
                         @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
                         'fGetLineWidth', @(x)(lineWidth),...
                         'fGetFill', @(x)(isFill));
                 end
             else
                 if dim < 2 || dim > 3
-                    plObj = smartdb.disp.RelationDataPlotter();
-                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                    plObj = self.ellTubeRel.getTuplesFilteredBy(...
                         APPROX_TYPE, approxType).plot(plObj);
                 else
                     projReachObj = self.projection(eye(dim));
-                    plObj = smartdb.disp.RelationDataPlotter();
-                    plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
+                    plObj = projReachObj.ellTubeRel.getTuplesFilteredBy(...
                         APPROX_TYPE, approxType).plot(plObj);
                 end
-                
             end
-            
-            
-            
         end
         %
         function ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat,...
@@ -1201,7 +1192,8 @@ classdef AReach < elltool.reach.IReach
             %       self: - reach tube
             %
             %   optional:
-            %       relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - relation 
+            %           data plotter object.
             %       charColor: char[1,1]  - color specification code, can be 'r','g',
             %                      etc (any code supported by built-in Matlab function).
             %   properties:
@@ -1215,8 +1207,8 @@ classdef AReach < elltool.reach.IReach
             %                sets default colors in the form [x y z].
             %                   Default value is [0 0 1].
             %       'shade': double[1,1]  -
-            %      level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
-            %                Default value is 0.3.
+            %           level of transparency between 0 and 1 (0 - transparent,
+            %           1 - opaque).  Default value is 0.3.
             %
             % Output:
             %   regular:
@@ -1247,7 +1239,8 @@ classdef AReach < elltool.reach.IReach
             %       self: - reach tube
             %
             %   optional:
-            %       relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - relation data 
+            %           plotter object.
             %       charColor: char[1,1]  - color specification code, can be 'r','g',
             %                      etc (any code supported by built-in Matlab function).
             %   properties:
@@ -1639,7 +1632,7 @@ classdef AReach < elltool.reach.IReach
         end
     end
 end
-function [colorVec, shade, lineWidth, isFill,reg] =...
+function [colorVec, shade, lineWidth, isFill,plObj,reg] =...
     parceInputForPlot(approxType,varargin)
 import gras.ellapx.enums.EApproxType;
 import modgen.common.throwerror;
@@ -1676,8 +1669,6 @@ end
 if ischar(colorVec)
     colorVec = elltoll.plot.colorcode2rgb(colorVec);
 end
-
-
 %
 if ~isempty(reg)
     if ischar(reg{1})
@@ -1700,6 +1691,12 @@ if ~isempty(reg)
         end
     end
 end
-
-
+if isempty(reg)
+    plObj=smartdb.disp.RelationDataPlotter();
+elseif isa(reg{1},'smartdb.disp.RelationDataPlotter')
+    plObj=reg{1};
+    reg(1)=[];
+else
+    throwerror('wrongInput','conflicting type specificaiton');
+end
 end
