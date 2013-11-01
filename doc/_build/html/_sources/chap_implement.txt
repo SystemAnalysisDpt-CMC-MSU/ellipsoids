@@ -172,7 +172,7 @@ sum can be computed explicitely and plotted:
 
 .. figure:: minksum.png
    :alt: approximation
-   :figwidth: 60 %
+   :figwidth: 40 %
 
    The geometric sum of ellipsoids.
 
@@ -204,7 +204,7 @@ can be computed explicitely and plotted for ellipsoids in
 
 .. figure:: minkdiff.png
    :alt: approximation
-   :figwidth: 60 %
+   :figwidth: 40 %
 
    The geometric difference of ellipsoids.
 

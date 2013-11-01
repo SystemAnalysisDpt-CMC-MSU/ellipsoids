@@ -11,10 +11,11 @@
 \usepackage{longtable}
 \usepackage{sphinx}
 \usepackage{multirow}
+\usepackage{amssymb}
 
 
 \title{elltool\_manual Documentation}
-\date{October 25, 2013}
+\date{November 01, 2013}
 \release{0.1}
 \author{Lukashevichus K.}
 \newcommand{\sphinxlogo}{}
@@ -125,7 +126,7 @@ Contents:
 
 
 \chapter{Introduction}
-\label{chap_intro:introduction}\label{chap_intro:welcome-to-elltool-manual-s-documentation}\label{chap_intro::doc}
+\label{chap_intro:introduction}\label{chap_intro::doc}\label{chap_intro:welcome-to-ellipsoidal-toolbox-documentation}
 Research on dynamical and hybrid systems has produced several methods
 for verification and controller synthesis. A common step in these
 methods is the reachability analysis of the system. Reachability
@@ -174,8 +175,8 @@ of time steps. For example, consider the system,
 \begin{split}x_{k+1} = Ax_k + u_k ,\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
 with $A=\left[\begin{array}{cc}\cos 1 & -\sin 1\\ \sin 1 & \cos 1\end{array}\right]$,
-$u_k \in \{u\in {\bf R}^2 | \|u|_{\infty}\leqslant 1\}$,
-and $x_0 \in \{x\in {\bf R}^2 ~|~ \|x|_{\infty}\leqslant1\}$.
+$\ u_k \in \{u\in {\bf R}^2 ~|~ \|u\|_{\infty}\leqslant1\}$,
+and $x_0 \in \{x\in {\bf R}^2 ~|~ \|x\|_{\infty}\leqslant1\}$.
 
 Starting with a rectangular initial set, the number of vertices of the
 reach set polytope is $4k + 4$ at the $k$th step.
@@ -3398,16 +3399,14 @@ of arbitrary dimension.
 \end{Verbatim}
 \begin{figure}[htbp]
 \centering
-\capstart
 
 \includegraphics{minkpm.png}
-\caption{Implementation of an operation `sum-difference'.}\label{chap_implement:minkpmpic}\end{figure}
+\label{chap_implement:minkpmpic}\end{figure}
 \begin{figure}[htbp]
 \centering
-\capstart
 
 \includegraphics{minkmp.png}
-\caption{Implementation of an operation `difference-sum'.}\label{chap_implement:minkmppic}\end{figure}
+\label{chap_implement:minkmppic}\end{figure}
 
 Figure $\ref{minkPic}$ displays results of
 the implementation of minkpm and minkmp operations.
@@ -3838,16 +3837,14 @@ We can compute the projection of the ellipsoidal
 tube onto time-dependent subspace.
 \begin{figure}[htbp]
 \centering
-\capstart
 
 \includegraphics{reachTubeStatProj.png}
-\caption{Static projection of the ellipsoidal tube.}\label{chap_implement:stat-proj}\end{figure}
+\label{chap_implement:stat-proj}\end{figure}
 \begin{figure}[htbp]
 \centering
-\capstart
 
 \includegraphics{reachTubeDynProj.png}
-\caption{Dynamic projection of the ellipsoidal tube.}\label{chap_implement:dyn-proj}\end{figure}
+\label{chap_implement:dyn-proj}\end{figure}
 
 Figure $\ref{project}$ displays static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.
@@ -3885,10 +3882,9 @@ We can compute tubes by the instant of time using methodfromEllTubes:
 \end{Verbatim}
 \begin{figure}[htbp]
 \centering
-\capstart
 
 \includegraphics{unionTubeStatProj.png}
-\caption{Ellipsoidal tubes by the instant of time.}\label{chap_implement:uniontubestatproj}\end{figure}
+\label{chap_implement:uniontubestatproj}\end{figure}
 
 Figure \hyperref[chap_implement:unionTubeStatProj]{ \ref*{chap_implement:unionTubeStatProj}} shows projection of ellipsoidal
 tubes by the instant of time.
@@ -3925,10 +3921,9 @@ to display a content of ellipsoidal tubes.
 \end{Verbatim}
 \begin{figure}[htbp]
 \centering
-\capstart
 
 \includegraphics{dispPic.png}
-\caption{Content of the ellipsoidal tube.}\label{chap_implement:disppic}\end{figure}
+\label{chap_implement:disppic}\end{figure}
 
 Figure \hyperref[chap_implement:dispPic]{ \ref*{chap_implement:dispPic}}
 displays all fields of the ellipsoidal tube.

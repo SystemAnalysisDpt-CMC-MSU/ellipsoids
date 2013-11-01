@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2013.9.24)  25 OCT 2013 22:08
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2013.9.24)  1 NOV 2013 11:11
 entering extended mode
 **elltool_manual.tex
 (C:\Users\Ksenia\Desktop\myBranchWorkCopy\doc\_build\latex\elltool_manual.tex
@@ -805,33 +805,43 @@ Package: hypcap 2011/02/16 v1.11 Adjusting the anchors of captions (HO)
 ("C:\Program Files\MiKTeX 2.9_new\tex\latex\multirow\multirow.sty"
 \bigstrutjot=\dimen140
 )
+("C:\Program Files\MiKTeX 2.9_new\tex\latex\amsfonts\amssymb.sty"
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+("C:\Program Files\MiKTeX 2.9_new\tex\latex\amsfonts\amsfonts.sty"
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+))
 \@indexfile=\write5
 
 Writing index file elltool_manual.idx
 (C:\Users\Ksenia\Desktop\myBranchWorkCopy\doc\_build\latex\elltool_manual.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 117.
-LaTeX Font Info:    ... okay on input line 117.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 117.
-LaTeX Font Info:    ... okay on input line 117.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 117.
-LaTeX Font Info:    ... okay on input line 117.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 117.
-LaTeX Font Info:    ... okay on input line 117.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 117.
-LaTeX Font Info:    ... okay on input line 117.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 117.
-LaTeX Font Info:    ... okay on input line 117.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 117.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 117.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 118.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 118.
 
 
 ("C:\Program Files\MiKTeX 2.9_new\tex\latex\base\ts1cmr.fd"
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 117.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 117.
-LaTeX Font Info:    ... okay on input line 117.
-LaTeX Font Info:    Try loading font information for T1+ptm on input line 117.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 118.
+LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 118.
 
 ("C:\Program Files\MiKTeX 2.9_new\tex\latex\psnfss\t1ptm.fd"
 File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
@@ -851,7 +861,7 @@ File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
 \everyMPtoPDFconversion=\toks31
 )
 \AtBeginShipoutBox=\box41
-Package hyperref Info: Link coloring ON on input line 117.
+Package hyperref Info: Link coloring ON on input line 118.
  ("C:\Program Files\MiKTeX 2.9_new\tex\latex\hyperref\nameref.sty"
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -860,33 +870,43 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count130
 )
-LaTeX Info: Redefining \ref on input line 117.
-LaTeX Info: Redefining \pageref on input line 117.
-LaTeX Info: Redefining \nameref on input line 117.
+LaTeX Info: Redefining \ref on input line 118.
+LaTeX Info: Redefining \pageref on input line 118.
+LaTeX Info: Redefining \nameref on input line 118.
 
 (C:\Users\Ksenia\Desktop\myBranchWorkCopy\doc\_build\latex\elltool_manual.out)
 (C:\Users\Ksenia\Desktop\myBranchWorkCopy\doc\_build\latex\elltool_manual.out)
 \@outlinefile=\write6
 
-Underfull \hbox (badness 10000) in paragraph at lines 120--120
+Underfull \hbox (badness 10000) in paragraph at lines 121--121
 
  []
 
-LaTeX Font Info:    Try loading font information for T1+phv on input line 120.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 121.
 ("C:\Program Files\MiKTeX 2.9_new\tex\latex\psnfss\t1phv.fd"
 File: t1phv.fd 2001/06/04 scalable font definitions for T1/phv.
 )
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <24.88> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 120.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 121.
 LaTeX Font Info:    Font shape `T1/phv/m/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/m/sl' tried instead on input line 120.
+(Font)              Font shape `T1/phv/m/sl' tried instead on input line 121.
 LaTeX Font Info:    Font shape `T1/phv/bx/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/it' tried instead on input line 120.
+(Font)              Font shape `T1/phv/b/it' tried instead on input line 121.
 LaTeX Font Info:    Font shape `T1/phv/b/it' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/sl' tried instead on input line 120.
+(Font)              Font shape `T1/phv/b/sl' tried instead on input line 121.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <17.28> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 120.
-<<ot1.cmap>><<oml.cmap>><<oms.cmap>><<omx.cmap>> [1
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 121.
+<<ot1.cmap>><<oml.cmap>><<oms.cmap>><<omx.cmap>>
+LaTeX Font Info:    Try loading font information for U+msa on input line 121.
+
+("C:\Program Files\MiKTeX 2.9_new\tex\latex\amsfonts\umsa.fd"
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 121.
+
+("C:\Program Files\MiKTeX 2.9_new\tex\latex\amsfonts\umsb.fd"
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+) [1
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}] [2
 
@@ -909,7 +929,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.ii}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.120 \tableofcontents
+l.121 \tableofcontents
                        [2] [1
 
 ] [2
@@ -917,719 +937,42 @@ l.120 \tableofcontents
 ]
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 127.
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 128.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 127.
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 128.
 LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <24.88> not available
-(Font)              Font shape `T1/ptm/b/n' tried instead on input line 127.
-! Undefined control sequence.
-l.177 ...\{u\in {\bf R}^2 | \|u|_{\infty}\leqslant
-                                                   1\}$,
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.178 ...x\in {\bf R}^2 ~|~ \|x|_{\infty}\leqslant
-                                                  1\}$.
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
+(Font)              Font shape `T1/ptm/b/n' tried instead on input line 128.
 <ddt.png, id=252, 563.10374pt x 772.8875pt>
 File: ddt.png Graphic file (type png)
  <use ddt.png>
-Package pdftex.def Info: ddt.png used on input line 189.
+Package pdftex.def Info: ddt.png used on input line 190.
 (pdftex.def)             Requested size: 563.10237pt x 772.8856pt.
 File: ddt.png Graphic file (type png)
  <use ddt.png>
-Package pdftex.def Info: ddt.png used on input line 189.
+Package pdftex.def Info: ddt.png used on input line 190.
 (pdftex.def)             Requested size: 469.755pt x 644.7632pt.
 
 
-LaTeX Warning: Float too large for page by 18.49812pt on input line 190.
+LaTeX Warning: Float too large for page by 18.49812pt on input line 191.
 
 [3] [4 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/ddt.png>]
-! Undefined control sequence.
-<argument> ... _{i=1}^p\alpha _ig_i,~ -1\leqslant 
-                                                  \alpha _i\leqslant 1\},\en...
-l.227 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ..._i,~ -1\leqslant \alpha _i\leqslant 
-                                                  1\},\end {split}\notag 
-l.227 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... _{i=1}^p\alpha _ig_i,~ -1\leqslant 
-                                                  \alpha _i\leqslant 1\},\en...
-l.227 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ..._i,~ -1\leqslant \alpha _i\leqslant 
-                                                  1\},\end {split}\notag 
-l.227 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
 [5]
-! Undefined control sequence.
-l.293 ...in {\bf R}^2 ~|~ \|x\|_{\infty} \leqslant
-                                                  1\}$ and
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
+LaTeX Font Info:    Try loading font information for TS1+ptm on input line 335.
 
-! Undefined control sequence.
-l.294 ...ols $u_k\in\{u\in {\bf R} ~|~ -1\leqslant
-                                                   u\leqslant1\}$, the
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.294 ...\{u\in {\bf R} ~|~ -1\leqslant u\leqslant
-                                                  1\}$, the
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.295 reach set for $k\geqslant
-                               0$ is given by the quantified formula
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... \exists x_0, ~~ \exists k\geqslant 
-                                                  0, ~~ \exists u_i, ~ 0\leq...
-l.300 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ant 0, ~~ \exists u_i, ~ 0\leqslant 
-                                                  i\leqslant k: ~~ x = A^kx_...
-l.300 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...exists u_i, ~ 0\leqslant i\leqslant 
-                                                  k: ~~ x = A^kx_0+\sum _{i=...
-l.300 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... \exists x_0, ~~ \exists k\geqslant 
-                                                  0, ~~ \exists u_i, ~ 0\leq...
-l.300 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ant 0, ~~ \exists u_i, ~ 0\leqslant 
-                                                  i\leqslant k: ~~ x = A^kx_...
-l.300 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...exists u_i, ~ 0\leqslant i\leqslant 
-                                                  k: ~~ x = A^kx_0+\sum _{i=...
-l.300 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument>  \begin {split}-1\leqslant 
-                                      [1 ~~ 0]x\leqslant 1 ~ \wedge ~ -1\leq...
-l.304 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...plit}-1\leqslant [1 ~~ 0]x\leqslant 
-                                                  1 ~ \wedge ~ -1\leqslant [...
-l.304 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...x\leqslant 1 ~ \wedge ~ -1\leqslant 
-                                                  [0 ~~ 1]x\leqslant 1.\end ...
-l.304 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ge ~ -1\leqslant [0 ~~ 1]x\leqslant 
-                                                  1.\end {split}\notag \\\be...
-l.304 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument>  \begin {split}-1\leqslant 
-                                      [1 ~~ 0]x\leqslant 1 ~ \wedge ~ -1\leq...
-l.304 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...plit}-1\leqslant [1 ~~ 0]x\leqslant 
-                                                  1 ~ \wedge ~ -1\leqslant [...
-l.304 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...x\leqslant 1 ~ \wedge ~ -1\leqslant 
-                                                  [0 ~~ 1]x\leqslant 1.\end ...
-l.304 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ge ~ -1\leqslant [0 ~~ 1]x\leqslant 
-                                                  1.\end {split}\notag \\\be...
-l.304 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-LaTeX Font Info:    Try loading font information for TS1+ptm on input line 334.
-
-("C:\Program Files\MiKTeX 2.9_new\tex\latex\psnfss\ts1ptm.fd"
+ ("C:\Program Files\MiKTeX 2.9_new\tex\latex\psnfss\ts1ptm.fd"
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 ) [6]
 Chapter 2.
-! Undefined control sequence.
-<argument> ...(x-q), Q^{-1}(x-q)\rangle \leqslant 
-                                                  1 \},\end {split}\label {c...
-l.381 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...(x-q), Q^{-1}(x-q)\rangle \leqslant 
-                                                  1 \},\end {split}\label {c...
-l.381 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...^n ~|~ \langle l,x\rangle \leqslant 
-                                                  \langle l,q\rangle + \lang...
-l.405 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...^n ~|~ \langle l,x\rangle \leqslant 
-                                                  \langle l,q\rangle + \lang...
-l.405 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.407 $\langle x, Qx\rangle\geqslant
-                                    0$ for all $x\in{\bf R}^n$).
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... Vol}_{\langle x,x\rangle \leqslant 
-                                                  1}\sqrt {\det Q},\end {spl...
-l.411 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... Vol}_{\langle x,x\rangle \leqslant 
-                                                  1}\sqrt {\det Q},\end {spl...
-l.411 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.412 ...e ${\bf Vol}_{\langle x,x\rangle\leqslant
-                                                  1}$ is the volume of
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... Vol}_{\langle x,x\rangle \leqslant 
-                                                  1} = \left \{\begin {array...
-l.420 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... Vol}_{\langle x,x\rangle \leqslant 
-                                                  1} = \left \{\begin {array...
-l.420 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
 [7
 
-]
-! Undefined control sequence.
-<argument> ... Q_1^{-1}(q_1-x)\rangle & \leqslant 
-                                                  & 1,\\ \langle (q_2-x), Q_...
-l.464 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... Q_2^{-1}(q_2-y)\rangle & \leqslant 
-                                                  & 1,\end {aligned}\end {sp...
-l.464 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... Q_1^{-1}(q_1-x)\rangle & \leqslant 
-                                                  & 1,\\ \langle (q_2-x), Q_...
-l.464 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... Q_2^{-1}(q_2-y)\rangle & \leqslant 
-                                                  & 1,\end {aligned}\end {sp...
-l.464 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ..._i^{-1}(x-q_i)\rangle - 1 \leqslant 
-                                                  0, ~~~ i=1,\cdots ,k.\end ...
-l.482 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ..._i^{-1}(x-q_i)\rangle - 1 \leqslant 
-                                                  0, ~~~ i=1,\cdots ,k.\end ...
-l.482 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...^n ~|~ \langle x,y\rangle \leqslant 
-                                                  1, ~ y\in {\mathcal X}\},\...
-l.488 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...^n ~|~ \langle x,y\rangle \leqslant 
-                                                  1, ~ y\in {\mathcal X}\},\...
-l.488 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... \rho (l ~|~ {\mathcal X})\leqslant 
-                                                  1\}.\end {split}\notag \\\...
-l.492 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... \rho (l ~|~ {\mathcal X})\leqslant 
-                                                  1\}.\end {split}\notag \\\...
-l.492 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...\langle l,Ql\rangle ^{1/2}\leqslant 
-                                                  1 \}\\ & = & \{l\in {\bf R...
-l.519 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...gle + 2\langle l,q\rangle \leqslant 
-                                                  1 \}\\ & = & \{l\in {\bf R...
-l.519 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...(l+(Q-qq^T)^{-1}q)\rangle \leqslant 
-                                                  1+\langle q,(Q-qq^T)^{-1}q...
-l.519 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...\langle l,Ql\rangle ^{1/2}\leqslant 
-                                                  1 \}\\ & = & \{l\in {\bf R...
-l.519 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...gle + 2\langle l,q\rangle \leqslant 
-                                                  1 \}\\ & = & \{l\in {\bf R...
-l.519 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...(l+(Q-qq^T)^{-1}q)\rangle \leqslant 
-                                                  1+\langle q,(Q-qq^T)^{-1}q...
-l.519 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[8]
-! Undefined control sequence.
-<argument> ..._i^{-1}(x-q_i)\rangle - 1 \leqslant 
-                                                  0, & & i=1,\cdots ,k,\\ \l...
-l.594 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ..._i^{-1}(x-q_i)\rangle - 1 \leqslant 
-                                                  0, & & i=1,\cdots ,k,\\ \l...
-l.594 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...n ~|~ \langle c, x\rangle \leqslant 
-                                                  \gamma \}\end {split}\labe...
-l.598 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...n ~|~ \langle c, x\rangle \leqslant 
-                                                  \gamma \}\end {split}\labe...
-l.598 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...n ~|~ \langle c, x\rangle \geqslant 
-                                                  \gamma \}.\end {split}\lab...
-l.602 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...n ~|~ \langle c, x\rangle \geqslant 
-                                                  \gamma \}.\end {split}\lab...
-l.602 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... = \{x\in {\bf R}^n ~|~ Cx\leqslant 
-                                                  g\},\end {split}\label {ch...
-l.616 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... = \{x\in {\bf R}^n ~|~ Cx\leqslant 
-                                                  g\},\end {split}\label {ch...
-l.616 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[9]
-! Undefined control sequence.
-<argument> ..._i^{-1}(x-q_i)\rangle - 1 \leqslant 
-                                                  0, & & i=1,\cdots ,k,\\ \l...
-l.645 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...c_j, x\rangle - \gamma _j \leqslant 
-                                                  0, & & j=1,\cdots ,m.\end ...
-l.645 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ..._i^{-1}(x-q_i)\rangle - 1 \leqslant 
-                                                  0, & & i=1,\cdots ,k,\\ \l...
-l.645 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...c_j, x\rangle - \gamma _j \leqslant 
-                                                  0, & & j=1,\cdots ,m.\end ...
-l.645 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
+] [8] [9]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
-(Font)              Font shape `T1/phv/b/n' tried instead on input line 650.
-! Undefined control sequence.
-l.660 $m\leqslant
-                  n$), and $b=0$, the affine transformation is
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[10]
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 651.
+ [10]
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.727 \end{gather}
+l.728 \end{gather}
                   \phantomsection\label{chap_ellcalc:equation-valign2}\begin...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1638,7 +981,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.727 \end{gather}
+l.728 \end{gather}
                   \phantomsection\label{chap_ellcalc:equation-valign2}\begin...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1647,7 +990,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.732 \end{gather}
+l.733 \end{gather}
                   \phantomsection\label{chap_ellcalc:equation-valign3}\begin...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1656,7 +999,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.732 \end{gather}
+l.733 \end{gather}
                   \phantomsection\label{chap_ellcalc:equation-valign3}\begin...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1665,66 +1008,26 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.737 \end{gather}
+l.738 \end{gather}
                   
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
 So I'll assume that you meant to type \cr instead.
-
-! Undefined control sequence.
-<argument> ...lit}&&Q_1 = [q_1 \, q_2]\in \mathbb 
-                                                  {R}^{n\times 2},\ \quad q_...
-l.737 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
 
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.737 \end{gather}
+l.738 \end{gather}
                   
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
 So I'll assume that you meant to type \cr instead.
-
-! Undefined control sequence.
-<argument> ...lit}&&Q_1 = [q_1 \, q_2]\in \mathbb 
-                                                  {R}^{n\times 2},\ \quad q_...
-l.737 \end{gather}
-                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
 
 [11] [12] [13] [14]
-! Undefined control sequence.
-l.1065 with $0\leqslant
-                       \pi\leqslant1$. We substitute $X$,
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.1065 with $0\leqslant\pi\leqslant
-                                   1$. We substitute $X$,
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1078 \end{gather}
+l.1079 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1733,7 +1036,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1078 \end{gather}
+l.1079 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1742,7 +1045,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1078 \end{gather}
+l.1079 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1751,7 +1054,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1078 \end{gather}
+l.1079 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1761,7 +1064,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1089 \end{gather}
+l.1090 \end{gather}
                    \phantomsection\label{chap_ellcalc:equation-beta2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1770,7 +1073,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1089 \end{gather}
+l.1090 \end{gather}
                    \phantomsection\label{chap_ellcalc:equation-beta2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1779,7 +1082,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1091 \end{gather}
+l.1092 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1788,100 +1091,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1091 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Undefined control sequence.
-<argument>  \begin {split}\beta _1\geqslant 
-                                            1,~\beta _2\geqslant 1 & \Righta...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ta _1\geqslant 1,~\beta _2\geqslant 
-                                                  1 & \Rightarrow & {\bf int...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1101 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Undefined control sequence.
-<argument> ...g \\\begin {split}\beta _1\geqslant 
-                                                  1,~\beta _2\leqslant 1 & \...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ta _1\geqslant 1,~\beta _2\leqslant 
-                                                  1 & \Rightarrow & {\mathca...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1101 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Undefined control sequence.
-<argument> ...g \\\begin {split}\beta _1\leqslant 
-                                                  1,~\beta _2\geqslant 1 & \...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ta _1\leqslant 1,~\beta _2\geqslant 
-                                                  1 & \Rightarrow & {\mathca...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1101 \end{gather}
+l.1092 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1890,7 +1100,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1101 \end{gather}
+l.1102 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1899,7 +1109,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1101 \end{gather}
+l.1102 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -1908,100 +1118,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1101 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Undefined control sequence.
-<argument>  \begin {split}\beta _1\geqslant 
-                                            1,~\beta _2\geqslant 1 & \Righta...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ta _1\geqslant 1,~\beta _2\geqslant 
-                                                  1 & \Rightarrow & {\bf int...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1101 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Undefined control sequence.
-<argument> ...g \\\begin {split}\beta _1\geqslant 
-                                                  1,~\beta _2\leqslant 1 & \...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ta _1\geqslant 1,~\beta _2\leqslant 
-                                                  1 & \Rightarrow & {\mathca...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1101 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Undefined control sequence.
-<argument> ...g \\\begin {split}\beta _1\leqslant 
-                                                  1,~\beta _2\geqslant 1 & \...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ta _1\leqslant 1,~\beta _2\geqslant 
-                                                  1 & \Rightarrow & {\mathca...
-l.1101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1101 \end{gather}
+l.1102 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -2010,7 +1127,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1101 \end{gather}
+l.1102 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -2019,7 +1136,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1101 \end{gather}
+l.1102 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -2028,80 +1145,71 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.1101 \end{gather}
+l.1102 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
 So I'll assume that you meant to type \cr instead.
 
-! Undefined control sequence.
-l.1121 for all $0\leqslant
-                          \theta_1,\theta_2\leqslant1$, is specified by
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.1121 ...ll $0\leqslant\theta_1,\theta_2\leqslant
-                                                  1$, is specified by
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[16]
-! Undefined control sequence.
-<argument> ...^n ~|~ \langle c,x\rangle \leqslant 
-                                                  \gamma \}.\end {split}\not...
-l.1157 \end{gather}
+! Extra alignment tab has been changed to \cr.
+<template> }$\hfill \endtemplate 
+                                 
+l.1102 \end{gather}
                    
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
 
-! Undefined control sequence.
-<argument> ...^n ~|~ \langle c,x\rangle \leqslant 
-                                                  \gamma \}.\end {split}\not...
-l.1157 \end{gather}
+! Extra alignment tab has been changed to \cr.
+<template> }$\hfill \endtemplate 
+                                 
+l.1102 \end{gather}
                    
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
 
-! Undefined control sequence.
-<argument> ...(x-q_2),W_2(x-q_2)\rangle \leqslant 
-                                                  1\},\end {split}\notag 
-l.1182 \end{gather}
+! Extra alignment tab has been changed to \cr.
+<template> }$\hfill \endtemplate 
+                                 
+l.1102 \end{gather}
                    
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
 
-! Undefined control sequence.
-<argument> ...(x-q_2),W_2(x-q_2)\rangle \leqslant 
-                                                  1\},\end {split}\notag 
-l.1182 \end{gather}
+! Extra alignment tab has been changed to \cr.
+<template> }$\hfill \endtemplate 
+                                 
+l.1102 \end{gather}
                    
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
 
-[17]
+! Extra alignment tab has been changed to \cr.
+<template> }$\hfill \endtemplate 
+                                 
+l.1102 \end{gather}
+                   
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+! Extra alignment tab has been changed to \cr.
+<template> }$\hfill \endtemplate 
+                                 
+l.1102 \end{gather}
+                   
+You have given more \span or & marks than there were
+in the preamble to the \halign or \valign now in progress.
+So I'll assume that you meant to type \cr instead.
+
+[16] [17]
 ! Undefined control sequence.
 <recently read> \EE 
                     
-l.1231 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
+l.1232 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
                                                   
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2112,7 +1220,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 <argument> ...king if $\EE (q_1,Q_1)\subseteq \EE 
                                                   (q_2,Q_2)$
-l.1231 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
+l.1232 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
                                                   
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2123,7 +1231,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 <argument> ...oclabel \ttl@a \fi Checking if $\EE 
                                                   (q_1,Q_1)\subseteq \EE (q_...
-l.1231 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
+l.1232 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
                                                   
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2134,7 +1242,7 @@ and I'll forget about whatever was undefined.
 ! Undefined control sequence.
 <argument> ...king if $\EE (q_1,Q_1)\subseteq \EE 
                                                   (q_2,Q_2)$}{\thepage }{\@c...
-l.1231 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
+l.1232 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
                                                   
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -2142,1100 +1250,19 @@ misspelled it (e.g., `\hobx'), type `I' and the correct
 spelling (e.g., `I\hbox'). Otherwise just continue,
 and I'll forget about whatever was undefined.
 
-! Undefined control sequence.
-<argument> ...langle b_1,x\rangle + c_1 \leqslant 
-                                                  0 ~~ \Rightarrow ~~ \langl...
-l.1239 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...langle b_2,x\rangle + c_2 \leqslant 
-                                                  0,\end {split}\notag 
-l.1239 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...langle b_1,x\rangle + c_1 \leqslant 
-                                                  0 ~~ \Rightarrow ~~ \langl...
-l.1239 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...langle b_2,x\rangle + c_2 \leqslant 
-                                                  0,\end {split}\notag 
-l.1239 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...(Av + b), (Av + b)\rangle \leqslant 
-                                                  1,\end {split}\notag \\\be...
-l.1296 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...(Av + b), (Av + b)\rangle \leqslant 
-                                                  1,\end {split}\notag \\\be...
-l.1296 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[18]
-! Undefined control sequence.
-<argument> ...+ b), (Ax_i + b)\rangle & \leqslant 
-                                                  & 1, ~~~ i=1..m.\end {alig...
-l.1318 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...+ b), (Ax_i + b)\rangle & \leqslant 
-                                                  & 1, ~~~ i=1..m.\end {alig...
-l.1318 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... q ~|~ \langle x,x\rangle \leqslant 
-                                                  1\},\end {split}\notag \\\...
-l.1361 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... q ~|~ \langle x,x\rangle \leqslant 
-                                                  1\},\end {split}\notag \\\...
-l.1361 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[19]
-! Undefined control sequence.
-<argument> ...\sup _{\langle v,v\rangle \leqslant 
-                                                  1} I_S(Bv+q)\leqslant 0 ,\...
-l.1373 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...gle \leqslant 1} I_S(Bv+q)\leqslant 
-                                                  0 ,\end {split}\notag \\\b...
-l.1373 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...\sup _{\langle v,v\rangle \leqslant 
-                                                  1} I_S(Bv+q)\leqslant 0 ,\...
-l.1373 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...gle \leqslant 1} I_S(Bv+q)\leqslant 
-                                                  0 ,\end {split}\notag \\\b...
-l.1373 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...+ \langle c_i, q\rangle & \leqslant 
-                                                  & \gamma _i, ~~~ i=1..m.\e...
-l.1393 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...+ \langle c_i, q\rangle & \leqslant 
-                                                  & \gamma _i, ~~~ i=1..m.\e...
-l.1393 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[20]
+[18] [19] [20]
 Chapter 3.
-! Undefined control sequence.
-l.1466 $t_0\leqslant
-                    \tau< t$. For a given set of initial states
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...mathcal X}_0)), \;\;\; t_0\leqslant 
-                                                  \tau < t.\end {split}\labe...
-l.1484 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...mathcal X}_0)), \;\;\; t_0\leqslant 
-                                                  \tau < t.\end {split}\labe...
-l.1484 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
 [21
 
-]
-! Undefined control sequence.
-l.1512 ...wever, if for some $\tau$, $t_0\leqslant
-                                                  \tau<t$,
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.1543 ${\mathcal U}(\tau)$, $t_0\leqslant
-                                          \tau<t$, are compact and
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.1551 $t\leqslant
-                  \tau<t_1$, that steers system \eqref{chap_reach-ctds1}, or...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...{\mathcal U}(\tau )$, $t_0\leqslant 
-                                                  \tau < t$, that steers the...
-l.1574 }
-        
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...{\mathcal U}(\tau )$, $t_0\leqslant 
-                                                  \tau <t$ steer the system ...
-l.1574 }
-        
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...{\mathcal Y}_1)), \;\;\; t\leqslant 
-                                                  \tau < t_1.\end {split}\la...
-l.1597 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...{\mathcal Y}_1)), \;\;\; t\leqslant 
-                                                  \tau < t_1.\end {split}\la...
-l.1597 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[22]
-! Undefined control sequence.
-l.1619 ${\mathcal U}(\tau)$, $t\leqslant
-                                        \tau<t_1$, are compact and
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.1654 ...au)\in{\mathcal U}(\tau)$, $t_0\leqslant
-                                                  \tau<t$, that
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.1662 ...au)\in{\mathcal V}(\tau)$, $t_0\leqslant
-                                                  \tau<t$,
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...\mathcal V}(\tau ), \; t_0\leqslant 
-                                                  \tau <t\},\end {split}\lab...
-l.1679 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...\mathcal V}(\tau ), \; t_0\leqslant 
-                                                  \tau <t\},\end {split}\lab...
-l.1679 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.1681 ...) = \{ x~|~\underline{V}(t, x) \leqslant
-                                                  0\}$,
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...\mathcal V}(\tau ), \; t_0\leqslant 
-                                                  \tau <t\},\end {split}\lab...
-l.1688 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...\mathcal V}(\tau ), \; t_0\leqslant 
-                                                  \tau <t\},\end {split}\lab...
-l.1688 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.1699 $\underline{V}(t, x)\leqslant
-                                    \overline{V}(t, x)$,
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[23]
-! Undefined control sequence.
-<argument> ...hcal V}(\tau ), \; \tau _1\leqslant 
-                                                  \tau <t\},\end {split}\lab...
-l.1723 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...hcal V}(\tau ), \; \tau _1\leqslant 
-                                                  \tau <t\},\end {split}\lab...
-l.1723 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...it}\underline {V}^1(t, x) \geqslant 
-                                                  \underline {V}(t, x),\end ...
-l.1727 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...it}\underline {V}^1(t, x) \geqslant 
-                                                  \underline {V}(t, x),\end ...
-l.1727 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...hcal V}(\tau ), \; \tau _1\leqslant 
-                                                  \tau <t\},\end {split}\lab...
-l.1739 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...hcal V}(\tau ), \; \tau _1\leqslant 
-                                                  \tau <t\},\end {split}\lab...
-l.1739 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...split}\overline {V}(t, x) \geqslant 
-                                                  \overline {V}^1(t, x),\end...
-l.1743 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...split}\overline {V}(t, x) \geqslant 
-                                                  \overline {V}^1(t, x),\end...
-l.1743 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...hcal V}(\tau ), \; \tau _k\leqslant 
-                                                  \tau <t\}. \end {aligned}\...
-l.1762 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...hcal V}(\tau ), \; \tau _k\leqslant 
-                                                  \tau <t\}. \end {aligned}\...
-l.1762 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...hcal V}(\tau ), \; \tau _k\leqslant 
-                                                  \tau <t\}. \end {aligned}\...
-l.1775 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...hcal V}(\tau ), \; \tau _k\leqslant 
-                                                  \tau <t\}. \end {aligned}\...
-l.1775 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...plit}\underline {V}(t, x) \leqslant 
-                                                  \underline {V}^1(t, x)\leq...
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ant \underline {V}^1(t, x)\leqslant 
-                                                  \cdots \leqslant \underlin...
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<recently read> \leqslant 
-                          
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...nt \underline {V}^k(t, x) \leqslant 
-                                                  \overline {V}^k(t, x) \leq...
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ant \overline {V}^k(t, x) \leqslant 
-                                                  \cdots \leqslant \overline...
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<recently read> \leqslant 
-                          
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ant \overline {V}^1(t, x) \leqslant 
-                                                  \overline {V}(t, x) .\end ...
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...plit}\underline {V}(t, x) \leqslant 
-                                                  \underline {V}^1(t, x)\leq...
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ant \underline {V}^1(t, x)\leqslant 
-                                                  \cdots \leqslant \underlin...
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<recently read> \leqslant 
-                          
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...nt \underline {V}^k(t, x) \leqslant 
-                                                  \overline {V}^k(t, x) \leq...
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ant \overline {V}^k(t, x) \leqslant 
-                                                  \cdots \leqslant \overline...
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<recently read> \leqslant 
-                          
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...ant \overline {V}^1(t, x) \leqslant 
-                                                  \overline {V}(t, x) .\end ...
-l.1782 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[24]
-! Undefined control sequence.
-l.1828 ...e discrete-time case, with $t_0\leqslant
-                                                  \tau<t$, is such
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.1848 ...e discrete-time case, with $t_0\leqslant
-                                                  \tau<t$, is such
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[25] [26]
+] [22] [23] [24] [25] [26]
 
 LaTeX Warning: Reference `chap_reach-ctlsmaxmink' on page 27 undefined on input
- line 1962.
+ line 1963.
 
+[27] [28] [29]
 ! Undefined control sequence.
-l.1966 ${\mathcal V}(\tau)$, $t_0\leqslant
-                                          \tau<t$, are compact and
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.1983 $u(\tau)\in{\mathcal U}(\tau)$, $t\leqslant
-                                                  \tau<t_1$, which
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <t_1\}, \end {aligned...
-l.1994 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <t_1\}, \end {aligned...
-l.1994 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.2001 $t\leqslant
-                  \tau<t_1$, assigns a terminal state
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <t_1\}, \end {aligned...
-l.2012 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <t_1\}, \end {aligned...
-l.2012 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <\tau _1\}. \end {ali...
-l.2032 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <\tau _1\}. \end {ali...
-l.2032 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <\tau _1\}, \end {ali...
-l.2045 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <\tau _1\}, \end {ali...
-l.2045 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <\tau _k\}. \end {ali...
-l.2060 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <\tau _k\}. \end {ali...
-l.2060 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[27]
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <\tau _k\}, \end {ali...
-l.2073 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... {\mathcal V}(\tau ), \; t\leqslant 
-                                                  \tau <\tau _k\}, \end {ali...
-l.2073 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...it}\underline {V}_b(t, y) \leqslant 
-                                                  \underline {V}^1_b(t, y)\l...
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...t \underline {V}^1_b(t, y)\leqslant 
-                                                  \cdots \leqslant \underlin...
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<recently read> \leqslant 
-                          
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... \underline {V}^k_b(t, y) \leqslant 
-                                                  \overline {V}^k_b(t, y) \l...
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...t \overline {V}^k_b(t, y) \leqslant 
-                                                  \cdots \leqslant \overline...
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<recently read> \leqslant 
-                          
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...t \overline {V}^1_b(t, y) \leqslant 
-                                                  \overline {V}_b(t, y) .\en...
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...it}\underline {V}_b(t, y) \leqslant 
-                                                  \underline {V}^1_b(t, y)\l...
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...t \underline {V}^1_b(t, y)\leqslant 
-                                                  \cdots \leqslant \underlin...
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<recently read> \leqslant 
-                          
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ... \underline {V}^k_b(t, y) \leqslant 
-                                                  \overline {V}^k_b(t, y) \l...
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...t \overline {V}^k_b(t, y) \leqslant 
-                                                  \cdots \leqslant \overline...
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<recently read> \leqslant 
-                          
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...t \overline {V}^1_b(t, y) \leqslant 
-                                                  \overline {V}_b(t, y) .\en...
-l.2080 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.2128 in discrete-time case, with $t\leqslant
-                                              \tau<t_1$, such that
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.2148 in the discrete-time case, with $t\leqslant
-                                                  \tau<t_1$, such that
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[28]
-! Undefined control sequence.
-l.2246 ${\mathcal V}(\tau)$, $t\leqslant
-                                        \tau<t_1$, are compact and
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[29]
-! Undefined control sequence.
-l.2265 ${\mathcal Y}_1\cap\bigcup_{t_0 \leqslant
-                                                \tau\leqslantt}{\mathcal X}(...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.2265 ...\cap\bigcup_{t_0 \leqslant\tau\leqslantt
+l.2266 ...\cap\bigcup_{t_0 \leqslant\tau\leqslantt
                                                   }{\mathcal X}(\tau, t_0, {...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...Y}_1\neq \emptyset ~|~ t_0\leqslant 
-                                                  \tau \leqslant t\}.\end {s...
-l.2281 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...set ~|~ t_0\leqslant \tau \leqslant 
-                                                  t\}.\end {split}\notag 
-l.2281 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...Y}_1\neq \emptyset ~|~ t_0\leqslant 
-                                                  \tau \leqslant t\}.\end {s...
-l.2281 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...set ~|~ t_0\leqslant \tau \leqslant 
-                                                  t\}.\end {split}\notag 
-l.2281 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.2288 $\bigcup_{t\leqslant
-                           \tau<t_1}{\mathcal Y}(t_1, \tau, {\mathcal Y}_1)$.
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
 misspelled it (e.g., `\hobx'), type `I' and the correct
@@ -3246,7 +1273,7 @@ and I'll forget about whatever was undefined.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2388 \end{gather}
+l.2389 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3255,7 +1282,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2388 \end{gather}
+l.2389 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3264,7 +1291,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2388 \end{gather}
+l.2389 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3273,7 +1300,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2388 \end{gather}
+l.2389 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3282,7 +1309,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2388 \end{gather}
+l.2389 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3291,7 +1318,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2388 \end{gather}
+l.2389 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3300,7 +1327,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2388 \end{gather}
+l.2389 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3309,7 +1336,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2388 \end{gather}
+l.2389 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3318,7 +1345,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2390 \end{gather}
+l.2391 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3327,7 +1354,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2390 \end{gather}
+l.2391 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3336,7 +1363,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2414 \end{gather}
+l.2415 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3345,7 +1372,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2414 \end{gather}
+l.2415 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3354,7 +1381,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2414 \end{gather}
+l.2415 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3363,7 +1390,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2414 \end{gather}
+l.2415 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3372,7 +1399,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2414 \end{gather}
+l.2415 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3381,7 +1408,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2414 \end{gather}
+l.2415 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3390,7 +1417,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2414 \end{gather}
+l.2415 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3399,7 +1426,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2414 \end{gather}
+l.2415 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3408,7 +1435,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2414 \end{gather}
+l.2415 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3417,7 +1444,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2414 \end{gather}
+l.2415 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3427,7 +1454,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2501 \end{gather}
+l.2502 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3436,7 +1463,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2501 \end{gather}
+l.2502 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3445,7 +1472,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2501 \end{gather}
+l.2502 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3454,7 +1481,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2501 \end{gather}
+l.2502 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3463,7 +1490,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2501 \end{gather}
+l.2502 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3472,7 +1499,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2501 \end{gather}
+l.2502 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3481,7 +1508,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2501 \end{gather}
+l.2502 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3490,7 +1517,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2501 \end{gather}
+l.2502 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckext2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3499,7 +1526,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2503 \end{gather}
+l.2504 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3508,7 +1535,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2503 \end{gather}
+l.2504 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3517,7 +1544,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2522 \end{gather}
+l.2523 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckint2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3526,7 +1553,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2522 \end{gather}
+l.2523 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckint2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3535,7 +1562,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2522 \end{gather}
+l.2523 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckint2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3544,7 +1571,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2522 \end{gather}
+l.2523 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckint2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3553,7 +1580,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2522 \end{gather}
+l.2523 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckint2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3562,7 +1589,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2522 \end{gather}
+l.2523 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckint2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3571,7 +1598,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2522 \end{gather}
+l.2523 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckint2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3580,7 +1607,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2522 \end{gather}
+l.2523 \end{gather}
                    \phantomsection\label{chap_reach:equation-bckint2}\begin{...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3589,7 +1616,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2524 \end{gather}
+l.2525 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3598,7 +1625,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2524 \end{gather}
+l.2525 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3608,7 +1635,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2645 \end{gather}
+l.2646 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextmaxmin2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3617,7 +1644,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2645 \end{gather}
+l.2646 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextmaxmin2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3626,7 +1653,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2650 \end{gather}
+l.2651 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextmaxmin3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3635,7 +1662,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2650 \end{gather}
+l.2651 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextmaxmin3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3644,7 +1671,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2650 \end{gather}
+l.2651 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextmaxmin3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3653,7 +1680,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2650 \end{gather}
+l.2651 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextmaxmin3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3662,7 +1689,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2652 \end{gather}
+l.2653 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3671,7 +1698,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2652 \end{gather}
+l.2653 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3680,7 +1707,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2683 \end{gather}
+l.2684 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextminmax2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3689,7 +1716,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2683 \end{gather}
+l.2684 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextminmax2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3698,7 +1725,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2683 \end{gather}
+l.2684 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextminmax2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3707,7 +1734,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2683 \end{gather}
+l.2684 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextminmax2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3717,7 +1744,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2688 \end{gather}
+l.2689 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextminmax3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3726,7 +1753,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2688 \end{gather}
+l.2689 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdextminmax3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3735,7 +1762,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2690 \end{gather}
+l.2691 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3744,7 +1771,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2690 \end{gather}
+l.2691 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3753,7 +1780,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2721 \end{gather}
+l.2722 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintmaxmin2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3762,7 +1789,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2721 \end{gather}
+l.2722 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintmaxmin2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3771,7 +1798,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2721 \end{gather}
+l.2722 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintmaxmin2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3780,7 +1807,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2721 \end{gather}
+l.2722 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintmaxmin2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3789,7 +1816,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2726 \end{gather}
+l.2727 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintmaxmin3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3798,7 +1825,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2726 \end{gather}
+l.2727 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintmaxmin3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3807,7 +1834,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2728 \end{gather}
+l.2729 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3816,7 +1843,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2728 \end{gather}
+l.2729 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3826,7 +1853,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2753 \end{gather}
+l.2754 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintminmax2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3835,7 +1862,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2753 \end{gather}
+l.2754 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintminmax2}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3844,7 +1871,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2758 \end{gather}
+l.2759 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintminmax3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3853,7 +1880,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2758 \end{gather}
+l.2759 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintminmax3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3862,7 +1889,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2758 \end{gather}
+l.2759 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintminmax3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3871,7 +1898,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2758 \end{gather}
+l.2759 \end{gather}
                    \phantomsection\label{chap_reach:equation-fwdintminmax3}\...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3880,7 +1907,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2760 \end{gather}
+l.2761 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -3889,14 +1916,14 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.2760 \end{gather}
+l.2761 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
 So I'll assume that you meant to type \cr instead.
 
 ! Undefined control sequence.
-l.2790 Points $x^{\pm}_l(t)$, $t\geqslantt
+l.2791 Points $x^{\pm}_l(t)$, $t\geqslantt
                                           _0$, form extremal
 The control sequence at the end of the top line
 of your error message was never \def'ed. If you have
@@ -3910,7 +1937,7 @@ Chapter 4.
 
 ] [40]
 Chapter 5.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 3028.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 3029.
 
 ("C:\Program Files\MiKTeX 2.9_new\tex\latex\psnfss\t1pcr.fd"
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
@@ -3918,51 +1945,51 @@ File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 
 ]
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 3102.
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 3103.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 3142.
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 3143.
  [42]
-[43] <minksum.png, id=880, 924.45375pt x 695.59875pt>
+[43] <minksum.png, id=883, 924.45375pt x 695.59875pt>
 File: minksum.png Graphic file (type png)
  <use minksum.png>
-Package pdftex.def Info: minksum.png used on input line 3281.
+Package pdftex.def Info: minksum.png used on input line 3282.
 (pdftex.def)             Requested size: 924.45149pt x 695.59706pt.
 File: minksum.png Graphic file (type png)
 
 <use minksum.png>
-Package pdftex.def Info: minksum.png used on input line 3281.
+Package pdftex.def Info: minksum.png used on input line 3282.
 (pdftex.def)             Requested size: 469.755pt x 353.46638pt.
 
 
 LaTeX Warning: Hyper reference `chap_implement:minksumPic' on page 44 undefined
- on input line 3284.
+ on input line 3285.
 
 
 LaTeX Warning: Reference `chap_implement:minksumPic' on page 44 undefined on in
-put line 3284.
+put line 3285.
 
 [44 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minksum.png (PNG
- copy)>] <minkdiff.png, id=886, 997.7275pt x 750.805pt>
+ copy)>] <minkdiff.png, id=889, 997.7275pt x 750.805pt>
 File: minkdiff.png Graphic file (type png)
  <use minkdiff.png>
-Package pdftex.def Info: minkdiff.png used on input line 3341.
+Package pdftex.def Info: minkdiff.png used on input line 3342.
 (pdftex.def)             Requested size: 997.72505pt x 750.80316pt.
 File: minkdiff.png Graphic file (type png)
 
 <use minkdiff.png>
-Package pdftex.def Info: minkdiff.png used on input line 3341.
+Package pdftex.def Info: minkdiff.png used on input line 3342.
 (pdftex.def)             Requested size: 469.755pt x 353.49704pt.
 
 
 LaTeX Warning: Hyper reference `chap_implement:minkdiffPic' on page 45 undefine
-d on input line 3344.
+d on input line 3345.
 
 
 LaTeX Warning: Reference `chap_implement:minkdiffPic' on page 45 undefined on i
-nput line 3344.
+nput line 3345.
 
 [45] [46 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minkdiff.pn
-g (PNG copy)>] <minkpm.png, id=897, 959.585pt x 721.69624pt>
+g (PNG copy)>] <minkpm.png, id=900, 959.585pt x 721.69624pt>
 File: minkpm.png Graphic file (type png)
  <use minkpm.png>
 Package pdftex.def Info: minkpm.png used on input line 3403.
@@ -3972,226 +1999,103 @@ File: minkpm.png Graphic file (type png)
 <use minkpm.png>
 Package pdftex.def Info: minkpm.png used on input line 3403.
 (pdftex.def)             Requested size: 469.755pt x 353.3039pt.
- <minkmp.png, id=898, 1004.75375pt x 755.82375pt>
+ <minkmp.png, id=901, 1004.75375pt x 755.82375pt>
 File: minkmp.png Graphic file (type png)
 
 <use minkmp.png>
-Package pdftex.def Info: minkmp.png used on input line 3409.
+Package pdftex.def Info: minkmp.png used on input line 3408.
 (pdftex.def)             Requested size: 1004.75131pt x 755.8219pt.
 File: minkmp.png Graphic file (type png)
  <use minkmp.png>
-Package pdftex.def Info: minkmp.png used on input line 3409.
+Package pdftex.def Info: minkmp.png used on input line 3408.
 (pdftex.def)             Requested size: 469.755pt x 353.36887pt.
 
 
-LaTeX Warning: Reference `minkPic' on page 47 undefined on input line 3412.
+LaTeX Warning: Reference `minkPic' on page 47 undefined on input line 3411.
 
-[47] [48 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minkpm.png 
-(PNG copy)>] [49 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/min
-kmp.png (PNG copy)>] [50] [51] [52]
-Underfull \hbox (badness 6493) in paragraph at lines 3745--3750
+[47 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minkpm.png (PNG 
+copy)>] [48 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minkmp.p
+ng (PNG copy)>] [49] [50] [51] [52]
+Underfull \hbox (badness 6493) in paragraph at lines 3744--3749
 \T1/ptm/m/n/10 There are sev-eral classes in \T1/ptm/m/it/10 El-lip-soidal Tool
 -box \T1/ptm/m/n/10 for op-er-a-tions with el-lip-soidal tubes. The class
  []
 
-[53]
-! Undefined control sequence.
-<argument> ...t]=\bigcup \limits _{\tau \leqslant 
-                                                  t}{\mathcal X}[\tau ],\end...
-l.3752 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...t]=\bigcup \limits _{\tau \leqslant 
-                                                  t}{\mathcal X}[\tau ],\end...
-l.3752 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.3796 computed, say $2\leqslant
-                                 t\leqslant4$. This data can be extracted
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.3796 computed, say $2\leqslant t\leqslant
-                                           4$. This data can be extracted
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[54] <reachTubeStatProj.png, id=934, 1018.80624pt x 884.30376pt>
+[53] <reachTubeStatProj.png, id=931, 1018.80624pt x 884.30376pt>
 File: reachTubeStatProj.png Graphic file (type png)
 
 <use reachTubeStatProj.png>
-Package pdftex.def Info: reachTubeStatProj.png used on input line 3843.
+Package pdftex.def Info: reachTubeStatProj.png used on input line 3841.
 (pdftex.def)             Requested size: 1018.80376pt x 884.3016pt.
 File: reachTubeStatProj.png Graphic file (type png)
  <use reachTubeStatProj.png>
-Package pdftex.def Info: reachTubeStatProj.png used on input line 3843.
+Package pdftex.def Info: reachTubeStatProj.png used on input line 3841.
 (pdftex.def)             Requested size: 469.755pt x 407.74269pt.
 
-<reachTubeDynProj.png, id=935, 1008.76875pt x 771.88374pt>
+<reachTubeDynProj.png, id=932, 1008.76875pt x 771.88374pt>
 File: reachTubeDynProj.png Graphic file (type png)
 
 <use reachTubeDynProj.png>
-Package pdftex.def Info: reachTubeDynProj.png used on input line 3849.
+Package pdftex.def Info: reachTubeDynProj.png used on input line 3846.
 (pdftex.def)             Requested size: 1008.7663pt x 771.88185pt.
 File: reachTubeDynProj.png Graphic file (type png)
  <use reachTubeDynProj.png>
-Package pdftex.def Info: reachTubeDynProj.png used on input line 3849.
+Package pdftex.def Info: reachTubeDynProj.png used on input line 3846.
 (pdftex.def)             Requested size: 469.755pt x 359.44046pt.
 
 
-LaTeX Warning: Reference `project' on page 55 undefined on input line 3852.
+LaTeX Warning: Reference `project' on page 54 undefined on input line 3849.
 
-<unionTubeStatProj.png, id=936, 1020.81375pt x 886.31125pt>
+[54] [55 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/reachTubeSt
+atProj.png (PNG copy)>] [56 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_buil
+d/latex/reachTubeDynProj.png (PNG copy)>]
+<unionTubeStatProj.png, id=945, 1020.81375pt x 886.31125pt>
 File: unionTubeStatProj.png Graphic file (type png)
 
 <use unionTubeStatProj.png>
-Package pdftex.def Info: unionTubeStatProj.png used on input line 3890.
+Package pdftex.def Info: unionTubeStatProj.png used on input line 3886.
 (pdftex.def)             Requested size: 1020.81126pt x 886.30908pt.
 File: unionTubeStatProj.png Graphic file (type png)
  <use unionTubeStatProj.png>
-Package pdftex.def Info: unionTubeStatProj.png used on input line 3890.
+Package pdftex.def Info: unionTubeStatProj.png used on input line 3886.
 (pdftex.def)             Requested size: 469.755pt x 407.8704pt.
 
 
-LaTeX Warning: Hyper reference `chap_implement:unionTubeStatProj' on page 55 un
-defined on input line 3893.
+LaTeX Warning: Hyper reference `chap_implement:unionTubeStatProj' on page 57 un
+defined on input line 3889.
 
 
-LaTeX Warning: Reference `chap_implement:unionTubeStatProj' on page 55 undefine
-d on input line 3893.
+LaTeX Warning: Reference `chap_implement:unionTubeStatProj' on page 57 undefine
+d on input line 3889.
 
-[55] [56 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/reachTubeSt
-atProj.png (PNG copy)>] [57 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_buil
-d/latex/reachTubeDynProj.png (PNG copy)>] [58 <C:/Users/Ksenia/Desktop/myBranch
-WorkCopy/doc/_build/latex/unionTubeStatProj.png (PNG copy)>]
-<dispPic.png, id=957, 1015.795pt x 764.8575pt>
+<dispPic.png, id=946, 1015.795pt x 764.8575pt>
 File: dispPic.png Graphic file (type png)
  <use dispPic.png>
-Package pdftex.def Info: dispPic.png used on input line 3930.
+Package pdftex.def Info: dispPic.png used on input line 3925.
 (pdftex.def)             Requested size: 1015.79253pt x 764.85562pt.
 File: dispPic.png Graphic file (type png)
 
 <use dispPic.png>
-Package pdftex.def Info: dispPic.png used on input line 3930.
+Package pdftex.def Info: dispPic.png used on input line 3925.
 (pdftex.def)             Requested size: 469.755pt x 353.70604pt.
 
 
-LaTeX Warning: Hyper reference `chap_implement:dispPic' on page 59 undefined on
- input line 3933.
+LaTeX Warning: Hyper reference `chap_implement:dispPic' on page 57 undefined on
+ input line 3928.
 
 
-LaTeX Warning: Reference `chap_implement:dispPic' on page 59 undefined on input
- line 3933.
+LaTeX Warning: Reference `chap_implement:dispPic' on page 57 undefined on input
+ line 3928.
 
-[59 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/dispPic.png (PNG
- copy)>] [60]
-! Undefined control sequence.
-l.4072 $-1\leqslant
-                    v(t)\leqslant1$, we type:
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.4072 $-1\leqslant v(t)\leqslant
-                                 1$, we type:
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...array}\right ]u[k], ~~~ -1\leqslant 
-                                                  u[k]\leqslant 1,\end {spli...
-l.4101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...u[k], ~~~ -1\leqslant u[k]\leqslant 
-                                                  1,\end {split}\notag 
-l.4101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...array}\right ]u[k], ~~~ -1\leqslant 
-                                                  u[k]\leqslant 1,\end {spli...
-l.4101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...u[k], ~~~ -1\leqslant u[k]\leqslant 
-                                                  1,\end {split}\notag 
-l.4101 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[61]
-! Undefined control sequence.
-l.4166 was computed, say $3\leqslant
-                                     t\leqslant5$. This data can be
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.4166 was computed, say $3\leqslant t\leqslant
-                                               5$. This data can be
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[62]
+[57] [58 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/unionTubeSt
+atProj.png (PNG copy)>] [59 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_buil
+d/latex/dispPic.png (PNG copy)>] [60] [61] [62]
 
 LaTeX Warning: Reference `chap_implement-uct' on page 63 undefined on input lin
-e 4274.
+e 4269.
 
 [63] [64] [65] [66]
-Overfull \hbox (0.81987pt too wide) in paragraph at lines 4550--4552
+Overfull \hbox (0.81987pt too wide) in paragraph at lines 4545--4547
 []\T1/ptm/m/n/10 Stanley Chan Ar-ti-cle Home-page. [][]http://videoprocessing
 .ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf[][]. 
  []
@@ -4200,53 +2104,31 @@ Overfull \hbox (0.81987pt too wide) in paragraph at lines 4550--4552
 
 ]
 Chapter 6.
-! Undefined control sequence.
-<argument> ...X}_0, ~~~ u[k]\in U, ~~~ k\geqslant 
-                                                  0,\end {split}\notag 
-l.4590 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...X}_0, ~~~ u[k]\in U, ~~~ k\geqslant 
-                                                  0,\end {split}\notag 
-l.4590 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-<ellpoly.png, id=1011, 497.86pt x 391.4625pt>
+<ellpoly.png, id=1008, 497.86pt x 391.4625pt>
 File: ellpoly.png Graphic file (type png)
  <use ellpoly.png>
-Package pdftex.def Info: ellpoly.png used on input line 4597.
+Package pdftex.def Info: ellpoly.png used on input line 4592.
 (pdftex.def)             Requested size: 497.85878pt x 391.46153pt.
 File: ellpoly.png Graphic file (type png)
 
 <use ellpoly.png>
-Package pdftex.def Info: ellpoly.png used on input line 4597.
+Package pdftex.def Info: ellpoly.png used on input line 4592.
 (pdftex.def)             Requested size: 469.755pt x 369.37253pt.
- <springmass.png, id=1015, 563.10374pt x 223.83624pt>
+ <springmass.png, id=1012, 563.10374pt x 223.83624pt>
 File: springmass.png Graphic file (type png)
 
 <use springmass.png>
-Package pdftex.def Info: springmass.png used on input line 4643.
+Package pdftex.def Info: springmass.png used on input line 4638.
 (pdftex.def)             Requested size: 563.10237pt x 223.8357pt.
 File: springmass.png Graphic file (type png)
  <use springmass.png>
-Package pdftex.def Info: springmass.png used on input line 4643.
+Package pdftex.def Info: springmass.png used on input line 4638.
 (pdftex.def)             Requested size: 469.755pt x 186.73012pt.
 
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.4650 \end{gather}
+l.4645 \end{gather}
                    \phantomsection\label{chap_examples:equation-spmass2}\beg...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -4255,7 +2137,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.4650 \end{gather}
+l.4645 \end{gather}
                    \phantomsection\label{chap_examples:equation-spmass2}\beg...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -4267,7 +2149,7 @@ ass.png>]
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.4652 \end{gather}
+l.4647 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -4276,27 +2158,27 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.4652 \end{gather}
+l.4647 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
 So I'll assume that you meant to type \cr instead.
 
-<reachmech.png, id=1035, 875.27pt x 723.70375pt>
+<reachmech.png, id=1032, 875.27pt x 723.70375pt>
 File: reachmech.png Graphic file (type png)
  <use reachmech.png>
-Package pdftex.def Info: reachmech.png used on input line 4688.
+Package pdftex.def Info: reachmech.png used on input line 4683.
 (pdftex.def)             Requested size: 875.26787pt x 723.70198pt.
 File: reachmech.png Graphic file (type png)
 
 <use reachmech.png>
-Package pdftex.def Info: reachmech.png used on input line 4688.
+Package pdftex.def Info: reachmech.png used on input line 4683.
 (pdftex.def)             Requested size: 469.755pt x 388.40895pt.
 
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.4733 \end{gather}
+l.4728 \end{gather}
                    \phantomsection\label{chap_examples:equation-smdist2}\beg...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -4305,7 +2187,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.4733 \end{gather}
+l.4728 \end{gather}
                    \phantomsection\label{chap_examples:equation-smdist2}\beg...
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -4314,7 +2196,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.4735 \end{gather}
+l.4730 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -4323,7 +2205,7 @@ So I'll assume that you meant to type \cr instead.
 ! Extra alignment tab has been changed to \cr.
 <template> }$\hfill \endtemplate 
                                  
-l.4735 \end{gather}
+l.4730 \end{gather}
                    
 You have given more \span or & marks than there were
 in the preamble to the \halign or \valign now in progress.
@@ -4333,134 +2215,63 @@ So I'll assume that you meant to type \cr instead.
 ng (PNG copy)>]
 
 LaTeX Warning: Hyper reference `chap_examples:mechreachfig`(c) shows the reach 
-set of the system ([smdist1' on page 73 undefined on input line 4767.
+set of the system ([smdist1' on page 73 undefined on input line 4762.
 
 
 LaTeX Warning: Reference `chap_examples:mechreachfig`(c) shows the reach set of
  the system ([smdist1]-[smdist2]) evolving in time from :math:`t=0' on page 73 
-undefined on input line 4767.
+undefined on input line 4762.
 
 
 LaTeX Warning: Hyper reference `chap_examples:mechreachfig`(d) presents a snaps
 hot of this reach set at time :math:`t=4' on page 73 undefined on input line 47
-68.
+63.
 
 
 LaTeX Warning: Reference `chap_examples:mechreachfig`(d) presents a snapshot of
- this reach set at time :math:`t=4' on page 73 undefined on input line 4768.
+ this reach set at time :math:`t=4' on page 73 undefined on input line 4763.
 
-<rlc.png, id=1060, 501.875pt x 176.66pt>
+<rlc.png, id=1057, 501.875pt x 176.66pt>
 File: rlc.png Graphic file (type png)
  <use rlc.png>
-Package pdftex.def Info: rlc.png used on input line 4776.
+Package pdftex.def Info: rlc.png used on input line 4771.
 (pdftex.def)             Requested size: 501.87376pt x 176.65956pt.
 File: rlc.png Graphic file (type png)
  <use rlc.png>
-Package pdftex.def Info: rlc.png used on input line 4776.
+Package pdftex.def Info: rlc.png used on input line 4771.
 (pdftex.def)             Requested size: 469.755pt x 165.36224pt.
- [73 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/rlc.png>]
-! Undefined control sequence.
-l.4819 $0\leqslant
-                   t<2$, $R_1=2$ Ohm, $R_2=1$ Ohm,
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.4822 ...thcal E}(0,I)$; and for time $t\geqslant
-                                                  2$,
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-l.4824 source is turned off, and $|v|\leqslant
-                                              1$. Then, system \eqref{chap_e...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...i\end {array}\right ], & 0\leqslant 
-                                                  t< 2, \\ \left [\begin {ar...
-l.4855 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...\end {array}\right ]v, & 2\leqslant 
-                                                  t. \end {array}\right .\en...
-l.4855 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...i\end {array}\right ], & 0\leqslant 
-                                                  t< 2, \\ \left [\begin {ar...
-l.4855 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...\end {array}\right ]v, & 2\leqslant 
-                                                  t. \end {array}\right .\en...
-l.4855 \end{gather}
-                   
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[74] <rlcreach.png, id=1080, 931.48pt x 730.73pt>
+ [73 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/rlc.png>] [74]
+<rlcreach.png, id=1077, 931.48pt x 730.73pt>
 File: rlcreach.png Graphic file (type png)
  <use rlcreach.png>
-Package pdftex.def Info: rlcreach.png used on input line 4907.
+Package pdftex.def Info: rlcreach.png used on input line 4902.
 (pdftex.def)             Requested size: 931.47772pt x 730.72821pt.
 File: rlcreach.png Graphic file (type png)
 
 <use rlcreach.png>
-Package pdftex.def Info: rlcreach.png used on input line 4907.
+Package pdftex.def Info: rlcreach.png used on input line 4902.
 (pdftex.def)             Requested size: 469.755pt x 368.5084pt.
  [75 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/rlcreach.png (P
-NG copy)>] <hw.png, id=1093, 612.2875pt x 181.67876pt>
+NG copy)>] <hw.png, id=1090, 612.2875pt x 181.67876pt>
 File: hw.png Graphic file (type png)
 
 <use hw.png>
-Package pdftex.def Info: hw.png used on input line 4968.
+Package pdftex.def Info: hw.png used on input line 4963.
 (pdftex.def)             Requested size: 612.28601pt x 181.6783pt.
 File: hw.png Graphic file (type png)
  <use hw.png>
-Package pdftex.def Info: hw.png used on input line 4968.
+Package pdftex.def Info: hw.png used on input line 4963.
 (pdftex.def)             Requested size: 469.755pt x 139.38574pt.
  [76 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/hw.png>] [77] [
-78] <hwreach.png, id=1112, 887.315pt x 694.595pt>
+78] <hwreach.png, id=1109, 887.315pt x 694.595pt>
 File: hwreach.png Graphic file (type png)
 
 <use hwreach.png>
-Package pdftex.def Info: hwreach.png used on input line 5173.
+Package pdftex.def Info: hwreach.png used on input line 5168.
 (pdftex.def)             Requested size: 887.31284pt x 694.5933pt.
 File: hwreach.png Graphic file (type png)
  <use hwreach.png>
-Package pdftex.def Info: hwreach.png used on input line 5173.
+Package pdftex.def Info: hwreach.png used on input line 5168.
 (pdftex.def)             Requested size: 469.755pt x 367.72025pt.
  [79 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/hwreach.png (PN
 G copy)>] [80]
@@ -4476,366 +2287,366 @@ Chapter 8.
 ]
 Chapter 9.
 [85]
-Underfull \vbox (badness 10000) detected at line 5406
+Underfull \vbox (badness 10000) detected at line 5401
  []
 
 
-Underfull \vbox (badness 10000) detected at line 5406
+Underfull \vbox (badness 10000) detected at line 5401
  []
 
 [86]
-Underfull \vbox (badness 10000) detected at line 5442
+Underfull \vbox (badness 10000) detected at line 5437
  []
 
 [87]
-Underfull \vbox (badness 1102) detected at line 5543
+Underfull \vbox (badness 1102) detected at line 5538
  []
 
 [88]
-Underfull \vbox (badness 10000) detected at line 5583
+Underfull \vbox (badness 10000) detected at line 5578
  []
 
 [89]
-Underfull \vbox (badness 10000) detected at line 5679
+Underfull \vbox (badness 10000) detected at line 5674
  []
 
 [90]
-Underfull \vbox (badness 10000) detected at line 5707
+Underfull \vbox (badness 10000) detected at line 5702
  []
 
 [91] [92]
-Underfull \vbox (badness 10000) detected at line 5842
+Underfull \vbox (badness 10000) detected at line 5837
  []
 
 [93] [94] [95]
-Underfull \vbox (badness 10000) detected at line 5996
+Underfull \vbox (badness 10000) detected at line 5991
  []
 
 [96] [97]
-Underfull \vbox (badness 1552) detected at line 6122
+Underfull \vbox (badness 1552) detected at line 6117
  []
 
 [98]
-Underfull \vbox (badness 1033) detected at line 6203
+Underfull \vbox (badness 1033) detected at line 6198
  []
 
 [99]
-Underfull \vbox (badness 3029) detected at line 6274
+Underfull \vbox (badness 3029) detected at line 6269
  []
 
 [100] [101]
-Underfull \vbox (badness 10000) detected at line 6425
+Underfull \vbox (badness 10000) detected at line 6420
  []
 
 [102]
-Underfull \vbox (badness 10000) detected at line 6478
+Underfull \vbox (badness 10000) detected at line 6473
  []
 
 [103]
-Underfull \vbox (badness 10000) detected at line 6544
+Underfull \vbox (badness 10000) detected at line 6539
  []
 
 [104]
-Underfull \vbox (badness 10000) detected at line 6578
+Underfull \vbox (badness 10000) detected at line 6573
  []
 
 [105] [106]
-Underfull \vbox (badness 3240) detected at line 6684
+Underfull \vbox (badness 3240) detected at line 6679
  []
 
 [107]
-Underfull \vbox (badness 1033) detected at line 6792
+Underfull \vbox (badness 1033) detected at line 6787
  []
 
 [108] [109]
-Underfull \vbox (badness 5231) detected at line 6871
+Underfull \vbox (badness 5231) detected at line 6866
  []
 
 [110]
-Underfull \vbox (badness 10000) detected at line 6930
+Underfull \vbox (badness 10000) detected at line 6925
  []
 
 [111]
-Underfull \vbox (badness 10000) detected at line 6986
+Underfull \vbox (badness 10000) detected at line 6981
  []
 
 [112] [113]
-Underfull \vbox (badness 10000) detected at line 7134
+Underfull \vbox (badness 10000) detected at line 7129
  []
 
 [114]
-Underfull \vbox (badness 10000) detected at line 7174
+Underfull \vbox (badness 10000) detected at line 7169
  []
 
 [115]
-Underfull \vbox (badness 10000) detected at line 7224
+Underfull \vbox (badness 10000) detected at line 7219
  []
 
 [116]
-Underfull \vbox (badness 1552) detected at line 7300
+Underfull \vbox (badness 1552) detected at line 7295
  []
 
 [117]
-Underfull \vbox (badness 10000) detected at line 7352
+Underfull \vbox (badness 10000) detected at line 7347
  []
 
 [118]
-Underfull \vbox (badness 1953) detected at line 7450
+Underfull \vbox (badness 1953) detected at line 7445
  []
 
 [119]
-Underfull \vbox (badness 10000) detected at line 7506
+Underfull \vbox (badness 10000) detected at line 7501
  []
 
 [120]
-Underfull \vbox (badness 10000) detected at line 7539
+Underfull \vbox (badness 10000) detected at line 7534
  []
 
 [121] [122]
-Underfull \vbox (badness 10000) detected at line 7657
+Underfull \vbox (badness 10000) detected at line 7652
  []
 
 [123]
-Underfull \vbox (badness 10000) detected at line 7713
+Underfull \vbox (badness 10000) detected at line 7708
  []
 
 [124]
-Underfull \vbox (badness 3240) detected at line 7783
+Underfull \vbox (badness 3240) detected at line 7778
  []
 
 [125]
-Underfull \vbox (badness 1552) detected at line 7848
+Underfull \vbox (badness 1552) detected at line 7843
  []
 
 [126]
-Underfull \vbox (badness 3029) detected at line 7905
+Underfull \vbox (badness 3029) detected at line 7900
  []
 
 [127]
-Underfull \vbox (badness 1552) detected at line 7959
+Underfull \vbox (badness 1552) detected at line 7954
  []
 
 [128] [129] [130]
-Underfull \vbox (badness 3029) detected at line 8156
+Underfull \vbox (badness 3029) detected at line 8151
  []
 
 [131] [132] [133]
-Underfull \vbox (badness 3029) detected at line 8335
+Underfull \vbox (badness 3029) detected at line 8330
  []
 
 [134]
-Underfull \vbox (badness 3029) detected at line 8472
+Underfull \vbox (badness 3029) detected at line 8467
  []
 
 [135]
-Underfull \vbox (badness 10000) detected at line 8472
+Underfull \vbox (badness 10000) detected at line 8467
  []
 
 
-Underfull \vbox (badness 10000) detected at line 8472
+Underfull \vbox (badness 10000) detected at line 8467
  []
 
 [136]
-Underfull \vbox (badness 3240) detected at line 8517
+Underfull \vbox (badness 3240) detected at line 8512
  []
 
 [137]
-Underfull \vbox (badness 3029) detected at line 8576
+Underfull \vbox (badness 3029) detected at line 8571
  []
 
 [138]
-Underfull \vbox (badness 3029) detected at line 8640
+Underfull \vbox (badness 3029) detected at line 8635
  []
 
 [139] [140] [141] [142] [143] [144]
-Underfull \vbox (badness 10000) detected at line 9073
+Underfull \vbox (badness 10000) detected at line 9068
  []
 
 [145]
-Underfull \vbox (badness 10000) detected at line 9122
+Underfull \vbox (badness 10000) detected at line 9117
  []
 
 [146] [147]
-Underfull \vbox (badness 10000) detected at line 9234
+Underfull \vbox (badness 10000) detected at line 9229
  []
 
 [148] [149] [150] [151] [152] [153]
-Underfull \vbox (badness 10000) detected at line 9629
+Underfull \vbox (badness 10000) detected at line 9624
  []
 
 [154] [155] [156] [157] [158] [159] [160]
-Underfull \vbox (badness 10000) detected at line 10083
+Underfull \vbox (badness 10000) detected at line 10078
  []
 
 [161]
-Underfull \vbox (badness 3029) detected at line 10129
+Underfull \vbox (badness 3029) detected at line 10124
  []
 
 [162] [163]
-Underfull \vbox (badness 1552) detected at line 10254
+Underfull \vbox (badness 1552) detected at line 10249
  []
 
 [164] [165] [166]
-Underfull \vbox (badness 10000) detected at line 10445
+Underfull \vbox (badness 10000) detected at line 10440
  []
 
 
-Underfull \vbox (badness 10000) detected at line 10445
+Underfull \vbox (badness 10000) detected at line 10440
  []
 
 [167] [168]
-Underfull \vbox (badness 10000) detected at line 10613
+Underfull \vbox (badness 10000) detected at line 10608
  []
 
 [169]
-Underfull \vbox (badness 10000) detected at line 10633
+Underfull \vbox (badness 10000) detected at line 10628
  []
 
 [170]
-Underfull \vbox (badness 1033) detected at line 10730
+Underfull \vbox (badness 1033) detected at line 10725
  []
 
 [171] [172]
-Underfull \vbox (badness 10000) detected at line 10808
+Underfull \vbox (badness 10000) detected at line 10803
  []
 
 [173] [174]
-Underfull \vbox (badness 1552) detected at line 10951
+Underfull \vbox (badness 1552) detected at line 10946
  []
 
 [175]
-Underfull \vbox (badness 1552) detected at line 11009
+Underfull \vbox (badness 1552) detected at line 11004
  []
 
 [176]
-Underfull \vbox (badness 1552) detected at line 11108
+Underfull \vbox (badness 1552) detected at line 11103
  []
 
 [177]
-Underfull \vbox (badness 10000) detected at line 11122
+Underfull \vbox (badness 10000) detected at line 11117
  []
 
 [178] [179]
-Underfull \vbox (badness 10000) detected at line 11256
+Underfull \vbox (badness 10000) detected at line 11251
  []
 
 [180]
-Underfull \vbox (badness 3029) detected at line 11322
+Underfull \vbox (badness 3029) detected at line 11317
  []
 
 [181] [182]
-Underfull \vbox (badness 2635) detected at line 11441
+Underfull \vbox (badness 2635) detected at line 11436
  []
 
 [183] [184]
-Underfull \vbox (badness 10000) detected at line 11566
+Underfull \vbox (badness 10000) detected at line 11561
  []
 
 [185]
-Underfull \vbox (badness 10000) detected at line 11619
+Underfull \vbox (badness 10000) detected at line 11614
  []
 
 [186] [187] [188]
-Underfull \vbox (badness 10000) detected at line 11815
+Underfull \vbox (badness 10000) detected at line 11810
  []
 
 [189] [190] [191] [192] [193] [194] [195]
-Underfull \vbox (badness 1552) detected at line 12273
+Underfull \vbox (badness 1552) detected at line 12268
  []
 
 [196] [197] [198]
-Underfull \vbox (badness 10000) detected at line 12443
+Underfull \vbox (badness 10000) detected at line 12438
  []
 
 [199]
-Underfull \vbox (badness 1552) detected at line 12505
+Underfull \vbox (badness 1552) detected at line 12500
  []
 
 [200]
-Underfull \vbox (badness 10000) detected at line 12567
+Underfull \vbox (badness 10000) detected at line 12562
  []
 
 [201] [202] [203] [204]
-Underfull \vbox (badness 1033) detected at line 12822
+Underfull \vbox (badness 1033) detected at line 12817
  []
 
 [205]
-Underfull \vbox (badness 1552) detected at line 12885
+Underfull \vbox (badness 1552) detected at line 12880
  []
 
 [206]
-Underfull \vbox (badness 1552) detected at line 12971
+Underfull \vbox (badness 1552) detected at line 12966
  []
 
 [207]
-Underfull \vbox (badness 10000) detected at line 13007
+Underfull \vbox (badness 10000) detected at line 13002
  []
 
 [208]
-Underfull \vbox (badness 10000) detected at line 13048
+Underfull \vbox (badness 10000) detected at line 13043
  []
 
 [209]
-Underfull \vbox (badness 3872) detected at line 13123
+Underfull \vbox (badness 3872) detected at line 13118
  []
 
 [210]
-Underfull \vbox (badness 3240) detected at line 13196
+Underfull \vbox (badness 3240) detected at line 13191
  []
 
 [211] [212]
-Underfull \vbox (badness 1953) detected at line 13316
+Underfull \vbox (badness 1953) detected at line 13311
  []
 
 [213]
-Underfull \vbox (badness 10000) detected at line 13358
+Underfull \vbox (badness 10000) detected at line 13353
  []
 
 [214] [215]
-Underfull \hbox (badness 6204) in paragraph at lines 13455--13457
+Underfull \hbox (badness 6204) in paragraph at lines 13450--13452
 []\T1/ptm/m/n/10 See the de-scrip-tion of the fol-low-ing meth-ods in sec-tion 
 [sec-Class-De-scr:elltool.reach.AReach] for ell-
  []
 
 
-Overfull \vbox (0.63048pt too high) detected at line 13495
+Overfull \vbox (0.63048pt too high) detected at line 13490
  []
 
 [216]
-Underfull \hbox (badness 6204) in paragraph at lines 13497--13499
+Underfull \hbox (badness 6204) in paragraph at lines 13492--13494
 []\T1/ptm/m/n/10 See the de-scrip-tion of the fol-low-ing meth-ods in sec-tion 
 [sec-Class-De-scr:elltool.reach.AReach] for ell-
  []
 
 [217] [218]
-Underfull \vbox (badness 1552) detected at line 13673
+Underfull \vbox (badness 1552) detected at line 13668
  []
 
 [219]
-Underfull \vbox (badness 1147) detected at line 13734
+Underfull \vbox (badness 1147) detected at line 13729
  []
 
 [220] [221]
-Underfull \vbox (badness 1552) detected at line 13871
+Underfull \vbox (badness 1552) detected at line 13866
  []
 
 [222]
-Underfull \vbox (badness 3240) detected at line 13935
+Underfull \vbox (badness 3240) detected at line 13930
  []
 
 [223] [224] [225] [226]
 Chapter 10.
 No file elltool_manual.ind.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 14090.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 14085.
 [227
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 14090.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 14085.
 
 (C:\Users\Ksenia\Desktop\myBranchWorkCopy\doc\_build\latex\elltool_manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 14090.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 14085.
 
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 14090
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 14085
 .
 Package rerunfilecheck Info: File `elltool_manual.out' has not changed.
 (rerunfilecheck)             Checksum: A075CD234722780F9146A433B3470D00;2905.
@@ -4843,14 +2654,14 @@ Package rerunfilecheck Info: File `elltool_manual.out' has not changed.
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 14090.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 14085.
  ) 
 Here is how much of TeX's memory you used:
- 10050 strings out of 493921
- 144014 string characters out of 3147279
- 250977 words of memory out of 3000000
- 12433 multiletter control sequences out of 15000+200000
- 80441 words of font info for 91 fonts, out of 3000000 for 9000
+ 10335 strings out of 493921
+ 147182 string characters out of 3147279
+ 251407 words of memory out of 3000000
+ 12703 multiletter control sequences out of 15000+200000
+ 83329 words of font info for 105 fonts, out of 3000000 for 9000
  842 hyphenation exceptions out of 8191
  38i,27n,51p,757b,491s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9_new/fonts/enc/dvips/fontname/8r.enc}<C:/Program 
@@ -4873,16 +2684,19 @@ Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files
 /MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Program Files/MiKT
 eX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX 2.
 9_new/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 2.9_new
-/fonts/type1/urw/courier/ucrb8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type
-1/urw/courier/ucrr8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/couri
-er/ucrro8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/helvetic/uhvb8a
-.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/helvetic/uhvbo8a.pfb><C:/
-Program Files/MiKTeX 2.9_new/fonts/type1/urw/times/utmb8a.pfb><C:/Program Files
-/MiKTeX 2.9_new/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9_n
-ew/fonts/type1/urw/times/utmri8a.pfb>
-Output written on elltool_manual.pdf (231 pages, 2241205 bytes).
+/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Program Files/MiKTeX 2.9_ne
+w/fonts/type1/public/amsfonts/symbols/msam7.pfb><C:/Program Files/MiKTeX 2.9_ne
+w/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Program Files/MiKTeX 2.9_n
+ew/fonts/type1/urw/courier/ucrb8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/ty
+pe1/urw/courier/ucrr8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/cou
+rier/ucrro8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/helvetic/uhvb
+8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/helvetic/uhvbo8a.pfb><C
+:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/times/utmb8a.pfb><C:/Program Fil
+es/MiKTeX 2.9_new/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9
+_new/fonts/type1/urw/times/utmri8a.pfb>
+Output written on elltool_manual.pdf (231 pages, 2261074 bytes).
 PDF statistics:
- 1965 PDF objects out of 2073 (max. 8388607)
- 617 named destinations out of 1000 (max. 500000)
+ 1969 PDF objects out of 2073 (max. 8388607)
+ 611 named destinations out of 1000 (max. 500000)
  445 words of extra memory for PDF output out of 10000 (max. 10000000)
 
