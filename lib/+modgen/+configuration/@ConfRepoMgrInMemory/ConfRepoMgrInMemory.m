@@ -24,7 +24,7 @@ classdef ConfRepoMgrInMemory<modgen.configuration.ConfRepoManagerAnyStorage
             self=self@modgen.configuration.ConfRepoManagerAnyStorage(storage);
             %
         end
-        function destFileName=copyConfFile(self,destFolderName,varargin)
+        function copyConfFile(self,destFolderName,varargin)
             % COPYCONFFILE copies a configuration file to a specified file
             % 
             % Input:
@@ -37,9 +37,6 @@ classdef ConfRepoMgrInMemory<modgen.configuration.ConfRepoManagerAnyStorage
             %       destIsFile: logical[1,1] - if true, destFolderName is
             %           interpreted as a file name and as a folder name
             %           otherwise, false by default
-            % Output:
-            %   regular:
-            %       destFileName: char[1,] - destination file name
             %       
             %
             [reg,~,isDestFile]=modgen.common.parseparext(varargin,...
@@ -60,9 +57,6 @@ classdef ConfRepoMgrInMemory<modgen.configuration.ConfRepoManagerAnyStorage
                 'skipStorageBranchKey',true,...
                 'checkStorageContent',false);
             storage.put(destConfName,self.getConfInternal(confName));
-            if nargout>0,
-                destFileName=[destPathStr filesep destConfName '.xml'];
-            end
        end            
        function selectConf(self,confName,varargin)
             % SELECTCONF selects the configuration specified by name

@@ -57,7 +57,11 @@ function [isMember,indMember]=ismemberjoint(leftCell,rightCell,varargin)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
+%
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-06-19 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 %   skipping calculation of the second output if it is not necessary
 %   processing of NaNs and empty arrays is fixed
@@ -269,8 +273,8 @@ for iRow=1:nLeftComp,
             leftIndColMat=nan(nLeftElem,nCols);
             rightIndColMat=nan(nRightElem,nCols);
             for iCol=1:nCols,
-                [rightVec,~,rightIndColMat(:,iCol)]=unique(rightMat(:,iCol),'legacy');
-                [~,leftIndColMat(:,iCol)]=ismember(leftMat(:,iCol),rightVec,'legacy');
+                [rightVec,~,rightIndColMat(:,iCol)]=unique(rightMat(:,iCol));
+                [~,leftIndColMat(:,iCol)]=ismember(leftMat(:,iCol),rightVec);
             end
             if nCols==1,
                 leftIndMat(:,iRow)=leftIndColMat;
@@ -288,7 +292,7 @@ for iRow=1:nLeftComp,
                 if isLeftSorted&&isRightSorted,
                     nElems=size(leftMat,1);
                     [~,~,curInd]=uniquejoint({vertcat(leftMat,rightMat)},1);
-                    [~,curInd]=ismember(curInd(1:nElems),curInd(nElems+1:end),'legacy');
+                    [~,curInd]=ismember(curInd(1:nElems),curInd(nElems+1:end));
                 else
                     if ismethod(rightMat,'isequal'),
                         inputCell={@isequal};
@@ -309,9 +313,9 @@ if nLeftComp==0,
     indMember=nRightElem*ones(nLeftElem,1);
 elseif nLeftComp==1,
     if isInd,
-        [isMember,indMember]=ismember(leftIndMat,rightIndMat,'legacy');
+        [isMember,indMember]=ismember(leftIndMat,rightIndMat);
     else
-        isMember=ismember(leftIndMat,rightIndMat,'legacy');
+        isMember=ismember(leftIndMat,rightIndMat);
     end
 else
     if isInd,

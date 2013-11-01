@@ -1,4 +1,4 @@
-classdef GenEllipsoid < handle
+classdef GenEllipsoid < elltool.core.AEllipsoid
     % GENELLIPSOID - class of generalized ellipsoids
     %
     % Input:
@@ -40,9 +40,19 @@ classdef GenEllipsoid < handle
         diagMat
         eigvMat
     end
+
     properties (Constant,GetAccess = private)
         CHECK_TOL=1e-09;
     end
+    
+    %MAGIC!
+    methods
+        function shapeMat=get.shapeMat(self,shMat)
+              shapeMat=self.eigvMat*self.diagMat*transpose(self.eigvMat);
+        end
+    end
+    %end_MAGIC!
+    
     methods (Static,Access=private)
         function checkIsMe(objArr)
             import modgen.common.checkvar;
@@ -164,6 +174,9 @@ classdef GenEllipsoid < handle
     end
     methods
         function ellObj = GenEllipsoid(varargin)
+            %
+            ellObj = ellObj@elltool.core.AEllipsoid();    
+            %
             import modgen.common.throwerror
             import elltool.core.GenEllipsoid;
             import gras.la.ismatsymm;
@@ -391,6 +404,7 @@ classdef GenEllipsoid < handle
         end
     end
     methods (Static,Access = private)
+        resVec = getColorTable(ch);
         [isOk, pPar] = getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,dirVec,absTol)
         sqMat = findSqrtOfMatrix(qMat,absTol)
         isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)

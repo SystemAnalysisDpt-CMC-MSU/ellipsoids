@@ -22,13 +22,13 @@ if svnErr~=0
     else
         Msg(1).identifier='SVN:versioningProblem';
         Msg(1).message=['Problem using version control system:' 10 ...
-            modgen.string.cell2str(svnMsg,' ')];
+            modgen.subversion.cell2str(svnMsg,' ')];
     end
 elseif ~isempty(svnMsg)
     if strmatch('svn:',svnMsg{1})==1
         Msg(1).identifier='SVN:versioningProblem';
         Msg(1).message=['Problem using version control system:' 10 ...
-            modgen.string.cell2str(svnMsg,' ')];
+            modgen.subversion.cell2str(svnMsg,' ')];
     end
 end
 

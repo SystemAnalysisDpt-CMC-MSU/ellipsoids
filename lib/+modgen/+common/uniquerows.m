@@ -82,13 +82,13 @@ if nCols<2,
     end
     if isInteger,
         % perform unique
-        [uniqueMat,varargout{:}]=unique(inpMat,'legacy');
+        [uniqueMat,varargout{:}]=unique(inpMat);
     else
         if isInd,
             curInd=find(isMat,1,'last');
         end
         isMat=~isMat;
-        [uniqueMat,varargout{:}]=unique(inpMat(isMat),'legacy');
+        [uniqueMat,varargout{:}]=unique(inpMat(isMat));
         % add info for NaNs
         uniqueMat=[uniqueMat;NaN];
         if isInd,
@@ -224,9 +224,9 @@ else
     if isnOptimized,
         % perform built-in version of unique
         if isAllFinite,
-            [uniqueMat,varargout{:}]=unique(inpMat,'rows','legacy');
+            [uniqueMat,varargout{:}]=unique(inpMat,'rows');
         else
-            [~,indRight2LeftVec,varargout{2:end}]=unique(indMat,'rows','legacy');
+            [~,indRight2LeftVec,varargout{2:end}]=unique(indMat,'rows');
             uniqueMat=inpMat(indRight2LeftVec,:);
             if isInd,
                 varargout{1}=indRight2LeftVec;

@@ -157,56 +157,52 @@ classdef SuiteBasic < mlunitext.test_case
             end
         end
         function testMatrixCubicSplineBasic(self)
-            MAX_TOL = 1e-13;
-            N_TIME_POINTS = 100;
-            dataArray = rand(8, 7, N_TIME_POINTS);
-            timeVec = 1 : N_TIME_POINTS;
+            MAX_TOL=1e-13;
+            N_TIME_POINTS=100;
+            dataArray=rand(8,7,N_TIME_POINTS);
+            timeVec=1:N_TIME_POINTS;
             checkBulk();
-            dataArray = rand(7, 8, N_TIME_POINTS);
+            dataArray=rand(7,8,N_TIME_POINTS);
             checkBulk();
             %
             %
-            dataArray = rand(8, 8, N_TIME_POINTS);
-            for iTime = 1 : N_TIME_POINTS
-                dataArray(:, :, iTime) = triu(dataArray(:, :, iTime) +...
-                    transpose(dataArray(:, :, iTime)));
+            dataArray=rand(8,8,N_TIME_POINTS);
+            for iTime=1:N_TIME_POINTS
+                dataArray(:,:,iTime)=triu(dataArray(:,:,iTime)+...
+                    transpose(dataArray(:,:,iTime)));
             end
             check('column_triu');
-            for iTime = 1 : N_TIME_POINTS
-                dataArray(:, :, iTime) = dataArray(:, :, iTime) * ...
-                    transpose(dataArray(:, :, iTime));
+            for iTime=1:N_TIME_POINTS
+                dataArray(:,:,iTime)=dataArray(:,:,iTime)*transpose(dataArray(:,:,iTime));
             end
             check('posdef_chol');
-            tmpMat = rand(8, 8);
-            dataArray(:, :, 10) = tmpMat + transpose(tmpMat);
+            tmpMat=rand(8,8);
+            dataArray(:,:,10)=tmpMat+transpose(tmpMat);
             checkN('posdef_chol');
             check('symm_column_triu');
-            dataArray(:, :, 10) = rand(8, 8);
+            dataArray(:,:,10)=rand(8,8);
             checkN('symm_column_triu');
             checkN('posdef_chol');
             check('linear');
             check('nearest');
-            dataArray = gras.gen.MatVector.triu(dataArray);
+            dataArray=gras.gen.MatVector.triu(dataArray);
             check('column_triu');
-            dataArray = rand(8, N_TIME_POINTS);
+            dataArray=rand(8,N_TIME_POINTS);
             check('column');
             check('row');
-            
+
             %%
-            posArray = rand(8, 8, N_TIME_POINTS);
-            for iTime = 1 : N_TIME_POINTS
-                posArray(:, :, iTime) = posArray(:, :, iTime) *...
-                    transpose(posArray(:, :, iTime));
+            posArray=rand(8,8,N_TIME_POINTS);
+            for iTime=1:N_TIME_POINTS
+                posArray(:,:,iTime)=posArray(:,:,iTime)*transpose(posArray(:,:,iTime));
             end
-            multArray = rand(8, 8, N_TIME_POINTS);
-            dataArray = gras.gen.SquareMatVector.lrMultiply(posArray,...
-                multArray, 'L');
-            check('nndef_chol_mult', {multArray, posArray, timeVec});
-            checkN('nndef_chol_mult', {multArray(:, :, 1 : end - 1), ...
-                posArray, timeVec});
-            checkN('nndef_chol_mult', {multArray(:, 1 : end - 1, :),...
-                posArray, timeVec});
-            checkN('nndef_chol_mult', {multArray, -posArray, timeVec});
+            multArray=rand(8,8,N_TIME_POINTS);
+            dataArray=gras.gen.SquareMatVector.lrMultiply(posArray,...
+                multArray,'L');
+            check('nndef_chol_mult',{multArray,posArray,timeVec});
+            checkN('nndef_chol_mult',{multArray(:,:,1:end-1),posArray,timeVec});
+            checkN('nndef_chol_mult',{multArray(:,1:end-1,:),posArray,timeVec});
+            checkN('nndef_chol_mult',{multArray,-posArray,timeVec});
             %
             function checkBulk()
                 check('column');
@@ -215,77 +211,67 @@ classdef SuiteBasic < mlunitext.test_case
                 checkN('symm_column_triu');
                 checkN('posdef_chol');
             end
-            function checkN(shape, inpArgList)
-                if nargin < 2
-                    inpArgList = {};
+            function checkN(shape,inpArgList)
+                if nargin<2
+                    inpArgList={};
                 else
-                    inpArgList = {inpArgList};
+                    inpArgList={inpArgList};
                 end
-                self.runAndCheckError(@(x)check(shape, inpArgList{:}),...
+                self.runAndCheckError(@(x)check(shape,inpArgList{:}),...
                     ':wrongInput');
             end
-            function check(shape, inpArgList)
-                if nargin < 2
-                    inpArgList = {dataArray, timeVec};
+            function check(shape,inpArgList)
+                if nargin<2
+                    inpArgList={dataArray,timeVec};
                 end
                 %% Check for a possibility to use a default constuctor
-                obj = gras.interp.MatrixInterpolantFactory.createInstance(shape);
-                mlunitext.assert_equals(true, isempty(obj.evaluate([])));
-                mlunitext.assert_equals(2, obj.getDimensionality());
-                
+                obj=gras.interp.MatrixInterpolantFactory.createInstance(shape);
+                mlunitext.assert_equals(true,isempty(obj.evaluate([])));
+                mlunitext.assert_equals(2,obj.getDimensionality());
+                %
                 %%
-                obj = gras.interp.MatrixInterpolantFactory.createInstance(...
-                    shape, inpArgList{:});
+                obj=gras.interp.MatrixInterpolantFactory.createInstance(...
+                    shape,inpArgList{:});
                 %%
-                resDataArray = obj.evaluate(timeVec);
-                nTimePoints = length(timeVec);
-                nDims = obj.getDimensionality();
+                resDataArray=obj.evaluate(timeVec);
+                nTimePoints=length(timeVec);
+                nDims=obj.getDimensionality();
                 checkInternal();
                 %
-                resDataArray = obj.getKnotDataArray();
+                resDataArray=obj.getKnotDataArray();
                 checkInternal();
                 %
-                indMid = fix(nTimePoints * 0.5);
-                timeLeftVec = timeVec(1 : indMid);
-                timeRightVec = timeVec((indMid + 1) : end);
-                evalCMat = {obj.evaluate(timeLeftVec),...
-                    obj.evaluate(timeRightVec)};
-                if((nDims == 1) && (strcmp(shape, 'column') || strcmp(shape, 'row')))
-                    catArgCMat = cellfun(@(x)squeeze(x), evalCMat,...
-                        'UniformOutput', false);
-                    resDataArray = cat(nDims + 1, catArgCMat{1, 1},...
-                        catArgCMat{1, 2});
-                else
-                    resDataArray = cat(nDims + 1,obj.evaluate(timeLeftVec),...
-                        obj.evaluate(timeRightVec));
-                end
+                indMid=fix(nTimePoints*0.5);
+                timeLeftVec=timeVec(1:indMid);
+                timeRightVec=timeVec((indMid+1):end);
+                resDataArray=cat(nDims+1,obj.evaluate(timeLeftVec),...
+                    obj.evaluate(timeRightVec));
                 checkInternal();
                 %%
                 %%
-                if strcmp(shape, 'column')
-                    objList = obj.getColSplines();
-                    dataList = cellfun(@(x)x.evaluate(timeVec), objList,...
-                        'UniformOutput', false);
-                    if nDims == 2
-                        nRows = obj.getNRows();
-                        nTimePoints = length(obj.getKnotVec);
-                        mlunitext.assert_equals(nTimePoints, obj.getNKnots());
+                if strcmp(shape,'column')
+                    objList=obj.getColSplines();
+                    dataList=cellfun(@(x)x.evaluate(timeVec),objList,...
+                        'UniformOutput',false);
+                    if nDims==2
+                        nRows=obj.getNRows();
+                        nTimePoints=length(obj.getKnotVec);
+                        mlunitext.assert_equals(nTimePoints,obj.getNKnots());
                         %
-                        dataList = cellfun(@(x)reshape(x,...
-                            [nRows, 1, nTimePoints]), dataList,...
-                            'UniformOutput', false);
-                        catDataArray = cat(2, dataList{:});
+                        dataList=cellfun(@(x)reshape(x,...
+                            [nRows,1,nTimePoints]),dataList,...
+                            'UniformOutput',false);
+                        catDataArray=cat(2,dataList{:});
                     else
-                        catDataArray = squeeze(cell2mat(dataList));
+                        catDataArray=dataList{1};
                     end
-                    mlunitext.assert_equals(true, isequal(resDataArray,...
-                        catDataArray));
+                    mlunitext.assert_equals(true,isequal(resDataArray,catDataArray));
                 end
                 function checkInternal()
-                    maxTol = max(abs(dataArray(:) - resDataArray(:)));
-                    isOk = maxTol <= MAX_TOL;
-                    mlunitext.assert_equals(true, isOk,...
-                        sprintf('max tol %g', maxTol));
+                    maxTol=max(abs(dataArray(:)-resDataArray(:)));
+                    isOk=maxTol<=MAX_TOL;
+                    mlunitext.assert_equals(true,isOk,...
+                        sprintf('max tol %g',maxTol));
                 end
                 %
             end

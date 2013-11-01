@@ -65,13 +65,14 @@ function [uniqueCell,indRight2LeftVec,indLeft2RightVec,isSorted]=uniquejoint(inp
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-%
-%
 %   added a possibility to handle the arbitraty types that support isequal
 %   function
 %   processing of NaNs and empty arrays is fixed
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-02-03 $ 
+% $Copyright: Moscow State University,
+%            Faculty of Computational Mathematics and Computer Science,
+%            System Analysis Department 2012 $
 %
 %   added support for empty arrays (like zeros(10,0))
 %   added dim argument, added support for multidimensional arrays in cells
@@ -241,7 +242,7 @@ for iRow=1:nInp,
         indColMat=nan(nInpElem,nCols);
         if isCharStr,
             for iCol=1:nCols,
-                [~,~,indColMat(:,iCol)]=unique(inpMat(:,iCol),'legacy');
+                [~,~,indColMat(:,iCol)]=unique(inpMat(:,iCol));
             end
         elseif isNumCell||isStructCell||isCharCell,
             for iCol=1:nCols,
@@ -250,8 +251,7 @@ for iRow=1:nInp,
                 if isStructCell,
                     inpMat=cellfun(@orderfields,inpVec,'UniformOutput',false);
                     curMat=cellfun(@fieldnames,inpVec,'UniformOutput',false);
-                    [sizeVars,~,curIndMat(:,1)]=unique(cellfun('prodofsize',curMat),...
-                        'legacy');
+                    [sizeVars,~,curIndMat(:,1)]=unique(cellfun('prodofsize',curMat));
                     nVars=size(sizeVars,1);
                     for iVar=1:nVars,
                         isVar=curIndMat(:,1)==iVar;
@@ -322,9 +322,9 @@ if nInp==0,
     end
 elseif nInp==1,
     if isBackwardInd,
-        [~,indRight2LeftVec,indLeft2RightVec]=unique(indMat,'legacy');
+        [~,indRight2LeftVec,indLeft2RightVec]=unique(indMat);
     else
-        [~,indRight2LeftVec]=unique(indMat,'legacy');
+        [~,indRight2LeftVec]=unique(indMat);
     end
 else
     if isBackwardInd,

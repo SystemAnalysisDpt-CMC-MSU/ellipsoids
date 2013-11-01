@@ -54,9 +54,9 @@ end
 
 
 cvx_begin sdp
-    cvx_solver sdpt3;
     variable cvxEllMat(m,m) symmetric
     variable cvxEllCenterVec(m)
+    
     maximize( det_rootn( cvxEllMat ) )
     subject to
         cvxEllMat >= 0
@@ -66,8 +66,7 @@ cvx_begin sdp
 cvx_end
 
 if strcmp(cvx_status,'Infeasible') || strcmp(cvx_status,'Inaccurate/Infeasible') || strcmp(cvx_status,'Failed')
-    throwerror('cvxError',...
-        'Cvx cannot solve the system, cvx status: %s',cvx_status);
+    throwerror('cvxError','Cvx cannot solve the system');
 end;
 
 sqrtEllMat = cvxEllMat;

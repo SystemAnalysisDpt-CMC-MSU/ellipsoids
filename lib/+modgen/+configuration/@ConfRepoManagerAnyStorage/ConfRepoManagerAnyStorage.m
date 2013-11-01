@@ -348,7 +348,7 @@ classdef ConfRepoManagerAnyStorage<handle
             self.putConf(toConfName,SConf,metaData);
         end
         %
-        function destFileName=copyConfFile(self,destFolderName,varargin)
+        function copyConfFile(self,destFolderName,varargin)
             % COPYCONFFILE - copies a configuration file to a specified
             %                file
             % 
@@ -362,10 +362,6 @@ classdef ConfRepoManagerAnyStorage<handle
             %       destIsFile: logical[1,1] - if true, destFolderName is
             %           interpreted as a file name and as a folder name
             %           otherwise, false by default
-            % Output:
-            %   regular:
-            %       destFileName: char [1,] - resulting destination file
-            %           name
             %       
             %
             [reg,~,isDestFile]=modgen.common.parseparext(varargin,...

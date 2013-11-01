@@ -1,4 +1,4 @@
-classdef ellipsoid < elltool.core.AGenEllipsoid
+classdef ellipsoid < elltool.core.AEllipsoid
     %ELLIPSOID class of ellipsoids
     properties (Access=private,Hidden)
         centerVec
@@ -9,6 +9,7 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
         nPlot3dPoints
     end
     
+    
     methods
         function set.shapeMat(self,shMat)
             import modgen.common.throwerror;
@@ -18,7 +19,6 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             end
             self.shapeMat=shMat;
         end
-        
     end
     %
     methods (Access=private)
@@ -191,11 +191,15 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             %             Faculty of Computational Mathematics and and Computer Science,
             %             System Analysis Department 2012-2013 $
             %
+            ellMat = ellMat@elltool.core.AEllipsoid();
+            
             import modgen.common.throwerror;
             import modgen.common.checkvar;
             import modgen.common.checkmultvar;
             import gras.la.ismatsymm;
             %
+            
+            
             NEEDED_PROP_NAME_LIST = {'absTol','relTol',...
                 'nPlot2dPoints','nPlot3dPoints'};
             [regParamList,propNameValList]=modgen.common.parseparams(...
@@ -292,12 +296,12 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             end
         end
     end
-    
     methods(Static)
         ellArr = fromRepMat(varargin)
         ellArr = fromStruct(SEllArr)
     end
     methods(Static,Access = private)
+        res = my_color_table(ch)
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
         [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat,...
@@ -313,11 +317,10 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
         [bpMat, fVec] = getGridByFactor(ellObj,factorVec)
         checkDoesContainArgs(ell,poly)
         doesContain = doesContainPoly(ellArr,polytope,varagin)
-    end
+    end 
     methods (Static)
         checkIsMe(someObj,varargin)
     end
-    
     methods (Access=private)
         function isArrEq = isMatEqualInternal(self,aArr,bArr)
             % ISMATEQUALINTERNAL - returns isArrEq - logical 1(true) if
@@ -350,7 +353,6 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             end
         end
     end
-    
     methods (Access = protected, Static)
         function SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
             if (~isempty(SEll.shapeMat))
@@ -367,6 +369,4 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             end
         end
     end
-    
-    
 end

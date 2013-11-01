@@ -1,11 +1,10 @@
 classdef MPTController < elltool.exttbx.IExtTBXController
     properties (GetAccess=private,Constant)
         MPT_SETUP_FUNC_NAME='mpt_init';
-        MPT_GLOBAL_OPT = 'MPTOPTIONS';
-        
+        MPT_GLOBAL_OPT = 'mptOptions';
     end
     methods
-        function fullSetup(self,absTol,relTol,isVerbose)   
+        function fullSetup(self,absTol,relTol,isVerbose)
             self.checkIfOnPath();
             if isempty(whos('global',self.MPT_GLOBAL_OPT))
                 if isVerbose
@@ -13,8 +12,8 @@ classdef MPTController < elltool.exttbx.IExtTBXController
                 else
                     verbose = 1;
                 end
-                mpt_init();
-                mptopt('abs_tol',absTol,'rel_tol',relTol,'verbose',verbose);
+                mpt_init('abs_tol',absTol,'rel_tol',relTol,'verbose',...
+                    verbose);
                 self.checkIfSetUp();
             end
         end
@@ -53,21 +52,21 @@ classdef MPTController < elltool.exttbx.IExtTBXController
         end
         %
         function isVerb = getIsVerbosityEnabled(self)
-            global MPTOPTIONS;
-            checkIfSetUp(self);            
-            isVerb = MPTOPTIONS.verbose > 1;
+            checkIfSetUp(self);
+            global mptOptions;
+            isVerb = mptOptions.verbose > 1;
         end
         %
         function absTol = getAbsTol(self)
-            global MPTOPTIONS;
-            checkIfSetUp(self);            
-            absTol = MPTOPTIONS.abs_tol;
+            checkIfSetUp(self);
+            global mptOptions;
+            absTol = mptOptions.abs_tol;
         end
         %
         function relTol = getRelTol(self)
-            global MPTOPTIONS;
-            checkIfSetUp(self);            
-            relTol = MPTOPTIONS.rel_tol;
+            checkIfSetUp(self);
+            global mptOptions;
+            relTol = mptOptions.rel_tol;
         end
     end
 end

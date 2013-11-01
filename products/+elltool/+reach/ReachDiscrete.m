@@ -188,6 +188,10 @@ classdef ReachDiscrete < elltool.reach.AReach
                 approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsDiscrete;
+            import gras.ellapx.gen.RegProblemDynamicsFactory;
+            %
+            probDynObj = RegProblemDynamicsFactory.create(probDynObj,...
+                self.isRegEnabled, self.isJustCheck, self.regTol);
             goodDirSetObj = GoodDirsDiscrete(...
                 probDynObj, timeLimsVec(1), l0Mat, calcPrecision);
             %
@@ -247,6 +251,7 @@ classdef ReachDiscrete < elltool.reach.AReach
         function ellTubeRel = internalMakeEllTubeRel(self, probDynObj, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.gen.RegProblemDynamicsFactory;
             import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
             import modgen.common.throwerror;
             import modgen.string.catwithsep;

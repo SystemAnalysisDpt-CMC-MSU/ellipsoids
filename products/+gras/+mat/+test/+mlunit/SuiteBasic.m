@@ -7,146 +7,243 @@ classdef SuiteBasic < mlunitext.test_case
         function testConstMatrixFunction(self)
             import gras.mat.ConstMatrixFunctionFactory;
             %
-            testCMat = {zeros(1), zeros(2), zeros(1, 2), zeros(2, 1),...
-                zeros(2, 3), zeros(3, 2)};
-            fCMat = cellfun(@(x)ConstMatrixFunctionFactory.createInstance(x),...
-                testCMat, 'UniformOutput', false);
-            testNumGetDimCVec = {1, 2, 1, 1, 2, 2};
-            testNumGetNRowsCVec = {1, 2, 1, 2, 2, 3};
-            testNumGetNColsCVec = {1, 2, 2, 1, 3, 2};
-            testRepCVec = {[1 1 3], [1 1 5], [1 1 1], [1 1 8], [1 1 2],...
-                [1 1 3]};
-            testEvalCVec = {[1 2 3], [1 2 3 4 5], 1, [1 2 3 4 5 6 7 8],...
-                [1 2], [1 2 3]};
-            aExpectedCMat = cellfun(@(x, y)repmat(x, y), testCMat, ...
-                testRepCVec, 'UniformOutput', false);
-            cellfun(@(x, y, z, w, q, v)compareAllSize(x, y, z, w, q, v),...
-                fCMat, testNumGetDimCVec, testNumGetNRowsCVec,...
-                testNumGetNColsCVec, testEvalCVec, aExpectedCMat,...
-                'UniformOutput', false);
-            
-            argCVec = {'gras.mat.ConstMatrixFunctionFactory.createInstance([])',...
-                'gras.mat.ConstMatrixFunctionFactory.createInstance(zeros([2 2 2]))',...
-                'gras.mat.ConstMatrixFunctionFactory.createInstance({})',...
-                'gras.mat.ConstMatrixFunctionFactory.createInstance({1 2; 3 4})',}; 
-            cellfun(@(x)self.runAndCheckError(x, 'CHECKVAR:wrongInput'),...
-                argCVec, 'UniformOutput', false);
-            
+            f = ConstMatrixFunctionFactory.createInstance(zeros(1));
+            mlunitext.assert_equals(f.getDimensionality,1);
+            mlunitext.assert_equals(f.getNRows,1);
+            mlunitext.assert_equals(f.getNCols,1);
+            mlunitext.assert_equals(all(f.getMatrixSize == [1 1]), true);
+            aArrayExpected = repmat(zeros(1), [1 1 3]);
+            aArrayObtained = f.evaluate([1 2 3]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunitext.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstMatrixFunctionFactory.createInstance(zeros(2));
+            mlunitext.assert_equals(f.getDimensionality,2);
+            mlunitext.assert_equals(f.getNRows,2);
+            mlunitext.assert_equals(f.getNCols,2);
+            mlunitext.assert_equals(all(f.getMatrixSize == [2 2]), true);
+            aArrayExpected = repmat(zeros(2), [1 1 5]);
+            aArrayObtained = f.evaluate([1 2 3 4 5]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunitext.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstMatrixFunctionFactory.createInstance(zeros(1,2));
+            mlunitext.assert_equals(f.getDimensionality,1);
+            mlunitext.assert_equals(f.getNRows,1);
+            mlunitext.assert_equals(f.getNCols,2);
+            mlunitext.assert_equals(all(f.getMatrixSize == [1 2]), true);
+            aArrayExpected = repmat(zeros(1,2), [1 1 1]);
+            aArrayObtained = f.evaluate(1);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunitext.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstMatrixFunctionFactory.createInstance(zeros(2,1));
+            mlunitext.assert_equals(f.getDimensionality,1);
+            mlunitext.assert_equals(f.getNRows,2);
+            mlunitext.assert_equals(f.getNCols,1);
+            mlunitext.assert_equals(all(f.getMatrixSize == [2 1]), true);
+            aArrayExpected = repmat(zeros(2,1), [1 1 8]);
+            aArrayObtained = f.evaluate([1 2 3 4 5 6 7 8]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunitext.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstMatrixFunctionFactory.createInstance(zeros(2,3));
+            mlunitext.assert_equals(f.getDimensionality,2);
+            mlunitext.assert_equals(f.getNRows,2);
+            mlunitext.assert_equals(f.getNCols,3);
+            mlunitext.assert_equals(all(f.getMatrixSize == [2 3]), true);
+            aArrayExpected = repmat(zeros(2,3), [1 1 2]);
+            aArrayObtained = f.evaluate([1 2]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunitext.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstMatrixFunctionFactory.createInstance(zeros(3,2));
+            mlunitext.assert_equals(f.getDimensionality,2);
+            mlunitext.assert_equals(f.getNRows,3);
+            mlunitext.assert_equals(f.getNCols,2);
+            mlunitext.assert_equals(all(f.getMatrixSize == [3 2]), true);
+            aArrayExpected = repmat(zeros(3,2), [1 1 3]);
+            aArrayObtained = f.evaluate([1 2 3]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunitext.assert_equals(all(isOkArray(:)),true);
+            %
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '([])'], 'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '(zeros([2 2 2]))'], 'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '({})'], 'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '({1,2;3,4})'], 'CHECKVAR:wrongInput');
+            %
         end
-        %
         function testConstRowFunction(self)
             import gras.mat.fcnlib.ConstRowFunction;
             %
-            testCMat = {zeros(1), zeros(1, 10)};
-            fCMat = cellfun(@(x)ConstRowFunction(x),...
-                testCMat, 'UniformOutput', false);
-            testNumGetDimCVec = {1, 1};
-            testNumGetNRowsCVec = {1, 1};
-            testNumGetNColsCVec = {1, 10};
-            testRepCVec = {[1 1 3], [1 1 6]};
-            testEvalCVec = {[1 2 3], [1 2 3 4 5 6]};
-            aExpectedCMat = cellfun(@(x, y)repmat(x, y), testCMat, ...
-                testRepCVec, 'UniformOutput', false);
-            cellfun(@(x, y, z, w, q, v)compareAllSize(x, y, z, w, q, v),...
-                fCMat, testNumGetDimCVec, testNumGetNRowsCVec,...
-                testNumGetNColsCVec, testEvalCVec, aExpectedCMat,...
-                'UniformOutput', false);
-            
+            f = ConstRowFunction(zeros(1));
+            mlunitext.assert_equals(f.getDimensionality,1);
+            mlunitext.assert_equals(f.getNRows,1);
+            mlunitext.assert_equals(f.getNCols,1);
+            mlunitext.assert_equals(all(f.getMatrixSize == [1 1]), true);
+            aArrayExpected = repmat(zeros(1), [1 1 3]);
+            aArrayObtained = f.evaluate([1 2 3]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunitext.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstRowFunction(zeros(1,10));
+            mlunitext.assert_equals(f.getDimensionality,1);
+            mlunitext.assert_equals(f.getNRows,1);
+            mlunitext.assert_equals(f.getNCols,10);
+            mlunitext.assert_equals(all(f.getMatrixSize == [1 10]), true);
+            aArrayExpected = repmat(zeros(1,10), [1 1 6]);
+            aArrayObtained = f.evaluate([1 2 3 4 5 6]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunitext.assert_equals(all(isOkArray(:)),true);
+            %
             try
                 gras.mat.ConstRowFunction([]);
             catch meObj
                 disp(meObj.identifier);
             end
-            
-            argCVec = {'gras.mat.fcnlib.ConstRowFunction([])',...
-                'gras.mat.fcnlib.ConstRowFunction(zeros(2))',...
-                'gras.mat.fcnlib.ConstRowFunction(zeros(2, 1))',...
-                'gras.mat.fcnlib.ConstRowFunction(zeros([2 2 2]))',...
-                'gras.mat.fcnlib.ConstRowFunction({})',...
-                'gras.mat.fcnlib.ConstRowFunction({1, 2; 3, 4})'}; 
-            cellfun(@(x)self.runAndCheckError(x, 'CHECKVAR:wrongInput'),...
-                argCVec, 'UniformOutput', false);
                
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstRowFunction([])', ...
+                'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstRowFunction(zeros(2))', ...
+                'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstRowFunction(zeros(2,1))', ...
+                'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstRowFunction(zeros([2 2 2]))', ...
+                'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstRowFunction({})', ...
+                'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstRowFunction({1,2;3,4})', ...
+                'CHECKVAR:wrongInput');
+            %
         end
-        %
         function testConstColFunction(self)
             import gras.mat.fcnlib.ConstColFunction;
             %
-            testCMat = {zeros(1), zeros(10, 1)};
-            fCMat = cellfun(@(x)ConstColFunction(x),...
-                testCMat, 'UniformOutput', false);
-            testNumGetDimCVec = {1, 1};
-            testNumGetNRowsCVec = {1, 10};
-            testNumGetNColsCVec = {1, 1};
-            testRepCVec = {[1 1 3], [1 1 6]};
-            testEvalCVec = {[1 2 3], [1 2 3 4 5 6]};
-            aExpectedCMat = cellfun(@(x, y)repmat(x, y), testCMat, ...
-                testRepCVec, 'UniformOutput', false);
-            cellfun(@(x, y, z, w, q, v)compareAllSize(x, y, z, w, q, v),...
-                fCMat, testNumGetDimCVec, testNumGetNRowsCVec,...
-                testNumGetNColsCVec, testEvalCVec, aExpectedCMat,...
-                'UniformOutput', false);
-            argCVec = {'gras.mat.fcnlib.ConstColFunction([])',...
-                'gras.mat.fcnlib.ConstColFunction(zeros(2))',...
-                'gras.mat.fcnlib.ConstColFunction(zeros(1,2))',...
-                'gras.mat.fcnlib.ConstColFunction(zeros([2 2 2]))',...
-                'gras.mat.fcnlib.ConstColFunction({})',...
-                'gras.mat.fcnlib.ConstColFunction({1, 2; 3, 4})'}; 
-            cellfun(@(x)self.runAndCheckError(x, 'CHECKVAR:wrongInput'),...
-                argCVec, 'UniformOutput', false);
-            
+            f = ConstColFunction(zeros(1));
+            mlunitext.assert_equals(f.getDimensionality,1);
+            mlunitext.assert_equals(f.getNRows,1);
+            mlunitext.assert_equals(f.getNCols,1);
+            mlunitext.assert_equals(all(f.getMatrixSize == [1 1]), true);
+            aArrayExpected = repmat(zeros(1), [1 1 3]);
+            aArrayObtained = f.evaluate([1 2 3]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunitext.assert_equals(all(isOkArray(:)),true);
+            %
+            f = ConstColFunction(zeros(10,1));
+            mlunitext.assert_equals(f.getDimensionality,1);
+            mlunitext.assert_equals(f.getNRows,10);
+            mlunitext.assert_equals(f.getNCols,1);
+            mlunitext.assert_equals(all(f.getMatrixSize == [10 1]), true);
+            aArrayExpected = repmat(zeros(10,1), [1 1 6]);
+            aArrayObtained = f.evaluate([1 2 3 4 5 6]);
+            isOkArray = ( aArrayExpected == aArrayObtained );
+            mlunitext.assert_equals(all(isOkArray(:)),true);
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstColFunction([])', ...
+                'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstColFunction(zeros(2))', ...
+                'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstColFunction(zeros(1,2))', ...
+                'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstColFunction(zeros([2 2 2]))', ...
+                'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstColFunction({})', ...
+                'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstRowFunction({1,2;3,4})', ...
+                'CHECKVAR:wrongInput');
+            %
         end
-        %
         function testConstMatrixFunctionFactory(self)
             import gras.mat.ConstMatrixFunctionFactory;
             import gras.mat.fcnlib.ConstMatrixFunction;
             import gras.mat.fcnlib.ConstRowFunction;
             import gras.mat.fcnlib.ConstColFunction;
             %
-            
-            testCMat = {{'1'}, {'1','2';'3','4'}, {'1','2'}, {'1';'2'}};
-            fCMat = cellfun(@(x)gras.mat.ConstMatrixFunctionFactory.createInstance(x),...
-                testCMat, 'UniformOutput', false);
-            aExpectedCMat = {1, [1 2; 3 4], [1 2], [1; 2]};
-            flagCVec = {1, 2, 3, 4};
-            cellfun(@(x, y, z)compareFun(x, y, z), fCMat, aExpectedCMat,...
-                flagCVec, 'UniformOutput', false);
-            
-            argCVec = {'([])', '({})', '({''t''})', '({1,''t'';1,1})'}; 
-            cellfun(@(x)self.runAndCheckError(['gras.mat.ConstMatrixFunctionFactory.createInstance',...
-                x], 'CHECKVAR:wrongInput'), argCVec, 'UniformOutput', false);
-           
+            f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
+                {'1'});
+            mlunitext.assert_equals(isa(f, ...
+                'gras.mat.fcnlib.ConstScalarFunction'), true);
+            aMatExpected = 1;
+            aMatObtained = f.evaluate(0);
+            isOkMat = ( aMatExpected == aMatObtained );
+            mlunitext.assert_equals(all(isOkMat(:)),true);
+            %
+            f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
+                {'1','2';'3','4'});
+            mlunitext.assert_equals(isa(f, ...
+                'gras.mat.fcnlib.ConstMatrixFunction'), true);
+            aMatExpected = [1 2; 3 4];
+            aMatObtained = f.evaluate(0);
+            isOkMat = ( aMatExpected == aMatObtained );
+            mlunitext.assert_equals(all(isOkMat(:)),true);
+            %
+            f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
+                {'1','2'});
+            mlunitext.assert_equals(isa(f, ...
+                'gras.mat.fcnlib.ConstRowFunction'), true);
+            aMatExpected = [1 2];
+            aMatObtained = f.evaluate(0);
+            isOkMat = ( aMatExpected == aMatObtained );
+            mlunitext.assert_equals(all(isOkMat(:)),true);
+            %
+            f = gras.mat.ConstMatrixFunctionFactory.createInstance(...
+                {'1';'2'});
+            mlunitext.assert_equals(isa(f, ...
+                'gras.mat.fcnlib.ConstColFunction'), true);
+            aMatExpected = [1; 2];
+            aMatObtained = f.evaluate(0);
+            isOkMat = ( aMatExpected == aMatObtained );
+            mlunitext.assert_equals(all(isOkMat(:)),true);
+            %
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '([])'], 'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '({})'], 'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '({''t''})'], 'CHECKVAR:wrongInput');
+            %
+            self.runAndCheckError([...
+                'gras.mat.ConstMatrixFunctionFactory.createInstance', ...
+                '({1,''t'';1,1})'], 'CHECKVAR:wrongInput');
+            %
         end
-        
     end
-end
-function compareAllSize(fMat, nDim, nRows, nCols, evalVec, aExpectedMat)
-    mlunitext.assert_equals(fMat.getDimensionality, nDim);
-    mlunitext.assert_equals(fMat.getNRows, nRows);
-    mlunitext.assert_equals(fMat.getNCols, nCols);
-    mlunitext.assert_equals(all(fMat.getMatrixSize == [nRows nCols]),...
-        true);
-    aArrayObtained = fMat.evaluate(evalVec);
-    isOkArray = ( aExpectedMat == aArrayObtained );
-    mlunitext.assert_equals(all(isOkArray(:)),true);
-
-end
-
-function compareFun(fMat, aExpectedMat, flag)
-    if(flag == 1)
-        mlunitext.assert_equals(isa(fMat, ...
-            'gras.mat.fcnlib.ConstScalarFunction'), true);
-    elseif(flag == 2)
-        mlunitext.assert_equals(isa(fMat, ...
-            'gras.mat.fcnlib.ConstMatrixFunction'), true);
-    elseif(flag == 3)
-        mlunitext.assert_equals(isa(fMat, ...
-            'gras.mat.fcnlib.ConstRowFunction'), true);
-    else
-        mlunitext.assert_equals(isa(fMat, ...
-            'gras.mat.fcnlib.ConstColFunction'), true);
-    end
-    aMatObtained = fMat.evaluate(0);
-    isOkMat = ( aExpectedMat == aMatObtained );
-    mlunitext.assert_equals(all(isOkMat(:)),true);
 end

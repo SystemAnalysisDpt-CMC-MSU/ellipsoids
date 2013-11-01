@@ -5,6 +5,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
         COMP_PRECISION = 5e-3;
         REL_TOL = 1e-5;
         SPLIT_FACTOR=0.25;
+        DISABLE_CUT_AND_EVOLVE_ISSUE_126=true;
     end
     properties (Access=private)
         testDataRootDir

@@ -16,27 +16,11 @@ classdef EmailLoggerBuilder
             dstConfFileName=[tmpDirName,filesep,'cur_conf','.xml'];
             confRepoMgr.copyConfFile(dstConfFileName,'destIsFile',true);
             %
-            curDirStr=pwd;
-            isSvn=modgen.subversion.issvn(curDirStr);
-            urlCodeStr='';
-            if isSvn,
-                isGit=false;
-                urlCodeStr='svnURL';
-                urlStr=modgen.subversion.svngeturl(curDirStr);
-            else
-                isGit=modgen.git.isgit(curDirStr);
-                if isGit,
-                    urlCodeStr='gitURL';
-                    urlStr=modgen.git.gitgeturl(curDirStr);
-                else
-                    throwerror('wrongObjState',...
-                        'Files with code should be under either SVN or Git');
-                end
-            end
+            svnURL=modgen.subversion.svngeturl(pwd);
             [~,pidVal,~]=modgen.system.getpidhost();
             subjectSuffix=[',pid:',num2str(pidVal),',conf:',...
                 confRepoMgr.getCurConfName(),inpSubjSuffName,...
-                ',',urlCodeStr,':',urlStr]; 
+                ',svnURL:',svnURL]; 
             addArgList={};
             if confRepoMgr.isParam('emailNotification.smtpUserName')
                 addArgList=[addArgList,{'smtpUserName',...
@@ -49,11 +33,7 @@ classdef EmailLoggerBuilder
                 throwerror('wrongInput',['smtpPassword can only be ',...
                     'specified when smtpUser name is specified']);
             end
-            if isSvn,
-                revisionStr=modgen.subversion.getrevision('ignoreErrors',true);
-            elseif isGit,
-                revisionStr=modgen.git.gitgethash(curDirStr);
-            end
+            revisionStr=modgen.subversion.getrevision('ignoreErrors',true);
             emailLogger=modgen.logging.EmailLogger(...
                 'emailDistributionList',...
                 confRepoMgr.getParam('emailNotification.distributionList'),...
