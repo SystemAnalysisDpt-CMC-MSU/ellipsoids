@@ -2,13 +2,13 @@ function run_helpcollector
 helpcollectorName = modgen.common.getcallername(1);
 [pathstrVec, ~, ~] = fileparts(which(helpcollectorName));
 dirName = [pathstrVec filesep '+picgen' filesep '*.m'];
-picgenFilesVec = dir(dirName);
+SPicgenFilesArray = dir(dirName);
 elltool.doc.picgen.PicGenController.setPicDestDir('doc/pic')
-for iElem = 1 : size(picgenFilesVec, 1)
-     picgenFileName = modgen.string.splitpart(picgenFilesVec(iElem).name, '.', 'first');
+for iElem = 1 : size(SPicgenFilesArray, 1)
+     picgenFileName = modgen.string.splitpart(SPicgenFilesArray(iElem).name, '.', 'first');
      picgenFunctionName =  strcat ('elltool.doc.picgen.', picgenFileName);
-     picgenFunction = str2func(picgenFunctionName);
-     picgenFunction();
+     fPicGen = str2func(picgenFunctionName);
+     fPicGen();
 end
 elltool.doc.picgen.PicGenController.flush();
 

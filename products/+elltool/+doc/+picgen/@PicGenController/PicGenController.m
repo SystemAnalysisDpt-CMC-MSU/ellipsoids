@@ -1,13 +1,13 @@
 classdef PicGenController<modgen.common.obj.StaticPropStorage
 % PicGenController - a static class, providing methods to generate the
-% name for the picture and save the figure in doc/pic.
+% name for the picture and save the figure.
 %
 % $Author: <Elena Shcherbakova>  <shcherbakova415@gmail.com> $    $Date: <6 October 2013> $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2013 $
     
-     methods(Static)
+     methods(Static, Access = public)
          
          function picDestDir = getPicDestDir
             branchName=mfilename('class');
@@ -25,7 +25,10 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
             branchName=mfilename('class');
             modgen.common.obj.StaticPropStorage.flushInternal(branchName);
          end 
-         
+     end  
+     
+     methods(Static, Access = private)
+    
          function hcombinedFig = createCombinedFigure(hFigHandleVec, nFigRows, nFigCols, figRegExpList, cameraPositionsList, viewAngleList)
             % CREATECOMBINEDFIGURE - combines figures from hfigHandleVec forming one 
             % combined figure with 4 axes.
@@ -53,7 +56,8 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
             hcombinedFig = figure;
             iElemVec = 1:nFigRows*nFigCols;                 
             axesTitlesVec(iElemVec) = char(96+iElemVec);
-   
+            labelPropVec = ['X' 'Y' 'Z'];
+            
             for iElem = 1:nFigRows*nFigCols                 
             axesVec(iElem) = subplot(nFigRows, nFigCols, iElem);
             grid on
@@ -67,25 +71,26 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
             end
             hFigVec =  findobj(hFigHandleVec, '-regexp','Name',...
             figRegExpList{iElem});
-
+            
             for jElem = 1:size(hFigVec, 1)
                  movedContent = get(findobj(hFigVec(jElem),'Type','axes'), 'Children');
                  copyobj(movedContent, axesVec(iElem));
-                 xlabel = copyobj(get(findobj(hFigVec(jElem),'Type','axes'), 'XLabel'), axesVec(iElem));
-                 set(axesVec(iElem), 'XLabel', xlabel);
-                 ylabel = copyobj(get(findobj(hFigVec(jElem),'Type','axes'), 'YLabel'), axesVec(iElem));
-                 set(axesVec(iElem), 'YLabel', ylabel);
-                 zlabel = copyobj(get(findobj(hFigVec(jElem),'Type','axes'), 'ZLabel'), axesVec(iElem));
-                 set(axesVec(iElem), 'ZLabel', zlabel);
+            for kElem = 1:3 
+                 labelNameVec(kElem) = copyobj(get(findobj(hFigVec(jElem),'Type','axes'),...
+                 [labelPropVec(kElem) 'Label']), axesVec(iElem));
+                 set(axesVec(iElem), [labelPropVec(kElem) 'Label'], labelNameVec(kElem));
+            end
             end
             end   
                  
          end 
-         
+     
+     
+
         function fullPicFileName = getPicFileNameByCaller()
         
         % GETPICFILENAMEBYCALLER - generates the full name for a picture
-        % in order to save it later in doc/pic.
+        % in order to save it later.
         % Output:
         %    regular:
         %        fullPicFileName: char [1, ] - full file name for a picture.
@@ -102,6 +107,10 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
                                filesep picFileName];
         end
         
+     end
+     
+     methods(Static)
+
         function savePicFileNameByCaller(hFigHandleVec, figWidth, figHeight, nFigRows, nFigCols, varargin)
             
         % SAVEPICFILENAMEBYCALLER - combines figures from hFigHandleVec in one, 
