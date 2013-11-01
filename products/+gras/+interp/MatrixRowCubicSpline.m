@@ -3,7 +3,7 @@ classdef MatrixRowCubicSpline<gras.interp.AMatrixCubicSpline
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2011 $
-    %    
+    %
     methods (Access=protected,Static)
         function ppFormList=buildSplineCoeffs(dataArray,timeVec)
             import gras.interp.AMatrixCubicSpline;
@@ -22,25 +22,17 @@ classdef MatrixRowCubicSpline<gras.interp.AMatrixCubicSpline
         end
     end
     methods (Access=public)
-        function resArray=evaluate(self,timeVec)
-            mSizeVec=self.mSizeVec;
-            mSizeLen=length(mSizeVec);
-            nDims=2-(any(mSizeVec == 1) || (mSizeLen < 2));
-            nRows=self.nRows;
-            nCols=self.nCols;
-            nTimePoints=length(timeVec);
-            switch nDims
-                case 1
-                    resArray=zeros(nRows,nTimePoints);
-                    for k=1:1:nRows
-                        resArray(k,:)=fnval(self.ppFormList{k},timeVec);
-                    end
-                case 2
-                    resArray=zeros(nRows,nCols,nTimePoints);
-                    for k=1:1:nRows
-                        resArray(k,:,:)=fnval(self.ppFormList{k},timeVec);
-                    end
+        function resArray = evaluate(self, timeVec)
+            
+            nRows = self.nRows;
+            nCols = self.nCols;
+            nTimePoints = length(timeVec);
+            
+            resArray = zeros(nRows, nCols, nTimePoints);
+            for k = 1 : 1 : nRows
+                resArray(k, :, :) = fnval(self.ppFormList{k}, timeVec);
             end
+            
         end
     end
     methods
@@ -53,7 +45,7 @@ classdef MatrixRowCubicSpline<gras.interp.AMatrixCubicSpline
             %       dataArray: double[nCols,nRows,nTimePoints]
             %               /double[nRows,nTimes] - data array
             %       timeVec: double[1,nTimePoints] -
-            %           
+            %
             %
             self=self@gras.interp.AMatrixCubicSpline(varargin{:});
         end

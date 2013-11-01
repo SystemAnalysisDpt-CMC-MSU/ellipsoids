@@ -48,14 +48,14 @@ function [methodName className]=getcallernameext(indStack)
 %
 
 StFunc=dbstack('-completenames');
-if isequal(numel(StFunc),indStack),
-    methodName='COMMAND_LINE';
-    className='';
-    return;
-end
 if nargin==0,
     indStack=1;
 else
+    if isequal(numel(StFunc),indStack),
+        methodName='COMMAND_LINE';
+        className='';
+        return;
+    end
     isnWrong=numel(indStack)==1&&isreal(indStack);
     if isnWrong,
         isnWrong=floor(indStack)==indStack&&indStack>=0&&indStack<=numel(StFunc)-1;

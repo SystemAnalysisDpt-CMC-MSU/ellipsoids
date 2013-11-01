@@ -65,6 +65,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             centRegCurve = calcCentCurve(...
                 @SquareMatVector.rMultiplyByVec);
             %
+            
+            aMat = squeeze(aMat);
+            
             xTouchOpMat= aMat - centRegCurve;
             xTouchMat= aMat + centRegCurve;
             function curveMat = calcCentCurve(rMulByVecOp)
@@ -424,6 +427,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         'size along second or higher dimension'],...
                         fieldListStr);
                 end
+                
+                self.aMat = cellfun(@(x)squeeze(x), self.aMat,...
+                    'UniformOutput',false);
+                
                 checkFieldList={'QArray','aMat','scaleFactor',...
                     'MArray','dim','sTime','approxSchemaName',...
                     'approxSchemaDescr','approxType','timeVec',...
