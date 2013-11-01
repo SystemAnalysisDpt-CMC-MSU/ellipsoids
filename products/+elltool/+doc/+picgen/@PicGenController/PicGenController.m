@@ -100,10 +100,8 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
             picGenFunctionName = modgen.common.getcallername(3);
             picFileName = modgen.string.splitpart(picGenFunctionName, '.', 'last');
             picFileName = modgen.string.splitpart(picFileName, '_gen', 1);
-            [pathstrVec, ~, ~] = fileparts(which(modgen.common.getcallernameext(3)));
-            dirName = modgen.path.rmlastnpathparts(pathstrVec, 4);
             picFileName = strcat (picFileName, '.eps');
-            fullPicFileName = [dirName filesep elltool.doc.picgen.PicGenController.getPicDestDir()...
+            fullPicFileName = [elltool.doc.picgen.PicGenController.getPicDestDir()...
                                filesep picFileName];
         end
         
@@ -155,7 +153,7 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
             set(hfigHandle, 'Units','normalized');
             set(hfigHandle,'WindowStyle','normal'); 
             set(hfigHandle, 'Position', [0.2 0.2 figWidth figHeight]);
-            set(hfigHandle, 'Position', [0.2 0.2 figWidth figHeight]);
+            drawnow
             print(hfigHandle,'-depsc', picFileName);
         end
         

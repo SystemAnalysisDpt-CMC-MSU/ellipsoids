@@ -15,10 +15,12 @@ classdef SuiteBasic < mlunitext.test_case
             [pathstrVec, ~, ~] = fileparts(which(testFileName));
             TmpDataManager.setRootDir(pathstrVec);
             testDirPath = TmpDataManager.getDirByCallerKey('test', 1);
-            testDirName = modgen.string.splitpart(testDirPath, filesep, 'last');
-            PicGenController.setPicDestDir(['products'...
-            filesep '+elltool' filesep '+doc' filesep '+picgen' filesep...
-            '+test' filesep '+mlunit' filesep testDirName]);
+%             testDirName = modgen.string.splitpart(testDirPath, filesep, 'last');
+%             PicGenController.setPicDestDir(['products'...
+%             filesep '+elltool' filesep '+doc' filesep '+picgen' filesep...
+%             '+test' filesep '+mlunit' filesep testDirName]);
+            PicGenController.setPicDestDir(testDirPath);
+
             picFileNameVec = [];
             picgenDirName = [modgen.path.rmlastnpathparts(pathstrVec, 2) filesep '*.m'];
             SPicgenFilesArray = dir(picgenDirName);            
