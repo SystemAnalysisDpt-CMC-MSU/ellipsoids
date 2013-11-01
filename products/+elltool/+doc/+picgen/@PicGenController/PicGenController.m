@@ -152,7 +152,7 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
             picFileName = elltool.doc.picgen.PicGenController.getPicFileNameByCaller();
             set(hfigHandle, 'Units','normalized');
             set(hfigHandle,'WindowStyle','normal'); 
-            set(hfigHandle, 'Position', [0.2 0.2 figWidth figHeight]);
+            set(hfigHandle, 'Position', [0 0 figWidth figHeight]);
             drawnow
             print(hfigHandle,'-depsc', picFileName);
         end
