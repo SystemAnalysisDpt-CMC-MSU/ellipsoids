@@ -155,7 +155,7 @@ return (IOstatus);
 
 
 /*int ch_read_chs (instream)// need to know what this function does
-  /* чтение аппроксимации в бинарном виде */
+  /*reading approximation  */
 /*FILE *instream;
  {int IOstatus, i, k, current, topSIGN, estSIGN;
   float p;
@@ -187,9 +187,9 @@ return (-8);
   fread ((char*)&csum,    sizeof (long), 1, instream);
   fread ((char*)&sum,     sizeof (long), 1, instream);
 
-/* установка index_position */
+/* аsetting index_position */
  /* for (i = 0; i < ch_topCOUNT; i++) ch_next_position();
-/* инициализация цепи граней */
+/* initialization of faces chain */
  /* for (i = 0; i <= ch_facetCOUNT; i++)
 ERR_RET (ch_add_facet (&ch_first_facet));
   ch_emp_facet       = ch_first_facet;
@@ -212,13 +212,13 @@ ERR_RET (ch_add_facet (&ch_first_facet));
     else if (i > 1) i++;
 	 else i--;
    } while (i != -1);
-/* контроль суммы */
+/* sum control */
  /* if (sum != csum)
    {fclose (instream);
     printf (msg [ch_LNG] [4]);
 return (-8);
    }
-/* инициализация цепи вершин */
+/*initialization of tops chain  */
  /* for (i = 0; i < ch_estCOUNT; i++)
    {ptop = (ch_top*) malloc (sizeof (ch_top));
     if (ptop == NULL)
@@ -228,11 +228,11 @@ return (-5);
 return (-5);
     ch_first_top = ptop;
    }
-/* считывание вершин */
+/* reading the tops */
  /* for (i = 0; i < ch_N; i++)
     VIEW (ptop, ch_first_top)
       fread ((char*)(ptop->c + i), sizeof (float), 1, instream);
-/* сортировка вершин */
+/* sorting the tops */
  /* current = 1;
   pfacet = ch_first_facet;
   ptop = ch_first_top;
@@ -263,7 +263,7 @@ return (-8);
       free (pred_top);
      }
    }
-/* считывание индексов */
+/* reading indicies */
 /*#ifdef CH_SIMPLEX
   for (i = 1; i <= ch_index_position.number; i++)
    {pfacet = ch_first_facet;
@@ -292,7 +292,7 @@ return(-5);
        }
      }
    }
-/* определение Ncomb */
+/* defining Ncomb */
  /* ch_Ncomb = 0;
   for (i = 1; i <= ch_index_position.number; i++)
    {a = ch_first_facet->simp [i].ind;
@@ -302,7 +302,7 @@ return(-5);
   for (i = 0; i <= ch_index_position.number; i++)
     VIEW (pfacet, ch_first_facet)
       fread ((char*)(pfacet->ind + i), sizeof (long), 1, instream);
-/* определение Ncomb */
+/* defining Ncomb */
 /*  ch_Ncomb = ch_N;
   VIEW (pfacet, ch_first_facet)
    {if (*pfacet->c != -1.)

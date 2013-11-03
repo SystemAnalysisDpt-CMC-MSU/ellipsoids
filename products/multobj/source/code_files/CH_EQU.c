@@ -6,7 +6,7 @@ extern ch_facet *ch_first_facet, *ch_second_facet;
 extern float *ch_equ;
 
 void ch_equ_search (void)
-  /* поиск равенства и удаление его из цепи */
+  /* searching for the equality and deleting it from the chain */
  {ch_facet *pfacet, **pp;
 
   pp = &ch_first_facet;
@@ -30,11 +30,11 @@ extern int ch_N1;
 extern ch_position ch_index_position;
 
 void ch_equ_double (void)
-  /* дублирование равенства с обратным знаком */
+  /*duplication of equality with the opposite sign  */
  {int i;
   float p;
 
-  /* копирование индексов */
+  /* copy indicies*/
 #ifdef CH_SIMPLEX
   for (i = 1; i <= ch_index_position.number; i++)
     ch_emp_facet->simp [i].ind = ch_equ_facet->simp [i].ind;
@@ -48,7 +48,7 @@ void ch_equ_double (void)
     ch_emp_facet->c [i] = p;
    }
   *(ch_emp_facet->c) = ch_INF;
-  /* с этого момента непоср.прерывание делать осторожно */
+  /* from this moment be carefull with interrupting */
   ch_equ_facet->next = ch_emp_facet;
   ch_emp_facet->top = NULL;
   ch_equ_facet->top = NULL;
@@ -61,7 +61,7 @@ extern ch_top *ch_conn_top;
 #include <math.h>
 
 int ch_equ_comb (void)
-  /* цикл присоединения вершины в начальном приближении */
+  /* adding the top in initial approximation */
  {ch_facet *pfacet;
   int IOstatus;
   double dif;
@@ -92,5 +92,5 @@ ERR_RET (ch_check (pfacet));
   ch_emp_facet->top = NULL;
   ch_estCOUNT--;
   if (ch_PRNT > 1) ch_inf_print (025);
-return (0); /* код ошибки */
+return (0); /* error code */
  }    /* ch_equ_comb */

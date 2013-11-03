@@ -9,7 +9,7 @@ extern int ch_facetCOUNT, ch_facetTOTAL;
 extern int ch_RHYPER;
 
 int ch_init_facet (IOst)
-  /* построение исходных граней */
+  /*the construction of the original faces  */
 int IOst;
  {ch_facet *pfacet;
   int i, j, k, IOstatus;
@@ -38,8 +38,8 @@ ERR_RET (ch_add_facet (&ch_emp_facet));
       ch_first_facet->c [0]= ch_INF;
 
       a = sqrt (nonpar+1.);
-      b = norm / (a + 1.);    /* коэффициенты вершин правильного */
-      a = - (a + nonpar) * b; /*    nonpar-мерного симплекса     */
+      b = norm / (a + 1.);    /*coefficients of the tops   */
+      a = - (a + nonpar) * b; /* nonpar-dimensional simplex        */
      }
     pfacet = ch_first_facet->next;
    }
@@ -63,14 +63,14 @@ ERR_RET (ch_add_facet (&ch_emp_facet));
    }
   pfacet->c [0] = -1.;
   pfacet->c [1] = -1.;
-return (0);  /* код ошибки */
+return (0);  /*error code  */
  }    /* ch_init_facet */
 
 extern int ch_topCOUNT;
 extern ch_position ch_index_position;
 
 int ch_inf_comb (void)
-  /* присоединение всех фиктивных вершин */
+  /*adding all the fictitious topsн */
  {ch_facet *pfacet, *pf;
   int IOstatus;
   VIEW (pfacet, ch_first_facet)

@@ -4,7 +4,7 @@
 extern unsigned ch_SIZEcfacet, ch_SIZEind;
 
 int ch_add_facet (head)
-  /* добавление новой грани в начало списка */
+  /* adding new face to the beginning of the listа */
 ch_facet **head;
  {ch_facet *pfacet;
 
@@ -32,7 +32,7 @@ return (0);
 extern float *ch_equ;
 
 void ch_free_facet (head)
-  /*  освобождение цепи граней  */
+  /*  free faces chain  */
 ch_facet **head;
  {ch_facet *pfacet, *first_facet;
 #ifdef CH_SIMPLEX
@@ -68,12 +68,12 @@ extern int ch_N,ch_N1;
 extern ch_position ch_index_position;
 
 int ch_copy_facet (pdest, psource)
-  /* копирование грани */
+  /*copy the face  */
 ch_facet *pdest, *psource;
  {int i;
   ch_simplex *psimpdest, *psimpsource, *first_simp, *psimp;
 
-/* копирование индексов */
+/*copy indicies  */
   psimpdest = pdest->simp;
   VIEW_INDEX (psimpsource, psource)
    {for (i = 1; i <= ch_index_position.number; i++)
@@ -99,11 +99,11 @@ return (-5);
        }
     psimpdest = psimpdest->next;
    }
-/* копирование коэффициентов */
+/*copy coefficients  */
   for (i = 0; i <= ch_N1; i++)
     pdest->c [i] = psource->c [i];
 
-/* перенос оценочной вершины (при прерывании - пропадет) */
+/* moving the estimated top */
   pdest->top = psource->top;
   if (psource->top != ch_equ) psource->top = NULL;
 
@@ -112,7 +112,7 @@ return(0);
 #endif
 
 void ch_free_top (head)
-  /*  освобождение цепи вершин  */
+  /*  free faces chain  */
 ch_top **head;
  {ch_top *ptop, *first_top;
 
@@ -130,7 +130,7 @@ extern int ch_estCOUNT;
 extern ch_top *ch_conn_top;
 
 void ch_del_top (pfacet)
-  /* освобождение оценочной вершины */
+  /* free the estimated top */
 ch_facet *pfacet;
 
  {if ((pfacet->top != NULL) && (pfacet->top != ch_equ))
@@ -143,11 +143,11 @@ ch_facet *pfacet;
 extern float ch_EPSest;
 
 void ch_move_top (pdest, psrc)
-  /* перенос оценочной вершины */
+  /*moving the estimated top  */
 ch_facet *pdest, *psrc;
  {if(pdest != psrc && *pdest->c >= ch_EPSest)
-   {pdest->top = psrc->top;  /* при прерывании оценочная */
-    psrc->top = NULL;         /*     вершина пропадет     */
+   {pdest->top = psrc->top;  /*when interrupting,the top is estimated  */
+    psrc->top = NULL;         /* the top will be lost      */
    }
  }    /* ch_move_top */
 
@@ -156,7 +156,7 @@ extern ch_facet *ch_second_facet, *ch_equ_facet;
 extern ch_top *ch_first_top;
 
 void ch_free_mem (void)
-  /* освобождение памяти, выделенной под множество */
+  /*free memory  */
  {if (ch_first_facet != NULL && ch_first_facet->next == ch_emp_facet)
    {ch_first_facet->next = ch_second_facet;
     ch_equ_facet = NULL;

@@ -1,50 +1,50 @@
-/* ‚› …†‚ */
-//#define ROUGH /* ‘‹‡‚€… „—›• …€–‰ */
+/*mode choice */
+//#define ROUGH /*using inexact methods  */
 #define CH_SIMPLEX 
 #define CH_FREEEST
-/*#define CH_VOLUMES … ‹ ‹™€„ ‚…•‘’ ’…‹€ */
-/*#define CH_SURFACE … ‹™€„ ‚…•‘’ */
-/*#define CH_VOLFILE ”€‰‹-’‹ ‘ … ‹ ‹™€„*/
+/*#define CH_VOLUMES volume and the surface area of ??the object */
+/*#define CH_SURFACE  the surface area*/
+/*#define CH_VOLFILE file with the volume or surface area*/
 
-/* …„…‹… ‘’“’“ „“‹ CONVEX */
+/* defining the structures of  CONVEX module */
 #ifdef CH_SIMPLEX
-typedef union ch_simplex/*---------ψΰμλεκψ----------*/
- {unsigned long     ind;  /* „…‘ */
-  union ch_simplex *next; /* ‘‘›‹€ € ‘‹…„“™‰ */
+typedef union ch_simplex/**/
+ {unsigned long     ind;  /* index */
+  union ch_simplex *next; /*link to the next */
  } ch_simplex;
 #endif
 
-typedef struct ch_facet /*-----------γΨθνω-----------*/
- {double           dif;   /* …‚‡€ */
-  float           *c;     /* –…€,.—€‘’,””-’› */
+typedef struct ch_facet /**/
+ {double           dif;   /* discrepancy */
+  float           *c;     /* estimation, right part, coeff */
 #ifdef CH_SIMPLEX
-  ch_simplex      *simp;  /* ‘‹…‘› */
+  ch_simplex      *simp;  /* simplex */
 #else
-  unsigned long   *ind;   /* „…‘› */
+  unsigned long   *ind;   /* indicies */
 #endif
-  float           *top;   /* –…—€ ‚…€ */
-  struct ch_facet *next;  /* ‘‘›‹€ € ‘‹…„“™“ */
+  float           *top;   /*estimated top  */
+  struct ch_facet *next;  /* link to the next */
  } ch_facet;
 
-typedef struct ch_top   /*-βεΨρΰνθ βϋσκλξι ξαξλξχκΰ-*/
- {float           *c;     /* ””–…’› */
-  struct ch_top   *next;  /* ‘‘›‹€ € ‘‹…„“™“ */
+typedef struct ch_top   /*tops of the convex hull*/
+ {float           *c;     /*coeff */
+  struct ch_top   *next;  /* link to the next */
  } ch_top;
 
-typedef struct          /*-ξηΰφΰÿ βεΨρΰνϋ β ΰνδεκψε-*/
- {unsigned long    bit;   /* ‡– ‚ —…‰… */
-  int              number;/* „‚›‰ … —…‰ */
+typedef struct          /*--*/
+ {unsigned long    bit;   /*position in the cell  */
+  int              number;/* number of the cell */
  } ch_position;
 
-typedef struct          /*-------ψΰψξκ γΨθνει-------*/
- {ch_facet        *begin; /* ‘‘›‹€ € …‚›‰ */
-  ch_facet       **end;   /* ‘‘›‹€ € ‹… next ‘‹…„…ƒ */
+typedef struct          /*--------------*/
+ {ch_facet        *begin; /* link to the first */
+  ch_facet       **end;   /*link to field 'next' of the last */
  } ch_list;
 
 #define ERR_RET(f) if ((IOstatus = f) != 0) return(IOstatus)
 #define VIEW(p,first) for (p = first; p != NULL; p = p->next)
 #ifndef CH_SIMPLEX
-/* —‘‹ …„– ‚ ‘‹‚… a */
+/*number of 1 in the world a  */
 #define ONES(pfacet) \
 	for (i = 0; i <= ch_index_position.number; i++) \
 	 {a = pfacet->ind [i]; \
@@ -64,7 +64,7 @@ typedef struct          /*-------ψΰψξκ γΨθνει-------*/
 #define rough_mult *
 #endif
 
-/* ”“– „“‹ CONVEX */
+/* functions of CONVEX module */
 #include <stdio.h>
 double ch_calc_dif      (float*, float*);
 void   ch_prn_facet     (ch_facet*);

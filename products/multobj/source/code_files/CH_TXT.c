@@ -25,7 +25,7 @@ static int end;
 
 
 int ch_write_dat (in_name, out_name)
-  /* запись файла описаниЯ множества */
+  /* recording input dataа */
 char *in_name, *out_name;
  {int i, k, current, num, topTOTAL;
   int ok;
@@ -72,7 +72,7 @@ return(-8);
   sprintf (str + 35, "%10.3E%10.3E\n", ch_EPS, ch_width);
   if (end > 60) {str [55] = ' ';  str [56] = ' ';}
   fputs (str, outstream);
-/* запись имен критериев */
+/* criterion's names */
   fgets (str, 82, instream);
   for (i = 0; i < ch_N; i++)
    {fgets (str, 82, instream);
@@ -81,7 +81,7 @@ return(-8);
   fprintf (outstream, "\n");
   fclose (instream);
 
-/* запись граней */
+/* recording faces */
   i = 2;
   do
    {num = 0;
@@ -97,7 +97,7 @@ return(-8);
     else if (i > 1) i++;
 	 else i--;
    } while (i != -1);
-/* запись вершин */
+/* recording tops */
   ch_reverse ();
   for (i = 0; i < ch_N; i++)
    {num = 0;
@@ -118,7 +118,7 @@ return(-8);
        }
     if (num) fprintf (outstream, "\n");
    }
-/* запись признаков вершин */
+/* recording top's features */
   num = 0;
   VIEW (ptop, ch_first_top)
    {fprintf (outstream, "  -1");
@@ -140,7 +140,7 @@ return(-8);
    }
   if (num) fprintf (outstream, "\n");
   ch_reverse ();
-/* запись индексов */
+/* recording indices */
   k = ch_index_position.number;
   if (ch_ex_next && ! (ch_index_position.bit << 1)) k--;
 

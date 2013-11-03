@@ -9,8 +9,8 @@ static float unit = 1.0;
 #endif
 
 double ch_calc_dif (pcfacet, pctop)
-  /*вычисление невязки грани (pcfacet-ссылка на поле "c") */
-  /*       в вершине(pсtop-ссылка на поле "c") */
+  /*calculating the discrepancy of the face(pfacet-link to the field "c") */
+  /*  on the top (pfacet-link to the field "c")      */
 float *pcfacet, *pctop;
  {register int i;
   register double s, u;
@@ -29,7 +29,7 @@ float *pcfacet, *pctop;
     rough(max) = rough(max) rough_mult rough(ch_EPSrel);
   if (rough(sa) <= rough(max))
     s = 0.;
-return (s);      /* невязка */
+return (s);      /*discrepancy а */
  }    /* ch_calc_dif */
 
 #include <stdio.h>
@@ -38,7 +38,7 @@ extern int ch_N1;
 extern ch_position ch_index_position;
 
 void ch_prn_facet (pfacet)
-  /* печать грани *pfacet */
+  /*printing the face *pfacet  */
 ch_facet *pfacet;
  {register int  i;
 #ifdef CH_SIMPLEX
@@ -65,8 +65,8 @@ extern int ch_Ncomb;
 extern double *ch_coef;
 
 void ch_combination (pplus, pminus, pnew)
-  /* комбинирование граней *pplus и *pminus  */
-  /* и запись результата в     *pnew         */
+  /* combination of *pminus and *pplus faces */
+  /* put the result to *pnew         */
 ch_facet *pplus, *pminus, *pnew;
  {register int  i;
   register double norm, w, s;
