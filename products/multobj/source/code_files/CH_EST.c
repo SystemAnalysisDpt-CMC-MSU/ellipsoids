@@ -7,7 +7,7 @@ extern float ch_EPSest;
 extern int ch_N;
 
 void ch_est_next (last_dir)
-  /* ‚›—ˆ‘‹…ˆ… “Š€‡€’…‹Ÿ € ‘‹…„“ž™“ž Ž–…ˆ‚€…Œ“ž ƒ€œ */
+  /* calculating of the point to next adding top*/
 float *last_dir;
  {float max_top_est, s;
   ch_facet *pfacet;
@@ -46,7 +46,7 @@ extern float ch_max_all_est;
 extern int ch_PRNT;
 
 void ch_est_max (void)
-  /* €‘—…’ ƒ€ˆ ‘ Œ€Š‘ˆŒ€‹œŽ‰ ’Ž—Ž‰ Ž–…ŠŽ‰ */
+  /* calculating the face with the best precision */
  {ch_facet *pfacet;
   float max_top_est, est;
 
@@ -110,11 +110,11 @@ return (-5);
   if (ch_PRNT > 1)
     ch_inf_print (06 | ((rough(ch_max_all_est) <
 			 rough(old_max)) ? 040 : 0));
-return (0);    /* ŠŽ„ Ž˜ˆŠˆ */
+return (0);    /* error code */
  }    /* ch_est_write */
 
 void ch_dir_write (c)
-  /* ‡€ˆ‘œ –…‹…‚Ž‰ ”“Š–ˆˆ */
+ /* recording of the objective function*/
 float *c;
  {float *pcfacet;
   int i;

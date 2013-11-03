@@ -3,8 +3,8 @@
 #include "ch_var.def"
 
 int ch_init_dat(void)
-/* инициализация переменных для CH */
-/* вместо ch_read_dat для начала процесса */
+/* initialization of variables for CH */
+/* instead od ch_read_dat for starting the proccesа */
  {ch_facetCOUNT = 0;
   ch_topCOUNT = 0;
   ch_estCOUNT = 0;

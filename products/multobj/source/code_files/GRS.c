@@ -2,23 +2,12 @@
 /*#define CH_LPM     simpleks Malkova */
 /*#define CH_POINTS*/  
 #define CH_ELIPSE /*approksimaciya e'lipsoidov*/ 
-/*#define CH_SOUND   zvukovoe soprovozhdenie */
-//#define CH_TXT
-/*#define CH_TIME    pechat' vremeni resheniya */
+
 #include "StdAfx.h"
 
-#ifdef CH_TIME
-#include <time.h>
-#endif
-#ifdef CH_SOUND
-#include <dos.h>
-#endif
+
 #ifdef CH_ELIPSE
 #include <math.h>
-#else
-#ifdef CH_SOUND
-#include <math.h>
-#endif
 #endif
 
 #include <string.h>
@@ -50,38 +39,35 @@
 int add_top;
 void read_par (void);
 char *par_name = "set.par";
-static char in_name [43] =
-#ifdef CH_TXT
-  "input.set";
-#else
-  "input.chs";
-#endif
+//char *par_name = NULL;
+//static char in_name [43] ="input.chs";
 
-static char out_name [40] =
-#ifdef CH_TXT
-  "output.set";
-#elif defined(CH_ELIPSE)
-  "output.set";
-#else
-  "output.chs";
-#endif
 
-static char model_name [40]
-#ifdef CH_TXT
-  =
-#ifdef CH_LP_PC
-  "model.mps"
-#endif
-#ifdef CH_LPM
-  "model.dat"
-#endif
-#ifdef CH_POINTS
-  "points.pnt"
-#endif
-#ifdef CH_ELIPSE
-  "axes.dat"
-#endif
-#endif
+//static char out_name [40] =
+//#ifdef CH_TXT
+  //"output.set";
+//#elif defined(CH_ELIPSE)
+  //"output.set";
+//#else
+ // "output.chs";
+//#endif
+
+//static char model_name [40]
+//#ifdef CH_TXT
+ // =
+//#ifdef CH_LP_PC
+  //"model.mps"
+//#endif
+//#ifdef CH_LPM
+  //"model.dat"
+//#endif
+//#ifdef CH_POINTS
+ // "points.pnt"
+//#endif
+//#ifdef CH_ELIPSE
+  //"axes.dat"
+//#endif
+//#endif
   ;
 
 static char type [4]
@@ -163,18 +149,16 @@ return (0);
 int objfun (float*, int*, int);
 #endif
 
-void in_read (void)
+void in_read (int size,double* centervec, double* semiaxes) //read not from file now
  {int i;
 
   //clrscr ();
   printf ("Podozhdite, idet schityvanie\n");
   //gotoxy (1, 1);
-  IOstatus = ch_read_dat (in_name, type, model_name, &objnums);
+  IOstatus = ch_read_dat(size, &objnums);
   if (IOstatus > 0)
    {
-#ifdef CH_TXT
-    objnums = (int*) realloc (objnums, ch_N * sizeof (int));
-#endif
+
     c = (float*) realloc (c, ch_SIZEctop);
     x = (float*) realloc (x, ch_SIZEctop);
     if (x == NULL) IOstatus = -5;
@@ -195,10 +179,10 @@ void in_read (void)
      }
 //    add_top = 32 - ch_topCOUNT % 32;
     stage = 1;
-   }
+  }
  }    /* in_read */
 
-void out_write (void)
+/*void out_write (void)
  {//clrscr ();
 	 
 	 printf("%d", stage);
@@ -214,14 +198,11 @@ void out_write (void)
    }
  }    /* out_write */
 
-void conv_go (void)
+void conv_go (double* semiaxes)
  {int i, new_dat;
-  static char old_name [40] = "";
   static int dat_is_read;
 #ifdef CH_LP_PC
   static int Ncon, Nvar, Nfunc, y;
-#else
-  FILE *datstream;
 #endif
 
 #ifdef CH_LPM
@@ -257,18 +238,18 @@ void conv_go (void)
 #endif
 
   //clrscr ();
-  new_dat = strcmp (model_name, old_name);
-  if(stage == 0 || stage == 2 && new_dat)
-   {printf ("Net dannyx. Osuwestvite chtenie.");
-    wait ();
-return;
-   }
+ // new_dat = strcmp (model_name, old_name);
+  //if(stage == 0 || stage == 2 && new_dat)
+   //{printf ("Net dannyx. Osuwestvite chtenie.");
+    //wait ();
+//return;
+  // }
 
 //  ch_max_topCOUNT = ch_topCOUNT + add_top;
   if (stage == 1)
    {
 #ifndef CH_ELIPSE
-    if (dat_is_read && new_dat)
+    if (dat_is_read)
      {dat_is_read = 0;
 #ifdef CH_LP_PC
       lp_initfree ();
@@ -282,25 +263,17 @@ return;
 #endif
      {printf ("Podozhdite, idet schityvanie\n");
       //gotoxy (1, 1);
-#ifdef CH_LP_PC
-      if( ! (lp_comptf(model_name, "mps")))
-       {printf ("E'to ne MPS-fajl !");
-#else
-      if (NULL == (datstream = fopen (model_name, "r")))
-       {printf ("Ne mogu otkryt' fajl %s\n", model_name);
-#endif
-	wait ();
-return;
-       }
-#ifdef CH_LP_PC
-      if ( ! lp_fromps (model_name, "rhs", "ran", "boun", "obj",
-		64, &Ncon, &Nvar, &Nfunc))
-       {//clreol ();
-	printf ("\nOshibka pri vvode MPS");
-	wait ();
-return;
-       }
-#endif
+//#ifdef CH_LP_PC
+//      if( ! (lp_comptf(model_name, "mps")))
+//      {printf ("E'to ne MPS-fajl !");
+//#else
+//      //if (NULL == (datstream = fopen (model_name, "r")))
+//       {//printf ("Ne mogu otkryt' fajl %s\n", model_name);
+//#endif
+//	wait ();
+////return;
+//       //}
+
 #ifdef CH_LPM
       IOlpm = lpm_read (model_name, &Ncon, &Nvar, &Nmatr,
 		&Nvar0, 0, 0, 0);
@@ -331,15 +304,12 @@ return;
 return;
        }
       for (i = 0; i < ch_N; i++)
-       {fscanf (datstream, "%f", axes + i);
-	axes [i] *= axes [i];         /* Kvadraty poluosej */
+       {
+	axes [i] = semiaxes [i]*semiaxes[i];         /* Kvadraty poluosej */
        }
 #endif
-#ifndef CH_LP_PC
-      fclose (datstream);
-#endif
+
       dat_is_read = 1;
-      strcpy (old_name, model_name);
       //clrscr ();
      }
    }
@@ -369,7 +339,6 @@ return;
 #endif
 #endif
 #endif
-
   while (!IOstatus)
    {
 #ifdef CH_LP_PC
@@ -429,6 +398,7 @@ return;
     d = 0;
     for (i = 0; i < ch_N; i++) d += axes [i] * c [i] * c [i];
     d = 1. / sqrt (d);
+	
     for (i = 0; i < ch_N; i++) x [i] = d * axes [i] * c [i];
 #endif
 #ifdef CH_TIME
@@ -470,19 +440,31 @@ return;
   printf ("Nazhmite lyubuyu klavishu . . .\n");
   getch ();
  }    /* conv_go */
-int main(int argc, char *argv[]){
-	
-  if (argc > 1) strcpy (in_name, argv[1]);
-  if (argc > 2) strcpy (out_name, argv[2]);
-  if (argc > 3) strcpy (par_name, argv[3]);
 
+void calcEllipsoidApprox(int size,double* centervec, double* semiaxes){ 
+ //main function for which mex-file will be written 
   read_par ();
-  in_read ();
-  conv_go();
-  
-  
-  
-  out_write();
-  return 0;
-return 0;
+  in_read (size,centervec, semiaxes);
+  conv_go(semiaxes);
+  // out_write();
+//return 0;
  }
+
+int main(void){
+	//for compilation while there is no mex-files
+	//here input data will be defined
+
+    double* centervec;
+	double* semiaxes;
+	int size = 2;
+	centervec=(double*) malloc(2*sizeof(double));
+	semiaxes=(double*) malloc(2*sizeof(double));
+	
+	centervec[0] = 0;
+	centervec[1] = 0;
+	semiaxes[0] = 2;
+	semiaxes[1] = 1;
+	
+    calcEllipsoidApprox(size,centervec,semiaxes);
+  return 0;
+}

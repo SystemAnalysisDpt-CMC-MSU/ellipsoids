@@ -1,11 +1,10 @@
- function [convexMat, convexVec, discrepVec,vertMat] = calcConvexHull(polyMat, controlParamsVec,nPropExpected, properties)
+ function [convexMat, convexVec, discrepVec,vertMat] = calcConvexHull(polyMat,nPropExpected, properties)
 % 
 % CALCCONVEXHULL - builds the convex hull of given points
 % 
 %  Input:
 %    regular:
 %       pointsMat: double [nPoints, nDims] - array of points to build the convex hull
-%       controlParamsVec : double [1,nParamsElems]- values of control params that do not match with the default values
 %    optional:
 %       nPropExpected: double[1,1] - an expected number of properties
 %     properties:

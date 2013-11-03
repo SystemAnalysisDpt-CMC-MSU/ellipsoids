@@ -3,8 +3,8 @@
 #include "ch_var.def"
 
 int ch_primal (c, x, IOstatus)
-  /* процедура построения выпуклой оболoчки */
-  /* для аппроксимации выпуклого множества  */
+  /* building convex hull */
+  /* approximation if convex setа  */
 float *c, *x;
 int IOstatus;
  {ch_facet *pfacet;
@@ -52,7 +52,7 @@ return (-5);
 ERR_RET (ch_est_write (x));
      }
    }
-  /* основной цикл присоединения вершины */
+  /* main cycle of adding the top */
   while (1)
    {ch_est_next(c);
     if (ch_next_est_facet != NULL)

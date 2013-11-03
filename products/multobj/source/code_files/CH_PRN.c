@@ -8,7 +8,7 @@ extern int ch_estTOTAL, ch_facetTOTAL;
 char *ch_inform (int);
 
 void ch_inf_print (signes)
-  /* печать информационной строки */
+  /* information print */
 unsigned int signes;
  {static unsigned int unit = 040;
   static int pospr[] = {1,18,26,34,42,50};
@@ -22,7 +22,7 @@ unsigned int signes;
   int y;
   int i,new_line;
 
-  if (!signes)  /* печать заголовка */
+  if (!signes)  /* title printа */
    {////window (1, 1, 80, 1);
     //////clrscr ();
     //gotoxy (4, 1);
@@ -58,7 +58,7 @@ unsigned int signes;
  }    /* ch_inf_print */
 
 char *ch_inform (IOstatus)
-  /* выдача сообщениЯ по номеру */
+  /* message for number */
 int IOstatus;
  {static char *inform [2][9] = {
    {"ПРОЦЕСС ОКОНЧЕН",          /* -1 */

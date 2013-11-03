@@ -1,4 +1,4 @@
-function [approxMat, approxVec, discrepVec,vertMat] = calcEllipsoidApprox(centerVec, semiaxesVec, controlParamsVec,nPropExpected, properties)
+function [approxMat, approxVec, discrepVec,vertMat] = calcEllipsoidApprox(centerVec, semiaxesVec,nPropExpected, properties)
 
 % CALCELLIPSOIDAPPROX - builds the approximation of ellipsoid by the polytope
 % 
@@ -6,7 +6,6 @@ function [approxMat, approxVec, discrepVec,vertMat] = calcEllipsoidApprox(center
 %   regular:
 %       centerVec: double [1, nDims] -  ellipsoid's center coordinates 
 %       semiaxesVec: double [1, nDims] -  values of ellipsoid's  semiaxes
-%       controlParamsVec:double[1,nParamsElems] - values of control params that do not match with the default values
 %   optional:
 %       nPropExpected: double[1,1] - an expected number of properties
 % 
