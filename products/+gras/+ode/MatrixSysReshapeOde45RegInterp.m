@@ -1,4 +1,4 @@
-classdef MatrixSysReshapeOde45RegInterp
+classdef MatrixSysReshapeOde45RegInterp < gras.ode.IMatrixSysInterp
     properties(Access=private)
         objVecOde45RegInterp
         sizeEqList
