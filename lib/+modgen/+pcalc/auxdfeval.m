@@ -53,9 +53,9 @@ function varargout=auxdfeval(processorFunc,varargin)
 %
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-04-26 $ 
-% $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%
+%
+%
 %
 %
 import modgen.pcalc.dfevalasync;
@@ -126,7 +126,7 @@ if isStartupFileUsed
     startupFileName=[startupFilePath,filesep,'taskStartup.m'];
 end
 if ~isConfSpec
-    confName=defaultParallelConfig;
+    confName=parallel.defaultClusterProfile;
 end
 dfevalArgList=[dfevalArgList,{'configuration',confName}];
 nOut=nargout;
@@ -169,27 +169,28 @@ if (nTasks>1&&clusterSize>1) || isFork
     %
     try
         waitForState(job,'finished');
-        resState=get(job,'State');
-        if ~strcmp(resState,'finished')
-            jobName=get(job,'Name');
-            error([upper(mfilename),':jobBadFinish'],...
-                'Job %s has finished with state %s',jobName,resState);
-        end
-        %
         STasks=get(job,'Tasks');
-        ErrorCell=cell(1,nTasks);
+        isErrorVec=false(1,nTasks);
+        errorList=cell(1,nTasks);
         for iTask=1:nTasks
-            ErrorCell{iTask}=get(STasks(iTask),'Error');
+            isErrorVec(iTask)=strcmpi(get(STasks(iTask),'state'),'failed');
+            errObj=get(STasks(iTask),'Error');
+            isErrorVec(iTask)=isErrorVec(iTask)||~isempty(errObj);
+            if isempty(errObj)
+                errObj=modgen.common.throwerror('unknownTaskError',...
+                    'task failed for unknown reason');
+            end
+            errorList{iTask}=errObj;
         end
-        isErrorVec=~cellfun(@(x)isempty(x)||~isempty(x)&&isempty(x.message),ErrorCell);
         %
         resultCell=getAllOutputArguments(job);
         if any(isErrorVec)
-            indError=find(isErrorVec);
-            parentException=MException([mfilename,':derivedTaskFailed'],'the following tasks failed: %s',mat2str(indError));
-            nErrors=length(indError);
+            indErrorVec=find(isErrorVec);
+            parentException=MException([mfilename,':derivedTaskFailed'],...
+                'the following tasks failed: %s',mat2str(indErrorVec));
+            nErrors=length(indErrorVec);
             for iError=1:nErrors
-                indCurError=indError(iError);
+                indCurError=indErrorVec(iError);
                 % Note: the following block of code is excluded because it
                 % is impossible to establish where error occured in child
                 % code, replace of '\' to '/' is moved to errst2str
@@ -202,7 +203,7 @@ if (nTasks>1&&clusterSize>1) || isFork
                 % messageStr=strrep(messageStr,'\','/');
                 %
                 % childException=MException(identifierStr,messageStr);
-                parentException=addCause(parentException,ErrorCell{indCurError});
+                parentException=addCause(parentException,errorList{indCurError});
             end
             throw(parentException);
         end
