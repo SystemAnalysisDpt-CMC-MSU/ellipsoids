@@ -11,7 +11,6 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
               logger, solverObj,...
               lsGoodDirMat, sTime, isFirstPointToRemove,solveTimeVec,...
                fHandle, initValueMat)
-    
                 tStart=tic;
                 logStr=sprintf(...
                     'solving ode for direction \n %s  defined at time %f',...
@@ -68,21 +67,15 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %% Calculating internal approximation
              pCalc=elltool.pcalc.ParCalculator();
            
-            
-            lsGoodDirMat=(lsGoodDirMat(:, 1:nLDirs));
-            [nGoodDirs]=size(lsGoodDirMat,1);
-            lsGoodDirMatCVec=mat2cell(lsGoodDirMat,nGoodDirs,[ones(1,nLDirs)]);
+            nGoodDirs=size(lsGoodDirMat,1);
+            lsGoodDirMatCVec=mat2cell(lsGoodDirMat,nGoodDirs,ones(1,nLDirs));
             
             fHandleCVec=cell(1,nLDirs);
-            for iDir=1:nLDirs
-             fHandleCVec(iDir)={self.getEllApxMatrixDerivFunc(iDir)};
-            end
-            
             initValueMatCVec=cell(1,nLDirs);
             for iDir=1:nLDirs
-              initValueMatCVec(iDir)={self.getEllApxMatrixInitValue(iDir)};
+             fHandleCVec{iDir}=self.getEllApxMatrixDerivFunc(iDir);
+             initValueMatCVec{iDir}=self.getEllApxMatrixInitValue(iDir);
             end
-
 
             selfCVec=cell(1,nLDirs);
             sTimeCVec=cell(1,nLDirs);
@@ -99,11 +92,12 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             solveTimeVecCVec(:)={solveTimeVec};
             
             
-            [QArrayCVec]=pCalc.eval(@gras.ellapx.lreachplain.ATightEllApxBuilder.fCalcTube,selfCVec,...
+            [QArrayList]=pCalc.eval(@gras.ellapx.lreachplain.ATightEllApxBuilder.fCalcTube,selfCVec,...
               loggerCVec, solverObjCVec,...
               lsGoodDirMatCVec, sTimeCVec, isFirstPointToRemoveCVec,solveTimeVecCVec,...
                fHandleCVec, initValueMatCVec);
-              QArrayList= QArrayCVec';   
+           
+           QArrayList= transpose(QArrayList);   
             %
             aMat=pDefObj.getxtDynamics.evaluate(resTimeVec);
             %

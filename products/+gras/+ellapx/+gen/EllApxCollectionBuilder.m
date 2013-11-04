@@ -61,13 +61,13 @@ classdef EllApxCollectionBuilder<gras.ellapx.gen.IEllApxBuilder
             pCalc=elltool.pcalc.ParCalculator();
              
             ellTubeTempRelCVec=cell(1,nBuilders);
-            ellTubeTempRelCVec(:)={self.builderList{1:nBuilders}.getEllTubes()};
-
+            ellTubeTempRelCVec{:}=self.builderList{1:nBuilders}.getEllTubes();
+            
             CalcPrecCVec=cell(1,nBuilders);
-            CalcPrecCVec(:)={self.builderList{1:nBuilders}.getCalcPrecision()};
+            CalcPrecCVec{:}=self.builderList{1:nBuilders}.getCalcPrecision();
             
             loggerCVec=cell(1,nBuilders);
-            loggerCVec(:)={logger};
+            loggerCVec{:}=logger;
             
             ellTubeRel=smartdb.relationoperators.union(ellTubeTempRelCVec{:});
 

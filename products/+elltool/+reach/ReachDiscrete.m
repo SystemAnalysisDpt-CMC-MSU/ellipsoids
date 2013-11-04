@@ -149,7 +149,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                     qArrayListArray(:, :, iTime + 1) = qMat;
                     lMat(:, iTime + 1) = aInvMat' * lMat(:, iTime);
                 end
-               
                 ltGoodDirArrayMat=lMat;
        
     end
@@ -187,10 +186,11 @@ classdef ReachDiscrete < elltool.reach.AReach
                 fMinkdiff = @(aEll, bEll, lVec) ...
                     minkdiff_ea(aEll, bEll, lVec);
             end
+            %
             pCalc=elltool.pcalc.ParCalculator();
             
-            [nInitialGoodDirs]=size(l0Mat,1);
-            l0CVec=mat2cell(l0Mat,nInitialGoodDirs,[ones(1,nTubes)]);
+            nInitialGoodDirs=size(l0Mat,1);
+            l0CVec=mat2cell(l0Mat,nInitialGoodDirs,ones(1,nTubes));
             
             
             probDynObjCVec=cell(1,nTubes);
@@ -219,12 +219,12 @@ classdef ReachDiscrete < elltool.reach.AReach
                    xDimCVec, timeVecCVec, ...
                    lMatCVec,  isDisturbCVec, isMinMaxCVec, ...
                   fMinkmpCVec,  fMinksumCVec, fMinkdiffCVec, isBackCVec, l0CVec);
-               
-            for iTube=1:nTubes
+           
+           for iTube=1:nTubes
                   qArrayList{iTube}(:, :, :)=cell2mat(qArrayListCVec(iTube));
                   ltGoodDirArray(:, iTube, :)=cell2mat(ltGoodDirArrayCVec(iTube));
-             end
-            
+            end
+
             %
         end
     end

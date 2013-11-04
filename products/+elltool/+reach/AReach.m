@@ -586,17 +586,17 @@ classdef AReach < elltool.reach.IReach
             %
             pCalc=elltool.pcalc.ParCalculator();
             
-            [nTimeSGoodDirs]=size(l0Mat,1);
-            l0MatCVec=mat2cell(fliplr(l0Mat),nTimeSGoodDirs,[ones(1,nGoodDirs)]);
+            nTimeSGoodDirs=size(l0Mat,1);
+            l0MatCVec=mat2cell(fliplr(l0Mat),nTimeSGoodDirs,ones(1,nGoodDirs));
             
             
             [sysDimRows, sysDimCols, nGoodDirs]=size(x0MatArray);
-            x0MatArrayCArray=mat2cell(flipdim(x0MatArray,3),sysDimRows, sysDimCols,[ones(1,nGoodDirs)]);
+            x0MatArrayCArray=mat2cell(flipdim(x0MatArray,3),sysDimRows, sysDimCols,ones(1,nGoodDirs));
             x0MatArrayCVec=cell(1,nGoodDirs);
             x0MatArrayCVec(:)={x0MatArrayCArray{:,:,:}};
             
-            [sysDimRows]=size(x0VecMat,1);
-            x0VecMatCVec=mat2cell(fliplr(x0VecMat),sysDimRows,[ones(1,nGoodDirs)]);
+            sysDimRows=size(x0VecMat,1);
+            x0VecMatCVec=mat2cell(fliplr(x0VecMat),sysDimRows,ones(1,nGoodDirs));
             
             selfCVec=cell(1,nGoodDirs);
             newTimeVecCVec=cell(1,nGoodDirs);
@@ -624,14 +624,16 @@ classdef AReach < elltool.reach.IReach
             qtStrCVecCVec(:)={qtStrCVec};
             isDisturbanceCVec(:)={isDisturbance};
             APPROX_TYPECVec(:)={APPROX_TYPE};
+            
+            
        
-             [ellTubeRelCVec]=pCalc.eval(@elltool.reach.AReach.fCalcTube, selfCVec,  ...
+             [ellTubeRelList]=pCalc.eval(@elltool.reach.AReach.fCalcTube, selfCVec,  ...
                 newTimeVecCVec,  approxTypeCVec, atStrCMatCVec,...
                 btStrCMatCVec, ptStrCMatCVec, ptStrCVecCVec, ctStrCMatCVec, ...
                 qtStrCMatCVec, qtStrCVecCVec, x0MatArrayCVec, ...
                 x0VecMatCVec,l0MatCVec,isDisturbanceCVec, APPROX_TYPECVec);
 
-             ellTubeRelList=flipud(ellTubeRelCVec);
+             ellTubeRelList=flipud(ellTubeRelList);
         end
     end
     %

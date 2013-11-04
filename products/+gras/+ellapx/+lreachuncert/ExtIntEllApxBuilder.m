@@ -199,19 +199,16 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %% Calculating approximations
             
             pCalc=elltool.pcalc.ParCalculator();
-           
-            lsGoodDirMat=(lsGoodDirMat(:, 1:nLDirs));
-            [nGoodDirs]=size(lsGoodDirMat,1);
-            lsGoodDirMatCVec=mat2cell(lsGoodDirMat,nGoodDirs,[ones(1,nLDirs)]);
+
+            nGoodDirs=size(lsGoodDirMat,1);
+            lsGoodDirMatCVec=mat2cell(lsGoodDirMat,nGoodDirs,ones(1,nLDirs));
             
             fHandleCVec=cell(1,nLDirs);
-            for iDir=1:nLDirs
-              fHandleCVec(iDir)={self.getEllApxMatrixDerivFunc(iDir)};
-            end
-            
             initValueMatCVec=cell(1,nLDirs);
+            
             for iDir=1:nLDirs
-               initValueMatCVec(iDir)={self.getEllApxMatrixInitValue(iDir)};
+              fHandleCVec{iDir}=self.getEllApxMatrixDerivFunc(iDir);
+              initValueMatCVec{iDir}=self.getEllApxMatrixInitValue(iDir);
             end
             
             
@@ -224,7 +221,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             solveTimeVecCVec=cell(1,nLDirs);
             
             
-            selfCVec(:)={self};
+            selfCVec(:)={self}
             sTimeCVec(:)={sTime};
             solverObjCVec(:)={solverObj};
             isFirstPointToRemoveCVec(:)={isFirstPointToRemove};
@@ -233,16 +230,16 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             solveTimeVecCVec(:)={solveTimeVec};
             
        
-            [QIntArrayCVec, MIntArrayCVec, QExtArrayCVec,  MExtArrayCVec]=...
+            [QIntArrayList, MIntArrayList, QExtArrayList,  MExtArrayList]=...
                 pCalc.eval(@gras.ellapx.lreachuncert.ExtIntEllApxBuilder.fCalcTube,selfCVec, ...
                 sTimeCVec, lsGoodDirMatCVec,...
                 solverObjCVec, isFirstPointToRemoveCVec,  loggerCVec, fOdeRegCVec, solveTimeVecCVec,...
                 fHandleCVec, initValueMatCVec);
-            QIntArrayList= QIntArrayCVec';
-            MIntArrayList= MIntArrayCVec';
-            QExtArrayList= QExtArrayCVec';
-            MExtArrayList= MExtArrayCVec';
-            
+            QIntArrayList=transpose(QIntArrayList);
+            MIntArrayList=transpose(MIntArrayList);
+            QExtArrayList=transpose(QExtArrayList);
+            MExtArrayList=transpose(MExtArrayList);
+
             %
             aMat=pDefObj.getxtDynamics.evaluate(resTimeVec);
             %
