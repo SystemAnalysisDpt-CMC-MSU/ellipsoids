@@ -28,7 +28,7 @@ where :math:`{\mathcal X}_0` is the set of initial conditions, and
 
 .. _ellpolyfig:
 
-.. figure:: ellpoly.png
+.. figure:: /pic/ellpoly.png
    :align: center
    :alt: approximation
    :figwidth: 70 %
@@ -68,7 +68,7 @@ System with Disturbance
 
 .. _springmassfig:
 
-.. figure:: springmass.png
+.. figure:: /pic/springmass.png
    :align: center
    :alt: spmass
    :figwidth: 70 %
@@ -126,7 +126,7 @@ and taking its projection onto :math:`(x_1, x_2)` subspace.
 
 .. _mechreachfig:
 
-.. figure:: reachmech.png
+.. figure:: /pic/reachmech.png
    :align: center
    :alt: reachmech
    :figwidth: 60 %
@@ -191,7 +191,7 @@ Switched System
 
 .. _rlcfig:
 
-.. figure:: rlc.png
+.. figure:: /pic/rlc.png
    :align: center
    :alt: rlc
    :figwidth: 60 %
@@ -286,7 +286,7 @@ say, :math:`t=3`.
    
 .. _rlcreachfig:
 
-.. figure:: rlcreach.png
+.. figure:: /pic/rlcreach.png
    :align: center
    :alt: rlcreach
    :figwidth: 60 %
@@ -324,7 +324,7 @@ Hybrid System
 
 .. _hwfig:
 
-.. figure:: hw.png
+.. figure:: /pic/hw.png
    :align: center
    :alt: highway
    :figwidth: 70 %
@@ -470,7 +470,7 @@ that intersect the guard.
    
 .. _hwreachfig:
 
-.. figure:: hwreach.png
+.. figure:: /pic/hwreach.png
    :align: center
    :alt: highway
    :figwidth: 70 %

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2013.9.24)  1 NOV 2013 11:11
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9 64-bit) (preloaded format=pdflatex 2013.9.24)  5 NOV 2013 01:39
 entering extended mode
 **elltool_manual.tex
 (C:\Users\Ksenia\Desktop\myBranchWorkCopy\doc\_build\latex\elltool_manual.tex
@@ -920,7 +920,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.i}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.55 ....reach.ReachContinuous}{216}{section.9.11}
+l.55 ....reach.ReachContinuous}{222}{section.9.11}
                                                    [1
 
 ])
@@ -968,976 +968,22 @@ Chapter 2.
 ] [8] [9]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 651.
- [10]
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.728 \end{gather}
-                  \phantomsection\label{chap_ellcalc:equation-valign2}\begin...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.728 \end{gather}
-                  \phantomsection\label{chap_ellcalc:equation-valign2}\begin...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.733 \end{gather}
-                  \phantomsection\label{chap_ellcalc:equation-valign3}\begin...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.733 \end{gather}
-                  \phantomsection\label{chap_ellcalc:equation-valign3}\begin...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.738 \end{gather}
-                  
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.738 \end{gather}
-                  
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-[11] [12] [13] [14]
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1079 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1079 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1079 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1079 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-[15]
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1090 \end{gather}
-                   \phantomsection\label{chap_ellcalc:equation-beta2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1090 \end{gather}
-                   \phantomsection\label{chap_ellcalc:equation-beta2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1092 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1092 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.1102 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-[16] [17]
-! Undefined control sequence.
-<recently read> \EE 
-                    
-l.1232 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
-                                                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...king if $\EE (q_1,Q_1)\subseteq \EE 
-                                                  (q_2,Q_2)$
-l.1232 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
-                                                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...oclabel \ttl@a \fi Checking if $\EE 
-                                                  (q_1,Q_1)\subseteq \EE (q_...
-l.1232 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
-                                                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-! Undefined control sequence.
-<argument> ...king if $\EE (q_1,Q_1)\subseteq \EE 
-                                                  (q_2,Q_2)$}{\thepage }{\@c...
-l.1232 ... if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
-                                                  
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[18] [19] [20]
+ [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20]
 Chapter 3.
 [21
 
 ] [22] [23] [24] [25] [26]
 
 LaTeX Warning: Reference `chap_reach-ctlsmaxmink' on page 27 undefined on input
- line 1963.
+ line 1964.
 
-[27] [28] [29]
-! Undefined control sequence.
-l.2266 ...\cap\bigcup_{t_0 \leqslant\tau\leqslantt
-                                                  }{\mathcal X}(\tau, t_0, {...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
+[27] [28] [29] [30] [31] [32] [33] [34] [35] [36] [37] [38
 
-[30]
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2389 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2389 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2389 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2389 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2389 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2389 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2389 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2389 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2391 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2391 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2415 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2415 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2415 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2415 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2415 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2415 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2415 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2415 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2415 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2415 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-[31] [32]
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2502 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2502 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2502 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2502 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2502 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2502 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2502 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2502 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckext2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2504 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2504 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2523 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckint2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2523 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckint2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2523 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckint2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2523 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckint2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2523 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckint2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2523 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckint2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2523 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckint2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2523 \end{gather}
-                   \phantomsection\label{chap_reach:equation-bckint2}\begin{...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2525 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2525 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-[33] [34]
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2646 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextmaxmin2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2646 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextmaxmin2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2651 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextmaxmin3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2651 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextmaxmin3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2651 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextmaxmin3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2651 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextmaxmin3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2653 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2653 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2684 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextminmax2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2684 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextminmax2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2684 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextminmax2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2684 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextminmax2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-[35]
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2689 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextminmax3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2689 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdextminmax3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2691 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2691 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2722 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintmaxmin2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2722 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintmaxmin2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2722 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintmaxmin2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2722 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintmaxmin2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2727 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintmaxmin3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2727 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintmaxmin3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2729 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2729 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-[36]
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2754 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintminmax2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2754 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintminmax2}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2759 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintminmax3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2759 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintminmax3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2759 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintminmax3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2759 \end{gather}
-                   \phantomsection\label{chap_reach:equation-fwdintminmax3}\...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2761 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.2761 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Undefined control sequence.
-l.2791 Points $x^{\pm}_l(t)$, $t\geqslantt
-                                          _0$, form extremal
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
-[37] [38]
+]
 Chapter 4.
-[39
-
-] [40]
+[39] [40]
 Chapter 5.
-LaTeX Font Info:    Try loading font information for T1+pcr on input line 3029.
+LaTeX Font Info:    Try loading font information for T1+pcr on input line 3034.
 
 ("C:\Program Files\MiKTeX 2.9_new\tex\latex\psnfss\t1pcr.fd"
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
@@ -1945,157 +991,131 @@ File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 
 ]
 LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
-(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 3103.
+(Font)              Font shape `T1/pcr/m/sl' tried instead on input line 3108.
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <9> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 3143.
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 3148.
  [42]
 [43] <minksum.png, id=883, 924.45375pt x 695.59875pt>
 File: minksum.png Graphic file (type png)
  <use minksum.png>
-Package pdftex.def Info: minksum.png used on input line 3282.
+Package pdftex.def Info: minksum.png used on input line 3287.
 (pdftex.def)             Requested size: 924.45149pt x 695.59706pt.
 File: minksum.png Graphic file (type png)
 
 <use minksum.png>
-Package pdftex.def Info: minksum.png used on input line 3282.
+Package pdftex.def Info: minksum.png used on input line 3287.
 (pdftex.def)             Requested size: 469.755pt x 353.46638pt.
-
-
-LaTeX Warning: Hyper reference `chap_implement:minksumPic' on page 44 undefined
- on input line 3285.
-
-
-LaTeX Warning: Reference `chap_implement:minksumPic' on page 44 undefined on in
-put line 3285.
-
-[44 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minksum.png (PNG
- copy)>] <minkdiff.png, id=889, 997.7275pt x 750.805pt>
-File: minkdiff.png Graphic file (type png)
- <use minkdiff.png>
-Package pdftex.def Info: minkdiff.png used on input line 3342.
-(pdftex.def)             Requested size: 997.72505pt x 750.80316pt.
+ [44 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minksum.png (PN
+G copy)>] <minkdiff.png, id=890, 997.7275pt x 750.805pt>
 File: minkdiff.png Graphic file (type png)
 
 <use minkdiff.png>
-Package pdftex.def Info: minkdiff.png used on input line 3342.
+Package pdftex.def Info: minkdiff.png used on input line 3347.
+(pdftex.def)             Requested size: 997.72505pt x 750.80316pt.
+File: minkdiff.png Graphic file (type png)
+ <use minkdiff.png>
+Package pdftex.def Info: minkdiff.png used on input line 3347.
 (pdftex.def)             Requested size: 469.755pt x 353.49704pt.
-
-
-LaTeX Warning: Hyper reference `chap_implement:minkdiffPic' on page 45 undefine
-d on input line 3345.
-
-
-LaTeX Warning: Reference `chap_implement:minkdiffPic' on page 45 undefined on i
-nput line 3345.
-
-[45] [46 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minkdiff.pn
-g (PNG copy)>] <minkpm.png, id=900, 959.585pt x 721.69624pt>
+ [45] [46 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minkdiff.p
+ng (PNG copy)>]
+<minkpm.png, id=902, 959.585pt x 721.69624pt>
 File: minkpm.png Graphic file (type png)
  <use minkpm.png>
-Package pdftex.def Info: minkpm.png used on input line 3403.
+Package pdftex.def Info: minkpm.png used on input line 3408.
 (pdftex.def)             Requested size: 959.58266pt x 721.69449pt.
 File: minkpm.png Graphic file (type png)
 
 <use minkpm.png>
-Package pdftex.def Info: minkpm.png used on input line 3403.
+Package pdftex.def Info: minkpm.png used on input line 3408.
 (pdftex.def)             Requested size: 469.755pt x 353.3039pt.
- <minkmp.png, id=901, 1004.75375pt x 755.82375pt>
+ <minkmp.png, id=903, 1004.75375pt x 755.82375pt>
 File: minkmp.png Graphic file (type png)
 
 <use minkmp.png>
-Package pdftex.def Info: minkmp.png used on input line 3408.
+Package pdftex.def Info: minkmp.png used on input line 3413.
 (pdftex.def)             Requested size: 1004.75131pt x 755.8219pt.
 File: minkmp.png Graphic file (type png)
  <use minkmp.png>
-Package pdftex.def Info: minkmp.png used on input line 3408.
+Package pdftex.def Info: minkmp.png used on input line 3413.
 (pdftex.def)             Requested size: 469.755pt x 353.36887pt.
 
 
-LaTeX Warning: Reference `minkPic' on page 47 undefined on input line 3411.
+LaTeX Warning: Reference `minkpic' on page 47 undefined on input line 3416.
 
 [47 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minkpm.png (PNG 
 copy)>] [48 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/minkmp.p
 ng (PNG copy)>] [49] [50] [51] [52]
-Underfull \hbox (badness 6493) in paragraph at lines 3744--3749
+Underfull \hbox (badness 6493) in paragraph at lines 3749--3754
 \T1/ptm/m/n/10 There are sev-eral classes in \T1/ptm/m/it/10 El-lip-soidal Tool
 -box \T1/ptm/m/n/10 for op-er-a-tions with el-lip-soidal tubes. The class
  []
 
-[53] <reachTubeStatProj.png, id=931, 1018.80624pt x 884.30376pt>
+[53] <reachTubeStatProj.png, id=933, 1018.80624pt x 884.30376pt>
 File: reachTubeStatProj.png Graphic file (type png)
 
 <use reachTubeStatProj.png>
-Package pdftex.def Info: reachTubeStatProj.png used on input line 3841.
+Package pdftex.def Info: reachTubeStatProj.png used on input line 3846.
 (pdftex.def)             Requested size: 1018.80376pt x 884.3016pt.
 File: reachTubeStatProj.png Graphic file (type png)
  <use reachTubeStatProj.png>
-Package pdftex.def Info: reachTubeStatProj.png used on input line 3841.
+Package pdftex.def Info: reachTubeStatProj.png used on input line 3846.
 (pdftex.def)             Requested size: 469.755pt x 407.74269pt.
 
-<reachTubeDynProj.png, id=932, 1008.76875pt x 771.88374pt>
+<reachTubeDynProj.png, id=934, 1008.76875pt x 771.88374pt>
 File: reachTubeDynProj.png Graphic file (type png)
 
 <use reachTubeDynProj.png>
-Package pdftex.def Info: reachTubeDynProj.png used on input line 3846.
+Package pdftex.def Info: reachTubeDynProj.png used on input line 3851.
 (pdftex.def)             Requested size: 1008.7663pt x 771.88185pt.
 File: reachTubeDynProj.png Graphic file (type png)
  <use reachTubeDynProj.png>
-Package pdftex.def Info: reachTubeDynProj.png used on input line 3846.
+Package pdftex.def Info: reachTubeDynProj.png used on input line 3851.
 (pdftex.def)             Requested size: 469.755pt x 359.44046pt.
 
 
-LaTeX Warning: Reference `project' on page 54 undefined on input line 3849.
+LaTeX Warning: Reference `project' on page 54 undefined on input line 3854.
 
 [54] [55 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/reachTubeSt
 atProj.png (PNG copy)>] [56 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_buil
 d/latex/reachTubeDynProj.png (PNG copy)>]
-<unionTubeStatProj.png, id=945, 1020.81375pt x 886.31125pt>
+<unionTubeStatProj.png, id=947, 1020.81375pt x 886.31125pt>
 File: unionTubeStatProj.png Graphic file (type png)
 
 <use unionTubeStatProj.png>
-Package pdftex.def Info: unionTubeStatProj.png used on input line 3886.
+Package pdftex.def Info: unionTubeStatProj.png used on input line 3891.
 (pdftex.def)             Requested size: 1020.81126pt x 886.30908pt.
 File: unionTubeStatProj.png Graphic file (type png)
  <use unionTubeStatProj.png>
-Package pdftex.def Info: unionTubeStatProj.png used on input line 3886.
+Package pdftex.def Info: unionTubeStatProj.png used on input line 3891.
 (pdftex.def)             Requested size: 469.755pt x 407.8704pt.
 
 
 LaTeX Warning: Hyper reference `chap_implement:unionTubeStatProj' on page 57 un
-defined on input line 3889.
+defined on input line 3894.
 
 
 LaTeX Warning: Reference `chap_implement:unionTubeStatProj' on page 57 undefine
-d on input line 3889.
+d on input line 3894.
 
-<dispPic.png, id=946, 1015.795pt x 764.8575pt>
+<dispPic.png, id=948, 1015.795pt x 764.8575pt>
 File: dispPic.png Graphic file (type png)
  <use dispPic.png>
-Package pdftex.def Info: dispPic.png used on input line 3925.
+Package pdftex.def Info: dispPic.png used on input line 3930.
 (pdftex.def)             Requested size: 1015.79253pt x 764.85562pt.
 File: dispPic.png Graphic file (type png)
 
 <use dispPic.png>
-Package pdftex.def Info: dispPic.png used on input line 3925.
+Package pdftex.def Info: dispPic.png used on input line 3930.
 (pdftex.def)             Requested size: 469.755pt x 353.70604pt.
-
-
-LaTeX Warning: Hyper reference `chap_implement:dispPic' on page 57 undefined on
- input line 3928.
-
-
-LaTeX Warning: Reference `chap_implement:dispPic' on page 57 undefined on input
- line 3928.
-
-[57] [58 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/unionTubeSt
-atProj.png (PNG copy)>] [59 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_buil
-d/latex/dispPic.png (PNG copy)>] [60] [61] [62]
+ [57] [58 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/unionTubeS
+tatProj.png (PNG copy)>] [59 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_bui
+ld/latex/dispPic.png (PNG copy)>] [60] [61] [62]
 
 LaTeX Warning: Reference `chap_implement-uct' on page 63 undefined on input lin
-e 4269.
+e 4274.
 
 [63] [64] [65] [66]
-Overfull \hbox (0.81987pt too wide) in paragraph at lines 4545--4547
+Overfull \hbox (0.81987pt too wide) in paragraph at lines 4550--4552
 []\T1/ptm/m/n/10 Stanley Chan Ar-ti-cle Home-page. [][]http://videoprocessing
 .ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf[][]. 
  []
@@ -2104,174 +1124,99 @@ Overfull \hbox (0.81987pt too wide) in paragraph at lines 4545--4547
 
 ]
 Chapter 6.
-<ellpoly.png, id=1008, 497.86pt x 391.4625pt>
+<ellpoly.png, id=1011, 497.86pt x 391.4625pt>
 File: ellpoly.png Graphic file (type png)
  <use ellpoly.png>
-Package pdftex.def Info: ellpoly.png used on input line 4592.
+Package pdftex.def Info: ellpoly.png used on input line 4597.
 (pdftex.def)             Requested size: 497.85878pt x 391.46153pt.
 File: ellpoly.png Graphic file (type png)
 
 <use ellpoly.png>
-Package pdftex.def Info: ellpoly.png used on input line 4592.
+Package pdftex.def Info: ellpoly.png used on input line 4597.
 (pdftex.def)             Requested size: 469.755pt x 369.37253pt.
- <springmass.png, id=1012, 563.10374pt x 223.83624pt>
+ <springmass.png, id=1015, 563.10374pt x 223.83624pt>
 File: springmass.png Graphic file (type png)
 
 <use springmass.png>
-Package pdftex.def Info: springmass.png used on input line 4638.
+Package pdftex.def Info: springmass.png used on input line 4643.
 (pdftex.def)             Requested size: 563.10237pt x 223.8357pt.
 File: springmass.png Graphic file (type png)
  <use springmass.png>
-Package pdftex.def Info: springmass.png used on input line 4638.
+Package pdftex.def Info: springmass.png used on input line 4643.
 (pdftex.def)             Requested size: 469.755pt x 186.73012pt.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.4645 \end{gather}
-                   \phantomsection\label{chap_examples:equation-spmass2}\beg...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.4645 \end{gather}
-                   \phantomsection\label{chap_examples:equation-spmass2}\beg...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-[69] [70 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/ellpoly.png
- (PNG copy)> <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/springm
-ass.png>]
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.4647 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.4647 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-<reachmech.png, id=1032, 875.27pt x 723.70375pt>
+ [69] [70 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/ellpoly.pn
+g (PNG copy)> <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/spring
+mass.png>]
+<reachmech.png, id=1035, 875.27pt x 723.70375pt>
 File: reachmech.png Graphic file (type png)
  <use reachmech.png>
-Package pdftex.def Info: reachmech.png used on input line 4683.
+Package pdftex.def Info: reachmech.png used on input line 4688.
 (pdftex.def)             Requested size: 875.26787pt x 723.70198pt.
 File: reachmech.png Graphic file (type png)
 
 <use reachmech.png>
-Package pdftex.def Info: reachmech.png used on input line 4683.
+Package pdftex.def Info: reachmech.png used on input line 4688.
 (pdftex.def)             Requested size: 469.755pt x 388.40895pt.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.4728 \end{gather}
-                   \phantomsection\label{chap_examples:equation-smdist2}\beg...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.4728 \end{gather}
-                   \phantomsection\label{chap_examples:equation-smdist2}\beg...
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.4730 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-! Extra alignment tab has been changed to \cr.
-<template> }$\hfill \endtemplate 
-                                 
-l.4730 \end{gather}
-                   
-You have given more \span or & marks than there were
-in the preamble to the \halign or \valign now in progress.
-So I'll assume that you meant to type \cr instead.
-
-[71] [72 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/reachmech.p
-ng (PNG copy)>]
+ [71] [72 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/reachmech.
+png (PNG copy)>]
 
 LaTeX Warning: Hyper reference `chap_examples:mechreachfig`(c) shows the reach 
-set of the system ([smdist1' on page 73 undefined on input line 4762.
+set of the system :eq:`smdist1' on page 73 undefined on input line 4767.
 
 
 LaTeX Warning: Reference `chap_examples:mechreachfig`(c) shows the reach set of
- the system ([smdist1]-[smdist2]) evolving in time from :math:`t=0' on page 73 
-undefined on input line 4762.
+ the system :eq:`smdist1' on page 73 undefined on input line 4767.
 
 
 LaTeX Warning: Hyper reference `chap_examples:mechreachfig`(d) presents a snaps
 hot of this reach set at time :math:`t=4' on page 73 undefined on input line 47
-63.
+68.
 
 
 LaTeX Warning: Reference `chap_examples:mechreachfig`(d) presents a snapshot of
- this reach set at time :math:`t=4' on page 73 undefined on input line 4763.
+ this reach set at time :math:`t=4' on page 73 undefined on input line 4768.
 
-<rlc.png, id=1057, 501.875pt x 176.66pt>
+<rlc.png, id=1063, 501.875pt x 176.66pt>
 File: rlc.png Graphic file (type png)
  <use rlc.png>
-Package pdftex.def Info: rlc.png used on input line 4771.
+Package pdftex.def Info: rlc.png used on input line 4776.
 (pdftex.def)             Requested size: 501.87376pt x 176.65956pt.
 File: rlc.png Graphic file (type png)
  <use rlc.png>
-Package pdftex.def Info: rlc.png used on input line 4771.
+Package pdftex.def Info: rlc.png used on input line 4776.
 (pdftex.def)             Requested size: 469.755pt x 165.36224pt.
  [73 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/rlc.png>] [74]
-<rlcreach.png, id=1077, 931.48pt x 730.73pt>
+<rlcreach.png, id=1081, 931.48pt x 730.73pt>
 File: rlcreach.png Graphic file (type png)
  <use rlcreach.png>
-Package pdftex.def Info: rlcreach.png used on input line 4902.
+Package pdftex.def Info: rlcreach.png used on input line 4907.
 (pdftex.def)             Requested size: 931.47772pt x 730.72821pt.
 File: rlcreach.png Graphic file (type png)
 
 <use rlcreach.png>
-Package pdftex.def Info: rlcreach.png used on input line 4902.
+Package pdftex.def Info: rlcreach.png used on input line 4907.
 (pdftex.def)             Requested size: 469.755pt x 368.5084pt.
  [75 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/rlcreach.png (P
-NG copy)>] <hw.png, id=1090, 612.2875pt x 181.67876pt>
+NG copy)>] <hw.png, id=1094, 612.2875pt x 181.67876pt>
 File: hw.png Graphic file (type png)
 
 <use hw.png>
-Package pdftex.def Info: hw.png used on input line 4963.
+Package pdftex.def Info: hw.png used on input line 4968.
 (pdftex.def)             Requested size: 612.28601pt x 181.6783pt.
 File: hw.png Graphic file (type png)
  <use hw.png>
-Package pdftex.def Info: hw.png used on input line 4963.
+Package pdftex.def Info: hw.png used on input line 4968.
 (pdftex.def)             Requested size: 469.755pt x 139.38574pt.
  [76 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/hw.png>] [77] [
-78] <hwreach.png, id=1109, 887.315pt x 694.595pt>
+78] <hwreach.png, id=1113, 887.315pt x 694.595pt>
 File: hwreach.png Graphic file (type png)
 
 <use hwreach.png>
-Package pdftex.def Info: hwreach.png used on input line 5168.
+Package pdftex.def Info: hwreach.png used on input line 5173.
 (pdftex.def)             Requested size: 887.31284pt x 694.5933pt.
 File: hwreach.png Graphic file (type png)
  <use hwreach.png>
-Package pdftex.def Info: hwreach.png used on input line 5168.
+Package pdftex.def Info: hwreach.png used on input line 5173.
 (pdftex.def)             Requested size: 469.755pt x 367.72025pt.
  [79 <C:/Users/Ksenia/Desktop/myBranchWorkCopy/doc/_build/latex/hwreach.png (PN
 G copy)>] [80]
@@ -2287,366 +1232,367 @@ Chapter 8.
 ]
 Chapter 9.
 [85]
-Underfull \vbox (badness 10000) detected at line 5401
+Underfull \vbox (badness 10000) detected at line 5406
  []
 
 
-Underfull \vbox (badness 10000) detected at line 5401
+Underfull \vbox (badness 10000) detected at line 5406
  []
 
 [86]
-Underfull \vbox (badness 10000) detected at line 5437
+Underfull \vbox (badness 10000) detected at line 5442
  []
 
 [87]
-Underfull \vbox (badness 1102) detected at line 5538
+Underfull \vbox (badness 1102) detected at line 5543
  []
 
 [88]
-Underfull \vbox (badness 10000) detected at line 5578
+Underfull \vbox (badness 10000) detected at line 5583
  []
 
 [89]
-Underfull \vbox (badness 10000) detected at line 5674
+Underfull \vbox (badness 10000) detected at line 5679
  []
 
 [90]
-Underfull \vbox (badness 10000) detected at line 5702
+Underfull \vbox (badness 10000) detected at line 5707
  []
 
 [91] [92]
-Underfull \vbox (badness 10000) detected at line 5837
+Underfull \vbox (badness 10000) detected at line 5842
  []
 
 [93] [94] [95]
-Underfull \vbox (badness 10000) detected at line 5991
+Underfull \vbox (badness 10000) detected at line 5996
  []
 
 [96] [97]
-Underfull \vbox (badness 1552) detected at line 6117
+Underfull \vbox (badness 1552) detected at line 6122
  []
 
 [98]
-Underfull \vbox (badness 1033) detected at line 6198
+Underfull \vbox (badness 1033) detected at line 6203
  []
 
 [99]
-Underfull \vbox (badness 3029) detected at line 6269
+Underfull \vbox (badness 3029) detected at line 6274
  []
 
 [100] [101]
-Underfull \vbox (badness 10000) detected at line 6420
+Underfull \vbox (badness 10000) detected at line 6425
  []
 
 [102]
-Underfull \vbox (badness 10000) detected at line 6473
+Underfull \vbox (badness 10000) detected at line 6478
  []
 
 [103]
-Underfull \vbox (badness 10000) detected at line 6539
+Underfull \vbox (badness 10000) detected at line 6544
  []
 
 [104]
-Underfull \vbox (badness 10000) detected at line 6573
+Underfull \vbox (badness 10000) detected at line 6578
  []
 
 [105] [106]
-Underfull \vbox (badness 3240) detected at line 6679
+Underfull \vbox (badness 3240) detected at line 6684
  []
 
 [107]
-Underfull \vbox (badness 1033) detected at line 6787
+Underfull \vbox (badness 1033) detected at line 6792
  []
 
 [108] [109]
-Underfull \vbox (badness 5231) detected at line 6866
+Underfull \vbox (badness 5231) detected at line 6871
  []
 
 [110]
-Underfull \vbox (badness 10000) detected at line 6925
+Underfull \vbox (badness 10000) detected at line 6930
  []
 
 [111]
-Underfull \vbox (badness 10000) detected at line 6981
+Underfull \vbox (badness 10000) detected at line 6986
  []
 
 [112] [113]
-Underfull \vbox (badness 10000) detected at line 7129
+Underfull \vbox (badness 10000) detected at line 7134
  []
 
 [114]
-Underfull \vbox (badness 10000) detected at line 7169
+Underfull \vbox (badness 10000) detected at line 7174
  []
 
 [115]
-Underfull \vbox (badness 10000) detected at line 7219
+Underfull \vbox (badness 10000) detected at line 7224
  []
 
 [116]
-Underfull \vbox (badness 1552) detected at line 7295
+Underfull \vbox (badness 1552) detected at line 7300
  []
 
 [117]
-Underfull \vbox (badness 10000) detected at line 7347
+Underfull \vbox (badness 10000) detected at line 7352
  []
 
 [118]
-Underfull \vbox (badness 1953) detected at line 7445
+Underfull \vbox (badness 1953) detected at line 7450
  []
 
 [119]
-Underfull \vbox (badness 10000) detected at line 7501
+Underfull \vbox (badness 10000) detected at line 7506
  []
 
 [120]
-Underfull \vbox (badness 10000) detected at line 7534
+Underfull \vbox (badness 10000) detected at line 7539
  []
 
 [121] [122]
-Underfull \vbox (badness 10000) detected at line 7652
+Underfull \vbox (badness 10000) detected at line 7657
  []
 
 [123]
-Underfull \vbox (badness 10000) detected at line 7708
+Underfull \vbox (badness 10000) detected at line 7713
  []
 
 [124]
-Underfull \vbox (badness 3240) detected at line 7778
+Underfull \vbox (badness 3240) detected at line 7783
  []
 
 [125]
-Underfull \vbox (badness 1552) detected at line 7843
+Underfull \vbox (badness 1552) detected at line 7848
  []
 
 [126]
-Underfull \vbox (badness 3029) detected at line 7900
+Underfull \vbox (badness 3029) detected at line 7905
  []
 
 [127]
-Underfull \vbox (badness 1552) detected at line 7954
+Underfull \vbox (badness 1552) detected at line 7959
  []
 
 [128] [129] [130]
-Underfull \vbox (badness 3029) detected at line 8151
+Underfull \vbox (badness 3029) detected at line 8156
  []
 
 [131] [132] [133]
-Underfull \vbox (badness 3029) detected at line 8330
+Underfull \vbox (badness 3029) detected at line 8335
  []
 
 [134]
-Underfull \vbox (badness 3029) detected at line 8467
+Underfull \vbox (badness 3029) detected at line 8472
  []
 
 [135]
-Underfull \vbox (badness 10000) detected at line 8467
+Underfull \vbox (badness 10000) detected at line 8472
  []
 
 
-Underfull \vbox (badness 10000) detected at line 8467
+Underfull \vbox (badness 10000) detected at line 8472
  []
 
 [136]
-Underfull \vbox (badness 3240) detected at line 8512
+Underfull \vbox (badness 3240) detected at line 8517
  []
 
 [137]
-Underfull \vbox (badness 3029) detected at line 8571
+Underfull \vbox (badness 3029) detected at line 8576
  []
 
 [138]
-Underfull \vbox (badness 3029) detected at line 8635
+Underfull \vbox (badness 3029) detected at line 8640
  []
 
 [139] [140] [141] [142] [143] [144]
-Underfull \vbox (badness 10000) detected at line 9068
+Underfull \vbox (badness 10000) detected at line 9073
  []
 
 [145]
-Underfull \vbox (badness 10000) detected at line 9117
+Underfull \vbox (badness 10000) detected at line 9122
  []
 
 [146] [147]
-Underfull \vbox (badness 10000) detected at line 9229
+Underfull \vbox (badness 10000) detected at line 9234
  []
 
 [148] [149] [150] [151] [152] [153]
-Underfull \vbox (badness 10000) detected at line 9624
+Underfull \vbox (badness 10000) detected at line 9629
  []
 
 [154] [155] [156] [157] [158] [159] [160]
-Underfull \vbox (badness 10000) detected at line 10078
+Underfull \vbox (badness 10000) detected at line 10083
  []
 
 [161]
-Underfull \vbox (badness 3029) detected at line 10124
+Underfull \vbox (badness 3029) detected at line 10129
  []
 
 [162] [163]
-Underfull \vbox (badness 1552) detected at line 10249
+Underfull \vbox (badness 1552) detected at line 10254
  []
 
-[164] [165] [166]
-Underfull \vbox (badness 10000) detected at line 10440
+[164] [165]
+Underfull \vbox (badness 1552) detected at line 10412
  []
 
-
-Underfull \vbox (badness 10000) detected at line 10440
+[166]
+Underfull \vbox (badness 10000) detected at line 10439
  []
 
 [167] [168]
-Underfull \vbox (badness 10000) detected at line 10608
+Underfull \vbox (badness 10000) detected at line 10580
  []
 
-[169]
-Underfull \vbox (badness 10000) detected at line 10628
+
+Underfull \vbox (badness 10000) detected at line 10580
  []
 
-[170]
-Underfull \vbox (badness 1033) detected at line 10725
+[169] [170]
+Underfull \vbox (badness 10000) detected at line 10697
  []
 
-[171] [172]
-Underfull \vbox (badness 10000) detected at line 10803
+[171] [172] [173]
+Underfull \hbox (badness 10000) in paragraph at lines 10834--10837
+[]\T1/ptm/m/n/10 See the de-scrip-tion of the fol-low-ing meth-ods in sec-tion 
+[][]smartdb.relations.ATypifiedStaticRelation[][] for
  []
 
-[173] [174]
-Underfull \vbox (badness 1552) detected at line 10946
- []
-
-[175]
-Underfull \vbox (badness 1552) detected at line 11004
- []
-
-[176]
-Underfull \vbox (badness 1552) detected at line 11103
+[174] [175] [176]
+Underfull \vbox (badness 1552) detected at line 11155
  []
 
 [177]
-Underfull \vbox (badness 10000) detected at line 11117
+Underfull \vbox (badness 1552) detected at line 11254
  []
 
 [178] [179]
-Underfull \vbox (badness 10000) detected at line 11251
+Underfull \vbox (badness 2005) detected at line 11327
  []
 
 [180]
-Underfull \vbox (badness 3029) detected at line 11317
+Underfull \vbox (badness 1552) detected at line 11402
  []
 
-[181] [182]
-Underfull \vbox (badness 2635) detected at line 11436
+[181]
+Underfull \vbox (badness 3029) detected at line 11468
  []
 
-[183] [184]
-Underfull \vbox (badness 10000) detected at line 11561
+[182] [183]
+Underfull \hbox (badness 10000) in paragraph at lines 11517--11520
+[]\T1/ptm/m/n/10 See the de-scrip-tion of the fol-low-ing meth-ods in sec-tion 
+[][]smartdb.relations.ATypifiedStaticRelation[][] for
  []
 
-[185]
-Underfull \vbox (badness 10000) detected at line 11614
+[184] [185]
+Underfull \vbox (badness 10000) detected at line 11772
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 11772
  []
 
 [186] [187] [188]
-Underfull \vbox (badness 10000) detected at line 11810
+Underfull \vbox (badness 10000) detected at line 12003
  []
 
-[189] [190] [191] [192] [193] [194] [195]
-Underfull \vbox (badness 1552) detected at line 12268
+[189] [190]
+Underfull \hbox (badness 10000) in paragraph at lines 12063--12066
+[]\T1/ptm/m/n/10 See the de-scrip-tion of the fol-low-ing meth-ods in sec-tion 
+[][]smartdb.relations.ATypifiedStaticRelation[][] for
  []
 
-[196] [197] [198]
-Underfull \vbox (badness 10000) detected at line 12438
+[191] [192] [193]
+Underfull \vbox (badness 3029) detected at line 12367
  []
 
-[199]
-Underfull \vbox (badness 1552) detected at line 12500
+[194]
+Underfull \vbox (badness 1552) detected at line 12464
  []
 
-[200]
-Underfull \vbox (badness 10000) detected at line 12562
+[195] [196]
+Underfull \hbox (badness 10000) in paragraph at lines 12524--12527
+[]\T1/ptm/m/n/10 See the de-scrip-tion of the fol-low-ing meth-ods in sec-tion 
+[][]smartdb.relations.ATypifiedStaticRelation[][] for
  []
 
-[201] [202] [203] [204]
-Underfull \vbox (badness 1033) detected at line 12817
+[197] [198] [199]
+Underfull \vbox (badness 10000) detected at line 12792
  []
 
-[205]
-Underfull \vbox (badness 1552) detected at line 12880
+
+Underfull \vbox (badness 10000) detected at line 12792
+ []
+
+[200] [201] [202]
+Underfull \vbox (badness 10000) detected at line 13023
+ []
+
+[203] [204] [205]
+Underfull \vbox (badness 10000) detected at line 13173
  []
 
 [206]
-Underfull \vbox (badness 1552) detected at line 12966
+Underfull \vbox (badness 3646) detected at line 13267
  []
 
 [207]
-Underfull \vbox (badness 10000) detected at line 13002
+Underfull \vbox (badness 10000) detected at line 13296
  []
 
-[208]
-Underfull \vbox (badness 10000) detected at line 13043
+[208] [209] [210]
+Underfull \vbox (badness 1424) detected at line 13493
  []
 
-[209]
-Underfull \vbox (badness 3872) detected at line 13118
+[211]
+Underfull \vbox (badness 1552) detected at line 13555
  []
 
-[210]
-Underfull \vbox (badness 3240) detected at line 13191
- []
-
-[211] [212]
-Underfull \vbox (badness 1953) detected at line 13311
+[212]
+Underfull \vbox (badness 1552) detected at line 13613
  []
 
 [213]
-Underfull \vbox (badness 10000) detected at line 13353
+Underfull \vbox (badness 10000) detected at line 13671
  []
 
 [214] [215]
-Underfull \hbox (badness 6204) in paragraph at lines 13450--13452
-[]\T1/ptm/m/n/10 See the de-scrip-tion of the fol-low-ing meth-ods in sec-tion 
-[sec-Class-De-scr:elltool.reach.AReach] for ell-
- []
-
-
-Overfull \vbox (0.63048pt too high) detected at line 13490
+Underfull \vbox (badness 10000) detected at line 13793
  []
 
 [216]
-Underfull \hbox (badness 6204) in paragraph at lines 13492--13494
-[]\T1/ptm/m/n/10 See the de-scrip-tion of the fol-low-ing meth-ods in sec-tion 
-[sec-Class-De-scr:elltool.reach.AReach] for ell-
+Underfull \vbox (badness 5832) detected at line 13859
  []
 
-[217] [218]
-Underfull \vbox (badness 1552) detected at line 13668
+[217]
+Underfull \vbox (badness 1552) detected at line 13933
+ []
+
+[218]
+Underfull \vbox (badness 10000) detected at line 13970
  []
 
 [219]
-Underfull \vbox (badness 1147) detected at line 13729
+Underfull \vbox (badness 1552) detected at line 14058
  []
 
-[220] [221]
-Underfull \vbox (badness 1552) detected at line 13866
+[220]
+Underfull \vbox (badness 1552) detected at line 14113
  []
 
-[222]
-Underfull \vbox (badness 3240) detected at line 13930
- []
-
-[223] [224] [225] [226]
-Chapter 10.
-No file elltool_manual.ind.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 14085.
-[227
+[221] [222] [223] [224] [225] [226] [227] [228] [229] [230] [231] [232]
+[233] [234] [235] [236
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 14085.
+Chapter 10.
+No file elltool_manual.ind.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 15092.
+[237]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 15092.
 
 (C:\Users\Ksenia\Desktop\myBranchWorkCopy\doc\_build\latex\elltool_manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 14085.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 15092.
 
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 14085
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 15092
 .
 Package rerunfilecheck Info: File `elltool_manual.out' has not changed.
 (rerunfilecheck)             Checksum: A075CD234722780F9146A433B3470D00;2905.
@@ -2654,14 +1600,14 @@ Package rerunfilecheck Info: File `elltool_manual.out' has not changed.
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 14085.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 15092.
  ) 
 Here is how much of TeX's memory you used:
- 10335 strings out of 493921
- 147182 string characters out of 3147279
- 251407 words of memory out of 3000000
- 12703 multiletter control sequences out of 15000+200000
- 83329 words of font info for 105 fonts, out of 3000000 for 9000
+ 10548 strings out of 493921
+ 154265 string characters out of 3147279
+ 258000 words of memory out of 3000000
+ 12802 multiletter control sequences out of 15000+200000
+ 83022 words of font info for 104 fonts, out of 3000000 for 9000
  842 hyphenation exceptions out of 8191
  38i,27n,51p,757b,491s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9_new/fonts/enc/dvips/fontname/8r.enc}<C:/Program 
@@ -2669,34 +1615,32 @@ Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Program File
 s/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Program Files/MiK
 TeX 2.9_new/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Files/MiKTeX 
 2.9_new/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKTeX 2.9_
-new/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files/MiKTeX 2.9_new/
-fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files/MiKTeX 2.9_new/fonts
-/type1/public/amsfonts/cm/cmmi6.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type
-1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/pub
-lic/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/public/a
-msfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/public/amsfon
-ts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm
-/cmr5.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmr6.
-pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmr7.pfb><C
-:/Program Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Prog
-ram Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program 
-Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Files
-/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Program Files/MiKT
-eX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/MiKTeX 2.
-9_new/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTeX 2.9_new
-/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Program Files/MiKTeX 2.9_ne
-w/fonts/type1/public/amsfonts/symbols/msam7.pfb><C:/Program Files/MiKTeX 2.9_ne
-w/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Program Files/MiKTeX 2.9_n
-ew/fonts/type1/urw/courier/ucrb8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/ty
-pe1/urw/courier/ucrr8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/cou
-rier/ucrro8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/helvetic/uhvb
-8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/helvetic/uhvbo8a.pfb><C
-:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/times/utmb8a.pfb><C:/Program Fil
-es/MiKTeX 2.9_new/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/MiKTeX 2.9
-_new/fonts/type1/urw/times/utmri8a.pfb>
-Output written on elltool_manual.pdf (231 pages, 2261074 bytes).
+new/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Program Files/MiKTeX 2.9_new/f
+onts/type1/public/amsfonts/cm/cmmi6.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/
+type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1
+/public/amsfonts/cm/cmmi8.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/publ
+ic/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/public/am
+sfonts/cm/cmr5.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts
+/cm/cmr6.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cm
+r7.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmr8.pfb
+><C:/Program Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:
+/Program Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Prog
+ram Files/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Program F
+iles/MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files/
+MiKTeX 2.9_new/fonts/type1/public/amsfonts/cm/cmsy8.pfb><C:/Program Files/MiKTe
+X 2.9_new/fonts/type1/public/amsfonts/symbols/msam10.pfb><C:/Program Files/MiKT
+eX 2.9_new/fonts/type1/public/amsfonts/symbols/msam7.pfb><C:/Program Files/MiKT
+eX 2.9_new/fonts/type1/public/amsfonts/symbols/msbm10.pfb><C:/Program Files/MiK
+TeX 2.9_new/fonts/type1/urw/courier/ucrb8a.pfb><C:/Program Files/MiKTeX 2.9_new
+/fonts/type1/urw/courier/ucrr8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type
+1/urw/courier/ucrro8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/helv
+etic/uhvb8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/helvetic/uhvbo
+8a.pfb><C:/Program Files/MiKTeX 2.9_new/fonts/type1/urw/times/utmb8a.pfb><C:/Pr
+ogram Files/MiKTeX 2.9_new/fonts/type1/urw/times/utmr8a.pfb><C:/Program Files/M
+iKTeX 2.9_new/fonts/type1/urw/times/utmri8a.pfb>
+Output written on elltool_manual.pdf (241 pages, 2330063 bytes).
 PDF statistics:
- 1969 PDF objects out of 2073 (max. 8388607)
- 611 named destinations out of 1000 (max. 500000)
+ 2472 PDF objects out of 2487 (max. 8388607)
+ 727 named destinations out of 1000 (max. 500000)
  445 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -15,7 +15,7 @@
 
 
 \title{elltool\_manual Documentation}
-\date{November 01, 2013}
+\date{November 05, 2013}
 \release{0.1}
 \author{Lukashevichus K.}
 \newcommand{\sphinxlogo}{}
@@ -724,14 +724,14 @@ We have to find matrix $S$ such that
 $Sv_2\uparrow\uparrow v_1$. We suggest explicit formulas for the
 calculation of this matrix ( Dariyn and Kurzhanski (2012)):
 \phantomsection\label{chap_ellcalc:equation-valign1}\begin{gather}
-\begin{split}&&T = I + Q_1(S - I)Q_1^T, \\\end{split}\label{chap_ellcalc-valign1}
+\begin{split}T = I + Q_1(S - I)Q_1^T,\end{split}\label{chap_ellcalc-valign1}
 \end{gather}\phantomsection\label{chap_ellcalc:equation-valign2}\begin{gather}
-\begin{split}&&S = \begin{pmatrix}
+\begin{split}S = \begin{pmatrix}
      c & s\\
      -s & c
-    \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}\\\end{split}\label{chap_ellcalc-valign2}
+    \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}\end{split}\label{chap_ellcalc-valign2}
 \end{gather}\phantomsection\label{chap_ellcalc:equation-valign3}\begin{gather}
-\begin{split}&&Q_1 = [q_1 \, q_2]\in \mathbb{R}^{n\times2},\ \quad q_1 = \hat{v_1},\ \quad q_2 = \begin{cases}
+\begin{split}Q_1 = [q_1 \, q_2]\in \mathbb{R}^{n\times2},\ \quad q_1 = \hat{v_1},\ \quad q_2 = \begin{cases}
 s^{-1}(\hat{v_2} - c\hat{v_1}),& s\ne 0\\
 0,& s = 0.
 \end{cases}\end{split}\label{chap_ellcalc-valign3}
@@ -1075,7 +1075,8 @@ $\pi_0=0$, whence
 ${\mathcal E}(q^+,Q^+)={\mathcal E}(q_2,Q_2)$. These situations
 may occur if, for example, one ellipsoid is contained in the other:
 \begin{gather}
-\begin{split}{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) & \Rightarrow & \pi_0 = 1,\\\end{split}\notag\\\begin{split}{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) & \Rightarrow & \pi_0 = 0.\\\end{split}\notag
+\begin{split}{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) & \Rightarrow \pi_0 = 1,\\
+{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) & \Rightarrow \pi_0 = 0.\end{split}\notag
 \end{gather}
 The proof that the system of equations \eqref{chap_ellcalc-fusion1}-\eqref{chap_ellcalc-fusion5} correctly
 defines the minimal volume external ellipsoidal approximationi of the
@@ -1086,9 +1087,9 @@ To find the internal approximating ellipsoid
 ${\mathcal E}(q^-,Q^-)\subseteq{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)$,
 define
 \phantomsection\label{chap_ellcalc:equation-beta1}\begin{gather}
-\begin{split}\beta_1 & = & \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle,\\\end{split}\label{chap_ellcalc-beta1}
+\begin{split}\beta_1 = \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle,\end{split}\label{chap_ellcalc-beta1}
 \end{gather}\phantomsection\label{chap_ellcalc:equation-beta2}\begin{gather}
-\begin{split}\beta_2 & = & \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle,\end{split}\label{chap_ellcalc-beta2}
+\begin{split}\beta_2 = \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle,\end{split}\label{chap_ellcalc-beta2}
 \end{gather}
 Notice that \eqref{chap_ellcalc-beta1} and \eqref{chap_ellcalc-beta2} are QCQP problems. Parameters
 $\beta_1$ and $\beta_2$ are invariant with respect to affine
@@ -1096,9 +1097,9 @@ coordinate transformation and describe the position of ellipsoids
 ${\mathcal E}(q_1,Q_1)$, ${\mathcal E}(q_2,Q_2)$ with
 respect to each other:
 \begin{gather}
-\begin{split}\beta_1\geqslant1,~\beta_2\geqslant1 & \Rightarrow &
-{\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))=\emptyset, \\\end{split}\notag\\\begin{split}\beta_1\geqslant1,~\beta_2\leqslant1 & \Rightarrow & {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2), \\\end{split}\notag\\\begin{split}\beta_1\leqslant1,~\beta_2\geqslant1 & \Rightarrow & {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1), \\\end{split}\notag\\\begin{split}\beta_1<1,~\beta_2<1 & \Rightarrow &
-{\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))\neq\emptyset \\\end{split}\notag\\\begin{split}& & \mbox{and} ~ {\mathcal E}(q_1,Q_1)\not\subseteq{\mathcal E}(q_2,Q_2) \\\end{split}\notag\\\begin{split}& & \mbox{and} ~ {\mathcal E}(q_2,Q_2)\not\subseteq{\mathcal E}(q_1,Q_1).\end{split}\notag
+\begin{split}\beta_1\geqslant1,~\beta_2\geqslant1 & \Rightarrow
+{\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))=\emptyset, \\\end{split}\notag\\\begin{split}\beta_1\geqslant1,~\beta_2\leqslant1 & \Rightarrow {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2), \\\end{split}\notag\\\begin{split}\beta_1\leqslant1,~\beta_2\geqslant1 & \Rightarrow {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1), \\\end{split}\notag\\\begin{split}\beta_1<1,~\beta_2<1 & \Rightarrow
+{\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))\neq\emptyset \\\end{split}\notag\\\begin{split}&\mbox{and} ~ {\mathcal E}(q_1,Q_1)\not\subseteq{\mathcal E}(q_2,Q_2) \\\end{split}\notag\\\begin{split}&\mbox{and} ~ {\mathcal E}(q_2,Q_2)\not\subseteq{\mathcal E}(q_1,Q_1).\end{split}\notag
 \end{gather}
 Define parametrized family of internal ellipsoids
 ${\mathcal E}(q^-_{\theta_1\theta_2},Q^-_{\theta_1\theta_2})$ with
@@ -1229,8 +1230,8 @@ The resulting ellipsoidal approximations are
 \begin{split}{\mathcal E}(q^+,Q^+)={\mathcal E}(q^+_m,Q^+_m), ~~~~ {\mathcal E}(q^-,Q^-)={\mathcal E}(q^-_m,Q^-_m) .\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
 
-\subsection{Checking if $\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)$}
-\label{chap_ellcalc:checking-if}
+\subsection{Checking if one ellipsoid contains another}
+\label{chap_ellcalc:checking-if-one-ellipsoid-contains-another}
 Theorem of alternatives, also known as $S$-procedure Boyd and
 Vandenberghe (2004), states that the implication
 \begin{gather}
@@ -2263,7 +2264,7 @@ like the following:
 For the given time interval $[t_0, t]$, determine whether the
 system can be steered into the given target set
 ${\mathcal Y}_1$. In other words, is the set
-${\mathcal Y}_1\cap\bigcup_{t_0 \leqslant\tau\leqslantt}{\mathcal X}(\tau, t_0, {\mathcal X}_0)$
+${\mathcal Y}_1\cap\bigcup_{t_0 \leqslant\tau\leqslant t}{\mathcal X}(\tau, t_0, {\mathcal X}_0)$
 nonempty? And if the answer is ‘yes’, find a control that steers the
 system to the target set (or avoids the target set). \footnote{
 So-called verification problems often consist in ensuring that the
@@ -2382,12 +2383,12 @@ and
 \end{gather}
 The equation for the shape matrix of the external ellipsoid is
 \phantomsection\label{chap_reach:equation-fwdext1}\begin{gather}
-\begin{split}\dot{X}^+_l(t) & = & A(t)X^+_l(t) + X^+_l(t)A^T(t) +\nonumber \\
-& & \pi_l(t)X^+_l(t) + \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) -\nonumber \\
-& & (X_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} \nonumber -\\
-& & (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(X_l^{+}(t))^{1/2}, \\\end{split}\label{chap_reach-fwdext1}
+\begin{split}\dot{X}^+_l(t) & = A(t)X^+_l(t) + X^+_l(t)A^T(t) +\nonumber \\
+&\pi_l(t)X^+_l(t) + \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) -\nonumber \\
+& (X_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} \nonumber -\\
+& (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(X_l^{+}(t))^{1/2}, \\\end{split}\label{chap_reach-fwdext1}
 \end{gather}\phantomsection\label{chap_reach:equation-fwdext2}\begin{gather}
-\begin{split}X^+_l(t_0) & = & X_0,\end{split}\label{chap_reach-fwdext2}
+\begin{split}X^+_l(t_0) =X_0,\end{split}\label{chap_reach-fwdext2}
 \end{gather}
 in which
 \begin{gather}
@@ -2408,10 +2409,12 @@ from the equation \eqref{chap_reach-fwdext1}.
 
 The equation for the shape matrix of the internal ellipsoid is
 \phantomsection\label{chap_reach:equation-fwdint1}\begin{gather}
-\begin{split}\dot{X}^-_l(t) & = & A(t)X^-_l(t) + X^-_l(t)A^T(t) +\nonumber \\
-& & (X_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} +\nonumber \\
-& & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(X_l^{-}(t))^{1/2} -\nonumber \\
-& & \eta_l(t)X^-_l(t) - \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \\\end{split}\label{chap_reach-fwdint1}\\\begin{split}X^-_l(t_0) & = & X_0, \label{fwdint2}\end{split}\notag
+\begin{split}\dot{X}^-_l(t) & = A(t)X^-_l(t) + X^-_l(t)A^T(t) +\nonumber \\
+& (X_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} +\nonumber \\
+& (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(X_l^{-}(t))^{1/2} -\nonumber \\
+& \eta_l(t)X^-_l(t) - \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \\\end{split}\label{chap_reach-fwdint1}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdint2}\begin{gather}
+\begin{split}X^-_l(t_0) = X_0,\end{split}\label{chap_reach-fwdint2}
 \end{gather}
 in which
 \begin{gather}
@@ -2495,12 +2498,12 @@ and
 \end{gather}
 The equation for the shape matrix of the external ellipsoid is
 \phantomsection\label{chap_reach:equation-bckext1}\begin{gather}
-\begin{split}\dot{Y}^+_l(t) & = & A(t)Y^+_l(t) + Y^+_l(t)A^T(t) -\nonumber \\
-& & \pi_l(t)Y^+_l(t) - \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) +\nonumber \\
-& & (Y_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} +\nonumber \\
-& & (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(Y_l^{+}(t))^{1/2},\\\end{split}\label{chap_reach-bckext1}
+\begin{split}\dot{Y}^+_l(t) & = A(t)Y^+_l(t) + Y^+_l(t)A^T(t) -\nonumber \\
+& \pi_l(t)Y^+_l(t) - \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) +\nonumber \\
+& (Y_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} +\nonumber \\
+& (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(Y_l^{+}(t))^{1/2},\\\end{split}\label{chap_reach-bckext1}
 \end{gather}\phantomsection\label{chap_reach:equation-bckext2}\begin{gather}
-\begin{split}Y^+_l(t_1) & = & Y_1,\end{split}\label{chap_reach-bckext2}
+\begin{split}Y^+_l(t_1)  = Y_1,\end{split}\label{chap_reach-bckext2}
 \end{gather}
 in which
 \begin{gather}
@@ -2516,12 +2519,12 @@ Y_l^+(t)l(t)\rangle^{1/2}}(Y_l^{+}(t))^{1/2}l(t).\end{split}\notag
 \end{gather}
 The equation for the shape matrix of the internal ellipsoid is
 \phantomsection\label{chap_reach:equation-bckint1}\begin{gather}
-\begin{split}\dot{Y}^-_l(t) & = & A(t)Y^-_l(t) + Y^-_l(t)A^T(t) -\nonumber \\
-& & (Y_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} -\nonumber \\
-& & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(Y_l^{-}(t))^{1/2} +\nonumber \\
-& & \eta_l(t)Y^-_l(t) + \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t),\\\end{split}\label{chap_reach-bckint1}
+\begin{split}\dot{Y}^-_l(t) & =  A(t)Y^-_l(t) + Y^-_l(t)A^T(t) -\nonumber \\
+& (Y_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} -\nonumber \\
+& (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(Y_l^{-}(t))^{1/2} +\nonumber \\
+& \eta_l(t)Y^-_l(t) + \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t),\\\end{split}\label{chap_reach-bckint1}
 \end{gather}\phantomsection\label{chap_reach:equation-bckint2}\begin{gather}
-\begin{split}Y^-_l(t_1) & = & Y_1,\end{split}\label{chap_reach-bckint2}
+\begin{split}Y^-_l(t_1) & = Y_1,\end{split}\label{chap_reach-bckint2}
 \end{gather}
 in which
 \begin{gather}
@@ -2594,7 +2597,7 @@ ordinary affine system with known $v(\cdot)=q(\cdot)$. If matrix
 $G(\cdot)=0$, the system reduces to a linear controlled system. In
 the absence of disturbance ($Q(\cdot)=0$ or $G(\cdot)=0$),
 $\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))=\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))={\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))$,
-the reach set is as in Definition {[}def:sub:\emph{o}lrs{]}. !!!!!!!!!!!! WATCH !!!!!!!!!!!!
+the reach set is as in Definition {[}def:sub:\emph{o}lrs{]}. !!! WATCH !!!
 
 Maxmin and minmax CLRS
 $\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)$ and
@@ -2602,14 +2605,16 @@ $\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)$, if
 nonempty, are symmetric convex and compact, with the center evolving in
 time according to
 \phantomsection\label{chap_reach:equation-fwdcenterd}\begin{gather}
-\begin{split}x_c(t+1) = A(t)x_c(t) + B(t)p(t) + G(t)v(t), \;\;\; x_c(t_0)=x_0.\end{split}\label{chap_reach-fwdcenterd}
+\begin{split}x_c(t+1) = A(t)x_c(t) + B(t)p(t) + G(t)v(t), \\
+x_c(t_0)= x_0.\end{split}\label{chap_reach-fwdcenterd}
 \end{gather}
 Fix some vector $l_0\in{\bf R}^n$ and consider $l(t)$ that
 satisfies the discrete-time adjoint equation, \footnote{
 Note that for \eqref{chap_reach-adjointdt} $A(t)$ must be invertible.
 }
 \phantomsection\label{chap_reach:equation-adjointdt}\begin{gather}
-\begin{split}l(t+1) = \left(A^T\right)^{-1}(t)l(t), \;\;\; l(t_0) = l_0,\end{split}\label{chap_reach-adjointdt}
+\begin{split}l(t+1) = \left(A^T\right)^{-1}(t)l(t), \\
+l(t_0) = l_0,\end{split}\label{chap_reach-adjointdt}
 \end{gather}
 or, equivalently
 \begin{gather}
@@ -2640,16 +2645,16 @@ and
 The shape matrix of the external ellipsoid for maxmin reach set is
 determined from
 \phantomsection\label{chap_reach:equation-fwdextmaxmin1}\begin{gather}
-\begin{split}\hat{X}^+_l(t) & = & (1+\overline{\pi}_l(t))A(t)\overline{X}^+_l(t)A^T(t) +
+\begin{split}\hat{X}^+_l(t) & = (1+\overline{\pi}_l(t))A(t)\overline{X}^+_l(t)A^T(t) +
 \left(1+\frac{1}{\overline{\pi}_l(t)}\right)
 B(t)P(t)B^T(t),  \\\end{split}\label{chap_reach-fwdextmaxmin1}
 \end{gather}\phantomsection\label{chap_reach:equation-fwdextmaxmin2}\begin{gather}
-\begin{split}\overline{X}^+_l(t+1) & = & \left((\hat{X}^+_l(t))^{1/2} +
+\begin{split}\overline{X}^+_l(t+1) & = \left((\hat{X}^+_l(t))^{1/2} +
 \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
 \times \nonumber \\
-& &\left((\hat{X}^+_l(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right),\\\end{split}\label{chap_reach-fwdextmaxmin2}
+& \left((\hat{X}^+_l(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right),\\\end{split}\label{chap_reach-fwdextmaxmin2}
 \end{gather}\phantomsection\label{chap_reach:equation-fwdextmaxmin3}\begin{gather}
-\begin{split}\overline{X}^+_l(t_0) & = & X_0,\end{split}\label{chap_reach-fwdextmaxmin3}
+\begin{split}\overline{X}^+_l(t_0) & = X_0,\end{split}\label{chap_reach-fwdextmaxmin3}
 \end{gather}
 wherein
 \begin{gather}
@@ -2675,19 +2680,19 @@ empty.
 The shape matrix of the external ellipsoid for minmax reach set is
 determined from
 \phantomsection\label{chap_reach:equation-fwdextminmax1}\begin{gather}
-\begin{split}\breve{X}^+_l(t) & = &
+\begin{split}\breve{X}^+_l(t) & =
 \left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
 \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
 \times \nonumber \\
-& &\left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
+&\left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
 \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)\\\end{split}\label{chap_reach-fwdextminmax1}
 \end{gather}\phantomsection\label{chap_reach:equation-fwdextminmax2}\begin{gather}
-\begin{split}\underline{X}^+_l(t+1) & = &
+\begin{split}\underline{X}^+_l(t+1) & =
 (1+\underline{\pi}_l(t))\breve{X}^+_l(t) +
 \left(1+\frac{1}{\underline{\pi}_l(t)}\right)
 B(t)P(t)B^T(t),\\\end{split}\label{chap_reach-fwdextminmax2}
 \end{gather}\phantomsection\label{chap_reach:equation-fwdextminmax3}\begin{gather}
-\begin{split}\underline{X}^+_l(t_0) & = & X_0,\end{split}\label{chap_reach-fwdextminmax3}
+\begin{split}\underline{X}^+_l(t_0) & = X_0,\end{split}\label{chap_reach-fwdextminmax3}
 \end{gather}
 where
 \begin{gather}
@@ -2699,8 +2704,8 @@ and $\underline{S}_l(t)$ is orthogonal matrix determined from the
 equation
 \begin{gather}
 \begin{split}\begin{aligned}
-& & \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t+1) = \\
-& & \frac{\langle l(t+1),
+& \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t+1) = \\
+& \frac{\langle l(t+1),
 G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
 \underline{X}^+_l(t)l(t)\rangle^{1/2}}(A(t)\underline{X}^+_l(t)A^T(t))^{1/2}l(t+1).\end{aligned}\end{split}\notag
 \end{gather}
@@ -2713,19 +2718,19 @@ empty.
 The shape matrix of the internal ellipsoid for maxmin reach set is
 determined from
 \phantomsection\label{chap_reach:equation-fwdintmaxmin1}\begin{gather}
-\begin{split}\hat{X}^-_l(t) & = &
+\begin{split}\hat{X}^-_l(t) & =
 \left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
 \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
 \times \nonumber \\
-& &\left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
+& \left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
 \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)\\\end{split}\label{chap_reach-fwdintmaxmin1}
 \end{gather}\phantomsection\label{chap_reach:equation-fwdintmaxmin2}\begin{gather}
-\begin{split}\overline{X}^-_l(t+1) & = &
+\begin{split}\overline{X}^-_l(t+1) & =
 (1+\overline{\eta}_l(t))\hat{X}^-_l(t) +
 \left(1+\frac{1}{\underline{\eta}_l(t)}\right)
 G(t)Q(t)G^T(t), \\\end{split}\label{chap_reach-fwdintmaxmin2}
 \end{gather}\phantomsection\label{chap_reach:equation-fwdintmaxmin3}\begin{gather}
-\begin{split}\overline{X}^-_l(t_0) & = & X_0,\end{split}\label{chap_reach-fwdintmaxmin3}
+\begin{split}\overline{X}^-_l(t_0) & = X_0,\end{split}\label{chap_reach-fwdintmaxmin3}
 \end{gather}
 where
 \begin{gather}
@@ -2737,8 +2742,8 @@ and $\overline{T}_l(t)$ is orthogonal matrix determined from the
 equation
 \begin{gather}
 \begin{split}\begin{aligned}
-& & \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
-& & \frac{\langle l(t+1),
+& \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
+& \frac{\langle l(t+1),
 B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
 \overline{X}^-_l(t)l(t)\rangle^{1/2}}(A(t)\overline{X}^-_l(t)A^T(t))^{1/2}l(t+1).\end{aligned}\end{split}\notag
 \end{gather}
@@ -2748,16 +2753,16 @@ ${\mathcal E}(0,G(t)Q(t)G^T(t)\subseteq{\mathcal E}(0,\hat{X}^-_l(t))$.
 The shape matrix of the internal ellipsoid for the minmax reach set is
 determined by
 \phantomsection\label{chap_reach:equation-fwdintminmax1}\begin{gather}
-\begin{split}\breve{X}^-_l(t) & = & (1+\underline{\eta}_l(t))A(t)\underline{X}^-_l(t)A^T(t) +
+\begin{split}\breve{X}^-_l(t) & = (1+\underline{\eta}_l(t))A(t)\underline{X}^-_l(t)A^T(t) +
 \left(1+\frac{1}{\underline{\eta}_l(t)}\right)
 G(t)Q(t)G^T(t),\\\end{split}\label{chap_reach-fwdintminmax1}
 \end{gather}\phantomsection\label{chap_reach:equation-fwdintminmax2}\begin{gather}
-\begin{split}\underline{X}^-_l(t+1) & = & \left((\breve{X}^-_l(t))^{1/2} +
+\begin{split}\underline{X}^-_l(t+1) & = \left((\breve{X}^-_l(t))^{1/2} +
 \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
 \times \nonumber \\
-& &\left((\breve{X}^-_l(t))^{1/2} + \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right),\\\end{split}\label{chap_reach-fwdintminmax2}
+&\left((\breve{X}^-_l(t))^{1/2} + \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right),\\\end{split}\label{chap_reach-fwdintminmax2}
 \end{gather}\phantomsection\label{chap_reach:equation-fwdintminmax3}\begin{gather}
-\begin{split}\underline{X}^-_l(t_0) & = & X_0,\end{split}\label{chap_reach-fwdintminmax3}
+\begin{split}\underline{X}^-_l(t_0) & = X_0,\end{split}\label{chap_reach-fwdintminmax3}
 \end{gather}
 wherein
 \begin{gather}
@@ -2769,8 +2774,8 @@ and the orthogonal matrix $\underline{T}_l(t)$ is determined by
 the equation
 \begin{gather}
 \begin{split}\begin{aligned}
-& & \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
-& & \frac{\langle l(t+1),
+&\underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
+& \frac{\langle l(t+1),
 B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
 \breve{X}^-_l(t)l(t+1)\rangle^{1/2}}(\breve{X}^-_l(t))^{1/2}l(t+1).\end{aligned}\end{split}\notag
 \end{gather}
@@ -2788,7 +2793,7 @@ and the bounday point of minmax CLRS is
 \begin{split}x_l^-(t) = x_c(t) + \frac{\overline{X}^-_l(t)l(t)}{\langle l(t),
 \overline{X}^-_l(t)l(t)\rangle^{1/2}} .\end{split}\notag
 \end{gather}
-Points $x^{\pm}_l(t)$, $t\geqslantt_0$, form extremal
+Points $x^{\pm}_l(t)$, $t\geqslant t_0$, form extremal
 trajectories. In order for the system to follow the extremal trajectory
 specified by some vector $l_0$, the initial state must be
 \phantomsection\label{chap_reach:equation-dx01}\begin{gather}
@@ -2851,7 +2856,7 @@ and
 \end{gather}
 in direction $l(t)$ from \eqref{chap_reach-bckadjointd}. Section
 {[}subsec:sub:\emph{s}umdiff{]} describes the operation of geometric
-sum-difference for ellipsoids.
+sum-difference for ellipsoids. !!! WATCH !!!
 
 External and internal ellipsoids for minmax CLBRS
 $\underline{{\mathcal Y}}_{CL}(t_1,t,{\mathcal E}(y_1,Y_1))$ at
@@ -3282,7 +3287,7 @@ sum can be computed explicitely and plotted:
 \includegraphics{minksum.png}
 \caption{The geometric sum of ellipsoids.}\label{chap_implement:minksumpic}\end{figure}
 
-Figure \hyperref[chap_implement:minksumPic]{ \ref*{chap_implement:minksumPic}} displays the geometric sum of ellipsoids. If
+Figure \hyperref[chap_implement:minksumpic]{ \ref*{chap_implement:minksumpic}} displays the geometric sum of ellipsoids. If
 the dimension of the space in which the ellipsoids are defined exceeds
 $3$, an error is returned. The result of the geometric sum
 operation is not generally an ellipsoid, but it can be approximated by
@@ -3342,7 +3347,7 @@ ${\bf R}$, ${\bf R}^2$ and ${\bf R}^3$:
 \includegraphics{minkdiff.png}
 \caption{The geometric difference of ellipsoids.}\label{chap_implement:minkdiffpic}\end{figure}
 
-Figure \hyperref[chap_implement:minkdiffPic]{ \ref*{chap_implement:minkdiffPic}} shows the geometric difference of ellipsoids.
+Figure \hyperref[chap_implement:minkdiffpic]{ \ref*{chap_implement:minkdiffpic}} shows the geometric difference of ellipsoids.
 
 Similar to minksum, minkdiff is there for visualization purpose. It
 works only for dimensions $1$, $2$ and $3$, and for
@@ -3408,7 +3413,7 @@ of arbitrary dimension.
 \includegraphics{minkmp.png}
 \label{chap_implement:minkmppic}\end{figure}
 
-Figure $\ref{minkPic}$ displays results of
+Figure $\ref{minkpic}$ displays results of
 the implementation of minkpm and minkmp operations.
 
 Similarly, operation
@@ -3925,7 +3930,7 @@ to display a content of ellipsoidal tubes.
 \includegraphics{dispPic.png}
 \label{chap_implement:disppic}\end{figure}
 
-Figure \hyperref[chap_implement:dispPic]{ \ref*{chap_implement:dispPic}}
+Figure \hyperref[chap_implement:disppic]{ \ref*{chap_implement:disppic}}
 displays all fields of the ellipsoidal tube.
 
 There are several methods to find the tubes with necessary parameters.
@@ -4641,9 +4646,9 @@ complexity of ellipsoidal method grows linearly.
 The mechanical system presented in \hyperref[chap_examples:springmassfig]{figure  \ref*{chap_examples:springmassfig}}, is described
 by the following system of equations:
 \phantomsection\label{chap_examples:equation-spmass1}\begin{gather}
-\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1,\end{split}\label{chap_examples-spmass1}
+\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = u_1,\end{split}\label{chap_examples-spmass1}
 \end{gather}\phantomsection\label{chap_examples:equation-spmass2}\begin{gather}
-\begin{split}m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 .\end{split}\label{chap_examples-spmass2}
+\begin{split}m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = u_2 .\end{split}\label{chap_examples-spmass2}
 \end{gather}
 Here $u_1$ and $u_2$ are the forces applied to masses
 $m_1$ and $m_2$, and we shall assume
@@ -4724,9 +4729,9 @@ So far we considered an ideal system without any disturbance, such as
 friction. We introduce disturbance to \eqref{chap_examples-spmass1}-\eqref{chap_examples-spmass2} by adding
 extra terms, $v_1$ and $v_2$,
 \phantomsection\label{chap_examples:equation-smdist1}\begin{gather}
-\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1 + v_1,\end{split}\label{chap_examples-smdist1}
+\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = u_1 + v_1,\end{split}\label{chap_examples-smdist1}
 \end{gather}\phantomsection\label{chap_examples:equation-smdist2}\begin{gather}
-\begin{split}m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 + v_2,\end{split}\label{chap_examples-smdist2}
+\begin{split}m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = u_2 + v_2,\end{split}\label{chap_examples-smdist2}
 \end{gather}
 which results in equation \eqref{chap_examples-spmassls} getting an extra term
 \begin{gather}
@@ -4759,7 +4764,7 @@ closed-loop reach set of the system with disturbance.
 \PYG{n}{psdCutObj}\PYG{p}{.}\PYG{n}{plotEa}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} plot reach set approximation at time t = 4}
 \end{Verbatim}
 
-\hyperref[chap_examples:mechreachfig`(c) shows the reach set of the system ([smdist1]-[smdist2]) evolving in time from :math:`t=0]{Figure  \ref*{chap_examples:mechreachfig`(c) shows the reach set of the system ([smdist1]-[smdist2]) evolving in time from :math:`t=0}} to $t=4$.
+\hyperref[chap_examples:mechreachfig`(c) shows the reach set of the system :eq:`smdist1]{Figure  \ref*{chap_examples:mechreachfig`(c) shows the reach set of the system :eq:`smdist1}}-\eqref{chap_examples-smdist2} evolving in time from $t=0$ to $t=4$.
 \hyperref[chap_examples:mechreachfig`(d) presents a snapshot of this reach set at time :math:`t=4]{Figure  \ref*{chap_examples:mechreachfig`(d) presents a snapshot of this reach set at time :math:`t=4}}.
 
 
@@ -9281,7 +9286,7 @@ Output:
 Note: In the case the first interface is used, SData and
       SIsNull are taken from class object obj
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-adddata}
 \begin{Verbatim}[commandchars=\\\{\}]
 ADDDATA - adds a set of field values to existing data in a form of new
           tuples
@@ -9290,7 +9295,7 @@ Input:
   regular:
      self:ARelation [1,1] - class object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-adddataalongdim}
 \begin{Verbatim}[commandchars=\\\{\}]
 ADDDATAALONGDIM - adds a set of field values to existing data using
                   a concatenation along a specified dimension
@@ -9299,7 +9304,7 @@ Input:
   regular:
       self: CubeStruct [1,1] - the object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-addtuples}
 \begin{Verbatim}[commandchars=\\\{\}]
 ADDTUPLES - adds a set of new tuples to the relation
 
@@ -9324,7 +9329,7 @@ input:
       checkConsistency: logical[1,1], if true, a consistency between the
          input structures is not checked, true by default
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-applygetfunc}
 \begin{Verbatim}[commandchars=\\\{\}]
 APPLYGETFUNC - applies a function to the specified fields as columns, i.e.
                the function is applied to each field as whole, not to
@@ -9347,7 +9352,7 @@ Notes: this function currently has a lots of limitations:
   3) no additional arguments can be passed
   All this limitations will eventually go away though so stay tuned...
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-applysetfunc}
 \begin{Verbatim}[commandchars=\\\{\}]
 APPLYSETFUNC - applies some function to each cell of the specified fields
                of a given CubeStruct object
@@ -9410,7 +9415,7 @@ Input:
          outputType parameter of toArray method, see its documentation
          for a list of supported input types.
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-applytuplegetfunc}
 \begin{Verbatim}[commandchars=\\\{\}]
 APPLYTUPLEGETFUNC - applies a function to the specified fields
                     separately to each tuple
@@ -9441,7 +9446,7 @@ Notes: this function currently has a lots of limitations:
   2) no additional arguments can be passed
   All this limitations will eventually go away though so stay tuned...
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-cleardata}
 \begin{Verbatim}[commandchars=\\\{\}]
 CLEARDATA - deletes all the data from the object
 
@@ -9451,7 +9456,7 @@ Input:
   regular:
     self: CubeStruct [1,1] - class object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-clone}
 \begin{Verbatim}[commandchars=\\\{\}]
 CLONE - creates a copy of a specified object via calling
         a copy constructor for the object class
@@ -9465,7 +9470,7 @@ Input:
 Ouput:
   self: any [] - constructed object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-copyfrom}
 \begin{Verbatim}[commandchars=\\\{\}]
 COPYFROM - reconstruct CubeStruct object within a current object using the
            input CubeStruct object as a prototype
@@ -9478,7 +9483,7 @@ Input:
   optional:
     fieldNameList: cell[1,nFields] - list of fields to copy
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-createinstance}
 \begin{Verbatim}[commandchars=\\\{\}]
 CREATEINSTANCE - returns an object of the same class by calling a default
                  constructor (with no parameters)
@@ -9494,7 +9499,7 @@ input:
 Ouput:
   self: any [] - constructed object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-disponui}
 \begin{Verbatim}[commandchars=\\\{\}]
 DISPONUI - displays a content of the given relation as a data grid UI
            component.
@@ -9516,7 +9521,7 @@ Output:
   gridObj: smartdb.relations.disp.UIDataGrid[1,1] - data grid component
       instance used for displaying a content of the relation object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-display}
 \begin{Verbatim}[commandchars=\\\{\}]
 DISPLAY - puts some textual information about CubeStruct object in screen
 
@@ -9524,7 +9529,7 @@ Input:
  regular:
      self.
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-fromstructlist}
 \begin{Verbatim}[commandchars=\\\{\}]
 FROMSTRUCTLIST - creates a dynamic relation from a list of structures
                  interpreting each structure as the data for
@@ -9542,7 +9547,7 @@ Output:
   relDataObj: smartdb.relations.DynamicRelation[1,1] -
      constructed relation
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getcopy}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETCOPY - returns an object copy
 
@@ -9622,7 +9627,7 @@ Output:
        means that a corresponding cell doesn't not contain
           any value
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getfielddescrlist}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETFIELDDESCRLIST - returns the list of CubeStruct field descriptions
 
@@ -9640,7 +9645,7 @@ Output:
     value: char cell [1,nFields] - list of CubeStruct object field
         descriptions
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getfieldisnull}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETFIELDISNULL - returns for given field a nested logical/cell array
                  containing is-null indicators for cell content
@@ -9656,7 +9661,7 @@ Output:
     fieldIsCVec: logical/cell[] - nested cell/logical array containing
        is-null indicators for content of the field
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETFIELDISVALUENULL - returns for given field logical vector determining
                       whether value of this field in each cell is null
@@ -9677,7 +9682,7 @@ Output:
     isValueNullVec: logical[] - array of isValueNull indicators for the
        specified field
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getfieldnamelist}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETFIELDNAMELIST - returns the list of CubeStruct object field names
 
@@ -9691,7 +9696,7 @@ Iutput:
     value: char cell [1,nFields] - list of CubeStruct object field
         names
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getfieldprojection}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETFIELDPROJECTION - project object with specified fields.
 
@@ -9703,7 +9708,7 @@ Input:
 Output:
   obj: DynamicRelation[1,1] - projected object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getfieldtypelist}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETFIELDTYPELIST - returns list of field types in given CubeStruct object
 
@@ -9721,7 +9726,7 @@ Output:
   fieldTypeList: cell [1,nFields] of smartdb.cubes.ACubeStructFieldType[1,1]
       - list of field types
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETFIELDTYPESPECLIST - returns a list of field type specifications. Field
                        type specification is a sequence of type names
@@ -9747,7 +9752,7 @@ Output:
           cell[1,nFields*prod(nNestedLevelsVec)] of char[1,.]
        - list of field type specifications
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETFIELDVALUESIZEMAT - returns a matrix composed from the size vectors
                        for the specified fields
@@ -9770,7 +9775,7 @@ Input:
 Output:
   sizeMat: double[nFields,nMaxDims]
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETISFIELDVALUENULL - returns a vector indicating whether a particular
                       field is composed of null values completely
@@ -9810,7 +9815,7 @@ Input:
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getmindimensionsize}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETMINDIMENSIONSIZE - returns a size vector for the specified
                       dimensions. If no dimensions are specified, a size
@@ -9828,7 +9833,7 @@ Output:
   minDimensionSizeVec: double [1,nDims] - a size vector for
      the requested dimensions
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getmindimensionality}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETMINDIMENSIONALITY - returns a minimum dimensionality for a given
                        object
@@ -9841,7 +9846,7 @@ Output:
   minDimensionality: double[1,1] - minimum dimensionality of
      self object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getnelems}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETNELEMS - returns a number of elements in a given object
 Input:
@@ -9851,7 +9856,7 @@ Input:
 Output:
   nElems:double[1, 1] - number of elements in a given object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getnfields}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETNFIELDS - returns number of fields in given object
 
@@ -9864,7 +9869,7 @@ Output:
   regular:
     nFields: double [1,1] - number of fields in given object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getntuples}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETNTUPLES - returns number of tuples in given relation
 
@@ -9877,7 +9882,7 @@ output:
   regular:
     nTuples: double [1,1] - number of tuples in given  relation
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getsortindex}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETSORTINDEX - gets sort index for all tuples of given relation with
                respect to some of its fields
@@ -9901,7 +9906,7 @@ output:
        relation, then fieldValueVec(sortIndex) is a vector of values for
        this field when tuples of the relation are sorted
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-gettuples}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETTUPLES - selects tuples with given indices from given relation and
             returns the result as new relation
@@ -9918,7 +9923,7 @@ output:
     obj: ARelation [1,1] - new class object containing only selected
         tuples
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETTUPLESFILTEREDBY - selects tuples from given relation such that a
                       fixed index field contains values from a given set
@@ -9942,7 +9947,7 @@ Output:
         tuples
     isThereVec: logical[nTuples,1] - contains true for the kept tuples
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesindexedby}
 \begin{Verbatim}[commandchars=\\\{\}]
  GETTUPLESINDEXEDBY - selects tuples from given relation such that fixed
                       index field contains given in a specified order
@@ -9963,7 +9968,7 @@ Output:
 
 TODO add type check
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETTUPLESJOINEDWITH - returns the tuples of the given relation
                       INNER-joined with other relation by the specified
@@ -9992,7 +9997,7 @@ Input:
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getuniquedata}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETUNIQUEDATA - returns internal representation for a set of unique
                 tuples for given relation
@@ -10034,7 +10039,7 @@ Output:
     indBackward: double[1,nTuples] - indices that map the unique tuple
        set back to the original tuple set
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETUNIQUEDATAALONGDIM - returns internal representation of CubeStruct
 
@@ -10076,7 +10081,7 @@ Output:
        set back to the original data setdata set unique along a specified
        dimension
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-getuniquetuples}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETUNIQUETUPLES - returns a relation containing the unique tuples from
                   the original relation
@@ -10106,7 +10111,7 @@ Output:
     indBackward: double[1,nTuples] - indices that map the unique tuple
        set back to the original tuple set
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-initbyemptydataset}
 \begin{Verbatim}[commandchars=\\\{\}]
 INITBYEMPTYDATASET - initializes cube struct object with null value arrays
                      of specified size based on minDimVec specified.
@@ -10122,7 +10127,7 @@ Input:
   optional
       minDimVec: double[1,nDims] - size vector of null value arrays
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-initbydefaultdataset}
 \begin{Verbatim}[commandchars=\\\{\}]
 INITBYDEFAULTDATASET - initializes cube struct object with null value
                        arrays of specified size based on minDimVec
@@ -10139,7 +10144,7 @@ Input:
   optional
       minDimVec: double[1,nDims] - size vector of null value arrays
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-isequal}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISEQUAL - compares current relation object with other relation object and
           returns true if they are equal, otherwise it returns false
@@ -10170,9 +10175,9 @@ Input:
 
 Output:
   isEq: logical[1,1] - result of comparison
-  reportStr: char[1,] - report of comparsion
+  reportStr: char[1,] - report of comparison
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-isfields}
 \begin{Verbatim}[commandchars=\\\{\}]
  ISFIELDS - returns whether all fields whose names are given in the input
             list are in the field list of given object or not
@@ -10197,7 +10202,7 @@ Output:
 
 TODO allow for varargins
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-ismemberalongdim}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISMEMBERALONGDIM - performs ismember operation of CubeStruct data slices
                    along the specified dimension
@@ -10222,7 +10227,7 @@ Output:
         of isThere is false, otherwise the highest index of the
         corresponding data slice in the second (other) object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-ismember}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISMEMBER - performs ismember operation for tuples of two relations by key
            fields given by special list
@@ -10247,7 +10252,7 @@ Output:
         of isTuple is false, otherwise the highest index of the
         corresponding tuple in the second (other) relation
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-isuniquekey}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISUNIQUEKEY - checks if a specified set of fields forms a unique key
 
@@ -10262,40 +10267,7 @@ Output:
   isPositive: logical[1,1] - true means that a specified set of fields is
      a unique key
 \end{Verbatim}
-
-\begin{Verbatim}[commandchars=\\\{\}]
-ISEQUAL - compares current relation object with other relation object and
-          returns true if they are equal, otherwise it returns false
-
-
-Usage: isEq=isEqual(self,otherObj)
-
-Input:
-  regular:
-    self: ARelation [1,1] - current relation object
-    otherObj: ARelation [1,1] - other relation object
-
-  properties:
-    checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields
-        in compared relations must be in the same order, otherwise the
-        order is not  important (false by default)
-    checkTupleOrder: logical[1,1] -  if true, then the tuples in the
-        compared relations are expected to be in the same order,
-        otherwise the order is not important (false by default)
-
-    maxTolerance: double [1,1] - maximum allowed tolerance
-
-    compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
-        referenced from the meta data objects are also compared
-
-    maxRelativeTolerance: double [1,1] - maximum allowed
-    relative tolerance
-
-Output:
-  isEq: logical[1,1] - result of comparison
-  reportStr: char[1,] - report of comparsion
-\end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-removeduplicatetuples}
 \begin{Verbatim}[commandchars=\\\{\}]
 REMOVEDUPLICATETUPLES - removes all duplicate tuples from the relation
 
@@ -10320,7 +10292,7 @@ Output:
     indBackwardVec: double[nSlices,1] - indices that map the unique
        tuples back to the original tuples
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-removetuples}
 \begin{Verbatim}[commandchars=\\\{\}]
 REMOVETUPLES - removes tuples with given indices from given relation
 
@@ -10332,7 +10304,7 @@ Input:
     subIndVec: double [nSubTuples,1]/logical[nTuples,1] - array of
        indices for tuples that are selected to be removed
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-reorderdata}
 \begin{Verbatim}[commandchars=\\\{\}]
 REORDERDATA - reorders cells of CubeStruct object along the specified
               dimensions according to the specified index vectors
@@ -10349,7 +10321,7 @@ Input:
       dimVec: numeric[1,nDims] - vector of dimension numbers
           corresponding to subIndCVec
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-saveobj}
 \begin{Verbatim}[commandchars=\\\{\}]
 SAVEOBJ- transforms given CubeStruct object into structure containing
          internal representation of object properties
@@ -10364,7 +10336,7 @@ Output:
     SObjectData: struct [n1,...,n\_k] - structure containing an internal
        representation of the specified object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-setdata}
 \begin{Verbatim}[commandchars=\\\{\}]
 SETDATA - sets values of all cells for all fields
 
@@ -10438,7 +10410,7 @@ Input:
 Note: call of setData with an empty list of arguments clears
    the data
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-setfieldinternal}
 \begin{Verbatim}[commandchars=\\\{\}]
 SETFIELDINTERNAL - sets values of all cells for given field
 
@@ -10465,7 +10437,7 @@ Input:
       Note: if structNameList contains 'SIsValueNull' entry,
        inferIsValueNull parameter is overwritten by false
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-sortby}
 \begin{Verbatim}[commandchars=\\\{\}]
 SORTBY - sorts all tuples of given relation with respect to some of its
          fields
@@ -10482,7 +10454,7 @@ input:
         all fields (if one value is given) or for each field separately;
         each value may be 'asc' or 'desc'
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-sortbyalongdim}
 \begin{Verbatim}[commandchars=\\\{\}]
 SORTBYALONGDIM -  sorts data of given CubeStruct object along the
                   specified dimension using the specified fields
@@ -10501,7 +10473,7 @@ input:
         all fields (if one value is given) or for each field separately;
         each value may be 'asc' or 'desc'
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-toarray}
 \begin{Verbatim}[commandchars=\\\{\}]
 TOARRAY - transforms values of all CubeStruct cells into a multi-
           dimentional array
@@ -10606,7 +10578,7 @@ Output:
           values on the positions which correspond to fields converted to
           cells
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-tocell}
 \begin{Verbatim}[commandchars=\\\{\}]
 TOCELL - transforms values of all fields for all tuples into two
          dimensional cell array
@@ -10626,7 +10598,7 @@ output:
 
 FIXME - order fields in setData method
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-tocellisnull}
 \begin{Verbatim}[commandchars=\\\{\}]
 TOCELLISNULL - transforms is-null indicators of all fields for all tuples
                into two dimensional cell array
@@ -10646,7 +10618,7 @@ output:
 
 FIXME - order fields in setData method
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-todispcell}
 \begin{Verbatim}[commandchars=\\\{\}]
 TODISPCELL - transforms values of all fields into their character
              representation
@@ -10665,7 +10637,7 @@ Output:
   dataCell: cell[nRows,nCols] of char[1,] - cell array containing the
       character representation of field values
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-tomat}
 \begin{Verbatim}[commandchars=\\\{\}]
 TOMAT - transforms values of all fields for all tuples into two
         dimensional array
@@ -10723,7 +10695,7 @@ output:
   resCMat:  [nTuples,nFields(N)] - matrix/cell with values of all fields
       (or fields selected by optional arguments) for all tuples
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-tostruct}
 \begin{Verbatim}[commandchars=\\\{\}]
 TOSTRUCT - transforms given CubeStruct object into structure
 
@@ -10769,7 +10741,7 @@ Input:
           two-element vector.
           Note: default value is true
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-unionwithalongdim}
 \begin{Verbatim}[commandchars=\\\{\}]
 UNIONWITHALONGDIM - adds data from the input CubeStructs
 
@@ -10801,7 +10773,7 @@ all required fields). The first element correspod to SData, the
           two-element vector.
           Note: default value is true
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-writetocsv}
 \begin{Verbatim}[commandchars=\\\{\}]
 WRITETOCSV - writes a content of relation into Excel spreadsheet file
 Input:
@@ -10812,7 +10784,7 @@ Input:
 Output:
   none
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-writetoxls}
 \begin{Verbatim}[commandchars=\\\{\}]
 WRITETOXLS - writes a content of relation into Excel spreadsheet file
 Input:
@@ -10860,8 +10832,187 @@ Fields:
 \end{Verbatim}
 
 See the description of the following methods in section
-{[}secClassDescr:smartdb.relations.ATypifiedStaticRelation{]} for
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation]{smartdb.relations.ATypifiedStaticRelation}} for
 smartdb.relations.ATypifiedStaticRelation:
+\begin{itemize}
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-adddata]{smartdb.relations.ATypifiedStaticRelation.addData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-adddataalongdim]{smartdb.relations.ATypifiedStaticRelation.addDataAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-addtuples]{smartdb.relations.ATypifiedStaticRelation.addTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applygetfunc]{smartdb.relations.ATypifiedStaticRelation.applyGetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applysetfunc]{smartdb.relations.ATypifiedStaticRelation.applySetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applytuplegetfunc]{smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-cleardata]{smartdb.relations.ATypifiedStaticRelation.clearData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-clone]{smartdb.relations.ATypifiedStaticRelation.clone}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-copyfrom]{smartdb.relations.ATypifiedStaticRelation.copyFrom}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-createinstance]{smartdb.relations.ATypifiedStaticRelation.createInstance}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-disponui]{smartdb.relations.ATypifiedStaticRelation.dispOnUI}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-display]{smartdb.relations.ATypifiedStaticRelation.display}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-fromstructlist]{smartdb.relations.ATypifiedStaticRelation.fromStructList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getcopy]{smartdb.relations.ATypifiedStaticRelation.getCopy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldisnull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldnamelist]{smartdb.relations.ATypifiedStaticRelation.getFieldNameList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldprojection]{smartdb.relations.ATypifiedStaticRelation.getFieldProjection}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldtypelist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat]{smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull]{smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getmindimensionsize]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getmindimensionality]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionality}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getnelems]{smartdb.relations.ATypifiedStaticRelation.getNElems}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getnfields]{smartdb.relations.ATypifiedStaticRelation.getNFields}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getntuples]{smartdb.relations.ATypifiedStaticRelation.getNTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getsortindex]{smartdb.relations.ATypifiedStaticRelation.getSortIndex}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuples]{smartdb.relations.ATypifiedStaticRelation.getTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby]{smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesindexedby]{smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith]{smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquedata]{smartdb.relations.ATypifiedStaticRelation.getUniqueData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim]{smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquetuples]{smartdb.relations.ATypifiedStaticRelation.getUniqueTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-initbyemptydataset]{smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-initbydefaultdataset]{smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isfields]{smartdb.relations.ATypifiedStaticRelation.isFields}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-ismemberalongdim]{smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-ismember]{smartdb.relations.ATypifiedStaticRelation.isMember}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isuniquekey]{smartdb.relations.ATypifiedStaticRelation.isUniqueKey}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isequal]{smartdb.relations.ATypifiedStaticRelation.isEqual}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-removeduplicatetuples]{smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-removetuples]{smartdb.relations.ATypifiedStaticRelation.removeTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-reorderdata]{smartdb.relations.ATypifiedStaticRelation.reorderData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-saveobj]{smartdb.relations.ATypifiedStaticRelation.saveObj}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-setdata]{smartdb.relations.ATypifiedStaticRelation.setData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-setfieldinternal]{smartdb.relations.ATypifiedStaticRelation.setFieldInternal}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-sortby]{smartdb.relations.ATypifiedStaticRelation.sortBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-sortbyalongdim]{smartdb.relations.ATypifiedStaticRelation.sortByAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-toarray]{smartdb.relations.ATypifiedStaticRelation.toArray}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tocell]{smartdb.relations.ATypifiedStaticRelation.toCell}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tocellisnull]{smartdb.relations.ATypifiedStaticRelation.toCellIsNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-todispcell]{smartdb.relations.ATypifiedStaticRelation.toDispCell}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tomat]{smartdb.relations.ATypifiedStaticRelation.toMat}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
+
+\item {} 
+{\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.unionWith\_}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-writetocsv]{smartdb.relations.ATypifiedStaticRelation.writeToCSV}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-writetoxls]{smartdb.relations.ATypifiedStaticRelation.writeToXLS}}
+
+\end{itemize}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 CAT  - concatenates data from relation objects.
@@ -11364,8 +11515,193 @@ TODO: correct description of the fields in
 \end{Verbatim}
 
 See the description of the following methods in section
-{[}secClassDescr:smartdb.relations.ATypifiedStaticRelation{]} for
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation]{smartdb.relations.ATypifiedStaticRelation}} for
 smartdb.relations.ATypifiedStaticRelation:
+\begin{itemize}
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-adddata]{smartdb.relations.ATypifiedStaticRelation.addData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-adddataalongdim]{smartdb.relations.ATypifiedStaticRelation.addDataAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-addtuples]{smartdb.relations.ATypifiedStaticRelation.addTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applygetfunc]{smartdb.relations.ATypifiedStaticRelation.applyGetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applysetfunc]{smartdb.relations.ATypifiedStaticRelation.applySetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applytuplegetfunc]{smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-cleardata]{smartdb.relations.ATypifiedStaticRelation.clearData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-clone]{smartdb.relations.ATypifiedStaticRelation.clone}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-copyfrom]{smartdb.relations.ATypifiedStaticRelation.copyFrom}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-createinstance]{smartdb.relations.ATypifiedStaticRelation.createInstance}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-disponui]{smartdb.relations.ATypifiedStaticRelation.dispOnUI}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-display]{smartdb.relations.ATypifiedStaticRelation.display}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-fromstructlist]{smartdb.relations.ATypifiedStaticRelation.fromStructList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getcopy]{smartdb.relations.ATypifiedStaticRelation.getCopy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfielddescrlist]{smartdb.relations.ATypifiedStaticRelation.getFieldDescrList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldisnull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldnamelist]{smartdb.relations.ATypifiedStaticRelation.getFieldNameList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldprojection]{smartdb.relations.ATypifiedStaticRelation.getFieldProjection}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldtypelist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat]{smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull]{smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getmindimensionsize]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getmindimensionality]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionality}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getnelems]{smartdb.relations.ATypifiedStaticRelation.getNElems}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getnfields]{smartdb.relations.ATypifiedStaticRelation.getNFields}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getntuples]{smartdb.relations.ATypifiedStaticRelation.getNTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getsortindex]{smartdb.relations.ATypifiedStaticRelation.getSortIndex}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuples]{smartdb.relations.ATypifiedStaticRelation.getTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby]{smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesindexedby]{smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith]{smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquedata]{smartdb.relations.ATypifiedStaticRelation.getUniqueData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim]{smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquetuples]{smartdb.relations.ATypifiedStaticRelation.getUniqueTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-initbyemptydataset]{smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-initbydefaultdataset]{smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isfields]{smartdb.relations.ATypifiedStaticRelation.isFields}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-ismemberalongdim]{smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-ismember]{smartdb.relations.ATypifiedStaticRelation.isMember}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isuniquekey]{smartdb.relations.ATypifiedStaticRelation.isUniqueKey}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isequal]{smartdb.relations.ATypifiedStaticRelation.isEqual}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-removeduplicatetuples]{smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-removetuples]{smartdb.relations.ATypifiedStaticRelation.removeTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-reorderdata]{smartdb.relations.ATypifiedStaticRelation.reorderData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-saveobj]{smartdb.relations.ATypifiedStaticRelation.saveObj}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-setdata]{smartdb.relations.ATypifiedStaticRelation.setData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-setfieldinternal]{smartdb.relations.ATypifiedStaticRelation.setFieldInternal}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-sortby]{smartdb.relations.ATypifiedStaticRelation.sortBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-sortbyalongdim]{smartdb.relations.ATypifiedStaticRelation.sortByAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-toarray]{smartdb.relations.ATypifiedStaticRelation.toArray}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tocell]{smartdb.relations.ATypifiedStaticRelation.toCell}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tocellisnull]{smartdb.relations.ATypifiedStaticRelation.toCellIsNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-todispcell]{smartdb.relations.ATypifiedStaticRelation.toDispCell}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tomat]{smartdb.relations.ATypifiedStaticRelation.toMat}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
+
+\item {} 
+{\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.unionWith\_}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-writetocsv]{smartdb.relations.ATypifiedStaticRelation.writeToCSV}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-writetoxls]{smartdb.relations.ATypifiedStaticRelation.writeToXLS}}
+
+\end{itemize}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 GETDATA - returns an indexed projection of CubeStruct object's content
@@ -11725,8 +12061,193 @@ TODO: correct description of the fields in
 \end{Verbatim}
 
 See the description of the following methods in section
-{[}secClassDescr:smartdb.relations.ATypifiedStaticRelation{]} for
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation]{smartdb.relations.ATypifiedStaticRelation}} for
 smartdb.relations.ATypifiedStaticRelation:
+\begin{itemize}
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-adddata]{smartdb.relations.ATypifiedStaticRelation.addData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-adddataalongdim]{smartdb.relations.ATypifiedStaticRelation.addDataAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-addtuples]{smartdb.relations.ATypifiedStaticRelation.addTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applygetfunc]{smartdb.relations.ATypifiedStaticRelation.applyGetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applysetfunc]{smartdb.relations.ATypifiedStaticRelation.applySetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applytuplegetfunc]{smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-cleardata]{smartdb.relations.ATypifiedStaticRelation.clearData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-clone]{smartdb.relations.ATypifiedStaticRelation.clone}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-copyfrom]{smartdb.relations.ATypifiedStaticRelation.copyFrom}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-createinstance]{smartdb.relations.ATypifiedStaticRelation.createInstance}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-disponui]{smartdb.relations.ATypifiedStaticRelation.dispOnUI}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-display]{smartdb.relations.ATypifiedStaticRelation.display}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-fromstructlist]{smartdb.relations.ATypifiedStaticRelation.fromStructList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getcopy]{smartdb.relations.ATypifiedStaticRelation.getCopy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfielddescrlist]{smartdb.relations.ATypifiedStaticRelation.getFieldDescrList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldisnull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldnamelist]{smartdb.relations.ATypifiedStaticRelation.getFieldNameList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldprojection]{smartdb.relations.ATypifiedStaticRelation.getFieldProjection}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldtypelist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat]{smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull]{smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getmindimensionsize]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getmindimensionality]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionality}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getnelems]{smartdb.relations.ATypifiedStaticRelation.getNElems}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getnfields]{smartdb.relations.ATypifiedStaticRelation.getNFields}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getntuples]{smartdb.relations.ATypifiedStaticRelation.getNTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getsortindex]{smartdb.relations.ATypifiedStaticRelation.getSortIndex}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuples]{smartdb.relations.ATypifiedStaticRelation.getTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby]{smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesindexedby]{smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith]{smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquedata]{smartdb.relations.ATypifiedStaticRelation.getUniqueData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim]{smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquetuples]{smartdb.relations.ATypifiedStaticRelation.getUniqueTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-initbyemptydataset]{smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-initbydefaultdataset]{smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isfields]{smartdb.relations.ATypifiedStaticRelation.isFields}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-ismemberalongdim]{smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-ismember]{smartdb.relations.ATypifiedStaticRelation.isMember}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isuniquekey]{smartdb.relations.ATypifiedStaticRelation.isUniqueKey}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isequal]{smartdb.relations.ATypifiedStaticRelation.isEqual}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-removeduplicatetuples]{smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-removetuples]{smartdb.relations.ATypifiedStaticRelation.removeTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-reorderdata]{smartdb.relations.ATypifiedStaticRelation.reorderData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-saveobj]{smartdb.relations.ATypifiedStaticRelation.saveObj}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-setdata]{smartdb.relations.ATypifiedStaticRelation.setData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-setfieldinternal]{smartdb.relations.ATypifiedStaticRelation.setFieldInternal}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-sortby]{smartdb.relations.ATypifiedStaticRelation.sortBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-sortbyalongdim]{smartdb.relations.ATypifiedStaticRelation.sortByAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-toarray]{smartdb.relations.ATypifiedStaticRelation.toArray}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tocell]{smartdb.relations.ATypifiedStaticRelation.toCell}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tocellisnull]{smartdb.relations.ATypifiedStaticRelation.toCellIsNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-todispcell]{smartdb.relations.ATypifiedStaticRelation.toDispCell}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tomat]{smartdb.relations.ATypifiedStaticRelation.toMat}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
+
+\item {} 
+{\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.unionWith\_}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-writetocsv]{smartdb.relations.ATypifiedStaticRelation.writeToCSV}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-writetoxls]{smartdb.relations.ATypifiedStaticRelation.writeToXLS}}
+
+\end{itemize}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 FROMELLTUBES - returns union of the ellipsoidal tubes on time
@@ -11843,10 +12364,6 @@ Input:
 
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result
-\end{Verbatim}
-
-\begin{Verbatim}[commandchars=\\\{\}]
-::
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\}]
@@ -12005,8 +12522,193 @@ Fields:
 \end{Verbatim}
 
 See the description of the following methods in section
-{[}secClassDescr:smartdb.relations.ATypifiedStaticRelation{]} for
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation]{smartdb.relations.ATypifiedStaticRelation}} for
 smartdb.relations.ATypifiedStaticRelation:
+\begin{itemize}
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-adddata]{smartdb.relations.ATypifiedStaticRelation.addData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-adddataalongdim]{smartdb.relations.ATypifiedStaticRelation.addDataAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-addtuples]{smartdb.relations.ATypifiedStaticRelation.addTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applygetfunc]{smartdb.relations.ATypifiedStaticRelation.applyGetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applysetfunc]{smartdb.relations.ATypifiedStaticRelation.applySetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-applytuplegetfunc]{smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-cleardata]{smartdb.relations.ATypifiedStaticRelation.clearData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-clone]{smartdb.relations.ATypifiedStaticRelation.clone}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-copyfrom]{smartdb.relations.ATypifiedStaticRelation.copyFrom}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-createinstance]{smartdb.relations.ATypifiedStaticRelation.createInstance}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-disponui]{smartdb.relations.ATypifiedStaticRelation.dispOnUI}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-display]{smartdb.relations.ATypifiedStaticRelation.display}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-fromstructlist]{smartdb.relations.ATypifiedStaticRelation.fromStructList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getcopy]{smartdb.relations.ATypifiedStaticRelation.getCopy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfielddescrlist]{smartdb.relations.ATypifiedStaticRelation.getFieldDescrList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldisnull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldnamelist]{smartdb.relations.ATypifiedStaticRelation.getFieldNameList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldprojection]{smartdb.relations.ATypifiedStaticRelation.getFieldProjection}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldtypelist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat]{smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull]{smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getmindimensionsize]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getmindimensionality]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionality}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getnelems]{smartdb.relations.ATypifiedStaticRelation.getNElems}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getnfields]{smartdb.relations.ATypifiedStaticRelation.getNFields}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getntuples]{smartdb.relations.ATypifiedStaticRelation.getNTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getsortindex]{smartdb.relations.ATypifiedStaticRelation.getSortIndex}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuples]{smartdb.relations.ATypifiedStaticRelation.getTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby]{smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesindexedby]{smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith]{smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquedata]{smartdb.relations.ATypifiedStaticRelation.getUniqueData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim]{smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-getuniquetuples]{smartdb.relations.ATypifiedStaticRelation.getUniqueTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-initbyemptydataset]{smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-initbydefaultdataset]{smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isfields]{smartdb.relations.ATypifiedStaticRelation.isFields}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-ismemberalongdim]{smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-ismember]{smartdb.relations.ATypifiedStaticRelation.isMember}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isuniquekey]{smartdb.relations.ATypifiedStaticRelation.isUniqueKey}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-isequal]{smartdb.relations.ATypifiedStaticRelation.isEqual}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-removeduplicatetuples]{smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-removetuples]{smartdb.relations.ATypifiedStaticRelation.removeTuples}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-reorderdata]{smartdb.relations.ATypifiedStaticRelation.reorderData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-saveobj]{smartdb.relations.ATypifiedStaticRelation.saveObj}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-setdata]{smartdb.relations.ATypifiedStaticRelation.setData}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-setfieldinternal]{smartdb.relations.ATypifiedStaticRelation.setFieldInternal}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-sortby]{smartdb.relations.ATypifiedStaticRelation.sortBy}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-sortbyalongdim]{smartdb.relations.ATypifiedStaticRelation.sortByAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-toarray]{smartdb.relations.ATypifiedStaticRelation.toArray}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tocell]{smartdb.relations.ATypifiedStaticRelation.toCell}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tocellisnull]{smartdb.relations.ATypifiedStaticRelation.toCellIsNull}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-todispcell]{smartdb.relations.ATypifiedStaticRelation.toDispCell}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tomat]{smartdb.relations.ATypifiedStaticRelation.toMat}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
+
+\item {} 
+{\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.unionWith\_}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-writetocsv]{smartdb.relations.ATypifiedStaticRelation.writeToCSV}}
+
+\item {} 
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-writetoxls]{smartdb.relations.ATypifiedStaticRelation.writeToXLS}}
+
+\end{itemize}
 
 \begin{Verbatim}[commandchars=\\\{\}]
 FROMELLTUBES - returns union of the ellipsoidal tubes on time
@@ -12322,7 +13024,7 @@ Output:
 
 
 \section{elltool.reach.AReach}
-\label{chap_func:elltool-reach-areach}
+\label{chap_func:elltool-reach-areach}\phantomsection\label{chap_func:elltool-reach-areach-cut}
 \begin{Verbatim}[commandchars=\\\{\}]
 CUT - extracts the piece of reach tube from given start time to given
       end time. Given reach set self, find states that are reachable
@@ -12353,7 +13055,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
   dCutObj = dRsObj.cut([3 5]);
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-dimension}
 \begin{Verbatim}[commandchars=\\\{\}]
 DIMENSION - returns array of dimensions of given reach set array.
 
@@ -12396,7 +13098,7 @@ Example:
   sSdim =
           [ 2  2 ]
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-display}
 \begin{Verbatim}[commandchars=\\\{\}]
 DISPLAY - displays the reach set object.
 
@@ -12436,7 +13138,7 @@ Example:
   Number of external approximations: 2
   Number of internal approximations: 2
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-evolve}
 \begin{Verbatim}[commandchars=\\\{\}]
 EVOLVE - computes further evolution in time of the
          already existing reach set.
@@ -12469,7 +13171,7 @@ Example:
   newRsObj = rsObj.evolve(12);
   newDRsObj = dRsObj.evolve(11);
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-getabstol}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETABSTOL - gives the array of absTol for all elements
   in rsArr
@@ -12498,8 +13200,10 @@ Usage:
   use absTolArr = rsArr.getAbsTol() if you want get only
       absTolArr
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-getcopy}
 \begin{Verbatim}[commandchars=\\\{\}]
+GETCOPY -
+
 Input:
   regular:
       self:
@@ -12511,6 +13215,7 @@ Input:
         and second - to external ones. An element equal to
          false means that the corresponding approximation type
          is filtered out. Default value is [true,true]
+
 Example:
     aMat = [0 1; 0 0]; bMat = eye(2);
     SUBounds = struct();
@@ -12560,7 +13265,7 @@ Example:
     Number of external approximations: 1
     Number of internal approximations: 1
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-geteascalefactor}
 \begin{Verbatim}[commandchars=\\\{\}]
 GET\_EASCALEFACTOR - return the scale factor for external approximation
                     of reach tube
@@ -12617,7 +13322,7 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   getEllTubeUnionRel(rsObj);
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-getiascalefactor}
 \begin{Verbatim}[commandchars=\\\{\}]
 GET\_IASCALEFACTOR - return the scale factor for internal approximation
                     of reach tube
@@ -12646,7 +13351,7 @@ Example:
 
       1.0200
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-getinitialset}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETINITIALSET - return the initial set for linear system, which is solved
                 for building reach tube.
@@ -12684,7 +13389,7 @@ Example:
 
   Nondegenerate ellipsoid in R\textasciicircum{}2.
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-getnplot2dpoints}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETNPLOT2DPOINTS - gives array  the same size as rsArr of
   value of nPlot2dPoints property for each element in rsArr -
@@ -12700,7 +13405,7 @@ Output:
       values of nTimeGridPoints property for each reach set
       in rsArr
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-getnplot3dpoints}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETNPLOT3DPOINTS - gives array  the same size as rsArr of
   value of nPlot3dPoints property for each element in rsArr
@@ -12714,7 +13419,7 @@ Output:
   nPlot3dPointsArr:double[nDims1,nDims2,...]- array of values
       of nPlot3dPoints property for each reach set in rsArr
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-getntimegridpoints}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETNTIMEGRIDPOINTS - gives array  the same size as rsArr of
   value of nTimeGridPoints property for each element in rsArr
@@ -12730,7 +13435,7 @@ Output:
       values of nTimeGridPoints property for each reach set
       in rsArr
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-getreltol}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETRELTOL - gives the array of relTol for all elements in
 ellArr
@@ -12759,7 +13464,7 @@ Usage:
   use relTolArr = rsArr.getRelTol() if you want get only
       relTolArr
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-get-center}
 \begin{Verbatim}[commandchars=\\\{\}]
 GET\_CENTER - returns the trajectory of the center of the reach set.
 
@@ -12786,7 +13491,7 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   [trCenterMat timeVec] = rsObj.get\_center();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-get-directions}
 \begin{Verbatim}[commandchars=\\\{\}]
 GET\_DIRECTIONS - returns the values of direction vectors for time grid
                  values.
@@ -12815,7 +13520,7 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   [directionsCVec timeVec] = rsObj.get\_directions();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-get-ea}
 \begin{Verbatim}[commandchars=\\\{\}]
 GET\_EA - returns array of ellipsoid objects representing external
          approximation of the reach  tube.
@@ -12848,7 +13553,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   [eaEllMat timeVec] = dRsObj.get\_ea();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-get-goodcurves}
 \begin{Verbatim}[commandchars=\\\{\}]
 GET\_GOODCURVES - returns the 'good curve' trajectories of the reach set.
 
@@ -12878,7 +13583,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   [goodCurvesCVec timeVec] = dRsObj.get\_goodcurves();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-get-ia}
 \begin{Verbatim}[commandchars=\\\{\}]
 GET\_IA - returns array of ellipsoid objects representing internal
          approximation of the  reach tube.
@@ -12906,7 +13611,7 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   [iaEllMat timeVec] = rsObj.get\_ia();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-get-system}
 \begin{Verbatim}[commandchars=\\\{\}]
 GET\_SYSTEM - returns the linear system for which the reach set is
              computed.
@@ -12964,7 +13669,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   dRsObj.get\_system();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-intersect}
 \begin{Verbatim}[commandchars=\\\{\}]
 INTERSECT - checks if its external (s = 'e'), or internal (s = 'i')
             approximation intersects with given ellipsoid, hyperplane
@@ -13000,7 +13705,7 @@ Example:
 
                   1
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-isempty}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISEMPTY - checks if given reach set array is an array of empty objects.
 
@@ -13041,7 +13746,7 @@ Example:
   ans =
       [ 0  0 ]
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-isequal}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISEQUAL - checks for equality given reach set objects
 
@@ -13086,7 +13791,7 @@ Example:
 
           1
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-isbackward}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISBACKWARD - checks if given reach set object was obtained by solving
              the system in reverse time.
@@ -13116,7 +13821,7 @@ Example:
 
        1
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-iscut}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISCUT - checks if given array of reach set objects is a cut of
         another reach set object's array.
@@ -13152,7 +13857,7 @@ Example:
   iscut(cutObjArr);
   iscut(cutObj);
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-isprojection}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISPROJECTION - checks if given array of reach set objects is projections.
 
@@ -13189,7 +13894,7 @@ Example:
   isprojection(projObj);
   isprojection(projObjArr);
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-plotbyea}
 \begin{Verbatim}[commandchars=\\\{\}]
 plotByEa - plots external approximation of reach tube.
 
@@ -13226,7 +13931,7 @@ Output:
       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
       data plotter object.
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-plotbyia}
 \begin{Verbatim}[commandchars=\\\{\}]
 plotByIa - plots internal approximation of reach tube.
 
@@ -13263,7 +13968,7 @@ Output:
       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
       data plotter object.
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-plotea}
 \begin{Verbatim}[commandchars=\\\{\}]
 PLOT\_EA - plots external approximations of 2D and 3D reach sets.
 
@@ -13309,7 +14014,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   dRsObj.plotEa();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-plotia}
 \begin{Verbatim}[commandchars=\\\{\}]
 PLOTIA - plots internal approximations of 2D and 3D reach sets.
 
@@ -13351,7 +14056,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   dRsObj.plotIa();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-refine}
 \begin{Verbatim}[commandchars=\\\{\}]
 REFINE - adds new approximations computed for the specified directions
          to the given reach set or to the projection of reach set.
@@ -13380,7 +14085,7 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   rsObj = rsObj.refine(newDirsMat);
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-reach-areach-repmat}
 \begin{Verbatim}[commandchars=\\\{\}]
 REPMAT - is analogous to built-in repmat function with one exception - it
          copies the objects, not just the handles
@@ -13448,7 +14153,114 @@ Example:
 \end{Verbatim}
 
 See the description of the following methods in section
-{[}secClassDescr:elltool.reach.AReach{]} for elltool.reach.AReach:
+{\hyperref[chap_func:elltool-reach-areach]{elltool.reach.AReach}} for elltool.reach.AReach:
+\begin{itemize}
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-cut]{elltool.reach.AReach.cut}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-dimension]{elltool.reach.AReach.dimension}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-display]{elltool.reach.AReach.display}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-evolve]{elltool.reach.AReach.evolve}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getabstol]{elltool.reach.AReach.getAbsTol}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getcopy]{elltool.reach.AReach.getCopy}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-geteascalefactor]{elltool.reach.AReach.getEaScaleFactor}}
+
+\item {} 
+{\color{red}\bfseries{}elltool.reach.AReach.getEllTubeRel\_}?
+
+\item {} 
+{\color{red}\bfseries{}elltool.reach.AReach.getEllTubeUnionRel\_}?
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getiascalefactor]{elltool.reach.AReach.getIaScaleFactor}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getinitialset]{elltool.reach.AReach.getInitialSet}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getnplot2dpoints]{elltool.reach.AReach.getNPlot2dPoints}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getnplot3dpoints]{elltool.reach.AReach.getNPlot3dPoints}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getntimegridpoints]{elltool.reach.AReach.getNTimeGridPoints}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getreltol]{elltool.reach.AReach.getRelTol}}
+
+\item {} 
+{\color{red}\bfseries{}elltool.reach.AReach.getSwitchTimeVec\_} ?
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-center]{elltool.reach.AReach.get\_center}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-directions]{elltool.reach.AReach.get\_directions}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-ea]{elltool.reach.AReach.get\_ea}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-goodcurves]{elltool.reach.AReach.get\_goodcurves}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-ia]{elltool.reach.AReach.get\_ia}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-system]{elltool.reach.AReach.get\_system}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-intersect]{elltool.reach.AReach.intersect}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-isempty]{elltool.reach.AReach.isEmpty}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-isequal]{elltool.reach.AReach.isEqual}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-isbackward]{elltool.reach.AReach.isbackward}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-iscut]{elltool.reach.AReach.iscut}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-isprojection]{elltool.reach.AReach.isprojection}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-plotbyea]{elltool.reach.AReach.plotByEa}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-plotbyia]{elltool.reach.AReach.plotByIa}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-plotea]{elltool.reach.AReach.plotEa}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-plotia]{elltool.reach.AReach.plotIa}}
+
+\item {} 
+{\color{red}\bfseries{}elltool.reach.AReach.projection\_} ?
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-refine]{elltool.reach.AReach.refine}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-repmat]{elltool.reach.AReach.repMat}}
+
+\end{itemize}
 
 
 \section{elltool.reach.ReachDiscrete}
@@ -13490,7 +14302,114 @@ Example:
 \end{Verbatim}
 
 See the description of the following methods in section
-{[}secClassDescr:elltool.reach.AReach{]} for elltool.reach.AReach:
+{\hyperref[chap_func:elltool-reach-areach]{elltool.reach.AReach}} for elltool.reach.AReach:
+\begin{itemize}
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-cut]{elltool.reach.AReach.cut}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-dimension]{elltool.reach.AReach.dimension}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-display]{elltool.reach.AReach.display}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-evolve]{elltool.reach.AReach.evolve}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getabstol]{elltool.reach.AReach.getAbsTol}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getcopy]{elltool.reach.AReach.getCopy}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-geteascalefactor]{elltool.reach.AReach.getEaScaleFactor}}
+
+\item {} 
+{\color{red}\bfseries{}elltool.reach.AReach.getEllTubeRel\_}?
+
+\item {} 
+{\color{red}\bfseries{}elltool.reach.AReach.getEllTubeUnionRel\_}?
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getiascalefactor]{elltool.reach.AReach.getIaScaleFactor}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getinitialset]{elltool.reach.AReach.getInitialSet}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getnplot2dpoints]{elltool.reach.AReach.getNPlot2dPoints}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getnplot3dpoints]{elltool.reach.AReach.getNPlot3dPoints}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getntimegridpoints]{elltool.reach.AReach.getNTimeGridPoints}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-getreltol]{elltool.reach.AReach.getRelTol}}
+
+\item {} 
+{\color{red}\bfseries{}elltool.reach.AReach.getSwitchTimeVec\_} ?
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-center]{elltool.reach.AReach.get\_center}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-directions]{elltool.reach.AReach.get\_directions}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-ea]{elltool.reach.AReach.get\_ea}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-goodcurves]{elltool.reach.AReach.get\_goodcurves}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-ia]{elltool.reach.AReach.get\_ia}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-get-system]{elltool.reach.AReach.get\_system}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-intersect]{elltool.reach.AReach.intersect}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-isempty]{elltool.reach.AReach.isEmpty}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-isequal]{elltool.reach.AReach.isEqual}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-isbackward]{elltool.reach.AReach.isbackward}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-iscut]{elltool.reach.AReach.iscut}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-isprojection]{elltool.reach.AReach.isprojection}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-plotbyea]{elltool.reach.AReach.plotByEa}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-plotbyia]{elltool.reach.AReach.plotByIa}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-plotea]{elltool.reach.AReach.plotEa}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-plotia]{elltool.reach.AReach.plotIa}}
+
+\item {} 
+{\color{red}\bfseries{}elltool.reach.AReach.projection\_} ?
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-refine]{elltool.reach.AReach.refine}}
+
+\item {} 
+{\hyperref[chap_func:elltool-reach-areach-repmat]{elltool.reach.AReach.repMat}}
+
+\end{itemize}
 
 
 \section{elltool.reach.ReachFactory}
@@ -13611,7 +14530,7 @@ Output:
   self: elltool.linsys.ALinSys[1, 1] -
       linear system.
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-dimension}
 \begin{Verbatim}[commandchars=\\\{\}]
 DIMENSION - returns dimensions of state, input, output and disturbance
             spaces.
@@ -13655,7 +14574,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   dsys.dimension();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-display}
 \begin{Verbatim}[commandchars=\\\{\}]
 DISPLAY - displays the details of linear system object.
 
@@ -13666,7 +14585,7 @@ Input:
 Output:
   None.
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-getabstol}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETABSTOL - gives array the same size as linsysArr with values of absTol
             properties for each hyperplane in hplaneArr.
@@ -13691,8 +14610,10 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   dsys.getAbsTol();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-getatmat}
 \begin{Verbatim}[commandchars=\\\{\}]
+GETATMAT -
+
 Input:
   regular:
       self: elltool.linsys.ILinSys[1, 1] - linear system.
@@ -13709,7 +14630,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   aMat = dsys.getAtMat();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-getbtmat}
 \begin{Verbatim}[commandchars=\\\{\}]
 Input:
   regular:
@@ -13727,7 +14648,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   bMat = dsys.getBtMat();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-getcopy}
 \begin{Verbatim}[commandchars=\\\{\}]
 GETCOPY - gives array the same size as linsysArr with with copies of
           elements of self.
@@ -13751,7 +14672,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   newDSys = dsys.getCopy();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-getctmat}
 \begin{Verbatim}[commandchars=\\\{\}]
 Input:
   regular:
@@ -13769,8 +14690,10 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   gMat = sys.getCtMat();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-getdistboundsell}
 \begin{Verbatim}[commandchars=\\\{\}]
+GETDISTBOUNDSELL -
+
 Input:
   regular:
       self: elltool.linsys.ILinSys[1, 1] - linear system.
@@ -13787,7 +14710,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   distEll = sys.getDistBoundsEll();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-getuboundsell}
 \begin{Verbatim}[commandchars=\\\{\}]
 Input:
   regular:
@@ -13805,7 +14728,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   uEll = dsys.getUBoundsEll();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-hasdisturbance}
 \begin{Verbatim}[commandchars=\\\{\}]
 HASDISTURBANCE - returns true if system has disturbance
 
@@ -13836,7 +14759,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   dsys.hasDisturbance();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-isempty}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISEMPTY - checks if linear system is empty.
 
@@ -13864,7 +14787,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   dsys.isEmpty();
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-isequal}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISEQUAL - produces produces logical array the same size as
           self/compLinSysArr (if they have the same).
@@ -13904,7 +14827,7 @@ Examples:
 
        1
 \end{Verbatim}
-
+\phantomsection\label{chap_func:elltool-linsys-alinsys-islti}
 \begin{Verbatim}[commandchars=\\\{\}]
 ISLTI - checks if linear system is time-invariant.
 
@@ -13971,7 +14894,48 @@ Example:
 \end{Verbatim}
 
 See the description of the following methods in section
-{[}secClassDescr:elltool.linsys.ALinSys{]} for elltool.linsys.ALinSys:
+{\hyperref[chap_func:elltool-linsys-alinsys]{elltool.linsys.ALinSys}} for elltool.linsys.ALinSys:
+\begin{itemize}
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-dimension]{elltool.linsys.ALinSys.dimension}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-display]{elltool.linsys.ALinSys.display}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getabstol]{elltool.linsys.ALinSys.getAbsTol}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getatmat]{elltool.linsys.ALinSys.getAtMat}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getbtmat]{elltool.linsys.ALinSys.getBtMat}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getcopy]{elltool.linsys.ALinSys.getCopy}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getctmat]{elltool.linsys.ALinSys.getCtMat}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getdistboundsell]{elltool.linsys.ALinSys.getDistBoundsEll}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getuboundsell]{elltool.linsys.ALinSys.getUBoundsEll}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-hasdisturbance]{elltool.linsys.ALinSys.hasDisturbance}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-isempty]{elltool.linsys.ALinSys.isEmpty}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-isequal]{elltool.linsys.ALinSys.isEqual}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-islti]{elltool.linsys.ALinSys.isLti}}
+
+\end{itemize}
 
 
 \section{elltool.linsys.LinSysDiscrete}
@@ -14014,9 +14978,52 @@ Example:
          uBoundsEllObj, ctMat,distBounds);
   end
 \end{Verbatim}
+\begin{description}
+\item[{See the description of the following methods in section {\hyperref[chap_func:elltool-linsys-alinsys]{elltool.linsys.ALinSys}}}] \leavevmode
+for elltool.linsys.ALinSys:
 
-See the description of the following methods in section
-{[}secClassDescr:elltool.linsys.ALinSys{]} for elltool.linsys.ALinSys:
+\end{description}
+\begin{itemize}
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-dimension]{elltool.linsys.ALinSys.dimension}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-display]{elltool.linsys.ALinSys.display}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getabstol]{elltool.linsys.ALinSys.getAbsTol}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getatmat]{elltool.linsys.ALinSys.getAtMat}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getbtmat]{elltool.linsys.ALinSys.getBtMat}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getcopy]{elltool.linsys.ALinSys.getCopy}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getctmat]{elltool.linsys.ALinSys.getCtMat}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getdistboundsell]{elltool.linsys.ALinSys.getDistBoundsEll}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-getuboundsell]{elltool.linsys.ALinSys.getUBoundsEll}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-hasdisturbance]{elltool.linsys.ALinSys.hasDisturbance}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-isempty]{elltool.linsys.ALinSys.isEmpty}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-isequal]{elltool.linsys.ALinSys.isEqual}}
+
+\item {} 
+{\hyperref[chap_func:elltool-linsys-alinsys-islti]{elltool.linsys.ALinSys.isLti}}
+
+\end{itemize}
 
 
 \section{elltool.linsys.LinSysFactory}

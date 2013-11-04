@@ -425,20 +425,20 @@ calculation of this matrix ( Dariyn and Kurzhanski (2012)):
 .. math::
    :label: valign1
 
-   &&T = I + Q_1(S - I)Q_1^T, \\ 
+   T = I + Q_1(S - I)Q_1^T,  
 
 .. math::
    :label: valign2
 
-   &&S = \begin{pmatrix}
+   S = \begin{pmatrix}
         c & s\\
         -s & c
-       \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}\\ 
+       \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|} 
 
 .. math::
    :label: valign3
 
-   &&Q_1 = [q_1 \, q_2]\in \mathbb{R}^{n\times2},\ \quad q_1 = \hat{v_1},\ \quad q_2 = \begin{cases}
+   Q_1 = [q_1 \, q_2]\in \mathbb{R}^{n\times2},\ \quad q_1 = \hat{v_1},\ \quad q_2 = \begin{cases}
    s^{-1}(\hat{v_2} - c\hat{v_1}),& s\ne 0\\
    0,& s = 0.
    \end{cases}
@@ -852,9 +852,8 @@ may occur if, for example, one ellipsoid is contained in the other:
 
 .. math::
 
-   {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) & \Rightarrow & \pi_0 = 1,\\
-
-   {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) & \Rightarrow & \pi_0 = 0.\\
+   {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) & \Rightarrow \pi_0 = 1,\\   
+   {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) & \Rightarrow \pi_0 = 0.
 
 The proof that the system of equations :eq:`fusion1`-:eq:`fusion5` correctly
 defines the minimal volume external ellipsoidal approximationi of the
@@ -868,12 +867,12 @@ define
 .. math::
    :label: beta1
 
-   \beta_1 & = & \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle,\\
+   \beta_1 = \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle,
 
 .. math::
    :label: beta2
 
-   \beta_2 & = & \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle,
+   \beta_2 = \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle,
 
 Notice that :eq:`beta1` and :eq:`beta2` are QCQP problems. Parameters
 :math:`\beta_1` and :math:`\beta_2` are invariant with respect to affine
@@ -883,19 +882,19 @@ respect to each other:
 
 .. math::
 
-   \beta_1\geqslant1,~\beta_2\geqslant1 & \Rightarrow &
+   \beta_1\geqslant1,~\beta_2\geqslant1 & \Rightarrow
    {\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))=\emptyset, \\
 
-   \beta_1\geqslant1,~\beta_2\leqslant1 & \Rightarrow & {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2), \\
+   \beta_1\geqslant1,~\beta_2\leqslant1 & \Rightarrow {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2), \\
 
-   \beta_1\leqslant1,~\beta_2\geqslant1 & \Rightarrow & {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1), \\
+   \beta_1\leqslant1,~\beta_2\geqslant1 & \Rightarrow {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1), \\
 
-   \beta_1<1,~\beta_2<1 & \Rightarrow &
+   \beta_1<1,~\beta_2<1 & \Rightarrow
    {\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))\neq\emptyset \\
 
-   & & \mbox{and} ~ {\mathcal E}(q_1,Q_1)\not\subseteq{\mathcal E}(q_2,Q_2) \\
+   &\mbox{and} ~ {\mathcal E}(q_1,Q_1)\not\subseteq{\mathcal E}(q_2,Q_2) \\
 
-   & & \mbox{and} ~ {\mathcal E}(q_2,Q_2)\not\subseteq{\mathcal E}(q_1,Q_1).
+   &\mbox{and} ~ {\mathcal E}(q_2,Q_2)\not\subseteq{\mathcal E}(q_1,Q_1).
 
 Define parametrized family of internal ellipsoids
 :math:`{\mathcal E}(q^-_{\theta_1\theta_2},Q^-_{\theta_1\theta_2})` with
@@ -1048,7 +1047,7 @@ The resulting ellipsoidal approximations are
 
 .. math:: {\mathcal E}(q^+,Q^+)={\mathcal E}(q^+_m,Q^+_m), ~~~~ {\mathcal E}(q^-,Q^-)={\mathcal E}(q^-_m,Q^-_m) .
 
-Checking if :math:`\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)`
+Checking if one ellipsoid contains another
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Theorem of alternatives, also known as :math:`S`-procedure Boyd and

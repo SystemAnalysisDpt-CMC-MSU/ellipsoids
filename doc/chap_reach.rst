@@ -1003,7 +1003,7 @@ like the following:
 #. For the given time interval :math:`[t_0, t]`, determine whether the
    system can be steered into the given target set
    :math:`{\mathcal Y}_1`. In other words, is the set
-   :math:`{\mathcal Y}_1\cap\bigcup_{t_0 \leqslant\tau\leqslantt}{\mathcal X}(\tau, t_0, {\mathcal X}_0)`
+   :math:`{\mathcal Y}_1\cap\bigcup_{t_0 \leqslant\tau\leqslant t}{\mathcal X}(\tau, t_0, {\mathcal X}_0)`
    nonempty? And if the answer is ‘yes’, find a control that steers the
    system to the target set (or avoids the target set). [8]_
 
@@ -1135,15 +1135,15 @@ The equation for the shape matrix of the external ellipsoid is
 .. math::
    :label: fwdext1 
 
-   \dot{X}^+_l(t) & = & A(t)X^+_l(t) + X^+_l(t)A^T(t) +\nonumber \\
-   & & \pi_l(t)X^+_l(t) + \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) -\nonumber \\
-   & & (X_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} \nonumber -\\
-   & & (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(X_l^{+}(t))^{1/2}, \\
+   \dot{X}^+_l(t) & = A(t)X^+_l(t) + X^+_l(t)A^T(t) +\nonumber \\
+   &\pi_l(t)X^+_l(t) + \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) -\nonumber \\
+   & (X_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} \nonumber -\\
+   & (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(X_l^{+}(t))^{1/2}, \\
 
 .. math::
    :label: fwdext2
    
-   X^+_l(t_0) & = & X_0,
+   X^+_l(t_0) =X_0,
 
 in which
 
@@ -1171,12 +1171,15 @@ The equation for the shape matrix of the internal ellipsoid is
 .. math::
    :label: fwdint1 
 
-   \dot{X}^-_l(t) & = & A(t)X^-_l(t) + X^-_l(t)A^T(t) +\nonumber \\
-   & & (X_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} +\nonumber \\
-   & & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(X_l^{-}(t))^{1/2} -\nonumber \\
-   & & \eta_l(t)X^-_l(t) - \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \\
+   \dot{X}^-_l(t) & = A(t)X^-_l(t) + X^-_l(t)A^T(t) +\nonumber \\
+   & (X_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} +\nonumber \\
+   & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(X_l^{-}(t))^{1/2} -\nonumber \\
+   & \eta_l(t)X^-_l(t) - \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \\
 
-   X^-_l(t_0) & = & X_0, \label{fwdint2}
+.. math::
+   :label: fwdint2
+   
+   X^-_l(t_0) = X_0, 
 
 in which
 
@@ -1292,15 +1295,15 @@ The equation for the shape matrix of the external ellipsoid is
 .. math::
    :label: bckext1
 
-   \dot{Y}^+_l(t) & = & A(t)Y^+_l(t) + Y^+_l(t)A^T(t) -\nonumber \\
-   & & \pi_l(t)Y^+_l(t) - \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) +\nonumber \\
-   & & (Y_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} +\nonumber \\
-   & & (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(Y_l^{+}(t))^{1/2},\\
+   \dot{Y}^+_l(t) & = A(t)Y^+_l(t) + Y^+_l(t)A^T(t) -\nonumber \\
+   & \pi_l(t)Y^+_l(t) - \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) +\nonumber \\
+   & (Y_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} +\nonumber \\
+   & (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(Y_l^{+}(t))^{1/2},\\
 
 .. math::
    :label: bckext2
 
-   Y^+_l(t_1) & = & Y_1,
+   Y^+_l(t_1)  = Y_1,
 
 in which
 
@@ -1323,15 +1326,15 @@ The equation for the shape matrix of the internal ellipsoid is
 .. math::
    :label: bckint1 
 
-   \dot{Y}^-_l(t) & = & A(t)Y^-_l(t) + Y^-_l(t)A^T(t) -\nonumber \\
-   & & (Y_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} -\nonumber \\
-   & & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(Y_l^{-}(t))^{1/2} +\nonumber \\
-   & & \eta_l(t)Y^-_l(t) + \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t),\\
+   \dot{Y}^-_l(t) & =  A(t)Y^-_l(t) + Y^-_l(t)A^T(t) -\nonumber \\
+   & (Y_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} -\nonumber \\
+   & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(Y_l^{-}(t))^{1/2} +\nonumber \\
+   & \eta_l(t)Y^-_l(t) + \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t),\\
    
 .. math::
    :label: bckint2
  
-   Y^-_l(t_1) & = & Y_1,
+   Y^-_l(t_1) & = Y_1,
 
 in which
 
@@ -1379,7 +1382,7 @@ Consider the discrete-time linear system,
    :label: dtsystem
 
    x(t+1) = A(t)x(t) + B(t)u(t,x(t)) + G(t)v(t),
-.. \tag*{(\ref{ctsystem})}
+
 
 
 in which :math:`x(t)\in{\bf R}^n` is the state,
@@ -1402,7 +1405,7 @@ ordinary affine system with known :math:`v(\cdot)=q(\cdot)`. If matrix
 :math:`G(\cdot)=0`, the system reduces to a linear controlled system. In
 the absence of disturbance (:math:`Q(\cdot)=0` or :math:`G(\cdot)=0`),
 :math:`\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))=\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))={\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))`,
-the reach set is as in Definition [def:sub:`o`\ lrs]. !!!!!!!!!!!! WATCH !!!!!!!!!!!!
+the reach set is as in Definition [def:sub:`o`\ lrs]. !!! WATCH !!!
 
 Maxmin and minmax CLRS
 :math:`\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)` and
@@ -1413,7 +1416,8 @@ time according to
 .. math::
    :label: fwdcenterd
 
-   x_c(t+1) = A(t)x_c(t) + B(t)p(t) + G(t)v(t), \;\;\; x_c(t_0)=x_0.
+   x_c(t+1) = A(t)x_c(t) + B(t)p(t) + G(t)v(t), \\
+   x_c(t_0)= x_0.
 
 
 Fix some vector :math:`l_0\in{\bf R}^n` and consider :math:`l(t)` that
@@ -1422,7 +1426,8 @@ satisfies the discrete-time adjoint equation, [10]_
 .. math::
    :label: adjointdt
    
-   l(t+1) = \left(A^T\right)^{-1}(t)l(t), \;\;\; l(t_0) = l_0,
+   l(t+1) = \left(A^T\right)^{-1}(t)l(t), \\ 
+   l(t_0) = l_0,
 
 
 or, equivalently
@@ -1472,7 +1477,7 @@ determined from
 .. math::
    :label: fwdextmaxmin1
 
-   \hat{X}^+_l(t) & = & (1+\overline{\pi}_l(t))A(t)\overline{X}^+_l(t)A^T(t) +
+   \hat{X}^+_l(t) & = (1+\overline{\pi}_l(t))A(t)\overline{X}^+_l(t)A^T(t) +
    \left(1+\frac{1}{\overline{\pi}_l(t)}\right)
    B(t)P(t)B^T(t),  \\
 
@@ -1480,15 +1485,15 @@ determined from
    :label: fwdextmaxmin2
    
    
-   \overline{X}^+_l(t+1) & = & \left((\hat{X}^+_l(t))^{1/2} +
+   \overline{X}^+_l(t+1) & = \left((\hat{X}^+_l(t))^{1/2} +
    \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
    \times \nonumber \\
-   & &\left((\hat{X}^+_l(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right),\\
+   & \left((\hat{X}^+_l(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right),\\
    
 .. math::
    :label: fwdextmaxmin3
 
-   \overline{X}^+_l(t_0) & = & X_0,
+   \overline{X}^+_l(t_0) & = X_0,
 
 wherein
 
@@ -1521,17 +1526,17 @@ determined from
 .. math::
    :label: fwdextminmax1
    
-   \breve{X}^+_l(t) & = &
+   \breve{X}^+_l(t) & =
    \left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
    \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
    \times \nonumber \\
-   & &\left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
+   &\left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
    \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)\\
 
 .. math::   
    :label: fwdextminmax2 
 
-   \underline{X}^+_l(t+1) & = &
+   \underline{X}^+_l(t+1) & = 
    (1+\underline{\pi}_l(t))\breve{X}^+_l(t) +
    \left(1+\frac{1}{\underline{\pi}_l(t)}\right)
    B(t)P(t)B^T(t),\\
@@ -1539,7 +1544,7 @@ determined from
 .. math::
    :label: fwdextminmax3
 
-   \underline{X}^+_l(t_0) & = & X_0, 
+   \underline{X}^+_l(t_0) & = X_0, 
 
 where
 
@@ -1555,8 +1560,8 @@ equation
 .. math::
 
    \begin{aligned}
-   & & \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t+1) = \\
-   & & \frac{\langle l(t+1),
+   & \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t+1) = \\
+   & \frac{\langle l(t+1),
    G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
    \underline{X}^+_l(t)l(t)\rangle^{1/2}}(A(t)\underline{X}^+_l(t)A^T(t))^{1/2}l(t+1).\end{aligned}
 
@@ -1572,17 +1577,17 @@ determined from
 .. math::
    :label: fwdintmaxmin1
    
-   \hat{X}^-_l(t) & = &
+   \hat{X}^-_l(t) & = 
    \left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
    \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
    \times \nonumber \\
-   & &\left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
+   & \left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
    \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)\\
 
 .. math::
    :label: fwdintmaxmin2
    
-   \overline{X}^-_l(t+1) & = &
+   \overline{X}^-_l(t+1) & = 
    (1+\overline{\eta}_l(t))\hat{X}^-_l(t) +
    \left(1+\frac{1}{\underline{\eta}_l(t)}\right)
    G(t)Q(t)G^T(t), \\
@@ -1590,7 +1595,7 @@ determined from
 .. math::
    :label: fwdintmaxmin3
 
-   \overline{X}^-_l(t_0) & = & X_0, 
+   \overline{X}^-_l(t_0) & = X_0, 
 
 where
 
@@ -1606,8 +1611,8 @@ equation
 .. math::
 
    \begin{aligned}
-   & & \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
-   & & \frac{\langle l(t+1),
+   & \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
+   & \frac{\langle l(t+1),
    B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
    \overline{X}^-_l(t)l(t)\rangle^{1/2}}(A(t)\overline{X}^-_l(t)A^T(t))^{1/2}l(t+1).\end{aligned}
 
@@ -1620,22 +1625,22 @@ determined by
 .. math::
    :label: fwdintminmax1 
 
-   \breve{X}^-_l(t) & = & (1+\underline{\eta}_l(t))A(t)\underline{X}^-_l(t)A^T(t) +
+   \breve{X}^-_l(t) & = (1+\underline{\eta}_l(t))A(t)\underline{X}^-_l(t)A^T(t) +
    \left(1+\frac{1}{\underline{\eta}_l(t)}\right)
    G(t)Q(t)G^T(t),\\
    
 .. math::
    :label: fwdintminmax2
 
-   \underline{X}^-_l(t+1) & = & \left((\breve{X}^-_l(t))^{1/2} +
+   \underline{X}^-_l(t+1) & = \left((\breve{X}^-_l(t))^{1/2} +
    \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
    \times \nonumber \\
-   & &\left((\breve{X}^-_l(t))^{1/2} + \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right),\\
+   &\left((\breve{X}^-_l(t))^{1/2} + \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right),\\
    
 .. math::
    :label: fwdintminmax3
 
-   \underline{X}^-_l(t_0) & = & X_0,
+   \underline{X}^-_l(t_0) & = X_0,
 
 wherein
 
@@ -1651,8 +1656,8 @@ the equation
 .. math::
 
    \begin{aligned}
-   & & \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
-   & & \frac{\langle l(t+1),
+   &\underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
+   & \frac{\langle l(t+1),
    B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
    \breve{X}^-_l(t)l(t+1)\rangle^{1/2}}(\breve{X}^-_l(t))^{1/2}l(t+1).\end{aligned}
 
@@ -1674,7 +1679,7 @@ and the bounday point of minmax CLRS is
    x_l^-(t) = x_c(t) + \frac{\overline{X}^-_l(t)l(t)}{\langle l(t),
    \overline{X}^-_l(t)l(t)\rangle^{1/2}} .
 
-Points :math:`x^{\pm}_l(t)`, :math:`t\geqslantt_0`, form extremal
+Points :math:`x^{\pm}_l(t)`, :math:`t\geqslant t_0`, form extremal
 trajectories. In order for the system to follow the extremal trajectory
 specified by some vector :math:`l_0`, the initial state must be
 
@@ -1722,7 +1727,6 @@ obtained for those directions :math:`l(t)` satisfying
    :label: bckadjointd
 
    l(t) = \Phi^T(t_1,t)l_1,
-..   \tag*{(\ref{bckadjoint})}
 
 
 with some fixed :math:`l_1`, for which they exist.
@@ -1760,7 +1764,7 @@ and
 
 in direction :math:`l(t)` from :eq:`bckadjointd`. Section
 [subsec:sub:`s`\ umdiff] describes the operation of geometric
-sum-difference for ellipsoids.
+sum-difference for ellipsoids. !!! WATCH !!!
 
 External and internal ellipsoids for minmax CLBRS
 :math:`\underline{{\mathcal Y}}_{CL}(t_1,t,{\mathcal E}(y_1,Y_1))` at

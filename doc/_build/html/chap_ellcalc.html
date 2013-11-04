@@ -342,14 +342,14 @@ We have to find matrix <span class="math">\(S\)</span> such that
 <span class="math">\(Sv_2\uparrow\uparrow v_1\)</span>. We suggest explicit formulas for the
 calculation of this matrix ( Dariyn and Kurzhanski (2012)):</p>
 <div class="math" id="equation-valign1">
-<span class="eqno">(20)</span>\[\begin{split}&amp;&amp;T = I + Q_1(S - I)Q_1^T, \\\end{split}\]</div>
+<span class="eqno">(20)</span>\[T = I + Q_1(S - I)Q_1^T,\]</div>
 <div class="math" id="equation-valign2">
-<span class="eqno">(21)</span>\[\begin{split}&amp;&amp;S = \begin{pmatrix}
+<span class="eqno">(21)</span>\[\begin{split}S = \begin{pmatrix}
      c &amp; s\\
      -s &amp; c
-    \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}\\\end{split}\]</div>
+    \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}\end{split}\]</div>
 <div class="math" id="equation-valign3">
-<span class="eqno">(22)</span>\[\begin{split}&amp;&amp;Q_1 = [q_1 \, q_2]\in \mathbb{R}^{n\times2},\ \quad q_1 = \hat{v_1},\ \quad q_2 = \begin{cases}
+<span class="eqno">(22)</span>\[\begin{split}Q_1 = [q_1 \, q_2]\in \mathbb{R}^{n\times2},\ \quad q_1 = \hat{v_1},\ \quad q_2 = \begin{cases}
 s^{-1}(\hat{v_2} - c\hat{v_1}),&amp; s\ne 0\\
 0,&amp; s = 0.
 \end{cases}\end{split}\]</div>
@@ -644,7 +644,8 @@ cases are <span class="math">\(\pi_0=1\)</span>, whence
 <span class="math">\({\mathcal E}(q^+,Q^+)={\mathcal E}(q_2,Q_2)\)</span>. These situations
 may occur if, for example, one ellipsoid is contained in the other:</p>
 <div class="math">
-\[\begin{split}{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) &amp; \Rightarrow &amp; \pi_0 = 1,\\\end{split}\]\[\begin{split}{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) &amp; \Rightarrow &amp; \pi_0 = 0.\\\end{split}\]</div>
+\[\begin{split}{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) &amp; \Rightarrow \pi_0 = 1,\\
+{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) &amp; \Rightarrow \pi_0 = 0.\end{split}\]</div>
 <p>The proof that the system of equations <a href="#equation-fusion1">(30)</a>-<a href="#equation-fusion5">(34)</a> correctly
 defines the minimal volume external ellipsoidal approximationi of the
 intersection <span class="math">\({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)\)</span> is
@@ -653,18 +654,18 @@ given in L. Ros (2002).</p>
 <span class="math">\({\mathcal E}(q^-,Q^-)\subseteq{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)\)</span>,
 define</p>
 <div class="math" id="equation-beta1">
-<span class="eqno">(35)</span>\[\begin{split}\beta_1 &amp; = &amp; \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle,\\\end{split}\]</div>
+<span class="eqno">(35)</span>\[\beta_1 = \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle,\]</div>
 <div class="math" id="equation-beta2">
-<span class="eqno">(36)</span>\[\begin{split}\beta_2 &amp; = &amp; \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle,\end{split}\]</div>
+<span class="eqno">(36)</span>\[\beta_2 = \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle,\]</div>
 <p>Notice that <a href="#equation-beta1">(35)</a> and <a href="#equation-beta2">(36)</a> are QCQP problems. Parameters
 <span class="math">\(\beta_1\)</span> and <span class="math">\(\beta_2\)</span> are invariant with respect to affine
 coordinate transformation and describe the position of ellipsoids
 <span class="math">\({\mathcal E}(q_1,Q_1)\)</span>, <span class="math">\({\mathcal E}(q_2,Q_2)\)</span> with
 respect to each other:</p>
 <div class="math">
-\[\begin{split}\beta_1\geqslant1,~\beta_2\geqslant1 &amp; \Rightarrow &amp;
-{\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))=\emptyset, \\\end{split}\]\[\begin{split}\beta_1\geqslant1,~\beta_2\leqslant1 &amp; \Rightarrow &amp; {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2), \\\end{split}\]\[\begin{split}\beta_1\leqslant1,~\beta_2\geqslant1 &amp; \Rightarrow &amp; {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1), \\\end{split}\]\[\begin{split}\beta_1&lt;1,~\beta_2&lt;1 &amp; \Rightarrow &amp;
-{\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))\neq\emptyset \\\end{split}\]\[\begin{split}&amp; &amp; \mbox{and} ~ {\mathcal E}(q_1,Q_1)\not\subseteq{\mathcal E}(q_2,Q_2) \\\end{split}\]\[\begin{split}&amp; &amp; \mbox{and} ~ {\mathcal E}(q_2,Q_2)\not\subseteq{\mathcal E}(q_1,Q_1).\end{split}\]</div>
+\[\begin{split}\beta_1\geqslant1,~\beta_2\geqslant1 &amp; \Rightarrow
+{\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))=\emptyset, \\\end{split}\]\[\begin{split}\beta_1\geqslant1,~\beta_2\leqslant1 &amp; \Rightarrow {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2), \\\end{split}\]\[\begin{split}\beta_1\leqslant1,~\beta_2\geqslant1 &amp; \Rightarrow {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1), \\\end{split}\]\[\begin{split}\beta_1&lt;1,~\beta_2&lt;1 &amp; \Rightarrow
+{\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))\neq\emptyset \\\end{split}\]\[\begin{split}&amp;\mbox{and} ~ {\mathcal E}(q_1,Q_1)\not\subseteq{\mathcal E}(q_2,Q_2) \\\end{split}\]\[\begin{split}&amp;\mbox{and} ~ {\mathcal E}(q_2,Q_2)\not\subseteq{\mathcal E}(q_1,Q_1).\end{split}\]</div>
 <p>Define parametrized family of internal ellipsoids
 <span class="math">\({\mathcal E}(q^-_{\theta_1\theta_2},Q^-_{\theta_1\theta_2})\)</span> with</p>
 <div class="math" id="equation-paramell1">
@@ -774,7 +775,7 @@ vector <span class="math">\(g\)</span>, <span class="math">\(\gamma_1\)</span>. 
 \[{\mathcal E}(q^+,Q^+)={\mathcal E}(q^+_m,Q^+_m), ~~~~ {\mathcal E}(q^-,Q^-)={\mathcal E}(q^-_m,Q^-_m) .\]</div>
 </div>
 <div class="section" id="checking-if">
-<h3>Checking if <span class="math">\(\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)\)</span><a class="headerlink" href="#checking-if" title="Permalink to this headline">¶</a></h3>
+<h3>Checking if <span class="math">\(\texorpdfstring{\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)}\)</span><a class="headerlink" href="#checking-if" title="Permalink to this headline">¶</a></h3>
 <p>Theorem of alternatives, also known as <span class="math">\(S\)</span>-procedure Boyd and
 Vandenberghe (2004), states that the implication</p>
 <div class="math">
@@ -961,7 +962,7 @@ Boyd and Vandenberghe (2004).</p>
 <li><a class="reference internal" href="#intersection-of-ellipsoid-and-hyperplane">Intersection of Ellipsoid and Hyperplane</a></li>
 <li><a class="reference internal" href="#intersection-of-ellipsoid-and-ellipsoid">Intersection of Ellipsoid and Ellipsoid</a></li>
 <li><a class="reference internal" href="#intersection-of-ellipsoid-and-halfspace">Intersection of Ellipsoid and Halfspace</a></li>
-<li><a class="reference internal" href="#checking-if">Checking if <span class="math">\(\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)\)</span></a></li>
+<li><a class="reference internal" href="#checking-if">Checking if <span class="math">\(\texorpdfstring{\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)}\)</span></a></li>
 <li><a class="reference internal" href="#minimum-volume-ellipsoids">Minimum Volume Ellipsoids</a></li>
 <li><a class="reference internal" href="#maximum-volume-ellipsoids">Maximum Volume Ellipsoids</a></li>
 </ul>

@@ -3803,21 +3803,21 @@ Output:
 Note: In the case the first interface is used, SData and
       SIsNull are taken from class object obj</pre>
 </div>
-<div class="highlight-python"><pre>ADDDATA - adds a set of field values to existing data in a form of new
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-adddata"><pre>ADDDATA - adds a set of field values to existing data in a form of new
           tuples
 
 Input:
   regular:
      self:ARelation [1,1] - class object</pre>
 </div>
-<div class="highlight-python"><pre>ADDDATAALONGDIM - adds a set of field values to existing data using
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-adddataalongdim"><pre>ADDDATAALONGDIM - adds a set of field values to existing data using
                   a concatenation along a specified dimension
 
 Input:
   regular:
       self: CubeStruct [1,1] - the object</pre>
 </div>
-<div class="highlight-python"><pre>ADDTUPLES - adds a set of new tuples to the relation
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-addtuples"><pre>ADDTUPLES - adds a set of new tuples to the relation
 
 Usage: addTuplesInternal(self,varargin)
 
@@ -3840,7 +3840,7 @@ input:
       checkConsistency: logical[1,1], if true, a consistency between the
          input structures is not checked, true by default</pre>
 </div>
-<div class="highlight-python"><pre>APPLYGETFUNC - applies a function to the specified fields as columns, i.e.
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-applygetfunc"><pre>APPLYGETFUNC - applies a function to the specified fields as columns, i.e.
                the function is applied to each field as whole, not to
                each cell separately
 
@@ -3861,7 +3861,7 @@ Notes: this function currently has a lots of limitations:
   3) no additional arguments can be passed
   All this limitations will eventually go away though so stay tuned...</pre>
 </div>
-<div class="highlight-python"><pre>APPLYSETFUNC - applies some function to each cell of the specified fields
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-applysetfunc"><pre>APPLYSETFUNC - applies some function to each cell of the specified fields
                of a given CubeStruct object
 
 Usage: applySetFunc(self,toFieldNameList,hFunc)
@@ -3922,7 +3922,7 @@ Input:
          outputType parameter of toArray method, see its documentation
          for a list of supported input types.</pre>
 </div>
-<div class="highlight-python"><pre>APPLYTUPLEGETFUNC - applies a function to the specified fields
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-applytuplegetfunc"><pre>APPLYTUPLEGETFUNC - applies a function to the specified fields
                     separately to each tuple
 
 Input:
@@ -3951,7 +3951,7 @@ Notes: this function currently has a lots of limitations:
   2) no additional arguments can be passed
   All this limitations will eventually go away though so stay tuned...</pre>
 </div>
-<div class="highlight-python"><pre>CLEARDATA - deletes all the data from the object
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-cleardata"><pre>CLEARDATA - deletes all the data from the object
 
 Usage: self.clearData(self)
 
@@ -3959,7 +3959,7 @@ Input:
   regular:
     self: CubeStruct [1,1] - class object</pre>
 </div>
-<div class="highlight-python"><pre>CLONE - creates a copy of a specified object via calling
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-clone"><pre>CLONE - creates a copy of a specified object via calling
         a copy constructor for the object class
 
 Input:
@@ -3971,7 +3971,7 @@ Input:
 Ouput:
   self: any [] - constructed object</pre>
 </div>
-<div class="highlight-python"><pre>COPYFROM - reconstruct CubeStruct object within a current object using the
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-copyfrom"><pre>COPYFROM - reconstruct CubeStruct object within a current object using the
            input CubeStruct object as a prototype
 
 Input:
@@ -3982,7 +3982,7 @@ Input:
   optional:
     fieldNameList: cell[1,nFields] - list of fields to copy</pre>
 </div>
-<div class="highlight-python"><pre>CREATEINSTANCE - returns an object of the same class by calling a default
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-createinstance"><pre>CREATEINSTANCE - returns an object of the same class by calling a default
                  constructor (with no parameters)
 
 Usage: resObj=getInstance(self)
@@ -3996,7 +3996,7 @@ input:
 Ouput:
   self: any [] - constructed object</pre>
 </div>
-<div class="highlight-python"><pre>DISPONUI - displays a content of the given relation as a data grid UI
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-disponui"><pre>DISPONUI - displays a content of the given relation as a data grid UI
            component.
 
 Input:
@@ -4016,13 +4016,13 @@ Output:
   gridObj: smartdb.relations.disp.UIDataGrid[1,1] - data grid component
       instance used for displaying a content of the relation object</pre>
 </div>
-<div class="highlight-python"><pre>DISPLAY - puts some textual information about CubeStruct object in screen
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-display"><pre>DISPLAY - puts some textual information about CubeStruct object in screen
 
 Input:
  regular:
      self.</pre>
 </div>
-<div class="highlight-python"><pre>FROMSTRUCTLIST - creates a dynamic relation from a list of structures
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-fromstructlist"><pre>FROMSTRUCTLIST - creates a dynamic relation from a list of structures
                  interpreting each structure as the data for
                  several tuples.
 
@@ -4038,7 +4038,7 @@ Output:
   relDataObj: smartdb.relations.DynamicRelation[1,1] -
      constructed relation</pre>
 </div>
-<div class="highlight-python"><pre>GETCOPY - returns an object copy
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getcopy"><pre>GETCOPY - returns an object copy
 
 Usage: resObj=getCopy(self)
 
@@ -4114,7 +4114,7 @@ Output:
        means that a corresponding cell doesn't not contain
           any value</pre>
 </div>
-<div class="highlight-python"><pre>GETFIELDDESCRLIST - returns the list of CubeStruct field descriptions
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getfielddescrlist"><pre>GETFIELDDESCRLIST - returns the list of CubeStruct field descriptions
 
 Usage: value=getFieldDescrList(self)
 
@@ -4130,7 +4130,7 @@ Output:
     value: char cell [1,nFields] - list of CubeStruct object field
         descriptions</pre>
 </div>
-<div class="highlight-python"><pre>GETFIELDISNULL - returns for given field a nested logical/cell array
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getfieldisnull"><pre>GETFIELDISNULL - returns for given field a nested logical/cell array
                  containing is-null indicators for cell content
 
 Usage: fieldIsNullCVec=getFieldIsNull(self,fieldName)
@@ -4144,7 +4144,7 @@ Output:
     fieldIsCVec: logical/cell[] - nested cell/logical array containing
        is-null indicators for content of the field</pre>
 </div>
-<div class="highlight-python"><pre>GETFIELDISVALUENULL - returns for given field logical vector determining
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull"><pre>GETFIELDISVALUENULL - returns for given field logical vector determining
                       whether value of this field in each cell is null
                       or not.
 
@@ -4163,7 +4163,7 @@ Output:
     isValueNullVec: logical[] - array of isValueNull indicators for the
        specified field</pre>
 </div>
-<div class="highlight-python"><pre>GETFIELDNAMELIST - returns the list of CubeStruct object field names
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getfieldnamelist"><pre>GETFIELDNAMELIST - returns the list of CubeStruct object field names
 
 Usage: value=getFieldNameList(self)
 
@@ -4175,7 +4175,7 @@ Iutput:
     value: char cell [1,nFields] - list of CubeStruct object field
         names</pre>
 </div>
-<div class="highlight-python"><pre>GETFIELDPROJECTION - project object with specified fields.
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getfieldprojection"><pre>GETFIELDPROJECTION - project object with specified fields.
 
 Input:
   regular:
@@ -4185,7 +4185,7 @@ Input:
 Output:
   obj: DynamicRelation[1,1] - projected object</pre>
 </div>
-<div class="highlight-python"><pre>GETFIELDTYPELIST - returns list of field types in given CubeStruct object
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getfieldtypelist"><pre>GETFIELDTYPELIST - returns list of field types in given CubeStruct object
 
 Usage: fieldTypeList=getFieldTypeList(self)
 
@@ -4201,7 +4201,7 @@ Output:
   fieldTypeList: cell [1,nFields] of smartdb.cubes.ACubeStructFieldType[1,1]
       - list of field types</pre>
 </div>
-<div class="highlight-python"><pre>GETFIELDTYPESPECLIST - returns a list of field type specifications. Field
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist"><pre>GETFIELDTYPESPECLIST - returns a list of field type specifications. Field
                        type specification is a sequence of type names
                        corresponding to field value types starting with
                        the top level and going down into the nested
@@ -4225,7 +4225,7 @@ Output:
           cell[1,nFields*prod(nNestedLevelsVec)] of char[1,.]
        - list of field type specifications</pre>
 </div>
-<div class="highlight-python"><pre>GETFIELDVALUESIZEMAT - returns a matrix composed from the size vectors
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat"><pre>GETFIELDVALUESIZEMAT - returns a matrix composed from the size vectors
                        for the specified fields
 
 Input:
@@ -4246,7 +4246,7 @@ Input:
 Output:
   sizeMat: double[nFields,nMaxDims]</pre>
 </div>
-<div class="highlight-python"><pre>GETISFIELDVALUENULL - returns a vector indicating whether a particular
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull"><pre>GETISFIELDVALUENULL - returns a vector indicating whether a particular
                       field is composed of null values completely
 
 Usage: isValueNullVec=getIsFieldValueNull(self,fieldNameList)
@@ -4282,7 +4282,7 @@ Input:
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result</pre>
 </div>
-<div class="highlight-python"><pre>GETMINDIMENSIONSIZE - returns a size vector for the specified
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getmindimensionsize"><pre>GETMINDIMENSIONSIZE - returns a size vector for the specified
                       dimensions. If no dimensions are specified, a size
                       vector for all dimensions up to minimum CubeStruct
                       dimension is returned
@@ -4298,7 +4298,7 @@ Output:
   minDimensionSizeVec: double [1,nDims] - a size vector for
      the requested dimensions</pre>
 </div>
-<div class="highlight-python"><pre>GETMINDIMENSIONALITY - returns a minimum dimensionality for a given
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getmindimensionality"><pre>GETMINDIMENSIONALITY - returns a minimum dimensionality for a given
                        object
 
 Input:
@@ -4309,7 +4309,7 @@ Output:
   minDimensionality: double[1,1] - minimum dimensionality of
      self object</pre>
 </div>
-<div class="highlight-python"><pre>GETNELEMS - returns a number of elements in a given object
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getnelems"><pre>GETNELEMS - returns a number of elements in a given object
 Input:
   regular:
      self:
@@ -4317,7 +4317,7 @@ Input:
 Output:
   nElems:double[1, 1] - number of elements in a given object</pre>
 </div>
-<div class="highlight-python"><pre>GETNFIELDS - returns number of fields in given object
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getnfields"><pre>GETNFIELDS - returns number of fields in given object
 
 Usage: nFields=getNFields(self)
 
@@ -4328,7 +4328,7 @@ Output:
   regular:
     nFields: double [1,1] - number of fields in given object</pre>
 </div>
-<div class="highlight-python"><pre>GETNTUPLES - returns number of tuples in given relation
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getntuples"><pre>GETNTUPLES - returns number of tuples in given relation
 
 Usage: nTuples=getNTuples(self)
 
@@ -4339,7 +4339,7 @@ output:
   regular:
     nTuples: double [1,1] - number of tuples in given  relation</pre>
 </div>
-<div class="highlight-python"><pre>GETSORTINDEX - gets sort index for all tuples of given relation with
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getsortindex"><pre>GETSORTINDEX - gets sort index for all tuples of given relation with
                respect to some of its fields
 
 Usage: sortInd=getSortIndex(self,sortFieldNameList,varargin)
@@ -4361,7 +4361,7 @@ output:
        relation, then fieldValueVec(sortIndex) is a vector of values for
        this field when tuples of the relation are sorted</pre>
 </div>
-<div class="highlight-python"><pre>GETTUPLES - selects tuples with given indices from given relation and
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-gettuples"><pre>GETTUPLES - selects tuples with given indices from given relation and
             returns the result as new relation
 
 Usage: obj=getTuples(self,subIndVec)
@@ -4376,7 +4376,7 @@ output:
     obj: ARelation [1,1] - new class object containing only selected
         tuples</pre>
 </div>
-<div class="highlight-python"><pre>GETTUPLESFILTEREDBY - selects tuples from given relation such that a
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby"><pre>GETTUPLESFILTEREDBY - selects tuples from given relation such that a
                       fixed index field contains values from a given set
                       of value and returns the result as new relation
 
@@ -4398,7 +4398,7 @@ Output:
         tuples
     isThereVec: logical[nTuples,1] - contains true for the kept tuples</pre>
 </div>
-<div class="highlight-python"><pre> GETTUPLESINDEXEDBY - selects tuples from given relation such that fixed
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-gettuplesindexedby"><pre> GETTUPLESINDEXEDBY - selects tuples from given relation such that fixed
                       index field contains given in a specified order
                       values and returns the result as new relation.
                       It is required that the original relation
@@ -4417,7 +4417,7 @@ Output:
 
 TODO add type check</pre>
 </div>
-<div class="highlight-python"><pre>GETTUPLESJOINEDWITH - returns the tuples of the given relation
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith"><pre>GETTUPLESJOINEDWITH - returns the tuples of the given relation
                       INNER-joined with other relation by the specified
                       key fields
 
@@ -4444,7 +4444,7 @@ Input:
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result</pre>
 </div>
-<div class="highlight-python"><pre>GETUNIQUEDATA - returns internal representation for a set of unique
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getuniquedata"><pre>GETUNIQUEDATA - returns internal representation for a set of unique
                 tuples for given relation
 
 Usage: [SData,SIsNull,SIsValueNull]=getUniqueData(self,varargin)
@@ -4484,7 +4484,7 @@ Output:
     indBackward: double[1,nTuples] - indices that map the unique tuple
        set back to the original tuple set</pre>
 </div>
-<div class="highlight-python"><pre>GETUNIQUEDATAALONGDIM - returns internal representation of CubeStruct
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim"><pre>GETUNIQUEDATAALONGDIM - returns internal representation of CubeStruct
 
 Input:
   regular:
@@ -4524,7 +4524,7 @@ Output:
        set back to the original data setdata set unique along a specified
        dimension</pre>
 </div>
-<div class="highlight-python"><pre>GETUNIQUETUPLES - returns a relation containing the unique tuples from
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-getuniquetuples"><pre>GETUNIQUETUPLES - returns a relation containing the unique tuples from
                   the original relation
 
 Usage: [resRel,indForwardVec,indBackwardVec]=getUniqueTuples(self,varargin)
@@ -4552,7 +4552,7 @@ Output:
     indBackward: double[1,nTuples] - indices that map the unique tuple
        set back to the original tuple set</pre>
 </div>
-<div class="highlight-python"><pre>INITBYEMPTYDATASET - initializes cube struct object with null value arrays
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-initbyemptydataset"><pre>INITBYEMPTYDATASET - initializes cube struct object with null value arrays
                      of specified size based on minDimVec specified.
 
 For instance, if minDimVec=[2,3,4,5,6] and minDimensionality of cube
@@ -4566,7 +4566,7 @@ Input:
   optional
       minDimVec: double[1,nDims] - size vector of null value arrays</pre>
 </div>
-<div class="highlight-python"><pre>INITBYDEFAULTDATASET - initializes cube struct object with null value
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-initbydefaultdataset"><pre>INITBYDEFAULTDATASET - initializes cube struct object with null value
                        arrays of specified size based on minDimVec
                        specified.
 
@@ -4581,7 +4581,7 @@ Input:
   optional
       minDimVec: double[1,nDims] - size vector of null value arrays</pre>
 </div>
-<div class="highlight-python"><pre>ISEQUAL - compares current relation object with other relation object and
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-isequal"><pre>ISEQUAL - compares current relation object with other relation object and
           returns true if they are equal, otherwise it returns false
 
 
@@ -4610,9 +4610,9 @@ Input:
 
 Output:
   isEq: logical[1,1] - result of comparison
-  reportStr: char[1,] - report of comparsion</pre>
+  reportStr: char[1,] - report of comparison</pre>
 </div>
-<div class="highlight-python"><pre> ISFIELDS - returns whether all fields whose names are given in the input
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-isfields"><pre> ISFIELDS - returns whether all fields whose names are given in the input
             list are in the field list of given object or not
 
  Usage: isPositive=isFields(self,fieldList)
@@ -4635,7 +4635,7 @@ Output:
 
 TODO allow for varargins</pre>
 </div>
-<div class="highlight-python"><pre>ISMEMBERALONGDIM - performs ismember operation of CubeStruct data slices
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-ismemberalongdim"><pre>ISMEMBERALONGDIM - performs ismember operation of CubeStruct data slices
                    along the specified dimension
 Input:
   regular:
@@ -4658,7 +4658,7 @@ Output:
         of isThere is false, otherwise the highest index of the
         corresponding data slice in the second (other) object</pre>
 </div>
-<div class="highlight-python"><pre>ISMEMBER - performs ismember operation for tuples of two relations by key
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-ismember"><pre>ISMEMBER - performs ismember operation for tuples of two relations by key
            fields given by special list
 
 Usage: isTuple=isMemberTuples(self,otherRel,keyFieldNameList) or
@@ -4681,7 +4681,7 @@ Output:
         of isTuple is false, otherwise the highest index of the
         corresponding tuple in the second (other) relation</pre>
 </div>
-<div class="highlight-python"><pre>ISUNIQUEKEY - checks if a specified set of fields forms a unique key
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-isuniquekey"><pre>ISUNIQUEKEY - checks if a specified set of fields forms a unique key
 
 Usage: isPositive=self.isUniqueKey(fieldNameList)
 
@@ -4694,38 +4694,7 @@ Output:
   isPositive: logical[1,1] - true means that a specified set of fields is
      a unique key</pre>
 </div>
-<div class="highlight-python"><pre>ISEQUAL - compares current relation object with other relation object and
-          returns true if they are equal, otherwise it returns false
-
-
-Usage: isEq=isEqual(self,otherObj)
-
-Input:
-  regular:
-    self: ARelation [1,1] - current relation object
-    otherObj: ARelation [1,1] - other relation object
-
-  properties:
-    checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields
-        in compared relations must be in the same order, otherwise the
-        order is not  important (false by default)
-    checkTupleOrder: logical[1,1] -  if true, then the tuples in the
-        compared relations are expected to be in the same order,
-        otherwise the order is not important (false by default)
-
-    maxTolerance: double [1,1] - maximum allowed tolerance
-
-    compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
-        referenced from the meta data objects are also compared
-
-    maxRelativeTolerance: double [1,1] - maximum allowed
-    relative tolerance
-
-Output:
-  isEq: logical[1,1] - result of comparison
-  reportStr: char[1,] - report of comparsion</pre>
-</div>
-<div class="highlight-python"><pre>REMOVEDUPLICATETUPLES - removes all duplicate tuples from the relation
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-removeduplicatetuples"><pre>REMOVEDUPLICATETUPLES - removes all duplicate tuples from the relation
 
 Usage: [indForwardVec,indBackwardVec]=...
            removeDuplicateTuples(self,varargin)
@@ -4748,7 +4717,7 @@ Output:
     indBackwardVec: double[nSlices,1] - indices that map the unique
        tuples back to the original tuples</pre>
 </div>
-<div class="highlight-python"><pre>REMOVETUPLES - removes tuples with given indices from given relation
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-removetuples"><pre>REMOVETUPLES - removes tuples with given indices from given relation
 
 Usage: self.removeTuples(subIndVec)
 
@@ -4758,7 +4727,7 @@ Input:
     subIndVec: double [nSubTuples,1]/logical[nTuples,1] - array of
        indices for tuples that are selected to be removed</pre>
 </div>
-<div class="highlight-python"><pre>REORDERDATA - reorders cells of CubeStruct object along the specified
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-reorderdata"><pre>REORDERDATA - reorders cells of CubeStruct object along the specified
               dimensions according to the specified index vectors
 
 Input:
@@ -4773,7 +4742,7 @@ Input:
       dimVec: numeric[1,nDims] - vector of dimension numbers
           corresponding to subIndCVec</pre>
 </div>
-<div class="highlight-python"><pre>SAVEOBJ- transforms given CubeStruct object into structure containing
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-saveobj"><pre>SAVEOBJ- transforms given CubeStruct object into structure containing
          internal representation of object properties
 
 Input:
@@ -4786,7 +4755,7 @@ Output:
     SObjectData: struct [n1,...,n_k] - structure containing an internal
        representation of the specified object</pre>
 </div>
-<div class="highlight-python"><pre>SETDATA - sets values of all cells for all fields
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-setdata"><pre>SETDATA - sets values of all cells for all fields
 
 Input:
   regular:
@@ -4858,7 +4827,7 @@ Input:
 Note: call of setData with an empty list of arguments clears
    the data</pre>
 </div>
-<div class="highlight-python"><pre>SETFIELDINTERNAL - sets values of all cells for given field
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-setfieldinternal"><pre>SETFIELDINTERNAL - sets values of all cells for given field
 
 Usage: setFieldInternal(self,fieldName,value)
 
@@ -4883,7 +4852,7 @@ Input:
       Note: if structNameList contains 'SIsValueNull' entry,
        inferIsValueNull parameter is overwritten by false</pre>
 </div>
-<div class="highlight-python"><pre>SORTBY - sorts all tuples of given relation with respect to some of its
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-sortby"><pre>SORTBY - sorts all tuples of given relation with respect to some of its
          fields
 
 Usage: sortBy(self,sortFieldNameList,varargin)
@@ -4898,7 +4867,7 @@ input:
         all fields (if one value is given) or for each field separately;
         each value may be 'asc' or 'desc'</pre>
 </div>
-<div class="highlight-python"><pre>SORTBYALONGDIM -  sorts data of given CubeStruct object along the
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-sortbyalongdim"><pre>SORTBYALONGDIM -  sorts data of given CubeStruct object along the
                   specified dimension using the specified fields
 
 Usage: sortByInternal(self,sortFieldNameList,varargin)
@@ -4915,7 +4884,7 @@ input:
         all fields (if one value is given) or for each field separately;
         each value may be 'asc' or 'desc'</pre>
 </div>
-<div class="highlight-python"><pre>TOARRAY - transforms values of all CubeStruct cells into a multi-
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-toarray"><pre>TOARRAY - transforms values of all CubeStruct cells into a multi-
           dimentional array
 
 Usage: resCArray=toArray(self,varargin)
@@ -5018,7 +4987,7 @@ Output:
           values on the positions which correspond to fields converted to
           cells</pre>
 </div>
-<div class="highlight-python"><pre>TOCELL - transforms values of all fields for all tuples into two
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-tocell"><pre>TOCELL - transforms values of all fields for all tuples into two
          dimensional cell array
 
 Usage: resCMat=toCell(self,varargin)
@@ -5036,7 +5005,7 @@ output:
 
 FIXME - order fields in setData method</pre>
 </div>
-<div class="highlight-python"><pre>TOCELLISNULL - transforms is-null indicators of all fields for all tuples
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-tocellisnull"><pre>TOCELLISNULL - transforms is-null indicators of all fields for all tuples
                into two dimensional cell array
 
 Usage: resCMat=toCell(self,varargin)
@@ -5054,7 +5023,7 @@ output:
 
 FIXME - order fields in setData method</pre>
 </div>
-<div class="highlight-python"><pre>TODISPCELL - transforms values of all fields into their character
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-todispcell"><pre>TODISPCELL - transforms values of all fields into their character
              representation
 
 Usage: resCMat=toDispCell(self)
@@ -5071,7 +5040,7 @@ Output:
   dataCell: cell[nRows,nCols] of char[1,] - cell array containing the
       character representation of field values</pre>
 </div>
-<div class="highlight-python"><pre>TOMAT - transforms values of all fields for all tuples into two
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-tomat"><pre>TOMAT - transforms values of all fields for all tuples into two
         dimensional array
 
 Usage: resCMat=toMat(self,varargin)
@@ -5127,7 +5096,7 @@ output:
   resCMat:  [nTuples,nFields(N)] - matrix/cell with values of all fields
       (or fields selected by optional arguments) for all tuples</pre>
 </div>
-<div class="highlight-python"><pre>TOSTRUCT - transforms given CubeStruct object into structure
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-tostruct"><pre>TOSTRUCT - transforms given CubeStruct object into structure
 
 Input:
   regular:
@@ -5169,7 +5138,7 @@ Input:
           two-element vector.
           Note: default value is true</pre>
 </div>
-<div class="highlight-python"><pre>UNIONWITHALONGDIM - adds data from the input CubeStructs
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-unionwithalongdim"><pre>UNIONWITHALONGDIM - adds data from the input CubeStructs
 
 Usage: self.unionWithAlongDim(unionDim,inpCube)
 
@@ -5199,7 +5168,7 @@ all required fields). The first element correspod to SData, the
           two-element vector.
           Note: default value is true</pre>
 </div>
-<div class="highlight-python"><pre>WRITETOCSV - writes a content of relation into Excel spreadsheet file
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-writetocsv"><pre>WRITETOCSV - writes a content of relation into Excel spreadsheet file
 Input:
   regular:
       self:
@@ -5208,7 +5177,7 @@ Input:
 Output:
   none</pre>
 </div>
-<div class="highlight-python"><pre>WRITETOXLS - writes a content of relation into Excel spreadsheet file
+<div class="highlight-python" id="smartdb-relations-atypifiedstaticrelation-writetoxls"><pre>WRITETOXLS - writes a content of relation into Excel spreadsheet file
 Input:
   regular:
       self:
@@ -5251,8 +5220,69 @@ Fields:
   TODO: correct description of the fields in gras.ellapx.smartdb.rels.EllTube</pre>
 </div>
 <p>See the description of the following methods in section
-[secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
+<a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation">smartdb.relations.ATypifiedStaticRelation</a> for
 smartdb.relations.ATypifiedStaticRelation:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-adddata">smartdb.relations.ATypifiedStaticRelation.addData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-adddataalongdim">smartdb.relations.ATypifiedStaticRelation.addDataAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-addtuples">smartdb.relations.ATypifiedStaticRelation.addTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applygetfunc">smartdb.relations.ATypifiedStaticRelation.applyGetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applysetfunc">smartdb.relations.ATypifiedStaticRelation.applySetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applytuplegetfunc">smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-cleardata">smartdb.relations.ATypifiedStaticRelation.clearData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-clone">smartdb.relations.ATypifiedStaticRelation.clone</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-copyfrom">smartdb.relations.ATypifiedStaticRelation.copyFrom</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-createinstance">smartdb.relations.ATypifiedStaticRelation.createInstance</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-disponui">smartdb.relations.ATypifiedStaticRelation.dispOnUI</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-display">smartdb.relations.ATypifiedStaticRelation.display</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-fromstructlist">smartdb.relations.ATypifiedStaticRelation.fromStructList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getcopy">smartdb.relations.ATypifiedStaticRelation.getCopy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldisnull">smartdb.relations.ATypifiedStaticRelation.getFieldIsNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull">smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldnamelist">smartdb.relations.ATypifiedStaticRelation.getFieldNameList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldprojection">smartdb.relations.ATypifiedStaticRelation.getFieldProjection</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldtypelist">smartdb.relations.ATypifiedStaticRelation.getFieldTypeList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat">smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull">smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getmindimensionsize">smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getmindimensionality">smartdb.relations.ATypifiedStaticRelation.getMinDimensionality</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getnelems">smartdb.relations.ATypifiedStaticRelation.getNElems</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getnfields">smartdb.relations.ATypifiedStaticRelation.getNFields</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getntuples">smartdb.relations.ATypifiedStaticRelation.getNTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getsortindex">smartdb.relations.ATypifiedStaticRelation.getSortIndex</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuples">smartdb.relations.ATypifiedStaticRelation.getTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby">smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesindexedby">smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith">smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquedata">smartdb.relations.ATypifiedStaticRelation.getUniqueData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim">smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquetuples">smartdb.relations.ATypifiedStaticRelation.getUniqueTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-initbyemptydataset">smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-initbydefaultdataset">smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isfields">smartdb.relations.ATypifiedStaticRelation.isFields</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-ismemberalongdim">smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-ismember">smartdb.relations.ATypifiedStaticRelation.isMember</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isuniquekey">smartdb.relations.ATypifiedStaticRelation.isUniqueKey</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isequal">smartdb.relations.ATypifiedStaticRelation.isEqual</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-removeduplicatetuples">smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-removetuples">smartdb.relations.ATypifiedStaticRelation.removeTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-reorderdata">smartdb.relations.ATypifiedStaticRelation.reorderData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-saveobj">smartdb.relations.ATypifiedStaticRelation.saveObj</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-setdata">smartdb.relations.ATypifiedStaticRelation.setData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-setfieldinternal">smartdb.relations.ATypifiedStaticRelation.setFieldInternal</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-sortby">smartdb.relations.ATypifiedStaticRelation.sortBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-sortbyalongdim">smartdb.relations.ATypifiedStaticRelation.sortByAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-toarray">smartdb.relations.ATypifiedStaticRelation.toArray</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tocell">smartdb.relations.ATypifiedStaticRelation.toCell</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tocellisnull">smartdb.relations.ATypifiedStaticRelation.toCellIsNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-todispcell">smartdb.relations.ATypifiedStaticRelation.toDispCell</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tomat">smartdb.relations.ATypifiedStaticRelation.toMat</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tostruct">smartdb.relations.ATypifiedStaticRelation.toStruct</a></li>
+<li><a href="#id1"><span class="problematic" id="id2">smartdb.relations.ATypifiedStaticRelation.unionWith_</span></a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-unionwithalongdim">smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-writetocsv">smartdb.relations.ATypifiedStaticRelation.writeToCSV</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-writetoxls">smartdb.relations.ATypifiedStaticRelation.writeToXLS</a></li>
+</ul>
 <div class="highlight-python"><pre>CAT  - concatenates data from relation objects.
 
 Input:
@@ -5720,8 +5750,71 @@ TODO: correct description of the fields in
     gras.ellapx.smartdb.rels.EllTubeProj</pre>
 </div>
 <p>See the description of the following methods in section
-[secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
+<a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation">smartdb.relations.ATypifiedStaticRelation</a> for
 smartdb.relations.ATypifiedStaticRelation:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-adddata">smartdb.relations.ATypifiedStaticRelation.addData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-adddataalongdim">smartdb.relations.ATypifiedStaticRelation.addDataAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-addtuples">smartdb.relations.ATypifiedStaticRelation.addTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applygetfunc">smartdb.relations.ATypifiedStaticRelation.applyGetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applysetfunc">smartdb.relations.ATypifiedStaticRelation.applySetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applytuplegetfunc">smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-cleardata">smartdb.relations.ATypifiedStaticRelation.clearData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-clone">smartdb.relations.ATypifiedStaticRelation.clone</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-copyfrom">smartdb.relations.ATypifiedStaticRelation.copyFrom</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-createinstance">smartdb.relations.ATypifiedStaticRelation.createInstance</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-disponui">smartdb.relations.ATypifiedStaticRelation.dispOnUI</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-display">smartdb.relations.ATypifiedStaticRelation.display</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-fromstructlist">smartdb.relations.ATypifiedStaticRelation.fromStructList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getcopy">smartdb.relations.ATypifiedStaticRelation.getCopy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfielddescrlist">smartdb.relations.ATypifiedStaticRelation.getFieldDescrList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldisnull">smartdb.relations.ATypifiedStaticRelation.getFieldIsNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull">smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldnamelist">smartdb.relations.ATypifiedStaticRelation.getFieldNameList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldprojection">smartdb.relations.ATypifiedStaticRelation.getFieldProjection</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldtypelist">smartdb.relations.ATypifiedStaticRelation.getFieldTypeList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist">smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat">smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull">smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getmindimensionsize">smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getmindimensionality">smartdb.relations.ATypifiedStaticRelation.getMinDimensionality</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getnelems">smartdb.relations.ATypifiedStaticRelation.getNElems</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getnfields">smartdb.relations.ATypifiedStaticRelation.getNFields</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getntuples">smartdb.relations.ATypifiedStaticRelation.getNTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getsortindex">smartdb.relations.ATypifiedStaticRelation.getSortIndex</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuples">smartdb.relations.ATypifiedStaticRelation.getTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby">smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesindexedby">smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith">smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquedata">smartdb.relations.ATypifiedStaticRelation.getUniqueData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim">smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquetuples">smartdb.relations.ATypifiedStaticRelation.getUniqueTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-initbyemptydataset">smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-initbydefaultdataset">smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isfields">smartdb.relations.ATypifiedStaticRelation.isFields</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-ismemberalongdim">smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-ismember">smartdb.relations.ATypifiedStaticRelation.isMember</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isuniquekey">smartdb.relations.ATypifiedStaticRelation.isUniqueKey</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isequal">smartdb.relations.ATypifiedStaticRelation.isEqual</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-removeduplicatetuples">smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-removetuples">smartdb.relations.ATypifiedStaticRelation.removeTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-reorderdata">smartdb.relations.ATypifiedStaticRelation.reorderData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-saveobj">smartdb.relations.ATypifiedStaticRelation.saveObj</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-setdata">smartdb.relations.ATypifiedStaticRelation.setData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-setfieldinternal">smartdb.relations.ATypifiedStaticRelation.setFieldInternal</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-sortby">smartdb.relations.ATypifiedStaticRelation.sortBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-sortbyalongdim">smartdb.relations.ATypifiedStaticRelation.sortByAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-toarray">smartdb.relations.ATypifiedStaticRelation.toArray</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tocell">smartdb.relations.ATypifiedStaticRelation.toCell</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tocellisnull">smartdb.relations.ATypifiedStaticRelation.toCellIsNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-todispcell">smartdb.relations.ATypifiedStaticRelation.toDispCell</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tomat">smartdb.relations.ATypifiedStaticRelation.toMat</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tostruct">smartdb.relations.ATypifiedStaticRelation.toStruct</a></li>
+<li><a href="#id3"><span class="problematic" id="id4">smartdb.relations.ATypifiedStaticRelation.unionWith_</span></a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-unionwithalongdim">smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-writetocsv">smartdb.relations.ATypifiedStaticRelation.writeToCSV</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-writetoxls">smartdb.relations.ATypifiedStaticRelation.writeToXLS</a></li>
+</ul>
 <div class="highlight-python"><pre>GETDATA - returns an indexed projection of CubeStruct object's content
 
 Input:
@@ -6056,8 +6149,71 @@ TODO: correct description of the fields in
     gras.ellapx.smartdb.rels.EllUnionTube</pre>
 </div>
 <p>See the description of the following methods in section
-[secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
+<a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation">smartdb.relations.ATypifiedStaticRelation</a> for
 smartdb.relations.ATypifiedStaticRelation:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-adddata">smartdb.relations.ATypifiedStaticRelation.addData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-adddataalongdim">smartdb.relations.ATypifiedStaticRelation.addDataAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-addtuples">smartdb.relations.ATypifiedStaticRelation.addTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applygetfunc">smartdb.relations.ATypifiedStaticRelation.applyGetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applysetfunc">smartdb.relations.ATypifiedStaticRelation.applySetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applytuplegetfunc">smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-cleardata">smartdb.relations.ATypifiedStaticRelation.clearData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-clone">smartdb.relations.ATypifiedStaticRelation.clone</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-copyfrom">smartdb.relations.ATypifiedStaticRelation.copyFrom</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-createinstance">smartdb.relations.ATypifiedStaticRelation.createInstance</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-disponui">smartdb.relations.ATypifiedStaticRelation.dispOnUI</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-display">smartdb.relations.ATypifiedStaticRelation.display</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-fromstructlist">smartdb.relations.ATypifiedStaticRelation.fromStructList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getcopy">smartdb.relations.ATypifiedStaticRelation.getCopy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfielddescrlist">smartdb.relations.ATypifiedStaticRelation.getFieldDescrList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldisnull">smartdb.relations.ATypifiedStaticRelation.getFieldIsNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull">smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldnamelist">smartdb.relations.ATypifiedStaticRelation.getFieldNameList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldprojection">smartdb.relations.ATypifiedStaticRelation.getFieldProjection</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldtypelist">smartdb.relations.ATypifiedStaticRelation.getFieldTypeList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist">smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat">smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull">smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getmindimensionsize">smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getmindimensionality">smartdb.relations.ATypifiedStaticRelation.getMinDimensionality</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getnelems">smartdb.relations.ATypifiedStaticRelation.getNElems</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getnfields">smartdb.relations.ATypifiedStaticRelation.getNFields</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getntuples">smartdb.relations.ATypifiedStaticRelation.getNTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getsortindex">smartdb.relations.ATypifiedStaticRelation.getSortIndex</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuples">smartdb.relations.ATypifiedStaticRelation.getTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby">smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesindexedby">smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith">smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquedata">smartdb.relations.ATypifiedStaticRelation.getUniqueData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim">smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquetuples">smartdb.relations.ATypifiedStaticRelation.getUniqueTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-initbyemptydataset">smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-initbydefaultdataset">smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isfields">smartdb.relations.ATypifiedStaticRelation.isFields</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-ismemberalongdim">smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-ismember">smartdb.relations.ATypifiedStaticRelation.isMember</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isuniquekey">smartdb.relations.ATypifiedStaticRelation.isUniqueKey</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isequal">smartdb.relations.ATypifiedStaticRelation.isEqual</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-removeduplicatetuples">smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-removetuples">smartdb.relations.ATypifiedStaticRelation.removeTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-reorderdata">smartdb.relations.ATypifiedStaticRelation.reorderData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-saveobj">smartdb.relations.ATypifiedStaticRelation.saveObj</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-setdata">smartdb.relations.ATypifiedStaticRelation.setData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-setfieldinternal">smartdb.relations.ATypifiedStaticRelation.setFieldInternal</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-sortby">smartdb.relations.ATypifiedStaticRelation.sortBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-sortbyalongdim">smartdb.relations.ATypifiedStaticRelation.sortByAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-toarray">smartdb.relations.ATypifiedStaticRelation.toArray</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tocell">smartdb.relations.ATypifiedStaticRelation.toCell</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tocellisnull">smartdb.relations.ATypifiedStaticRelation.toCellIsNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-todispcell">smartdb.relations.ATypifiedStaticRelation.toDispCell</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tomat">smartdb.relations.ATypifiedStaticRelation.toMat</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tostruct">smartdb.relations.ATypifiedStaticRelation.toStruct</a></li>
+<li><a href="#id5"><span class="problematic" id="id6">smartdb.relations.ATypifiedStaticRelation.unionWith_</span></a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-unionwithalongdim">smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-writetocsv">smartdb.relations.ATypifiedStaticRelation.writeToCSV</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-writetoxls">smartdb.relations.ATypifiedStaticRelation.writeToXLS</a></li>
+</ul>
 <div class="highlight-python"><pre>FROMELLTUBES - returns union of the ellipsoidal tubes on time
 
 Input:
@@ -6166,8 +6322,6 @@ Input:
 
 Output:
   resRel: smartdb.relations.ARelation[1,1] - join result</pre>
-</div>
-<div class="highlight-python"><pre>::</pre>
 </div>
 <div class="highlight-python"><pre>ISEQUAL - compares current relation object with other relation object and
           returns true if they are equal, otherwise it returns false
@@ -6319,8 +6473,71 @@ Fields:
     gras.ellapx.smartdb.rels.EllUnionTubeStaticProj</pre>
 </div>
 <p>See the description of the following methods in section
-[secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
+<a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation">smartdb.relations.ATypifiedStaticRelation</a> for
 smartdb.relations.ATypifiedStaticRelation:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-adddata">smartdb.relations.ATypifiedStaticRelation.addData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-adddataalongdim">smartdb.relations.ATypifiedStaticRelation.addDataAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-addtuples">smartdb.relations.ATypifiedStaticRelation.addTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applygetfunc">smartdb.relations.ATypifiedStaticRelation.applyGetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applysetfunc">smartdb.relations.ATypifiedStaticRelation.applySetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-applytuplegetfunc">smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-cleardata">smartdb.relations.ATypifiedStaticRelation.clearData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-clone">smartdb.relations.ATypifiedStaticRelation.clone</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-copyfrom">smartdb.relations.ATypifiedStaticRelation.copyFrom</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-createinstance">smartdb.relations.ATypifiedStaticRelation.createInstance</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-disponui">smartdb.relations.ATypifiedStaticRelation.dispOnUI</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-display">smartdb.relations.ATypifiedStaticRelation.display</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-fromstructlist">smartdb.relations.ATypifiedStaticRelation.fromStructList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getcopy">smartdb.relations.ATypifiedStaticRelation.getCopy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfielddescrlist">smartdb.relations.ATypifiedStaticRelation.getFieldDescrList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldisnull">smartdb.relations.ATypifiedStaticRelation.getFieldIsNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull">smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldnamelist">smartdb.relations.ATypifiedStaticRelation.getFieldNameList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldprojection">smartdb.relations.ATypifiedStaticRelation.getFieldProjection</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldtypelist">smartdb.relations.ATypifiedStaticRelation.getFieldTypeList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist">smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat">smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull">smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getmindimensionsize">smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getmindimensionality">smartdb.relations.ATypifiedStaticRelation.getMinDimensionality</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getnelems">smartdb.relations.ATypifiedStaticRelation.getNElems</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getnfields">smartdb.relations.ATypifiedStaticRelation.getNFields</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getntuples">smartdb.relations.ATypifiedStaticRelation.getNTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getsortindex">smartdb.relations.ATypifiedStaticRelation.getSortIndex</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuples">smartdb.relations.ATypifiedStaticRelation.getTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby">smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesindexedby">smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith">smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquedata">smartdb.relations.ATypifiedStaticRelation.getUniqueData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim">smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-getuniquetuples">smartdb.relations.ATypifiedStaticRelation.getUniqueTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-initbyemptydataset">smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-initbydefaultdataset">smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isfields">smartdb.relations.ATypifiedStaticRelation.isFields</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-ismemberalongdim">smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-ismember">smartdb.relations.ATypifiedStaticRelation.isMember</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isuniquekey">smartdb.relations.ATypifiedStaticRelation.isUniqueKey</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-isequal">smartdb.relations.ATypifiedStaticRelation.isEqual</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-removeduplicatetuples">smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-removetuples">smartdb.relations.ATypifiedStaticRelation.removeTuples</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-reorderdata">smartdb.relations.ATypifiedStaticRelation.reorderData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-saveobj">smartdb.relations.ATypifiedStaticRelation.saveObj</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-setdata">smartdb.relations.ATypifiedStaticRelation.setData</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-setfieldinternal">smartdb.relations.ATypifiedStaticRelation.setFieldInternal</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-sortby">smartdb.relations.ATypifiedStaticRelation.sortBy</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-sortbyalongdim">smartdb.relations.ATypifiedStaticRelation.sortByAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-toarray">smartdb.relations.ATypifiedStaticRelation.toArray</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tocell">smartdb.relations.ATypifiedStaticRelation.toCell</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tocellisnull">smartdb.relations.ATypifiedStaticRelation.toCellIsNull</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-todispcell">smartdb.relations.ATypifiedStaticRelation.toDispCell</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tomat">smartdb.relations.ATypifiedStaticRelation.toMat</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-tostruct">smartdb.relations.ATypifiedStaticRelation.toStruct</a></li>
+<li><a href="#id7"><span class="problematic" id="id8">smartdb.relations.ATypifiedStaticRelation.unionWith_</span></a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-unionwithalongdim">smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-writetocsv">smartdb.relations.ATypifiedStaticRelation.writeToCSV</a></li>
+<li><a class="reference internal" href="#smartdb-relations-atypifiedstaticrelation-writetoxls">smartdb.relations.ATypifiedStaticRelation.writeToXLS</a></li>
+</ul>
 <div class="highlight-python"><pre>FROMELLTUBES - returns union of the ellipsoidal tubes on time
 
 Input:
@@ -6616,7 +6833,7 @@ Output:
 </div>
 <div class="section" id="elltool-reach-areach">
 <h2>elltool.reach.AReach<a class="headerlink" href="#elltool-reach-areach" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python"><pre>CUT - extracts the piece of reach tube from given start time to given
+<div class="highlight-python" id="elltool-reach-areach-cut"><pre>CUT - extracts the piece of reach tube from given start time to given
       end time. Given reach set self, find states that are reachable
       within time interval specified by cutTimeVec. If cutTimeVec
       is a scalar, then reach set at given time is returned.
@@ -6645,7 +6862,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
   dCutObj = dRsObj.cut([3 5]);</pre>
 </div>
-<div class="highlight-python"><pre>DIMENSION - returns array of dimensions of given reach set array.
+<div class="highlight-python" id="elltool-reach-areach-dimension"><pre>DIMENSION - returns array of dimensions of given reach set array.
 
 Input:
   regular:
@@ -6686,7 +6903,7 @@ Example:
   sSdim =
           [ 2  2 ]</pre>
 </div>
-<div class="highlight-python"><pre>DISPLAY - displays the reach set object.
+<div class="highlight-python" id="elltool-reach-areach-display"><pre>DISPLAY - displays the reach set object.
 
 Input:
   regular:
@@ -6724,7 +6941,7 @@ Example:
   Number of external approximations: 2
   Number of internal approximations: 2</pre>
 </div>
-<div class="highlight-python"><pre>EVOLVE - computes further evolution in time of the
+<div class="highlight-python" id="elltool-reach-areach-evolve"><pre>EVOLVE - computes further evolution in time of the
          already existing reach set.
 
 Input:
@@ -6755,7 +6972,7 @@ Example:
   newRsObj = rsObj.evolve(12);
   newDRsObj = dRsObj.evolve(11);</pre>
 </div>
-<div class="highlight-python"><pre>GETABSTOL - gives the array of absTol for all elements
+<div class="highlight-python" id="elltool-reach-areach-getabstol"><pre>GETABSTOL - gives the array of absTol for all elements
   in rsArr
 
 Input:
@@ -6782,7 +6999,9 @@ Usage:
   use absTolArr = rsArr.getAbsTol() if you want get only
       absTolArr</pre>
 </div>
-<div class="highlight-python"><pre>Input:
+<div class="highlight-python" id="elltool-reach-areach-getcopy"><pre>GETCOPY -
+
+Input:
   regular:
       self:
   properties:
@@ -6793,6 +7012,7 @@ Usage:
         and second - to external ones. An element equal to
          false means that the corresponding approximation type
          is filtered out. Default value is [true,true]
+
 Example:
     aMat = [0 1; 0 0]; bMat = eye(2);
     SUBounds = struct();
@@ -6842,7 +7062,7 @@ Example:
     Number of external approximations: 1
     Number of internal approximations: 1</pre>
 </div>
-<div class="highlight-python"><pre>GET_EASCALEFACTOR - return the scale factor for external approximation
+<div class="highlight-python" id="elltool-reach-areach-geteascalefactor"><pre>GET_EASCALEFACTOR - return the scale factor for external approximation
                     of reach tube
 
 Input:
@@ -6893,7 +7113,7 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   getEllTubeUnionRel(rsObj);</pre>
 </div>
-<div class="highlight-python"><pre>GET_IASCALEFACTOR - return the scale factor for internal approximation
+<div class="highlight-python" id="elltool-reach-areach-getiascalefactor"><pre>GET_IASCALEFACTOR - return the scale factor for internal approximation
                     of reach tube
 
 Input:
@@ -6920,7 +7140,7 @@ Example:
 
       1.0200</pre>
 </div>
-<div class="highlight-python"><pre>GETINITIALSET - return the initial set for linear system, which is solved
+<div class="highlight-python" id="elltool-reach-areach-getinitialset"><pre>GETINITIALSET - return the initial set for linear system, which is solved
                 for building reach tube.
 
 Input:
@@ -6956,7 +7176,7 @@ Example:
 
   Nondegenerate ellipsoid in R^2.</pre>
 </div>
-<div class="highlight-python"><pre>GETNPLOT2DPOINTS - gives array  the same size as rsArr of
+<div class="highlight-python" id="elltool-reach-areach-getnplot2dpoints"><pre>GETNPLOT2DPOINTS - gives array  the same size as rsArr of
   value of nPlot2dPoints property for each element in rsArr -
   array of reach sets
 
@@ -6970,7 +7190,7 @@ Output:
       values of nTimeGridPoints property for each reach set
       in rsArr</pre>
 </div>
-<div class="highlight-python"><pre>GETNPLOT3DPOINTS - gives array  the same size as rsArr of
+<div class="highlight-python" id="elltool-reach-areach-getnplot3dpoints"><pre>GETNPLOT3DPOINTS - gives array  the same size as rsArr of
   value of nPlot3dPoints property for each element in rsArr
   array of reach sets
 
@@ -6982,7 +7202,7 @@ Output:
   nPlot3dPointsArr:double[nDims1,nDims2,...]- array of values
       of nPlot3dPoints property for each reach set in rsArr</pre>
 </div>
-<div class="highlight-python"><pre>GETNTIMEGRIDPOINTS - gives array  the same size as rsArr of
+<div class="highlight-python" id="elltool-reach-areach-getntimegridpoints"><pre>GETNTIMEGRIDPOINTS - gives array  the same size as rsArr of
   value of nTimeGridPoints property for each element in rsArr
   array of reach sets
 
@@ -6996,7 +7216,7 @@ Output:
       values of nTimeGridPoints property for each reach set
       in rsArr</pre>
 </div>
-<div class="highlight-python"><pre>GETRELTOL - gives the array of relTol for all elements in
+<div class="highlight-python" id="elltool-reach-areach-getreltol"><pre>GETRELTOL - gives the array of relTol for all elements in
 ellArr
 
 Input:
@@ -7023,7 +7243,7 @@ Usage:
   use relTolArr = rsArr.getRelTol() if you want get only
       relTolArr</pre>
 </div>
-<div class="highlight-python"><pre>GET_CENTER - returns the trajectory of the center of the reach set.
+<div class="highlight-python" id="elltool-reach-areach-get-center"><pre>GET_CENTER - returns the trajectory of the center of the reach set.
 
 Input:
   regular:
@@ -7048,7 +7268,7 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   [trCenterMat timeVec] = rsObj.get_center();</pre>
 </div>
-<div class="highlight-python"><pre>GET_DIRECTIONS - returns the values of direction vectors for time grid
+<div class="highlight-python" id="elltool-reach-areach-get-directions"><pre>GET_DIRECTIONS - returns the values of direction vectors for time grid
                  values.
 
 Input:
@@ -7075,7 +7295,7 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   [directionsCVec timeVec] = rsObj.get_directions();</pre>
 </div>
-<div class="highlight-python"><pre>GET_EA - returns array of ellipsoid objects representing external
+<div class="highlight-python" id="elltool-reach-areach-get-ea"><pre>GET_EA - returns array of ellipsoid objects representing external
          approximation of the reach  tube.
 
 Input:
@@ -7106,7 +7326,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   [eaEllMat timeVec] = dRsObj.get_ea();</pre>
 </div>
-<div class="highlight-python"><pre>GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
+<div class="highlight-python" id="elltool-reach-areach-get-goodcurves"><pre>GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
 
 Input:
   regular:
@@ -7134,7 +7354,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   [goodCurvesCVec timeVec] = dRsObj.get_goodcurves();</pre>
 </div>
-<div class="highlight-python"><pre>GET_IA - returns array of ellipsoid objects representing internal
+<div class="highlight-python" id="elltool-reach-areach-get-ia"><pre>GET_IA - returns array of ellipsoid objects representing internal
          approximation of the  reach tube.
 
 Input:
@@ -7160,7 +7380,7 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   [iaEllMat timeVec] = rsObj.get_ia();</pre>
 </div>
-<div class="highlight-python"><pre>GET_SYSTEM - returns the linear system for which the reach set is
+<div class="highlight-python" id="elltool-reach-areach-get-system"><pre>GET_SYSTEM - returns the linear system for which the reach set is
              computed.
 
 Input:
@@ -7216,7 +7436,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   dRsObj.get_system();</pre>
 </div>
-<div class="highlight-python"><pre>INTERSECT - checks if its external (s = 'e'), or internal (s = 'i')
+<div class="highlight-python" id="elltool-reach-areach-intersect"><pre>INTERSECT - checks if its external (s = 'e'), or internal (s = 'i')
             approximation intersects with given ellipsoid, hyperplane
             or polytop.
 
@@ -7250,7 +7470,7 @@ Example:
 
                   1</pre>
 </div>
-<div class="highlight-python"><pre>ISEMPTY - checks if given reach set array is an array of empty objects.
+<div class="highlight-python" id="elltool-reach-areach-isempty"><pre>ISEMPTY - checks if given reach set array is an array of empty objects.
 
 Input:
   regular:
@@ -7289,7 +7509,7 @@ Example:
   ans =
       [ 0  0 ]</pre>
 </div>
-<div class="highlight-python"><pre>ISEQUAL - checks for equality given reach set objects
+<div class="highlight-python" id="elltool-reach-areach-isequal"><pre>ISEQUAL - checks for equality given reach set objects
 
 Input:
   regular:
@@ -7332,7 +7552,7 @@ Example:
 
           1</pre>
 </div>
-<div class="highlight-python"><pre>ISBACKWARD - checks if given reach set object was obtained by solving
+<div class="highlight-python" id="elltool-reach-areach-isbackward"><pre>ISBACKWARD - checks if given reach set object was obtained by solving
              the system in reverse time.
 
 Input:
@@ -7360,7 +7580,7 @@ Example:
 
        1</pre>
 </div>
-<div class="highlight-python"><pre>ISCUT - checks if given array of reach set objects is a cut of
+<div class="highlight-python" id="elltool-reach-areach-iscut"><pre>ISCUT - checks if given array of reach set objects is a cut of
         another reach set object's array.
 
 Input:
@@ -7394,7 +7614,7 @@ Example:
   iscut(cutObjArr);
   iscut(cutObj);</pre>
 </div>
-<div class="highlight-python"><pre>ISPROJECTION - checks if given array of reach set objects is projections.
+<div class="highlight-python" id="elltool-reach-areach-isprojection"><pre>ISPROJECTION - checks if given array of reach set objects is projections.
 
 Input:
   regular:
@@ -7429,7 +7649,7 @@ Example:
   isprojection(projObj);
   isprojection(projObjArr);</pre>
 </div>
-<div class="highlight-python"><pre>plotByEa - plots external approximation of reach tube.
+<div class="highlight-python" id="elltool-reach-areach-plotbyea"><pre>plotByEa - plots external approximation of reach tube.
 
 
 Usage:
@@ -7464,7 +7684,7 @@ Output:
       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
       data plotter object.</pre>
 </div>
-<div class="highlight-python"><pre>plotByIa - plots internal approximation of reach tube.
+<div class="highlight-python" id="elltool-reach-areach-plotbyia"><pre>plotByIa - plots internal approximation of reach tube.
 
 
 Usage:
@@ -7499,7 +7719,7 @@ Output:
       plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
       data plotter object.</pre>
 </div>
-<div class="highlight-python"><pre>PLOT_EA - plots external approximations of 2D and 3D reach sets.
+<div class="highlight-python" id="elltool-reach-areach-plotea"><pre>PLOT_EA - plots external approximations of 2D and 3D reach sets.
 
 Input:
   regular:
@@ -7543,7 +7763,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   dRsObj.plotEa();</pre>
 </div>
-<div class="highlight-python"><pre>PLOTIA - plots internal approximations of 2D and 3D reach sets.
+<div class="highlight-python" id="elltool-reach-areach-plotia"><pre>PLOTIA - plots internal approximations of 2D and 3D reach sets.
 
 Input:
   regular:
@@ -7583,7 +7803,7 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
   dRsObj.plotIa();</pre>
 </div>
-<div class="highlight-python"><pre>REFINE - adds new approximations computed for the specified directions
+<div class="highlight-python" id="elltool-reach-areach-refine"><pre>REFINE - adds new approximations computed for the specified directions
          to the given reach set or to the projection of reach set.
 
 Input:
@@ -7610,7 +7830,7 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   rsObj = rsObj.refine(newDirsMat);</pre>
 </div>
-<div class="highlight-python"><pre>REPMAT - is analogous to built-in repmat function with one exception - it
+<div class="highlight-python" id="elltool-reach-areach-repmat"><pre>REPMAT - is analogous to built-in repmat function with one exception - it
          copies the objects, not just the handles
 
 Input:
@@ -7673,7 +7893,44 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);</pre>
 </div>
 <p>See the description of the following methods in section
-[secClassDescr:elltool.reach.AReach] for elltool.reach.AReach:</p>
+<a class="reference internal" href="#elltool-reach-areach">elltool.reach.AReach</a> for elltool.reach.AReach:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#elltool-reach-areach-cut">elltool.reach.AReach.cut</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-dimension">elltool.reach.AReach.dimension</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-display">elltool.reach.AReach.display</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-evolve">elltool.reach.AReach.evolve</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getabstol">elltool.reach.AReach.getAbsTol</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getcopy">elltool.reach.AReach.getCopy</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-geteascalefactor">elltool.reach.AReach.getEaScaleFactor</a></li>
+<li><a href="#id9"><span class="problematic" id="id10">elltool.reach.AReach.getEllTubeRel_</span></a>?</li>
+<li><a href="#id11"><span class="problematic" id="id12">elltool.reach.AReach.getEllTubeUnionRel_</span></a>?</li>
+<li><a class="reference internal" href="#elltool-reach-areach-getiascalefactor">elltool.reach.AReach.getIaScaleFactor</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getinitialset">elltool.reach.AReach.getInitialSet</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getnplot2dpoints">elltool.reach.AReach.getNPlot2dPoints</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getnplot3dpoints">elltool.reach.AReach.getNPlot3dPoints</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getntimegridpoints">elltool.reach.AReach.getNTimeGridPoints</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getreltol">elltool.reach.AReach.getRelTol</a></li>
+<li><a href="#id13"><span class="problematic" id="id14">elltool.reach.AReach.getSwitchTimeVec_</span></a> ?</li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-center">elltool.reach.AReach.get_center</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-directions">elltool.reach.AReach.get_directions</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-ea">elltool.reach.AReach.get_ea</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-goodcurves">elltool.reach.AReach.get_goodcurves</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-ia">elltool.reach.AReach.get_ia</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-system">elltool.reach.AReach.get_system</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-intersect">elltool.reach.AReach.intersect</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-isempty">elltool.reach.AReach.isEmpty</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-isequal">elltool.reach.AReach.isEqual</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-isbackward">elltool.reach.AReach.isbackward</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-iscut">elltool.reach.AReach.iscut</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-isprojection">elltool.reach.AReach.isprojection</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-plotbyea">elltool.reach.AReach.plotByEa</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-plotbyia">elltool.reach.AReach.plotByIa</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-plotea">elltool.reach.AReach.plotEa</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-plotia">elltool.reach.AReach.plotIa</a></li>
+<li><a href="#id15"><span class="problematic" id="id16">elltool.reach.AReach.projection_</span></a> ?</li>
+<li><a class="reference internal" href="#elltool-reach-areach-refine">elltool.reach.AReach.refine</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-repmat">elltool.reach.AReach.repMat</a></li>
+</ul>
 </div>
 <div class="section" id="elltool-reach-reachdiscrete">
 <h2>elltool.reach.ReachDiscrete<a class="headerlink" href="#elltool-reach-reachdiscrete" title="Permalink to this headline">¶</a></h2>
@@ -7712,7 +7969,44 @@ Example:
   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);</pre>
 </div>
 <p>See the description of the following methods in section
-[secClassDescr:elltool.reach.AReach] for elltool.reach.AReach:</p>
+<a class="reference internal" href="#elltool-reach-areach">elltool.reach.AReach</a> for elltool.reach.AReach:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#elltool-reach-areach-cut">elltool.reach.AReach.cut</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-dimension">elltool.reach.AReach.dimension</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-display">elltool.reach.AReach.display</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-evolve">elltool.reach.AReach.evolve</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getabstol">elltool.reach.AReach.getAbsTol</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getcopy">elltool.reach.AReach.getCopy</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-geteascalefactor">elltool.reach.AReach.getEaScaleFactor</a></li>
+<li><a href="#id17"><span class="problematic" id="id18">elltool.reach.AReach.getEllTubeRel_</span></a>?</li>
+<li><a href="#id19"><span class="problematic" id="id20">elltool.reach.AReach.getEllTubeUnionRel_</span></a>?</li>
+<li><a class="reference internal" href="#elltool-reach-areach-getiascalefactor">elltool.reach.AReach.getIaScaleFactor</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getinitialset">elltool.reach.AReach.getInitialSet</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getnplot2dpoints">elltool.reach.AReach.getNPlot2dPoints</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getnplot3dpoints">elltool.reach.AReach.getNPlot3dPoints</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getntimegridpoints">elltool.reach.AReach.getNTimeGridPoints</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-getreltol">elltool.reach.AReach.getRelTol</a></li>
+<li><a href="#id21"><span class="problematic" id="id22">elltool.reach.AReach.getSwitchTimeVec_</span></a> ?</li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-center">elltool.reach.AReach.get_center</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-directions">elltool.reach.AReach.get_directions</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-ea">elltool.reach.AReach.get_ea</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-goodcurves">elltool.reach.AReach.get_goodcurves</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-ia">elltool.reach.AReach.get_ia</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-get-system">elltool.reach.AReach.get_system</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-intersect">elltool.reach.AReach.intersect</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-isempty">elltool.reach.AReach.isEmpty</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-isequal">elltool.reach.AReach.isEqual</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-isbackward">elltool.reach.AReach.isbackward</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-iscut">elltool.reach.AReach.iscut</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-isprojection">elltool.reach.AReach.isprojection</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-plotbyea">elltool.reach.AReach.plotByEa</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-plotbyia">elltool.reach.AReach.plotByIa</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-plotea">elltool.reach.AReach.plotEa</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-plotia">elltool.reach.AReach.plotIa</a></li>
+<li><a href="#id23"><span class="problematic" id="id24">elltool.reach.AReach.projection_</span></a> ?</li>
+<li><a class="reference internal" href="#elltool-reach-areach-refine">elltool.reach.AReach.refine</a></li>
+<li><a class="reference internal" href="#elltool-reach-areach-repmat">elltool.reach.AReach.repMat</a></li>
+</ul>
 </div>
 <div class="section" id="elltool-reach-reachfactory">
 <h2>elltool.reach.ReachFactory<a class="headerlink" href="#elltool-reach-reachfactory" title="Permalink to this headline">¶</a></h2>
@@ -7817,7 +8111,7 @@ Output:
   self: elltool.linsys.ALinSys[1, 1] -
       linear system.</pre>
 </div>
-<div class="highlight-python"><pre>DIMENSION - returns dimensions of state, input, output and disturbance
+<div class="highlight-python" id="elltool-linsys-alinsys-dimension"><pre>DIMENSION - returns dimensions of state, input, output and disturbance
             spaces.
 Input:
   regular:
@@ -7859,7 +8153,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   dsys.dimension();</pre>
 </div>
-<div class="highlight-python"><pre>DISPLAY - displays the details of linear system object.
+<div class="highlight-python" id="elltool-linsys-alinsys-display"><pre>DISPLAY - displays the details of linear system object.
 
 Input:
   regular:
@@ -7868,7 +8162,7 @@ Input:
 Output:
   None.</pre>
 </div>
-<div class="highlight-python"><pre>GETABSTOL - gives array the same size as linsysArr with values of absTol
+<div class="highlight-python" id="elltool-linsys-alinsys-getabstol"><pre>GETABSTOL - gives array the same size as linsysArr with values of absTol
             properties for each hyperplane in hplaneArr.
 
 
@@ -7891,7 +8185,9 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   dsys.getAbsTol();</pre>
 </div>
-<div class="highlight-python"><pre>Input:
+<div class="highlight-python" id="elltool-linsys-alinsys-getatmat"><pre>GETATMAT -
+
+Input:
   regular:
       self: elltool.linsys.ILinSys[1, 1] - linear system.
 
@@ -7907,7 +8203,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   aMat = dsys.getAtMat();</pre>
 </div>
-<div class="highlight-python"><pre>Input:
+<div class="highlight-python" id="elltool-linsys-alinsys-getbtmat"><pre>Input:
   regular:
       self: elltool.linsys.ILinSys[1, 1] - linear system.
 
@@ -7923,7 +8219,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   bMat = dsys.getBtMat();</pre>
 </div>
-<div class="highlight-python"><pre>GETCOPY - gives array the same size as linsysArr with with copies of
+<div class="highlight-python" id="elltool-linsys-alinsys-getcopy"><pre>GETCOPY - gives array the same size as linsysArr with with copies of
           elements of self.
 
 Input:
@@ -7945,7 +8241,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   newDSys = dsys.getCopy();</pre>
 </div>
-<div class="highlight-python"><pre>Input:
+<div class="highlight-python" id="elltool-linsys-alinsys-getctmat"><pre>Input:
   regular:
       self: elltool.linsys.ILinSys[1, 1] - linear system.
 
@@ -7961,7 +8257,9 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   gMat = sys.getCtMat();</pre>
 </div>
-<div class="highlight-python"><pre>Input:
+<div class="highlight-python" id="elltool-linsys-alinsys-getdistboundsell"><pre>GETDISTBOUNDSELL -
+
+Input:
   regular:
       self: elltool.linsys.ILinSys[1, 1] - linear system.
 
@@ -7977,7 +8275,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   distEll = sys.getDistBoundsEll();</pre>
 </div>
-<div class="highlight-python"><pre>Input:
+<div class="highlight-python" id="elltool-linsys-alinsys-getuboundsell"><pre>Input:
   regular:
       self: elltool.linsys.ILinSys[1, 1] - linear system.
 
@@ -7993,7 +8291,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   uEll = dsys.getUBoundsEll();</pre>
 </div>
-<div class="highlight-python"><pre>HASDISTURBANCE - returns true if system has disturbance
+<div class="highlight-python" id="elltool-linsys-alinsys-hasdisturbance"><pre>HASDISTURBANCE - returns true if system has disturbance
 
 Input:
   regular:
@@ -8022,7 +8320,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   dsys.hasDisturbance();</pre>
 </div>
-<div class="highlight-python"><pre>ISEMPTY - checks if linear system is empty.
+<div class="highlight-python" id="elltool-linsys-alinsys-isempty"><pre>ISEMPTY - checks if linear system is empty.
 
 Input:
   regular:
@@ -8048,7 +8346,7 @@ Examples:
   dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
   dsys.isEmpty();</pre>
 </div>
-<div class="highlight-python"><pre>ISEQUAL - produces produces logical array the same size as
+<div class="highlight-python" id="elltool-linsys-alinsys-isequal"><pre>ISEQUAL - produces produces logical array the same size as
           self/compLinSysArr (if they have the same).
           isEqualArr[iDim1, iDim2,...] is true if corresponding
           linear systems are equal and false otherwise.
@@ -8086,7 +8384,7 @@ Examples:
 
        1</pre>
 </div>
-<div class="highlight-python"><pre>ISLTI - checks if linear system is time-invariant.
+<div class="highlight-python" id="elltool-linsys-alinsys-islti"><pre>ISLTI - checks if linear system is time-invariant.
 
 Input:
   regular:
@@ -8148,7 +8446,22 @@ Example:
   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);</pre>
 </div>
 <p>See the description of the following methods in section
-[secClassDescr:elltool.linsys.ALinSys] for elltool.linsys.ALinSys:</p>
+<a class="reference internal" href="#elltool-linsys-alinsys">elltool.linsys.ALinSys</a> for elltool.linsys.ALinSys:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#elltool-linsys-alinsys-dimension">elltool.linsys.ALinSys.dimension</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-display">elltool.linsys.ALinSys.display</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getabstol">elltool.linsys.ALinSys.getAbsTol</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getatmat">elltool.linsys.ALinSys.getAtMat</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getbtmat">elltool.linsys.ALinSys.getBtMat</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getcopy">elltool.linsys.ALinSys.getCopy</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getctmat">elltool.linsys.ALinSys.getCtMat</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getdistboundsell">elltool.linsys.ALinSys.getDistBoundsEll</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getuboundsell">elltool.linsys.ALinSys.getUBoundsEll</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-hasdisturbance">elltool.linsys.ALinSys.hasDisturbance</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-isempty">elltool.linsys.ALinSys.isEmpty</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-isequal">elltool.linsys.ALinSys.isEqual</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-islti">elltool.linsys.ALinSys.isLti</a></li>
+</ul>
 </div>
 <div class="section" id="elltool-linsys-linsysdiscrete">
 <h2>elltool.linsys.LinSysDiscrete<a class="headerlink" href="#elltool-linsys-linsysdiscrete" title="Permalink to this headline">¶</a></h2>
@@ -8189,8 +8502,25 @@ Example:
          uBoundsEllObj, ctMat,distBounds);
   end</pre>
 </div>
-<p>See the description of the following methods in section
-[secClassDescr:elltool.linsys.ALinSys] for elltool.linsys.ALinSys:</p>
+<dl class="docutils">
+<dt>See the description of the following methods in section <a class="reference internal" href="#elltool-linsys-alinsys">elltool.linsys.ALinSys</a></dt>
+<dd>for elltool.linsys.ALinSys:</dd>
+</dl>
+<ul class="simple">
+<li><a class="reference internal" href="#elltool-linsys-alinsys-dimension">elltool.linsys.ALinSys.dimension</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-display">elltool.linsys.ALinSys.display</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getabstol">elltool.linsys.ALinSys.getAbsTol</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getatmat">elltool.linsys.ALinSys.getAtMat</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getbtmat">elltool.linsys.ALinSys.getBtMat</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getcopy">elltool.linsys.ALinSys.getCopy</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getctmat">elltool.linsys.ALinSys.getCtMat</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getdistboundsell">elltool.linsys.ALinSys.getDistBoundsEll</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-getuboundsell">elltool.linsys.ALinSys.getUBoundsEll</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-hasdisturbance">elltool.linsys.ALinSys.hasDisturbance</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-isempty">elltool.linsys.ALinSys.isEmpty</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-isequal">elltool.linsys.ALinSys.isEqual</a></li>
+<li><a class="reference internal" href="#elltool-linsys-alinsys-islti">elltool.linsys.ALinSys.isLti</a></li>
+</ul>
 </div>
 <div class="section" id="elltool-linsys-linsysfactory">
 <h2>elltool.linsys.LinSysFactory<a class="headerlink" href="#elltool-linsys-linsysfactory" title="Permalink to this headline">¶</a></h2>

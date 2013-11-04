@@ -1003,7 +1003,7 @@ like the following:
 #. For the given time interval :math:`[t_0, t]`, determine whether the
    system can be steered into the given target set
    :math:`{\mathcal Y}_1`. In other words, is the set
-   :math:`{\mathcal Y}_1\cap\bigcup_{t_0 \leqslant\tau\leqslantt}{\mathcal X}(\tau, t_0, {\mathcal X}_0)`
+   :math:`{\mathcal Y}_1\cap\bigcup_{t_0 \leqslant\tau\leqslant t}{\mathcal X}(\tau, t_0, {\mathcal X}_0)`
    nonempty? And if the answer is ‘yes’, find a control that steers the
    system to the target set (or avoids the target set). [8]_
 
@@ -1674,7 +1674,7 @@ and the bounday point of minmax CLRS is
    x_l^-(t) = x_c(t) + \frac{\overline{X}^-_l(t)l(t)}{\langle l(t),
    \overline{X}^-_l(t)l(t)\rangle^{1/2}} .
 
-Points :math:`x^{\pm}_l(t)`, :math:`t\geqslantt_0`, form extremal
+Points :math:`x^{\pm}_l(t)`, :math:`t\geqslant t_0`, form extremal
 trajectories. In order for the system to follow the extremal trajectory
 specified by some vector :math:`l_0`, the initial state must be
 

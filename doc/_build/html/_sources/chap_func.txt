@@ -4017,6 +4017,9 @@ smartdb.relations.ATypifiedStaticRelation
     Note: In the case the first interface is used, SData and
           SIsNull are taken from class object obj
 
+
+.. _smartdb.relations.ATypifiedStaticRelation.addData:
+
 ::
 
     ADDDATA - adds a set of field values to existing data in a form of new
@@ -4026,6 +4029,8 @@ smartdb.relations.ATypifiedStaticRelation
       regular:
          self:ARelation [1,1] - class object
 
+.. _smartdb.relations.ATypifiedStaticRelation.addDataAlongDim:
+
 ::
 
     ADDDATAALONGDIM - adds a set of field values to existing data using
@@ -4034,6 +4039,8 @@ smartdb.relations.ATypifiedStaticRelation
     Input:
       regular:
           self: CubeStruct [1,1] - the object
+
+.. _smartdb.relations.ATypifiedStaticRelation.addTuples:
 
 ::
 
@@ -4060,6 +4067,8 @@ smartdb.relations.ATypifiedStaticRelation
           checkConsistency: logical[1,1], if true, a consistency between the
              input structures is not checked, true by default
 
+.. _smartdb.relations.ATypifiedStaticRelation.applyGetFunc:
+             
 ::
 
     APPLYGETFUNC - applies a function to the specified fields as columns, i.e.
@@ -4082,6 +4091,8 @@ smartdb.relations.ATypifiedStaticRelation
       2) the function is applies to SData part of field value
       3) no additional arguments can be passed
       All this limitations will eventually go away though so stay tuned...
+      
+.. _smartdb.relations.ATypifiedStaticRelation.applySetFunc:
 
 ::
 
@@ -4146,6 +4157,8 @@ smartdb.relations.ATypifiedStaticRelation
              outputType parameter of toArray method, see its documentation
              for a list of supported input types.
 
+.. _smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc:
+
 ::
 
     APPLYTUPLEGETFUNC - applies a function to the specified fields
@@ -4177,6 +4190,8 @@ smartdb.relations.ATypifiedStaticRelation
       2) no additional arguments can be passed
       All this limitations will eventually go away though so stay tuned...
 
+.. _smartdb.relations.ATypifiedStaticRelation.clearData:
+
 ::
 
     CLEARDATA - deletes all the data from the object
@@ -4186,6 +4201,8 @@ smartdb.relations.ATypifiedStaticRelation
     Input:
       regular:
         self: CubeStruct [1,1] - class object
+
+.. _smartdb.relations.ATypifiedStaticRelation.clone:
 
 ::
 
@@ -4201,6 +4218,8 @@ smartdb.relations.ATypifiedStaticRelation
     Ouput:
       self: any [] - constructed object
 
+.. _smartdb.relations.ATypifiedStaticRelation.copyFrom:
+
 ::
 
     COPYFROM - reconstruct CubeStruct object within a current object using the
@@ -4213,6 +4232,8 @@ smartdb.relations.ATypifiedStaticRelation
 
       optional:
         fieldNameList: cell[1,nFields] - list of fields to copy
+
+.. _smartdb.relations.ATypifiedStaticRelation.createInstance:
 
 ::
 
@@ -4229,6 +4250,8 @@ smartdb.relations.ATypifiedStaticRelation
 
     Ouput:
       self: any [] - constructed object
+
+.. _smartdb.relations.ATypifiedStaticRelation.dispOnUI:
 
 ::
 
@@ -4252,6 +4275,8 @@ smartdb.relations.ATypifiedStaticRelation
       gridObj: smartdb.relations.disp.UIDataGrid[1,1] - data grid component
           instance used for displaying a content of the relation object
 
+.. _smartdb.relations.ATypifiedStaticRelation.display:
+
 ::
 
     DISPLAY - puts some textual information about CubeStruct object in screen
@@ -4259,6 +4284,8 @@ smartdb.relations.ATypifiedStaticRelation
     Input:
      regular:
          self.
+
+.. _smartdb.relations.ATypifiedStaticRelation.fromStructList:
 
 ::
 
@@ -4277,6 +4304,8 @@ smartdb.relations.ATypifiedStaticRelation
     Output:
       relDataObj: smartdb.relations.DynamicRelation[1,1] -
          constructed relation
+
+.. _smartdb.relations.ATypifiedStaticRelation.getCopy:
 
 ::
 
@@ -4358,6 +4387,8 @@ smartdb.relations.ATypifiedStaticRelation
            means that a corresponding cell doesn't not contain
               any value
 
+.. _smartdb.relations.ATypifiedStaticRelation.getFieldDescrList:
+
 ::
 
     GETFIELDDESCRLIST - returns the list of CubeStruct field descriptions
@@ -4376,6 +4407,8 @@ smartdb.relations.ATypifiedStaticRelation
         value: char cell [1,nFields] - list of CubeStruct object field
             descriptions
 
+.. _smartdb.relations.ATypifiedStaticRelation.getFieldIsNull:
+
 ::
 
     GETFIELDISNULL - returns for given field a nested logical/cell array
@@ -4392,6 +4425,8 @@ smartdb.relations.ATypifiedStaticRelation
         fieldIsCVec: logical/cell[] - nested cell/logical array containing
            is-null indicators for content of the field
 
+.. _smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull:
+           
 ::
 
     GETFIELDISVALUENULL - returns for given field logical vector determining
@@ -4413,6 +4448,9 @@ smartdb.relations.ATypifiedStaticRelation
         isValueNullVec: logical[] - array of isValueNull indicators for the
            specified field
 
+           
+.. _smartdb.relations.ATypifiedStaticRelation.getFieldNameList:
+
 ::
 
     GETFIELDNAMELIST - returns the list of CubeStruct object field names
@@ -4427,6 +4465,8 @@ smartdb.relations.ATypifiedStaticRelation
         value: char cell [1,nFields] - list of CubeStruct object field
             names
 
+.. _smartdb.relations.ATypifiedStaticRelation.getFieldProjection:
+
 ::
 
     GETFIELDPROJECTION - project object with specified fields.
@@ -4438,6 +4478,8 @@ smartdb.relations.ATypifiedStaticRelation
 
     Output:
       obj: DynamicRelation[1,1] - projected object
+
+.. _smartdb.relations.ATypifiedStaticRelation.getFieldTypeList:
 
 ::
 
@@ -4456,6 +4498,8 @@ smartdb.relations.ATypifiedStaticRelation
      regular:
       fieldTypeList: cell [1,nFields] of smartdb.cubes.ACubeStructFieldType[1,1]
           - list of field types
+
+.. _smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList:
 
 ::
 
@@ -4483,6 +4527,8 @@ smartdb.relations.ATypifiedStaticRelation
               cell[1,nFields*prod(nNestedLevelsVec)] of char[1,.]
            - list of field type specifications
 
+.. _smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat:
+
 ::
 
     GETFIELDVALUESIZEMAT - returns a matrix composed from the size vectors
@@ -4505,6 +4551,8 @@ smartdb.relations.ATypifiedStaticRelation
 
     Output:
       sizeMat: double[nFields,nMaxDims]
+
+.. _smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull:
 
 ::
 
@@ -4546,6 +4594,8 @@ smartdb.relations.ATypifiedStaticRelation
     Output:
       resRel: smartdb.relations.ARelation[1,1] - join result
 
+.. _smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize:
+      
 ::
 
     GETMINDIMENSIONSIZE - returns a size vector for the specified
@@ -4564,6 +4614,8 @@ smartdb.relations.ATypifiedStaticRelation
       minDimensionSizeVec: double [1,nDims] - a size vector for
          the requested dimensions
 
+.. _smartdb.relations.ATypifiedStaticRelation.getMinDimensionality:
+
 ::
 
     GETMINDIMENSIONALITY - returns a minimum dimensionality for a given
@@ -4577,6 +4629,8 @@ smartdb.relations.ATypifiedStaticRelation
       minDimensionality: double[1,1] - minimum dimensionality of
          self object
 
+.. _smartdb.relations.ATypifiedStaticRelation.getNElems:
+
 ::
 
     GETNELEMS - returns a number of elements in a given object
@@ -4586,6 +4640,8 @@ smartdb.relations.ATypifiedStaticRelation
 
     Output:
       nElems:double[1, 1] - number of elements in a given object
+
+.. _smartdb.relations.ATypifiedStaticRelation.getNFields:
 
 ::
 
@@ -4600,6 +4656,8 @@ smartdb.relations.ATypifiedStaticRelation
       regular:
         nFields: double [1,1] - number of fields in given object
 
+.. _smartdb.relations.ATypifiedStaticRelation.getNTuples:
+
 ::
 
     GETNTUPLES - returns number of tuples in given relation
@@ -4612,6 +4670,8 @@ smartdb.relations.ATypifiedStaticRelation
     output:
       regular:
         nTuples: double [1,1] - number of tuples in given  relation
+
+.. _smartdb.relations.ATypifiedStaticRelation.getSortIndex:
 
 ::
 
@@ -4637,6 +4697,8 @@ smartdb.relations.ATypifiedStaticRelation
            relation, then fieldValueVec(sortIndex) is a vector of values for
            this field when tuples of the relation are sorted
 
+.. _smartdb.relations.ATypifiedStaticRelation.getTuples:
+
 ::
 
     GETTUPLES - selects tuples with given indices from given relation and
@@ -4653,6 +4715,8 @@ smartdb.relations.ATypifiedStaticRelation
       regular:
         obj: ARelation [1,1] - new class object containing only selected
             tuples
+
+.. _smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy:
 
 ::
 
@@ -4678,6 +4742,8 @@ smartdb.relations.ATypifiedStaticRelation
             tuples
         isThereVec: logical[nTuples,1] - contains true for the kept tuples
 
+.. _smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy:
+
 ::
 
      GETTUPLESINDEXEDBY - selects tuples from given relation such that fixed
@@ -4698,6 +4764,8 @@ smartdb.relations.ATypifiedStaticRelation
              tuples
 
     TODO add type check
+
+.. _smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith:
 
 ::
 
@@ -4727,6 +4795,8 @@ smartdb.relations.ATypifiedStaticRelation
 
     Output:
       resRel: smartdb.relations.ARelation[1,1] - join result
+
+.. _smartdb.relations.ATypifiedStaticRelation.getUniqueData:
 
 ::
 
@@ -4770,6 +4840,8 @@ smartdb.relations.ATypifiedStaticRelation
         indBackward: double[1,nTuples] - indices that map the unique tuple
            set back to the original tuple set
 
+.. _smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim:
+
 ::
 
     GETUNIQUEDATAALONGDIM - returns internal representation of CubeStruct
@@ -4812,6 +4884,8 @@ smartdb.relations.ATypifiedStaticRelation
            set back to the original data setdata set unique along a specified
            dimension
 
+.. _smartdb.relations.ATypifiedStaticRelation.getUniqueTuples:
+
 ::
 
     GETUNIQUETUPLES - returns a relation containing the unique tuples from
@@ -4842,6 +4916,8 @@ smartdb.relations.ATypifiedStaticRelation
         indBackward: double[1,nTuples] - indices that map the unique tuple
            set back to the original tuple set
 
+.. _smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet:
+
 ::
 
     INITBYEMPTYDATASET - initializes cube struct object with null value arrays
@@ -4857,6 +4933,8 @@ smartdb.relations.ATypifiedStaticRelation
           self:
       optional
           minDimVec: double[1,nDims] - size vector of null value arrays
+
+.. _smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet:
 
 ::
 
@@ -4874,6 +4952,8 @@ smartdb.relations.ATypifiedStaticRelation
           self:
       optional
           minDimVec: double[1,nDims] - size vector of null value arrays
+
+.. _smartdb.relations.ATypifiedStaticRelation.isEqual:
 
 ::
 
@@ -4906,7 +4986,9 @@ smartdb.relations.ATypifiedStaticRelation
 
     Output:
       isEq: logical[1,1] - result of comparison
-      reportStr: char[1,] - report of comparsion
+      reportStr: char[1,] - report of comparison
+
+.. _smartdb.relations.ATypifiedStaticRelation.isFields:
 
 ::
 
@@ -4933,6 +5015,8 @@ smartdb.relations.ATypifiedStaticRelation
 
     TODO allow for varargins
 
+.. _smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim:
+
 ::
 
     ISMEMBERALONGDIM - performs ismember operation of CubeStruct data slices
@@ -4957,6 +5041,8 @@ smartdb.relations.ATypifiedStaticRelation
         indTheres: double [nSlices,1] - zero if the corresponding coordinate
             of isThere is false, otherwise the highest index of the
             corresponding data slice in the second (other) object
+
+.. _smartdb.relations.ATypifiedStaticRelation.isMember:
 
 ::
 
@@ -4983,6 +5069,8 @@ smartdb.relations.ATypifiedStaticRelation
             of isTuple is false, otherwise the highest index of the
             corresponding tuple in the second (other) relation
 
+.. _smartdb.relations.ATypifiedStaticRelation.isUniqueKey:
+
 ::
 
     ISUNIQUEKEY - checks if a specified set of fields forms a unique key
@@ -4998,38 +5086,8 @@ smartdb.relations.ATypifiedStaticRelation
       isPositive: logical[1,1] - true means that a specified set of fields is
          a unique key
 
-::
 
-    ISEQUAL - compares current relation object with other relation object and
-              returns true if they are equal, otherwise it returns false
-
-
-    Usage: isEq=isEqual(self,otherObj)
-
-    Input:
-      regular:
-        self: ARelation [1,1] - current relation object
-        otherObj: ARelation [1,1] - other relation object
-
-      properties:
-        checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields
-            in compared relations must be in the same order, otherwise the
-            order is not  important (false by default)
-        checkTupleOrder: logical[1,1] -  if true, then the tuples in the
-            compared relations are expected to be in the same order,
-            otherwise the order is not important (false by default)
-
-        maxTolerance: double [1,1] - maximum allowed tolerance
-
-        compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
-            referenced from the meta data objects are also compared
-
-        maxRelativeTolerance: double [1,1] - maximum allowed
-        relative tolerance
-
-    Output:
-      isEq: logical[1,1] - result of comparison
-      reportStr: char[1,] - report of comparsion
+.. _smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples:
 
 ::
 
@@ -5056,6 +5114,8 @@ smartdb.relations.ATypifiedStaticRelation
         indBackwardVec: double[nSlices,1] - indices that map the unique
            tuples back to the original tuples
 
+.. _smartdb.relations.ATypifiedStaticRelation.removeTuples:
+
 ::
 
     REMOVETUPLES - removes tuples with given indices from given relation
@@ -5067,6 +5127,8 @@ smartdb.relations.ATypifiedStaticRelation
         self: ARelation [1,1] - class object
         subIndVec: double [nSubTuples,1]/logical[nTuples,1] - array of
            indices for tuples that are selected to be removed
+
+.. _smartdb.relations.ATypifiedStaticRelation.reorderData:
 
 ::
 
@@ -5085,6 +5147,8 @@ smartdb.relations.ATypifiedStaticRelation
           dimVec: numeric[1,nDims] - vector of dimension numbers
               corresponding to subIndCVec
 
+.. _smartdb.relations.ATypifiedStaticRelation.saveObj:
+
 ::
 
     SAVEOBJ- transforms given CubeStruct object into structure containing
@@ -5099,6 +5163,8 @@ smartdb.relations.ATypifiedStaticRelation
       regular:
         SObjectData: struct [n1,...,n_k] - structure containing an internal
            representation of the specified object
+
+.. _smartdb.relations.ATypifiedStaticRelation.setData:
 
 ::
 
@@ -5174,6 +5240,8 @@ smartdb.relations.ATypifiedStaticRelation
     Note: call of setData with an empty list of arguments clears
        the data
 
+.. _smartdb.relations.ATypifiedStaticRelation.setFieldInternal:
+
 ::
 
     SETFIELDINTERNAL - sets values of all cells for given field
@@ -5201,6 +5269,8 @@ smartdb.relations.ATypifiedStaticRelation
           Note: if structNameList contains 'SIsValueNull' entry,
            inferIsValueNull parameter is overwritten by false
 
+.. _smartdb.relations.ATypifiedStaticRelation.sortBy:
+
 ::
 
     SORTBY - sorts all tuples of given relation with respect to some of its
@@ -5217,6 +5287,8 @@ smartdb.relations.ATypifiedStaticRelation
         direction: char or char cell [1,nFields] - direction of sorting for
             all fields (if one value is given) or for each field separately;
             each value may be 'asc' or 'desc'
+
+.. _smartdb.relations.ATypifiedStaticRelation.sortByAlongDim:
 
 ::
 
@@ -5236,6 +5308,8 @@ smartdb.relations.ATypifiedStaticRelation
         direction: char or char cell [1,nFields] - direction of sorting for
             all fields (if one value is given) or for each field separately;
             each value may be 'asc' or 'desc'
+
+.. _smartdb.relations.ATypifiedStaticRelation.toArray:
 
 ::
 
@@ -5342,6 +5416,8 @@ smartdb.relations.ATypifiedStaticRelation
               values on the positions which correspond to fields converted to
               cells
 
+.. _smartdb.relations.ATypifiedStaticRelation.toCell:
+
 ::
 
     TOCELL - transforms values of all fields for all tuples into two
@@ -5361,6 +5437,8 @@ smartdb.relations.ATypifiedStaticRelation
           fields selected by optional arguments) for all tuples
 
     FIXME - order fields in setData method
+
+.. _smartdb.relations.ATypifiedStaticRelation.toCellIsNull:
 
 ::
 
@@ -5382,6 +5460,8 @@ smartdb.relations.ATypifiedStaticRelation
 
     FIXME - order fields in setData method
 
+.. _smartdb.relations.ATypifiedStaticRelation.toDispCell:
+
 ::
 
     TODISPCELL - transforms values of all fields into their character
@@ -5400,6 +5480,8 @@ smartdb.relations.ATypifiedStaticRelation
     Output:
       dataCell: cell[nRows,nCols] of char[1,] - cell array containing the
           character representation of field values
+
+.. _smartdb.relations.ATypifiedStaticRelation.toMat:
 
 ::
 
@@ -5459,6 +5541,8 @@ smartdb.relations.ATypifiedStaticRelation
       resCMat:  [nTuples,nFields(N)] - matrix/cell with values of all fields
           (or fields selected by optional arguments) for all tuples
 
+.. _smartdb.relations.ATypifiedStaticRelation.toStruct:
+
 ::
 
     TOSTRUCT - transforms given CubeStruct object into structure
@@ -5472,6 +5556,8 @@ smartdb.relations.ATypifiedStaticRelation
       regular:
         SObjectData: struct [n1,...,n_k] - structure containing an internal
            representation of the specified object
+
+.. smartdb.relations.ATypifiedStaticRelation.unionWith:
 
 ::
 
@@ -5505,6 +5591,8 @@ smartdb.relations.ATypifiedStaticRelation
               two-element vector.
               Note: default value is true
 
+.. _smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim:
+
 ::
 
     UNIONWITHALONGDIM - adds data from the input CubeStructs
@@ -5537,6 +5625,8 @@ smartdb.relations.ATypifiedStaticRelation
               two-element vector.
               Note: default value is true
 
+.. _smartdb.relations.ATypifiedStaticRelation.writeToCSV:
+
 ::
 
     WRITETOCSV - writes a content of relation into Excel spreadsheet file
@@ -5547,6 +5637,8 @@ smartdb.relations.ATypifiedStaticRelation
 
     Output:
       none
+
+.. _smartdb.relations.ATypifiedStaticRelation.writeToXLS:
 
 ::
 
@@ -5595,8 +5687,68 @@ gras.ellapx.smartdb.rels.EllTube
       TODO: correct description of the fields in gras.ellapx.smartdb.rels.EllTube
 
 See the description of the following methods in section
-[secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
+`smartdb.relations.ATypifiedStaticRelation`_ for
 smartdb.relations.ATypifiedStaticRelation:
+
+- smartdb.relations.ATypifiedStaticRelation.addData_
+- smartdb.relations.ATypifiedStaticRelation.addDataAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.addTuples_
+- smartdb.relations.ATypifiedStaticRelation.applyGetFunc_
+- smartdb.relations.ATypifiedStaticRelation.applySetFunc_
+- smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc_
+- smartdb.relations.ATypifiedStaticRelation.clearData_
+- smartdb.relations.ATypifiedStaticRelation.clone_
+- smartdb.relations.ATypifiedStaticRelation.copyFrom_
+- smartdb.relations.ATypifiedStaticRelation.createInstance_
+- smartdb.relations.ATypifiedStaticRelation.dispOnUI_
+- smartdb.relations.ATypifiedStaticRelation.display_
+- smartdb.relations.ATypifiedStaticRelation.fromStructList_
+- smartdb.relations.ATypifiedStaticRelation.getCopy_
+- smartdb.relations.ATypifiedStaticRelation.getFieldIsNull_
+- smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull_
+- smartdb.relations.ATypifiedStaticRelation.getFieldNameList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldProjection_
+- smartdb.relations.ATypifiedStaticRelation.getFieldTypeList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat_
+- smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull_
+- smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize_
+- smartdb.relations.ATypifiedStaticRelation.getMinDimensionality_
+- smartdb.relations.ATypifiedStaticRelation.getNElems_
+- smartdb.relations.ATypifiedStaticRelation.getNFields_
+- smartdb.relations.ATypifiedStaticRelation.getNTuples_
+- smartdb.relations.ATypifiedStaticRelation.getSortIndex_
+- smartdb.relations.ATypifiedStaticRelation.getTuples_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueData_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueTuples_
+- smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet_
+- smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet_
+- smartdb.relations.ATypifiedStaticRelation.isFields_
+- smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.isMember_
+- smartdb.relations.ATypifiedStaticRelation.isUniqueKey_
+- smartdb.relations.ATypifiedStaticRelation.isEqual_
+- smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples_
+- smartdb.relations.ATypifiedStaticRelation.removeTuples_
+- smartdb.relations.ATypifiedStaticRelation.reorderData_
+- smartdb.relations.ATypifiedStaticRelation.saveObj_
+- smartdb.relations.ATypifiedStaticRelation.setData_
+- smartdb.relations.ATypifiedStaticRelation.setFieldInternal_
+- smartdb.relations.ATypifiedStaticRelation.sortBy_
+- smartdb.relations.ATypifiedStaticRelation.sortByAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.toArray_
+- smartdb.relations.ATypifiedStaticRelation.toCell_
+- smartdb.relations.ATypifiedStaticRelation.toCellIsNull_
+- smartdb.relations.ATypifiedStaticRelation.toDispCell_
+- smartdb.relations.ATypifiedStaticRelation.toMat_
+- smartdb.relations.ATypifiedStaticRelation.toStruct_
+- smartdb.relations.ATypifiedStaticRelation.unionWith_
+- smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.writeToCSV_
+- smartdb.relations.ATypifiedStaticRelation.writeToXLS_
 
 ::
 
@@ -6099,8 +6251,70 @@ gras.ellapx.smartdb.rels.EllTubeProj
         gras.ellapx.smartdb.rels.EllTubeProj
 
 See the description of the following methods in section
-[secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
+`smartdb.relations.ATypifiedStaticRelation`_ for
 smartdb.relations.ATypifiedStaticRelation:
+
+- smartdb.relations.ATypifiedStaticRelation.addData_
+- smartdb.relations.ATypifiedStaticRelation.addDataAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.addTuples_
+- smartdb.relations.ATypifiedStaticRelation.applyGetFunc_
+- smartdb.relations.ATypifiedStaticRelation.applySetFunc_
+- smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc_
+- smartdb.relations.ATypifiedStaticRelation.clearData_
+- smartdb.relations.ATypifiedStaticRelation.clone_
+- smartdb.relations.ATypifiedStaticRelation.copyFrom_
+- smartdb.relations.ATypifiedStaticRelation.createInstance_
+- smartdb.relations.ATypifiedStaticRelation.dispOnUI_
+- smartdb.relations.ATypifiedStaticRelation.display_
+- smartdb.relations.ATypifiedStaticRelation.fromStructList_
+- smartdb.relations.ATypifiedStaticRelation.getCopy_
+- smartdb.relations.ATypifiedStaticRelation.getFieldDescrList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldIsNull_
+- smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull_
+- smartdb.relations.ATypifiedStaticRelation.getFieldNameList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldProjection_
+- smartdb.relations.ATypifiedStaticRelation.getFieldTypeList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat_
+- smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull_
+- smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize_
+- smartdb.relations.ATypifiedStaticRelation.getMinDimensionality_
+- smartdb.relations.ATypifiedStaticRelation.getNElems_
+- smartdb.relations.ATypifiedStaticRelation.getNFields_
+- smartdb.relations.ATypifiedStaticRelation.getNTuples_
+- smartdb.relations.ATypifiedStaticRelation.getSortIndex_
+- smartdb.relations.ATypifiedStaticRelation.getTuples_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueData_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueTuples_
+- smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet_
+- smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet_
+- smartdb.relations.ATypifiedStaticRelation.isFields_
+- smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.isMember_
+- smartdb.relations.ATypifiedStaticRelation.isUniqueKey_
+- smartdb.relations.ATypifiedStaticRelation.isEqual_
+- smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples_
+- smartdb.relations.ATypifiedStaticRelation.removeTuples_
+- smartdb.relations.ATypifiedStaticRelation.reorderData_
+- smartdb.relations.ATypifiedStaticRelation.saveObj_
+- smartdb.relations.ATypifiedStaticRelation.setData_
+- smartdb.relations.ATypifiedStaticRelation.setFieldInternal_
+- smartdb.relations.ATypifiedStaticRelation.sortBy_
+- smartdb.relations.ATypifiedStaticRelation.sortByAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.toArray_
+- smartdb.relations.ATypifiedStaticRelation.toCell_
+- smartdb.relations.ATypifiedStaticRelation.toCellIsNull_
+- smartdb.relations.ATypifiedStaticRelation.toDispCell_
+- smartdb.relations.ATypifiedStaticRelation.toMat_
+- smartdb.relations.ATypifiedStaticRelation.toStruct_
+- smartdb.relations.ATypifiedStaticRelation.unionWith_
+- smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.writeToCSV_
+- smartdb.relations.ATypifiedStaticRelation.writeToXLS_
 
 ::
 
@@ -6461,8 +6675,70 @@ gras.ellapx.smartdb.rels.EllUnionTube
         gras.ellapx.smartdb.rels.EllUnionTube
 
 See the description of the following methods in section
-[secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
+`smartdb.relations.ATypifiedStaticRelation`_ for
 smartdb.relations.ATypifiedStaticRelation:
+
+- smartdb.relations.ATypifiedStaticRelation.addData_
+- smartdb.relations.ATypifiedStaticRelation.addDataAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.addTuples_
+- smartdb.relations.ATypifiedStaticRelation.applyGetFunc_
+- smartdb.relations.ATypifiedStaticRelation.applySetFunc_
+- smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc_
+- smartdb.relations.ATypifiedStaticRelation.clearData_
+- smartdb.relations.ATypifiedStaticRelation.clone_
+- smartdb.relations.ATypifiedStaticRelation.copyFrom_
+- smartdb.relations.ATypifiedStaticRelation.createInstance_
+- smartdb.relations.ATypifiedStaticRelation.dispOnUI_
+- smartdb.relations.ATypifiedStaticRelation.display_
+- smartdb.relations.ATypifiedStaticRelation.fromStructList_
+- smartdb.relations.ATypifiedStaticRelation.getCopy_
+- smartdb.relations.ATypifiedStaticRelation.getFieldDescrList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldIsNull_
+- smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull_
+- smartdb.relations.ATypifiedStaticRelation.getFieldNameList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldProjection_
+- smartdb.relations.ATypifiedStaticRelation.getFieldTypeList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat_
+- smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull_
+- smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize_
+- smartdb.relations.ATypifiedStaticRelation.getMinDimensionality_
+- smartdb.relations.ATypifiedStaticRelation.getNElems_
+- smartdb.relations.ATypifiedStaticRelation.getNFields_
+- smartdb.relations.ATypifiedStaticRelation.getNTuples_
+- smartdb.relations.ATypifiedStaticRelation.getSortIndex_
+- smartdb.relations.ATypifiedStaticRelation.getTuples_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueData_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueTuples_
+- smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet_
+- smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet_
+- smartdb.relations.ATypifiedStaticRelation.isFields_
+- smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.isMember_
+- smartdb.relations.ATypifiedStaticRelation.isUniqueKey_
+- smartdb.relations.ATypifiedStaticRelation.isEqual_
+- smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples_
+- smartdb.relations.ATypifiedStaticRelation.removeTuples_
+- smartdb.relations.ATypifiedStaticRelation.reorderData_
+- smartdb.relations.ATypifiedStaticRelation.saveObj_
+- smartdb.relations.ATypifiedStaticRelation.setData_
+- smartdb.relations.ATypifiedStaticRelation.setFieldInternal_
+- smartdb.relations.ATypifiedStaticRelation.sortBy_
+- smartdb.relations.ATypifiedStaticRelation.sortByAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.toArray_
+- smartdb.relations.ATypifiedStaticRelation.toCell_
+- smartdb.relations.ATypifiedStaticRelation.toCellIsNull_
+- smartdb.relations.ATypifiedStaticRelation.toDispCell_
+- smartdb.relations.ATypifiedStaticRelation.toMat_
+- smartdb.relations.ATypifiedStaticRelation.toStruct_
+- smartdb.relations.ATypifiedStaticRelation.unionWith_
+- smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.writeToCSV_
+- smartdb.relations.ATypifiedStaticRelation.writeToXLS_
 
 ::
 
@@ -6580,10 +6856,6 @@ smartdb.relations.ATypifiedStaticRelation:
 
     Output:
       resRel: smartdb.relations.ARelation[1,1] - join result
-
-::
-
-::
 
 ::
 
@@ -6741,8 +7013,71 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
         gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
 
 See the description of the following methods in section
-[secClassDescr:smartdb.relations.ATypifiedStaticRelation] for
+`smartdb.relations.ATypifiedStaticRelation`_ for
 smartdb.relations.ATypifiedStaticRelation:
+
+- smartdb.relations.ATypifiedStaticRelation.addData_
+- smartdb.relations.ATypifiedStaticRelation.addDataAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.addTuples_
+- smartdb.relations.ATypifiedStaticRelation.applyGetFunc_
+- smartdb.relations.ATypifiedStaticRelation.applySetFunc_
+- smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc_
+- smartdb.relations.ATypifiedStaticRelation.clearData_
+- smartdb.relations.ATypifiedStaticRelation.clone_
+- smartdb.relations.ATypifiedStaticRelation.copyFrom_
+- smartdb.relations.ATypifiedStaticRelation.createInstance_
+- smartdb.relations.ATypifiedStaticRelation.dispOnUI_
+- smartdb.relations.ATypifiedStaticRelation.display_
+- smartdb.relations.ATypifiedStaticRelation.fromStructList_
+- smartdb.relations.ATypifiedStaticRelation.getCopy_
+- smartdb.relations.ATypifiedStaticRelation.getFieldDescrList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldIsNull_
+- smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull_
+- smartdb.relations.ATypifiedStaticRelation.getFieldNameList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldProjection_
+- smartdb.relations.ATypifiedStaticRelation.getFieldTypeList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList_
+- smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat_
+- smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull_
+- smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize_
+- smartdb.relations.ATypifiedStaticRelation.getMinDimensionality_
+- smartdb.relations.ATypifiedStaticRelation.getNElems_
+- smartdb.relations.ATypifiedStaticRelation.getNFields_
+- smartdb.relations.ATypifiedStaticRelation.getNTuples_
+- smartdb.relations.ATypifiedStaticRelation.getSortIndex_
+- smartdb.relations.ATypifiedStaticRelation.getTuples_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy_
+- smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueData_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.getUniqueTuples_
+- smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet_
+- smartdb.relations.ATypifiedStaticRelation.initByDefaultDataSet_
+- smartdb.relations.ATypifiedStaticRelation.isFields_
+- smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.isMember_
+- smartdb.relations.ATypifiedStaticRelation.isUniqueKey_
+- smartdb.relations.ATypifiedStaticRelation.isEqual_
+- smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples_
+- smartdb.relations.ATypifiedStaticRelation.removeTuples_
+- smartdb.relations.ATypifiedStaticRelation.reorderData_
+- smartdb.relations.ATypifiedStaticRelation.saveObj_
+- smartdb.relations.ATypifiedStaticRelation.setData_
+- smartdb.relations.ATypifiedStaticRelation.setFieldInternal_
+- smartdb.relations.ATypifiedStaticRelation.sortBy_
+- smartdb.relations.ATypifiedStaticRelation.sortByAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.toArray_
+- smartdb.relations.ATypifiedStaticRelation.toCell_
+- smartdb.relations.ATypifiedStaticRelation.toCellIsNull_
+- smartdb.relations.ATypifiedStaticRelation.toDispCell_
+- smartdb.relations.ATypifiedStaticRelation.toMat_
+- smartdb.relations.ATypifiedStaticRelation.toStruct_
+- smartdb.relations.ATypifiedStaticRelation.unionWith_
+- smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim_
+- smartdb.relations.ATypifiedStaticRelation.writeToCSV_
+- smartdb.relations.ATypifiedStaticRelation.writeToXLS_
+
 
 ::
 
@@ -7059,6 +7394,8 @@ smartdb.relations.ATypifiedStaticRelation:
 elltool.reach.AReach
 --------------------
 
+.. _elltool.reach.AReach.cut:
+
 ::
 
     CUT - extracts the piece of reach tube from given start time to given
@@ -7089,6 +7426,8 @@ elltool.reach.AReach
       cutObj = rsObj.cut([3 5]);
       dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
       dCutObj = dRsObj.cut([3 5]);
+
+.. _elltool.reach.AReach.dimension:
 
 ::
 
@@ -7134,6 +7473,8 @@ elltool.reach.AReach
       sSdim =
               [ 2  2 ]
 
+.. _elltool.reach.AReach.display:
+
 ::
 
 
@@ -7175,6 +7516,8 @@ elltool.reach.AReach
       Number of external approximations: 2
       Number of internal approximations: 2
 
+.. _elltool.reach.AReach.evolve:
+
 ::
 
 
@@ -7209,6 +7552,8 @@ elltool.reach.AReach
       newRsObj = rsObj.evolve(12);
       newDRsObj = dRsObj.evolve(11);
 
+.. _elltool.reach.AReach.getAbsTol:
+
 ::
 
     GETABSTOL - gives the array of absTol for all elements
@@ -7238,8 +7583,12 @@ elltool.reach.AReach
       use absTolArr = rsArr.getAbsTol() if you want get only
           absTolArr
 
+.. _elltool.reach.AReach.getCopy:
+
 ::
 
+    GETCOPY -
+    
     Input:
       regular:
           self:
@@ -7251,6 +7600,7 @@ elltool.reach.AReach
             and second - to external ones. An element equal to
              false means that the corresponding approximation type
              is filtered out. Default value is [true,true]
+             
     Example:
         aMat = [0 1; 0 0]; bMat = eye(2);
         SUBounds = struct();
@@ -7299,6 +7649,9 @@ elltool.reach.AReach
 
         Number of external approximations: 1
         Number of internal approximations: 1
+
+        
+.. _elltool.reach.AReach.getEaScaleFactor:
 
 ::
 
@@ -7357,6 +7710,8 @@ elltool.reach.AReach
       rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
       getEllTubeUnionRel(rsObj);
 
+.. _elltool.reach.AReach.getIaScaleFactor:
+
 ::
 
     GET_IASCALEFACTOR - return the scale factor for internal approximation
@@ -7385,6 +7740,8 @@ elltool.reach.AReach
       ans =
 
           1.0200
+
+.. _elltool.reach.AReach.getInitialSet:
 
 ::
 
@@ -7424,6 +7781,8 @@ elltool.reach.AReach
 
       Nondegenerate ellipsoid in R^2.
 
+.. _elltool.reach.AReach.getNPlot2dPoints:
+
 ::
 
     GETNPLOT2DPOINTS - gives array  the same size as rsArr of
@@ -7440,6 +7799,8 @@ elltool.reach.AReach
           values of nTimeGridPoints property for each reach set
           in rsArr
 
+.. _elltool.reach.AReach.getNPlot3dPoints:
+
 ::
 
     GETNPLOT3DPOINTS - gives array  the same size as rsArr of
@@ -7453,6 +7814,8 @@ elltool.reach.AReach
     Output:
       nPlot3dPointsArr:double[nDims1,nDims2,...]- array of values
           of nPlot3dPoints property for each reach set in rsArr
+
+.. _elltool.reach.AReach.getNTimeGridPoints:
 
 ::
 
@@ -7469,6 +7832,8 @@ elltool.reach.AReach
       nTimeGridPointsArr: double[nDims1,nDims2,...]- array of
           values of nTimeGridPoints property for each reach set
           in rsArr
+
+.. _elltool.reach.AReach.getRelTol:
 
 ::
 
@@ -7499,6 +7864,8 @@ elltool.reach.AReach
       use relTolArr = rsArr.getRelTol() if you want get only
           relTolArr
 
+.. _elltool.reach.AReach.get_center:
+
 ::
 
 
@@ -7526,6 +7893,8 @@ elltool.reach.AReach
       dirsMat = [1 0; 0 1]';
       rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
       [trCenterMat timeVec] = rsObj.get_center();
+
+.. _elltool.reach.AReach.get_directions:
 
 ::
 
@@ -7556,6 +7925,8 @@ elltool.reach.AReach
       dirsMat = [1 0; 0 1]';
       rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
       [directionsCVec timeVec] = rsObj.get_directions();
+
+.. _elltool.reach.AReach.get_ea:
 
 ::
 
@@ -7591,6 +7962,8 @@ elltool.reach.AReach
       dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
       [eaEllMat timeVec] = dRsObj.get_ea();
 
+.. _elltool.reach.AReach.get_goodcurves:
+
 ::
 
     GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
@@ -7621,6 +7994,8 @@ elltool.reach.AReach
       dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
       [goodCurvesCVec timeVec] = dRsObj.get_goodcurves();
 
+.. _elltool.reach.AReach.get_ia:
+
 ::
 
 
@@ -7649,6 +8024,8 @@ elltool.reach.AReach
       dirsMat = [1 0; 0 1]';
       rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
       [iaEllMat timeVec] = rsObj.get_ia();
+
+.. _elltool.reach.AReach.get_system:
 
 ::
 
@@ -7709,6 +8086,8 @@ elltool.reach.AReach
       dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
       dRsObj.get_system();
 
+.. _elltool.reach.AReach.intersect:
+
 ::
 
     INTERSECT - checks if its external (s = 'e'), or internal (s = 'i')
@@ -7744,6 +8123,8 @@ elltool.reach.AReach
       isEmptyIntersect =
 
                       1
+
+.. _elltool.reach.AReach.isEmpty:
 
 ::
 
@@ -7786,6 +8167,8 @@ elltool.reach.AReach
 
       ans =
           [ 0  0 ]
+
+.. _elltool.reach.AReach.isEqual:
 
 ::
 
@@ -7832,6 +8215,8 @@ elltool.reach.AReach
 
               1
 
+.. _elltool.reach.AReach.isbackward:
+
 ::
 
     ISBACKWARD - checks if given reach set object was obtained by solving
@@ -7861,6 +8246,8 @@ elltool.reach.AReach
       ans =
 
            1
+
+.. _elltool.reach.AReach.iscut:
 
 ::
 
@@ -7897,6 +8284,8 @@ elltool.reach.AReach
       cutObjArr = cutObj.repMat(1,2);
       iscut(cutObjArr);
       iscut(cutObj);
+
+.. _elltool.reach.AReach.isprojection:
 
 ::
 
@@ -7936,6 +8325,8 @@ elltool.reach.AReach
       isprojection(projObj);
       isprojection(projObjArr);
 
+.. _elltool.reach.AReach.plotByEa:
+
 ::
 
     plotByEa - plots external approximation of reach tube.
@@ -7973,6 +8364,8 @@ elltool.reach.AReach
           plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
           data plotter object.
 
+.. _elltool.reach.AReach.plotByIa:
+
 ::
 
     plotByIa - plots internal approximation of reach tube.
@@ -8009,6 +8402,8 @@ elltool.reach.AReach
       regular:
           plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
           data plotter object.
+
+.. _elltool.reach.AReach.plotEa:
 
 ::
 
@@ -8057,6 +8452,8 @@ elltool.reach.AReach
       dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
       dRsObj.plotEa();
 
+.. _elltool.reach.AReach.plotIa:
+
 ::
 
 
@@ -8101,6 +8498,8 @@ elltool.reach.AReach
       dRsObj.plotIa();
 
 
+.. _elltool.reach.AReach.refine:
+
 ::
 
 
@@ -8130,6 +8529,8 @@ elltool.reach.AReach
       newDirsMat = [1; -1];
       rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
       rsObj = rsObj.refine(newDirsMat);
+
+.. _elltool.reach.AReach.repMat:
 
 ::
 
@@ -8199,7 +8600,43 @@ elltool.reach.ReachContinuous
       rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
 
 See the description of the following methods in section
-[secClassDescr:elltool.reach.AReach] for elltool.reach.AReach:
+`elltool.reach.AReach`_ for elltool.reach.AReach:
+
+- elltool.reach.AReach.cut_
+- elltool.reach.AReach.dimension_
+- elltool.reach.AReach.display_
+- elltool.reach.AReach.evolve_
+- elltool.reach.AReach.getAbsTol_
+- elltool.reach.AReach.getCopy_
+- elltool.reach.AReach.getEaScaleFactor_
+- elltool.reach.AReach.getEllTubeRel_?
+- elltool.reach.AReach.getEllTubeUnionRel_?
+- elltool.reach.AReach.getIaScaleFactor_
+- elltool.reach.AReach.getInitialSet_
+- elltool.reach.AReach.getNPlot2dPoints_
+- elltool.reach.AReach.getNPlot3dPoints_
+- elltool.reach.AReach.getNTimeGridPoints_
+- elltool.reach.AReach.getRelTol_
+- elltool.reach.AReach.getSwitchTimeVec_ ?
+- elltool.reach.AReach.get_center_
+- elltool.reach.AReach.get_directions_
+- elltool.reach.AReach.get_ea_
+- elltool.reach.AReach.get_goodcurves_
+- elltool.reach.AReach.get_ia_
+- elltool.reach.AReach.get_system_
+- elltool.reach.AReach.intersect_
+- elltool.reach.AReach.isEmpty_
+- elltool.reach.AReach.isEqual_
+- elltool.reach.AReach.isbackward_
+- elltool.reach.AReach.iscut_
+- elltool.reach.AReach.isprojection_
+- elltool.reach.AReach.plotByEa_
+- elltool.reach.AReach.plotByIa_
+- elltool.reach.AReach.plotEa_
+- elltool.reach.AReach.plotIa_
+- elltool.reach.AReach.projection_ ?
+- elltool.reach.AReach.refine_
+- elltool.reach.AReach.repMat_
 
 elltool.reach.ReachDiscrete
 ---------------------------
@@ -8241,7 +8678,43 @@ elltool.reach.ReachDiscrete
       dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
 
 See the description of the following methods in section
-[secClassDescr:elltool.reach.AReach] for elltool.reach.AReach:
+`elltool.reach.AReach`_ for elltool.reach.AReach:
+
+- elltool.reach.AReach.cut_
+- elltool.reach.AReach.dimension_
+- elltool.reach.AReach.display_
+- elltool.reach.AReach.evolve_
+- elltool.reach.AReach.getAbsTol_
+- elltool.reach.AReach.getCopy_
+- elltool.reach.AReach.getEaScaleFactor_
+- elltool.reach.AReach.getEllTubeRel_?
+- elltool.reach.AReach.getEllTubeUnionRel_?
+- elltool.reach.AReach.getIaScaleFactor_
+- elltool.reach.AReach.getInitialSet_
+- elltool.reach.AReach.getNPlot2dPoints_
+- elltool.reach.AReach.getNPlot3dPoints_
+- elltool.reach.AReach.getNTimeGridPoints_
+- elltool.reach.AReach.getRelTol_
+- elltool.reach.AReach.getSwitchTimeVec_ ?
+- elltool.reach.AReach.get_center_
+- elltool.reach.AReach.get_directions_
+- elltool.reach.AReach.get_ea_
+- elltool.reach.AReach.get_goodcurves_
+- elltool.reach.AReach.get_ia_
+- elltool.reach.AReach.get_system_
+- elltool.reach.AReach.intersect_
+- elltool.reach.AReach.isEmpty_
+- elltool.reach.AReach.isEqual_
+- elltool.reach.AReach.isbackward_
+- elltool.reach.AReach.iscut_
+- elltool.reach.AReach.isprojection_
+- elltool.reach.AReach.plotByEa_
+- elltool.reach.AReach.plotByIa_
+- elltool.reach.AReach.plotEa_
+- elltool.reach.AReach.plotIa_
+- elltool.reach.AReach.projection_ ?
+- elltool.reach.AReach.refine_
+- elltool.reach.AReach.repMat_
 
 elltool.reach.ReachFactory
 --------------------------
@@ -8363,6 +8836,8 @@ elltool.linsys.ALinSys
       self: elltool.linsys.ALinSys[1, 1] -
           linear system.
 
+.. _elltool.linsys.ALinSys.dimension:
+
 ::
 
 
@@ -8408,6 +8883,8 @@ elltool.linsys.ALinSys
       dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
       dsys.dimension();
 
+.. _elltool.linsys.ALinSys.display:
+
 ::
 
     DISPLAY - displays the details of linear system object.
@@ -8418,6 +8895,8 @@ elltool.linsys.ALinSys
 
     Output:
       None.
+
+.. _elltool.linsys.ALinSys.getAbsTol:
 
 ::
 
@@ -8445,8 +8924,11 @@ elltool.linsys.ALinSys
       dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
       dsys.getAbsTol();
 
+.. _elltool.linsys.ALinSys.getAtMat:
+
 ::
 
+    GETATMAT -
 
     Input:
       regular:
@@ -8463,6 +8945,8 @@ elltool.linsys.ALinSys
       sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
       dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
       aMat = dsys.getAtMat();
+
+.. _elltool.linsys.ALinSys.getBtMat:
 
 ::
 
@@ -8482,6 +8966,8 @@ elltool.linsys.ALinSys
       sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
       dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
       bMat = dsys.getBtMat();
+
+.. _elltool.linsys.ALinSys.getCopy:
 
 ::
 
@@ -8508,6 +8994,8 @@ elltool.linsys.ALinSys
       dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
       newDSys = dsys.getCopy();
 
+.. _elltool.linsys.ALinSys.getCtMat:
+
 ::
 
 
@@ -8527,8 +9015,11 @@ elltool.linsys.ALinSys
       dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
       gMat = sys.getCtMat();
 
+.. _elltool.linsys.ALinSys.getDistBoundsEll:
+
 ::
 
+    GETDISTBOUNDSELL -
 
     Input:
       regular:
@@ -8545,6 +9036,8 @@ elltool.linsys.ALinSys
       sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
       dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
       distEll = sys.getDistBoundsEll();
+
+.. _elltool.linsys.ALinSys.getUBoundsEll:
 
 ::
 
@@ -8564,6 +9057,8 @@ elltool.linsys.ALinSys
       sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
       dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
       uEll = dsys.getUBoundsEll();
+
+.. _elltool.linsys.ALinSys.hasDisturbance:
 
 ::
 
@@ -8596,6 +9091,8 @@ elltool.linsys.ALinSys
       dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
       dsys.hasDisturbance();
 
+.. _elltool.linsys.ALinSys.isEmpty:
+
 ::
 
 
@@ -8625,6 +9122,8 @@ elltool.linsys.ALinSys
            0
       dsys = elltool.linsys.LinSysDiscrete(aMat, bMat, SUBounds);
       dsys.isEmpty();
+
+.. _elltool.linsys.ALinSys.isEqual:
 
 ::
 
@@ -8666,6 +9165,8 @@ elltool.linsys.ALinSys
       isEqual =
 
            1
+
+.. _elltool.linsys.ALinSys.isLti:
 
 ::
 
@@ -8734,8 +9235,22 @@ elltool.linsys.LinSysContinuous
       sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 
 See the description of the following methods in section
-[secClassDescr:elltool.linsys.ALinSys] for elltool.linsys.ALinSys:
+`elltool.linsys.ALinSys`_ for elltool.linsys.ALinSys:
 
+- elltool.linsys.ALinSys.dimension_
+- elltool.linsys.ALinSys.display_
+- elltool.linsys.ALinSys.getAbsTol_
+- elltool.linsys.ALinSys.getAtMat_
+- elltool.linsys.ALinSys.getBtMat_
+- elltool.linsys.ALinSys.getCopy_
+- elltool.linsys.ALinSys.getCtMat_
+- elltool.linsys.ALinSys.getDistBoundsEll_
+- elltool.linsys.ALinSys.getUBoundsEll_
+- elltool.linsys.ALinSys.hasDisturbance_
+- elltool.linsys.ALinSys.isEmpty_
+- elltool.linsys.ALinSys.isEqual_
+- elltool.linsys.ALinSys.isLti_
+ 
 elltool.linsys.LinSysDiscrete
 -----------------------------
 
@@ -8778,8 +9293,23 @@ elltool.linsys.LinSysDiscrete
              uBoundsEllObj, ctMat,distBounds);
       end
 
-See the description of the following methods in section
-[secClassDescr:elltool.linsys.ALinSys] for elltool.linsys.ALinSys:
+See the description of the following methods in section `elltool.linsys.ALinSys`_
+ for elltool.linsys.ALinSys:
+
+- elltool.linsys.ALinSys.dimension_
+- elltool.linsys.ALinSys.display_
+- elltool.linsys.ALinSys.getAbsTol_
+- elltool.linsys.ALinSys.getAtMat_
+- elltool.linsys.ALinSys.getBtMat_
+- elltool.linsys.ALinSys.getCopy_
+- elltool.linsys.ALinSys.getCtMat_
+- elltool.linsys.ALinSys.getDistBoundsEll_
+- elltool.linsys.ALinSys.getUBoundsEll_
+- elltool.linsys.ALinSys.hasDisturbance_
+- elltool.linsys.ALinSys.isEmpty_
+- elltool.linsys.ALinSys.isEqual_
+- elltool.linsys.ALinSys.isLti_
+
 
 elltool.linsys.LinSysFactory
 ----------------------------

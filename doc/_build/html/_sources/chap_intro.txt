@@ -55,7 +55,7 @@ unions of rectangular polytopes E.Asarin et al. (2000).
 
 .. _ddtfig:
 
-.. figure:: ddt.png
+.. figure:: /pic/ddt.png
    :align: center
    :alt: approximation
    :figwidth: 50 %
@@ -237,6 +237,5 @@ use the toolbox. Chapter 7 collects some conclusions and plans for
 future toolbox development. The functions provided by the toolbox
 together with their descriptions are listed in appendix A.
 
-.. |image| image:: ddt.png
 
 
