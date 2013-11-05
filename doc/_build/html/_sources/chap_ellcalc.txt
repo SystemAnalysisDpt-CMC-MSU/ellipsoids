@@ -1047,7 +1047,7 @@ The resulting ellipsoidal approximations are
 
 .. math:: {\mathcal E}(q^+,Q^+)={\mathcal E}(q^+_m,Q^+_m), ~~~~ {\mathcal E}(q^-,Q^-)={\mathcal E}(q^-_m,Q^-_m) .
 
-Checking if :math:`\texorpdfstring{\EE(q_1,Q_1)\subseteq\EE(q_2,Q_2)}`
+Checking if one ellipsoid contains another
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Theorem of alternatives, also known as :math:`S`-procedure Boyd and

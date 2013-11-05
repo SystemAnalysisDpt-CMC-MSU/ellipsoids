@@ -23,7 +23,6 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="Ellipsoidal Toolbox 0.1 documentation" href="index.html" />
     <link rel="next" title="Examples" href="chap_examples.html" />
     <link rel="prev" title="Installation" href="chap_install.html" /> 
@@ -56,8 +55,8 @@
 <h2>Operations with ellipsoids<a class="headerlink" href="#operations-with-ellipsoids" title="Permalink to this headline">¶</a></h2>
 <p>In the <em>Ellipsoidal Toolbox</em> we define a new class ellipsoid inside the
 MATLAB programming environment. The following three commands define the
-same ellipsoid <span class="math">\({\mathcal E}(q,Q)\)</span>, with <span class="math">\(q\in{\bf R}^n\)</span> and
-<span class="math">\(Q\in{\bf R}^{n\times n}\)</span> being symmetric positive semidefinite:</p>
+same ellipsoid <img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf549754f2f.png" alt="{\mathcal E}(q,Q)"/>, with <img class="math" src="_images/math/2f0254e7ea239a9e63ab4310a523e422df56e6c1.png" alt="q\in{\bf R}^n"/> and
+<img class="math" src="_images/math/93e54033bbd83ef95a1379548b4e57c8c5f32e85.png" alt="Q\in{\bf R}^{n\times n}"/> being symmetric positive semidefinite:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -72,35 +71,35 @@ same ellipsoid <span class="math">\({\mathcal E}(q,Q)\)</span>, with <span class
 <p>For the ellipsoid class we overload the following functions and
 operators:</p>
 <ul class="simple">
-<li>isEmpty(ellObj) - checks if <span class="math">\({\mathcal E}(q,Q)\)</span> is an empty
+<li>isEmpty(ellObj) - checks if <img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf549754f2f.png" alt="{\mathcal E}(q,Q)"/> is an empty
 ellipsoid.</li>
 <li>display(ellObj) - displays the details of ellipsoid
-<span class="math">\({\mathcal E}(q,Q)\)</span>, namely, its center <span class="math">\(q\)</span> and the shape
-matrix <span class="math">\(Q\)</span>.</li>
-<li>plot(ellObj) - plots ellipsoid <span class="math">\({\mathcal E}(q,Q)\)</span> if its
+<img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf549754f2f.png" alt="{\mathcal E}(q,Q)"/>, namely, its center <img class="math" src="_images/math/0615acc3725de21025457e7d6f7694dab8e2f758.png" alt="q"/> and the shape
+matrix <img class="math" src="_images/math/9866e3a998d628ba0941eb4fea0666ac391d149a.png" alt="Q"/>.</li>
+<li>plot(ellObj) - plots ellipsoid <img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf549754f2f.png" alt="{\mathcal E}(q,Q)"/> if its
 dimension is not greater than 3.</li>
 <li>firstEllObj == secEllObj - checks if ellipsoids
-<span class="math">\({\mathcal E}(q_1,Q_1)\)</span> and <span class="math">\({\mathcal E}(q_2,Q_2)\)</span> are
+<img class="math" src="_images/math/ea744f811759be7c88b5262e9d0a740984c595a0.png" alt="{\mathcal E}(q_1,Q_1)"/> and <img class="math" src="_images/math/5dab2798851c8408cf12b09c6587412701b3a32a.png" alt="{\mathcal E}(q_2,Q_2)"/> are
 equal.</li>
 <li>firstEllObj ~= secEllObj - checks if ellipsoids
-<span class="math">\({\mathcal E}(q_1,Q_1)\)</span> and <span class="math">\({\mathcal E}(q_2,Q_2)\)</span> are
+<img class="math" src="_images/math/ea744f811759be7c88b5262e9d0a740984c595a0.png" alt="{\mathcal E}(q_1,Q_1)"/> and <img class="math" src="_images/math/5dab2798851c8408cf12b09c6587412701b3a32a.png" alt="{\mathcal E}(q_2,Q_2)"/> are
 not equal.</li>
 <li>[ , ] - concatenates the ellipsoids into the horizontal array, e.g. ellVec
 = [firstEllObj secEllObj thirdEllObj].</li>
 <li>[ ; ] - concatenates the ellipsoids into the vertical array, e.g. ellMat =
 [firstEllObj secEllObj; thirdEllObj fourthEllObj] defines
-<span class="math">\(2\times 2\)</span> array of ellipsoids.</li>
+<img class="math" src="_images/math/7901356dd65ec4da1b694937cc4ffc663e90d800.png" alt="2\times 2"/> array of ellipsoids.</li>
 <li>firstEllObj &gt;= secEllObj - checks if the ellipsoid firstEllObj is
 bigger than the ellipsoid secEllObj, or equivalently
-<span class="math">\({\mathcal E}(0,Q_1)\subseteq{\mathcal E}(0,Q_2)\)</span>.</li>
+<img class="math" src="_images/math/9b07c69b8f9bda68bf950585a116379ef671bd4b.png" alt="{\mathcal E}(0,Q_1)\subseteq{\mathcal E}(0,Q_2)"/>.</li>
 <li>firstEllObj &lt;= secEllObj - checks if
-<span class="math">\({\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)\)</span>.</li>
-<li>-ellObj - defines ellipsoid <span class="math">\({\mathcal E}(-q,Q)\)</span>.</li>
-<li>ellObj + bScal - defines ellipsoid <span class="math">\({\mathcal E}(q+b,Q)\)</span>.</li>
-<li>ellObj - bScal - defines ellipsoid <span class="math">\({\mathcal E}(q-b,Q)\)</span>.</li>
-<li>aMat * ellObj - defines ellipsoid <span class="math">\({\mathcal E}(q,AQA^T)\)</span>.</li>
+<img class="math" src="_images/math/0eb8863783e03f5430af0160912fc20f07e0f722.png" alt="{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)"/>.</li>
+<li>-ellObj - defines ellipsoid <img class="math" src="_images/math/0c87cabacfab74fcbc78c3fc21c920688c00cc06.png" alt="{\mathcal E}(-q,Q)"/>.</li>
+<li>ellObj + bScal - defines ellipsoid <img class="math" src="_images/math/9c7fc5e1889c42d251d52284ef794edabc9af066.png" alt="{\mathcal E}(q+b,Q)"/>.</li>
+<li>ellObj - bScal - defines ellipsoid <img class="math" src="_images/math/038589752702866446eb8f5007c5891c2c748da9.png" alt="{\mathcal E}(q-b,Q)"/>.</li>
+<li>aMat * ellObj - defines ellipsoid <img class="math" src="_images/math/f2037876b576b9abbb0e8f4e47b33bcc4217bec8.png" alt="{\mathcal E}(q,AQA^T)"/>.</li>
 <li>ellObj.inv() - inverts the shape matrix of the ellipsoid:
-<span class="math">\({\mathcal E}(q,Q^{-1})\)</span>.</li>
+<img class="math" src="_images/math/21b1c8c55e5254f59fa316a90b5354a420a6a461.png" alt="{\mathcal E}(q,Q^{-1})"/>.</li>
 </ul>
 <p>All the listed operations can be applied to a single ellipsoid as well
 as to a two-dimensional array of ellipsoids. For example,</p>
@@ -297,7 +296,7 @@ if the intersection of more than two ellipsoids is empty:</p>
 </pre></div>
 </td></tr></table></div>
 <p>In this
-particular example the result <span class="math">\(-1\)</span> indicates that the intersection
+particular example the result <img class="math" src="_images/math/bae5aba07d37ff6ff813107e76260fb31ad5794e.png" alt="-1"/> indicates that the intersection
 of ellipsoids in ellMat is empty. Function intersect in general checks
 if an ellipsoid, hyperplane or polytope intersects the union or the
 intersection of ellipsoids in the given array:</p>
@@ -328,7 +327,7 @@ intersection of ellipsoids in the given array:</p>
 </pre></div>
 </td></tr></table></div>
 <p>For the ellipsoids in
-<span class="math">\({\bf R}\)</span>, <span class="math">\({\bf R}^2\)</span> and <span class="math">\({\bf R}^3\)</span> the geometric
+<img class="math" src="_images/math/e5908582078e69c6be80476164a5ad1904e0877c.png" alt="{\bf R}"/>, <img class="math" src="_images/math/bb5fa23edd2754dda88386b5c2f48e26b6d994da.png" alt="{\bf R}^2"/> and <img class="math" src="_images/math/6b6d844f26e2bc171d1c97590cd3df50633cb36e.png" alt="{\bf R}^3"/> the geometric
 sum can be computed explicitely and plotted:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellMat</span><span class="p">.</span><span class="n">minksum</span><span class="p">();</span>
 </pre></div>
@@ -339,7 +338,7 @@ sum can be computed explicitely and plotted:</p>
 </div>
 <p>Figure <a class="pageref" href="#minksumpic"> 1</a> displays the geometric sum of ellipsoids. If
 the dimension of the space in which the ellipsoids are defined exceeds
-<span class="math">\(3\)</span>, an error is returned. The result of the geometric sum
+<img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>, an error is returned. The result of the geometric sum
 operation is not generally an ellipsoid, but it can be approximated by
 families of external and internal ellipsoids parametrized by the
 direction vector:</p>
@@ -393,7 +392,7 @@ ellipsoids of arbitrary dimension. They should be used for general
 computations whereas minksum is there merely for visualization purposes.</p>
 <p>If the geometric difference of two ellipsoids is not an empty set, it
 can be computed explicitely and plotted for ellipsoids in
-<span class="math">\({\bf R}\)</span>, <span class="math">\({\bf R}^2\)</span> and <span class="math">\({\bf R}^3\)</span>:</p>
+<img class="math" src="_images/math/e5908582078e69c6be80476164a5ad1904e0877c.png" alt="{\bf R}"/>, <img class="math" src="_images/math/bb5fa23edd2754dda88386b5c2f48e26b6d994da.png" alt="{\bf R}^2"/> and <img class="math" src="_images/math/6b6d844f26e2bc171d1c97590cd3df50633cb36e.png" alt="{\bf R}^3"/>:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -423,7 +422,7 @@ can be computed explicitely and plotted for ellipsoids in
 </div>
 <p>Figure <a class="pageref" href="#minkdiffpic"> 2</a> shows the geometric difference of ellipsoids.</p>
 <p>Similar to minksum, minkdiff is there for visualization purpose. It
-works only for dimensions <span class="math">\(1\)</span>, <span class="math">\(2\)</span> and <span class="math">\(3\)</span>, and for
+works only for dimensions <img class="math" src="_images/math/dce34f4dfb2406144304ad0d6106c5382ddd1446.png" alt="1"/>, <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> and <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>, and for
 higher dimensions it returns an error. For arbitrary dimensions, the
 geometric difference can be approximated by families of external and
 internal ellipsoids parametrized by the direction vector, provided this
@@ -474,7 +473,7 @@ direction is not bad:</p>
 <p>Operation ’difference-sum’ described in section
 2.2.4 is implemented in functions minkmp, minkmp_ea, minkmp_ia, the
 first one of which is used for visualization and works for dimensions
-not higher than <span class="math">\(3\)</span>, whereas the last two can deal with ellipsoids
+not higher than <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>, whereas the last two can deal with ellipsoids
 of arbitrary dimension.</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -511,12 +510,12 @@ of arbitrary dimension.</p>
 <div class="figure" id="minkmppic">
 <img alt="_images/minkmp.png" src="_images/minkmp.png" />
 </div>
-<p>Figure <span class="math">\(\ref{minkpic}\)</span> displays results of
+<p>Figure <img class="math" src="_images/math/5059ce8eaa78b2427e5052905b7a777b4ca9754a.png" alt="\ref{minkpic}"/> displays results of
 the implementation of minkpm and minkmp operations.</p>
 <p>Similarly, operation
 ’sum-difference’ described in section 2.2.5 is implemented in functions
 minkpm, minkpm_ea, minkpm_ia, the first one of which is used for
-visualization and works for dimensions not higher than <span class="math">\(3\)</span>,
+visualization and works for dimensions not higher than <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>,
 whereas the last two can deal with ellipsoids of arbitrary dimension.</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -563,21 +562,21 @@ class:</p>
 <ul class="simple">
 <li>isempty(hypObj) &#8211; checks if hypObj is an empty hyperplane.</li>
 <li>display(hypObj) &#8211; displays the details of hyperplane
-<span class="math">\(H(c,\gamma)\)</span>, namely, its normal <span class="math">\(c\)</span> and the scalar
-<span class="math">\(\gamma\)</span>.</li>
-<li>plot(hypObj) &#8211; plots hyperplane <span class="math">\(H(c,\gamma)\)</span> if the dimension
+<img class="math" src="_images/math/bac0ae63aec09971dd9b5d57245fb790377c8e10.png" alt="H(c,\gamma)"/>, namely, its normal <img class="math" src="_images/math/3372c1cb6d68cf97c2d231acc0b47b95a9ed04cc.png" alt="c"/> and the scalar
+<img class="math" src="_images/math/66981fa3920210c6ad8dbe5e968783d5dd7520c3.png" alt="\gamma"/>.</li>
+<li>plot(hypObj) &#8211; plots hyperplane <img class="math" src="_images/math/bac0ae63aec09971dd9b5d57245fb790377c8e10.png" alt="H(c,\gamma)"/> if the dimension
 of the space in which it is defined is not greater than 3.</li>
 <li>firstHypObj == secHypObj &#8211; checks if hyperplanes
-<span class="math">\(H(c_1,\gamma_1)\)</span> and <span class="math">\(H(c_2,\gamma_2)\)</span> are equal.</li>
+<img class="math" src="_images/math/057d31429190724da461a768237af47b62c22523.png" alt="H(c_1,\gamma_1)"/> and <img class="math" src="_images/math/f352f0a9cf84f2ede9c8f28215158008cae11ee2.png" alt="H(c_2,\gamma_2)"/> are equal.</li>
 <li>firstHypObj = secHypObj &#8211; checks if hyperplanes
-<span class="math">\(H(c_1,\gamma_1)\)</span> and <span class="math">\(H(c_2,\gamma_2)\)</span> are not equal.</li>
+<img class="math" src="_images/math/057d31429190724da461a768237af47b62c22523.png" alt="H(c_1,\gamma_1)"/> and <img class="math" src="_images/math/f352f0a9cf84f2ede9c8f28215158008cae11ee2.png" alt="H(c_2,\gamma_2)"/> are not equal.</li>
 <li>[ , ] &#8211; concatenates the hyperplanes into the horizontal array, e.g. hypVec
 = [firstHypObj secHypObj thirdHypObj].</li>
 <li>[ ; ] &#8211; concatenates the hyperplanes into the vertical array, e.g. hypMat =
 [firstHypObj secHypObj; thirdHypObj fourthHypObj] &#8211; defines
-<span class="math">\(2\times 2\)</span> array of hyperplanes.</li>
-<li>-hypObj &#8211; defines hyperplane <span class="math">\(H(-c,-\gamma)\)</span>, which is the same
-as <span class="math">\(H(c,\gamma)\)</span> but specifies different halfspace.</li>
+<img class="math" src="_images/math/7901356dd65ec4da1b694937cc4ffc663e90d800.png" alt="2\times 2"/> array of hyperplanes.</li>
+<li>-hypObj &#8211; defines hyperplane <img class="math" src="_images/math/16e3c1b6fd6e98b81efcca4d744c1d395a580ebd.png" alt="H(-c,-\gamma)"/>, which is the same
+as <img class="math" src="_images/math/bac0ae63aec09971dd9b5d57245fb790377c8e10.png" alt="H(c,\gamma)"/> but specifies different halfspace.</li>
 </ul>
 <p>There are several ways to access the internal data of the hyperplane
 object:</p>
@@ -981,8 +980,8 @@ describe ellipsoidal tubes. The class
 gras.ellapx.smartdb.rels.EllUnionTube is used to store tubes by the
 instant of time:</p>
 <div class="math">
-\[{\mathcal X}_{U}[t]=\bigcup \limits_{\tau\leqslant t}{\mathcal X}[\tau],\]</div>
-<p>where <span class="math">\({\mathcal X}[\tau]\)</span> is single ellipsoidal tube. The class
+<p><img src="_images/math/a07db88b8564a8e6419836a9e3ef0fffa5cce9a8.png" alt="{\mathcal X}_{U}[t]=\bigcup \limits_{\tau\leqslant t}{\mathcal X}[\tau],"/></p>
+</div><p>where <img class="math" src="_images/math/40c56f6b4922bfdc10574203f8c6ba0093d96c96.png" alt="{\mathcal X}[\tau]"/> is single ellipsoidal tube. The class
 gras.ellapx.smartdb.rels.EllTubeProj is used to describe the projection
 of the ellipsoidal tubes onto time dependent subspaces.There are two
 types of projection: static and dynamic. Also there is class
@@ -1046,7 +1045,7 @@ some examples of the operations with ellipsoidal tubes.</p>
 <p>We may be
 interested in the data about ellipsoidal tube in some particular time
 interval, smaller than the one for which the ellipsoidal tube was
-computed, say <span class="math">\(2\leqslant t\leqslant4\)</span>. This data can be extracted
+computed, say <img class="math" src="_images/math/6516cb7d024c910ef89e7166abab196d9b142276.png" alt="2\leqslant t\leqslant4"/>. This data can be extracted
 by the cut function:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">cutTimeVec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">];</span>
@@ -1122,7 +1121,7 @@ tube onto time-dependent subspace.</p>
 <div class="figure" id="dyn-proj">
 <img alt="_images/reachTubeDynProj.png" src="_images/reachTubeDynProj.png" />
 </div>
-<p>Figure <span class="math">\(\ref{project}\)</span> displays static and dynamic projections.
+<p>Figure <img class="math" src="_images/math/319cc58c83532861dcc3fe7fe54849815f06f562.png" alt="\ref{project}"/> displays static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.</p>
 <p>We can compute tubes by the instant of time using methodfromEllTubes:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -1347,14 +1346,14 @@ work.</p>
 define few new classes in the <em>Ellipsoidal Toolbox</em>: class
 LinSysContinuous for the continuous-time system description, class
 LinSysDiscrete for the discrete-time system description and classes
-ReachContinuous<span class="math">\(\backslash\)</span>ReachDiscrete for the reach set
+ReachContinuous<img class="math" src="_images/math/385adced1eac31db28232371c6e5afb832d82bf7.png" alt="\backslash"/>ReachDiscrete for the reach set
 data. We start by explaining how to define a system using
 LinSysContinuous object. Also we can use LinSysFactory class for the
 description of this system. Through it’s method create user can get
 LinSysContinuous or LinSysDiscrete object. For example, description of
 the system</p>
 <div class="math">
-\[\begin{split}\left[\begin{array}{cc}
+<p><img src="_images/math/b839a34dccb12db9fde040cb49a9ee28f52b0f2c.png" alt="\left[\begin{array}{cc}
 \dot{x}_1\\
 \dot{x}_2\end{array}\right] = \left[\begin{array}{cc}
 0 &amp; 1\\
@@ -1362,15 +1361,15 @@ the system</p>
 x_1\\
 x_2\end{array}\right] + \left[\begin{array}{c}
 u_1(t)\\
-u_2(t)\end{array}\right], ~~~ u(t)\in{\mathcal E}(p(t), P)\end{split}\]</div>
-<p>with</p>
+u_2(t)\end{array}\right], ~~~ u(t)\in{\mathcal E}(p(t), P)"/></p>
+</div><p>with</p>
 <div class="math">
-\[\begin{split}p(t) = \left[\begin{array}{c}
+<p><img src="_images/math/01c62306b549dadfa6c93bdc2e859e6d17e868f8.png" alt="p(t) = \left[\begin{array}{c}
 \sin(t)\\
 \cos(t)\end{array}\right], ~~~ P = \left[\begin{array}{cc}
 9 &amp; 0\\
-0 &amp; 2\end{array}\right],\end{split}\]</div>
-<p>is done by the following sequence of commands:</p>
+0 &amp; 2\end{array}\right],"/></p>
+</div><p>is done by the following sequence of commands:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -1388,10 +1387,10 @@ u_2(t)\end{array}\right], ~~~ u(t)\in{\mathcal E}(p(t), P)\end{split}\]</div>
 <span class="o">%</span> <span class="n">is</span> <span class="n">equal</span> <span class="n">to</span> <span class="n">sys</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysFactory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">)</span>
 </pre></div>
 </td></tr></table></div>
-<p>If matrices <span class="math">\(A\)</span> or
-<span class="math">\(B\)</span> depend on time, say <span class="math">\(A(t)=\left[\begin{array}{cc}
+<p>If matrices <img class="math" src="_images/math/019e9892786e493964e145e7c5cf7b700314e53b.png" alt="A"/> or
+<img class="math" src="_images/math/ff5fb3d775862e2123b007eb4373ff6cc1a34d4e.png" alt="B"/> depend on time, say <img class="math" src="_images/math/abf6cb6dbf406936d75ae4fb99cf1370db04873d.png" alt="A(t)=\left[\begin{array}{cc}
 0 &amp; 1-\cos(2t)\\
--\frac{1}{t} &amp; 0\end{array}\right]\)</span>, then matrix aMat should be
+-\frac{1}{t} &amp; 0\end{array}\right]"/>, then matrix aMat should be
 symbolic:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">atMat</span> <span class="o">=</span> <span class="p">{</span><span class="sc">&#39;0&#39;</span> <span class="err">&#39;</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="err">&#39;</span><span class="p">;</span> <span class="err">&#39;</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="n">t</span><span class="sc">&#39; &#39;</span><span class="mi">0</span><span class="err">&#39;</span><span class="p">};</span>  
@@ -1400,7 +1399,7 @@ symbolic:</p>
 </td></tr></table></div>
 <p>To describe the system with disturbance</p>
 <div class="math">
-\[\begin{split}\left[\begin{array}{cc}
+<p><img src="_images/math/4b32f70d7f4bde5767d05c5775b46bc8ac763335.png" alt="\left[\begin{array}{cc}
 \dot{x}_1\\
 \dot{x}_2\end{array}\right] = \left[\begin{array}{cc}
 0 &amp; 1\\
@@ -1410,9 +1409,9 @@ x_2\end{array}\right] + \left[\begin{array}{c}
 u_1(t)\\
 u_2(t)\end{array}\right] + \left[\begin{array}{c}
 0\\
-1\end{array}\right]v(t),\end{split}\]</div>
-<p>with bounds on control as before, and disturbance being
-<span class="math">\(-1\leqslant v(t)\leqslant1\)</span>, we type:</p>
+1\end{array}\right]v(t),"/></p>
+</div><p>with bounds on control as before, and disturbance being
+<img class="math" src="_images/math/1ab11d8d186178605843112b737fc6f83c9c5a43.png" alt="-1\leqslant v(t)\leqslant1"/>, we type:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -1432,7 +1431,7 @@ control or disturbance is known and fixed, it should be defined as a
 vector, of type double if constant, or symbolic, if it depends on time.</p>
 <p>To declare a discrete-time system</p>
 <div class="math">
-\[\begin{split}\left[\begin{array}{c}
+<p><img src="_images/math/c7ca3edf641e50e137c1abfdd50dd6ff51c8d7ae.png" alt="\left[\begin{array}{c}
 x_1[k+1]\\
 x_2[k+1]\end{array}\right] = \left[\begin{array}{cc}
 0 &amp; 1\\
@@ -1440,8 +1439,8 @@ x_2[k+1]\end{array}\right] = \left[\begin{array}{cc}
 x_1[k]\\
 x_2[k]\end{array}\right] + \left[\begin{array}{c}
 0\\
-1\end{array}\right]u[k], ~~~ -1\leqslant u[k]\leqslant1,\end{split}\]</div>
-<p>we use LinSysDiscrete constructor:</p>
+1\end{array}\right]u[k], ~~~ -1\leqslant u[k]\leqslant1,"/></p>
+</div><p>we use LinSysDiscrete constructor:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
@@ -1494,8 +1493,8 @@ extracted in the form of arrays of ellipsoids:</p>
 <span class="p">[</span><span class="n">internalEllMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">]</span> <span class="o">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">get_ia</span><span class="p">();</span>  
 </pre></div>
 </td></tr></table></div>
-<p>Ellipsoidal arrays externallEllMat and internalEllMat have <span class="math">\(4\)</span>
-rows because we computed the reach set approximations for <span class="math">\(4\)</span>
+<p>Ellipsoidal arrays externallEllMat and internalEllMat have <img class="math" src="_images/math/c7cab1a05e1e0c1d51a6a219d96577a16b7abf9d.png" alt="4"/>
+rows because we computed the reach set approximations for <img class="math" src="_images/math/c7cab1a05e1e0c1d51a6a219d96577a16b7abf9d.png" alt="4"/>
 directions. Each row of ellipsoids corresponds to one direction. The
 number of columns in externallEllMat and internalEllMat is defined by
 the nTimeGridPoints parameter, which is available from
@@ -1510,7 +1509,7 @@ Internal ellipsoidal approximation of this set at this time is given by
 the union of ellipsoids in the same column of internalEllMat.</p>
 <p>We may be interested in the reachability data of our system in some
 particular time interval, smaller than the one for which the reach set
-was computed, say <span class="math">\(3\leqslant t\leqslant5\)</span>. This data can be
+was computed, say <img class="math" src="_images/math/32f9895b78b7f8c7747bf82c427c7932707fe58e.png" alt="3\leqslant t\leqslant5"/>. This data can be
 extracted and returned in the form of ReachContinuous object by the cut
 function:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">cutObj</span> <span class="o">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">cut</span><span class="p">([</span><span class="mi">3</span> <span class="mi">5</span><span class="p">]);</span>  <span class="o">%</span> <span class="n">reach</span> <span class="n">set</span> <span class="k">for</span> <span class="n">the</span> <span class="n">time</span> <span class="n">interval</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
@@ -1640,18 +1639,18 @@ touched by its ellipsoidal approximations:</p>
 </td></tr></table></div>
 <p>Variable ctrMat here is a matrix whose columns are the points ofthe
 reach set center trajectory evaluated at time values returned in the
-array ttVec. Variable gcCMat contains <span class="math">\(4\)</span> matrices each of which
+array ttVec. Variable gcCMat contains <img class="math" src="_images/math/c7cab1a05e1e0c1d51a6a219d96577a16b7abf9d.png" alt="4"/> matrices each of which
 corresponds to a good curve (columns of such matrix are points of the
 good curve evaluated at time values in ttVec). The analytic expression
 for the control driving the system along a good curve is given by
 formula <a href="#equation-uct">(?)</a>.</p>
-<p>We computed the reach set up to time <span class="math">\(10\)</span>. It is possible to
+<p>We computed the reach set up to time <img class="math" src="_images/math/fc606f7f1e530731ab4f1cc364c01dc64a4455ee.png" alt="10"/>. It is possible to
 continue the reach set computation for a longer time horizon using the
-reach set data at time <span class="math">\(10\)</span> as initial condition. It is also
+reach set data at time <img class="math" src="_images/math/fc606f7f1e530731ab4f1cc364c01dc64a4455ee.png" alt="10"/> as initial condition. It is also
 possible that the dynamics and inputs of the system change at certain
 time, and from that point on the system evolves according to the new
 system of differential equations. For example, starting at time
-<span class="math">\(10\)</span>, our reach set may evolve in time according to the
+<img class="math" src="_images/math/fc606f7f1e530731ab4f1cc364c01dc64a4455ee.png" alt="10"/>, our reach set may evolve in time according to the
 time-variant system sys_t defined above. Switched systems are a special
 case of this situation. To compute the further evolution in time of the
 existing reach set, function evolve should be used:</p>
@@ -1736,9 +1735,9 @@ using the same functions as for continuous-time systems:</p>
 </pre></div>
 </td></tr></table></div>
 <p>Number of columns in the ellipsoidal arrays externalEllMat and
-internalEllMat is <span class="math">\(51\)</span> because the backward reach set is computed
-for <span class="math">\(50\)</span> time steps, and the first column of these arrays contains
-<span class="math">\(3\)</span> ellipsoids yEllObj - the terminating condition.</p>
+internalEllMat is <img class="math" src="_images/math/6e1fd7cb028e27b8648efbfb002f3e6d4fcb33a5.png" alt="51"/> because the backward reach set is computed
+for <img class="math" src="_images/math/906734e2f1010e9a171ffee8050cbc0649cea37c.png" alt="50"/> time steps, and the first column of these arrays contains
+<img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/> ellipsoids yEllObj - the terminating condition.</p>
 <p>When dealing with discrete-time systems, all functions that accept time
 or time interval as an input parameter, round the time values and treat
 them as integers.</p>
@@ -1763,7 +1762,7 @@ no information except errors is displayed.</li>
 <li>nTimeGridPoints = 200 - density of the time grid for the continuous
 time reach set computation. This parameter directly affects the
 number of ellipsoids to be stored in the
-ReachContinuous<span class="math">\(\backslash\)</span>ReachDiscrete object.</li>
+ReachContinuous<img class="math" src="_images/math/385adced1eac31db28232371c6e5afb832d82bf7.png" alt="\backslash"/>ReachDiscrete object.</li>
 <li>ODESolverName = ode45 - specifies the ODE solver for continuous time
 reach set computation.</li>
 <li>isODENormControl = ’on’ - switches on and off the norm control in the
@@ -1817,27 +1816,27 @@ setters.</p>
 <p><em>Ellipsoidal Toolbox</em> has several plotting routines:</p>
 <ul class="simple">
 <li>ellipsoid/plot - plots one or more ellipsoids, or arrays of
-ellipsoids, defined in <span class="math">\({\bf R}\)</span>, <span class="math">\({\bf R}^2\)</span> or
-<span class="math">\({\bf R}^3\)</span>.</li>
+ellipsoids, defined in <img class="math" src="_images/math/e5908582078e69c6be80476164a5ad1904e0877c.png" alt="{\bf R}"/>, <img class="math" src="_images/math/bb5fa23edd2754dda88386b5c2f48e26b6d994da.png" alt="{\bf R}^2"/> or
+<img class="math" src="_images/math/6b6d844f26e2bc171d1c97590cd3df50633cb36e.png" alt="{\bf R}^3"/>.</li>
 <li>ellipsoid/minksum - plots geometric sum of finite number of
-ellipsoids defined in <span class="math">\({\bf R}\)</span>, <span class="math">\({\bf R}^2\)</span> or
-<span class="math">\({\bf R}^3\)</span>.</li>
+ellipsoids defined in <img class="math" src="_images/math/e5908582078e69c6be80476164a5ad1904e0877c.png" alt="{\bf R}"/>, <img class="math" src="_images/math/bb5fa23edd2754dda88386b5c2f48e26b6d994da.png" alt="{\bf R}^2"/> or
+<img class="math" src="_images/math/6b6d844f26e2bc171d1c97590cd3df50633cb36e.png" alt="{\bf R}^3"/>.</li>
 <li>ellipsoid/minkdiff - plots geometric difference (if it is not an
-empty set) of two ellipsoids defined in <span class="math">\({\bf R}\)</span>,
-<span class="math">\({\bf R}^2\)</span> or <span class="math">\({\bf R}^3\)</span>.</li>
+empty set) of two ellipsoids defined in <img class="math" src="_images/math/e5908582078e69c6be80476164a5ad1904e0877c.png" alt="{\bf R}"/>,
+<img class="math" src="_images/math/bb5fa23edd2754dda88386b5c2f48e26b6d994da.png" alt="{\bf R}^2"/> or <img class="math" src="_images/math/6b6d844f26e2bc171d1c97590cd3df50633cb36e.png" alt="{\bf R}^3"/>.</li>
 <li>ellipsoid/minkmp - plots geometric (Minkowski) sum of the geometric
-difference of two ellipsoids and the geometric sum of <span class="math">\(n\)</span>
-ellipsoids defined in <span class="math">\({\bf R}\)</span>, <span class="math">\({\bf R}^2\)</span> or
-<span class="math">\({\bf R}^3\)</span>.</li>
+difference of two ellipsoids and the geometric sum of <img class="math" src="_images/math/174fadd07fd54c9afe288e96558c92e0c1da733a.png" alt="n"/>
+ellipsoids defined in <img class="math" src="_images/math/e5908582078e69c6be80476164a5ad1904e0877c.png" alt="{\bf R}"/>, <img class="math" src="_images/math/bb5fa23edd2754dda88386b5c2f48e26b6d994da.png" alt="{\bf R}^2"/> or
+<img class="math" src="_images/math/6b6d844f26e2bc171d1c97590cd3df50633cb36e.png" alt="{\bf R}^3"/>.</li>
 <li>ellipsoid/minkpm - plots geometric (Minkowski) difference of the
 geometric sum of ellipsoids and a single ellipsoid defined in
-<span class="math">\({\bf R}\)</span>, <span class="math">\({\bf R}^2\)</span> or <span class="math">\({\bf R}^3\)</span>.</li>
+<img class="math" src="_images/math/e5908582078e69c6be80476164a5ad1904e0877c.png" alt="{\bf R}"/>, <img class="math" src="_images/math/bb5fa23edd2754dda88386b5c2f48e26b6d994da.png" alt="{\bf R}^2"/> or <img class="math" src="_images/math/6b6d844f26e2bc171d1c97590cd3df50633cb36e.png" alt="{\bf R}^3"/>.</li>
 <li>hyperplane/plot - plots one or more hyperplanes, or arrays of
-hyperplanes, defined in <span class="math">\({\bf R}^2\)</span> or <span class="math">\({\bf R}^3\)</span>.</li>
+hyperplanes, defined in <img class="math" src="_images/math/bb5fa23edd2754dda88386b5c2f48e26b6d994da.png" alt="{\bf R}^2"/> or <img class="math" src="_images/math/6b6d844f26e2bc171d1c97590cd3df50633cb36e.png" alt="{\bf R}^3"/>.</li>
 <li>reach/plot_ea - plots external approximation of the reach set whose
-dimension is <span class="math">\(2\)</span> or <span class="math">\(3\)</span>.</li>
+dimension is <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> or <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>.</li>
 <li>reach/plot_ia - plots internal approximation of the reach set whose
-dimension is <span class="math">\(2\)</span> or <span class="math">\(3\)</span>.</li>
+dimension is <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> or <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>.</li>
 </ul>
 <p>All these functions allow the user to specify the color of the plotted
 objects, line width for 1D and 2D plots, and transparency level of the
@@ -1889,7 +1888,7 @@ geometric sum of ellipsoids equals the geometric sum of the projected
 ellipsoids. The same is true for the geometric difference of two
 ellipsoids.</p>
 <p>Function projection exists also for the
-ReachContinuous<span class="math">\(\backslash\)</span>ReachDiscrete objects:</p>
+ReachContinuous<img class="math" src="_images/math/385adced1eac31db28232371c6e5afb832d82bf7.png" alt="\backslash"/>ReachDiscrete objects:</p>
 <div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3

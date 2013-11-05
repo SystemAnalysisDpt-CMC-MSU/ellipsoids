@@ -5557,7 +5557,7 @@ smartdb.relations.ATypifiedStaticRelation
         SObjectData: struct [n1,...,n_k] - structure containing an internal
            representation of the specified object
 
-.. smartdb.relations.ATypifiedStaticRelation.unionWith:
+.. _smartdb.relations.ATypifiedStaticRelation.unionWith:
 
 ::
 

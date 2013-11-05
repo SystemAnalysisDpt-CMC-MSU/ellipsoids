@@ -1405,7 +1405,7 @@ ordinary affine system with known :math:`v(\cdot)=q(\cdot)`. If matrix
 :math:`G(\cdot)=0`, the system reduces to a linear controlled system. In
 the absence of disturbance (:math:`Q(\cdot)=0` or :math:`G(\cdot)=0`),
 :math:`\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))=\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))={\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))`,
-the reach set is as in Definition [def:sub:`o`\ lrs]. !!! WATCH !!!
+the reach set is as in Definition.
 
 Maxmin and minmax CLRS
 :math:`\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)` and
@@ -1763,8 +1763,8 @@ and
    \right)
 
 in direction :math:`l(t)` from :eq:`bckadjointd`. Section
-[subsec:sub:`s`\ umdiff] describes the operation of geometric
-sum-difference for ellipsoids. !!! WATCH !!!
+`Geometric Sum-Difference`_ describes the operation of geometric
+sum-difference for ellipsoids. 
 
 External and internal ellipsoids for minmax CLBRS
 :math:`\underline{{\mathcal Y}}_{CL}(t_1,t,{\mathcal E}(y_1,Y_1))` at
@@ -1792,7 +1792,7 @@ and
    \right)
 
 in direction :math:`l(t)` from :eq:`bckadjointd`. Section
-[subsec:sub:`d`\ iffsum] describes the operation of geometric
+`Geometric Difference-Sum`_ describes the operation of geometric
 difference-sum for ellipsoids.
 
 .. raw:: html

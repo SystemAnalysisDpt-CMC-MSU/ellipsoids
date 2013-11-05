@@ -31,7 +31,7 @@ import os
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.ifconfig',
-    'sphinx.ext.mathjax',
+    'sphinx.ext.pngmath',
     'sphinx.ext.numfig',
 ]
 

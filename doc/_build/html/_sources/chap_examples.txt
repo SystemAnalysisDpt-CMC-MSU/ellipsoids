@@ -82,12 +82,12 @@ by the following system of equations:
 .. math:: 
    :label: spmass1
 
-   m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1, 
+   m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = u_1, 
 
 .. math::
    :label: spmass2
    
-   m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 . 
+   m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = u_2 . 
 
 Here :math:`u_1` and :math:`u_2` are the forces applied to masses
 :math:`m_1` and :math:`m_2`, and we shall assume
@@ -153,12 +153,12 @@ extra terms, :math:`v_1` and :math:`v_2`,
 .. math::
    :label: smdist1
 
-   m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = & u_1 + v_1,
+   m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = u_1 + v_1,
    
 .. math::
    :label: smdist2
    
-   m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = & u_2 + v_2,
+   m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = u_2 + v_2,
 
 which results in equation :eq:`spmassls` getting an extra term
 
@@ -182,7 +182,7 @@ closed-loop reach set of the system with disturbance.
 
 
 :num:`Figure #mechreachfig`(c) shows the reach set of the system
-([smdist1]-[smdist2]) evolving in time from :math:`t=0` to :math:`t=4`.
+:eq:`smdist1`-:eq:`smdist2` evolving in time from :math:`t=0` to :math:`t=4`.
 :num:`Figure #mechreachfig`(d) presents a snapshot of this reach set at time
 :math:`t=4`.
 
