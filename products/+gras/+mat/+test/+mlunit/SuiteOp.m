@@ -131,213 +131,92 @@ classdef SuiteOp < mlunitext.test_case
     end
     methods(Access=private)
         function runTestsForFactory(self, factory)
-            import gras.gen.matdot;
             import gras.mat.*;
-            %
-            % test triu square
-            %
-            aMat = magic(4);
-            self.isOpEqual({}, triu(aMat), [], @factory.triu, aMat);
-            %
-            % test triu not square
-            %
-            aMat = ones(2,5);
-            self.isOpEqual({}, triu(aMat), [], @factory.triu, aMat);
-            %
-            % test makeSymmetric
-            %
-            aMat = triu(magic(5));
-            self.isOpEqual({}, 0.5*(aMat+aMat.'), [], ...
-                @factory.makeSymmetric, aMat);
-            %
-            % test pinv
-            %
-            aMat = [magic(5), magic(5)];
-            self.isOpEqual({}, pinv(aMat), [], @factory.pinv, aMat);
-            %
-            % test transpose square
-            %
-            aMat = triu(magic(5));
-            self.isOpEqual({}, aMat.', [], @factory.transpose, aMat);
-            %
-            % test transpose not square
-            %
+            import gras.gen.matdot;
+            
             aMat = ones(3, 2);
             aMat(2,:) = 2;
-            self.isOpEqual({}, aMat.', [], @factory.transpose, aMat);
-            %
-            % test inv
-            %
-            aMat = magic(7);
-            self.isOpEqual({}, inv(aMat), [], @factory.inv, aMat);
-            %
-            % test sqrtm
-            %
-            aMat = eye(10)*5;
-            self.isOpEqual({}, sqrtm(aMat), [], @factory.sqrtmpos, aMat);
-            %
-            % test realsqrt square
-            %
-            aMat = magic(8);
-            self.isOpEqual({}, realsqrt(aMat), [], @factory.realsqrt, ...
-                aMat);
-			%
-            % test realsqrt not square
-            %
-            aMat = 5 * ones(3, 2);
-            self.isOpEqual({}, realsqrt(aMat), [], @factory.realsqrt, ...
-                aMat);
-            %
-            % test realsqrt #2
-            %
-            aCMat = {'t^4'};
-            aCSqrtMat = {'t^2'};
-            self.isOpEqual({}, aCSqrtMat, [], @factory.realsqrt, aCMat);
-            %
+            aCMat = {magic(4), ones(2, 5), triu(magic(5)),...
+                [magic(5), magic(5)], triu(magic(5)),...
+                aMat, magic(7), eye(10)*5, magic(8),...
+                5 * ones(3, 2), {'t^4'}, triu(magic(5)), ones(3, 4),...
+                {'t','2*t';'3*t','4*t'}, {'t','2*t';'3*t','4*t'; '5*t', '6*t'},...
+                ones(4)};
+            cCMat = {triu(magic(4)), triu(ones(2, 5)),...
+                0.5*( triu(magic(5)) +  triu(magic(5)).'),...
+                pinv([magic(5), magic(5)]),(triu(magic(5))).', aMat.',...
+                inv(magic(7)), sqrtm(eye(10)*5), realsqrt(magic(8)),...
+                realsqrt(5 * ones(3, 2)), {'t^2'}, -triu(magic(5)),...
+                -ones(3, 4), strrep({'t','2*t';'3*t','4*t'},'t','-t'),...
+                strrep({'t','2*t';'3*t','4*t'; '5*t', '6*t'},'t','-t'),...
+                expm(ones(4))};
+            matrixFunCVec = {@factory.triu, @factory.triu,...
+                @factory.makeSymmetric, @factory.pinv, @factory.transpose,...
+                @factory.transpose, @factory.inv, @factory.sqrtmpos,...
+                @factory.realsqrt, @factory.realsqrt, @factory.realsqrt,...
+                @factory.uminus, @factory.uminus, @factory.uminus,...
+                @factory.uminus, @factory.expm};
+            
+            cellfun(@(x, y, z)self.isOpEqual({}, x, [], y, z),...
+                cCMat, matrixFunCVec, aCMat,...
+                'UniformOutput', false);
+            
+           
+           aCMat = {magic(10), ones(3,4), ones(5), ones(4), magic(4),...
+               {'1', '-t'; 't', '1'}, magic(4), {'1', '-t'; 't', '1'},...
+               ones(4), 2 * eye(4), eye(4)};
+           bCMat = {ones(10,1), ones(4,5), ones(4, 5), ones(4, 5), 2,...
+               {'t + 1'}, 2, {'t.^2 + 1'}, ones(4, 1), ones(4, 1), ones(4, 1)};
+           cCMat = {magic(10) * ones(10, 1), ones(3, 4) * ones(4, 5),...
+               ones(4, 5) * ones(5) * (ones(4, 5).'),...
+               (ones(4, 5).') * ones(4) * ones(4, 5), 2 * magic(4),...
+               {'t + 1', '-t .* (t + 1)'; 't .* (t + 1)', 't + 1'}, ...
+               magic(4) / 2, {'1./(t.^2 + 1)', '-t./(t.^2 + 1)'; ...
+               't./(t.^2 + 1)', '1./(t.^2 + 1)'}, ...
+               (ones(4, 1).') * ones(4) * ones(4, 1), 2, 2};
+           matrixFunCVec = {@factory.rMultiplyByVec, @factory.rMultiply,...
+               @(x, y)factory.lrMultiply(x, y, 'L'),...
+               @(x, y)factory.lrMultiply(x, y, 'R'),...
+               @factory.rMultiplyByScalar, @factory.rMultiplyByScalar,...
+               @factory.rDivideByScalar, @factory.rDivideByScalar,...
+               @factory.lrMultiplyByVec, @factory.lrDivideVec,...
+               @factory.quadraticFormSqrt};
+           
+           cellfun(@(x, y, z, w)self.isOpEqual({}, x, [], y, z, w),...
+                cCMat, matrixFunCVec, aCMat, bCMat,...
+                'UniformOutput', false);
+            
+           
+           aMat = ones(3, 4);
+           bMat = ones(4, 5);
+           dMat = ones(5, 6);
+           cMat = ones(3, 4) * ones(4, 5) * ones(5, 6);
+           
+           self.isOpEqual({}, cMat, [], @factory.rMultiply, aMat, bMat, dMat);
+           
             isRSqrtBTestEnabled = false;
             if isRSqrtBTestEnabled
-                %
-                % test realsqrt #3 - bad spline
-                %
-                aCMat = {'t^2'};
-                aCSqrtMat = {'abs(t)'};
-                self.isOpEqual({}, aCSqrtMat, [], @factory.realsqrt, ...
-                    aCMat);
-            end
-            %
-            % test uminus for constant matrices: square
-            %
-            aMat = triu(magic(5));
-            self.isOpEqual({}, -aMat, [], @factory.uminus, aMat);
-            %
-            % test uminus for constant matrices: not square
-            %
-            aMat = ones(3, 4);
-            self.isOpEqual({}, -aMat, [], @factory.uminus, aMat);
-            %            
-            % test uminus for symbolic matrices: square
-            %
-            aCMat={'t','2*t';'3*t','4*t'};
-            aMinusCMat=strrep(aCMat,'t','-t');
-            self.isOpEqual({}, aMinusCMat, [], @factory.uminus, aCMat);
-            %            
-            % test uminus for symbolic matrices: not square
-            %
-            aCMat={'t','2*t';'3*t','4*t'; '5*t', '6*t'};
-            aMinusCMat=strrep(aCMat,'t','-t');
-            self.isOpEqual({}, aMinusCMat, [], @factory.uminus, aCMat);
-            %
-            % test rMultiplyByVec
-            %
-            aMat = magic(10);
-            bVec = ones(10,1);
-            self.isOpEqual({}, aMat * bVec, [], ...
-                @factory.rMultiplyByVec, aMat, bVec);
-            %
-            % test rMultiply #1
-            %
-            aMat = ones(3,4);
-            bMat = ones(4,5);
-            self.isOpEqual({}, aMat * bMat, [], @factory.rMultiply, ...
-                aMat, bMat);
-            %
-            % test rMultiply #2
-            %
-            aMat = ones(3,4);
-            bMat = ones(4,5);
-            cMat = ones(5,6);
-            self.isOpEqual({}, aMat * bMat * cMat, [], ...
-                @factory.rMultiply, aMat, bMat, cMat);
-            %
-            % test lrMultiply #1
-            %
-            lrMat = ones(4,5);
-            mMat = ones(5);
-            self.isOpEqual({}, lrMat * mMat * (lrMat.'), [], ...
-                @(x, y)factory.lrMultiply(x, y, 'L'), mMat, lrMat);
-            %
-            % test lrMultiply #2
-            %
-            lrMat = ones(4,5);
-            mMat = ones(4);
-            self.isOpEqual({}, (lrMat.') * mMat * lrMat, [], ...
-                @(x, y)factory.lrMultiply(x, y, 'R'), mMat, lrMat);
-            %
-            % test rMultiplyByScalar
-            %
-            aMat = magic(4);
-            self.isOpEqual({}, 2 * aMat, [], ...
-                @factory.rMultiplyByScalar, aMat, 2);
-            %
-            % test rMultiplyByScalar #2
-            %            
-            aCMat = {'1', '-t'; 't', '1'};
-            rCScal = {'t + 1'};
-            resCMat = {'t + 1', '-t .* (t + 1)'; 't .* (t + 1)', 't + 1'};
-            self.isOpEqual({}, resCMat, [], @factory.rMultiplyByScalar, ...
-                aCMat, rCScal);
-            %
-            % test rDivideByScalar
-            %
-            aMat = magic(4);
-            self.isOpEqual({}, aMat / 2, [], @factory.rDivideByScalar, ...
-                aMat, 2);
-            %
-            % test rDivideByScalar #2
-            %
-            aCMat = {'1', '-t'; 't', '1'};
-            rCScal = {'t.^2 + 1'};
-            resCMat = {'1./(t.^2 + 1)', '-t./(t.^2 + 1)'; ...
-                't./(t.^2 + 1)', '1./(t.^2 + 1)'};
-            self.isOpEqual({}, resCMat, [], @factory.rDivideByScalar, ...
-                aCMat, rCScal);
-            %
-            % test lrMultiplyByVec
-            %
-            lrVec = ones(4,1);
-            mMat = ones(4);
-            self.isOpEqual({}, (lrVec.') * mMat * lrVec, [], ...
-                @factory.lrMultiplyByVec, mMat, lrVec);
-            %
-            % test lrDivideVec
-            %
-            lrVec = ones(4,1);
-            mMat = 2*eye(4);
-            self.isOpEqual({}, 2, [], @factory.lrDivideVec, mMat, lrVec);
-            %
-            % test quadraticFormSqrt
-            %
-            xVec = ones(4,1);
-            mMat = eye(4);
-            self.isOpEqual({}, 2, [], @factory.quadraticFormSqrt, mMat, ...
-                xVec);
-            %
-            % test expm
-            %
+                self.isOpEqual({}, 'abs(t)', [], @factory.realsqrt,...
+                    't^2');
+            end 
+            
             aMat = ones(4);
-            self.isOpEqual({}, expm(aMat), [], @factory.expm, aMat);
-            %
-            % test expmt
-            %
-            aMat = ones(4);
-            self.isOpEqual({}, ...
-                cat(3,expm(aMat*0),expm(aMat*0.5), expm(aMat)), ...
-                [0, 0.5, 1], @(x) factory.expmt(x, 0), aMat);
-            %
-            % test matdot for constant matrices
-            %
-            aMat = ones(6);
-            bMat = magic(6);
-            self.isOpEqual({'symmetric'}, matdot(aMat, bMat), [], ...
-                @factory.matdot, aMat, bMat);
-            %
-            % test matdot for symbolic matrices 
-            %
-            aCMat = {'cos(t)', '-sin(t)'; 'sin(t)', 'cos(t)'};
-            bCMat = strrep(aCMat,'t','-t');
-            resCMat = {'cos(2 .* t)'};
-            self.isOpEqual({'symmetric'}, resCMat, [], @factory.matdot, ...
-                aCMat, bCMat);
+            cMat = cat(3,expm(ones(4) * 0), expm(ones(4) * 0.5),...
+                        expm(ones(4)));
+            bVec = [0, 0.5, 1];
+            self.isOpEqual({}, cMat, bVec, @(a) factory.expmt(a, 0), aMat);
+            
+            
+            aCMat = {ones(6), {'cos(t)', '-sin(t)'; 'sin(t)', 'cos(t)'}};
+            bCMat = {magic(6),...
+                        strrep({'cos(t)', '-sin(t)'; 'sin(t)', 'cos(t)'},...
+                        't','-t')};
+            cCMat = {matdot(ones(6), magic(6)), {'cos(2 .* t)'}};
+            cellfun(@(x, y, z)self.isOpEqual({'symmetric'}, x, [],...
+                @factory.matdot, y, z), cCMat, aCMat, bCMat,...
+                'UniformOutput', false);
+            
+            
         end
     end
     methods
@@ -346,51 +225,12 @@ classdef SuiteOp < mlunitext.test_case
         end
         %
         function testSize(self)
-            import gras.mat.*
-            %
-            % basic size tests
-            %
-            aMat = ones(2, 3);
-            aMatFun = ConstMatrixFunctionFactory.createInstance(aMat);
-            self.isMatFunSizeEq(aMatFun, aMat);
-            %
-            asqMat = eye(2);
-            asqMatFun = ConstMatrixFunctionFactory.createInstance(asqMat);
-            self.isMatFunSizeEq(asqMatFun, asqMat);
-            %
-            atCMat = {'t', '0'; '0', 't'; '0', '0'};
-            atMatFun = AMatrixOperations.fromSymbMatrix(atCMat);
-            self.isMatFunSizeEq(atMatFun, atCMat);
-            %
-            asqtCMat = {'cos(t)', '-sin(t)'; 'sin(t)', 'cos(t)'};
-            asqtMatFun = AMatrixOperations.fromSymbMatrix(asqtCMat);
-            self.isMatFunSizeEq(asqtMatFun, asqtCMat);
-            %
-            % dimensionality tests
-            %
-            aMat = ones(2, 1);
-            aMatFun = ConstMatrixFunctionFactory.createInstance(aMat);
-            self.isMatFunSizeEq(aMatFun, aMat);
-            %
-            aMat = aMat.';
-            aMatFun = ConstMatrixFunctionFactory.createInstance(aMat);
-            self.isMatFunSizeEq(aMatFun, aMat);
-            %
-            aMat = 1;
-            aMatFun = ConstMatrixFunctionFactory.createInstance(aMat);
-            self.isMatFunSizeEq(aMatFun, aMat);
-            %
-            atCMat = {'t', '0'};
-            atMatFun = AMatrixOperations.fromSymbMatrix(atCMat);
-            self.isMatFunSizeEq(atMatFun, atCMat);
-            %
-            atCMat = atCMat.';
-            atMatFun = AMatrixOperations.fromSymbMatrix(atCMat);
-            self.isMatFunSizeEq(atMatFun, atCMat);
-            %
-            atCMat = {'t'};
-            atMatFun = AMatrixOperations.fromSymbMatrix(atCMat);
-            self.isMatFunSizeEq(atMatFun, atCMat);
+            aCMat = {ones(2, 3), eye(2), {'t', '0'; '0', 't'; '0', '0'},...
+                {'cos(t)', '-sin(t)'; 'sin(t)', 'cos(t)'}, ones(2, 1),...
+                ones(1, 2), 1, {'t', '0'}, {'t'; '0'}, {'t'}};
+            flagCVec = {1, 1, 2, 2, 1, 1, 1, 2, 2, 2};
+            cellfun(@(x, y)sizeEq(x, y, self), aCMat, flagCVec,...
+                 'UniformOutput', false);
         end
         function testCompositeMatrixOperations(self)
             factory = gras.mat.CompositeMatrixOperations;
@@ -405,140 +245,73 @@ classdef SuiteOp < mlunitext.test_case
             import gras.mat.symb.*
             import gras.mat.AMatrixOperations;
             %
-            aScCMat = {'t'};
-            bScCMat = {'t + 1'};
-            aVecCMat = {'t'; 't.^2'};
-            aSqCMat = {'t', '1'; '1', 't'};            
-            %
-            % MatrixSFBinaryProdByVec: regular test
-            %
-            resCMat = {'2 .* t.^2'; 't.^3 + t'};
-            self.isOpEqual({'symb'}, resCMat, [], ...
-                @MatrixSFBinaryProdByVec, aSqCMat, aVecCMat);
-            %
-            % MatrixSFBinaryProdByVec: scalar result test
-            %
-            resCMat = {'t.^4 + t.^2'};
-            self.isOpEqual({'symb'}, resCMat, [], ...
-                @MatrixSFBinaryProdByVec, aVecCMat', aVecCMat);
-            %
-            % MatrixSFBinaryProd: regular test
-            %
-            resCMat = {'2 .* t.^2'; 't.^3 + t'};
-            self.isOpEqual({'symb'}, resCMat, [], @MatrixSFBinaryProd, ...
-                aSqCMat, aVecCMat);
-            %
-            % MatrixSFBinaryProd: scalar result test
-            %
-            resCMat = {'t.^4 + t.^2'};
-            self.isOpEqual({'symb'}, resCMat, [], @MatrixSFBinaryProd, ...
-                aVecCMat', aVecCMat);
-            %
-            % MatrixSFBinaryProd: scalar argument test #1
-            %
-            resCMat = {'t.^2', 't'; 't', 't.^2'};  
-            self.isOpEqual({'symb', 'symmetric'}, resCMat, [], ...
-                @MatrixSFBinaryProd, aScCMat, aSqCMat);
-            %
-            % MatrixSFBinaryProd: scalar argument test #1
-            %
-            resCMat = {'t.^2 + t'};  
-            self.isOpEqual({'symb', 'symmetric'}, resCMat, [], ...
-                @MatrixSFBinaryProd, aScCMat, bScCMat);
-            %
-            % MatrixSFTripleProd: scalar argument test #1
-            %
-            resCMat = {'t.^3', 't.^2'; 't.^2', 't.^3'};    
-            self.isOpEqual({'symb'}, resCMat, [], ...
-                @(x, y)MatrixSFTripleProd(x, x, y), aScCMat, aSqCMat);
-            %
-            % MatrixSFTripleProd: scalar argument test #2
-            %
-            resCMat = {'t.^3'; 't.^4'};
-            self.isOpEqual({'symb'}, resCMat, [], ...
-                @(x, y)MatrixSFTripleProd(x, x, y), aScCMat, aVecCMat);
-            %
-            % MatrixSFTripleProd: scalar argument test #2
-            %
-            resCMat = {'t.^3 + t.^2'};
-            self.isOpEqual({'symb'}, resCMat, [], ...
-                @(x, y)MatrixSFTripleProd(x, x, y), aScCMat, bScCMat);
+            aScC = {'t'};
+            bScC = {'t + 1'};
+            aCVec = {'t'; 't.^2'};
+            aSqCMat = {'t', '1'; '1', 't'};
+            
+            sCMat = {aSqCMat, aCVec', aSqCMat, aCVec'};
+            resCVec = {{'2 .* t.^2'; 't.^3 + t'}, {'t.^4 + t.^2'},...
+                {'2 .* t.^2'; 't.^3 + t'}, {'t.^4 + t.^2'}};
+            cellfun(@(x, y)self.isOpEqual({'symb'}, x, [],...
+                @MatrixSFBinaryProdByVec, y, aCVec), resCVec,...
+                sCMat, 'UniformOutput', false);
+            
+            sCMat = {aSqCMat, aCVec, bScC};
+            resCMat = {{'t.^3', 't.^2'; 't.^2', 't.^3'}, {'t.^3'; 't.^4'},...
+                {'t.^3 + t.^2'}};
+            cellfun(@(x, y)self.isOpEqual({'symb'}, x, [],...
+                @(z, w)MatrixSFTripleProd(z, z, w), aScC, y), resCMat,...
+                sCMat, 'UniformOutput', false);
+            
+            sCMat = {aSqCMat, bScC};
+            resCMat = {{'t.^2', 't'; 't', 't.^2'}, {'t.^2 + t'}};
+            cellfun(@(x, y)self.isOpEqual({'symb', 'symmetric'}, x, [],...
+                @MatrixSFBinaryProd, aScC, y), resCMat,...
+                sCMat, 'UniformOutput', false);
         end
         function testOtherOperations(self)
             import gras.mat.*;
             import gras.mat.fcnlib.*;
-            %
-            % test MatrixMinEigValFunc
-            %
-            aMat = diag([-2 -1 0 1 2]);
-            self.isOpEqual({}, -2, [], @MatrixMinEigValFunc, aMat);
-            %
-            % test MatrixPlusFunc
-            %
-            aMat = ones(4);
-            bMat = 2*ones(4);
-            self.isOpEqual({'symmetric'}, 3*ones(4), [], ...
-                @MatrixPlusFunc, aMat, bMat);
-            %
-            % test MatrixMinusFunc
-            %
-            aMat = ones(4);
-            bMat = 2*ones(4);
-            self.isOpEqual({}, -ones(4), [], @MatrixMinusFunc, aMat, bMat);
-            %
-            % test MatrixBinaryTimesFunc: scalar constant
-            %
-            aMat = magic(5);
-            self.isOpEqual({'symmetric'}, 2 * aMat, [], ...
-                @MatrixBinaryTimesFunc, aMat, 2);
-            %
-            self.isOpEqual({'symmetric'}, 6, [], ...
-                @MatrixBinaryTimesFunc, 3, 2);
-            %
-            % test MatrixBinaryTimesFunc: scalar non constant
-            %            
-            aCMat = {'1', '-t'; 't', '1'};
-            rCScal = {'t + 1'};
-            resCMat = {'t + 1', '-t.^2 - t'; 't.^2 + t', 't + 1'};
-            self.isOpEqual({'symmetric'}, resCMat, [], ...
-                @MatrixBinaryTimesFunc, aCMat, rCScal);
-            %
-            self.isOpEqual({'symmetric'}, {'(t + 1).*(t + 3)'}, [], ...
-                @MatrixBinaryTimesFunc, {'t + 1'}, {'t + 3'});
-            %
-            % test MatrixLRTimesFunc: scalar constant
-            %
-            aMat = magic(5);
-            self.isOpEqual({}, 4 * aMat, [], @MatrixLRTimesFunc, aMat, 2);
-            %
-            % test MatrixLRTimesFunc: scalar non constant
-            %            
-            aCMat = {'1', '-t'; 't', '1'};
-            rCScal = {'t + 1'};
-            resCMat = {'(t + 1).^2', '-t.*((t + 1).^2)'; ...
-                't.*((t + 1).^2)', '(t + 1).^2'};
-           self.isOpEqual({}, resCMat, [], @MatrixLRTimesFunc, aCMat, ...
-               rCScal);
-            %
-            % test MatrixTernaryTimesFunc: scalar constant
-            %
-            aMat = ones(2, 3);
-            self.isOpEqual({}, 4 * aMat, [], ...
-                @(x, y) MatrixTernaryTimesFunc(x, x, y), 2, aMat);
-            %
-            self.isOpEqual({}, 50, [], ...
-                @(x, y) MatrixTernaryTimesFunc(x, x, y), 5, 2);
-            %
-            % test MatrixTernaryTimesFunc: scalar non constant
-            %
-            aCMat = {'t', 't + 1'};
-            resCMat = {'9 .* t', '9 .* t + 9'};
-            self.isOpEqual({}, resCMat, [], ...
-                @(x, y) MatrixTernaryTimesFunc(x, x, y), 3, aCMat);
-            %
-            self.isOpEqual({}, {'12 .* t'}, [], ...
-                @(x, y) MatrixTernaryTimesFunc(x, x, y), {'2'}, ...
-                {'3 .* t'});
+            aCMat = {ones(4), ones(4),...
+                magic(5), 3, {'1', '-t'; 't', '1'}, {'t + 1'},...
+                magic(5), {'1', '-t'; 't', '1'}, 2, 5, 3, {'2'}};
+            bCMat = {2*ones(4),  2*ones(4), 2, 2, {'t + 1'},...
+                {'t + 3'}, 2, {'t + 1'}, ones(2, 3), 2, {'t', 't + 1'},...
+                {'3 .* t'}};
+            cCMat = {3*ones(4), -ones(4), 2 * magic(5), 6,...
+                {'t + 1', '-t.^2 - t'; 't.^2 + t', 't + 1'}, {'(t + 1).*(t + 3)'},...
+                4 * magic(5), {'(t + 1).^2', '-t.*((t + 1).^2)'; ...
+                't.*((t + 1).^2)', '(t + 1).^2'}, 4 * ones(2, 3), 50,...
+                {'9 .* t', '9 .* t + 9'}, {'12 .* t'}};
+            matrixFunCVec = {@MatrixPlusFunc,...
+                @MatrixMinusFunc, @MatrixBinaryTimesFunc,...
+                @MatrixBinaryTimesFunc, @MatrixBinaryTimesFunc,...
+                @MatrixBinaryTimesFunc, @MatrixLRTimesFunc,...
+                @MatrixLRTimesFunc, @(a, b) MatrixTernaryTimesFunc(a, a, b),...
+                @(a, b) MatrixTernaryTimesFunc(a, a, b),...
+                @(a, b) MatrixTernaryTimesFunc(a, a, b),...
+                @(a, b) MatrixTernaryTimesFunc(a, a, b)};
+            firstArgCVec = {{'symmetric'}, {}, {'symmetric'},...
+                {'symmetric'}, {'symmetric'}, {'symmetric'}, {},...
+                {}, {}, {}, {}, {}};
+            
+            cellfun(@(x, y, z, w, v)self.isOpEqual(x, y, [], z, w, v),firstArgCVec,...
+                cCMat, matrixFunCVec, aCMat, bCMat,...
+                'UniformOutput', false);
+            self.isOpEqual({}, -2, [], @MatrixMinEigValFunc,...
+                diag([-2 -1 0 1 2]));
+            
         end
     end
+end
+
+function sizeEq(aMat, flag, self)
+    import gras.mat.*
+    if(flag == 1)
+        aMatFun = ConstMatrixFunctionFactory.createInstance(aMat);
+    else
+        aMatFun = AMatrixOperations.fromSymbMatrix(aMat);
+    end
+    self.isMatFunSizeEq(aMatFun, aMat);
 end

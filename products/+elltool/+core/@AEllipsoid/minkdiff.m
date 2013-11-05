@@ -104,7 +104,11 @@ else
     varargout(2) = {boundMat};
 end
     function ellsVec = getEllArr(ellsArr)
-        if isa(ellsArr, 'ellipsoid')
+%         if isa(ellsArr, 'ellipsoid')
+%             cnt    = numel(ellsArr);
+%             ellsVec = reshape(ellsArr, cnt, 1);
+%         end
+        if isMe(ellsArr)
             cnt    = numel(ellsArr);
             ellsVec = reshape(ellsArr, cnt, 1);
         end
@@ -149,22 +153,22 @@ end
             fstEllShMat = fstEll.shapeMat;
             if isdegenerate(fstEll)
                 fstEllShMat = ...
-                    ellipsoid.regularize(fstEllShMat,fstEll.absTol);
+                    elltool.core.AEllipsoid.regularize(fstEllShMat,fstEll.absTol);
             end
             secEllShMat = secEll.shapeMat;
             if isdegenerate(secEll)
                 secEllShMat = ...
-                    ellipsoid.regularize(secEllShMat,secEll.absTol);
+                    elltool.core.AEllipsoid.regularize(secEllShMat,secEll.absTol);
             end
             [lMat, fMat] = getGridByFactor(fstEll);
             lMat = lMat';
             absTolVal=min(fstEll.absTol, secEll.absTol);
             [isBadDirVec,pUniversalVec] =...
-                ellipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
+                elltool.core.AEllipsoid.isbaddirectionmat(fstEllShMat, secEllShMat, ...
                 lMat,absTolVal);
             isGoodDirVec = ~isBadDirVec;
             [diffBoundMat,isPlotCenter3d] = ...
-                ellipsoid.calcdiffonedir(fstEll,secEll,lMat,...
+                elltool.core.AEllipsoid.calcdiffonedir(fstEll,secEll,lMat,...
                 pUniversalVec,isGoodDirVec);
             boundPointMat = cell2mat(diffBoundMat);
             boundPointMat = [boundPointMat, boundPointMat(:, 1)];
@@ -181,8 +185,10 @@ end
         nDim = 2;
         function ellTwoDim = oneDim2TwoDim(ell)
             [ellCenVec, qMat] = ell.double();
-            ellTwoDim = ellipsoid([ellCenVec, 0].', ...
-                diag([qMat, 0]));
+%             ellTwoDim = ellipsoid([ellCenVec, 0].', ...
+%                 diag([qMat, 0]));
+              ellTwoDim = ell.create([ellCenVec, 0].', ...
+                    diag([qMat, 0]));
         end
     end
 

@@ -96,7 +96,8 @@ else
     isVerbose=Properties.getIsVerbose();
     %
     absTolArr = getAbsTol(inpEllArr);
-    extApprEllVec(1,nCols) = ellipsoid;
+%     extApprEllVec(1,nCols) = ellipsoid;
+    extApprEllVec(1,nCols) = inpEllArr(1).create;
     arrayfun(@(x) fSingleDirection(x),1:nCols);
 end
     function fAddCenter(singEll)
@@ -122,7 +123,7 @@ end
                     logger.info('Degenerate ellipsoid.');
                     logger.info('Regularizing...')
                 end
-                shMat = ellipsoid.regularize(shMat, absTol);
+                shMat = elltool.core.AEllipsoid.regularize(shMat, absTol);
             end
             fstCoef = realsqrt(dirVec'*shMat*dirVec);
             subShMat = subShMat + ((1/fstCoef) * shMat);

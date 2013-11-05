@@ -65,9 +65,9 @@ checkmultvar('x1 || x2 ||all(size(x3)==size(x4))',...
     'errorMessage','sizes of ellipsoidal arrays do not match.');
 
 if ~(isFstScal || isSecScal)
-    isPositiveArr = arrayfun(@(x,y) isbigger(x,y),firstEllArr,secondEllArr);
+    isPositiveArr = arrayfun(@(x,y)isbigger(x,y),firstEllArr,secondEllArr);
 elseif isSecScal
-    isPositiveArr = arrayfun(@(x) isbigger(x,secondEllArr),firstEllArr);
+    isPositiveArr = arrayfun(@(x)isbigger(x,secondEllArr),firstEllArr);
 else
-    isPositiveArr = arrayfun(@(x) isbigger(firstEllArr,x),secondEllArr);
+    isPositiveArr = arrayfun(@(x)isbigger(firstEllArr,x),secondEllArr);
 end

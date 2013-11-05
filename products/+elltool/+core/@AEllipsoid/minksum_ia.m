@@ -104,7 +104,8 @@ else
     rotArr = zeros(nDims,nDims,nNumel,nCols);
     arrayfun(@(x) fSetRotArr(x), 1:nNumel);
     %
-    intApprEllVec(1,nCols) = ellipsoid;
+%     intApprEllVec(1,nCols) = ellipsoid;
+    intApprEllVec(1,nCols) = inpEllArr(1).create;
     arrayfun(@(x) fSingleDirection(x),1:nCols);
 end
 
@@ -125,7 +126,7 @@ end
                 logger.info('Degenerate ellipsoid.');
                 logger.info('Regularizing...')
             end
-            shMat = ellipsoid.regularize(shMat, absTolArr(ellIndex));
+            shMat = elltool.core.AEllipsoid.regularize(shMat, absTolArr(ellIndex));
         end
         shSqrtMat = sqrtmpos(shMat, absTolArr(ellIndex));
         absTolArr(ellIndex);

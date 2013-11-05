@@ -67,8 +67,12 @@ import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 
 ellipsoid.checkIsMe(myEllArr,'first');
-modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
-    isa(x, 'hyperplane') || isa(x, 'polytope'),...
+% modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
+%     isa(x, 'hyperplane') || isa(x, 'polytope'),...
+%     'errorTag','wrongInput', 'errorMessage',...
+%     'second input argument must be ellipsoid,hyperplane or polytope.');
+modgen.common.checkvar(objArr,@(x) isa(x, 'hyperplane') || isa(x, 'polytope') || ...
+    isa(x, 'ellipsoid') || isa(x, 'elltool.core.GenEllipsoid'),...
     'errorTag','wrongInput', 'errorMessage',...
     'second input argument must be ellipsoid,hyperplane or polytope.');
 
@@ -103,7 +107,8 @@ else
     nAmount = numel(objArr);
     sizeCVec = num2cell(size(objArr));
 end
-outEllArr(sizeCVec{:}) = ellipsoid;
+% outEllArr(sizeCVec{:}) = ellipsoid;
+outEllArr(sizeCVec{:}) = myEllArr(1).create;
 indexVec = 1:nAmount;
 
 if ~(isEllScal || isObjScal)
@@ -153,7 +158,7 @@ fstEllCentVec = fstEll.centerVec;
 fstEllShMat = fstEll.shapeMat;
 if rank(fstEllShMat) < size(fstEllShMat, 1)
     fstEllShMat = ...
-        ell_inv(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
+        ell_inv(elltool.core.AEllipsoid.regularize(fstEllShMat,fstEll.absTol));
 else
     fstEllShMat = ell_inv(fstEllShMat);
 end
@@ -170,7 +175,8 @@ if isa(secObj, 'hyperplane')
     end
     if (normHypVec'*fstEllCentVec < hypScalar) ...
             && ~(intersect(fstEll, secObj))
-        outEll = ellipsoid;
+%         outEll = ellipsoid;
+          outEll = fstEll.create;
         return;
     end
     hEig  = 2*realsqrt(maxeig(fstEll));
@@ -185,13 +191,14 @@ else
         return;
     end
     if ~intersect(fstEll, secObj)
-        outEll = ellipsoid;
+%         outEll = ellipsoid;
+          outEll = fstEll.create;
         return;
     end
     qSecVec = secObj.centerVec;
     seqQMat = secObj.shapeMat;
     if rank(seqQMat) < size(seqQMat, 1)
-        seqQMat = ell_inv(ellipsoid.regularize(seqQMat,secObj.absTol));
+        seqQMat = ell_inv(elltool.core.AEllipsoid.regularize(seqQMat,secObj.absTol));
     else
         seqQMat = ell_inv(seqQMat);
     end
@@ -208,7 +215,8 @@ const = 1 - lambda*(1 - lambda)*(qSecVec - ...
 qCenterVec = invXMat*(lambda*fstEllShMat*fstEllCentVec + ...
     (1 - lambda)*seqQMat*qSecVec);
 shQMat = const*invXMat;
-outEll = ellipsoid(qCenterVec, shQMat);
+% outEll = ellipsoid(qCenterVec, shQMat);
+outEll = fstEll.create(qCenterVec, shQMat);
 
 end
 

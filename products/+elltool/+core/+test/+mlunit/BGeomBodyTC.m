@@ -15,11 +15,10 @@ classdef BGeomBodyTC < elltool.plot.test.AGeomBodyPlotTestCase
                 self@elltool.plot.test.AGeomBodyPlotTestCase(varargin{:});
         end
         function self = plotND(self,nDims,inpFirstArgCList,inpSecArgCList)
-            nElem = numel(inpFirstArgCList);
+            nElem = numel(inpFirstArgCList);            
             for iElem = 1:nElem
                 testMat=...
-                    self.fTest(inpFirstArgCList{iElem},...
-                    inpSecArgCList{iElem});
+                    self.fTest(inpFirstArgCList{iElem},inpSecArgCList{iElem});
                 check(testMat, nDims);
             end
             testEllMat(1) =...

@@ -155,7 +155,7 @@ end
                 logger.info([fstFprintStr secFprintStr]);
                 logger.info('            Regularizing...');
             end
-            shMat = ellipsoid.regularize(shMat, absTol);
+            shMat = elltool.core.AEllipsoid.regularize(shMat, absTol);
         end
         
         rVal = cVec' * ell_inv(shMat) * cVec;

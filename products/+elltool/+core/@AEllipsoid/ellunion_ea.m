@@ -85,7 +85,7 @@ for iEllipsoid = 1:nEllipsoids
     inpEllShMat = (inpEllShMat + inpEllShMat')*0.5;
     if rank(inpEllShMat) < minEllDim
         inpEllShMat = ...
-            ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
+            elltool.core.AEllipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
     end
     
     inpEllShMat     = inv(inpEllShMat);
@@ -112,4 +112,5 @@ ellMat = inv(cvxEllMat);
 ellMat = 0.5*(ellMat + ellMat');
 ellCenterVec = -ellMat * cvxEllCenterVec;
 
-outEll = ellipsoid(ellCenterVec, ellMat);
+% outEll = ellipsoid(ellCenterVec, ellMat);
+outEll = inpEllArr.create(ellCenterVec, ellMat);

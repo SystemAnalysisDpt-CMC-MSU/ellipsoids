@@ -7,14 +7,14 @@ classdef EllFactory
         function self = EllFactory(ellType)
             self.ellType = ellType;
         end
-        function ellObj=create(varargin)
-            switch ellType
-                case 'ellipsoid',
-                    ellObj = ellipsoid(varargin{:});
-                case 'GenEllipsoid',
-                    ellObj = elltool.core.GenEllipsoid(varargin{:});
-            otherwise,
-                    modgen.common.throwerror('wrongInput','unsupported ellipsoid type');
+        
+        function ellObj=create(self, varargin)         
+            if (strcmp(self.ellType, 'ellipsoid'))
+                ellObj = ellipsoid(varargin{:});
+            elseif (strcmp(self.ellType, 'GenEllipsoid'))
+                ellObj = elltool.core.GenEllipsoid(varargin{:});
+            else 
+                modgen.common.throwerror('wrongInput','unsupported ellipsoid type');
             end
         end
     end

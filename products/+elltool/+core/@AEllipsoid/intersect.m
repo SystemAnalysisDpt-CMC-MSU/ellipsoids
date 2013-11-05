@@ -128,8 +128,12 @@ import elltool.logging.Log4jConfigurator;
 persistent logger;
 
 ellipsoid.checkIsMe(myEllArr,'first');
-modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
-    isa(x, 'hyperplane') || isa(x, 'polytope'),...
+% modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
+%     isa(x, 'hyperplane') || isa(x, 'polytope'),...
+%     'errorTag','wrongInput', 'errorMessage',...
+%     'second input argument must be ellipsoid,hyperplane or polytope.');
+modgen.common.checkvar(objArr,@(x) isa(x, 'hyperplane') ||...
+     isa(x, 'polytope') || isa(x, 'ellipsoid') || isa(x, 'elltool.core.GenEllipsoid'),... 
     'errorTag','wrongInput', 'errorMessage',...
     'second input argument must be ellipsoid,hyperplane or polytope.');
 
@@ -156,15 +160,7 @@ if mode == 'u'
     end
     res = cellfun(@(x) double(any(x(:) <= absTolArr(:))),auxArr);
     status = [];
-elseif isa(objArr, 'ellipsoid')
-   
-    fCheckDims(dimension(myEllArr),dimension(objArr));
-   
-    if Properties.getIsVerbose()
-        logger.info('Invoking CVX...\n');
-    end
-   
-    [resArr statusArr] = arrayfun(@(x) qcqp(myEllArr, x), objArr);
+
 elseif isa(objArr, 'hyperplane')
    
     fCheckDims(dimension(myEllArr),dimension(objArr));
@@ -174,6 +170,16 @@ elseif isa(objArr, 'hyperplane')
     end
    
     [resArr statusArr] = arrayfun(@(x) lqcqp(myEllArr, x), objArr);
+elseif isa(objArr, 'ellipsoid') || isa(objArr, 'elltool.core.GenEllipsoid')
+%elseif isMe(objArr)
+    
+    fCheckDims(dimension(myEllArr),dimension(objArr));
+   
+    if Properties.getIsVerbose()
+        logger.info('Invoking CVX...\n');
+    end
+   
+    [resArr statusArr] = arrayfun(@(x) qcqp(myEllArr, x), objArr);
 else
     nDimsArr = zeros(size(objArr));
     [~, nCols] = size(objArr);
@@ -254,7 +260,7 @@ if isdegenerate(secEll)
         logger.info('      Regularizing...\n');
     end
     secEllShMat = ...
-        ellipsoid.regularize(secEllShMat,getAbsTol(secEll));
+        elltool.core.AEllipsoid.regularize(secEllShMat,getAbsTol(secEll));
 end
 secEllShMat = ell_inv(secEllShMat);
 secEllShMat = 0.5*(secEllShMat + secEllShMat');
@@ -275,7 +281,7 @@ for iCount = 1:nNumel
         [secEllCentVec, secEllShMat] = ...
             parameters(fstEllArr(iCount));
         if isdegenerate(fstEllArr(iCount))
-            secEllShMat = ellipsoid.regularize(secEllShMat,...
+            secEllShMat = elltool.core.AEllipsoid.regularize(secEllShMat,...
                 absTolArr(iCount));
         end
         invSecEllShMat = ell_inv(secEllShMat);
@@ -349,7 +355,7 @@ for iCount = 1:nNumel
         [ellCentVec, ellShMat] = parameters(myEllArr(iCount));
         if isdegenerate(myEllArr(iCount))
             ellShMat = ...
-                ellipsoid.regularize(ellShMat,absTolArr(iCount));
+                elltool.core.AEllipsoid.regularize(ellShMat,absTolArr(iCount));
         end
         invEllShMat  = ell_inv(ellShMat);
         cvxExprVec'*invEllShMat*cvxExprVec - ...
@@ -412,7 +418,7 @@ for iCount = 1:nNumel
         [ellCentVec, ellShMat] = parameters(myEllArr(iCount));
         if isdegenerate(myEllArr(iCount))
             ellShMat = ...
-                ellipsoid.regularize(ellShMat,absTolArr(iCount));
+                elltool.core.AEllipsoid.regularize(ellShMat,absTolArr(iCount));
         end
         invEllShMat  = ell_inv(ellShMat);
         invEllShMat  = 0.5*(invEllShMat + invEllShMat');

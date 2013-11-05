@@ -2,7 +2,9 @@ classdef EllipsoidMinkPlotTestCase < mlunitext.test_case
     %
     properties (Access=private)
         testDataRootDir
-        
+    end
+    properties
+        ellFactoryObj
     end
     %
     methods
@@ -16,10 +18,13 @@ classdef EllipsoidMinkPlotTestCase < mlunitext.test_case
         function self = tear_down(self,varargin)
             close all;
         end
+        function self = set_up_param(self, ellFactoryObj)
+            self.ellFactoryObj = ellFactoryObj;
+        end
         function self = testFillAndShade(self)
-            testFirEll = ellipsoid(2*eye(2));
-            testSecEll = ellipsoid([1, 0].', eye(2));
-            testThirdEll = ellipsoid([0, -1].', 1.5*eye(2));
+            testFirEll = self.ellFactoryObj.create(2*eye(2));
+            testSecEll = self.ellFactoryObj.create([1, 0].', eye(2));
+            testThirdEll = self.ellFactoryObj.create([0, -1].', 1.5*eye(2));
             minksum(testFirEll,testSecEll,'fill',false,'shade',0.7);
             minksum(testFirEll,testSecEll,'fill',true,'shade',0.7);
             minksum(testFirEll,testSecEll,testThirdEll,'fill',false,'shade',1);
@@ -121,10 +126,10 @@ classdef EllipsoidMinkPlotTestCase < mlunitext.test_case
 %             self.runAndCheckError...
 %                 ('minksum([testFirEll,testSecEll,testThirdEll], 1)', ...
 %                 'wrongPropertyType');
-%             testFirEll = ellipsoid(eye(3));
+%             testFirEll = self.ellFactoryObj.create(eye(3));
 %             self.runAndCheckError...
 %                 ('minksum([testFirEll,testSecEll,testThirdEll])', 'dimMismatch');
-%             testFirEll = ellipsoid(1);
+%             testFirEll = self.ellFactoryObj.create(1);
 %             minksum(testFirEll,'fill',true);
 %             minksum(testFirEll,'fill',false);
         end

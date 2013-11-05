@@ -103,7 +103,7 @@ centVec = fstEll.centerVec - secEll.centerVec;
 fstEllShMat = fstEll.shapeMat;
 secEllShMat = secEll.shapeMat;
 absTolVal = min(fstEll.absTol, secEll.absTol);
-directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
+directionsMat  = elltool.core.AEllipsoid.rm_bad_directions(fstEllShMat, ...
     secEllShMat, directionsMat,absTolVal);
 nDirs  = size(directionsMat, 2);
 if nDirs < 1
@@ -118,10 +118,10 @@ if nDirs < 1
     return;
 end
 if isdegenerate(fstEll)
-    fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
+    fstEllShMat = elltool.core.AEllipsoid.regularize(fstEllShMat,fstEll.absTol);
 end
 if isdegenerate(secEll)
-    secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
+    secEllShMat = elltool.core.AEllipsoid.regularize(secEllShMat,secEll.absTol);
 end
 
 fstEllSqrtShMat = sqrtmpos(fstEllShMat, absTolVal);
@@ -131,7 +131,8 @@ srcMat=fstEllSqrtShMat*directionsMat;
 dstMat=secEllSqrtShMat*directionsMat;
 rotArray=gras.la.mlorthtransl(dstMat, srcMat);
 
-extApprEllVec(nDirs) = ellipsoid();
+% extApprEllVec(nDirs) = ellipsoid();
+extApprEllVec(nDirs) = fstEll.create();
 arrayfun(@(x) fSingleDir(x), 1:nDirs)
     function fSingleDir(index)
         rotMat = rotArray(:,:,index);

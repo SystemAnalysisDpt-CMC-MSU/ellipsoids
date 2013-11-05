@@ -73,10 +73,10 @@ errMsg =...
     'this operation is only permitted between ellipsoid and vector in R^n.';
 checkvar(nargin,'x==2','errorTag','wrongInput',...
     'errorMessage',errMsg)
-if isa(varargin{1}, 'ellipsoid')&&isa(varargin{2}, 'double')
+if (isa(varargin{1}, 'ellipsoid')||isa(varargin{1}, 'elltool.core.GenEllipsoid'))&&isa(varargin{2}, 'double')
     inpEllArr = varargin{1};
     inpVec = varargin{2};
-elseif isa(varargin{2}, 'ellipsoid')&&isa(varargin{1}, 'double')
+elseif (isa(varargin{2}, 'ellipsoid')||isa(varargin{2}, 'elltool.core.GenEllipsoid'))&&isa(varargin{1}, 'double')
     inpEllArr = varargin{2};
     inpVec = varargin{1};
 else

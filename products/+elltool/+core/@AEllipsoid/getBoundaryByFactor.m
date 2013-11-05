@@ -1,4 +1,4 @@
-function [vGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
+function [bpGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 %
 %   GETBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
 %                         for each face in the grid
@@ -17,9 +17,9 @@ function [vGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 %
 % Output:
 %   regular:
-%       vGridat: double[nPoints,nDim] - vertices of the grid
-%       fGridMat: double[1,nPoints+1]/double[nFaces,3] - indices of vertices in
-%           each face in the grid (2d/3d cases)
+%       bpGridMat: double[nVertices,nDims] - vertices of the grid.
+%       fGridMat: double[nFaces, nDims] - indices of vertices in each 
+%           face in the grid (2d/3d cases).
 %
 % $Author:  Vitaly Baranov  <vetbar42@gmail.com> $    $Date: <04-2013> $
 % $Author: Ilya Lyubich  <lubi4ig@gmail.com> $    $Date: <03-2013> $
@@ -28,27 +28,27 @@ function [vGridMat, fGridMat] = getBoundaryByFactor(ellObj,factorVec)
 %            System Analysis Department 2013 $
 %
 import modgen.common.throwerror
-nDim=dimension(ellObj);
+ellObj.checkIfScalar();
+nDim = dimension(ellObj);
 
-if nDim<2 || nDim>3
+if nDim < 2 || nDim > 3
     throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
 end
 
-if nargin<2
-    factor=1;
+if nargin < 2
+    factor = 1;
 else
-    factor=factorVec(nDim-1);
+    factor = factorVec(nDim - 1);
 end
-if nDim==2
-    nPlotPoints=ellObj.nPlot2dPoints;
-    if ~(factor==1)
-        nPlotPoints=floor(nPlotPoints*factor);
+if nDim == 2
+    nPlotPoints = ellObj.nPlot2dPoints;
+    if ~(factor == 1)
+        nPlotPoints = floor(nPlotPoints * factor);
     end
 else
-    nPlotPoints=ellObj.nPlot3dPoints;
-    if ~(factor==1)
-        nPlotPoints=floor(nPlotPoints*factor);
+    nPlotPoints = ellObj.nPlot3dPoints;
+    if ~(factor == 1)
+        nPlotPoints = floor(nPlotPoints * factor);
     end
 end
-[vGridMat, fGridMat] = getBoundary(ellObj,nPlotPoints);
-vGridMat(vGridMat == 0) = eps;
+[bpGridMat, fGridMat] = getBoundary(ellObj, nPlotPoints);

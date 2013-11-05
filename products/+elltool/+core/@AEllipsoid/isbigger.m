@@ -63,7 +63,7 @@ if isdegenerate(fstEll)
         logger.info('ISBIGGER: Warning! First ellipsoid is degenerate.');
         logger.info('          Regularizing...');
     end
-    fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
+    fstEllShMat = elltool.core.AEllipsoid.regularize(fstEllShMat,fstEll.absTol);
 end
 
 absTolVal=min(fstEll.absTol, secEll.absTol);

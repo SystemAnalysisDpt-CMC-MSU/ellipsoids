@@ -1,10 +1,8 @@
 function [diffBoundMat, isPlotCenter3d] = calcdiffonedir(fstEll,secEll,lMat,pUniversalVec,isGoodDirVec)
 ABS_TOL = 1e-14;
 absTol = elltool.conf.Properties.getAbsTol();
-[~, minEllPtsMat] = rho(fstEll, ...
-    lMat);
-[~, subEllPtsMat] = rho(secEll, ...
-    lMat);
+[~, minEllPtsMat] = rho(fstEll,lMat);
+[~, subEllPtsMat] = rho(secEll,lMat);
 if dimension(fstEll) == 3
     isPlotCenter3d = true;
 else
@@ -12,7 +10,6 @@ else
 end
 [diffBoundMat] = arrayfun(@(x,y) calcdiff(x,y),isGoodDirVec,...
     1:size(lMat,2), 'UniformOutput',false);
-
 
     function diffBoundMat = calcdiff(isGood, ind)
         if isGood

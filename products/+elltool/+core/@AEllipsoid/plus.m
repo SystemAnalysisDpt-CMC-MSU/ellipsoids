@@ -73,10 +73,10 @@ errMsg =...
     'this operation is only permitted between ellipsoid and vector in R^n.';
 checkvar(nargin,'x==2','errorTag','wrongInput',...
     'errorMessage',errMsg)
-if isa(varargin{1}, 'ellipsoid')&&isa(varargin{2}, 'double')
+if (isa(varargin{1}, 'ellipsoid')||isa(varargin{1}, 'elltool.core.GenEllipsoid'))&&isa(varargin{2}, 'double')
     inpEllArr = varargin{1};
     inpVec = varargin{2};
-elseif isa(varargin{2}, 'ellipsoid')&&isa(varargin{1}, 'double')
+elseif (isa(varargin{2}, 'ellipsoid')||isa(varargin{2}, 'elltool.core.GenEllipsoid'))&&isa(varargin{1}, 'double')
     inpEllArr = varargin{2};
     inpVec = varargin{1};
 else
@@ -85,12 +85,14 @@ end
 
 sizeCVec = num2cell(size(inpEllArr));
 if isempty(inpEllArr)
-    outEllArr = ellipsoid.empty(sizeCVec{:});
+    outEllArr = inpEllArr.create.empty(sizeCVec{:});
 else    
     dimArr = dimension(inpEllArr);
+    
     checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimArr,...
         'errorMessage','dimensions mismatch');
-    outEllArr(sizeCVec{:})=ellipsoid;
+%     outEllArr(sizeCVec{:})=ellipsoid;
+    outEllArr(sizeCVec{:})=inpEllArr(1).create;
     arrayfun(@(x) fSinglePlus(x),1:numel(inpEllArr));
 end        
     function fSinglePlus(index)

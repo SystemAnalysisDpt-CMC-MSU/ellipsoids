@@ -47,7 +47,7 @@ ellipsoid.checkIsMe(myEllArr);
 arrayfun(@(x) fSingleInv(x),myEllArr);
     function fSingleInv(ellObj)
         if isdegenerate(ellObj)
-            regShMat = ellipsoid.regularize(ellObj.shapeMat,...
+            regShMat = elltool.core.AEllipsoid.regularize(ellObj.shapeMat,...
                 getAbsTol(ellObj));
         else
             regShMat = ellObj.shapeMat;

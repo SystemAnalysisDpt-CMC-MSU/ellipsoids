@@ -28,7 +28,17 @@ import modgen.common.throwerror;
 import modgen.struct.structcomparevec;
 import gras.la.sqrtmpos;
 import elltool.core.GenEllipsoid;
-relTol=GenEllipsoid.getCheckTol();
+% relTol=GenEllipsoid.getCheckTol();
+relTol=ellFirstArr(1).getRelTol();
+
+%test section
+nFirstElems = numel(ellFirstArr);
+nSecElems = numel(ellSecArr);
+if (nFirstElems == 0 || nSecElems == 0)
+    throwerror('wrongInput:emptyArray',...
+        'input ellipsoidal arrays should be empty at the same time');
+end
+%test_section_end
 
 GenEllipsoid.checkIsMe(ellFirstArr);
 GenEllipsoid.checkIsMe(ellSecArr);

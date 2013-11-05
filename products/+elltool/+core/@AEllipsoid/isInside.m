@@ -44,8 +44,11 @@ import modgen.common.throwerror;
 %
 %Checking arguments
 ellipsoid.checkIsMe(ellArr,'first');
-checkvar(objArr,@(x) isa(x,'polytope') || isa(x,'ellipsoid'),...
-    'wrongInput','errorMessage',...
+% checkvar(objArr,@(x) isa(x,'polytope') || isa(x,'ellipsoid'),...
+%     'wrongInput','errorMessage',...
+%     'second argument must be vector of ellipsoids or polytopes.');
+checkvar(objArr,@(x) isa(x, 'ellipsoid') || isa(x, 'elltool.core.GenEllipsoid') ||...
+    isa(x,'polytope'), 'wrongInput','errorMessage',...
     'second argument must be vector of ellipsoids or polytopes.');
 nDimsArr  = dimension(ellArr);
 [~,nCols] = size(objArr);
@@ -69,7 +72,8 @@ checkmultvar('(x1(1)==x2(1))&&all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
 %
 %
 absTol = ellArr.getAbsTol();
-isEll = isa(objArr,'ellipsoid');
+isEll = isa(objArr,'ellipsoid') || isa(objArr, 'elltool.core.GenEllipsoid');
+
 if ~isEllScal && ~isPolyScal
     indVec = getIndVec(size(ellArr));
     res = arrayfun(@(x,y)isMyEllInPoly(x,y),indVec,indVec);

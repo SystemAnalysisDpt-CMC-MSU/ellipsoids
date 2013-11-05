@@ -1,5 +1,4 @@
-function [intEllArr, isnIntersectedArr] = ...
-    hpintersection(myEllArr, myHypArr)
+function [intEllArr, isnIntersectedArr] = hpintersection(myEllArr,myHypArr)
 %
 % HPINTERSECTION - computes the intersection of ellipsoid with hyperplane.
 %
@@ -55,19 +54,19 @@ isHypScal = isscalar(myHypArr);
 nEllDimsArr = dimension(myEllArr);
 maxEllDim   = max(nEllDimsArr(:));
 
-modgen.common.checkvar( myEllArr , 'numel(x) > 0', 'errorTag', ...
+modgen.common.checkvar(myEllArr , 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.');
 
-modgen.common.checkvar( myEllArr,'all(~x(:).isEmpty())','errorTag', ...
+modgen.common.checkvar(myEllArr,'all(~x(:).isEmpty())','errorTag', ...
     'wrongInput:emptyEllipsoid', 'errorMessage', ...
     'Array should not have empty ellipsoid.');
 
-modgen.common.checkvar( myHypArr , 'numel(x) > 0', 'errorTag', ...
+modgen.common.checkvar(myHypArr , 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.');
 
-modgen.common.checkvar( myHypArr,'all(~isEmpty(x(:)))','errorTag', ...
+modgen.common.checkvar(myHypArr,'all(~isEmpty(x(:)))','errorTag', ...
     'wrongInput:emptyHyperplane', 'errorMessage', ...
     'Array should not have empty hyperplane.');
 
@@ -89,7 +88,8 @@ else
     nAmount = numel(myHypArr);
     sizeCVec = num2cell(size(myHypArr));
 end
-intEllArr(sizeCVec{:}) = ellipsoid;
+% intEllArr(sizeCVec{:}) = ellipsoid;
+intEllArr(sizeCVec{:}) = myEllArr(1).create;
 isnIntersectedArr = false(sizeCVec{:});
 indexVec = 1:nAmount;
 
@@ -106,11 +106,11 @@ if Properties.getIsVerbose()
 end
 [~,absTol]=myEllArr.getAbsTol();
 if ~(isEllScal || isHypScal)
-    arrayfun(@(x,y) fSingleCase(x,y), indexVec,indexVec);
+    arrayfun(@(x,y)fSingleCase(x,y), indexVec,indexVec);
 elseif isHypScal
-    arrayfun(@(x) fSingleCase(x,1), indexVec);
+    arrayfun(@(x)fSingleCase(x,1), indexVec);
 else
-    arrayfun(@(x) fSingleCase(1,x),indexVec);
+    arrayfun(@(x)fSingleCase(1,x),indexVec);
 end
 
     function fSingleCase(ellIndex, hypIndex)
@@ -118,22 +118,16 @@ end
         myHyp = myHypArr(hypIndex);
         index = max(ellIndex,hypIndex);
         if distance(myEll, myHyp) > absTol
-           intEllArr(index) = ellipsoid;
+%            intEllArr(index) = ellipsoid;
+           intEllArr(index) = myEll.create;
            isnIntersectedArr(index) = true;
         else
-            intEllArr(index) = l_compute1intersection(myEll,myHyp,...
-                maxEllDim);
+            intEllArr(index)=l_compute1intersection(myEll,myHyp,maxEllDim);
             isnIntersectedArr(index) = false;
         end
     end
 end
-
-
-
-
-
 %%%%%%%%
-
 function intEll = l_compute1intersection(myEll, myHyp, maxEllDim)
 %
 % L_COMPUTE1INTERSECTION - computes intersection of single ellipsoid with
@@ -166,7 +160,6 @@ rotVec = (hypScalar*tMat*normHypVec)/(normHypVec'*normHypVec);
 myEll = tMat*myEll - rotVec;
 myEllCentVec = myEll.centerVec;
 myEllShMat = myEll.shapeMat;
-
 if rank(myEllShMat) < maxEllDim
     if Properties.getIsVerbose()
             if isempty(logger)
@@ -175,7 +168,7 @@ if rank(myEllShMat) < maxEllDim
         logger.info('HPINTERSECTION: Warning! Degenerate ellipsoid.');
         logger.info('                Regularizing...');
     end
-    myEllShMat = ellipsoid.regularize(myEllShMat,myEll.absTol);
+    myEllShMat = elltool.core.AEllipsoid.regularize(myEllShMat,myEll.absTol);
 end
 
 invMyEllShMat   = ell_inv(myEllShMat);
@@ -190,6 +183,6 @@ intEllCentVec   = myEllCentVec + myEllCentVec(1, 1)*...
     [-1; invMyEllShMat*invShMatrixVec];
 intEllShMat   = (1 - hCoefficient) * [0 zeros(1, maxEllDim-1); ...
     zeros(maxEllDim-1, 1) invMyEllShMat];
-intEll   = ellipsoid(intEllCentVec, intEllShMat);
-intEll   = ell_inv(tMat)*(intEll + rotVec);
+intEll = myEll.create(intEllCentVec, intEllShMat);
+intEll = ell_inv(tMat)*(intEll + rotVec);
 end

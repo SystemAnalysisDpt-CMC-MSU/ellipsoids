@@ -9,6 +9,9 @@ classdef HyperplaneTestCase < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
     end
+    properties
+        ellFactoryObj
+    end
     methods
         function self = HyperplaneTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -16,6 +19,9 @@ classdef HyperplaneTestCase < mlunitext.test_case
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
                 filesep,shortClassName];     
+        end
+        function self = set_up_param(self, ellFactoryObj)
+            self.ellFactoryObj = ellFactoryObj;
         end
         function tear_down(~)
             close all;

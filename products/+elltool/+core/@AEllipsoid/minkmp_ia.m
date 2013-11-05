@@ -98,7 +98,8 @@ absTolVal=min(fstEll.absTol, secEll.absTol);
 isGoodDirVec = ~isbaddirection(fstEll, secEll, dirMat,absTolVal);
 nGoodDirs = sum(isGoodDirVec);
 goodDirsMat = dirMat(:,isGoodDirVec);
-intApprEllVec(nGoodDirs) = ellipsoid();
+% intApprEllVec(nGoodDirs) = ellipsoid();
+intApprEllVec(nGoodDirs) = fstEll.create();
 arrayfun(@(x) fSingleMP(x),1:nGoodDirs)
 
 Properties.setIsVerbose(isVrb);

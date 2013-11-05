@@ -97,14 +97,14 @@ checkmultvar('(x1==x2)',2,dimension(fstEll),size(directionsMat, 1),...
 centVec = fstEll.centerVec - secEll.centerVec;
 fstEllShMat = fstEll.shapeMat;
 if isdegenerate(fstEll)
-    fstEllShMat = ellipsoid.regularize(fstEllShMat,fstEll.absTol);
+    fstEllShMat = elltool.core.AEllipsoid.regularize(fstEllShMat,fstEll.absTol);
 end
 secEllShMat = secEll.shapeMat;
 if isdegenerate(secEll)
-    secEllShMat = ellipsoid.regularize(secEllShMat,secEll.absTol);
+    secEllShMat = elltool.core.AEllipsoid.regularize(secEllShMat,secEll.absTol);
 end
 absTolVal=min(fstEll.absTol, secEll.absTol);
-directionsMat  = ellipsoid.rm_bad_directions(fstEllShMat, ...
+directionsMat  = elltool.core.AEllipsoid.rm_bad_directions(fstEllShMat, ...
     secEllShMat, directionsMat,absTolVal);
 nDirs  = size(directionsMat, 2);
 if nDirs < 1
@@ -123,7 +123,8 @@ numVec=sum((fstEllShMat*directionsMat).*directionsMat,1);
 denomVec=sum((secEllShMat*directionsMat).*directionsMat,1);
 coefVec=numVec./denomVec;
 
-intApprEllVec(nDirs) = ellipsoid();
+% intApprEllVec(nDirs) = ellipsoid();
+intApprEllVec(nDirs) = fstEll.create();
 arrayfun(@(x) fSingleDir(x), 1:nDirs)
     function fSingleDir(index)
         coef = realsqrt(coefVec(index));

@@ -93,7 +93,8 @@ if is2EllEqCentre(inpEllVec)
              sqrtFirstEllShMat';
     ellMat = 0.5*(ellMat + ellMat');
 
-    outEll = ellipsoid(EllCenterVec, ellMat);
+%     outEll = ellipsoid(EllCenterVec, ellMat);
+    outEll = firstEllObj.create(EllCenterVec, ellMat);
 else
 
     if Properties.getIsVerbose()
@@ -115,7 +116,7 @@ else
         [inpEllcenrVec, inpEllShMat] = double(inpEllVec(iEllipsoid));
         if rank(inpEllShMat) < minEllDim
             inpEllShMat = ...
-                ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
+                elltool.core.AEllipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
         end
         invShMat     = ell_inv(inpEllShMat);
         bVec     = -invShMat * inpEllcenrVec;
@@ -139,13 +140,14 @@ else
 
     if rank(cvxEllMat) < minEllDim
         cvxEllMat = ...
-            ellipsoid.regularize(cvxEllMat,absTol);
+            elltool.core.AEllipsoid.regularize(cvxEllMat,absTol);
     end
 
     ellMat = cvxEllMat * cvxEllMat';
     ellMat = 0.5*(ellMat + ellMat');
 
-    outEll = ellipsoid(cvxEllCenterVec, ellMat);
+%     outEll = ellipsoid(cvxEllCenterVec, ellMat);
+    outEll = inpEllVec(1).create(cvxEllCenterVec, ellMat);
 end
 end
 

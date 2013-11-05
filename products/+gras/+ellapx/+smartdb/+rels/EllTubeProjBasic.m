@@ -828,11 +828,18 @@ if (mDim < 2) || (nDim > 3)
 end
 end
 %
-function checkCenterVecAndTimeVec(aMat,timeVec,calcPrecision)
+function checkCenterVecAndTimeVec(aMat,timeVecList,calcPrecision)
 import modgen.common.throwerror;
 nTubes = numel(aMat);
 aMatList = aMat;
-timeVec = timeVec{1};
+timeVec = timeVecList{1};
+for iTube = 2:nTubes
+    if ~isequal(timeVecList{iTube},timeVec)
+        throwerror('wrongInput:differentTimeVec', ...
+            'Time vectors are expected to be equal');
+    end
+end
+%
 maxTol=max(calcPrecision);
 %
 for iTube = 2:nTubes
@@ -841,13 +848,6 @@ for iTube = 2:nTubes
     if ~isEqual
         throwerror('wrongInput:diffCenters',...
             ['centers are different: ',reportStr]);
-    end
-end
-%
-for iTube = 2:numel(nTubes)
-    if (timeVec{iTube}~=timeVec)
-        throwerror('differentTimeVec', ...
-            'Time vectors must be equal.');
     end
 end
 end
@@ -927,24 +927,24 @@ end
 end
 function [vMat,fMat] = calcPoints(fTri,fCalcPoints,...
     nPlotPoints,...
-    timeVec,...
-    QArray, aMat, dim,...
-    calcPrecision, varargin)
+    timeVecList,...
+    qArrayList, aMatList, dimVec,...
+    calcPrecisionVec, varargin)
 %
-nDims = dim(1);
-checkCenterVecAndTimeVec(aMat,timeVec,calcPrecision);
+nDims = dimVec(1);
+checkCenterVecAndTimeVec(aMatList,timeVecList,calcPrecisionVec);
 [lGridMat, fMat] = gras.geom.tri.spheretriext(nDims,nPlotPoints);
 lGridMat = lGridMat';
-timeVec = timeVec{1};
+timeVec = timeVecList{1};
 nDir = size(lGridMat, 2);
 nTimePoints = size(timeVec, 2);
-qArr = cat(4, QArray{:});
-absTol = max(calcPrecision);
+qArr = cat(4, qArrayList{:});
+absTol = max(calcPrecisionVec);
 %
 if nTimePoints == 1
     xMat = fCalcPoints(nDir,lGridMat,nDims,squeeze(qArr(:,:,1,:)),...
-        aMat{1}(:,1),absTol);
-    if dim == 2
+        aMatList{1}(:,1),absTol);
+    if nDims == 2
         xMat = [repmat(timeVec,[1,size(xMat,2)]); xMat];
     end
     vMat = [xMat xMat(:,1)];
@@ -954,7 +954,7 @@ else
     for iTime = 1:nTimePoints
         xSliceTimeVec = fCalcPoints(nDir,lGridMat,nDims,...
             squeeze(qArr(:,:,iTime,:)),...
-            aMat{1}(:,iTime),absTol);
+            aMatList{1}(:,iTime),absTol);
         xMat(:,(iTime-1)*nDir+1:iTime*nDir) =...
             [timeVec(iTime)*ones(1,nDir); xSliceTimeVec];
     end

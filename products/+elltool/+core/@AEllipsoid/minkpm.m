@@ -103,8 +103,8 @@ else
     end
 end
     function ellsVec = getEllArr(ellsArr)
-        ellsVec = ellipsoid;
-        if isa(ellsArr, 'ellipsoid')
+        ellsVec = ellsArr(1).create();
+        if isa(ellsArr, 'ellipsoid') || isa(ellsArr, 'elltool.core.GenEllipsoid')
             cnt    = numel(ellsArr);
             ellsVec = reshape(ellsArr, cnt, 1);
         end
@@ -145,7 +145,8 @@ end
         centVec= extApproxEllVec(1).centerVec - inpEll.centerVec;
         nCols = size(dirMat, 2);
 
-                extApprEllVec(1,nCols) = ellipsoid();
+%                 extApprEllVec(1,nCols) = ellipsoid();
+                extApprEllVec(1,nCols) = ellsArr(1).create();
                 arrayfun(@(x) fCase2extAppr(x),1:nCols);
                 
                 mValVec=zeros(1, nCols);
@@ -191,7 +192,9 @@ end
         nDim = 2;
         function ellTwoDim = oneDim2TwoDim(ell)
             [ellCenVec, qMat] = ell.double();
-            ellTwoDim = ellipsoid([ellCenVec, 0].', ...
+%             ellTwoDim = ellipsoid([ellCenVec, 0].', ...
+%                 diag([qMat, 0]));
+            ellTwoDim = ell.create([ellCenVec, 0].', ...
                 diag([qMat, 0]));
         end
     end
@@ -209,7 +212,8 @@ end
 centVec =zeros(nDims,1);
 arrayfun(@(x) fAddCenter(x),inpEllArr);
 absTolArr = getAbsTol(inpEllArr);
-extApprEllVec(1,nCols) = ellipsoid;
+% extApprEllVec(1,nCols) = ellipsoid;
+extApprEllVec(1,nCols) = inpEllArr(1).create;
 arrayfun(@(x) fSingleDirection(x),1:nCols);
 
     function fAddCenter(singEll)
@@ -227,7 +231,7 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
         function fAddSh(singEll,absTol)
             shMat = singEll.shapeMat;
             if isdegenerate(singEll)
-                shMat = ellipsoid.regularize(shMat, absTol);
+                shMat = elltool.core.AEllipsoid.regularize(shMat, absTol);
             end
             fstCoef = sqrt(dirVec'*shMat*dirVec);
             subShMat = subShMat + ((1/fstCoef) * shMat);

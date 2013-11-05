@@ -43,10 +43,18 @@ fprintf('Properties:\n');
 strucdisp(Properties);
 fprintf('\n');
 fprintf('Fields (name, type, description):\n');
-fprintf(['    ', SFieldNames.shapeMat, '    double    ',...
-    SFieldDescription.shapeMat, '\n']);
-fprintf(['    ', SFieldNames.centerVec, '    double    ',...
-    SFieldDescription.centerVec, '\n']);
+    
+%     fprintf(['    ', SFieldNames.shapeMat, '    double    ',...
+%         SFieldDescription.shapeMat, '\n']);
+%     fprintf(['    ', SFieldNames.centerVec, '    double    ',...
+%         SFieldDescription.centerVec, '\n']);
+
+SFieldNamesArr = fieldnames(SFieldNames);
+for i = 1 : size(SFieldNamesArr, 1)
+    fprintf(['    ', SFieldNames.(SFieldNamesArr{i}), '    double    ',...
+         SFieldDescription.(SFieldNamesArr{i}), '\n']);
+end
+
 fprintf('\nData: \n');
 
 if (numel(SDataArray) == 0)

@@ -86,7 +86,8 @@ else
     
     secExtApprEllVec = minksum_ea(inpEllArr, dirMat);
     absTol=min(min(secExtApprEllVec.getAbsTol()),inpEll.absTol);
-    extApprEllVec(nCols) = ellipsoid();
+%     extApprEllVec(nCols) = ellipsoid();
+    extApprEllVec(nCols) = inpEllArr(1).create();
     arrayfun(@(x) fSetExtApprEllVec(x), 1:nCols)
     extApprEllVec = extApprEllVec(~extApprEllVec.isEmpty());
     
