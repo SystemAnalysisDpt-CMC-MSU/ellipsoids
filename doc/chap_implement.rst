@@ -10,7 +10,7 @@ same ellipsoid :math:`{\mathcal E}(q,Q)`, with :math:`q\in{\bf R}^n` and
 :math:`Q\in{\bf R}^{n\times n}` being symmetric positive semidefinite:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet01.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 For the ellipsoid class we overload the following functions and
@@ -63,13 +63,13 @@ All the listed operations can be applied to a single ellipsoid as well
 as to a two-dimensional array of ellipsoids. For example, 
    
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet02.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 To access individual elements of the array, the usual MATLAB subindexing is used:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet03.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 Sometimes it may be useful to modify the shape of the ellipsoid without
@@ -77,7 +77,7 @@ affecting its center. Say, we would like to bloat or squeeze the
 ellipsoid: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet04.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Since function shape does not change the center of the
@@ -86,15 +86,15 @@ input parameter. Several functions access the internal data of the
 ellipsoid object: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet05.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet06.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet07.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -103,7 +103,7 @@ compute the distance between them ( (“Stanley Chan Article Homepage”),
 Lin and Han (2002)): 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet08.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 This result indicates that the ellipsoid
@@ -115,7 +115,7 @@ L. Ros, A. Sabater, F. Thomas (2002)
 for more information about these methods. 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet09.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 It can be checked that
@@ -123,11 +123,11 @@ resulting ellipsoid externalEllObj contains the given intersection,
 whereas internalEllObj is contained in this intersection: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet10.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet11.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 
@@ -141,7 +141,7 @@ It is also possible to solve the feasibility problem, that is, to check
 if the intersection of more than two ellipsoids is empty: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet12.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 
@@ -152,11 +152,11 @@ if an ellipsoid, hyperplane or polytope intersects the union or the
 intersection of ellipsoids in the given array: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet13.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet14.m
-   :language: guess
+   :language: matlab
    :linenos:   
 
 
@@ -165,7 +165,7 @@ For the ellipsoids in
 sum can be computed explicitely and plotted: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet15.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 .. _minksumpic:
@@ -185,7 +185,7 @@ families of external and internal ellipsoids parametrized by the
 direction vector: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet16.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Functions minksum\_ea and minksum\_ia work for
@@ -197,7 +197,7 @@ can be computed explicitely and plotted for ellipsoids in
 :math:`{\bf R}`, :math:`{\bf R}^2` and :math:`{\bf R}^3`: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet17.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. _minkdiffpic:
@@ -219,7 +219,7 @@ internal ellipsoids parametrized by the direction vector, provided this
 direction is not bad: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet18.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Operation ’difference-sum’ described in section
@@ -229,7 +229,7 @@ not higher than :math:`3`, whereas the last two can deal with ellipsoids
 of arbitrary dimension. 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet19.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. _minkpmpic:
@@ -261,7 +261,7 @@ visualization and works for dimensions not higher than :math:`3`,
 whereas the last two can deal with ellipsoids of arbitrary dimension.
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet20.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -273,7 +273,7 @@ hyperplanes and halfspaces. The following two commands define one and
 the same hyperplane but two different halfspaces:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet01.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 The following functions and operators are overloaded for the hyperplane
@@ -308,15 +308,15 @@ There are several ways to access the internal data of the hyperplane
 object: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet02.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet03.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet04.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -331,7 +331,7 @@ Multi-Parametric Toolbox (Kvasnica et al. (2004), (“Multi-Parametric
 Toolbox Homepage”)), and back: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet05.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -342,7 +342,7 @@ installed.
 We can compute distance from ellipsoids to hyperplanes and polytopes: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet06.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -360,24 +360,24 @@ intersects given hyperplanes or polytopes:
 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet07.m
-   :language: guess
+   :language: matlab
    :linenos:
 
    
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet08.m
-   :language: guess
+   :language: matlab
    :linenos:
 
    
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet09.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
 The intersection of ellipsoid and hyperplane can be computed exactly:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet10.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -386,7 +386,7 @@ hyperplane objects, which in this case define halfspaces and polytope
 objects:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet11.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -394,11 +394,11 @@ Function isInside can be used to check if a polytope or union of
 polytopes is contained in the intersection of given ellipsoids:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet12.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet13.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Functions distance, intersect, intersection\_ia and isInside use the CVX
@@ -426,11 +426,11 @@ projection on static plane tubes by the instant of time. Next we provide
 some examples of the operations with ellipsoidal tubes. 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet01.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet02.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 We may be
@@ -440,11 +440,11 @@ computed, say :math:`2\leqslant t\leqslant4`. This data can be extracted
 by the cut function: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet03.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet04.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 We can compute the projection of the ellipsoidal
@@ -474,7 +474,7 @@ Also we can see projections of good directions for ellipsoidal tubes.
 We can compute tubes by the instant of time using methodfromEllTubes:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet05.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. _unionTubeStatProj:
@@ -492,14 +492,14 @@ tubes by the instant of time.
 Also we can get initial data from the resulting tube: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet06.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 There is a method
 to display a content of ellipsoidal tubes. 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet07.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. _disppic:
@@ -518,20 +518,20 @@ displays all fields of the ellipsoidal tube.
 There are several methods to find the tubes with necessary parameters.
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet08.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 Also you can use the method display to see the result of the method’s
 work. 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet09.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 We can sort our tubes by certain fields:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet10.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Reachability
@@ -573,7 +573,7 @@ with
 is done by the following sequence of commands: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet01.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 If matrices :math:`A` or
@@ -583,7 +583,7 @@ If matrices :math:`A` or
 symbolic:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet02.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -607,7 +607,7 @@ with bounds on control as before, and disturbance being
 :math:`-1\leqslant v(t)\leqslant1`, we type: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet03.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Control and disturbance
@@ -636,7 +636,7 @@ To declare a discrete-time system
 we use LinSysDiscrete constructor: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet04.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Once the LinSysDiscrete object is
@@ -645,14 +645,14 @@ interval and values of the direction vector, for which the reach set
 approximations must be computed: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet05.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 The reach set approximation is computed
 by calling the constructor of the ReachContinuous object: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet06.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 At this point,
@@ -663,7 +663,7 @@ approximations are computed. The reach set approximation data can be
 extracted in the form of arrays of ellipsoids:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet07.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -689,14 +689,14 @@ extracted and returned in the form of ReachContinuous object by the cut
 function:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet08.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 To obtain a snap shot of the reach set at given time, the same function
 cut is used: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet09.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 It can be checked if the external or internal reach set
@@ -705,19 +705,19 @@ polytopes:
 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet10.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet11.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet12.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet13.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -732,7 +732,7 @@ determine whether or not ellObj intersects with the actual reach set. To
 improve the quality of approximation, refine function should be used:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet14.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -746,7 +746,7 @@ reach set and the good curves along which the actual reach set is
 touched by its ellipsoidal approximations:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet15.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -770,7 +770,7 @@ case of this situation. To compute the further evolution in time of the
 existing reach set, function evolve should be used: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet16.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Function evolve can
@@ -780,7 +780,7 @@ To compute the backward reach set for some specified target set, we
 declare the time interval so that the terminating time comes first:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet17.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -789,7 +789,7 @@ and manipulations with the resulting reach set object are performed
 using the same functions as for continuous-time systems:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet18.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -811,7 +811,7 @@ configured using xml files, which available from a set of command-line
 utilities: 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section05_snippet01.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Here we list system parameters available from the ’default’
@@ -858,14 +858,14 @@ function types: setters and getters. Using getters we obtain system
 parameters. 
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section05_snippet02.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Some of the parameters can be changed in run-time via
 setters.
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section05_snippet03.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Visualization
@@ -914,7 +914,7 @@ or three-dimensional subspace before being plotted. This is done by
 means of projection function:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section06_snippet01.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -927,7 +927,7 @@ Function projection exists also for the
 ReachContinuous\ :math:`\backslash`\ ReachDiscrete objects:
 
 .. literalinclude:: /mcodesnippets/s_chapter05_section06_snippet02.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 

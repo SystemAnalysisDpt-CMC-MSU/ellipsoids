@@ -29,7 +29,6 @@ where :math:`{\mathcal X}_0` is the set of initial conditions, and
 .. _ellpolyfig:
 
 .. figure:: /pic/ellpoly.png
-   :align: center
    :alt: approximation
    :figwidth: 70 %
 
@@ -52,7 +51,7 @@ corresponds to the number of ellipsoidal approximations, and obtain
 external and internal ellipsoidal approximations of the reach set:
 
 .. literalinclude:: /mcodesnippets/s_chapter06_section01_snippet01.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 In :num:`figure #ellpolyfig`, the time required to compute both external and
@@ -69,9 +68,8 @@ System with Disturbance
 .. _springmassfig:
 
 .. figure:: /pic/springmass.png
-   :align: center
    :alt: spmass
-   :figwidth: 70 %
+   :figwidth: 50 %
 
    Spring-mass system.
 
@@ -127,9 +125,8 @@ and taking its projection onto :math:`(x_1, x_2)` subspace.
 .. _mechreachfig:
 
 .. figure:: /pic/reachmech.png
-   :align: center
    :alt: reachmech
-   :figwidth: 60 %
+   :figwidth: 40 %
 
    Spring-mass system without disturbance:
    (a) reach tube for time :math:`t\in[0,4]`; (b) reach set at time :math:`t=4`.
@@ -137,7 +134,7 @@ and taking its projection onto :math:`(x_1, x_2)` subspace.
    (c) reach tube for time :math:`t\in[0,4]`; (d) reach set at time :math:`t=4`.
 
 .. literalinclude:: /mcodesnippets/s_chapter06_section02_snippet01.m
-   :language: guess
+   :language: matlab
    :linenos:
 
   
@@ -177,7 +174,7 @@ ellipsoid :math:`{\mathcal E}(0, \frac{1}{4}I)`, we can compute the
 closed-loop reach set of the system with disturbance.
 
 .. literalinclude:: /mcodesnippets/s_chapter06_section02_snippet02.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 
@@ -192,7 +189,6 @@ Switched System
 .. _rlcfig:
 
 .. figure:: /pic/rlc.png
-   :align: center
    :alt: rlc
    :figwidth: 60 %
 
@@ -281,15 +277,14 @@ We can compute the reach set of :eq:`rlceq2` for some time :math:`t>2`,
 say, :math:`t=3`.
 
 .. literalinclude:: /mcodesnippets/s_chapter06_section03_snippet01.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. _rlcreachfig:
 
 .. figure:: /pic/rlcreach.png
-   :align: center
    :alt: rlcreach
-   :figwidth: 60 %
+   :scale: 70 %
 
    Forward and backward reach sets of the switched system
    (external and internal approximations).
@@ -309,7 +304,7 @@ to reach a neighborhood M of the origin at time :math:`t=3`, we compute
 the backward reach set from :math:`t=3` to :math:`t=0`. 
 
 .. literalinclude:: /mcodesnippets/s_chapter06_section03_snippet02.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 :num:`Figure #rlcreachfig` (c) presents the evolution of the reach set projection onto
@@ -325,9 +320,8 @@ Hybrid System
 .. _hwfig:
 
 .. figure:: /pic/hw.png
-   :align: center
    :alt: highway
-   :figwidth: 70 %
+   :figwidth: 60 %
 
    Highway model. Adapted from L.Muñoz et al. (2003).
 
@@ -448,7 +442,7 @@ We indicate how to implement the reach set computation of this hybrid
 system. We first define the two linear systems and the guard.
 
 .. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet01.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 We assume that initially the system is in free-flow mode. Given a set of
@@ -457,7 +451,7 @@ initial conditions, we compute the reach set according to dynamics
 external approximation of the reach set by a single ellipsoid.
 
 .. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet02.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 Having obtained the ellipsoidal array externalEllMat representing the
@@ -465,13 +459,12 @@ reach set evolving in time, we determine the ellipsoids in the array
 that intersect the guard.
 
 .. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet03.m
-   :language: guess
+   :language: matlab
    :linenos:
    
 .. _hwreachfig:
 
 .. figure:: /pic/hwreach.png
-   :align: center
    :alt: highway
    :figwidth: 70 %
 
@@ -505,7 +498,7 @@ initial conditions is the intersection of the free-flow reach set with
 the guard.
 
 .. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet04.m
-   :language: guess
+   :language: matlab
    :linenos:
 
 The union of reach sets in array crs forms the reach set for the
