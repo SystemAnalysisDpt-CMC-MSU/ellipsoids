@@ -40,23 +40,23 @@ char *in_name, *out_name;
 #endif
 
   if (ch_emp_facet != NULL) ch_free_facet (&ch_emp_facet->next);
-  if ( ! strcmp (in_name, out_name))
-   {if (NULL == (l = strchr (in_name, '.')))
-      l = strchr (in_name, '\0');
-    strcpy (l, ".bak");
-    unlink (in_name);
-    rename (out_name, in_name);
-   }
-  if (NULL == (instream = fopen(in_name,"r")))
-   {ch_no_file (in_name);
-return (-8);
-   }
-  if(NULL == (outstream = fopen (out_name, "w")))
-   {ch_no_file (out_name);
-return(-8);
-   }
-  fgets (str, 82, instream);
-  fputs (str, outstream);
+  //if ( ! strcmp (in_name, out_name))
+   //{if (NULL == (l = strchr (in_name, '.')))
+     // l = strchr (in_name, '\0');
+    //strcpy (l, ".bak");
+    //unlink (in_name);
+    //rename (out_name, in_name);
+   //}
+  //if (NULL == (instream = fopen(in_name,"r")))
+   //{ch_no_file (in_name);
+//return (-8);
+  // }
+ // if(NULL == (outstream = fopen (out_name, "w")))
+   //{ch_no_file (out_name);
+//return(-8);
+  // }
+  //fgets (str, 82, instream);
+  //fputs (str, outstream);
   ch_estCOUNT = 0;
   ch_facetCOUNT = 0;
   VIEW (pfacet, ch_first_facet)

@@ -462,7 +462,7 @@ int main(void){
 	
 	centervec[0] = 0;
 	centervec[1] = 0;
-	semiaxes[0] = 2;
+	semiaxes[0] = 1;
 	semiaxes[1] = 1;
 	
     calcEllipsoidApprox(size,centervec,semiaxes);

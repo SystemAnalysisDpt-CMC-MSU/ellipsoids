@@ -52,6 +52,7 @@ int ch_read_dat (int size,int **objnums)
 
   ch_free_mem ();
   ch_N = size; 
+  ch_N1=ch_N+1;
   ch_topCOUNT = 0;
   ch_estCOUNT = 0;
   IOstatus = 1;
@@ -61,7 +62,6 @@ int ch_read_dat (int size,int **objnums)
 return (-5);
   // direction of improving 
   for (i = 0; i < ch_N; i++) ch_state[i] = 0;
-   
   *objnums = (int*) realloc (*objnums, ch_N * sizeof (int));//indicies of project variables
   for (i = 1; i<=ch_N;i++)
 	  (*objnums)[i-1]=i;
@@ -104,6 +104,7 @@ int ch_read_dat (int size, int* indProjVec,int* improveDirectVec ,int **objnums)
       return (-8);
   }
   ch_N = size; 
+  ch_N1=ch_N+1;
   ch_topCOUNT = 0;
   ch_estCOUNT = 0;
   IOstatus = 1;
@@ -113,7 +114,7 @@ int ch_read_dat (int size, int* indProjVec,int* improveDirectVec ,int **objnums)
 return (-5);
   // direction of improving 
   ch_state = improveDirectVec;
-  objnums= indProjVec;
+  *objnums= indProjVec;
 
   //if (*objnums == NULL)
 //return (-5);
