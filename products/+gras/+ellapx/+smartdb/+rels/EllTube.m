@@ -292,10 +292,6 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %    approxSchemaName:cell[1,] - name of the schema
             %    approxSchemaDescr:cell[1,] - description of the schema
             %    calcPrecision:double[1, 1] - calculation precision
-            %   properties:
-            %    interpObjList: cell[1,nElem] of
-            %       MatrixSysReshapeOde45RegInterp[1,1] - object
-            %       containing all the necessary data for interpolation
             %
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
