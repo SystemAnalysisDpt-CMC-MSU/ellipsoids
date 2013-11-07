@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Ellipsoidal Calculus &mdash; Ellipsoidal Toolbox 0.1 documentation</title>
+    <title>Ellipsoidal Calculus &mdash; Ellipsoidal Toolbox 2.0 beta 1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1',
+        VERSION:     '2.0 beta 1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Ellipsoidal Toolbox 0.1 documentation" href="index.html" />
+    <link rel="top" title="Ellipsoidal Toolbox 2.0 beta 1 documentation" href="index.html" />
     <link rel="next" title="Reachability" href="chap_reach.html" />
     <link rel="prev" title="Introduction" href="chap_intro.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="chap_intro.html" title="Introduction"
              accesskey="P">previous</a> |</li>
-        <li><a href="main_manual.html">Ellipsoidal Toolbox 0.1 documentation</a> &raquo;</li> 
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0 beta 1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -109,10 +109,10 @@ point of <img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf5497
 <p>Given two ellipsoids, <img class="math" src="_images/math/ea744f811759be7c88b5262e9d0a740984c595a0.png" alt="{\mathcal E}(q_1,Q_1)"/> and
 <img class="math" src="_images/math/5dab2798851c8408cf12b09c6587412701b3a32a.png" alt="{\mathcal E}(q_2,Q_2)"/>, the distance between them is</p>
 <div class="math" id="equation-dist_ell">
-<p><span class="eqno">(7)</span><img src="_images/math/4a357b71070c38040c1b8a4325b4694cc6f77270.png" alt="\begin{aligned}
-{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) &amp; = &amp; \max_{\langle l,l\rangle=1}
+<p><span class="eqno">(7)</span><img src="_images/math/de6040a2794dfff5ea1ebef5b939911fbf2cfd21.png" alt="\begin{aligned}
+{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) &amp; = \max_{\langle l,l\rangle=1}
 \left(-\rho(-l ~|~ {\mathcal E}(q_1,Q_1)) - \rho(l ~|~ {\mathcal E}(q_2,Q_2))\right) \\
-&amp; = &amp; \max_{\langle l,l\rangle=1}\left(\langle l,q_1\rangle -
+&amp; = \max_{\langle l,l\rangle=1}\left(\langle l,q_1\rangle -
 \langle l,Q_1l\rangle^{1/2} - \langle l,q_2\rangle -
 \langle l,Q_2l\rangle^{1/2}\right).
 \end{aligned}"/></p>
@@ -166,12 +166,12 @@ set, denoted <img class="math" src="_images/math/9dcf65b34c9b6571c83e870b229364b
 <p>If a nondegenerate ellipsoid <img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf549754f2f.png" alt="{\mathcal E}(q,Q)"/> contains the
 origin, its polar set is also an ellipsoid:</p>
 <div class="math">
-<p><img src="_images/math/373e004781710ee96a5bb8dd322ddafc2dccbc92.png" alt="\begin{aligned}
-{\mathcal E}^\circ(q,Q) &amp; = &amp; \{l\in{\bf R}^n ~|~ \langle l,q\rangle +
+<p><img src="_images/math/a1a60d72293886a86d97110ef0f9554352c8123c.png" alt="\begin{aligned}
+{\mathcal E}^\circ(q,Q) &amp; = \{l\in{\bf R}^n ~|~ \langle l,q\rangle +
 \langle l,Ql\rangle^{1/2}\leqslant1 \}\\
-&amp; = &amp; \{l\in{\bf R}^n ~|~ \langle l,(Q-qq^T)^{-1}l\rangle +
+&amp; = \{l\in{\bf R}^n ~|~ \langle l,(Q-qq^T)^{-1}l\rangle +
 2\langle l,q\rangle\leqslant1 \}\\
-&amp; = &amp; \{l\in{\bf R}^n ~|~ \langle(l+(Q-qq^T)^{-1}q),
+&amp; = \{l\in{\bf R}^n ~|~ \langle(l+(Q-qq^T)^{-1}q),
 (Q-qq^T)(l+(Q-qq^T)^{-1}q)\rangle\leqslant1+\langle q,(Q-qq^T)^{-1}q\rangle \}.\end{aligned}"/></p>
 </div><p>The special case is</p>
 <div class="math">
@@ -562,9 +562,9 @@ an ellipsoid. Here we show how to find it.</p>
 with <img class="math" src="_images/math/c7e77feae9e86880d314fe3a51f4e851d78e25e9.png" alt="v_1=c"/> and <img class="math" src="_images/math/e2a4206b0fc420afa156e56f648b0700ce6fbf8e.png" alt="v_2=[1~0~\cdots~0]^T"/>. The ellipsoid in
 the new coordinates becomes <img class="math" src="_images/math/0833a0c6e7ed9439d370589e5c64e3f7b7359851.png" alt="{\mathcal E}(q',Q')"/> with</p>
 <div class="math">
-<p><img src="_images/math/52a8cd8edc7772787afdc8e7580c640a0f5d9058.png" alt="\begin{aligned}
-q' &amp; = &amp; q-\frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \\
-Q' &amp; = &amp; SQS^T.\end{aligned}"/></p>
+<p><img src="_images/math/9601bfdb03a243b97f39ab40b3979d6912c3798b.png" alt="\begin{aligned}
+q' &amp; = q-\frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \\
+Q' &amp; = SQS^T.\end{aligned}"/></p>
 </div><p>Define matrix <img class="math" src="_images/math/b3911b40f8b909842d24b7d89020040d1afb8cbc.png" alt="M=Q'^{-1}"/>; <img class="math" src="_images/math/cacb608f7e428f64c8e4dbffdb5dd69848201f7c.png" alt="m_{11}"/> is its element in
 position <img class="math" src="_images/math/ae7a465ffe5255961382f5777569608be052b783.png" alt="(1,1)"/>, <img class="math" src="_images/math/7f98826dc08a1a0b01b31e030bba573e93beae08.png" alt="\bar{m}"/> is the first column of <img class="math" src="_images/math/5d1e4485dc90c450e8c76826516c1b2ccb8fce16.png" alt="M"/>
 without the first element, and <img class="math" src="_images/math/dce332cba90a1411dc2b4411f6845273bdca8373.png" alt="\bar{M}"/> is the submatrix of
@@ -580,11 +580,11 @@ m_{11} &amp; &amp; \bar{m}^T\\
 </div><p>The ellipsoid resulting from the intersection is
 <img class="math" src="_images/math/c3563f03f3e8adac231b8f2cf4b1662d62c5228f.png" alt="{\mathcal E}_H(w',W')"/> with</p>
 <div class="math">
-<p><img src="_images/math/0b51050a64813051c15e05af44c91ad13cbb24cf.png" alt="\begin{aligned}
-w' &amp; = &amp; q' + q_1'\left[\begin{array}{c}
+<p><img src="_images/math/1f461c17d20992f2431d22c78516f852193d069a.png" alt="\begin{aligned}
+w' &amp; = q' + q_1'\left[\begin{array}{c}
 -1\\
 \bar{M}^{-1}\bar{m}\end{array}\right],\\
-W' &amp; = &amp; \left(1-q_1'^2(m_{11}-
+W' &amp; = \left(1-q_1'^2(m_{11}-
 \langle\bar{m},\bar{M}^{-1}\bar{m}\rangle)\right)\left[\begin{array}{c|cl}
 0 &amp; &amp; {\bf 0}\\
  &amp; \\
@@ -595,9 +595,9 @@ W' &amp; = &amp; \left(1-q_1'^2(m_{11}-
 <p>Finally, it remains to do the inverse transform of the coordinates to
 obtain ellipsoid <img class="math" src="_images/math/be5c023aff92e6173fea63995f6a126af6e9a6cf.png" alt="{\mathcal E}_H(w,W)"/>:</p>
 <div class="math">
-<p><img src="_images/math/29fb16025a20152061fa7fcb96e323cd7ec12b55.png" alt="\begin{aligned}
-w &amp; = &amp; S^Tw' + \frac{\gamma}{\langle c,c\rangle^{1/2}}c, \\
-W &amp; = &amp; S^TW'S.\end{aligned}"/></p>
+<p><img src="_images/math/75e591e33f13cf53c53cdea8c00b0c4bb253bff2.png" alt="\begin{aligned}
+w &amp; = S^Tw' + \frac{\gamma}{\langle c,c\rangle^{1/2}}c, \\
+W &amp; = S^TW'S.\end{aligned}"/></p>
 </div></div>
 <div class="section" id="intersection-of-ellipsoid-and-ellipsoid">
 <h3>Intersection of Ellipsoid and Ellipsoid<a class="headerlink" href="#intersection-of-ellipsoid-and-ellipsoid" title="Permalink to this headline">¶</a></h3>
@@ -810,12 +810,12 @@ SDP problem is feasible:</p>
 <p><img src="_images/math/883cc66c9220b1a82600e5112a8ddb183cd8f4e4.png" alt="\min 0"/></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/8141f4bbe0a41df4095ce06eef369ade6e61b5a0.png" alt="\begin{aligned}
-\lambda &amp; &gt; &amp; 0, \\
+<p><img src="_images/math/2eac5dc4401c091596e10c578d9ded87c2949057.png" alt="\begin{aligned}
+\lambda &amp; &gt;  0, \\
 \left[\begin{array}{cc}
 Q_2^{-1} &amp; -Q_2^{-1}q_2\\
 (-Q_2^{-1}q_2)^T &amp; q_2^TQ_2^{-1}q_2-1\end{array}\right]
-&amp; \preceq &amp;
+&amp; \preceq
 \lambda \left[\begin{array}{cc}
 Q_1^{-1} &amp; -Q_1^{-1}q_1\\
 (-Q_1^{-1}q_1)^T &amp; q_1^TQ_1^{-1}q_1-1\end{array}\right]\end{aligned}"/></p>
@@ -856,9 +856,9 @@ finding the minimum volume ellipsoid containing the polytope
 <p><img src="_images/math/2ba0bc17e05b19a8d5cfce76c19e71868453b485.png" alt="\min \log \det A^{-1}"/></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/e07b93040aa134160480f9bc8607c2ee0b5a0588.png" alt="\begin{aligned}
-A &amp; \succ &amp; 0, \\
-\langle (Ax_i + b), (Ax_i + b)\rangle &amp; \leqslant&amp; 1, ~~~ i=1..m.\end{aligned}"/></p>
+<p><img src="_images/math/a663db97beba72ef60f4ca802cae575c6409eb8f.png" alt="\begin{aligned}
+A &amp; \succ  0, \\
+\langle (Ax_i + b), (Ax_i + b)\rangle &amp; \leqslant 1, ~~~ i=1..m.\end{aligned}"/></p>
 </div><p>We can find the minimum volume ellipsoid containing the union of
 ellipsoids <img class="math" src="_images/math/9eb64b702fe24f660e2444967bd846b7dab309a6.png" alt="\bigcup_{i=1}^m{\mathcal E}(q_i,Q_i)"/>. Using the fact
 that for <img class="math" src="_images/math/f9c09343107ce98fcf364ac4a6974ec24212ba2f.png" alt="i=1..m"/>
@@ -876,12 +876,12 @@ variables <img class="math" src="_images/math/019e9892786e493964e145e7c5cf7b7003
 <p><img src="_images/math/2ba0bc17e05b19a8d5cfce76c19e71868453b485.png" alt="\min \log \det A^{-1}"/></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/f49c05dd72e90f33cb56d34b8cfd030be5795c5d.png" alt="\begin{aligned}
-\lambda_i &amp; &gt; &amp; 0,\\
+<p><img src="_images/math/0eca2ec71db07c3ea6e83c1162bf851b970dc391.png" alt="\begin{aligned}
+\lambda_i &amp; &gt; 0,\\
 \left[\begin{array}{ccc}
 A^2-\lambda_iQ_i^{-1} &amp; \tilde{b}+\lambda_iQ_i^{-1}q_i &amp; 0 \\
 (\tilde{b}+\lambda_iQ_i^{-1}q_i)^T &amp; -1-\lambda_i(q_i^TQ_i^{-1}q_i-1) &amp; \tilde{b}^T \\
-0 &amp; \tilde{b} &amp; -A^2\end{array}\right] &amp; \preceq &amp; 0, ~~~ i=1..m.\end{aligned}"/></p>
+0 &amp; \tilde{b} &amp; -A^2\end{array}\right] &amp; \preceq 0, ~~~ i=1..m.\end{aligned}"/></p>
 </div><p>After <img class="math" src="_images/math/019e9892786e493964e145e7c5cf7b700314e53b.png" alt="A"/> and <img class="math" src="_images/math/8136a7ef6a03334a7246df9097e5bcc31ba33fd2.png" alt="b"/> are found,</p>
 <div class="math">
 <p><img src="_images/math/5e0473fd58249ffee304204822d1167ca8ace602.png" alt="q=-A^{-1}b ~~~ \mbox{ and } ~~~ Q=(A^TA)^{-1}."/></p>
@@ -918,9 +918,9 @@ where <img class="math" src="_images/math/4d042a567bd7e5b5fae8900e4bf9cc8bc58792
 <p><img src="_images/math/ac03112d81b92ce6eab79afa40e03ebedb8628f1.png" alt="\min \log \det B^{-1}"/></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/e55d64d8461a89a3fff9c1950936db9230db320f.png" alt="\begin{aligned}
-B &amp; \succ &amp; 0,\\
-\langle c_i, Bc_i\rangle + \langle c_i, q\rangle &amp; \leqslant&amp; \gamma_i,
+<p><img src="_images/math/ab5251439ecc70cee3e15e6288ea2c7ca840e025.png" alt="\begin{aligned}
+B &amp; \succ 0,\\
+\langle c_i, Bc_i\rangle + \langle c_i, q\rangle &amp; \leqslant \gamma_i,
 ~~~ i=1..m.\end{aligned}"/></p>
 </div><p>We can find the maximum volume ellipsoid that lies inside the
 intersection of given ellipsoids
@@ -937,12 +937,12 @@ B(Q_i^{-1}q-Q_i^{-1}q_i) &amp; \lambda_iI-BQ_i^{-1}B\end{array}\right] \succeq 0
 <p><img src="_images/math/ac03112d81b92ce6eab79afa40e03ebedb8628f1.png" alt="\min \log \det B^{-1}"/></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/f3f4a28e9213efe66147dc752631677d61411e9a.png" alt="\begin{aligned}
-\lambda_i &amp; &gt; &amp; 0, \\
+<p><img src="_images/math/099017df42de1d1cb4c003cfa90e314962c71731.png" alt="\begin{aligned}
+\lambda_i &amp; &gt;  0, \\
 \left[\begin{array}{ccc}
 1-\lambda_i &amp; 0 &amp; (q - q_i)^T\\
 0 &amp; \lambda_iI &amp; B\\
-q - q_i &amp; B &amp; Q_i\end{array}\right] &amp; \succeq &amp; 0, ~~~ i=1..m.\end{aligned}"/></p>
+q - q_i &amp; B &amp; Q_i\end{array}\right] &amp; \succeq  0, ~~~ i=1..m.\end{aligned}"/></p>
 </div><p>After <img class="math" src="_images/math/ff5fb3d775862e2123b007eb4373ff6cc1a34d4e.png" alt="B"/> and <img class="math" src="_images/math/0615acc3725de21025457e7d6f7694dab8e2f758.png" alt="q"/> are found,</p>
 <div class="math">
 <p><img src="_images/math/2c4ecb1b18106402978cf3d4481c3df7d0aa8922.png" alt="Q = B^TB."/></p>
@@ -1020,11 +1020,11 @@ Boyd and Vandenberghe (2004).</p>
         <li class="right" >
           <a href="chap_intro.html" title="Introduction"
              >previous</a> |</li>
-        <li><a href="main_manual.html">Ellipsoidal Toolbox 0.1 documentation</a> &raquo;</li> 
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0 beta 1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Lukashevichus K..
+        &copy; Copyright 2011-2013 Moscow State University, Faculty of Computational Mathematics and Computer Science, System Analysis Department, 2004-2011 The Regents of the University of California.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
     </div>
   </body>

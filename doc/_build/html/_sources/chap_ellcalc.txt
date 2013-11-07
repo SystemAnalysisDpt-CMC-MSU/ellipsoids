@@ -91,9 +91,9 @@ Given two ellipsoids, :math:`{\mathcal E}(q_1,Q_1)` and
    :label: dist_ell
 
    \begin{aligned}
-   {\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) & = & \max_{\langle l,l\rangle=1}
+   {\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) & = \max_{\langle l,l\rangle=1}
    \left(-\rho(-l ~|~ {\mathcal E}(q_1,Q_1)) - \rho(l ~|~ {\mathcal E}(q_2,Q_2))\right) \\
-   & = & \max_{\langle l,l\rangle=1}\left(\langle l,q_1\rangle -
+   & = \max_{\langle l,l\rangle=1}\left(\langle l,q_1\rangle -
    \langle l,Q_1l\rangle^{1/2} - \langle l,q_2\rangle -
    \langle l,Q_2l\rangle^{1/2}\right).
    \end{aligned}
@@ -165,11 +165,11 @@ origin, its polar set is also an ellipsoid:
 .. math::
 
    \begin{aligned}
-   {\mathcal E}^\circ(q,Q) & = & \{l\in{\bf R}^n ~|~ \langle l,q\rangle +
+   {\mathcal E}^\circ(q,Q) & = \{l\in{\bf R}^n ~|~ \langle l,q\rangle +
    \langle l,Ql\rangle^{1/2}\leqslant1 \}\\
-   & = & \{l\in{\bf R}^n ~|~ \langle l,(Q-qq^T)^{-1}l\rangle +
+   & = \{l\in{\bf R}^n ~|~ \langle l,(Q-qq^T)^{-1}l\rangle +
    2\langle l,q\rangle\leqslant1 \}\\
-   & = & \{l\in{\bf R}^n ~|~ \langle(l+(Q-qq^T)^{-1}q),
+   & = \{l\in{\bf R}^n ~|~ \langle(l+(Q-qq^T)^{-1}q),
    (Q-qq^T)(l+(Q-qq^T)^{-1}q)\rangle\leqslant1+\langle q,(Q-qq^T)^{-1}q\rangle \}.\end{aligned}
 
 The special case is
@@ -740,8 +740,8 @@ the new coordinates becomes :math:`{\mathcal E}(q',Q')` with
 .. math::
 
    \begin{aligned}
-   q' & = & q-\frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \\
-   Q' & = & SQS^T.\end{aligned}
+   q' & = q-\frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \\
+   Q' & = SQS^T.\end{aligned}
 
 Define matrix :math:`M=Q'^{-1}`; :math:`m_{11}` is its element in
 position :math:`(1,1)`, :math:`\bar{m}` is the first column of :math:`M`
@@ -764,10 +764,10 @@ The ellipsoid resulting from the intersection is
 .. math::
 
    \begin{aligned}
-   w' & = & q' + q_1'\left[\begin{array}{c}
+   w' & = q' + q_1'\left[\begin{array}{c}
    -1\\
    \bar{M}^{-1}\bar{m}\end{array}\right],\\
-   W' & = & \left(1-q_1'^2(m_{11}-
+   W' & = \left(1-q_1'^2(m_{11}-
    \langle\bar{m},\bar{M}^{-1}\bar{m}\rangle)\right)\left[\begin{array}{c|cl}
    0 & & {\bf 0}\\
     & \\
@@ -783,8 +783,8 @@ obtain ellipsoid :math:`{\mathcal E}_H(w,W)`:
 .. math::
 
    \begin{aligned}
-   w & = & S^Tw' + \frac{\gamma}{\langle c,c\rangle^{1/2}}c, \\
-   W & = & S^TW'S.\end{aligned}
+   w & = S^Tw' + \frac{\gamma}{\langle c,c\rangle^{1/2}}c, \\
+   W & = S^TW'S.\end{aligned}
 
 Intersection of Ellipsoid and Ellipsoid
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1085,11 +1085,11 @@ subject to:
 .. math::
 
    \begin{aligned}
-   \lambda & > & 0, \\
+   \lambda & >  0, \\
    \left[\begin{array}{cc}
    Q_2^{-1} & -Q_2^{-1}q_2\\
    (-Q_2^{-1}q_2)^T & q_2^TQ_2^{-1}q_2-1\end{array}\right]
-   & \preceq &
+   & \preceq 
    \lambda \left[\begin{array}{cc}
    Q_1^{-1} & -Q_1^{-1}q_1\\
    (-Q_1^{-1}q_1)^T & q_1^TQ_1^{-1}q_1-1\end{array}\right]\end{aligned}
@@ -1141,8 +1141,8 @@ subject to:
 .. math::
 
    \begin{aligned}
-   A & \succ & 0, \\
-   \langle (Ax_i + b), (Ax_i + b)\rangle & \leqslant& 1, ~~~ i=1..m.\end{aligned}
+   A & \succ  0, \\
+   \langle (Ax_i + b), (Ax_i + b)\rangle & \leqslant 1, ~~~ i=1..m.\end{aligned}
 
 We can find the minimum volume ellipsoid containing the union of
 ellipsoids :math:`\bigcup_{i=1}^m{\mathcal E}(q_i,Q_i)`. Using the fact
@@ -1168,11 +1168,11 @@ subject to:
 .. math::
 
    \begin{aligned}
-   \lambda_i & > & 0,\\
+   \lambda_i & > 0,\\
    \left[\begin{array}{ccc}
    A^2-\lambda_iQ_i^{-1} & \tilde{b}+\lambda_iQ_i^{-1}q_i & 0 \\
    (\tilde{b}+\lambda_iQ_i^{-1}q_i)^T & -1-\lambda_i(q_i^TQ_i^{-1}q_i-1) & \tilde{b}^T \\
-   0 & \tilde{b} & -A^2\end{array}\right] & \preceq & 0, ~~~ i=1..m.\end{aligned}
+   0 & \tilde{b} & -A^2\end{array}\right] & \preceq 0, ~~~ i=1..m.\end{aligned}
 
 After :math:`A` and :math:`b` are found,
 
@@ -1223,8 +1223,8 @@ subject to:
 .. math::
 
    \begin{aligned}
-   B & \succ & 0,\\
-   \langle c_i, Bc_i\rangle + \langle c_i, q\rangle & \leqslant& \gamma_i,
+   B & \succ 0,\\
+   \langle c_i, Bc_i\rangle + \langle c_i, q\rangle & \leqslant \gamma_i,
    ~~~ i=1..m.\end{aligned}
 
 We can find the maximum volume ellipsoid that lies inside the
@@ -1249,11 +1249,11 @@ subject to:
 .. math::
 
    \begin{aligned}
-   \lambda_i & > & 0, \\
+   \lambda_i & >  0, \\
    \left[\begin{array}{ccc}
    1-\lambda_i & 0 & (q - q_i)^T\\
    0 & \lambda_iI & B\\
-   q - q_i & B & Q_i\end{array}\right] & \succeq & 0, ~~~ i=1..m.\end{aligned}
+   q - q_i & B & Q_i\end{array}\right] & \succeq  0, ~~~ i=1..m.\end{aligned}
 
 After :math:`B` and :math:`q` are found,
 

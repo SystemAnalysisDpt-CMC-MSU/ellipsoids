@@ -6,8 +6,6 @@
 Welcome to Ellipsoidal Toolbox documentation!
 =============================================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
 
@@ -20,13 +18,3 @@ Contents:
    chap_summary
    chap_acknowledge
    chap_func		
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-

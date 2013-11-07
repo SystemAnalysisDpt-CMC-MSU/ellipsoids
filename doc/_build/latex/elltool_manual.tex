@@ -14,10 +14,10 @@
 \usepackage{amssymb}
 
 
-\title{elltool\_manual Documentation}
-\date{November 05, 2013}
-\release{0.1}
-\author{Lukashevichus K.}
+\title{Ellipsoidal Toolbox Documentation}
+\date{November 07, 2013}
+\release{2.0 beta 1}
+\author{Peter Gagarinov, Alex A. Kurzhanskiy}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Release}
 \makeindex
@@ -121,8 +121,6 @@
 \tableofcontents
 \phantomsection\label{main_manual::doc}
 
-
-Contents:
 
 
 \chapter{Introduction}
@@ -438,9 +436,9 @@ Given two ellipsoids, ${\mathcal E}(q_1,Q_1)$ and
 ${\mathcal E}(q_2,Q_2)$, the distance between them is
 \phantomsection\label{chap_ellcalc:equation-dist_ell}\begin{gather}
 \begin{split}\begin{aligned}
-{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) & = & \max_{\langle l,l\rangle=1}
+{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) & = \max_{\langle l,l\rangle=1}
 \left(-\rho(-l ~|~ {\mathcal E}(q_1,Q_1)) - \rho(l ~|~ {\mathcal E}(q_2,Q_2))\right) \\
-& = & \max_{\langle l,l\rangle=1}\left(\langle l,q_1\rangle -
+& = \max_{\langle l,l\rangle=1}\left(\langle l,q_1\rangle -
 \langle l,Q_1l\rangle^{1/2} - \langle l,q_2\rangle -
 \langle l,Q_2l\rangle^{1/2}\right).
 \end{aligned}\end{split}\label{chap_ellcalc-dist_ell}
@@ -511,11 +509,11 @@ If a nondegenerate ellipsoid ${\mathcal E}(q,Q)$ contains the
 origin, its polar set is also an ellipsoid:
 \begin{gather}
 \begin{split}\begin{aligned}
-{\mathcal E}^\circ(q,Q) & = & \{l\in{\bf R}^n ~|~ \langle l,q\rangle +
+{\mathcal E}^\circ(q,Q) & = \{l\in{\bf R}^n ~|~ \langle l,q\rangle +
 \langle l,Ql\rangle^{1/2}\leqslant1 \}\\
-& = & \{l\in{\bf R}^n ~|~ \langle l,(Q-qq^T)^{-1}l\rangle +
+& = \{l\in{\bf R}^n ~|~ \langle l,(Q-qq^T)^{-1}l\rangle +
 2\langle l,q\rangle\leqslant1 \}\\
-& = & \{l\in{\bf R}^n ~|~ \langle(l+(Q-qq^T)^{-1}q),
+& = \{l\in{\bf R}^n ~|~ \langle(l+(Q-qq^T)^{-1}q),
 (Q-qq^T)(l+(Q-qq^T)^{-1}q)\rangle\leqslant1+\langle q,(Q-qq^T)^{-1}q\rangle \}.\end{aligned}\end{split}\notag
 \end{gather}
 The special case is
@@ -986,8 +984,8 @@ with $v_1=c$ and $v_2=[1~0~\cdots~0]^T$. The ellipsoid in
 the new coordinates becomes ${\mathcal E}(q',Q')$ with
 \begin{gather}
 \begin{split}\begin{aligned}
-q' & = & q-\frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \\
-Q' & = & SQS^T.\end{aligned}\end{split}\notag
+q' & = q-\frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \\
+Q' & = SQS^T.\end{aligned}\end{split}\notag
 \end{gather}
 Define matrix $M=Q'^{-1}$; $m_{11}$ is its element in
 position $(1,1)$, $\bar{m}$ is the first column of $M$
@@ -1006,10 +1004,10 @@ The ellipsoid resulting from the intersection is
 ${\mathcal E}_H(w',W')$ with
 \begin{gather}
 \begin{split}\begin{aligned}
-w' & = & q' + q_1'\left[\begin{array}{c}
+w' & = q' + q_1'\left[\begin{array}{c}
 -1\\
 \bar{M}^{-1}\bar{m}\end{array}\right],\\
-W' & = & \left(1-q_1'^2(m_{11}-
+W' & = \left(1-q_1'^2(m_{11}-
 \langle\bar{m},\bar{M}^{-1}\bar{m}\rangle)\right)\left[\begin{array}{c|cl}
 0 & & {\bf 0}\\
  & \\
@@ -1023,8 +1021,8 @@ Finally, it remains to do the inverse transform of the coordinates to
 obtain ellipsoid ${\mathcal E}_H(w,W)$:
 \begin{gather}
 \begin{split}\begin{aligned}
-w & = & S^Tw' + \frac{\gamma}{\langle c,c\rangle^{1/2}}c, \\
-W & = & S^TW'S.\end{aligned}\end{split}\notag
+w & = S^Tw' + \frac{\gamma}{\langle c,c\rangle^{1/2}}c, \\
+W & = S^TW'S.\end{aligned}\end{split}\notag
 \end{gather}
 
 \subsection{Intersection of Ellipsoid and Ellipsoid}
@@ -1261,11 +1259,11 @@ SDP problem is feasible:
 subject to:
 \begin{gather}
 \begin{split}\begin{aligned}
-\lambda & > & 0, \\
+\lambda & >  0, \\
 \left[\begin{array}{cc}
 Q_2^{-1} & -Q_2^{-1}q_2\\
 (-Q_2^{-1}q_2)^T & q_2^TQ_2^{-1}q_2-1\end{array}\right]
-& \preceq &
+& \preceq
 \lambda \left[\begin{array}{cc}
 Q_1^{-1} & -Q_1^{-1}q_1\\
 (-Q_1^{-1}q_1)^T & q_1^TQ_1^{-1}q_1-1\end{array}\right]\end{aligned}\end{split}\notag
@@ -1315,8 +1313,8 @@ ${\bf conv}\{x_1,\cdots,x_m\}$. The SDP problem is
 subject to:
 \begin{gather}
 \begin{split}\begin{aligned}
-A & \succ & 0, \\
-\langle (Ax_i + b), (Ax_i + b)\rangle & \leqslant& 1, ~~~ i=1..m.\end{aligned}\end{split}\notag
+A & \succ  0, \\
+\langle (Ax_i + b), (Ax_i + b)\rangle & \leqslant 1, ~~~ i=1..m.\end{aligned}\end{split}\notag
 \end{gather}
 We can find the minimum volume ellipsoid containing the union of
 ellipsoids $\bigcup_{i=1}^m{\mathcal E}(q_i,Q_i)$. Using the fact
@@ -1338,11 +1336,11 @@ $\lambda_1,\cdots,\lambda_m$:
 subject to:
 \begin{gather}
 \begin{split}\begin{aligned}
-\lambda_i & > & 0,\\
+\lambda_i & > 0,\\
 \left[\begin{array}{ccc}
 A^2-\lambda_iQ_i^{-1} & \tilde{b}+\lambda_iQ_i^{-1}q_i & 0 \\
 (\tilde{b}+\lambda_iQ_i^{-1}q_i)^T & -1-\lambda_i(q_i^TQ_i^{-1}q_i-1) & \tilde{b}^T \\
-0 & \tilde{b} & -A^2\end{array}\right] & \preceq & 0, ~~~ i=1..m.\end{aligned}\end{split}\notag
+0 & \tilde{b} & -A^2\end{array}\right] & \preceq 0, ~~~ i=1..m.\end{aligned}\end{split}\notag
 \end{gather}
 After $A$ and $b$ are found,
 \begin{gather}
@@ -1389,8 +1387,8 @@ In case of polytope, $S=P(C,g)$ with $P(C,g)$ defined in
 subject to:
 \begin{gather}
 \begin{split}\begin{aligned}
-B & \succ & 0,\\
-\langle c_i, Bc_i\rangle + \langle c_i, q\rangle & \leqslant& \gamma_i,
+B & \succ 0,\\
+\langle c_i, Bc_i\rangle + \langle c_i, q\rangle & \leqslant \gamma_i,
 ~~~ i=1..m.\end{aligned}\end{split}\notag
 \end{gather}
 We can find the maximum volume ellipsoid that lies inside the
@@ -1411,11 +1409,11 @@ $B$, $q$, and $\lambda_1,\cdots,\lambda_m$:
 subject to:
 \begin{gather}
 \begin{split}\begin{aligned}
-\lambda_i & > & 0, \\
+\lambda_i & >  0, \\
 \left[\begin{array}{ccc}
 1-\lambda_i & 0 & (q - q_i)^T\\
 0 & \lambda_iI & B\\
-q - q_i & B & Q_i\end{array}\right] & \succeq & 0, ~~~ i=1..m.\end{aligned}\end{split}\notag
+q - q_i & B & Q_i\end{array}\right] & \succeq  0, ~~~ i=1..m.\end{aligned}\end{split}\notag
 \end{gather}
 After $B$ and $q$ are found,
 \begin{gather}
@@ -2597,7 +2595,7 @@ ordinary affine system with known $v(\cdot)=q(\cdot)$. If matrix
 $G(\cdot)=0$, the system reduces to a linear controlled system. In
 the absence of disturbance ($Q(\cdot)=0$ or $G(\cdot)=0$),
 $\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))=\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))={\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))$,
-the reach set is as in Definition {[}def:sub:\emph{o}lrs{]}. !!! WATCH !!!
+the reach set is as in Definition.
 
 Maxmin and minmax CLRS
 $\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)$ and
@@ -2855,8 +2853,8 @@ and
 \right)\end{split}\notag
 \end{gather}
 in direction $l(t)$ from \eqref{chap_reach-bckadjointd}. Section
-{[}subsec:sub:\emph{s}umdiff{]} describes the operation of geometric
-sum-difference for ellipsoids. !!! WATCH !!!
+{\color{red}\bfseries{}{}`Geometric Sum-Difference{}`\_} describes the operation of geometric
+sum-difference for ellipsoids.
 
 External and internal ellipsoids for minmax CLBRS
 $\underline{{\mathcal Y}}_{CL}(t_1,t,{\mathcal E}(y_1,Y_1))$ at
@@ -2880,7 +2878,7 @@ and
 \right)\end{split}\notag
 \end{gather}
 in direction $l(t)$ from \eqref{chap_reach-bckadjointd}. Section
-{[}subsec:sub:\emph{d}iffsum{]} describes the operation of geometric
+{\color{red}\bfseries{}{}`Geometric Difference-Sum{}`\_} describes the operation of geometric
 difference-sum for ellipsoids.
 
 A. A. Kurzhanskiy, P. Varaiya. 2007. “Ellipsoidal Techniques for
@@ -3032,11 +3030,11 @@ same ellipsoid ${\mathcal E}(q,Q)$, with $q\in{\bf R}^n$ and
 $Q\in{\bf R}^{n\times n}$ being symmetric positive semidefinite:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
- \PYG{n}{centVec} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{err}{\PYGZsq{}}\PYG{p}{;}
- \PYG{n}{shMat} \PYG{o}{=} \PYG{n}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
- \PYG{n}{ellObj} \PYG{o}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{n}{centVec}\PYG{p}{,} \PYG{n}{shMat}\PYG{p}{)}\PYG{p}{;}
- \PYG{n}{ellObj} \PYG{o}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{n}{shMat}\PYG{p}{)} \PYG{o}{+} \PYG{n}{centVec}\PYG{p}{;}
- \PYG{n}{ellObj} \PYG{o}{=} \PYG{n}{sqrtm}\PYG{p}{(}\PYG{n}{shMat}\PYG{p}{)}\PYG{o}{*}\PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{n}{size}\PYG{p}{(}\PYG{n}{shMat}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)} \PYG{o}{+} \PYG{n}{centVec}\PYG{p}{;}
+ \PYG{n}{centVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
+ \PYG{n}{shMat} \PYG{p}{=} \PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
+ \PYG{n}{ellObj} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{n}{centVec}\PYG{p}{,} \PYG{n}{shMat}\PYG{p}{)}\PYG{p}{;}
+ \PYG{n}{ellObj} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{n}{shMat}\PYG{p}{)} \PYG{o}{+} \PYG{n}{centVec}\PYG{p}{;}
+ \PYG{n}{ellObj} \PYG{p}{=} \PYG{n}{sqrtm}\PYG{p}{(}\PYG{n}{shMat}\PYG{p}{)}\PYG{o}{*}\PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{n+nb}{size}\PYG{p}{(}\PYG{n}{shMat}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)} \PYG{o}{+} \PYG{n}{centVec}\PYG{p}{;}
 \end{Verbatim}
 
 For the ellipsoid class we overload the following functions and
@@ -3124,10 +3122,10 @@ as to a two-dimensional array of ellipsoids. For example,
 To access individual elements of the array, the usual MATLAB subindexing is used:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{aMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{aMat} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{2}\PYG{n}{x2} \PYG{n}{real} \PYG{n}{matrix}
-\PYG{n}{bVec} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;} \PYG{o}{\PYGZpc{}} \PYG{n}{bVec} \PYG{o}{\PYGZhy{}} \PYG{n}{vector} \PYG{n}{in} \PYG{n}{R}\PYG{o}{\PYGZca{}}\PYG{l+m+mi}{2}
-\PYG{o}{\PYGZpc{}} \PYG{n}{affine} \PYG{n}{transformation} \PYG{n}{of} \PYG{n}{ellipsoids} \PYG{n}{in} \PYG{n}{the} \PYG{n}{second} \PYG{n}{column} \PYG{n}{of} \PYG{n}{ellMat}
-\PYG{n}{aTransMat} \PYG{o}{=} \PYG{n}{aMat} \PYG{o}{*} \PYG{n}{ellMat}\PYG{p}{(}\PYG{o}{:}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{+} \PYG{n}{bVec}\PYG{p}{;}
+\PYG{n}{aMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} aMat \PYGZhy{} 2x2 real matrix}
+\PYG{n}{bVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;} \PYG{c}{\PYGZpc{} bVec \PYGZhy{} vector in R\PYGZca{}2}
+\PYG{c}{\PYGZpc{} affine transformation of ellipsoids in the second column of ellMat}
+\PYG{n}{aTransMat} \PYG{p}{=} \PYG{n}{aMat} \PYG{o}{*} \PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)} \PYG{o}{+} \PYG{n}{bVec}\PYG{p}{;}
 \end{Verbatim}
 
 Sometimes it may be useful to modify the shape of the ellipsoid without
@@ -3135,8 +3133,8 @@ affecting its center. Say, we would like to bloat or squeeze the
 ellipsoid:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{bltEllObj} \PYG{o}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{getShape}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{bloats} \PYG{n}{ellipsoid} \PYG{n}{firstEllObj}
-\PYG{n}{sqzEllObj} \PYG{o}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{getShape}\PYG{p}{(}\PYG{l+m+mf}{0.5}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{squeezes} \PYG{n}{ellipsoid} \PYG{n}{firstEllObj}
+\PYG{n}{bltEllObj} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{getShape}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} bloats ellipsoid firstEllObj}
+\PYG{n}{sqzEllObj} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{getShape}\PYG{p}{(}\PYG{l+m+mf}{0.5}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} squeezes ellipsoid firstEllObj}
 \end{Verbatim}
 
 Since function shape does not change the center of the
@@ -3145,16 +3143,16 @@ input parameter. Several functions access the internal data of the
 ellipsoid object:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{p}{[}\PYG{n}{centVec}\PYG{p}{,} \PYG{n}{shMat}\PYG{p}{]} \PYG{o}{=} \PYG{n}{secEllObj}\PYG{p}{.}\PYG{k+kt}{double}\PYG{p}{(}\PYG{p}{)}
-\PYG{o}{\PYGZpc{}} \PYG{n}{centVec} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}    \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.5000}
-\PYG{o}{\PYGZpc{}}    \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.1667}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}} \PYG{n}{shMat} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}    \PYG{l+m+mf}{0.9167}     \PYG{l+m+mf}{0.9167}
-\PYG{o}{\PYGZpc{}}    \PYG{l+m+mf}{0.9167}     \PYG{l+m+mf}{1.5278}
+\PYG{p}{[}\PYG{n}{centVec}\PYG{p}{,} \PYG{n}{shMat}\PYG{p}{]} \PYG{p}{=} \PYG{n}{secEllObj}\PYG{p}{.}\PYG{n}{double}\PYG{p}{(}\PYG{p}{)}
+\PYG{c}{\PYGZpc{} centVec =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}    \PYGZhy{}0.5000}
+\PYG{c}{\PYGZpc{}    \PYGZhy{}0.1667}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{} shMat =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}    0.9167     0.9167}
+\PYG{c}{\PYGZpc{}    0.9167     1.5278}
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
@@ -3169,17 +3167,17 @@ ellipsoid object:
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{bufEllVec} \PYG{o}{=} \PYG{p}{[}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{:}\PYG{p}{)} \PYG{n}{fourthEllObj}\PYG{p}{]}\PYG{p}{;}
-\PYG{p}{[}\PYG{n}{dimVec}\PYG{p}{,} \PYG{n}{rankVec}\PYG{p}{]} \PYG{o}{=} \PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{dimension}\PYG{p}{(}\PYG{p}{)} 
+\PYG{n}{bufEllVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{p}{:}\PYG{p}{)} \PYG{n}{fourthEllObj}\PYG{p}{]}\PYG{p}{;}
+\PYG{p}{[}\PYG{n}{dimVec}\PYG{p}{,} \PYG{n}{rankVec}\PYG{p}{]} \PYG{p}{=} \PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{dimension}\PYG{p}{(}\PYG{p}{)} 
 
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{dimVec} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}    \PYG{l+m+mi}{2}     \PYG{l+m+mi}{2}     \PYG{l+m+mi}{4}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}} \PYG{n}{rankVec} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}    \PYG{l+m+mi}{2}     \PYG{l+m+mi}{2}     \PYG{l+m+mi}{3}
+\PYG{c}{\PYGZpc{} dimVec =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}    2     2     4}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{} rankVec =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}    2     2     3}
 \end{Verbatim}
 
 One way to check if two ellipsoids intersect, is to
@@ -3225,12 +3223,12 @@ whereas internalEllObj is contained in this intersection:
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{bufEllVec} \PYG{o}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{thirdEllObj}\PYG{p}{]}
+\PYG{n}{bufEllVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{thirdEllObj}\PYG{p}{]}
 \PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{n}{internalEllObj}\PYG{p}{)} 
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{1}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      1}
 \end{Verbatim}
 
 Function
@@ -3242,11 +3240,11 @@ It is also possible to solve the feasibility problem, that is, to check
 if the intersection of more than two ellipsoids is empty:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{,} \PYG{l+s+sc}{\PYGZsq{}i\PYGZsq{}}\PYG{p}{)}  
+\PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}  
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      \PYGZhy{}1}
 \end{Verbatim}
 
 In this
@@ -3256,21 +3254,21 @@ if an ellipsoid, hyperplane or polytope intersects the union or the
 intersection of ellipsoids in the given array:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{bufEllVec} \PYG{o}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj} \PYG{n}{thirdEllObj}\PYG{p}{]}
-\PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{,} \PYG{l+s+sc}{\PYGZsq{}i\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{bufEllVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj} \PYG{n}{thirdEllObj}\PYG{p}{]}
+\PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{0}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      0}
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{bufEllVec} \PYG{o}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj} \PYG{n}{thirdEllObj}\PYG{p}{]}\PYG{p}{;}
-\PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{,} \PYG{l+s+sc}{\PYGZsq{}u\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{bufEllVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj} \PYG{n}{thirdEllObj}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{u\PYGZsq{}}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{1}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      1}
 \end{Verbatim}
 
 For the ellipsoids in
@@ -3357,27 +3355,27 @@ internal ellipsoids parametrized by the direction vector, provided this
 direction is not bad:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{absTol} \PYG{o}{=} \PYG{n}{getAbsTol}\PYG{p}{(}\PYG{n}{firstEllObj}\PYG{p}{)}\PYG{p}{;}
-\PYG{o}{\PYGZpc{}} \PYG{n}{find} \PYG{n}{out} \PYG{n}{which} \PYG{n}{of} \PYG{n}{the} \PYG{n}{directions} \PYG{n}{in} \PYG{n}{dirsMat} \PYG{n}{are} \PYG{n}{bad}
+\PYG{n}{absTol} \PYG{p}{=} \PYG{n}{getAbsTol}\PYG{p}{(}\PYG{n}{firstEllObj}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} find out which of the directions in dirsMat are bad}
 \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{isbaddirection}\PYG{p}{(}\PYG{n}{fourthEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{)}  
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{1}     \PYG{l+m+mi}{0}     \PYG{l+m+mi}{0}     \PYG{l+m+mi}{1}     \PYG{l+m+mi}{0} 
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      1     0     0     1     0 }
 
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{two} \PYG{n}{of} \PYG{n}{five} \PYG{n}{directions} \PYG{n}{specified} \PYG{n}{by} \PYG{n}{dirsMat} \PYG{n}{are} \PYG{n}{bad}\PYG{p}{,}
-\PYG{o}{\PYGZpc{}} \PYG{n}{so}\PYG{p}{,} \PYG{n}{only} \PYG{n}{three} \PYG{n}{ellipsoidal} \PYG{n}{approximations} 
-\PYG{o}{\PYGZpc{}} \PYG{n}{can} \PYG{n}{be} \PYG{n}{produced} \PYG{k}{for} \PYG{n}{this} \PYG{n}{dirsMat}\PYG{o}{:}
-\PYG{n}{externalEllVec} \PYG{o}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{minkdiff\PYGZus{}ea}\PYG{p}{(}\PYG{n}{fourthEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{)} 
+\PYG{c}{\PYGZpc{} two of five directions specified by dirsMat are bad,}
+\PYG{c}{\PYGZpc{} so, only three ellipsoidal approximations }
+\PYG{c}{\PYGZpc{} can be produced for this dirsMat:}
+\PYG{n}{externalEllVec} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{minkdiff\PYGZus{}ea}\PYG{p}{(}\PYG{n}{fourthEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{)} 
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{externalEllVec} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} \PYG{n}{Array} \PYG{n}{of} \PYG{n}{ellipsoids} \PYG{n}{with} \PYG{n}{dimensionality} \PYG{l+m+mi}{1}\PYG{n}{x3}
+\PYG{c}{\PYGZpc{} externalEllVec =}
+\PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 1x3}
 
-\PYG{n}{internalEllVec} \PYG{o}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{minkdiff\PYGZus{}ia}\PYG{p}{(}\PYG{n}{fourthEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{)}
+\PYG{n}{internalEllVec} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{minkdiff\PYGZus{}ia}\PYG{p}{(}\PYG{n}{fourthEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{internalEllVec} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} \PYG{n}{Array} \PYG{n}{of} \PYG{n}{ellipsoids} \PYG{n}{with} \PYG{n}{dimensionality} \PYG{l+m+mi}{1}\PYG{n}{x3}
+\PYG{c}{\PYGZpc{} internalEllVec =}
+\PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 1x3}
 \end{Verbatim}
 
 Operation ’difference-sum’ described in section
@@ -3447,8 +3445,8 @@ hyperplanes and halfspaces. The following two commands define one and
 the same hyperplane but two different halfspaces:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{firstHypObj} \PYG{o}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{defines} \PYG{n}{halfspace} \PYG{n}{x1} \PYG{o}{+} \PYG{n}{x2} \PYG{o}{\PYGZlt{}}\PYG{o}{=} \PYG{l+m+mi}{1}
-\PYG{n}{firstHypObj} \PYG{o}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{defines} \PYG{n}{halfspace} \PYG{n}{x1} \PYG{o}{+} \PYG{n}{x2} \PYG{o}{\PYGZgt{}}\PYG{o}{=} \PYG{l+m+mi}{1}
+\PYG{n}{firstHypObj} \PYG{p}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} defines halfspace x1 + x2 \PYGZlt{}= 1}
+\PYG{n}{firstHypObj} \PYG{p}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} defines halfspace x1 + x2 \PYGZgt{}= 1}
 \end{Verbatim}
 
 The following functions and operators are overloaded for the hyperplane
@@ -3493,24 +3491,24 @@ There are several ways to access the internal data of the hyperplane
 object:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{p}{[}\PYG{n}{normVec}\PYG{p}{,} \PYG{n}{hypScal}\PYG{p}{]} \PYG{o}{=} \PYG{n}{firstHypObj}\PYG{p}{.}\PYG{k+kt}{double}\PYG{p}{(}\PYG{p}{)}
+\PYG{p}{[}\PYG{n}{normVec}\PYG{p}{,} \PYG{n}{hypScal}\PYG{p}{]} \PYG{p}{=} \PYG{n}{firstHypObj}\PYG{p}{.}\PYG{n}{double}\PYG{p}{(}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{normVec} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}    \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
-\PYG{o}{\PYGZpc{}}    \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}} \PYG{n}{hypScal} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}    \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+\PYG{c}{\PYGZpc{} normVec =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}    \PYGZhy{}1}
+\PYG{c}{\PYGZpc{}    \PYGZhy{}1}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{} hypScal =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}    \PYGZhy{}1}
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{n}{firstHypObj}\PYG{p}{.}\PYG{n}{dimension}\PYG{p}{(}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{2}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      2}
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
@@ -3630,28 +3628,28 @@ It can be checked if the union or intersection of given ellipsoids
 intersects given hyperplanes or polytopes:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{hypVec}\PYG{p}{,} \PYG{l+s+sc}{\PYGZsq{}u\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{hypVec}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{u\PYGZsq{}}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{1}     \PYG{l+m+mi}{1}     \PYG{l+m+mi}{1}     \PYG{l+m+mi}{1}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      1     1     1     1}
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{ellMat}\PYG{p}{(}\PYG{o}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{hypVec}\PYG{p}{,} \PYG{l+s+sc}{\PYGZsq{}i\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{hypVec}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{0}     \PYG{l+m+mi}{0}     \PYG{l+m+mi}{1}     \PYG{l+m+mi}{0}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      0     0     1     0}
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{bufEllVec} \PYG{o}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj} \PYG{n}{thirdEllObj}\PYG{p}{]}\PYG{p}{;}
-\PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{firstPolObj}\PYG{p}{,} \PYG{l+s+sc}{\PYGZsq{}i\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{bufEllVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj} \PYG{n}{thirdEllObj}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{firstPolObj}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{1}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      1}
 \end{Verbatim}
 
 The intersection of ellipsoid and hyperplane can be computed exactly:
@@ -3763,34 +3761,34 @@ projection on static plane tubes by the instant of time. Next we provide
 some examples of the operations with ellipsoidal tubes.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{nPoints}\PYG{o}{=}\PYG{l+m+mi}{5}\PYG{p}{;}
-\PYG{n}{calcPrecision}\PYG{o}{=}\PYG{l+m+mf}{0.001}\PYG{p}{;}
-\PYG{n}{approxSchemaDescr}\PYG{o}{=}\PYG{k+kt}{char}\PYG{p}{.}\PYG{n}{empty}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{approxSchemaName}\PYG{o}{=}\PYG{k+kt}{char}\PYG{p}{.}\PYG{n}{empty}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{nDims}\PYG{o}{=}\PYG{l+m+mi}{3}\PYG{p}{;}
-\PYG{n}{nTubes}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
-\PYG{n}{lsGoodDirVec}\PYG{o}{=}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}
-\PYG{n}{aMat}\PYG{o}{=}\PYG{n}{zeros}\PYG{p}{(}\PYG{n}{nDims}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{timeVec}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{nPoints}\PYG{p}{;}
-\PYG{n}{sTime}\PYG{o}{=}\PYG{n}{nPoints}\PYG{p}{;}
-\PYG{n}{approxType}\PYG{o}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{;}
-\PYG{n}{qArrayList}\PYG{o}{=}\PYG{n}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n}{repmat}\PYG{p}{(}\PYG{n}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{2} \PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{ltGoodDirArray}\PYG{o}{=}\PYG{n}{repmat}\PYG{p}{(}\PYG{n}{lsGoodDirVec}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{fromMatEllTube}\PYG{o}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQArrays}\PYG{p}{(}\PYG{n}{qArrayList}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
-                \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
+\PYG{n}{nPoints}\PYG{p}{=}\PYG{l+m+mi}{5}\PYG{p}{;}
+\PYG{n}{calcPrecision}\PYG{p}{=}\PYG{l+m+mf}{0.001}\PYG{p}{;}
+\PYG{n}{approxSchemaDescr}\PYG{p}{=}\PYG{n}{char}\PYG{p}{.}\PYG{n}{empty}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{approxSchemaName}\PYG{p}{=}\PYG{n}{char}\PYG{p}{.}\PYG{n}{empty}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{nDims}\PYG{p}{=}\PYG{l+m+mi}{3}\PYG{p}{;}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{lsGoodDirVec}\PYG{p}{=}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{aMat}\PYG{p}{=}\PYG{n+nb}{zeros}\PYG{p}{(}\PYG{n}{nDims}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{timeVec}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{nPoints}\PYG{p}{;}
+\PYG{n}{sTime}\PYG{p}{=}\PYG{n}{nPoints}\PYG{p}{;}
+\PYG{n}{approxType}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{;}
+\PYG{n}{qArrayList}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n+nb}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{2} \PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ltGoodDirArray}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n}{lsGoodDirVec}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{fromMatEllTube}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQArrays}\PYG{p}{(}\PYG{n}{qArrayList}\PYG{p}{,}\PYG{c}{...}
+                \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,}\PYG{c}{...}
                 \PYG{n}{approxSchemaName}\PYG{p}{,} \PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{calcPrecision}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{)} \PYG{o}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{approxType}\PYG{o}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{;}
-\PYG{n}{sTime}\PYG{o}{=} \PYG{l+m+mi}{2}\PYG{p}{;}
-\PYG{k}{for} \PYG{n}{iElem} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{nPoints}
-   \PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{iElem}\PYG{p}{)} \PYG{o}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
-   \PYG{n}{aMat}\PYG{p}{(}\PYG{o}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{1}\PYG{p}{\PYGZcb{}}\PYG{p}{(}\PYG{o}{:}\PYG{p}{,}\PYG{o}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;} 
-\PYG{n}{end}
-\PYG{n}{fromEllArrayEllTube} \PYG{o}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromEllArray}\PYG{p}{(}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
-                \PYG{n}{ellArray}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
+\PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{)} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{approxType}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{;}
+\PYG{n}{sTime}\PYG{p}{=} \PYG{l+m+mi}{2}\PYG{p}{;}
+\PYG{k}{for} \PYG{n}{iElem} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{nPoints}
+   \PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{iElem}\PYG{p}{)} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{c}{...}
+   \PYG{n}{aMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{1}\PYG{p}{\PYGZcb{}}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;} 
+\PYG{k}{end}
+\PYG{n}{fromEllArrayEllTube} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromEllArray}\PYG{p}{(}\PYG{c}{...}
+                \PYG{n}{ellArray}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,}\PYG{c}{...}
                 \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{calcPrecision}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
@@ -3801,41 +3799,70 @@ computed, say $2\leqslant t\leqslant4$. This data can be extracted
 by the cut function:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{cutTimeVec} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{]}\PYG{p}{;}
-\PYG{n}{cutEllTube} \PYG{o}{=} \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{n}{cutTimeVec}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{cutTimeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{4}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{cutEllTube} \PYG{p}{=} \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{n}{cutTimeVec}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{k+kd}{function} \PYG{n+nx}{example}
-   \PYG{n+nx}{aMat} \PYG{o}{=} \PYG{c+cp}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{c+cp}{]}\PYG{p}{;} \PYG{n+nx}{bMat} \PYG{o}{=} \PYG{n+nx}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  
-   \PYG{n+nx}{SUBounds} \PYG{o}{=} \PYG{n+nx}{struct}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n+nx}{SUBounds}\PYG{p}{.}\PYG{n+nx}{center} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}sin(t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s+s1}{\PYGZsq{}cos(t)\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
-   \PYG{n+nx}{SUBounds}\PYG{p}{.}\PYG{n+nx}{shape} \PYG{o}{=} \PYG{c+cp}{[}\PYG{l+m+mi}{9} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{2}\PYG{c+cp}{]}\PYG{p}{;} 
-   \PYG{n+nx}{sys} \PYG{o}{=} \PYG{n+nx}{elltool}\PYG{p}{.}\PYG{n+nx}{linsys}\PYG{p}{.}\PYG{n+nx}{LinSysContinuous}\PYG{p}{(}\PYG{n+nx}{aMat}\PYG{p}{,} \PYG{n+nx}{bMat}\PYG{p}{,} \PYG{n+nx}{SUBounds}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n+nx}{x0EllObj} \PYG{o}{=} \PYG{n+nx}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n+nx}{timeVec} \PYG{o}{=} \PYG{c+cp}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{10}\PYG{c+cp}{]}\PYG{p}{;} 
-   \PYG{n+nx}{dirsMat} \PYG{o}{=} \PYG{c+cp}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{c+cp}{]}\PYG{l+s+s1}{\PYGZsq{};  }
-\PYG{l+s+s1}{   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);}
-\PYG{l+s+s1}{   ellTubeObj = rsObj.getEllTubeRel();}
-\PYG{l+s+s1}{   projSpaceList = \PYGZob{}}\PYG{c+cp}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{c+cp}{]}\PYG{l+s+s1}{\PYGZcb{};}
-\PYG{l+s+s1}{   projType = gras.ellapx.enums.EProjType.Static;}
-\PYG{l+s+s1}{   statEllTubeProj = ellTubeObj.project(projType,projSpaceList,...}
-\PYG{l+s+s1}{      @fGetProjMat);}
-\PYG{l+s+s1}{   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;}
-\PYG{l+s+s1}{   dynEllTubeProj=ellTubeObj.project(projType,projSpaceList,...}
-\PYG{l+s+s1}{      @fGetProjMat);}
-\PYG{l+s+s1}{   plObj=smartdb.disp.RelationDataPlotter();}
-\PYG{l+s+s1}{   statEllTubeProj.plot(plObj);}
-\PYG{l+s+s1}{   dynEllTubeProj.plot(plObj);}
+\begin{Verbatim}[commandchars=\\\{\}]
+function example
 
-\PYG{l+s+s1}{end}
+   aMat = [0 1; 0 0]; bMat = eye(2);  
 
-\PYG{l+s+s1}{function }\PYG{c+cp}{[}\PYG{n+nx}{projOrthMatArray}\PYG{p}{,}\PYG{n+nx}{projOrthMatTransArray}\PYG{c+cp}{]}\PYG{l+s+s1}{=fGetProjMat(projMat,...}
-\PYG{l+s+s1}{    timeVec,varargin)}
-\PYG{l+s+s1}{  nTimePoints=length(timeVec);}
-\PYG{l+s+s1}{  projOrthMatArray=repmat(projMat,}\PYG{c+cp}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n+nx}{nTimePoints}\PYG{c+cp}{]}\PYG{l+s+s1}{);}
-\PYG{l+s+s1}{  projOrthMatTransArray=repmat(projMat.\PYGZsq{}}\PYG{p}{,}\PYG{c+cp}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n+nx}{nTimePoints}\PYG{c+cp}{]}\PYG{p}{)}\PYG{p}{;}
- \PYG{n+nx}{end}
+   SUBounds = struct();
+
+   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
+
+   SUBounds.shape = [9 0; 0 2]; 
+
+   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+
+   x0EllObj = ell\_unitball(2);
+
+   timeVec = [0 10]; 
+
+   dirsMat = [1 0; 0 1]';  
+
+   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+
+   ellTubeObj = rsObj.getEllTubeRel();
+
+   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
+
+   projType = gras.ellapx.enums.EProjType.Static;
+
+   statEllTubeProj = ellTubeObj.project(projType,projSpaceList,...
+
+      @fGetProjMat);
+
+   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+
+   dynEllTubeProj=ellTubeObj.project(projType,projSpaceList,...
+
+      @fGetProjMat);
+
+   plObj=smartdb.disp.RelationDataPlotter();
+
+   statEllTubeProj.plot(plObj);
+
+   dynEllTubeProj.plot(plObj);
+
+
+
+end
+
+
+
+function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+
+    timeVec,varargin)
+
+  nTimePoints=length(timeVec);
+
+  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+
+  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+
+ end
 \end{Verbatim}
 
 We can compute the projection of the ellipsoidal
@@ -3856,34 +3883,60 @@ Also we can see projections of good directions for ellipsoidal tubes.
 
 We can compute tubes by the instant of time using methodfromEllTubes:
 
-\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{k+kd}{function} \PYG{n+nx}{example}
-   \PYG{n+nx}{aMat} \PYG{o}{=} \PYG{c+cp}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{c+cp}{]}\PYG{p}{;} \PYG{n+nx}{bMat} \PYG{o}{=} \PYG{n+nx}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  
-   \PYG{n+nx}{SUBounds} \PYG{o}{=} \PYG{n+nx}{struct}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n+nx}{SUBounds}\PYG{p}{.}\PYG{n+nx}{center} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+s1}{\PYGZsq{}sin(t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s+s1}{\PYGZsq{}cos(t)\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
-   \PYG{n+nx}{SUBounds}\PYG{p}{.}\PYG{n+nx}{shape} \PYG{o}{=} \PYG{c+cp}{[}\PYG{l+m+mi}{9} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{2}\PYG{c+cp}{]}\PYG{p}{;} 
-   \PYG{n+nx}{sys} \PYG{o}{=} \PYG{n+nx}{elltool}\PYG{p}{.}\PYG{n+nx}{linsys}\PYG{p}{.}\PYG{n+nx}{LinSysContinuous}\PYG{p}{(}\PYG{n+nx}{aMat}\PYG{p}{,} \PYG{n+nx}{bMat}\PYG{p}{,} \PYG{n+nx}{SUBounds}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n+nx}{x0EllObj} \PYG{o}{=} \PYG{n+nx}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
-   \PYG{n+nx}{timeVec} \PYG{o}{=} \PYG{c+cp}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{10}\PYG{c+cp}{]}\PYG{p}{;} 
-   \PYG{n+nx}{dirsMat} \PYG{o}{=} \PYG{c+cp}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{c+cp}{]}\PYG{l+s+s1}{\PYGZsq{};  }
-\PYG{l+s+s1}{   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);}
-\PYG{l+s+s1}{   ellTubeObj = rsObj.getEllTubeRel();}
-\PYG{l+s+s1}{   unionEllTube = ...}
-\PYG{l+s+s1}{    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);}
-\PYG{l+s+s1}{   projSpaceList = \PYGZob{}}\PYG{c+cp}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{c+cp}{]}\PYG{l+s+s1}{\PYGZcb{};}
-\PYG{l+s+s1}{   projType = gras.ellapx.enums.EProjType.Static;}
-\PYG{l+s+s1}{   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...}
-\PYG{l+s+s1}{      @fGetProjMat);}
-\PYG{l+s+s1}{   plObj=smartdb.disp.RelationDataPlotter();}
-\PYG{l+s+s1}{   statEllTubeProj.plot(plObj);}
-\PYG{l+s+s1}{end}
+\begin{Verbatim}[commandchars=\\\{\}]
+function example
 
-\PYG{l+s+s1}{function }\PYG{c+cp}{[}\PYG{n+nx}{projOrthMatArray}\PYG{p}{,}\PYG{n+nx}{projOrthMatTransArray}\PYG{c+cp}{]}\PYG{l+s+s1}{=fGetProjMat(projMat,...}
-\PYG{l+s+s1}{    timeVec,varargin)}
-\PYG{l+s+s1}{  nTimePoints=length(timeVec);}
-\PYG{l+s+s1}{  projOrthMatArray=repmat(projMat,}\PYG{c+cp}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n+nx}{nTimePoints}\PYG{c+cp}{]}\PYG{l+s+s1}{);}
-\PYG{l+s+s1}{  projOrthMatTransArray=repmat(projMat.\PYGZsq{}}\PYG{p}{,}\PYG{c+cp}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n+nx}{nTimePoints}\PYG{c+cp}{]}\PYG{p}{)}\PYG{p}{;}
- \PYG{n+nx}{end}
+   aMat = [0 1; 0 0]; bMat = eye(2);  
+
+   SUBounds = struct();
+
+   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
+
+   SUBounds.shape = [9 0; 0 2]; 
+
+   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+
+   x0EllObj = ell\_unitball(2);
+
+   timeVec = [0 10]; 
+
+   dirsMat = [1 0; 0 1]';  
+
+   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+
+   ellTubeObj = rsObj.getEllTubeRel();
+
+   unionEllTube = ...
+
+    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
+
+   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
+
+   projType = gras.ellapx.enums.EProjType.Static;
+
+   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
+
+      @fGetProjMat);
+
+   plObj=smartdb.disp.RelationDataPlotter();
+
+   statEllTubeProj.plot(plObj);
+
+end
+
+
+
+function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+
+    timeVec,varargin)
+
+  nTimePoints=length(timeVec);
+
+  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+
+  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+
+ end
 \end{Verbatim}
 \begin{figure}[htbp]
 \centering
@@ -3897,31 +3950,31 @@ tubes by the instant of time.
 Also we can get initial data from the resulting tube:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{approxType}\PYG{o}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{;}
-\PYG{n}{ellArray} \PYG{o}{=} \PYG{n}{fromEllArrayEllTube}\PYG{p}{.}\PYG{n}{getEllArray}\PYG{p}{(}\PYG{n}{approxType}\PYG{p}{)}
+\PYG{n}{approxType}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{;}
+\PYG{n}{ellArray} \PYG{p}{=} \PYG{n}{fromEllArrayEllTube}\PYG{p}{.}\PYG{n}{getEllArray}\PYG{p}{(}\PYG{n}{approxType}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ellArray} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} \PYG{n}{Array} \PYG{n}{of} \PYG{n}{ellipsoids} \PYG{n}{with} \PYG{n}{dimensionality} \PYG{l+m+mi}{5}\PYG{n}{x1}
+\PYG{c}{\PYGZpc{} ellArray =}
+\PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 5x1}
 \end{Verbatim}
 
 There is a method
 to display a content of ellipsoidal tubes.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{aMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;} \PYG{n}{bMat} \PYG{o}{=} \PYG{n}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  
-\PYG{n}{SUBounds} \PYG{o}{=} \PYG{k}{struct}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{center} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{err}{\PYGZsq{}}\PYG{n}{sin}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)}\PYG{err}{\PYGZsq{}}\PYG{p}{;} \PYG{err}{\PYGZsq{}}\PYG{n}{cos}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)}\PYG{err}{\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
-\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{shape} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{9} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{;} 
-\PYG{n}{sys} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{x0EllObj} \PYG{o}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{timeVec} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{10}\PYG{p}{]}\PYG{p}{;} 
-\PYG{k}{for} \PYG{n}{iElem} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{l+m+mi}{5}
-    \PYG{n}{dirInitial}\PYG{o}{=} \PYG{n}{rand}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;} 
-    \PYG{n}{dirInitial} \PYG{o}{=} \PYG{n}{dirInitial} \PYG{p}{.}\PYG{o}{/} \PYG{n}{norm}\PYG{p}{(}\PYG{n}{dirInitial}\PYG{p}{)}\PYG{p}{;}
-    \PYG{n}{dirsMat}\PYG{p}{(}\PYG{o}{:}\PYG{p}{,} \PYG{n}{iElem}\PYG{p}{)} \PYG{o}{=} \PYG{n}{dirInitial}\PYG{p}{;}
-\PYG{n}{end}
-\PYG{n}{rsObj} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{sys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{ellTubeObj} \PYG{o}{=} \PYG{n}{rsObj}\PYG{p}{.}\PYG{n}{getEllTubeRel}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{aMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;} \PYG{n}{bMat} \PYG{p}{=} \PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{SUBounds} \PYG{p}{=} \PYG{n}{struct}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{center} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sin(t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cos(t)\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
+\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{shape} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{9} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{;} 
+\PYG{n}{sys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{x0EllObj} \PYG{p}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{timeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{10}\PYG{p}{]}\PYG{p}{;} 
+\PYG{k}{for} \PYG{n}{iElem} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{5}
+    \PYG{n}{dirInitial}\PYG{p}{=} \PYG{n+nb}{rand}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;} 
+    \PYG{n}{dirInitial} \PYG{p}{=} \PYG{n}{dirInitial} \PYG{o}{./} \PYG{n}{norm}\PYG{p}{(}\PYG{n}{dirInitial}\PYG{p}{)}\PYG{p}{;}
+    \PYG{n}{dirsMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{n}{iElem}\PYG{p}{)} \PYG{p}{=} \PYG{n}{dirInitial}\PYG{p}{;}
+\PYG{k}{end}
+\PYG{n}{rsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{sys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellTubeObj} \PYG{p}{=} \PYG{n}{rsObj}\PYG{p}{.}\PYG{n}{getEllTubeRel}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{dispOnUI}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 \begin{figure}[htbp]
@@ -3936,20 +3989,20 @@ displays all fields of the ellipsoidal tube.
 There are several methods to find the tubes with necessary parameters.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{newEllTube} \PYG{o}{=} \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getTuplesFilteredBy}\PYG{p}{(}\PYG{err}{\PYGZsq{}}\PYG{n}{sTime}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{newEllTube} \PYG{p}{=} \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getTuplesFilteredBy}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sTime\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{newEllTube}\PYG{p}{.}\PYG{n}{getNTuples}\PYG{p}{(}\PYG{p}{)}
-\PYG{o}{\PYGZpc{}}
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{1}
-\PYG{o}{\PYGZpc{}} 
-\PYG{n}{newEllTube} \PYG{o}{=} \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getTuplesFilteredBy}\PYG{p}{(}\PYG{err}{\PYGZsq{}}\PYG{n}{sTime}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      1}
+\PYG{c}{\PYGZpc{} }
+\PYG{n}{newEllTube} \PYG{p}{=} \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getTuplesFilteredBy}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sTime\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{newEllTube}\PYG{p}{.}\PYG{n}{getNTuples}\PYG{p}{(}\PYG{p}{)}
-\PYG{o}{\PYGZpc{}}
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{0}
-\PYG{o}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      0}
+\PYG{c}{\PYGZpc{} }
 \end{Verbatim}
 
 Also you can use the method display to see the result of the method’s
@@ -3957,44 +4010,44 @@ work.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getNTuples}\PYG{p}{(}\PYG{p}{)}
-\PYG{o}{\PYGZpc{}}
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{1}
-\PYG{o}{\PYGZpc{}} 
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      1}
+\PYG{c}{\PYGZpc{} }
 \PYG{n}{fromEllArrayEllTube}\PYG{p}{.}\PYG{n}{getNTuples}\PYG{p}{(}\PYG{p}{)}
-\PYG{o}{\PYGZpc{}}
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{1}
-\PYG{o}{\PYGZpc{}} 
-\PYG{n}{origFromMatEllTube}\PYG{o}{=}\PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getCopy}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      1}
+\PYG{c}{\PYGZpc{} }
+\PYG{n}{origFromMatEllTube}\PYG{p}{=}\PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getCopy}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{unionWith}\PYG{p}{(}\PYG{n}{fromEllArrayEllTube}\PYG{p}{)}\PYG{p}{;}
-\PYG{o}{\PYGZpc{}}
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{2}
-\PYG{o}{\PYGZpc{}} 
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      2}
+\PYG{c}{\PYGZpc{} }
 \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getNTuples}\PYG{p}{(}\PYG{p}{)}
-\PYG{n}{isOk}\PYG{o}{=}\PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getTuples}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{isEqual}\PYG{p}{(}\PYG{n}{origFromMatEllTube}\PYG{p}{)}
-\PYG{o}{\PYGZpc{}}
-\PYG{o}{\PYGZpc{}} \PYG{n}{isOk} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}}
-\PYG{o}{\PYGZpc{}}     \PYG{l+m+mi}{1}
+\PYG{n}{isOk}\PYG{p}{=}\PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getTuples}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{isEqual}\PYG{p}{(}\PYG{n}{origFromMatEllTube}\PYG{p}{)}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} isOk =}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{}     1}
 
-\PYG{n}{isOk}\PYG{o}{=}\PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getTuples}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{.}\PYG{n}{isEqual}\PYG{p}{(}\PYG{n}{fromEllArrayEllTube}\PYG{p}{)}
+\PYG{n}{isOk}\PYG{p}{=}\PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{getTuples}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{.}\PYG{n}{isEqual}\PYG{p}{(}\PYG{n}{fromEllArrayEllTube}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}}
-\PYG{o}{\PYGZpc{}} \PYG{n}{isOk} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}}
-\PYG{o}{\PYGZpc{}}     \PYG{l+m+mi}{1}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} isOk =}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{}     1}
 \end{Verbatim}
 
 We can sort our tubes by certain fields:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{display}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{sortBy}\PYG{p}{(}\PYG{err}{\PYGZsq{}}\PYG{n}{sTime}\PYG{err}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{sortBy}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sTime\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{fromMatEllTube}\PYG{p}{.}\PYG{n}{display}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
@@ -4033,14 +4086,14 @@ with
 is done by the following sequence of commands:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{aMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;} \PYG{n}{bMat} \PYG{o}{=} \PYG{n}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{matrices} \PYG{n}{A} \PYG{n}{and} \PYG{n}{B}\PYG{p}{,} \PYG{n}{B} \PYG{n}{is} \PYG{n}{identity}
-\PYG{n}{SUBounds} \PYG{o}{=} \PYG{k}{struct}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-\PYG{o}{\PYGZpc{}} \PYG{n}{center} \PYG{n}{of} \PYG{n}{the} \PYG{n}{ellipsoid} \PYG{n}{depends} \PYG{n}{on} \PYG{n}{t}
-\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{center} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{err}{\PYGZsq{}}\PYG{n}{sin}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)}\PYG{err}{\PYGZsq{}}\PYG{p}{;} \PYG{err}{\PYGZsq{}}\PYG{n}{cos}\PYG{p}{(}\PYG{n}{t}\PYG{p}{)}\PYG{err}{\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
-\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{shape} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{9} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{;} \PYG{o}{\PYGZpc{}} \PYG{n}{shape} \PYG{n}{matrix} \PYG{n}{of} \PYG{n}{the} \PYG{n}{ellipsoid} \PYG{n}{is} \PYG{k}{static}
-\PYG{o}{\PYGZpc{}} \PYG{n}{create} \PYG{n}{linear} \PYG{n}{system} \PYG{n}{object}
-\PYG{n}{sys} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;} 
-\PYG{o}{\PYGZpc{}} \PYG{n}{is} \PYG{n}{equal} \PYG{n}{to} \PYG{n}{sys} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysFactory}\PYG{p}{.}\PYG{n}{create}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}
+\PYG{n}{aMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;} \PYG{n}{bMat} \PYG{p}{=} \PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} matrices A and B, B is identity}
+\PYG{n}{SUBounds} \PYG{p}{=} \PYG{n}{struct}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} center of the ellipsoid depends on t}
+\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{center} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sin(t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cos(t)\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
+\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{shape} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{9} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{;} \PYG{c}{\PYGZpc{} shape matrix of the ellipsoid is static}
+\PYG{c}{\PYGZpc{} create linear system object}
+\PYG{n}{sys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;} 
+\PYG{c}{\PYGZpc{} is equal to sys = elltool.linsys.LinSysFactory.create(aMat, bMat, SUBounds)}
 \end{Verbatim}
 
 If matrices $A$ or
@@ -4050,8 +4103,8 @@ $B$ depend on time, say $A(t)=\left[\begin{array}{cc}
 symbolic:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{atMat} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+sc}{\PYGZsq{}0\PYGZsq{}} \PYG{err}{\PYGZsq{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}} \PYG{n}{cos}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{t}\PYG{p}{)}\PYG{err}{\PYGZsq{}}\PYG{p}{;} \PYG{err}{\PYGZsq{}}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{t}\PYG{l+s+sc}{\PYGZsq{} \PYGZsq{}}\PYG{l+m+mi}{0}\PYG{err}{\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
-\PYG{k+kt}{sys\PYGZus{}t} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysFactory}\PYG{p}{.}\PYG{n}{create}\PYG{p}{(}\PYG{n}{atMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{atMat} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{0\PYGZsq{}} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1 \PYGZhy{} cos(2*t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}1/t\PYGZsq{}} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{0\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
+\PYG{n}{sys\PYGZus{}t} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysFactory}\PYG{p}{.}\PYG{n}{create}\PYG{p}{(}\PYG{n}{atMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
 To describe the system with disturbance
@@ -4072,9 +4125,9 @@ with bounds on control as before, and disturbance being
 $-1\leqslant v(t)\leqslant1$, we type:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{gMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{matrix} \PYG{n}{G}
-\PYG{n}{vEllObj} \PYG{o}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{disturbance} \PYG{n}{bounds}\PYG{o}{:} \PYG{n}{unit} \PYG{n}{ball} \PYG{n}{in} \PYG{n}{R}
-\PYG{n}{sys\PYGZus{}d} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
+\PYG{n}{gMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} matrix G}
+\PYG{n}{vEllObj} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} disturbance bounds: unit ball in R}
+\PYG{n}{sys\PYGZus{}d} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{,}\PYG{c}{...}
     \PYG{n}{gMat}\PYG{p}{,} \PYG{n}{vEllObj}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
@@ -4102,12 +4155,12 @@ x_2[k]\end{array}\right] + \left[\begin{array}{c}
 we use LinSysDiscrete constructor:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{adMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.5}\PYG{p}{]}\PYG{p}{;} \PYG{n}{bdMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{matrices} \PYG{n}{A} \PYG{n}{and} \PYG{n}{B}
-\PYG{n}{udBoundsEllObj}  \PYG{o}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{control} \PYG{n}{bounds}\PYG{o}{:} \PYG{n}{unit} \PYG{n}{ball} \PYG{n}{in} \PYG{n}{R}
-\PYG{o}{\PYGZpc{}} \PYG{n}{discrete}\PYG{o}{\PYGZhy{}}\PYG{n}{time} \PYG{n}{system}
-\PYG{n}{dtsys} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysDiscrete}\PYG{p}{(}\PYG{n}{adMat}\PYG{p}{,} \PYG{n}{bdMat}\PYG{p}{,} \PYG{n}{udBoundsEllObj}\PYG{p}{)}\PYG{p}{;} 
-\PYG{o}{\PYGZpc{}} \PYG{n}{is} \PYG{n}{equal} \PYG{n}{to} \PYG{n}{dtsys} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysFactory}\PYG{p}{.}\PYG{n}{create}\PYG{p}{(}\PYG{n}{adMat}\PYG{p}{,} \PYG{n}{bdMat}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
-\PYG{o}{\PYGZpc{}}         \PYG{n}{udBoundsEllObj}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}\PYG{p}{[}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{p}{]}\PYG{p}{,} \PYG{l+s+sc}{\PYGZsq{}d\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{adMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.5}\PYG{p}{]}\PYG{p}{;} \PYG{n}{bdMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} matrices A and B}
+\PYG{n}{udBoundsEllObj}  \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} control bounds: unit ball in R}
+\PYG{c}{\PYGZpc{} discrete\PYGZhy{}time system}
+\PYG{n}{dtsys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysDiscrete}\PYG{p}{(}\PYG{n}{adMat}\PYG{p}{,} \PYG{n}{bdMat}\PYG{p}{,} \PYG{n}{udBoundsEllObj}\PYG{p}{)}\PYG{p}{;} 
+\PYG{c}{\PYGZpc{} is equal to dtsys = elltool.linsys.LinSysFactory.create(adMat, bdMat,...}
+\PYG{c}{\PYGZpc{}         udBoundsEllObj,...[], [], [], [], \PYGZsq{}d\PYGZsq{}); }
 \end{Verbatim}
 
 Once the LinSysDiscrete object is
@@ -4116,9 +4169,9 @@ interval and values of the direction vector, for which the reach set
 approximations must be computed:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{x0EllObj} \PYG{o}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{set} \PYG{n}{of} \PYG{n}{initial} \PYG{n}{conditions}
-\PYG{n}{timeVec} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{10}\PYG{p}{]}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{time} \PYG{n}{interval}
-\PYG{n}{dirsMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{err}{\PYGZsq{}}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{columns} \PYG{n}{of} \PYG{n}{L} \PYG{n}{specify} \PYG{n}{the} \PYG{n}{directions}
+\PYG{n}{x0EllObj} \PYG{p}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} set of initial conditions}
+\PYG{n}{timeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{10}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} time interval}
+\PYG{n}{dirsMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}  \PYG{c}{\PYGZpc{} columns of L specify the directions}
 \end{Verbatim}
 
 The reach set approximation is computed
@@ -4137,13 +4190,13 @@ approximations are computed. The reach set approximation data can be
 extracted in the form of arrays of ellipsoids:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{externallEllMat} \PYG{o}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ea}\PYG{p}{(}\PYG{p}{)}  \PYG{o}{\PYGZpc{}} \PYG{n}{external} \PYG{n}{approximating} \PYG{n}{ellipsoids}
+\PYG{n}{externallEllMat} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ea}\PYG{p}{(}\PYG{p}{)}  \PYG{c}{\PYGZpc{} external approximating ellipsoids}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{externallEllMat} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} \PYG{n}{Array} \PYG{n}{of} \PYG{n}{ellipsoids} \PYG{n}{with} \PYG{n}{dimensionality} \PYG{l+m+mi}{2}\PYG{n}{x100}
+\PYG{c}{\PYGZpc{} externallEllMat =}
+\PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 2x100}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{internal} \PYG{n}{approximating} \PYG{n}{ellipsoids}
-\PYG{p}{[}\PYG{n}{internalEllMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{]} \PYG{o}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ia}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} internal approximating ellipsoids}
+\PYG{p}{[}\PYG{n}{internalEllMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{]} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ia}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
 Ellipsoidal arrays externallEllMat and internalEllMat have $4$
@@ -4168,14 +4221,14 @@ extracted and returned in the form of ReachContinuous object by the cut
 function:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{cutObj} \PYG{o}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{3} \PYG{l+m+mi}{5}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{reach} \PYG{n}{set} \PYG{k}{for} \PYG{n}{the} \PYG{n}{time} \PYG{n}{interval} \PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{,} \PYG{l+m+mi}{5}\PYG{p}{]}
+\PYG{n}{cutObj} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{3} \PYG{l+m+mi}{5}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} reach set for the time interval [3, 5]}
 \end{Verbatim}
 
 To obtain a snap shot of the reach set at given time, the same function
 cut is used:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{cutObj} \PYG{o}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{5}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{reach} \PYG{n}{set} \PYG{n}{at} \PYG{n}{time} \PYG{n}{t} \PYG{o}{=} \PYG{l+m+mi}{5}
+\PYG{n}{cutObj} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{5}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} reach set at time t = 5}
 \end{Verbatim}
 
 It can be checked if the external or internal reach set
@@ -4183,16 +4236,16 @@ approximation intersects with given ellipsoids, hyperplanes or
 polytopes:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{ellObj} \PYG{o}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{17}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{4} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{define} \PYG{n}{ellipsoid}
-\PYG{o}{\PYGZpc{}} \PYG{n}{define} \PYG{l+m+mi}{4} \PYG{n}{hyperplanes}
-\PYG{n}{hypVec} \PYG{o}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{2} \PYG{l+m+mi}{2} \PYG{l+m+mi}{2} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;} 
-\PYG{n}{polObj} \PYG{o}{=} \PYG{n}{hyperplane2polytope}\PYG{p}{(}\PYG{n}{hypVec}\PYG{p}{)} \PYG{o}{+} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{;} \PYG{l+m+mi}{10}\PYG{p}{]}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{define} \PYG{n}{polytope}
-\PYG{o}{\PYGZpc{}} \PYG{n}{check} \PYG{k}{if} \PYG{n}{ellipsoid} \PYG{n}{ell} \PYG{n}{intersects} \PYG{n}{with} \PYG{n}{external} \PYG{n}{approximation}\PYG{o}{:}
-\PYG{n}{cutObj}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellObj}\PYG{p}{,} \PYG{l+s+sc}{\PYGZsq{}e\PYGZsq{}}\PYG{p}{)}
+\PYG{n}{ellObj} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{17}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{4} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} define ellipsoid}
+\PYG{c}{\PYGZpc{} define 4 hyperplanes}
+\PYG{n}{hypVec} \PYG{p}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{2} \PYG{l+m+mi}{2} \PYG{l+m+mi}{2} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{polObj} \PYG{p}{=} \PYG{n}{hyperplane2polytope}\PYG{p}{(}\PYG{n}{hypVec}\PYG{p}{)} \PYG{o}{+} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{;} \PYG{l+m+mi}{10}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} define polytope}
+\PYG{c}{\PYGZpc{} check if ellipsoid ell intersects with external approximation:}
+\PYG{n}{cutObj}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellObj}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{e\PYGZsq{}}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}      \PYG{l+m+mi}{1}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}      1}
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
@@ -4258,11 +4311,11 @@ reach set and the good curves along which the actual reach set is
 touched by its ellipsoidal approximations:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{p}{[}\PYG{n}{ctrMat}\PYG{p}{,} \PYG{n}{ttVec}\PYG{p}{]} \PYG{o}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}center}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;} \PYG{o}{\PYGZpc{}} \PYG{n}{trajectory} \PYG{n}{of} \PYG{n}{the} \PYG{n}{center}
-\PYG{n}{gcCVec} \PYG{o}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}goodcurves}\PYG{p}{(}\PYG{p}{)}  \PYG{o}{\PYGZpc{}} \PYG{n}{get} \PYG{n}{good} \PYG{n}{curves}
+\PYG{p}{[}\PYG{n}{ctrMat}\PYG{p}{,} \PYG{n}{ttVec}\PYG{p}{]} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}center}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} trajectory of the center}
+\PYG{n}{gcCVec} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}goodcurves}\PYG{p}{(}\PYG{p}{)}  \PYG{c}{\PYGZpc{} get good curves}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{gcCVec} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{n}{x100} \PYG{k+kt}{double}\PYG{p}{]} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{n}{x100} \PYG{k+kt}{double}\PYG{p}{]} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{n}{x100} \PYG{k+kt}{double}\PYG{p}{]}
+\PYG{c}{\PYGZpc{} gcCVec =}
+\PYG{c}{\PYGZpc{} [2x100 double] [2x100 double] [2x100 double] }
 \end{Verbatim}
 
 Variable ctrMat here is a matrix whose columns are the points ofthe
@@ -4320,22 +4373,22 @@ and manipulations with the resulting reach set object are performed
 using the same functions as for continuous-time systems:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{timeVec} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{100}\PYG{p}{]}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{represents} \PYG{l+m+mi}{100} \PYG{n}{time} \PYG{n}{steps} \PYG{n}{from} \PYG{l+m+mi}{1} \PYG{n}{to} \PYG{l+m+mi}{100}
-\PYG{o}{\PYGZpc{}} \PYG{n}{reach} \PYG{n}{set} \PYG{k}{for} \PYG{l+m+mi}{100} \PYG{n}{time} \PYG{n}{steps}
-\PYG{n}{secDtrsObj} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{dtsys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{)}\PYG{p}{;} 
-\PYG{n}{secDtrsObj} \PYG{o}{=} \PYG{n}{secDtrsObj}\PYG{p}{.}\PYG{n}{evolve}\PYG{p}{(}\PYG{l+m+mi}{200}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{compute} \PYG{n}{next} \PYG{l+m+mi}{100} \PYG{n}{time} \PYG{n}{steps}
+\PYG{n}{timeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{100}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} represents 100 time steps from 1 to 100}
+\PYG{c}{\PYGZpc{} reach set for 100 time steps}
+\PYG{n}{secDtrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{dtsys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{secDtrsObj} \PYG{p}{=} \PYG{n}{secDtrsObj}\PYG{p}{.}\PYG{n}{evolve}\PYG{p}{(}\PYG{l+m+mi}{200}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} compute next 100 time steps}
 
-\PYG{n}{tbTimeVec} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{50} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{backward} \PYG{n}{time} \PYG{n}{interval}
-\PYG{o}{\PYGZpc{}} \PYG{n}{backward} \PYG{n}{reach} \PYG{n}{set}
-\PYG{n}{dtbrsObj} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{dtsys}\PYG{p}{,} \PYG{n}{yEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{tbTimeVec}\PYG{p}{)}\PYG{p}{;}  
-\PYG{n}{dtbrsObj} \PYG{o}{=} \PYG{n}{dtbrsObj}\PYG{p}{.}\PYG{n}{refine}\PYG{p}{(}\PYG{n}{newDirsMat}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{refine} \PYG{n}{the} \PYG{n}{approximation}
-\PYG{o}{\PYGZpc{}} \PYG{n}{get} \PYG{n}{external} \PYG{n}{approximating} \PYG{n}{ellipsoids} \PYG{n}{and} \PYG{n}{time} \PYG{n}{values}
-\PYG{p}{[}\PYG{n}{externallEllMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{]} \PYG{o}{=} \PYG{n}{dtbrsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ea}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-\PYG{o}{\PYGZpc{}} \PYG{n}{get} \PYG{n}{internal} \PYG{n}{approximating} \PYG{n}{ellipsoids}
-\PYG{n}{internalEllMat} \PYG{o}{=} \PYG{n}{dtbrsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ia}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{tbTimeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{50} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} backward time interval}
+\PYG{c}{\PYGZpc{} backward reach set}
+\PYG{n}{dtbrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{dtsys}\PYG{p}{,} \PYG{n}{yEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{tbTimeVec}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{dtbrsObj} \PYG{p}{=} \PYG{n}{dtbrsObj}\PYG{p}{.}\PYG{n}{refine}\PYG{p}{(}\PYG{n}{newDirsMat}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} refine the approximation}
+\PYG{c}{\PYGZpc{} get external approximating ellipsoids and time values}
+\PYG{p}{[}\PYG{n}{externallEllMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{]} \PYG{p}{=} \PYG{n}{dtbrsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ea}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} get internal approximating ellipsoids}
+\PYG{n}{internalEllMat} \PYG{p}{=} \PYG{n}{dtbrsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ia}\PYG{p}{(}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{internalEllMat} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} \PYG{n}{Array} \PYG{n}{of} \PYG{n}{ellipsoids} \PYG{n}{with} \PYG{n}{dimensionality} \PYG{l+m+mi}{3}\PYG{n}{x51}
+\PYG{c}{\PYGZpc{} internalEllMat =}
+\PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 3x51}
 \end{Verbatim}
 
 Number of columns in the ellipsoidal arrays externalEllMat and
@@ -4356,7 +4409,7 @@ configured using xml files, which available from a set of command-line
 utilities:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{elltool}\PYG{p}{.}\PYG{n}{setconf}\PYG{p}{(}\PYG{err}{\PYGZsq{}}\PYG{k}{default}\PYG{err}{\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{elltool}\PYG{p}{.}\PYG{n}{setconf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{default\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
 Here we list system parameters available from the ’default’
@@ -4416,15 +4469,15 @@ parameters.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{conf}\PYG{p}{.}\PYG{n}{Properties}\PYG{p}{.}\PYG{n}{getAbsTol}\PYG{p}{(}\PYG{p}{)}
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}    \PYG{l+m+mf}{1.0000e\PYGZhy{}07}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}    1.0000e\PYGZhy{}07}
 
 \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{conf}\PYG{p}{.}\PYG{n}{Properties}\PYG{p}{.}\PYG{n}{getNPlot2dPoints}\PYG{p}{(}\PYG{p}{)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{ans} \PYG{o}{=}
-\PYG{o}{\PYGZpc{}} 
-\PYG{o}{\PYGZpc{}}    \PYG{l+m+mi}{200}
+\PYG{c}{\PYGZpc{} ans =}
+\PYG{c}{\PYGZpc{} }
+\PYG{c}{\PYGZpc{}    200}
 \end{Verbatim}
 
 Some of the parameters can be changed in run-time via
@@ -4489,25 +4542,42 @@ Ellipsoids of dimensions higher than three must be projected onto a two-
 or three-dimensional subspace before being plotted. This is done by
 means of projection function:
 
-\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{c}{\PYGZpc{} create two 4\PYGZhy{}dimensional ellipsoids:}
-\PYG{n}{firstEllObj} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{14} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{4} \PYG{l+m+mi}{2} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{4} \PYG{l+m+mi}{6} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{2} \PYG{l+m+mi}{0} \PYG{l+m+mi}{6} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5} \PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{secEllObj} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{getInv}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\begin{Verbatim}[commandchars=\\\{\}]
+\% create two 4-dimensional ellipsoids:
 
-\PYG{c}{\PYGZpc{} specify 3\PYGZhy{}dimensional subspace by its basis:}
+firstEllObj = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
 
-\PYG{c}{\PYGZpc{} columns of basisMat must be orthogonal}
-\PYG{n}{basisMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{.}\PYG{l+s}{\PYGZsq{}}\PYG{err}{;}\PYG{err}{ }
+secEllObj = firstEllObj.getInv();
 
-\PYG{c}{\PYGZpc{} get 3\PYGZhy{}dimensional projections of firstEllObj and secEllObj:}
-\PYG{n}{bufEllVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj}\PYG{p}{]}\PYG{p}{;}
-\PYG{c}{\PYGZpc{} array ellVec contains projections of firstEllObj and secEllObj}
-\PYG{n}{ellVec} \PYG{p}{=} \PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}  
 
-\PYG{c}{\PYGZpc{} ellVec =}
-\PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 1x2}
 
-\PYG{n}{ellVec}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} plot ellipsoids in ellVec}
+\% specify 3-dimensional subspace by its basis:
+
+
+
+\% columns of basisMat must be orthogonal
+
+basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1].'; 
+
+
+
+\% get 3-dimensional projections of firstEllObj and secEllObj:
+
+bufEllVec = [firstEllObj secEllObj];
+
+\% array ellVec contains projections of firstEllObj and secEllObj
+
+ellVec = bufEllVec.projection(basisMat)  
+
+
+
+\% ellVec =
+
+\% Array of ellipsoids with dimensionality 1x2
+
+
+
+ellVec.plot();  \% plot ellipsoids in ellVec
 \end{Verbatim}
 
 Since the operation of projection is linear, the projection of the
@@ -4518,23 +4588,38 @@ ellipsoids.
 Function projection exists also for the
 ReachContinuous$\backslash$ReachDiscrete objects:
 
-\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{aMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}
-\PYG{n}{bMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}
-\PYG{n}{uBoundsEllObj} \PYG{o}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
-\PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{4}\PYG{o}{\PYGZhy{}}\PYG{n}{dimensional} \PYG{n}{system}
-\PYG{n}{sys} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysFactory}\PYG{p}{.}\PYG{n}{create}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{uBoundsEllObj}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{dirsMat}  \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{.}\PYG{err}{\PYGZsq{}}\PYG{p}{;} \PYG{o}{\PYGZpc{}} \PYG{n}{matrix} \PYG{n}{of} \PYG{n}{directions}
-\PYG{o}{\PYGZpc{}} \PYG{n}{reach} \PYG{n}{set} \PYG{n}{from} \PYG{n}{time} \PYG{l+m+mi}{0} \PYG{n}{to} \PYG{l+m+mi}{5}
-\PYG{n}{rsObj} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{sys}\PYG{p}{,} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
-    \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{5}\PYG{p}{]}\PYG{p}{,} \PYG{err}{\PYGZsq{}}\PYG{n}{isRegEnabled}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{true}\PYG{p}{,} \PYG{err}{\PYGZsq{}}\PYG{n}{isJustCheck}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{false}\PYG{p}{,} \PYG{err}{\PYGZsq{}}\PYG{n}{regTol}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{1e\PYGZhy{}4}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{basisMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{.}\PYG{err}{\PYGZsq{}}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{basis} \PYG{n}{of} \PYG{l+m+mi}{2}\PYG{o}{\PYGZhy{}}\PYG{n}{dimensional} \PYG{n}{subspace}
+\begin{Verbatim}[commandchars=\\\{\}]
+aMat = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{project} \PYG{n}{reach} \PYG{n}{set} \PYG{n}{rs} \PYG{n}{onto} \PYG{n}{basis} \PYG{n}{basisMat}
-\PYG{n}{psObj} \PYG{o}{=} \PYG{n}{rsObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{psObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{plot} \PYG{n}{external} \PYG{n}{approximation}
-\PYG{n}{hold} \PYG{n}{on}\PYG{p}{;}
-\PYG{n}{psObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{plot} \PYG{n}{internal} \PYG{n}{approximation}
+bMat = [0; 0; 0; 1];
+
+uBoundsEllObj = ellipsoid(1);
+
+\% 4-dimensional system
+
+sys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj);
+
+dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1].'; \% matrix of directions
+
+\% reach set from time 0 to 5
+
+rsObj = elltool.reach.ReachContinuous(sys, ell\_unitball(4), dirsMat,...
+
+    [0 5], 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
+
+basisMat = [1 0 0 1; 0 1 1 0].';  \% basis of 2-dimensional subspace
+
+
+
+\% project reach set rs onto basis basisMat
+
+psObj = rsObj.projection(basisMat);
+
+psObj.plotByEa();  \% plot external approximation
+
+hold on;
+
+psObj.plotByIa();  \% plot internal approximation
 \end{Verbatim}
 
 The quality of the ellipsoid and reach set plots is controlled by the
@@ -4613,17 +4698,17 @@ corresponds to the number of ellipsoidal approximations, and obtain
 external and internal ellipsoidal approximations of the reach set:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{aMat} \PYG{o}{=} \PYG{p}{[}\PYG{n}{cos}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{n}{sin}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{n}{sin}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{n}{cos}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;}
-\PYG{n}{uBoundsEllObj} \PYG{o}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{control} \PYG{n}{bounds}
-\PYG{o}{\PYGZpc{}} \PYG{n}{define} \PYG{n}{linear} \PYG{n}{discrete}\PYG{o}{\PYGZhy{}}\PYG{n}{time} \PYG{n}{system}
-\PYG{n}{lsys} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysFactory}\PYG{p}{.}\PYG{n}{create}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{,} \PYG{n}{uBoundsEllObj}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
-    \PYG{p}{[}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{p}{]}\PYG{p}{,} \PYG{l+s+sc}{\PYGZsq{}d\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{x0EllObj} \PYG{o}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{set} \PYG{n}{of} \PYG{n}{initial} \PYG{n}{conditions}
-\PYG{n}{dirsMat} \PYG{o}{=} \PYG{p}{[}\PYG{n}{cos}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{o}{:}\PYG{l+m+mf}{0.1}\PYG{o}{:}\PYG{n}{pi}\PYG{p}{)}\PYG{p}{;} \PYG{n}{sin}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{o}{:}\PYG{l+m+mf}{0.1}\PYG{o}{:}\PYG{n}{pi}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{32} \PYG{n}{initial} \PYG{n}{directions}
-\PYG{n}{nSteps}  \PYG{o}{=} \PYG{l+m+mi}{100}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{number} \PYG{n}{of} \PYG{n}{time} \PYG{n}{steps}
+\PYG{n}{aMat} \PYG{p}{=} \PYG{p}{[}\PYG{n+nb}{cos}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{n+nb}{sin}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{n+nb}{sin}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{n+nb}{cos}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{uBoundsEllObj} \PYG{p}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} control bounds}
+\PYG{c}{\PYGZpc{} define linear discrete\PYGZhy{}time system}
+\PYG{n}{lsys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysFactory}\PYG{p}{.}\PYG{n}{create}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{,} \PYG{n}{uBoundsEllObj}\PYG{p}{,}\PYG{c}{...}
+    \PYG{p}{[}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{d\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{x0EllObj} \PYG{p}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} set of initial conditions}
+\PYG{n}{dirsMat} \PYG{p}{=} \PYG{p}{[}\PYG{n+nb}{cos}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{:}\PYG{l+m+mf}{0.1}\PYG{p}{:}\PYG{n+nb}{pi}\PYG{p}{)}\PYG{p}{;} \PYG{n+nb}{sin}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{:}\PYG{l+m+mf}{0.1}\PYG{p}{:}\PYG{n+nb}{pi}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} 32 initial directions}
+\PYG{n}{nSteps}  \PYG{p}{=} \PYG{l+m+mi}{100}\PYG{p}{;}  \PYG{c}{\PYGZpc{} number of time steps}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{compute} \PYG{n}{the} \PYG{n}{reach} \PYG{n}{set}
-\PYG{n}{rsObj} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{lsys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{n}{nSteps}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} compute the reach set}
+\PYG{n}{rsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{lsys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{n}{nSteps}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
 In \hyperref[chap_examples:ellpolyfig]{figure  \ref*{chap_examples:ellpolyfig}}, the time required to compute both external and
@@ -4692,32 +4777,32 @@ Spring-mass system with disturbance:
 (c) reach tube for time $t\in[0,4]$; (d) reach set at time $t=4$.}\label{chap_examples:mechreachfig}\end{figure}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{k1} \PYG{o}{=} \PYG{l+m+mi}{24}\PYG{p}{;}  \PYG{n}{k2} \PYG{o}{=} \PYG{l+m+mi}{32}\PYG{p}{;}
-\PYG{n}{m1} \PYG{o}{=} \PYG{l+m+mf}{1.5}\PYG{p}{;} \PYG{n}{m2} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
-\PYG{o}{\PYGZpc{}} \PYG{n}{define} \PYG{n}{matrices} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{and} \PYG{n}{control} \PYG{n}{bounds} \PYG{n}{uBoundsEll}\PYG{o}{:}
-\PYG{n}{aMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{p}{(}\PYG{n}{k1}\PYG{o}{+}\PYG{n}{k2}\PYG{p}{)}\PYG{o}{/}\PYG{n}{m1} \PYG{n}{k2}\PYG{o}{/}\PYG{n}{m1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k2}\PYG{o}{/}\PYG{n}{m2} \PYG{o}{\PYGZhy{}}\PYG{p}{(}\PYG{n}{k1}\PYG{o}{+}\PYG{n}{k2}\PYG{p}{)}\PYG{o}{/}\PYG{n}{m2} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}
-\PYG{n}{bMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{m1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{m2}\PYG{p}{]}\PYG{p}{;}
-\PYG{n}{uBoundsEllObj} \PYG{o}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
-\PYG{o}{\PYGZpc{}} \PYG{n}{linear} \PYG{n}{system}
-\PYG{n}{lsys} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{uBoundsEllObj}\PYG{p}{)}\PYG{p}{;}  
-\PYG{n}{timeVec} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{4}\PYG{p}{]}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{time} \PYG{n}{interval}\PYG{o}{\PYGZpc{}} \PYG{n}{initial} \PYG{n}{conditions}\PYG{o}{:}
-\PYG{n}{x0EllObj} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{2} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{.}\PYG{err}{\PYGZsq{}} \PYG{o}{+} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.01} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mf}{0.01} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
-           \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
-\PYG{o}{\PYGZpc{}} \PYG{n}{initial} \PYG{n}{directions} \PYG{p}{(}\PYG{n}{some} \PYG{n}{random} \PYG{n}{vectors} \PYG{n}{in} \PYG{n}{R}\PYG{o}{\PYGZca{}}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{o}{:}
-\PYG{n}{dirsMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{.}\PYG{err}{\PYGZsq{}}\PYG{p}{;}
-\PYG{o}{\PYGZpc{}} \PYG{n}{reach} \PYG{n}{set}
-\PYG{n}{rsObj} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{lsys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
-    \PYG{err}{\PYGZsq{}}\PYG{n}{isRegEnabled}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{true}\PYG{p}{,} \PYG{err}{\PYGZsq{}}\PYG{n}{isJustCheck}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{false}\PYG{p}{,} \PYG{err}{\PYGZsq{}}\PYG{n}{regTol}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{1e\PYGZhy{}3}\PYG{p}{)}\PYG{p}{;}  
-\PYG{n}{basisMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{err}{\PYGZsq{}}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{orthogonal} \PYG{n}{basis} \PYG{n}{of} \PYG{p}{(}\PYG{n}{x1}\PYG{p}{,} \PYG{n}{x2}\PYG{p}{)} \PYG{n}{subspace}
-\PYG{n}{psObj} \PYG{o}{=} \PYG{n}{rsObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{reach} \PYG{n}{set} \PYG{n}{projection}
-\PYG{o}{\PYGZpc{}} \PYG{n}{plot} \PYG{n}{projection} \PYG{n}{of} \PYG{n}{reach} \PYG{n}{set} \PYG{n}{external} \PYG{n}{approximation}\PYG{o}{:}
+\PYG{n}{k1} \PYG{p}{=} \PYG{l+m+mi}{24}\PYG{p}{;}  \PYG{n}{k2} \PYG{p}{=} \PYG{l+m+mi}{32}\PYG{p}{;}
+\PYG{n}{m1} \PYG{p}{=} \PYG{l+m+mf}{1.5}\PYG{p}{;} \PYG{n}{m2} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} define matrices aMat, bMat, and control bounds uBoundsEll:}
+\PYG{n}{aMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{p}{(}\PYG{n}{k1}\PYG{o}{+}\PYG{n}{k2}\PYG{p}{)}\PYG{o}{/}\PYG{n}{m1} \PYG{n}{k2}\PYG{o}{/}\PYG{n}{m1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{k2}\PYG{o}{/}\PYG{n}{m2} \PYG{o}{\PYGZhy{}}\PYG{p}{(}\PYG{n}{k1}\PYG{o}{+}\PYG{n}{k2}\PYG{p}{)}\PYG{o}{/}\PYG{n}{m2} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{bMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{m1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{m2}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{uBoundsEllObj} \PYG{p}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} linear system}
+\PYG{n}{lsys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{uBoundsEllObj}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{timeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{4}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} time interval\PYGZpc{} initial conditions:}
+\PYG{n}{x0EllObj} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{2} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{.}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ + ellipsoid([0.01 0 0 0; 0 0.01 0 0; 0 0 0 0;...}
+\PYG{l+s}{           0 0 0 0]);}
+\PYG{l+s}{\PYGZpc{} initial directions (some random vectors in R\PYGZca{}4):}
+\PYG{l+s}{dirsMat = [1 0 1 0; 1 \PYGZhy{}1 0 0; 0 \PYGZhy{}1 0 1; 1 1 \PYGZhy{}1 1; \PYGZhy{}1 1 1 0; \PYGZhy{}2 0 1 1].\PYGZsq{}}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} reach set}
+\PYG{n}{rsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{lsys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isRegEnabled\PYGZsq{}}\PYG{p}{,} \PYG{n}{true}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isJustCheck\PYGZsq{}}\PYG{p}{,} \PYG{n}{false}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{regTol\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{1e\PYGZhy{}3}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{basisMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}  \PYG{c}{\PYGZpc{} orthogonal basis of (x1, x2) subspace}
+\PYG{n}{psObj} \PYG{p}{=} \PYG{n}{rsObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} reach set projection}
+\PYG{c}{\PYGZpc{} plot projection of reach set external approximation:}
 
-\PYG{n}{psObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{plot} \PYG{n}{the} \PYG{n}{whole} \PYG{n}{reach} \PYG{n}{tube}
+\PYG{n}{psObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} plot the whole reach tube}
 
-\PYG{o}{\PYGZpc{}}
-\PYG{o}{\PYGZpc{}} \PYG{n}{ReachContinuous}\PYG{err}{\PYGZsq{}}\PYG{n}{s} \PYG{n}{cut}\PYG{p}{(}\PYG{p}{)} \PYG{n}{doesn}\PYG{err}{\PYGZsq{}}\PYG{n}{t} \PYG{n}{work} \PYG{n}{with} \PYG{n}{projections}\PYG{o}{:}
-\PYG{n}{psObj} \PYG{o}{=} \PYG{n}{psObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{psObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{plot} \PYG{n}{reach} \PYG{n}{set} \PYG{n}{approximation} \PYG{n}{at} \PYG{n}{time} \PYG{n}{t} \PYG{o}{=} \PYG{l+m+mi}{4}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} ReachContinuous\PYGZsq{}s cut() doesn\PYGZsq{}t work with projections:}
+\PYG{n}{psObj} \PYG{p}{=} \PYG{n}{psObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{psObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} plot reach set approximation at time t = 4}
 \end{Verbatim}
 
 \hyperref[chap_examples:mechreachfig]{Figure  \ref*{chap_examples:mechreachfig}} (a) shows the reach set of the system
@@ -4904,7 +4989,7 @@ say, $t=3$.
 \centering
 \capstart
 
-\includegraphics{rlcreach.png}
+\scalebox{0.700000}{\includegraphics{rlcreach.png}}
 \caption{Forward and backward reach sets of the switched system
 (external and internal approximations).}\label{chap_examples:rlcreachfig}\end{figure}
 
@@ -4922,34 +5007,34 @@ to reach a neighborhood M of the origin at time $t=3$, we compute
 the backward reach set from $t=3$ to $t=0$.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{mEllObj}  \PYG{o}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{l+m+mf}{0.01}\PYG{o}{*}\PYG{n}{eye}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{terminating} \PYG{n}{set}
-\PYG{n}{termTime} \PYG{o}{=} \PYG{l+m+mi}{3}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{terminating} \PYG{n}{time}
+\PYG{n}{mEllObj}  \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{l+m+mf}{0.01}\PYG{o}{*}\PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} terminating set}
+\PYG{n}{termTime} \PYG{p}{=} \PYG{l+m+mi}{3}\PYG{p}{;}  \PYG{c}{\PYGZpc{} terminating time}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{compute} \PYG{n}{backward} \PYG{n}{reach} \PYG{n}{set}\PYG{o}{:}
-\PYG{o}{\PYGZpc{}} \PYG{n}{compute} \PYG{n}{the} \PYG{n}{reach} \PYG{n}{set}\PYG{o}{:}
-\PYG{n}{secBrsObj} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{secondSys}\PYG{p}{,} \PYG{n}{mEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
- \PYG{p}{[}\PYG{n}{termTime} \PYG{n}{switchTime}\PYG{p}{]}\PYG{p}{,} \PYG{err}{\PYGZsq{}}\PYG{n}{isRegEnabled}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{true}\PYG{p}{,} \PYG{err}{\PYGZsq{}}\PYG{n}{isJustCheck}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{n+nb}{false}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
- \PYG{err}{\PYGZsq{}}\PYG{n}{regTol}\PYG{err}{\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{1e\PYGZhy{}5}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{second} \PYG{n}{system} \PYG{n}{comes} \PYG{n}{first}
-\PYG{n}{firstBrsObj} \PYG{o}{=} \PYG{n}{secBrsObj}\PYG{p}{.}\PYG{n}{evolve}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{firstSys}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{then} \PYG{n}{the} \PYG{n}{first} \PYG{n}{system}
+\PYG{c}{\PYGZpc{} compute backward reach set:}
+\PYG{c}{\PYGZpc{} compute the reach set:}
+\PYG{n}{secBrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{secondSys}\PYG{p}{,} \PYG{n}{mEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,}\PYG{c}{...}
+ \PYG{p}{[}\PYG{n}{termTime} \PYG{n}{switchTime}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isRegEnabled\PYGZsq{}}\PYG{p}{,} \PYG{n}{true}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isJustCheck\PYGZsq{}}\PYG{p}{,} \PYG{n}{false}\PYG{p}{,}\PYG{c}{...}
+ \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{regTol\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{1e\PYGZhy{}5}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} second system comes first}
+\PYG{n}{firstBrsObj} \PYG{p}{=} \PYG{n}{secBrsObj}\PYG{p}{.}\PYG{n}{evolve}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n}{firstSys}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} then the first system}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{obtain} \PYG{n}{projections} \PYG{n}{onto} \PYG{p}{(}\PYG{n}{x1}\PYG{p}{,} \PYG{n}{x2}\PYG{p}{)} \PYG{n}{subspace}\PYG{o}{:}
-\PYG{n}{firstBpsObj} \PYG{o}{=} \PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{secBpsObj} \PYG{o}{=} \PYG{n}{secBrsObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} obtain projections onto (x1, x2) subspace:}
+\PYG{n}{firstBpsObj} \PYG{p}{=} \PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{secBpsObj} \PYG{p}{=} \PYG{n}{secBrsObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{plot} \PYG{n}{the} \PYG{n}{results}\PYG{o}{:}
+\PYG{c}{\PYGZpc{} plot the results:}
 
-\PYG{n}{firstBpsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}r\PYGZsq{}}\PYG{p}{)}\PYG{p}{;} \PYG{o}{\PYGZpc{}} \PYG{n}{external} \PYG{n}{apprx}\PYG{p}{.} \PYG{n}{of} \PYG{n}{backward} \PYG{n}{reach} \PYG{n}{set} \PYG{l+m+mi}{1} \PYG{p}{(}\PYG{n}{red}\PYG{p}{)}
+\PYG{n}{firstBpsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{r\PYGZsq{}}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} external apprx. of backward reach set 1 (red)}
 \PYG{n}{hold} \PYG{n}{on}\PYG{p}{;}
-\PYG{n}{firstBpsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;} \PYG{o}{\PYGZpc{}} \PYG{n}{internal} \PYG{n}{apprx}\PYG{p}{.} \PYG{n}{of} \PYG{n}{backward} \PYG{n}{reach} \PYG{n}{set} \PYG{l+m+mi}{1} \PYG{p}{(}\PYG{n}{green}\PYG{p}{)}
-\PYG{n}{secBpsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}y\PYGZsq{}}\PYG{p}{)}\PYG{p}{;} \PYG{o}{\PYGZpc{}} \PYG{n}{external} \PYG{n}{apprx}\PYG{p}{.} \PYG{n}{of} \PYG{n}{backward} \PYG{n}{reach} \PYG{n}{set} \PYG{l+m+mi}{2} \PYG{p}{(}\PYG{n}{yellow}\PYG{p}{)}
-\PYG{n}{secBpsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}b\PYGZsq{}}\PYG{p}{)}\PYG{p}{;} \PYG{o}{\PYGZpc{}} \PYG{n}{internal} \PYG{n}{apprx}\PYG{p}{.} \PYG{n}{of} \PYG{n}{backward} \PYG{n}{reach} \PYG{n}{set} \PYG{l+m+mi}{2} \PYG{p}{(}\PYG{n}{blue}\PYG{p}{)}
+\PYG{n}{firstBpsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} internal apprx. of backward reach set 1 (green)}
+\PYG{n}{secBpsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y\PYGZsq{}}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} external apprx. of backward reach set 2 (yellow)}
+\PYG{n}{secBpsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{b\PYGZsq{}}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} internal apprx. of backward reach set 2 (blue)}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{plot} \PYG{n}{the} \PYG{l+m+mi}{3}\PYG{o}{\PYGZhy{}}\PYG{n}{dimensional} \PYG{n}{backward} \PYG{n}{reach} \PYG{n}{set} \PYG{n}{at} \PYG{n}{time} \PYG{n}{t} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{o}{:}
+\PYG{c}{\PYGZpc{} plot the 3\PYGZhy{}dimensional backward reach set at time t = 0:}
 
-\PYG{n}{firstBrsObj} \PYG{o}{=} \PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}r\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{firstBrsObj} \PYG{p}{=} \PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{r\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{hold} \PYG{n}{on}\PYG{p}{;}
-\PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
 \hyperref[chap_examples:rlcreachfig]{Figure  \ref*{chap_examples:rlcreachfig}} (c) presents the evolution of the reach set projection onto
@@ -5133,15 +5218,15 @@ initial conditions, we compute the reach set according to dynamics
 external approximation of the reach set by a single ellipsoid.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{o}{\PYGZpc{}}\PYG{n}{initial} \PYG{n}{conditions}\PYG{o}{:}
-\PYG{n}{x0EllObj} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{170}\PYG{p}{;} \PYG{l+m+mi}{180}\PYG{p}{;} \PYG{l+m+mi}{175}\PYG{p}{;} \PYG{l+m+mi}{170}\PYG{p}{]} \PYG{o}{+} \PYG{l+m+mi}{10}\PYG{o}{*}\PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}initial conditions:}
+\PYG{n}{x0EllObj} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{170}\PYG{p}{;} \PYG{l+m+mi}{180}\PYG{p}{;} \PYG{l+m+mi}{175}\PYG{p}{;} \PYG{l+m+mi}{170}\PYG{p}{]} \PYG{o}{+} \PYG{l+m+mi}{10}\PYG{o}{*}\PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{p}{;}
 
-\PYG{n}{dirsMat} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{single} \PYG{n}{initial} \PYG{n}{direction}
-\PYG{n}{nSteps} \PYG{o}{=} \PYG{l+m+mi}{100}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{n}{number} \PYG{n}{of} \PYG{n}{time} \PYG{n}{steps}
+\PYG{n}{dirsMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} single initial direction}
+\PYG{n}{nSteps} \PYG{p}{=} \PYG{l+m+mi}{100}\PYG{p}{;}  \PYG{c}{\PYGZpc{} number of time steps}
 
-\PYG{o}{\PYGZpc{}} \PYG{n}{free}\PYG{o}{\PYGZhy{}}\PYG{n}{flow} \PYG{n}{reach} \PYG{n}{set}
-\PYG{n}{ffrsObj} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{firstSys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{n}{nSteps}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}  
-\PYG{n}{externalEllMat} \PYG{o}{=} \PYG{n}{ffrsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ea}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}  \PYG{o}{\PYGZpc{}} \PYG{l+m+mi}{101}\PYG{n}{x1} \PYG{n}{array} \PYG{n}{of} \PYG{n}{external} \PYG{n}{ellipsoids}
+\PYG{c}{\PYGZpc{} free\PYGZhy{}flow reach set}
+\PYG{n}{ffrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{firstSys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{n}{nSteps}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{externalEllMat} \PYG{p}{=} \PYG{n}{ffrsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ea}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} 101x1 array of external ellipsoids}
 \end{Verbatim}
 
 Having obtained the ellipsoidal array externalEllMat representing the
@@ -5201,14 +5286,14 @@ initial conditions is the intersection of the free-flow reach set with
 the guard.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{crsObjVec} \PYG{o}{=} \PYG{p}{[}\PYG{p}{]}\PYG{p}{;}
-\PYG{k}{for} \PYG{n}{iInd} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{size}\PYG{p}{(}\PYG{n}{indNonEmptyVec}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}
-    \PYG{n}{curTimeLimVec}\PYG{o}{=}\PYG{p}{[}\PYG{n}{indNonEmptyVec}\PYG{p}{(}\PYG{n}{iInd}\PYG{p}{)}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{n}{nSteps}\PYG{p}{]}\PYG{p}{;}
-     \PYG{n}{rsObj} \PYG{o}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{secSys}\PYG{p}{,}\PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
-         \PYG{n}{intersectEllVec}\PYG{p}{(}\PYG{n}{indNonEmptyVec}\PYG{p}{(}\PYG{n}{iInd}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,} \PYG{p}{.}\PYG{p}{.}\PYG{p}{.}
-             \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{curTimeLimVec}\PYG{p}{,}\PYG{err}{\PYGZsq{}}\PYG{n}{isRegEnabled}\PYG{err}{\PYGZsq{}}\PYG{p}{,}\PYG{n+nb}{true}\PYG{p}{)}\PYG{p}{;}
-     \PYG{n}{crsObjVec} \PYG{o}{=} \PYG{p}{[}\PYG{n}{crsObjVec} \PYG{n}{rsObj}\PYG{p}{]}\PYG{p}{;}
-\PYG{n}{end}
+\PYG{n}{crsObjVec} \PYG{p}{=} \PYG{p}{[}\PYG{p}{]}\PYG{p}{;}
+\PYG{k}{for} \PYG{n}{iInd} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n+nb}{size}\PYG{p}{(}\PYG{n}{indNonEmptyVec}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}
+    \PYG{n}{curTimeLimVec}\PYG{p}{=}\PYG{p}{[}\PYG{n}{indNonEmptyVec}\PYG{p}{(}\PYG{n}{iInd}\PYG{p}{)}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{n}{nSteps}\PYG{p}{]}\PYG{p}{;}
+     \PYG{n}{rsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{secSys}\PYG{p}{,}\PYG{c}{...}
+         \PYG{n}{intersectEllVec}\PYG{p}{(}\PYG{n}{indNonEmptyVec}\PYG{p}{(}\PYG{n}{iInd}\PYG{p}{)}\PYG{p}{)}\PYG{p}{,} \PYG{c}{...}
+             \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{curTimeLimVec}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isRegEnabled\PYGZsq{}}\PYG{p}{,}\PYG{n}{true}\PYG{p}{)}\PYG{p}{;}
+     \PYG{n}{crsObjVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{crsObjVec} \PYG{n}{rsObj}\PYG{p}{]}\PYG{p}{;}
+\PYG{k}{end}
 \end{Verbatim}
 
 The union of reach sets in array crs forms the reach set for the
@@ -10709,7 +10794,7 @@ Output:
     SObjectData: struct [n1,...,n\_k] - structure containing an internal
        representation of the specified object
 \end{Verbatim}
-
+\phantomsection\label{chap_func:smartdb-relations-atypifiedstaticrelation-unionwith}
 \begin{Verbatim}[commandchars=\\\{\}]
 UNIONWITH - adds tuples of the input relation to the set of tuples of the
             original relation
@@ -11001,7 +11086,7 @@ smartdb.relations.ATypifiedStaticRelation:
 {\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
 
 \item {} 
-{\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.unionWith\_}
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwith]{smartdb.relations.ATypifiedStaticRelation.unionWith}}
 
 \item {} 
 {\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
@@ -11690,7 +11775,7 @@ smartdb.relations.ATypifiedStaticRelation:
 {\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
 
 \item {} 
-{\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.unionWith\_}
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwith]{smartdb.relations.ATypifiedStaticRelation.unionWith}}
 
 \item {} 
 {\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
@@ -12236,7 +12321,7 @@ smartdb.relations.ATypifiedStaticRelation:
 {\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
 
 \item {} 
-{\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.unionWith\_}
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwith]{smartdb.relations.ATypifiedStaticRelation.unionWith}}
 
 \item {} 
 {\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
@@ -12697,7 +12782,7 @@ smartdb.relations.ATypifiedStaticRelation:
 {\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
 
 \item {} 
-{\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.unionWith\_}
+{\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwith]{smartdb.relations.ATypifiedStaticRelation.unionWith}}
 
 \item {} 
 {\hyperref[chap_func:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
@@ -15070,20 +15155,6 @@ Examples:
   SUBounds.shape = [9 0; 0 2];
   sys = elltool.linsys.LinSysFactory.create(aMat, bMat,SUBounds);
 \end{Verbatim}
-
-
-\chapter{Indices and tables}
-\label{main_manual:indices-and-tables}\begin{itemize}
-\item {} 
-\emph{genindex}
-
-\item {} 
-\emph{modindex}
-
-\item {} 
-\emph{search}
-
-\end{itemize}
 
 
 

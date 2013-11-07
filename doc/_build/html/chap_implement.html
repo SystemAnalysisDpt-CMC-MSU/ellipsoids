@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Implementation &mdash; Ellipsoidal Toolbox 0.1 documentation</title>
+    <title>Implementation &mdash; Ellipsoidal Toolbox 2.0 beta 1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1',
+        VERSION:     '2.0 beta 1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Ellipsoidal Toolbox 0.1 documentation" href="index.html" />
+    <link rel="top" title="Ellipsoidal Toolbox 2.0 beta 1 documentation" href="index.html" />
     <link rel="next" title="Examples" href="chap_examples.html" />
     <link rel="prev" title="Installation" href="chap_install.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="chap_install.html" title="Installation"
              accesskey="P">previous</a> |</li>
-        <li><a href="main_manual.html">Ellipsoidal Toolbox 0.1 documentation</a> &raquo;</li> 
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0 beta 1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -57,15 +57,15 @@
 MATLAB programming environment. The following three commands define the
 same ellipsoid <img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf549754f2f.png" alt="{\mathcal E}(q,Q)"/>, with <img class="math" src="_images/math/2f0254e7ea239a9e63ab4310a523e422df56e6c1.png" alt="q\in{\bf R}^n"/> and
 <img class="math" src="_images/math/93e54033bbd83ef95a1379548b4e57c8c5f32e85.png" alt="Q\in{\bf R}^{n\times n}"/> being symmetric positive semidefinite:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
-5</pre></div></td><td class="code"><div class="highlight"><pre> <span class="n">centVec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span><span class="err">&#39;</span><span class="p">;</span>
- <span class="n">shMat</span> <span class="o">=</span> <span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
- <span class="n">ellObj</span> <span class="o">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="n">centVec</span><span class="p">,</span> <span class="n">shMat</span><span class="p">);</span>
- <span class="n">ellObj</span> <span class="o">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="n">shMat</span><span class="p">)</span> <span class="o">+</span> <span class="n">centVec</span><span class="p">;</span>
- <span class="n">ellObj</span> <span class="o">=</span> <span class="n">sqrtm</span><span class="p">(</span><span class="n">shMat</span><span class="p">)</span><span class="o">*</span><span class="n">ell_unitball</span><span class="p">(</span><span class="n">size</span><span class="p">(</span><span class="n">shMat</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">centVec</span><span class="p">;</span>
+5</pre></div></td><td class="code"><div class="highlight"><pre> <span class="n">centVec</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]</span><span class="o">&#39;</span><span class="p">;</span>
+ <span class="n">shMat</span> <span class="p">=</span> <span class="nb">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+ <span class="n">ellObj</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="n">centVec</span><span class="p">,</span> <span class="n">shMat</span><span class="p">);</span>
+ <span class="n">ellObj</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="n">shMat</span><span class="p">)</span> <span class="o">+</span> <span class="n">centVec</span><span class="p">;</span>
+ <span class="n">ellObj</span> <span class="p">=</span> <span class="n">sqrtm</span><span class="p">(</span><span class="n">shMat</span><span class="p">)</span><span class="o">*</span><span class="n">ell_unitball</span><span class="p">(</span><span class="nb">size</span><span class="p">(</span><span class="n">shMat</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">centVec</span><span class="p">;</span>
 </pre></div>
 </td></tr></table></div>
 <p>For the ellipsoid class we overload the following functions and
@@ -103,7 +103,7 @@ bigger than the ellipsoid secEllObj, or equivalently
 </ul>
 <p>All the listed operations can be applied to a single ellipsoid as well
 as to a two-dimensional array of ellipsoids. For example,</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -133,28 +133,28 @@ as to a two-dimensional array of ellipsoids. For example,</p>
 </pre></div>
 </td></tr></table></div>
 <p>To access individual elements of the array, the usual MATLAB subindexing is used:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">aMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">0</span><span class="p">];</span>  <span class="o">%</span> <span class="n">aMat</span> <span class="o">-</span> <span class="mi">2</span><span class="n">x2</span> <span class="n">real</span> <span class="n">matrix</span>
-<span class="n">bVec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">;</span> <span class="mi">0</span><span class="p">];</span> <span class="o">%</span> <span class="n">bVec</span> <span class="o">-</span> <span class="n">vector</span> <span class="n">in</span> <span class="n">R</span><span class="o">^</span><span class="mi">2</span>
-<span class="o">%</span> <span class="n">affine</span> <span class="n">transformation</span> <span class="n">of</span> <span class="n">ellipsoids</span> <span class="n">in</span> <span class="n">the</span> <span class="n">second</span> <span class="n">column</span> <span class="n">of</span> <span class="n">ellMat</span>
-<span class="n">aTransMat</span> <span class="o">=</span> <span class="n">aMat</span> <span class="o">*</span> <span class="n">ellMat</span><span class="p">(</span><span class="o">:</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">bVec</span><span class="p">;</span>  
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">aMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">2</span> <span class="mi">0</span><span class="p">];</span>  <span class="c">% aMat - 2x2 real matrix</span>
+<span class="n">bVec</span> <span class="p">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">;</span> <span class="mi">0</span><span class="p">];</span> <span class="c">% bVec - vector in R^2</span>
+<span class="c">% affine transformation of ellipsoids in the second column of ellMat</span>
+<span class="n">aTransMat</span> <span class="p">=</span> <span class="n">aMat</span> <span class="o">*</span> <span class="n">ellMat</span><span class="p">(:,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">bVec</span><span class="p">;</span>  
 </pre></div>
 </td></tr></table></div>
 <p>Sometimes it may be useful to modify the shape of the ellipsoid without
 affecting its center. Say, we would like to bloat or squeeze the
 ellipsoid:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bltEllObj</span> <span class="o">=</span> <span class="n">firstEllObj</span><span class="p">.</span><span class="n">getShape</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="o">%</span> <span class="n">bloats</span> <span class="n">ellipsoid</span> <span class="n">firstEllObj</span>
-<span class="n">sqzEllObj</span> <span class="o">=</span> <span class="n">firstEllObj</span><span class="p">.</span><span class="n">getShape</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span>  <span class="o">%</span> <span class="n">squeezes</span> <span class="n">ellipsoid</span> <span class="n">firstEllObj</span>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bltEllObj</span> <span class="p">=</span> <span class="n">firstEllObj</span><span class="p">.</span><span class="n">getShape</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="c">% bloats ellipsoid firstEllObj</span>
+<span class="n">sqzEllObj</span> <span class="p">=</span> <span class="n">firstEllObj</span><span class="p">.</span><span class="n">getShape</span><span class="p">(</span><span class="mf">0.5</span><span class="p">);</span>  <span class="c">% squeezes ellipsoid firstEllObj</span>
 </pre></div>
 </td></tr></table></div>
 <p>Since function shape does not change the center of the
 ellipsoid, it only accepts scalars or square matrices as its second
 input parameter. Several functions access the internal data of the
 ellipsoid object:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -163,19 +163,19 @@ ellipsoid object:</p>
  7
  8
  9
-10</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">[</span><span class="n">centVec</span><span class="p">,</span> <span class="n">shMat</span><span class="p">]</span> <span class="o">=</span> <span class="n">secEllObj</span><span class="p">.</span><span class="kt">double</span><span class="p">()</span>
-<span class="o">%</span> <span class="n">centVec</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>    <span class="o">-</span><span class="mf">0.5000</span>
-<span class="o">%</span>    <span class="o">-</span><span class="mf">0.1667</span>
-<span class="o">%</span> 
-<span class="o">%</span> <span class="n">shMat</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>    <span class="mf">0.9167</span>     <span class="mf">0.9167</span>
-<span class="o">%</span>    <span class="mf">0.9167</span>     <span class="mf">1.5278</span>
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">[</span><span class="n">centVec</span><span class="p">,</span> <span class="n">shMat</span><span class="p">]</span> <span class="p">=</span> <span class="n">secEllObj</span><span class="p">.</span><span class="n">double</span><span class="p">()</span>
+<span class="c">% centVec =</span>
+<span class="c">% </span>
+<span class="c">%    -0.5000</span>
+<span class="c">%    -0.1667</span>
+<span class="c">% </span>
+<span class="c">% shMat =</span>
+<span class="c">% </span>
+<span class="c">%    0.9167     0.9167</span>
+<span class="c">%    0.9167     1.5278</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
@@ -192,7 +192,7 @@ ellipsoid object:</p>
 <span class="c">%      0     0     1</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -202,23 +202,23 @@ ellipsoid object:</p>
  8
  9
 10
-11</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bufEllVec</span> <span class="o">=</span> <span class="p">[</span><span class="n">ellMat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">:</span><span class="p">)</span> <span class="n">fourthEllObj</span><span class="p">];</span>
-<span class="p">[</span><span class="n">dimVec</span><span class="p">,</span> <span class="n">rankVec</span><span class="p">]</span> <span class="o">=</span> <span class="n">bufEllVec</span><span class="p">.</span><span class="n">dimension</span><span class="p">()</span> 
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bufEllVec</span> <span class="p">=</span> <span class="p">[</span><span class="n">ellMat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">:)</span> <span class="n">fourthEllObj</span><span class="p">];</span>
+<span class="p">[</span><span class="n">dimVec</span><span class="p">,</span> <span class="n">rankVec</span><span class="p">]</span> <span class="p">=</span> <span class="n">bufEllVec</span><span class="p">.</span><span class="n">dimension</span><span class="p">()</span> 
 
 
-<span class="o">%</span> <span class="n">dimVec</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>    <span class="mi">2</span>     <span class="mi">2</span>     <span class="mi">4</span>
-<span class="o">%</span> 
-<span class="o">%</span> <span class="n">rankVec</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>    <span class="mi">2</span>     <span class="mi">2</span>     <span class="mi">3</span>
+<span class="c">% dimVec =</span>
+<span class="c">% </span>
+<span class="c">%    2     2     4</span>
+<span class="c">% </span>
+<span class="c">% rankVec =</span>
+<span class="c">% </span>
+<span class="c">%    2     2     3</span>
 </pre></div>
 </td></tr></table></div>
 <p>One way to check if two ellipsoids intersect, is to
 compute the distance between them ( (“Stanley Chan Article Homepage”),
 Lin and Han (2002)):</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
@@ -240,7 +240,7 @@ intersection of the two ellipsoids is nonempty, it can be approximated
 by ellipsoids from the outside as well as from the inside. See
 L. Ros, A. Sabater, F. Thomas (2002)
 for more information about these methods.</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% external approximation of intersection of firstEllObj and thirdEllObj</span>
@@ -252,7 +252,7 @@ for more information about these methods.</p>
 <p>It can be checked that
 resulting ellipsoid externalEllObj contains the given intersection,
 whereas internalEllObj is contained in this intersection:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
@@ -265,17 +265,17 @@ whereas internalEllObj is contained in this intersection:</p>
 <span class="c">%      1</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bufEllVec</span> <span class="o">=</span> <span class="p">[</span><span class="n">firstEllObj</span> <span class="n">thirdEllObj</span><span class="p">]</span>
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bufEllVec</span> <span class="p">=</span> <span class="p">[</span><span class="n">firstEllObj</span> <span class="n">thirdEllObj</span><span class="p">]</span>
 <span class="n">bufEllVec</span><span class="p">.</span><span class="n">doesIntersectionContain</span><span class="p">(</span><span class="n">internalEllObj</span><span class="p">)</span> 
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">1</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      1</span>
 </pre></div>
 </td></tr></table></div>
 <p>Function
@@ -284,15 +284,15 @@ given array contains the union or intersection of ellipsoids or
 polytopes.</p>
 <p>It is also possible to solve the feasibility problem, that is, to check
 if the intersection of more than two ellipsoids is empty:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellMat</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">ellMat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="sc">&#39;i&#39;</span><span class="p">)</span>  
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellMat</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">ellMat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s">&#39;i&#39;</span><span class="p">)</span>  
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="o">-</span><span class="mi">1</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      -1</span>
 </pre></div>
 </td></tr></table></div>
 <p>In this
@@ -300,36 +300,36 @@ particular example the result <img class="math" src="_images/math/bae5aba07d37ff
 of ellipsoids in ellMat is empty. Function intersect in general checks
 if an ellipsoid, hyperplane or polytope intersects the union or the
 intersection of ellipsoids in the given array:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bufEllVec</span> <span class="o">=</span> <span class="p">[</span><span class="n">firstEllObj</span> <span class="n">secEllObj</span> <span class="n">thirdEllObj</span><span class="p">]</span>
-<span class="n">bufEllVec</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">ellMat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sc">&#39;i&#39;</span><span class="p">)</span>
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bufEllVec</span> <span class="p">=</span> <span class="p">[</span><span class="n">firstEllObj</span> <span class="n">secEllObj</span> <span class="n">thirdEllObj</span><span class="p">]</span>
+<span class="n">bufEllVec</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">ellMat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s">&#39;i&#39;</span><span class="p">)</span>
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">0</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      0</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bufEllVec</span> <span class="o">=</span> <span class="p">[</span><span class="n">firstEllObj</span> <span class="n">secEllObj</span> <span class="n">thirdEllObj</span><span class="p">];</span>
-<span class="n">bufEllVec</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">ellMat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sc">&#39;u&#39;</span><span class="p">)</span>
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bufEllVec</span> <span class="p">=</span> <span class="p">[</span><span class="n">firstEllObj</span> <span class="n">secEllObj</span> <span class="n">thirdEllObj</span><span class="p">];</span>
+<span class="n">bufEllVec</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">ellMat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s">&#39;u&#39;</span><span class="p">)</span>
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">1</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      1</span>
 </pre></div>
 </td></tr></table></div>
 <p>For the ellipsoids in
 <img class="math" src="_images/math/e5908582078e69c6be80476164a5ad1904e0877c.png" alt="{\bf R}"/>, <img class="math" src="_images/math/bb5fa23edd2754dda88386b5c2f48e26b6d994da.png" alt="{\bf R}^2"/> and <img class="math" src="_images/math/6b6d844f26e2bc171d1c97590cd3df50633cb36e.png" alt="{\bf R}^3"/> the geometric
 sum can be computed explicitely and plotted:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellMat</span><span class="p">.</span><span class="n">minksum</span><span class="p">();</span>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellMat</span><span class="p">.</span><span class="n">minksum</span><span class="p">();</span>
 </pre></div>
 </td></tr></table></div>
 <div class="figure" id="minksumpic" style="width: 40%">
@@ -342,7 +342,7 @@ the dimension of the space in which the ellipsoids are defined exceeds
 operation is not generally an ellipsoid, but it can be approximated by
 families of external and internal ellipsoids parametrized by the
 direction vector:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -393,7 +393,7 @@ computations whereas minksum is there merely for visualization purposes.</p>
 <p>If the geometric difference of two ellipsoids is not an empty set, it
 can be computed explicitely and plotted for ellipsoids in
 <img class="math" src="_images/math/e5908582078e69c6be80476164a5ad1904e0877c.png" alt="{\bf R}"/>, <img class="math" src="_images/math/bb5fa23edd2754dda88386b5c2f48e26b6d994da.png" alt="{\bf R}^2"/> and <img class="math" src="_images/math/6b6d844f26e2bc171d1c97590cd3df50633cb36e.png" alt="{\bf R}^3"/>:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -427,7 +427,7 @@ higher dimensions it returns an error. For arbitrary dimensions, the
 geometric difference can be approximated by families of external and
 internal ellipsoids parametrized by the direction vector, provided this
 direction is not bad:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -447,27 +447,27 @@ direction is not bad:</p>
 18
 19
 20
-21</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">absTol</span> <span class="o">=</span> <span class="n">getAbsTol</span><span class="p">(</span><span class="n">firstEllObj</span><span class="p">);</span>
-<span class="o">%</span> <span class="n">find</span> <span class="n">out</span> <span class="n">which</span> <span class="n">of</span> <span class="n">the</span> <span class="n">directions</span> <span class="n">in</span> <span class="n">dirsMat</span> <span class="n">are</span> <span class="n">bad</span>
+21</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">absTol</span> <span class="p">=</span> <span class="n">getAbsTol</span><span class="p">(</span><span class="n">firstEllObj</span><span class="p">);</span>
+<span class="c">% find out which of the directions in dirsMat are bad</span>
 <span class="n">firstEllObj</span><span class="p">.</span><span class="n">isbaddirection</span><span class="p">(</span><span class="n">fourthEllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="n">absTol</span><span class="p">)</span>  
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">1</span>     <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>     <span class="mi">0</span> 
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      1     0     0     1     0 </span>
 
 
-<span class="o">%</span> <span class="n">two</span> <span class="n">of</span> <span class="n">five</span> <span class="n">directions</span> <span class="n">specified</span> <span class="n">by</span> <span class="n">dirsMat</span> <span class="n">are</span> <span class="n">bad</span><span class="p">,</span>
-<span class="o">%</span> <span class="n">so</span><span class="p">,</span> <span class="n">only</span> <span class="n">three</span> <span class="n">ellipsoidal</span> <span class="n">approximations</span> 
-<span class="o">%</span> <span class="n">can</span> <span class="n">be</span> <span class="n">produced</span> <span class="k">for</span> <span class="n">this</span> <span class="n">dirsMat</span><span class="o">:</span>
-<span class="n">externalEllVec</span> <span class="o">=</span> <span class="n">firstEllObj</span><span class="p">.</span><span class="n">minkdiff_ea</span><span class="p">(</span><span class="n">fourthEllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">)</span> 
+<span class="c">% two of five directions specified by dirsMat are bad,</span>
+<span class="c">% so, only three ellipsoidal approximations </span>
+<span class="c">% can be produced for this dirsMat:</span>
+<span class="n">externalEllVec</span> <span class="p">=</span> <span class="n">firstEllObj</span><span class="p">.</span><span class="n">minkdiff_ea</span><span class="p">(</span><span class="n">fourthEllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">)</span> 
 
-<span class="o">%</span> <span class="n">externalEllVec</span> <span class="o">=</span>
-<span class="o">%</span> <span class="n">Array</span> <span class="n">of</span> <span class="n">ellipsoids</span> <span class="n">with</span> <span class="n">dimensionality</span> <span class="mi">1</span><span class="n">x3</span>
+<span class="c">% externalEllVec =</span>
+<span class="c">% Array of ellipsoids with dimensionality 1x3</span>
 
-<span class="n">internalEllVec</span> <span class="o">=</span> <span class="n">firstEllObj</span><span class="p">.</span><span class="n">minkdiff_ia</span><span class="p">(</span><span class="n">fourthEllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">)</span>
+<span class="n">internalEllVec</span> <span class="p">=</span> <span class="n">firstEllObj</span><span class="p">.</span><span class="n">minkdiff_ia</span><span class="p">(</span><span class="n">fourthEllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">)</span>
 
-<span class="o">%</span> <span class="n">internalEllVec</span> <span class="o">=</span>
-<span class="o">%</span> <span class="n">Array</span> <span class="n">of</span> <span class="n">ellipsoids</span> <span class="n">with</span> <span class="n">dimensionality</span> <span class="mi">1</span><span class="n">x3</span>
+<span class="c">% internalEllVec =</span>
+<span class="c">% Array of ellipsoids with dimensionality 1x3</span>
 </pre></div>
 </td></tr></table></div>
 <p>Operation ’difference-sum’ described in section
@@ -475,7 +475,7 @@ direction is not bad:</p>
 first one of which is used for visualization and works for dimensions
 not higher than <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>, whereas the last two can deal with ellipsoids
 of arbitrary dimension.</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -517,7 +517,7 @@ the implementation of minkpm and minkmp operations.</p>
 minkpm, minkpm_ea, minkpm_ia, the first one of which is used for
 visualization and works for dimensions not higher than <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>,
 whereas the last two can deal with ellipsoids of arbitrary dimension.</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -552,9 +552,9 @@ whereas the last two can deal with ellipsoids of arbitrary dimension.</p>
 <p>The class hyperplane of the <em>Ellipsoidal Toolbox</em> is used to describe
 hyperplanes and halfspaces. The following two commands define one and
 the same hyperplane but two different halfspaces:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">firstHypObj</span> <span class="o">=</span> <span class="n">hyperplane</span><span class="p">([</span><span class="mi">1</span><span class="p">;</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">);</span>  <span class="o">%</span> <span class="n">defines</span> <span class="n">halfspace</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">&lt;=</span> <span class="mi">1</span>
-<span class="n">firstHypObj</span> <span class="o">=</span> <span class="n">hyperplane</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>  <span class="o">%</span> <span class="n">defines</span> <span class="n">halfspace</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">x2</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">firstHypObj</span> <span class="p">=</span> <span class="n">hyperplane</span><span class="p">([</span><span class="mi">1</span><span class="p">;</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">);</span>  <span class="c">% defines halfspace x1 + x2 &lt;= 1</span>
+<span class="n">firstHypObj</span> <span class="p">=</span> <span class="n">hyperplane</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>  <span class="c">% defines halfspace x1 + x2 &gt;= 1</span>
 </pre></div>
 </td></tr></table></div>
 <p>The following functions and operators are overloaded for the hyperplane
@@ -580,7 +580,7 @@ as <img class="math" src="_images/math/bac0ae63aec09971dd9b5d57245fb790377c8e10.
 </ul>
 <p>There are several ways to access the internal data of the hyperplane
 object:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -589,30 +589,30 @@ object:</p>
  7
  8
  9
-10</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">[</span><span class="n">normVec</span><span class="p">,</span> <span class="n">hypScal</span><span class="p">]</span> <span class="o">=</span> <span class="n">firstHypObj</span><span class="p">.</span><span class="kt">double</span><span class="p">()</span>
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">[</span><span class="n">normVec</span><span class="p">,</span> <span class="n">hypScal</span><span class="p">]</span> <span class="p">=</span> <span class="n">firstHypObj</span><span class="p">.</span><span class="n">double</span><span class="p">()</span>
 
-<span class="o">%</span> <span class="n">normVec</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>    <span class="o">-</span><span class="mi">1</span>
-<span class="o">%</span>    <span class="o">-</span><span class="mi">1</span>
-<span class="o">%</span> 
-<span class="o">%</span> <span class="n">hypScal</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>    <span class="o">-</span><span class="mi">1</span>
+<span class="c">% normVec =</span>
+<span class="c">% </span>
+<span class="c">%    -1</span>
+<span class="c">%    -1</span>
+<span class="c">% </span>
+<span class="c">% hypScal =</span>
+<span class="c">% </span>
+<span class="c">%    -1</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">firstHypObj</span><span class="p">.</span><span class="n">dimension</span><span class="p">()</span>
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">2</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      2</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
@@ -634,7 +634,7 @@ allows only single hyperplane object.</p>
 <p>An array of hyperplanes can be converted to the polytope object of the
 Multi-Parametric Toolbox (Kvasnica et al. (2004), (“Multi-Parametric
 Toolbox Homepage”)), and back:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -755,7 +755,7 @@ Toolbox Homepage”)), and back:</p>
 polytope2hyperplane require the Multi-Parametric Toolbox to be
 installed.</p>
 <p>We can compute distance from ellipsoids to hyperplanes and polytopes:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -796,43 +796,43 @@ Toolbox. Here, the zero distance values mean that each ellipsoid in
 ellMat has nonempty intersection with polytope firstPolObj.</p>
 <p>It can be checked if the union or intersection of given ellipsoids
 intersects given hyperplanes or polytopes:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellMat</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">hypVec</span><span class="p">,</span> <span class="sc">&#39;u&#39;</span><span class="p">)</span>
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellMat</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">hypVec</span><span class="p">,</span> <span class="s">&#39;u&#39;</span><span class="p">)</span>
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">1</span>     <span class="mi">1</span>     <span class="mi">1</span>     <span class="mi">1</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      1     1     1     1</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellMat</span><span class="p">(</span><span class="o">:</span><span class="p">,</span> <span class="mi">1</span><span class="p">).</span><span class="n">intersect</span><span class="p">(</span><span class="n">hypVec</span><span class="p">,</span> <span class="sc">&#39;i&#39;</span><span class="p">)</span>
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellMat</span><span class="p">(:,</span> <span class="mi">1</span><span class="p">).</span><span class="n">intersect</span><span class="p">(</span><span class="n">hypVec</span><span class="p">,</span> <span class="s">&#39;i&#39;</span><span class="p">)</span>
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>     <span class="mi">0</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      0     0     1     0</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bufEllVec</span> <span class="o">=</span> <span class="p">[</span><span class="n">firstEllObj</span> <span class="n">secEllObj</span> <span class="n">thirdEllObj</span><span class="p">];</span>
-<span class="n">bufEllVec</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">firstPolObj</span><span class="p">,</span> <span class="sc">&#39;i&#39;</span><span class="p">)</span>
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">bufEllVec</span> <span class="p">=</span> <span class="p">[</span><span class="n">firstEllObj</span> <span class="n">secEllObj</span> <span class="n">thirdEllObj</span><span class="p">];</span>
+<span class="n">bufEllVec</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">firstPolObj</span><span class="p">,</span> <span class="s">&#39;i&#39;</span><span class="p">)</span>
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">1</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      1</span>
 </pre></div>
 </td></tr></table></div>
 <p>The intersection of ellipsoid and hyperplane can be computed exactly:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -864,7 +864,7 @@ intersects given hyperplanes or polytopes:</p>
 <p>Functions intersection_ea and intersection_ia can be used with
 hyperplane objects, which in this case define halfspaces and polytope
 objects:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -927,7 +927,7 @@ objects:</p>
 </td></tr></table></div>
 <p>Function isInside can be used to check if a polytope or union of
 polytopes is contained in the intersection of given ellipsoids:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -952,7 +952,7 @@ polytopes is contained in the intersection of given ellipsoids:</p>
 <span class="c">%      0</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
@@ -988,7 +988,7 @@ types of projection: static and dynamic. Also there is class
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj for description of the
 projection on static plane tubes by the instant of time. Next we provide
 some examples of the operations with ellipsoidal tubes.</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -1003,25 +1003,25 @@ some examples of the operations with ellipsoidal tubes.</p>
 13
 14
 15
-16</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">nPoints</span><span class="o">=</span><span class="mi">5</span><span class="p">;</span>
-<span class="n">calcPrecision</span><span class="o">=</span><span class="mf">0.001</span><span class="p">;</span>
-<span class="n">approxSchemaDescr</span><span class="o">=</span><span class="kt">char</span><span class="p">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
-<span class="n">approxSchemaName</span><span class="o">=</span><span class="kt">char</span><span class="p">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
-<span class="n">nDims</span><span class="o">=</span><span class="mi">3</span><span class="p">;</span>
-<span class="n">nTubes</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
-<span class="n">lsGoodDirVec</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">1</span><span class="p">];</span>
-<span class="n">aMat</span><span class="o">=</span><span class="n">zeros</span><span class="p">(</span><span class="n">nDims</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
-<span class="n">timeVec</span><span class="o">=</span><span class="mi">1</span><span class="o">:</span><span class="n">nPoints</span><span class="p">;</span>
-<span class="n">sTime</span><span class="o">=</span><span class="n">nPoints</span><span class="p">;</span>
-<span class="n">approxType</span><span class="o">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">;</span>
-<span class="n">qArrayList</span><span class="o">=</span><span class="n">repmat</span><span class="p">({</span><span class="n">repmat</span><span class="p">(</span><span class="n">diag</span><span class="p">([</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
-<span class="n">ltGoodDirArray</span><span class="o">=</span><span class="n">repmat</span><span class="p">(</span><span class="n">lsGoodDirVec</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">,</span><span class="n">nPoints</span><span class="p">]);</span>
-<span class="n">fromMatEllTube</span><span class="o">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQArrays</span><span class="p">(</span><span class="n">qArrayList</span><span class="p">,...</span>
-                <span class="n">aMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,...</span>
+16</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">nPoints</span><span class="p">=</span><span class="mi">5</span><span class="p">;</span>
+<span class="n">calcPrecision</span><span class="p">=</span><span class="mf">0.001</span><span class="p">;</span>
+<span class="n">approxSchemaDescr</span><span class="p">=</span><span class="n">char</span><span class="p">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">approxSchemaName</span><span class="p">=</span><span class="n">char</span><span class="p">.</span><span class="n">empty</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="n">nDims</span><span class="p">=</span><span class="mi">3</span><span class="p">;</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">lsGoodDirVec</span><span class="p">=[</span><span class="mi">1</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">aMat</span><span class="p">=</span><span class="nb">zeros</span><span class="p">(</span><span class="n">nDims</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">timeVec</span><span class="p">=</span><span class="mi">1</span><span class="p">:</span><span class="n">nPoints</span><span class="p">;</span>
+<span class="n">sTime</span><span class="p">=</span><span class="n">nPoints</span><span class="p">;</span>
+<span class="n">approxType</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">;</span>
+<span class="n">qArrayList</span><span class="p">=</span><span class="nb">repmat</span><span class="p">({</span><span class="nb">repmat</span><span class="p">(</span><span class="nb">diag</span><span class="p">([</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="n">ltGoodDirArray</span><span class="p">=</span><span class="nb">repmat</span><span class="p">(</span><span class="n">lsGoodDirVec</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">,</span><span class="n">nPoints</span><span class="p">]);</span>
+<span class="n">fromMatEllTube</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQArrays</span><span class="p">(</span><span class="n">qArrayList</span><span class="p">,</span><span class="c">...</span>
+                <span class="n">aMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span><span class="c">...</span>
                 <span class="n">approxSchemaName</span><span class="p">,</span> <span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">calcPrecision</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -1030,15 +1030,15 @@ some examples of the operations with ellipsoidal tubes.</p>
  7
  8
  9
-10</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellArray</span><span class="p">(</span><span class="n">nPoints</span><span class="p">)</span> <span class="o">=</span> <span class="n">ellipsoid</span><span class="p">();</span>
-<span class="n">approxType</span><span class="o">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">;</span>
-<span class="n">sTime</span><span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-<span class="k">for</span> <span class="n">iElem</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="n">nPoints</span>
-   <span class="n">ellArray</span><span class="p">(</span><span class="n">iElem</span><span class="p">)</span> <span class="o">=</span> <span class="n">ellipsoid</span><span class="p">(...</span>
-   <span class="n">aMat</span><span class="p">(</span><span class="o">:</span><span class="p">,</span><span class="n">iElem</span><span class="p">),</span> <span class="n">qArrayList</span><span class="p">{</span><span class="mi">1</span><span class="p">}(</span><span class="o">:</span><span class="p">,</span><span class="o">:</span><span class="p">,</span><span class="n">iElem</span><span class="p">));</span> 
-<span class="n">end</span>
-<span class="n">fromEllArrayEllTube</span> <span class="o">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromEllArray</span><span class="p">(...</span>
-                <span class="n">ellArray</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,...</span>
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellArray</span><span class="p">(</span><span class="n">nPoints</span><span class="p">)</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">();</span>
+<span class="n">approxType</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">;</span>
+<span class="n">sTime</span><span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="k">for</span> <span class="n">iElem</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">nPoints</span>
+   <span class="n">ellArray</span><span class="p">(</span><span class="n">iElem</span><span class="p">)</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="c">...</span>
+   <span class="n">aMat</span><span class="p">(:,</span><span class="n">iElem</span><span class="p">),</span> <span class="n">qArrayList</span><span class="p">{</span><span class="mi">1</span><span class="p">}(:,:,</span><span class="n">iElem</span><span class="p">));</span> 
+<span class="k">end</span>
+<span class="n">fromEllArrayEllTube</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromEllArray</span><span class="p">(</span><span class="c">...</span>
+                <span class="n">ellArray</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span><span class="c">...</span>
                 <span class="n">approxSchemaName</span><span class="p">,</span><span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">calcPrecision</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
@@ -1047,72 +1047,42 @@ interested in the data about ellipsoidal tube in some particular time
 interval, smaller than the one for which the ellipsoidal tube was
 computed, say <img class="math" src="_images/math/6516cb7d024c910ef89e7166abab196d9b142276.png" alt="2\leqslant t\leqslant4"/>. This data can be extracted
 by the cut function:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">cutTimeVec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">];</span>
-<span class="n">cutEllTube</span> <span class="o">=</span> <span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="n">cutTimeVec</span><span class="p">);</span>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">cutTimeVec</span> <span class="p">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">];</span>
+<span class="n">cutEllTube</span> <span class="p">=</span> <span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="n">cutTimeVec</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">example</span>
-   <span class="nx">aMat</span> <span class="o">=</span> <span class="cp">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="cp">]</span><span class="p">;</span> <span class="nx">bMat</span> <span class="o">=</span> <span class="nx">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  
-   <span class="nx">SUBounds</span> <span class="o">=</span> <span class="nx">struct</span><span class="p">();</span>
-   <span class="nx">SUBounds</span><span class="p">.</span><span class="nx">center</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sin(t)&#39;</span><span class="p">;</span> <span class="s1">&#39;cos(t)&#39;</span><span class="p">};</span>  
-   <span class="nx">SUBounds</span><span class="p">.</span><span class="nx">shape</span> <span class="o">=</span> <span class="cp">[</span><span class="mi">9</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">2</span><span class="cp">]</span><span class="p">;</span> 
-   <span class="nx">sys</span> <span class="o">=</span> <span class="nx">elltool</span><span class="p">.</span><span class="nx">linsys</span><span class="p">.</span><span class="nx">LinSysContinuous</span><span class="p">(</span><span class="nx">aMat</span><span class="p">,</span> <span class="nx">bMat</span><span class="p">,</span> <span class="nx">SUBounds</span><span class="p">);</span>
-   <span class="nx">x0EllObj</span> <span class="o">=</span> <span class="nx">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-   <span class="nx">timeVec</span> <span class="o">=</span> <span class="cp">[</span><span class="mi">0</span> <span class="mi">10</span><span class="cp">]</span><span class="p">;</span> 
-   <span class="nx">dirsMat</span> <span class="o">=</span> <span class="cp">[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="cp">]</span><span class="s1">&#39;;  </span>
-<span class="s1">   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);</span>
-<span class="s1">   ellTubeObj = rsObj.getEllTubeRel();</span>
-<span class="s1">   projSpaceList = {</span><span class="cp">[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span><span class="mi">0</span> <span class="mi">1</span><span class="cp">]</span><span class="s1">};</span>
-<span class="s1">   projType = gras.ellapx.enums.EProjType.Static;</span>
-<span class="s1">   statEllTubeProj = ellTubeObj.project(projType,projSpaceList,...</span>
-<span class="s1">      @fGetProjMat);</span>
-<span class="s1">   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;</span>
-<span class="s1">   dynEllTubeProj=ellTubeObj.project(projType,projSpaceList,...</span>
-<span class="s1">      @fGetProjMat);</span>
-<span class="s1">   plObj=smartdb.disp.RelationDataPlotter();</span>
-<span class="s1">   statEllTubeProj.plot(plObj);</span>
-<span class="s1">   dynEllTubeProj.plot(plObj);</span>
+<div class="highlight-matlab"><pre>function example
+   aMat = [0 1; 0 0]; bMat = eye(2);  
+   SUBounds = struct();
+   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+   SUBounds.shape = [9 0; 0 2]; 
+   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+   x0EllObj = ell_unitball(2);
+   timeVec = [0 10]; 
+   dirsMat = [1 0; 0 1]';  
+   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+   ellTubeObj = rsObj.getEllTubeRel();
+   projSpaceList = {[1 0;0 1]};
+   projType = gras.ellapx.enums.EProjType.Static;
+   statEllTubeProj = ellTubeObj.project(projType,projSpaceList,...
+      @fGetProjMat);
+   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+   dynEllTubeProj=ellTubeObj.project(projType,projSpaceList,...
+      @fGetProjMat);
+   plObj=smartdb.disp.RelationDataPlotter();
+   statEllTubeProj.plot(plObj);
+   dynEllTubeProj.plot(plObj);
 
-<span class="s1">end</span>
+end
 
-<span class="s1">function </span><span class="cp">[</span><span class="nx">projOrthMatArray</span><span class="p">,</span><span class="nx">projOrthMatTransArray</span><span class="cp">]</span><span class="s1">=fGetProjMat(projMat,...</span>
-<span class="s1">    timeVec,varargin)</span>
-<span class="s1">  nTimePoints=length(timeVec);</span>
-<span class="s1">  projOrthMatArray=repmat(projMat,</span><span class="cp">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nx">nTimePoints</span><span class="cp">]</span><span class="s1">);</span>
-<span class="s1">  projOrthMatTransArray=repmat(projMat.&#39;</span><span class="p">,</span><span class="cp">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nx">nTimePoints</span><span class="cp">]</span><span class="p">);</span>
- <span class="nx">end</span>
-</pre></div>
-</td></tr></table></div>
+function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+    timeVec,varargin)
+  nTimePoints=length(timeVec);
+  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+ end</pre>
+</div>
 <p>We can compute the projection of the ellipsoidal
 tube onto time-dependent subspace.</p>
 <div class="figure" id="stat-proj">
@@ -1124,81 +1094,54 @@ tube onto time-dependent subspace.</p>
 <p>Figure <img class="math" src="_images/math/319cc58c83532861dcc3fe7fe54849815f06f562.png" alt="\ref{project}"/> displays static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.</p>
 <p>We can compute tubes by the instant of time using methodfromEllTubes:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27</pre></div></td><td class="code"><div class="highlight"><pre><span class="kd">function</span> <span class="nx">example</span>
-   <span class="nx">aMat</span> <span class="o">=</span> <span class="cp">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="cp">]</span><span class="p">;</span> <span class="nx">bMat</span> <span class="o">=</span> <span class="nx">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  
-   <span class="nx">SUBounds</span> <span class="o">=</span> <span class="nx">struct</span><span class="p">();</span>
-   <span class="nx">SUBounds</span><span class="p">.</span><span class="nx">center</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;sin(t)&#39;</span><span class="p">;</span> <span class="s1">&#39;cos(t)&#39;</span><span class="p">};</span>  
-   <span class="nx">SUBounds</span><span class="p">.</span><span class="nx">shape</span> <span class="o">=</span> <span class="cp">[</span><span class="mi">9</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">2</span><span class="cp">]</span><span class="p">;</span> 
-   <span class="nx">sys</span> <span class="o">=</span> <span class="nx">elltool</span><span class="p">.</span><span class="nx">linsys</span><span class="p">.</span><span class="nx">LinSysContinuous</span><span class="p">(</span><span class="nx">aMat</span><span class="p">,</span> <span class="nx">bMat</span><span class="p">,</span> <span class="nx">SUBounds</span><span class="p">);</span>
-   <span class="nx">x0EllObj</span> <span class="o">=</span> <span class="nx">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-   <span class="nx">timeVec</span> <span class="o">=</span> <span class="cp">[</span><span class="mi">0</span> <span class="mi">10</span><span class="cp">]</span><span class="p">;</span> 
-   <span class="nx">dirsMat</span> <span class="o">=</span> <span class="cp">[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="cp">]</span><span class="s1">&#39;;  </span>
-<span class="s1">   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);</span>
-<span class="s1">   ellTubeObj = rsObj.getEllTubeRel();</span>
-<span class="s1">   unionEllTube = ...</span>
-<span class="s1">    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);</span>
-<span class="s1">   projSpaceList = {</span><span class="cp">[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span><span class="mi">0</span> <span class="mi">1</span><span class="cp">]</span><span class="s1">};</span>
-<span class="s1">   projType = gras.ellapx.enums.EProjType.Static;</span>
-<span class="s1">   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...</span>
-<span class="s1">      @fGetProjMat);</span>
-<span class="s1">   plObj=smartdb.disp.RelationDataPlotter();</span>
-<span class="s1">   statEllTubeProj.plot(plObj);</span>
-<span class="s1">end</span>
+<div class="highlight-matlab"><pre>function example
+   aMat = [0 1; 0 0]; bMat = eye(2);  
+   SUBounds = struct();
+   SUBounds.center = {'sin(t)'; 'cos(t)'};  
+   SUBounds.shape = [9 0; 0 2]; 
+   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+   x0EllObj = ell_unitball(2);
+   timeVec = [0 10]; 
+   dirsMat = [1 0; 0 1]';  
+   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+   ellTubeObj = rsObj.getEllTubeRel();
+   unionEllTube = ...
+    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
+   projSpaceList = {[1 0;0 1]};
+   projType = gras.ellapx.enums.EProjType.Static;
+   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
+      @fGetProjMat);
+   plObj=smartdb.disp.RelationDataPlotter();
+   statEllTubeProj.plot(plObj);
+end
 
-<span class="s1">function </span><span class="cp">[</span><span class="nx">projOrthMatArray</span><span class="p">,</span><span class="nx">projOrthMatTransArray</span><span class="cp">]</span><span class="s1">=fGetProjMat(projMat,...</span>
-<span class="s1">    timeVec,varargin)</span>
-<span class="s1">  nTimePoints=length(timeVec);</span>
-<span class="s1">  projOrthMatArray=repmat(projMat,</span><span class="cp">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nx">nTimePoints</span><span class="cp">]</span><span class="s1">);</span>
-<span class="s1">  projOrthMatTransArray=repmat(projMat.&#39;</span><span class="p">,</span><span class="cp">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nx">nTimePoints</span><span class="cp">]</span><span class="p">);</span>
- <span class="nx">end</span>
-</pre></div>
-</td></tr></table></div>
+function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+    timeVec,varargin)
+  nTimePoints=length(timeVec);
+  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+ end</pre>
+</div>
 <div class="figure" id="uniontubestatproj">
 <img alt="_images/unionTubeStatProj.png" src="_images/unionTubeStatProj.png" />
 </div>
 <p>Figure  shows projection of ellipsoidal
 tubes by the instant of time.</p>
 <p>Also we can get initial data from the resulting tube:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">approxType</span><span class="o">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">;</span>
-<span class="n">ellArray</span> <span class="o">=</span> <span class="n">fromEllArrayEllTube</span><span class="p">.</span><span class="n">getEllArray</span><span class="p">(</span><span class="n">approxType</span><span class="p">)</span>
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">approxType</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">;</span>
+<span class="n">ellArray</span> <span class="p">=</span> <span class="n">fromEllArrayEllTube</span><span class="p">.</span><span class="n">getEllArray</span><span class="p">(</span><span class="n">approxType</span><span class="p">)</span>
 
-<span class="o">%</span> <span class="n">ellArray</span> <span class="o">=</span>
-<span class="o">%</span> <span class="n">Array</span> <span class="n">of</span> <span class="n">ellipsoids</span> <span class="n">with</span> <span class="n">dimensionality</span> <span class="mi">5</span><span class="n">x1</span>
+<span class="c">% ellArray =</span>
+<span class="c">% Array of ellipsoids with dimensionality 5x1</span>
 </pre></div>
 </td></tr></table></div>
 <p>There is a method
 to display a content of ellipsoidal tubes.</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -1212,20 +1155,20 @@ to display a content of ellipsoidal tubes.</p>
 12
 13
 14
-15</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">aMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span> <span class="n">bMat</span> <span class="o">=</span> <span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  
-<span class="n">SUBounds</span> <span class="o">=</span> <span class="k">struct</span><span class="p">();</span>
-<span class="n">SUBounds</span><span class="p">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">{</span><span class="err">&#39;</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="err">&#39;</span><span class="p">;</span> <span class="err">&#39;</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="err">&#39;</span><span class="p">};</span>  
-<span class="n">SUBounds</span><span class="p">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">2</span><span class="p">];</span> 
-<span class="n">sys</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">);</span>
-<span class="n">x0EllObj</span> <span class="o">=</span> <span class="n">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="n">timeVec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">10</span><span class="p">];</span> 
-<span class="k">for</span> <span class="n">iElem</span> <span class="o">=</span> <span class="mi">1</span><span class="o">:</span><span class="mi">5</span>
-    <span class="n">dirInitial</span><span class="o">=</span> <span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span> 
-    <span class="n">dirInitial</span> <span class="o">=</span> <span class="n">dirInitial</span> <span class="p">.</span><span class="o">/</span> <span class="n">norm</span><span class="p">(</span><span class="n">dirInitial</span><span class="p">);</span>
-    <span class="n">dirsMat</span><span class="p">(</span><span class="o">:</span><span class="p">,</span> <span class="n">iElem</span><span class="p">)</span> <span class="o">=</span> <span class="n">dirInitial</span><span class="p">;</span>
-<span class="n">end</span>
-<span class="n">rsObj</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachContinuous</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">);</span>
-<span class="n">ellTubeObj</span> <span class="o">=</span> <span class="n">rsObj</span><span class="p">.</span><span class="n">getEllTubeRel</span><span class="p">();</span>
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">aMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span> <span class="n">bMat</span> <span class="p">=</span> <span class="nb">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  
+<span class="n">SUBounds</span> <span class="p">=</span> <span class="n">struct</span><span class="p">();</span>
+<span class="n">SUBounds</span><span class="p">.</span><span class="n">center</span> <span class="p">=</span> <span class="p">{</span><span class="s">&#39;sin(t)&#39;</span><span class="p">;</span> <span class="s">&#39;cos(t)&#39;</span><span class="p">};</span>  
+<span class="n">SUBounds</span><span class="p">.</span><span class="n">shape</span> <span class="p">=</span> <span class="p">[</span><span class="mi">9</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">2</span><span class="p">];</span> 
+<span class="n">sys</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">);</span>
+<span class="n">x0EllObj</span> <span class="p">=</span> <span class="n">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">timeVec</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">10</span><span class="p">];</span> 
+<span class="k">for</span> <span class="n">iElem</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="mi">5</span>
+    <span class="n">dirInitial</span><span class="p">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span> 
+    <span class="n">dirInitial</span> <span class="p">=</span> <span class="n">dirInitial</span> <span class="o">./</span> <span class="n">norm</span><span class="p">(</span><span class="n">dirInitial</span><span class="p">);</span>
+    <span class="n">dirsMat</span><span class="p">(:,</span> <span class="n">iElem</span><span class="p">)</span> <span class="p">=</span> <span class="n">dirInitial</span><span class="p">;</span>
+<span class="k">end</span>
+<span class="n">rsObj</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachContinuous</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">);</span>
+<span class="n">ellTubeObj</span> <span class="p">=</span> <span class="n">rsObj</span><span class="p">.</span><span class="n">getEllTubeRel</span><span class="p">();</span>
 <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">dispOnUI</span><span class="p">();</span>
 </pre></div>
 </td></tr></table></div>
@@ -1235,7 +1178,7 @@ to display a content of ellipsoidal tubes.</p>
 <p>Figure <a class="pageref" href="#disppic"> 8</a>
 displays all fields of the ellipsoidal tube.</p>
 <p>There are several methods to find the tubes with necessary parameters.</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -1248,25 +1191,25 @@ displays all fields of the ellipsoidal tube.</p>
 11
 12
 13
-14</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">newEllTube</span> <span class="o">=</span> <span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getTuplesFilteredBy</span><span class="p">(</span><span class="err">&#39;</span><span class="n">sTime</span><span class="err">&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">newEllTube</span> <span class="p">=</span> <span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getTuplesFilteredBy</span><span class="p">(</span><span class="s">&#39;sTime&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
 <span class="n">newEllTube</span><span class="p">.</span><span class="n">getNTuples</span><span class="p">()</span>
-<span class="o">%</span>
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">1</span>
-<span class="o">%</span> 
-<span class="n">newEllTube</span> <span class="o">=</span> <span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getTuplesFilteredBy</span><span class="p">(</span><span class="err">&#39;</span><span class="n">sTime</span><span class="err">&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      1</span>
+<span class="c">% </span>
+<span class="n">newEllTube</span> <span class="p">=</span> <span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getTuplesFilteredBy</span><span class="p">(</span><span class="s">&#39;sTime&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
 <span class="n">newEllTube</span><span class="p">.</span><span class="n">getNTuples</span><span class="p">()</span>
-<span class="o">%</span>
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">0</span>
-<span class="o">%</span> 
+<span class="c">%</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      0</span>
+<span class="c">% </span>
 </pre></div>
 </td></tr></table></div>
 <p>Also you can use the method display to see the result of the method’s
 work.</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -1298,44 +1241,44 @@ work.</p>
 30
 31
 32</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getNTuples</span><span class="p">()</span>
-<span class="o">%</span>
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">1</span>
-<span class="o">%</span> 
+<span class="c">%</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      1</span>
+<span class="c">% </span>
 <span class="n">fromEllArrayEllTube</span><span class="p">.</span><span class="n">getNTuples</span><span class="p">()</span>
-<span class="o">%</span>
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">1</span>
-<span class="o">%</span> 
-<span class="n">origFromMatEllTube</span><span class="o">=</span><span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getCopy</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      1</span>
+<span class="c">% </span>
+<span class="n">origFromMatEllTube</span><span class="p">=</span><span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getCopy</span><span class="p">();</span>
 <span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">unionWith</span><span class="p">(</span><span class="n">fromEllArrayEllTube</span><span class="p">);</span>
-<span class="o">%</span>
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">2</span>
-<span class="o">%</span> 
+<span class="c">%</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      2</span>
+<span class="c">% </span>
 <span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getNTuples</span><span class="p">()</span>
-<span class="n">isOk</span><span class="o">=</span><span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getTuples</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">isEqual</span><span class="p">(</span><span class="n">origFromMatEllTube</span><span class="p">)</span>
-<span class="o">%</span>
-<span class="o">%</span> <span class="n">isOk</span> <span class="o">=</span>
-<span class="o">%</span>
-<span class="o">%</span>     <span class="mi">1</span>
+<span class="n">isOk</span><span class="p">=</span><span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getTuples</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">isEqual</span><span class="p">(</span><span class="n">origFromMatEllTube</span><span class="p">)</span>
+<span class="c">%</span>
+<span class="c">% isOk =</span>
+<span class="c">%</span>
+<span class="c">%     1</span>
 
-<span class="n">isOk</span><span class="o">=</span><span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getTuples</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">isEqual</span><span class="p">(</span><span class="n">fromEllArrayEllTube</span><span class="p">)</span>
+<span class="n">isOk</span><span class="p">=</span><span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">getTuples</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">isEqual</span><span class="p">(</span><span class="n">fromEllArrayEllTube</span><span class="p">)</span>
 
-<span class="o">%</span>
-<span class="o">%</span> <span class="n">isOk</span> <span class="o">=</span>
-<span class="o">%</span>
-<span class="o">%</span>     <span class="mi">1</span>
+<span class="c">%</span>
+<span class="c">% isOk =</span>
+<span class="c">%</span>
+<span class="c">%     1</span>
 </pre></div>
 </td></tr></table></div>
 <p>We can sort our tubes by certain fields:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
-<span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">sortBy</span><span class="p">(</span><span class="err">&#39;</span><span class="n">sTime</span><span class="err">&#39;</span><span class="p">);</span>
+<span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">sortBy</span><span class="p">(</span><span class="s">&#39;sTime&#39;</span><span class="p">);</span>
 <span class="n">fromMatEllTube</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
 </pre></div>
 </td></tr></table></div>
@@ -1370,21 +1313,21 @@ u_2(t)\end{array}\right], ~~~ u(t)\in{\mathcal E}(p(t), P)"/></p>
 9 &amp; 0\\
 0 &amp; 2\end{array}\right],"/></p>
 </div><p>is done by the following sequence of commands:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
 6
 7
-8</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">aMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span> <span class="n">bMat</span> <span class="o">=</span> <span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="o">%</span> <span class="n">matrices</span> <span class="n">A</span> <span class="n">and</span> <span class="n">B</span><span class="p">,</span> <span class="n">B</span> <span class="n">is</span> <span class="n">identity</span>
-<span class="n">SUBounds</span> <span class="o">=</span> <span class="k">struct</span><span class="p">();</span>
-<span class="o">%</span> <span class="n">center</span> <span class="n">of</span> <span class="n">the</span> <span class="n">ellipsoid</span> <span class="n">depends</span> <span class="n">on</span> <span class="n">t</span>
-<span class="n">SUBounds</span><span class="p">.</span><span class="n">center</span> <span class="o">=</span> <span class="p">{</span><span class="err">&#39;</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="err">&#39;</span><span class="p">;</span> <span class="err">&#39;</span><span class="n">cos</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="err">&#39;</span><span class="p">};</span>  
-<span class="n">SUBounds</span><span class="p">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">2</span><span class="p">];</span> <span class="o">%</span> <span class="n">shape</span> <span class="n">matrix</span> <span class="n">of</span> <span class="n">the</span> <span class="n">ellipsoid</span> <span class="n">is</span> <span class="k">static</span>
-<span class="o">%</span> <span class="n">create</span> <span class="n">linear</span> <span class="n">system</span> <span class="n">object</span>
-<span class="n">sys</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">);</span> 
-<span class="o">%</span> <span class="n">is</span> <span class="n">equal</span> <span class="n">to</span> <span class="n">sys</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysFactory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">)</span>
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">aMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span> <span class="n">bMat</span> <span class="p">=</span> <span class="nb">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="c">% matrices A and B, B is identity</span>
+<span class="n">SUBounds</span> <span class="p">=</span> <span class="n">struct</span><span class="p">();</span>
+<span class="c">% center of the ellipsoid depends on t</span>
+<span class="n">SUBounds</span><span class="p">.</span><span class="n">center</span> <span class="p">=</span> <span class="p">{</span><span class="s">&#39;sin(t)&#39;</span><span class="p">;</span> <span class="s">&#39;cos(t)&#39;</span><span class="p">};</span>  
+<span class="n">SUBounds</span><span class="p">.</span><span class="n">shape</span> <span class="p">=</span> <span class="p">[</span><span class="mi">9</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">2</span><span class="p">];</span> <span class="c">% shape matrix of the ellipsoid is static</span>
+<span class="c">% create linear system object</span>
+<span class="n">sys</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">);</span> 
+<span class="c">% is equal to sys = elltool.linsys.LinSysFactory.create(aMat, bMat, SUBounds)</span>
 </pre></div>
 </td></tr></table></div>
 <p>If matrices <img class="math" src="_images/math/019e9892786e493964e145e7c5cf7b700314e53b.png" alt="A"/> or
@@ -1392,9 +1335,9 @@ u_2(t)\end{array}\right], ~~~ u(t)\in{\mathcal E}(p(t), P)"/></p>
 0 &amp; 1-\cos(2t)\\
 -\frac{1}{t} &amp; 0\end{array}\right]"/>, then matrix aMat should be
 symbolic:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
-2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">atMat</span> <span class="o">=</span> <span class="p">{</span><span class="sc">&#39;0&#39;</span> <span class="err">&#39;</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">t</span><span class="p">)</span><span class="err">&#39;</span><span class="p">;</span> <span class="err">&#39;</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="n">t</span><span class="sc">&#39; &#39;</span><span class="mi">0</span><span class="err">&#39;</span><span class="p">};</span>  
-<span class="kt">sys_t</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysFactory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">atMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">);</span>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">atMat</span> <span class="p">=</span> <span class="p">{</span><span class="s">&#39;0&#39;</span> <span class="s">&#39;1 - cos(2*t)&#39;</span><span class="p">;</span> <span class="s">&#39;-1/t&#39;</span> <span class="s">&#39;0&#39;</span><span class="p">};</span>  
+<span class="n">sys_t</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysFactory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">atMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
 <p>To describe the system with disturbance</p>
@@ -1412,12 +1355,12 @@ u_2(t)\end{array}\right] + \left[\begin{array}{c}
 1\end{array}\right]v(t),"/></p>
 </div><p>with bounds on control as before, and disturbance being
 <img class="math" src="_images/math/1ab11d8d186178605843112b737fc6f83c9c5a43.png" alt="-1\leqslant v(t)\leqslant1"/>, we type:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">gMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">];</span>  <span class="o">%</span> <span class="n">matrix</span> <span class="n">G</span>
-<span class="n">vEllObj</span> <span class="o">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>  <span class="o">%</span> <span class="n">disturbance</span> <span class="n">bounds</span><span class="o">:</span> <span class="n">unit</span> <span class="n">ball</span> <span class="n">in</span> <span class="n">R</span>
-<span class="n">sys_d</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">,...</span>
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">gMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">];</span>  <span class="c">% matrix G</span>
+<span class="n">vEllObj</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>  <span class="c">% disturbance bounds: unit ball in R</span>
+<span class="n">sys_d</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">,</span><span class="c">...</span>
     <span class="n">gMat</span><span class="p">,</span> <span class="n">vEllObj</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
@@ -1441,33 +1384,33 @@ x_2[k]\end{array}\right] + \left[\begin{array}{c}
 0\\
 1\end{array}\right]u[k], ~~~ -1\leqslant u[k]\leqslant1,"/></p>
 </div><p>we use LinSysDiscrete constructor:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
-6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">adMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">];</span> <span class="n">bdMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">];</span>  <span class="o">%</span> <span class="n">matrices</span> <span class="n">A</span> <span class="n">and</span> <span class="n">B</span>
-<span class="n">udBoundsEllObj</span>  <span class="o">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>  <span class="o">%</span> <span class="n">control</span> <span class="n">bounds</span><span class="o">:</span> <span class="n">unit</span> <span class="n">ball</span> <span class="n">in</span> <span class="n">R</span>
-<span class="o">%</span> <span class="n">discrete</span><span class="o">-</span><span class="n">time</span> <span class="n">system</span>
-<span class="n">dtsys</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysDiscrete</span><span class="p">(</span><span class="n">adMat</span><span class="p">,</span> <span class="n">bdMat</span><span class="p">,</span> <span class="n">udBoundsEllObj</span><span class="p">);</span> 
-<span class="o">%</span> <span class="n">is</span> <span class="n">equal</span> <span class="n">to</span> <span class="n">dtsys</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysFactory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">adMat</span><span class="p">,</span> <span class="n">bdMat</span><span class="p">,...</span>
-<span class="o">%</span>         <span class="n">udBoundsEllObj</span><span class="p">,...[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="sc">&#39;d&#39;</span><span class="p">);</span> 
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">adMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">];</span> <span class="n">bdMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">];</span>  <span class="c">% matrices A and B</span>
+<span class="n">udBoundsEllObj</span>  <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>  <span class="c">% control bounds: unit ball in R</span>
+<span class="c">% discrete-time system</span>
+<span class="n">dtsys</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysDiscrete</span><span class="p">(</span><span class="n">adMat</span><span class="p">,</span> <span class="n">bdMat</span><span class="p">,</span> <span class="n">udBoundsEllObj</span><span class="p">);</span> 
+<span class="c">% is equal to dtsys = elltool.linsys.LinSysFactory.create(adMat, bdMat,...</span>
+<span class="c">%         udBoundsEllObj,...[], [], [], [], &#39;d&#39;); </span>
 </pre></div>
 </td></tr></table></div>
 <p>Once the LinSysDiscrete object is
 created, we need to specify the set of initial conditions, the time
 interval and values of the direction vector, for which the reach set
 approximations must be computed:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
-3</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">x0EllObj</span> <span class="o">=</span> <span class="n">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="o">%</span> <span class="n">set</span> <span class="n">of</span> <span class="n">initial</span> <span class="n">conditions</span>
-<span class="n">timeVec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">10</span><span class="p">];</span>  <span class="o">%</span> <span class="n">time</span> <span class="n">interval</span>
-<span class="n">dirsMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">]</span><span class="err">&#39;</span><span class="p">;</span>  <span class="o">%</span> <span class="n">columns</span> <span class="n">of</span> <span class="n">L</span> <span class="n">specify</span> <span class="n">the</span> <span class="n">directions</span>
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">x0EllObj</span> <span class="p">=</span> <span class="n">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>  <span class="c">% set of initial conditions</span>
+<span class="n">timeVec</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">10</span><span class="p">];</span>  <span class="c">% time interval</span>
+<span class="n">dirsMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">]</span><span class="o">&#39;</span><span class="p">;</span>  <span class="c">% columns of L specify the directions</span>
 </pre></div>
 </td></tr></table></div>
 <p>The reach set approximation is computed
 by calling the constructor of the ReachContinuous object:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% reach set of continuos-time system</span>
 <span class="n">firstRsObj</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachContinuous</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">);</span> 
 </pre></div>
@@ -1478,19 +1421,19 @@ specified continuous-time system, time interval and set of initial
 conditions computed for given directions. Both external and internal
 approximations are computed. The reach set approximation data can be
 extracted in the form of arrays of ellipsoids:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
 5
 6
-7</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">externallEllMat</span> <span class="o">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">get_ea</span><span class="p">()</span>  <span class="o">%</span> <span class="n">external</span> <span class="n">approximating</span> <span class="n">ellipsoids</span>
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">externallEllMat</span> <span class="p">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">get_ea</span><span class="p">()</span>  <span class="c">% external approximating ellipsoids</span>
 
-<span class="o">%</span> <span class="n">externallEllMat</span> <span class="o">=</span>
-<span class="o">%</span> <span class="n">Array</span> <span class="n">of</span> <span class="n">ellipsoids</span> <span class="n">with</span> <span class="n">dimensionality</span> <span class="mi">2</span><span class="n">x100</span>
+<span class="c">% externallEllMat =</span>
+<span class="c">% Array of ellipsoids with dimensionality 2x100</span>
 
-<span class="o">%</span> <span class="n">internal</span> <span class="n">approximating</span> <span class="n">ellipsoids</span>
-<span class="p">[</span><span class="n">internalEllMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">]</span> <span class="o">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">get_ia</span><span class="p">();</span>  
+<span class="c">% internal approximating ellipsoids</span>
+<span class="p">[</span><span class="n">internalEllMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">]</span> <span class="p">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">get_ia</span><span class="p">();</span>  
 </pre></div>
 </td></tr></table></div>
 <p>Ellipsoidal arrays externallEllMat and internalEllMat have <img class="math" src="_images/math/c7cab1a05e1e0c1d51a6a219d96577a16b7abf9d.png" alt="4"/>
@@ -1512,18 +1455,18 @@ particular time interval, smaller than the one for which the reach set
 was computed, say <img class="math" src="_images/math/32f9895b78b7f8c7747bf82c427c7932707fe58e.png" alt="3\leqslant t\leqslant5"/>. This data can be
 extracted and returned in the form of ReachContinuous object by the cut
 function:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">cutObj</span> <span class="o">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">cut</span><span class="p">([</span><span class="mi">3</span> <span class="mi">5</span><span class="p">]);</span>  <span class="o">%</span> <span class="n">reach</span> <span class="n">set</span> <span class="k">for</span> <span class="n">the</span> <span class="n">time</span> <span class="n">interval</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">cutObj</span> <span class="p">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">cut</span><span class="p">([</span><span class="mi">3</span> <span class="mi">5</span><span class="p">]);</span>  <span class="c">% reach set for the time interval [3, 5]</span>
 </pre></div>
 </td></tr></table></div>
 <p>To obtain a snap shot of the reach set at given time, the same function
 cut is used:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">cutObj</span> <span class="o">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>  <span class="o">%</span> <span class="n">reach</span> <span class="n">set</span> <span class="n">at</span> <span class="n">time</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">5</span>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">cutObj</span> <span class="p">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="mi">5</span><span class="p">);</span>  <span class="c">% reach set at time t = 5</span>
 </pre></div>
 </td></tr></table></div>
 <p>It can be checked if the external or internal reach set
 approximation intersects with given ellipsoids, hyperplanes or
 polytopes:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -1532,19 +1475,19 @@ polytopes:</p>
  7
  8
  9
-10</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellObj</span> <span class="o">=</span> <span class="n">ellipsoid</span><span class="p">([</span><span class="o">-</span><span class="mi">17</span><span class="p">;</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span><span class="p">]);</span>  <span class="o">%</span> <span class="n">define</span> <span class="n">ellipsoid</span>
-<span class="o">%</span> <span class="n">define</span> <span class="mi">4</span> <span class="n">hyperplanes</span>
-<span class="n">hypVec</span> <span class="o">=</span> <span class="n">hyperplane</span><span class="p">([</span><span class="mi">1</span> <span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="mi">1</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span><span class="p">]</span><span class="err">&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">]);</span> 
-<span class="n">polObj</span> <span class="o">=</span> <span class="n">hyperplane2polytope</span><span class="p">(</span><span class="n">hypVec</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">2</span><span class="p">;</span> <span class="mi">10</span><span class="p">];</span>  <span class="o">%</span> <span class="n">define</span> <span class="n">polytope</span>
-<span class="o">%</span> <span class="n">check</span> <span class="k">if</span> <span class="n">ellipsoid</span> <span class="n">ell</span> <span class="n">intersects</span> <span class="n">with</span> <span class="n">external</span> <span class="n">approximation</span><span class="o">:</span>
-<span class="n">cutObj</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">ellObj</span><span class="p">,</span> <span class="sc">&#39;e&#39;</span><span class="p">)</span>
+10</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellObj</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">([</span><span class="o">-</span><span class="mi">17</span><span class="p">;</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span><span class="p">]);</span>  <span class="c">% define ellipsoid</span>
+<span class="c">% define 4 hyperplanes</span>
+<span class="n">hypVec</span> <span class="p">=</span> <span class="n">hyperplane</span><span class="p">([</span><span class="mi">1</span> <span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="mi">1</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span><span class="p">]</span><span class="o">&#39;</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">]);</span> 
+<span class="n">polObj</span> <span class="p">=</span> <span class="n">hyperplane2polytope</span><span class="p">(</span><span class="n">hypVec</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">2</span><span class="p">;</span> <span class="mi">10</span><span class="p">];</span>  <span class="c">% define polytope</span>
+<span class="c">% check if ellipsoid ell intersects with external approximation:</span>
+<span class="n">cutObj</span><span class="p">.</span><span class="n">intersect</span><span class="p">(</span><span class="n">ellObj</span><span class="p">,</span> <span class="s">&#39;e&#39;</span><span class="p">)</span>
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>      <span class="mi">1</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%      1</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
@@ -1559,7 +1502,7 @@ polytopes:</p>
 <span class="c">%      1</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
@@ -1572,7 +1515,7 @@ polytopes:</p>
 <span class="c">%      1     1     1     1</span>
 </pre></div>
 </td></tr></table></div>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
@@ -1594,7 +1537,7 @@ intersect with the internal one. In our example above, ellipsoid ellObj
 is such a case: the quality of the approximation does not allow us to
 determine whether or not ellObj intersects with the actual reach set. To
 improve the quality of approximation, refine function should be used:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -1626,15 +1569,15 @@ contain all calculated data, otherwise, an error is returned.</p>
 refine operations, we can obtain the trajectory of the center of the
 reach set and the good curves along which the actual reach set is
 touched by its ellipsoidal approximations:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
-5</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">[</span><span class="n">ctrMat</span><span class="p">,</span> <span class="n">ttVec</span><span class="p">]</span> <span class="o">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">get_center</span><span class="p">();</span> <span class="o">%</span> <span class="n">trajectory</span> <span class="n">of</span> <span class="n">the</span> <span class="n">center</span>
-<span class="n">gcCVec</span> <span class="o">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">get_goodcurves</span><span class="p">()</span>  <span class="o">%</span> <span class="n">get</span> <span class="n">good</span> <span class="n">curves</span>
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="p">[</span><span class="n">ctrMat</span><span class="p">,</span> <span class="n">ttVec</span><span class="p">]</span> <span class="p">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">get_center</span><span class="p">();</span> <span class="c">% trajectory of the center</span>
+<span class="n">gcCVec</span> <span class="p">=</span> <span class="n">firstRsObj</span><span class="p">.</span><span class="n">get_goodcurves</span><span class="p">()</span>  <span class="c">% get good curves</span>
 
-<span class="o">%</span> <span class="n">gcCVec</span> <span class="o">=</span>
-<span class="o">%</span> <span class="p">[</span><span class="mi">2</span><span class="n">x100</span> <span class="kt">double</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="n">x100</span> <span class="kt">double</span><span class="p">]</span> <span class="p">[</span><span class="mi">2</span><span class="n">x100</span> <span class="kt">double</span><span class="p">]</span> 
+<span class="c">% gcCVec =</span>
+<span class="c">% [2x100 double] [2x100 double] [2x100 double] </span>
 </pre></div>
 </td></tr></table></div>
 <p>Variable ctrMat here is a matrix whose columns are the points ofthe
@@ -1654,7 +1597,7 @@ system of differential equations. For example, starting at time
 time-variant system sys_t defined above. Switched systems are a special
 case of this situation. To compute the further evolution in time of the
 existing reach set, function evolve should be used:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -1679,7 +1622,7 @@ existing reach set, function evolve should be used:</p>
 be viewed as an implementation of the semigroup property.</p>
 <p>To compute the backward reach set for some specified target set, we
 declare the time interval so that the terminating time comes first:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
 2
 3
 4
@@ -1701,7 +1644,7 @@ declare the time interval so that the terminating time comes first:</p>
 <p>Reach set and backward reach set computation for discrete-time systems
 and manipulations with the resulting reach set object are performed
 using the same functions as for continuous-time systems:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -1716,22 +1659,22 @@ using the same functions as for continuous-time systems:</p>
 13
 14
 15
-16</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">timeVec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">100</span><span class="p">];</span>  <span class="o">%</span> <span class="n">represents</span> <span class="mi">100</span> <span class="n">time</span> <span class="n">steps</span> <span class="n">from</span> <span class="mi">1</span> <span class="n">to</span> <span class="mi">100</span>
-<span class="o">%</span> <span class="n">reach</span> <span class="n">set</span> <span class="k">for</span> <span class="mi">100</span> <span class="n">time</span> <span class="n">steps</span>
-<span class="n">secDtrsObj</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachDiscrete</span><span class="p">(</span><span class="n">dtsys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">);</span> 
-<span class="n">secDtrsObj</span> <span class="o">=</span> <span class="n">secDtrsObj</span><span class="p">.</span><span class="n">evolve</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>  <span class="o">%</span> <span class="n">compute</span> <span class="n">next</span> <span class="mi">100</span> <span class="n">time</span> <span class="n">steps</span>
+16</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">timeVec</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">100</span><span class="p">];</span>  <span class="c">% represents 100 time steps from 1 to 100</span>
+<span class="c">% reach set for 100 time steps</span>
+<span class="n">secDtrsObj</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachDiscrete</span><span class="p">(</span><span class="n">dtsys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">);</span> 
+<span class="n">secDtrsObj</span> <span class="p">=</span> <span class="n">secDtrsObj</span><span class="p">.</span><span class="n">evolve</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>  <span class="c">% compute next 100 time steps</span>
 
-<span class="n">tbTimeVec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span> <span class="mi">0</span><span class="p">];</span>  <span class="o">%</span> <span class="n">backward</span> <span class="n">time</span> <span class="n">interval</span>
-<span class="o">%</span> <span class="n">backward</span> <span class="n">reach</span> <span class="n">set</span>
-<span class="n">dtbrsObj</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachDiscrete</span><span class="p">(</span><span class="n">dtsys</span><span class="p">,</span> <span class="n">yEllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="n">tbTimeVec</span><span class="p">);</span>  
-<span class="n">dtbrsObj</span> <span class="o">=</span> <span class="n">dtbrsObj</span><span class="p">.</span><span class="n">refine</span><span class="p">(</span><span class="n">newDirsMat</span><span class="p">);</span>  <span class="o">%</span> <span class="n">refine</span> <span class="n">the</span> <span class="n">approximation</span>
-<span class="o">%</span> <span class="n">get</span> <span class="n">external</span> <span class="n">approximating</span> <span class="n">ellipsoids</span> <span class="n">and</span> <span class="n">time</span> <span class="n">values</span>
-<span class="p">[</span><span class="n">externallEllMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">]</span> <span class="o">=</span> <span class="n">dtbrsObj</span><span class="p">.</span><span class="n">get_ea</span><span class="p">();</span>
-<span class="o">%</span> <span class="n">get</span> <span class="n">internal</span> <span class="n">approximating</span> <span class="n">ellipsoids</span>
-<span class="n">internalEllMat</span> <span class="o">=</span> <span class="n">dtbrsObj</span><span class="p">.</span><span class="n">get_ia</span><span class="p">()</span>
+<span class="n">tbTimeVec</span> <span class="p">=</span> <span class="p">[</span><span class="mi">50</span> <span class="mi">0</span><span class="p">];</span>  <span class="c">% backward time interval</span>
+<span class="c">% backward reach set</span>
+<span class="n">dtbrsObj</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachDiscrete</span><span class="p">(</span><span class="n">dtsys</span><span class="p">,</span> <span class="n">yEllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="n">tbTimeVec</span><span class="p">);</span>  
+<span class="n">dtbrsObj</span> <span class="p">=</span> <span class="n">dtbrsObj</span><span class="p">.</span><span class="n">refine</span><span class="p">(</span><span class="n">newDirsMat</span><span class="p">);</span>  <span class="c">% refine the approximation</span>
+<span class="c">% get external approximating ellipsoids and time values</span>
+<span class="p">[</span><span class="n">externallEllMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">]</span> <span class="p">=</span> <span class="n">dtbrsObj</span><span class="p">.</span><span class="n">get_ea</span><span class="p">();</span>
+<span class="c">% get internal approximating ellipsoids</span>
+<span class="n">internalEllMat</span> <span class="p">=</span> <span class="n">dtbrsObj</span><span class="p">.</span><span class="n">get_ia</span><span class="p">()</span>
 
-<span class="o">%</span> <span class="n">internalEllMat</span> <span class="o">=</span>
-<span class="o">%</span> <span class="n">Array</span> <span class="n">of</span> <span class="n">ellipsoids</span> <span class="n">with</span> <span class="n">dimensionality</span> <span class="mi">3</span><span class="n">x51</span>
+<span class="c">% internalEllMat =</span>
+<span class="c">% Array of ellipsoids with dimensionality 3x51</span>
 </pre></div>
 </td></tr></table></div>
 <p>Number of columns in the ellipsoidal arrays externalEllMat and
@@ -1748,7 +1691,7 @@ them as integers.</p>
 values of certain global parameters. System of the parameters are
 configured using xml files, which available from a set of command-line
 utilities:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">elltool</span><span class="p">.</span><span class="n">setconf</span><span class="p">(</span><span class="err">&#39;</span><span class="k">default</span><span class="err">&#39;</span><span class="p">);</span>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">elltool</span><span class="p">.</span><span class="n">setconf</span><span class="p">(</span><span class="s">&#39;default&#39;</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
 <p>Here we list system parameters available from the ’default’
@@ -1784,7 +1727,7 @@ through elltool.conf.Properties. elltool.conf.Properties is a static
 class, providing emulation of static properties for toolbox. It has two
 function types: setters and getters. Using getters we obtain system
 parameters.</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
  4
@@ -1794,20 +1737,20 @@ parameters.</p>
  8
  9
 10</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">elltool</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">Properties</span><span class="p">.</span><span class="n">getAbsTol</span><span class="p">()</span>
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>    <span class="mf">1.0000e-07</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%    1.0000e-07</span>
 
 <span class="n">elltool</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">Properties</span><span class="p">.</span><span class="n">getNPlot2dPoints</span><span class="p">()</span>
 
-<span class="o">%</span> <span class="n">ans</span> <span class="o">=</span>
-<span class="o">%</span> 
-<span class="o">%</span>    <span class="mi">200</span>
+<span class="c">% ans =</span>
+<span class="c">% </span>
+<span class="c">%    200</span>
 </pre></div>
 </td></tr></table></div>
 <p>Some of the parameters can be changed in run-time via
 setters.</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">elltool</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">Properties</span><span class="p">.</span><span class="n">setNTimeGridPoints</span><span class="p">(</span><span class="mi">250</span><span class="p">);</span>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">elltool</span><span class="p">.</span><span class="n">conf</span><span class="p">.</span><span class="n">Properties</span><span class="p">.</span><span class="n">setNTimeGridPoints</span><span class="p">(</span><span class="mi">250</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
 </div>
@@ -1846,82 +1789,49 @@ the center of the line segment or facet and its size.</p>
 <p>Ellipsoids of dimensions higher than three must be projected onto a two-
 or three-dimensional subspace before being plotted. This is done by
 means of projection function:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16
-17
-18</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% create two 4-dimensional ellipsoids:</span>
-<span class="n">firstEllObj</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">([</span><span class="mi">14</span> <span class="o">-</span><span class="mi">4</span> <span class="mi">2</span> <span class="o">-</span><span class="mi">5</span><span class="p">;</span> <span class="o">-</span><span class="mi">4</span> <span class="mi">6</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">2</span> <span class="mi">0</span> <span class="mi">6</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="mi">5</span> <span class="mi">1</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">2</span><span class="p">]);</span>
-<span class="n">secEllObj</span> <span class="p">=</span> <span class="n">firstEllObj</span><span class="p">.</span><span class="n">getInv</span><span class="p">();</span>
+<div class="highlight-matlab"><pre>% create two 4-dimensional ellipsoids:
+firstEllObj = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
+secEllObj = firstEllObj.getInv();
 
-<span class="c">% specify 3-dimensional subspace by its basis:</span>
+% specify 3-dimensional subspace by its basis:
 
-<span class="c">% columns of basisMat must be orthogonal</span>
-<span class="n">basisMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">].</span><span class="s">&#39;</span><span class="err">; </span>
+% columns of basisMat must be orthogonal
+basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1].'; 
 
-<span class="c">% get 3-dimensional projections of firstEllObj and secEllObj:</span>
-<span class="n">bufEllVec</span> <span class="p">=</span> <span class="p">[</span><span class="n">firstEllObj</span> <span class="n">secEllObj</span><span class="p">];</span>
-<span class="c">% array ellVec contains projections of firstEllObj and secEllObj</span>
-<span class="n">ellVec</span> <span class="p">=</span> <span class="n">bufEllVec</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">basisMat</span><span class="p">)</span>  
+% get 3-dimensional projections of firstEllObj and secEllObj:
+bufEllVec = [firstEllObj secEllObj];
+% array ellVec contains projections of firstEllObj and secEllObj
+ellVec = bufEllVec.projection(basisMat)  
 
-<span class="c">% ellVec =</span>
-<span class="c">% Array of ellipsoids with dimensionality 1x2</span>
+% ellVec =
+% Array of ellipsoids with dimensionality 1x2
 
-<span class="n">ellVec</span><span class="p">.</span><span class="n">plot</span><span class="p">();</span>  <span class="c">% plot ellipsoids in ellVec</span>
-</pre></div>
-</td></tr></table></div>
+ellVec.plot();  % plot ellipsoids in ellVec
+</pre>
+</div>
 <p>Since the operation of projection is linear, the projection of the
 geometric sum of ellipsoids equals the geometric sum of the projected
 ellipsoids. The same is true for the geometric difference of two
 ellipsoids.</p>
 <p>Function projection exists also for the
 ReachContinuous<img class="math" src="_images/math/385adced1eac31db28232371c6e5afb832d82bf7.png" alt="\backslash"/>ReachDiscrete objects:</p>
-<div class="highlight-guess"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-15
-16</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">aMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">0</span><span class="p">];</span>
-<span class="n">bMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">;</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span><span class="p">];</span>
-<span class="n">uBoundsEllObj</span> <span class="o">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="o">%</span> <span class="mi">4</span><span class="o">-</span><span class="n">dimensional</span> <span class="n">system</span>
-<span class="n">sys</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysFactory</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">uBoundsEllObj</span><span class="p">);</span>
-<span class="n">dirsMat</span>  <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span> <span class="mi">1</span><span class="p">].</span><span class="err">&#39;</span><span class="p">;</span> <span class="o">%</span> <span class="n">matrix</span> <span class="n">of</span> <span class="n">directions</span>
-<span class="o">%</span> <span class="n">reach</span> <span class="n">set</span> <span class="n">from</span> <span class="n">time</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">5</span>
-<span class="n">rsObj</span> <span class="o">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachContinuous</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">ell_unitball</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">dirsMat</span><span class="p">,...</span>
-    <span class="p">[</span><span class="mi">0</span> <span class="mi">5</span><span class="p">],</span> <span class="err">&#39;</span><span class="n">isRegEnabled</span><span class="err">&#39;</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">isJustCheck</span><span class="err">&#39;</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">regTol</span><span class="err">&#39;</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">);</span>
-<span class="n">basisMat</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">].</span><span class="err">&#39;</span><span class="p">;</span>  <span class="o">%</span> <span class="n">basis</span> <span class="n">of</span> <span class="mi">2</span><span class="o">-</span><span class="n">dimensional</span> <span class="n">subspace</span>
+<div class="highlight-matlab"><pre>aMat = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
+bMat = [0; 0; 0; 1];
+uBoundsEllObj = ellipsoid(1);
+% 4-dimensional system
+sys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj);
+dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1].'; % matrix of directions
+% reach set from time 0 to 5
+rsObj = elltool.reach.ReachContinuous(sys, ell_unitball(4), dirsMat,...
+    [0 5], 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
+basisMat = [1 0 0 1; 0 1 1 0].';  % basis of 2-dimensional subspace
 
-<span class="o">%</span> <span class="n">project</span> <span class="n">reach</span> <span class="n">set</span> <span class="n">rs</span> <span class="n">onto</span> <span class="n">basis</span> <span class="n">basisMat</span>
-<span class="n">psObj</span> <span class="o">=</span> <span class="n">rsObj</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">basisMat</span><span class="p">);</span>
-<span class="n">psObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">();</span>  <span class="o">%</span> <span class="n">plot</span> <span class="n">external</span> <span class="n">approximation</span>
-<span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
-<span class="n">psObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">();</span>  <span class="o">%</span> <span class="n">plot</span> <span class="n">internal</span> <span class="n">approximation</span>
-</pre></div>
-</td></tr></table></div>
+% project reach set rs onto basis basisMat
+psObj = rsObj.projection(basisMat);
+psObj.plotByEa();  % plot external approximation
+hold on;
+psObj.plotByIa();  % plot internal approximation</pre>
+</div>
 <p>The quality of the ellipsoid and reach set plots is controlled by the
 parameters nPlot2dPoints and nPlot3dPoints, which are available from
 getters of ellipsoid class.</p>
@@ -2003,11 +1913,11 @@ Transactions on Systems, Man and Cybernetics, Part B: Cybernetics</em> 32 (4).</
         <li class="right" >
           <a href="chap_install.html" title="Installation"
              >previous</a> |</li>
-        <li><a href="main_manual.html">Ellipsoidal Toolbox 0.1 documentation</a> &raquo;</li> 
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0 beta 1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Lukashevichus K..
+        &copy; Copyright 2011-2013 Moscow State University, Faculty of Computational Mathematics and Computer Science, System Analysis Department, 2004-2011 The Regents of the University of California.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
     </div>
   </body>
