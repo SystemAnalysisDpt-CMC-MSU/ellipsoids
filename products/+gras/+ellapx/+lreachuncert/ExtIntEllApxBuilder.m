@@ -196,7 +196,14 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                     toc(tStart)));
             end
             %
-            aMat=pDefObj.getxtDynamics.evaluate(resTimeVec);
+            [timeVec aMat]=pDefObj.getxtDynamics.evaluate(resTimeVec);
+            aMat = reshape(aMat,[2 100]);
+            
+            
+            
+             
+            
+            
             %
             [apxSchemaName,apxSchemaDescr]=self.getApxSchemaNameAndDescr();
             %

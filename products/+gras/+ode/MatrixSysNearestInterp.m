@@ -1,23 +1,20 @@
 classdef MatrixSysNearestInterp < gras.ode.IMatrixSysInterp
     properties(Access=private)
-        QArray
-        MArray
+        interpArray
         timeVec
     end
     
     methods
-        function self = MatrixSysNearestInterp(QArray,MArray,timeVec)
-            self.QArray = QArray;
-            self.MArray = MArray;
+        function self = MatrixSysNearestInterp(sourceArray,timeVec)
+            self.interpArray = sourceArray;
             self.timeVec = timeVec;
         end
-        function [QArray MArray] = evaluate(self,newTimeVec)
+        function interpArray = evaluate(self,newTimeVec)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
-            nDims=size(self.QArray,1);
-            nPoints=size(self.QArray,3);
-            QArray = simpleInterp(self.QArray);
-            MArray = simpleInterp(self.MArray);
+            nDims=size(self.interpArray,1);
+            nPoints=size(self.interpArray,3);
+            interpArray = simpleInterp(self.interpArray);
             
             function interpArray=simpleInterp(inpArray,isVector)
                 import gras.interp.MatrixInterpolantFactory;
