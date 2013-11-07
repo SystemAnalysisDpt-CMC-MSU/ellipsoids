@@ -29,6 +29,6 @@
 %       the result is defined  as a multiplicity of x such that:
 %                                                convexMat*x +  convexVec <= 0                                               
 %         
-%       discrepVec: double [1,nVertices] - vector of approximation
+%       discrepVec: double [1,nResInequalities] - vector of approximation
 %          error for  each vertex of result polytope
 %       vertMat: double [nVertices, nDims] - vertices of result polytope

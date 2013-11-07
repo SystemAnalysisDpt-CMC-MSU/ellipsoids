@@ -40,17 +40,17 @@ int add_top;
 void read_par (void);
 char *par_name = "set.par";
 //char *par_name = NULL;
-//static char in_name [43] ="input.chs";
+static char in_name [43] ="input.chs";
 
 
-//static char out_name [40] =
-//#ifdef CH_TXT
-  //"output.set";
-//#elif defined(CH_ELIPSE)
-  //"output.set";
-//#else
- // "output.chs";
-//#endif
+static char out_name [40] =
+#ifdef CH_TXT
+  "output.set";
+#elif defined(CH_ELIPSE)
+  "output.set";
+#else
+  "output.chs";
+#endif
 
 //static char model_name [40]
 //#ifdef CH_TXT
@@ -182,14 +182,14 @@ void in_read (int size,double* centervec, double* semiaxes) //read not from file
   }
  }    /* in_read */
 
-/*void out_write (void)
+void out_write (void)
  {//clrscr ();
 	 
 	 printf("%d", stage);
   if (stage == 2)
    {printf ("Podozhdite, idet zapis'\n");
     //gotoxy (1, 1);
-    if (ch_write_dat (in_name, out_name) < 0) wait();
+    if (ch_write_dat () < 0) wait();
    
   }
   else
@@ -443,17 +443,17 @@ return;
 
 void calcEllipsoidApprox(int size,double* centervec, double* semiaxes){ 
  //main function for which mex-file will be written 
+
   read_par ();
   in_read (size,centervec, semiaxes);
   conv_go(semiaxes);
-  // out_write();
-//return 0;
- }
+  out_write();
+   }
 
 int main(void){
 	//for compilation while there is no mex-files
 	//here input data will be defined
-
+	int i;
     double* centervec;
 	double* semiaxes;
 	int size = 2;
@@ -462,7 +462,7 @@ int main(void){
 	
 	centervec[0] = 0;
 	centervec[1] = 0;
-	semiaxes[0] = 1;
+	semiaxes[0] = 2;
 	semiaxes[1] = 1;
 	
     calcEllipsoidApprox(size,centervec,semiaxes);

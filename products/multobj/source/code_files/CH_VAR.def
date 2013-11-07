@@ -55,6 +55,11 @@ CH_EXTERN float     ch_max_all_est;
 CH_EXTERN float     ch_width;
 CH_EXTERN ch_facet *ch_max_est_facet;
 CH_EXTERN ch_facet *ch_next_est_facet;
+//output params
+CH_EXTERN float** Amat;
+CH_EXTERN float* bVec;
+CH_EXTERN float* discrVec;
+CH_EXTERN float** vertMat;
 
 #undef CH_INIT
 #undef CH_EXTERN
