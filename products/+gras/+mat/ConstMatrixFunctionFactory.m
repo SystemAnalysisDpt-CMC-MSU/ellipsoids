@@ -5,7 +5,6 @@ classdef ConstMatrixFunctionFactory
             import modgen.common.throwerror;
             import gras.gen.MatVector;
             import gras.mat.fcnlib.*;
-            import gras.mat.symb.iscellofstringconst;
             %
             checkgen(mCMat,'(isnumeric(x)||iscellofstring(x))&&ismat(x)');
             if isnumeric(mCMat)

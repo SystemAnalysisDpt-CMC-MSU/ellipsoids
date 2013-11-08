@@ -1,4 +1,4 @@
-classdef MatrixColTriuSymmCubicSpline<gras.interp.MatrixColTriuCubicSpline
+classdef MatrixColTriuSymmCubicSpline<gras.mat.interp.MatrixColTriuCubicSpline
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
@@ -10,7 +10,7 @@ classdef MatrixColTriuSymmCubicSpline<gras.interp.MatrixColTriuCubicSpline
     methods (Access=public)
         function resArray=evaluate(self,timeVec)
             resArray=evaluate@...
-                gras.interp.MatrixColTriuCubicSpline(self,timeVec);
+                gras.mat.interp.MatrixColTriuCubicSpline(self,timeVec);
             nCols=self.nCols;
             for k=1:1:nCols-1
                 resArray((k+1):end,k,:)=resArray(k,(k+1):end,:);
@@ -29,9 +29,9 @@ classdef MatrixColTriuSymmCubicSpline<gras.interp.MatrixColTriuCubicSpline
             %       timeVec: double[1,nTimePoints] -
             %
             %
-            import gras.interp.MatrixColTriuSymmCubicSpline
+            import gras.mat.interp.MatrixColTriuSymmCubicSpline
             import modgen.common.throwerror;
-            self=self@gras.interp.MatrixColTriuCubicSpline(varargin{:});
+            self=self@gras.mat.interp.MatrixColTriuCubicSpline(varargin{:});
             if nargin>1
                 dataArray=varargin{1};
                 nTimePoints=size(dataArray,3);

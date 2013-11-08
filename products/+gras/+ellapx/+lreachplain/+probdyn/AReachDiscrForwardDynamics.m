@@ -10,9 +10,9 @@ classdef AReachDiscrForwardDynamics <...
         %
         function self = AReachDiscrForwardDynamics(problemDef)
             import gras.ellapx.common.*;
-            import gras.mat.symb.MatrixSymbFormulaBased;
+            import gras.mat.fcnlib.MatrixSymbFormulaBased;
             import gras.mat.CompositeMatrixOperations;
-            import gras.interp.MatrixInterpolantFactory;
+            import gras.mat.interp.MatrixInterpolantFactory;
             %
             self.problemDef = problemDef;
             %

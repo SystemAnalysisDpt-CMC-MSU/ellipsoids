@@ -1,11 +1,11 @@
-classdef PosDefMatCholCubicSpline<gras.interp.MatrixColTriuCubicSpline
+classdef PosDefMatCholCubicSpline<gras.mat.interp.MatrixColTriuCubicSpline
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2011 $
     methods
         function self=PosDefMatCholCubicSpline(varargin)
-            self=self@gras.interp.MatrixColTriuCubicSpline(varargin{:});
+            self=self@gras.mat.interp.MatrixColTriuCubicSpline(varargin{:});
         end
     end
     methods (Access=protected,Static)
@@ -13,7 +13,7 @@ classdef PosDefMatCholCubicSpline<gras.interp.MatrixColTriuCubicSpline
             import modgen.common.type.simple.checkgen;
             import modgen.common.type.simple.checkgenext;
             import modgen.common.throwerror;
-            import gras.interp.MatrixColTriuCubicSpline;
+            import gras.mat.interp.MatrixColTriuCubicSpline;
             %
             [mSizeVec,nDims]=MatrixColTriuCubicSpline.getSizeProps(dataArray);
             checkgen(nDims,'x==2');
@@ -56,7 +56,7 @@ classdef PosDefMatCholCubicSpline<gras.interp.MatrixColTriuCubicSpline
             %
             %
             dataArray=...
-                evaluate@gras.interp.MatrixColTriuCubicSpline(...
+                evaluate@gras.mat.interp.MatrixColTriuCubicSpline(...
                 self,timeVec);
             %
             for iTime=1:size(dataArray,3)

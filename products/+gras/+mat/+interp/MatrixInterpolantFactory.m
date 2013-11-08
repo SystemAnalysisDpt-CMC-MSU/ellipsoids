@@ -6,25 +6,25 @@ classdef MatrixInterpolantFactory
             checkgen(type,'isstring(x)');
             switch lower(type)
                 case 'linear',
-                    obj=gras.interp.MatrixLinearInterp(varargin{:});
+                    obj=gras.mat.interp.MatrixLinearInterp(varargin{:});
                 case 'nearest',
-                    obj=gras.interp.MatrixNearestInterp(varargin{:});                    
+                    obj=gras.mat.interp.MatrixNearestInterp(varargin{:});                    
                 case 'posdef_chol',
-                    obj=gras.interp.PosDefMatCholCubicSpline(varargin{:});
+                    obj=gras.mat.interp.PosDefMatCholCubicSpline(varargin{:});
                 case 'nndef_chol_mult',
-                    obj=gras.interp.NNDefMatCholMultCubicSpline(varargin{:});
+                    obj=gras.mat.interp.NNDefMatCholMultCubicSpline(varargin{:});
                 case 'nndef_triu',
-                    obj=gras.interp.MatrixNNDefTriuCubicSpline(varargin{:});
+                    obj=gras.mat.interp.MatrixNNDefTriuCubicSpline(varargin{:});
                 case 'column',
-                    obj=gras.interp.MatrixColCubicSpline(varargin{:});
+                    obj=gras.mat.interp.MatrixColCubicSpline(varargin{:});
                 case 'row',
-                    obj=gras.interp.MatrixRowCubicSpline(varargin{:});
+                    obj=gras.mat.interp.MatrixRowCubicSpline(varargin{:});
                 case 'scalar'
-                    obj=gras.interp.MatrixScalarCubicSpline(varargin{:});
+                    obj=gras.mat.interp.MatrixScalarCubicSpline(varargin{:});
                 case 'column_triu'
-                    obj=gras.interp.MatrixColTriuCubicSpline(varargin{:});
+                    obj=gras.mat.interp.MatrixColTriuCubicSpline(varargin{:});
                 case 'symm_column_triu',
-                    obj=gras.interp.MatrixColTriuSymmCubicSpline(varargin{:});
+                    obj=gras.mat.interp.MatrixColTriuSymmCubicSpline(varargin{:});
                 otherwise,
                     throwerror('wrongInput',...
                         'Interpolation type %s is not supported',type);

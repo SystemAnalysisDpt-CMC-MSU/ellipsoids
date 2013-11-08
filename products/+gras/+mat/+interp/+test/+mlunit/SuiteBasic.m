@@ -18,8 +18,8 @@ classdef SuiteBasic < mlunitext.test_case
             check();
             function check()
                 import gras.gen.MatVector;
-                import gras.mat.symb.MatrixSymbFormulaBased;
-                import gras.mat.symb.MatrixSFBinaryProdByVec;
+                import gras.mat.fcnlib.MatrixSymbFormulaBased;
+                import gras.mat.fcnlib.MatrixSFBinaryProdByVec;
                 nTimePoints=length(timeVec);
                 m1Interp=MatrixSymbFormulaBased(sym1CMat);
                 m2Interp=MatrixSymbFormulaBased(sym2CMat);
@@ -41,9 +41,9 @@ classdef SuiteBasic < mlunitext.test_case
             timeVec=0;
             check();
             function check()
-                import gras.mat.symb.MatrixSymbFormulaBased;
-                import gras.mat.symb.MatrixSFBinaryProd;
-                import gras.mat.symb.MatrixSFTripleProd;
+                import gras.mat.fcnlib.MatrixSymbFormulaBased;
+                import gras.mat.fcnlib.MatrixSFBinaryProd;
+                import gras.mat.fcnlib.MatrixSFTripleProd;
                 %
                 sym1CMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};
                 sym2CMat={'1','0';'0','1'};
@@ -103,7 +103,7 @@ classdef SuiteBasic < mlunitext.test_case
             function checkMaster()
                 symCMat={'cos(t)','sin(t)';'-sin(t)','cos(t)'};
                 dataArray=gras.gen.MatVector.fromFormulaMat(symCMat,timeVec);
-                mInterp=gras.mat.symb.MatrixSymbFormulaBased(symCMat);
+                mInterp=gras.mat.fcnlib.MatrixSymbFormulaBased(symCMat);
                 check(mInterp);
                 function check(mInterp)
                     resDataArray=mInterp.evaluate(timeVec);
@@ -120,7 +120,7 @@ classdef SuiteBasic < mlunitext.test_case
             interpTimeVec=[1 5]+0.1;
             expArray(:,:,1)=[1 2;3 4]*1.5;
             expArray(:,:,2)=[1 2;3 4]*2.5;
-            intObj=gras.interp.MatrixInterpolantFactory.createInstance(...
+            intObj=gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                 'linear',inpArray,timeVec);
             resArray=intObj.evaluate(interpTimeVec);
             isOk=max(abs(expArray(:)-resArray(:)))<=CMP_TOL;
@@ -137,7 +137,7 @@ classdef SuiteBasic < mlunitext.test_case
             check(3,true);
             %
             function check(tolFactor,isExpOk)
-                import gras.interp.MatrixInterpolantFactory;
+                import gras.mat.interp.MatrixInterpolantFactory;
                 symmArray=zeros(size(dataArray));
                 for iTime=1:nTimes
                     symmMat=dataArray(:,:,iTime)*transpose(dataArray(:,:,iTime));
@@ -229,12 +229,12 @@ classdef SuiteBasic < mlunitext.test_case
                     inpArgList = {dataArray, timeVec};
                 end
                 %% Check for a possibility to use a default constuctor
-                obj = gras.interp.MatrixInterpolantFactory.createInstance(shape);
+                obj = gras.mat.interp.MatrixInterpolantFactory.createInstance(shape);
                 mlunitext.assert_equals(true, isempty(obj.evaluate([])));
                 mlunitext.assert_equals(2, obj.getDimensionality());
                 
                 %%
-                obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+                obj = gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                     shape, inpArgList{:});
                 %%
                 resDataArray = obj.evaluate(timeVec);
@@ -304,7 +304,7 @@ classdef SuiteBasic < mlunitext.test_case
                 mArray(:,:,iTimePoint) = 10*sin(10*timeVec(iTimePoint));
             end
             %
-            splineObj = gras.interp.MatrixColCubicSpline(mArray, timeVec);
+            splineObj = gras.mat.interp.MatrixColCubicSpline(mArray, timeVec);
             %
             evalTimeVec = ( timeVec(2:end) + timeVec(1:end-1) ) / 2;
             evalTimeVec = [timeVec(1),evalTimeVec,timeVec(end)];

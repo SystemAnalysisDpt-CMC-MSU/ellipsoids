@@ -1,4 +1,4 @@
-classdef MatrixNNDefTriuCubicSpline<gras.interp.MatrixColTriuSymmCubicSpline
+classdef MatrixNNDefTriuCubicSpline<gras.mat.interp.MatrixColTriuSymmCubicSpline
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
@@ -11,7 +11,7 @@ classdef MatrixNNDefTriuCubicSpline<gras.interp.MatrixColTriuSymmCubicSpline
         function resArray = evaluate(self,timeVec)
             absTol = self.zeroEigTol;
             resArray = evaluate@...
-                gras.interp.MatrixColTriuSymmCubicSpline(self, timeVec);
+                gras.mat.interp.MatrixColTriuSymmCubicSpline(self, timeVec);
             nOldTimes = size(resArray, 3);
             if(self.nDims == 1)
                 resArray = reshape(resArray, self.nRows, nOldTimes);
@@ -55,7 +55,7 @@ classdef MatrixNNDefTriuCubicSpline<gras.interp.MatrixColTriuSymmCubicSpline
             import modgen.common.parseparext;
             [reg,~,absTol]=parseparext(varargin,{'zeroEigTol';ZERO_EIG_TOL;...
                 'isscalar(x)&&isnumeric(x)&&(x>=0)'});
-            self=self@gras.interp.MatrixColTriuSymmCubicSpline(reg{:});
+            self=self@gras.mat.interp.MatrixColTriuSymmCubicSpline(reg{:});
             self.zeroEigTol=absTol;
         end
     end
