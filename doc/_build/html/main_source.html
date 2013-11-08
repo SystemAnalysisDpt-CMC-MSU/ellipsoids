@@ -2826,7 +2826,7 @@ sum can be computed explicitely and plotted:</p>
 <img alt="approximation" src="_images/minksum.png" />
 <p class="caption">Figure 2: The geometric sum of ellipsoids.</p>
 </div>
-<p>Figure <a class="pageref" href="#minksumpic"> 2</a> displays the geometric sum of ellipsoids. If
+<p>Figure <a class="pageref" href="old/chap_implement.html#minksumpic"> 2</a> displays the geometric sum of ellipsoids. If
 the dimension of the space in which the ellipsoids are defined exceeds
 <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>, an error is returned. The result of the geometric sum
 operation is not generally an ellipsoid, but it can be approximated by
@@ -2910,7 +2910,7 @@ can be computed explicitely and plotted for ellipsoids in
 <img alt="approximation" src="_images/minkdiff.png" />
 <p class="caption">Figure 3: The geometric difference of ellipsoids.</p>
 </div>
-<p>Figure <a class="pageref" href="#minkdiffpic"> 3</a> shows the geometric difference of ellipsoids.</p>
+<p>Figure <a class="pageref" href="old/chap_implement.html#minkdiffpic"> 3</a> shows the geometric difference of ellipsoids.</p>
 <p>Similar to minksum, minkdiff is there for visualization purpose. It
 works only for dimensions <img class="math" src="_images/math/dce34f4dfb2406144304ad0d6106c5382ddd1446.png" alt="1"/>, <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> and <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>, and for
 higher dimensions it returns an error. For arbitrary dimensions, the
@@ -3000,7 +3000,7 @@ of arbitrary dimension.</p>
 <div class="figure" id="minkmppic">
 <img alt="_images/minkmp.png" src="_images/minkmp.png" />
 </div>
-<p>Figures <a class="pageref" href="#minkpmpic"> 4</a> and <a class="pageref" href="#minkmppic"> 5</a> display results of
+<p>Figures <a class="pageref" href="old/chap_implement.html#minkpmpic"> 4</a> and <a class="pageref" href="old/chap_implement.html#minkmppic"> 5</a> display results of
 the implementation of minkpm and minkmp operations.</p>
 <p>Similarly, operation ’sum-difference’ described in section <a class="reference internal" href="#geometric-sum-difference">Geometric sum-difference</a> is implemented in functions
 minkpm, minkpm_ea, minkpm_ia, the first one of which is used for
@@ -3579,7 +3579,7 @@ tube onto time-dependent subspace.</p>
 <div class="figure" id="dyn-proj">
 <img alt="_images/reachTubeDynProj.png" src="_images/reachTubeDynProj.png" />
 </div>
-<p>Figures <a class="pageref" href="#stat-proj"> 6</a> and <a class="pageref" href="#dyn-proj"> 7</a> display static and dynamic projections.
+<p>Figures <a class="pageref" href="old/chap_implement.html#stat-proj"> 6</a> and <a class="pageref" href="old/chap_implement.html#dyn-proj"> 7</a> display static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.</p>
 <p>We can compute tubes by the instant of time using methodfromEllTubes:</p>
 <div class="highlight-matlab"><pre>function example
@@ -3613,7 +3613,7 @@ function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
 <div class="figure" id="uniontubestatproj">
 <img alt="_images/unionTubeStatProj.png" src="_images/unionTubeStatProj.png" />
 </div>
-<p>Figure <a class="pageref" href="#uniontubestatproj"> 8</a> shows projection of ellipsoidal
+<p>Figure <a class="pageref" href="old/chap_implement.html#uniontubestatproj"> 8</a> shows projection of ellipsoidal
 tubes by the instant of time.</p>
 <p>Also we can get initial data from the resulting tube:</p>
 <div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -3663,7 +3663,7 @@ to display a content of ellipsoidal tubes.</p>
 <div class="figure" id="disppic">
 <img alt="_images/dispPic.png" src="_images/dispPic.png" />
 </div>
-<p>Figure <a class="pageref" href="#disppic"> 9</a>
+<p>Figure <a class="pageref" href="old/chap_implement.html#disppic"> 9</a>
 displays all fields of the ellipsoidal tube.</p>
 <p>There are several methods to find the tubes with necessary parameters.</p>
 <div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -4355,7 +4355,7 @@ u_2[k]\end{array}\right], ~~~ x[0]\in{\mathcal X}_0, ~~~ u[k]\in U, ~~~ k\geqsla
 implemented in MPT <a class="reference internal" href="#mpthp" id="id75">[MPTHP]</a>. With every
 time step the number of vertices of the reach set polytope increases by
 <img class="math" src="_images/math/c7cab1a05e1e0c1d51a6a219d96577a16b7abf9d.png" alt="4"/>. The complexity of the convex hull computation increases
-exponentially with number of vertices. In <a class="pageref" href="#ellpolyfig">figure  10</a>, the time
+exponentially with number of vertices. In <a class="pageref" href="old/chap_examples.html#ellpolyfig">figure  10</a>, the time
 required to compute the reach set for different time steps using
 polytopes is shown in red.</p>
 <p>To compute the reach set of the system using <em>Ellipsoidal Toolbox</em>, we
@@ -4386,10 +4386,10 @@ external and internal ellipsoidal approximations of the reach set:</p>
 <span class="n">rsObj</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachDiscrete</span><span class="p">(</span><span class="n">lsys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span> <span class="n">nSteps</span><span class="p">]);</span>
 </pre></div>
 </td></tr></table></div>
-<p>In <a class="pageref" href="#ellpolyfig">figure  10</a>, the time required to compute both external and
+<p>In <a class="pageref" href="old/chap_examples.html#ellpolyfig">figure  10</a>, the time required to compute both external and
 internal ellipsoidal approximations, with <img class="math" src="_images/math/4f4b8590f8aa9f9894b3891dd5dede0e354fa04e.png" alt="32"/> ellipsoids each,
 for different number of time steps is shown in blue.</p>
-<p><a class="pageref" href="#ellpolyfig">Figure  10</a> illustrates the fact that the complexity of polytope
+<p><a class="pageref" href="old/chap_examples.html#ellpolyfig">Figure  10</a> illustrates the fact that the complexity of polytope
 method grows exponentially with number of time steps, whereas the
 complexity of ellipsoidal method grows linearly.</p>
 </div>
@@ -4399,7 +4399,7 @@ complexity of ellipsoidal method grows linearly.</p>
 <img alt="spmass" src="_images/springmass.png" />
 <p class="caption">Figure 11: Spring-mass system.</p>
 </div>
-<p>The mechanical system presented in <a class="pageref" href="#springmassfig">figure  11</a>, is described
+<p>The mechanical system presented in <a class="pageref" href="old/chap_examples.html#springmassfig">figure  11</a>, is described
 by the following system of equations:</p>
 <div class="math" id="equation-spmass1">
 <p><span class="eqno">(138)</span><img src="_images/math/978f7246aecfe9c9b3177e08f89fbc4d432d407d.png" alt="m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 &amp; = u_1,"/></p>
@@ -4495,9 +4495,9 @@ Spring-mass system with disturbance:
 <span class="n">psObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">);</span>  <span class="c">% plot reach set approximation at time t = 4</span>
 </pre></div>
 </td></tr></table></div>
-<p>Figure <a class="pageref" href="#mechreachfig"> 12</a> (a) shows the reach set of the system
+<p>Figure <a class="pageref" href="old/chap_examples.html#mechreachfig"> 12</a> (a) shows the reach set of the system
 <a href="#equation-spmass1">(138)</a>-<a href="#equation-spmass2">(139)</a> evolving in time from <img class="math" src="_images/math/5a607fd61885c014512c949fee18869690330407.png" alt="t=0"/> to <img class="math" src="_images/math/b9cc4404c2ef33fed45cc3187994253f79ecae29.png" alt="t=4"/>.
-Figure <a class="pageref" href="#mechreachfig"> 12</a> (b) presents a snapshot of this reach set at time
+Figure <a class="pageref" href="old/chap_examples.html#mechreachfig"> 12</a> (b) presents a snapshot of this reach set at time
 <img class="math" src="_images/math/b9cc4404c2ef33fed45cc3187994253f79ecae29.png" alt="t=4"/>.</p>
 <p>So far we considered an ideal system without any disturbance, such as
 friction. We introduce disturbance to <a href="#equation-spmass1">(138)</a>-<a href="#equation-spmass2">(139)</a> by adding
@@ -4547,9 +4547,9 @@ closed-loop reach set of the system with disturbance.</p>
 <span class="n">psdCutObj</span><span class="p">.</span><span class="n">plotEa</span><span class="p">();</span>  <span class="c">% plot reach set approximation at time t = 4</span>
 </pre></div>
 </td></tr></table></div>
-<p><a class="pageref" href="#mechreachfig">Figure  12</a> (c) shows the reach set of the system
+<p><a class="pageref" href="old/chap_examples.html#mechreachfig">Figure  12</a> (c) shows the reach set of the system
 <a href="#equation-smdist1">(141)</a>-<a href="#equation-smdist2">(142)</a> evolving in time from <img class="math" src="_images/math/5a607fd61885c014512c949fee18869690330407.png" alt="t=0"/> to <img class="math" src="_images/math/b9cc4404c2ef33fed45cc3187994253f79ecae29.png" alt="t=4"/>.
-<a class="pageref" href="#mechreachfig">Figure  12</a> (d) presents a snapshot of this reach set at time
+<a class="pageref" href="old/chap_examples.html#mechreachfig">Figure  12</a> (d) presents a snapshot of this reach set at time
 <img class="math" src="_images/math/b9cc4404c2ef33fed45cc3187994253f79ecae29.png" alt="t=4"/>.</p>
 </div>
 <div class="section" id="switched-system">
@@ -4559,7 +4559,7 @@ closed-loop reach set of the system with disturbance.</p>
 <p class="caption">Figure 13: RLC circuit with two inputs.</p>
 </div>
 <p>By <em>switched systems</em> we mean systems whose dynamics changes at known
-times. Consider the RLC circuit shown in <a class="pageref" href="#rlcfig">figure  13</a>. It has two
+times. Consider the RLC circuit shown in <a class="pageref" href="old/chap_examples.html#rlcfig">figure  13</a>. It has two
 inputs - the voltage (<img class="math" src="_images/math/a9f23bf124b6b2b2a993eb313c72e678664ac74a.png" alt="v"/>) and current (<img class="math" src="_images/math/34857b3ba74ce5cd8607f3ebd23e9015908ada71.png" alt="i"/>) sources. Define</p>
 <ul class="simple">
 <li><img class="math" src="_images/math/ccada11db7b2b90693e2fac4f887a57fce6f96bf.png" alt="x_1"/> - voltage across capacitor <img class="math" src="_images/math/70b97eb4ad6e4e7a5a97e2547d9ed6e965960d0c.png" alt="C_1"/>, so
@@ -4718,14 +4718,14 @@ say, <img class="math" src="_images/math/35c913cff7776ae19bed793a777bfc715759152
 <p class="caption">Figure 14: Forward and backward reach sets of the switched system
 (external and internal approximations).</p>
 </div>
-<p><a class="pageref" href="#rlcreachfig">Figure  14</a> (a) shows how the reach set projection onto
+<p><a class="pageref" href="old/chap_examples.html#rlcreachfig">Figure  14</a> (a) shows how the reach set projection onto
 <img class="math" src="_images/math/93bc6527f61669132dabf5873a2b69109ce1dd75.png" alt="(x_1, x_2)"/> of system <a href="#equation-rlceq2">(144)</a> evolves in time from <img class="math" src="_images/math/5a607fd61885c014512c949fee18869690330407.png" alt="t=0"/>
 to <img class="math" src="_images/math/35c913cff7776ae19bed793a777bfc7157591527.png" alt="t=3"/>. The external reach set approximation for the first
 dynamics is in red, the internal approximation is in green. The dynamics
 switches at <img class="math" src="_images/math/80d4822fd227ceb0ef72b1bd9326703a98f8593c.png" alt="t=2"/>. The external reach set approximation for the
 second dynamics is in yellow, its internal approximation is in blue. The
 full three-dimensional external (yellow) and internal (blue)
-approximations of the reach set are shown in <a class="pageref" href="#rlcreachfig">figure  14</a> (b).</p>
+approximations of the reach set are shown in <a class="pageref" href="old/chap_examples.html#rlcreachfig">figure  14</a> (b).</p>
 <p>To find out where the system should start at time <img class="math" src="_images/math/5a607fd61885c014512c949fee18869690330407.png" alt="t=0"/> in order
 to reach a neighborhood M of the origin at time <img class="math" src="_images/math/35c913cff7776ae19bed793a777bfc7157591527.png" alt="t=3"/>, we compute
 the backward reach set from <img class="math" src="_images/math/35c913cff7776ae19bed793a777bfc7157591527.png" alt="t=3"/> to <img class="math" src="_images/math/5a607fd61885c014512c949fee18869690330407.png" alt="t=0"/>.</p>
@@ -4786,12 +4786,12 @@ the backward reach set from <img class="math" src="_images/math/35c913cff7776ae1
 <span class="n">firstBrsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
-<p><a class="pageref" href="#rlcreachfig">Figure  14</a> (c) presents the evolution of the reach set projection onto
+<p><a class="pageref" href="old/chap_examples.html#rlcreachfig">Figure  14</a> (c) presents the evolution of the reach set projection onto
 <img class="math" src="_images/math/93bc6527f61669132dabf5873a2b69109ce1dd75.png" alt="(x_1, x_2)"/> in backward time. Again, external and internal
 approximations corresponding to the first dynamics are shown in red and
 green, and to the second dynamics in yellow and blue. The full
 dimensional backward reach set external and internal approximations of
-system <a href="#equation-rlceq2">(144)</a> at time <img class="math" src="_images/math/5a607fd61885c014512c949fee18869690330407.png" alt="t=0"/> is shown in <a class="pageref" href="#rlcreachfig">figure  14</a> (d).</p>
+system <a href="#equation-rlceq2">(144)</a> at time <img class="math" src="_images/math/5a607fd61885c014512c949fee18869690330407.png" alt="t=0"/> is shown in <a class="pageref" href="old/chap_examples.html#rlcreachfig">figure  14</a> (d).</p>
 </div>
 <div class="section" id="hybrid-system">
 <h2>Hybrid System<a class="headerlink" href="#hybrid-system" title="Permalink to this headline">¶</a></h2>
@@ -4807,7 +4807,7 @@ dynamics whose guards are ellipsoids, hyperplanes, halfspaces or
 polytopes.</p>
 <p>We consider the <em>switching-mode model</em> of highway traffic presented in
 <a class="reference internal" href="#sun2003" id="id77">[SUN2003]</a>. The highway segment is divided into <img class="math" src="_images/math/fc97ef67268cd4e91bacdf12b8901d7036c9a056.png" alt="N"/>
-cells as shown in <a class="pageref" href="#hwfig">figure  15</a>. In this particular case, <img class="math" src="_images/math/fce912a0ad9e9d6cab93289db73fe702ea56b18f.png" alt="N=4"/>.
+cells as shown in <a class="pageref" href="old/chap_examples.html#hwfig">figure  15</a>. In this particular case, <img class="math" src="_images/math/fce912a0ad9e9d6cab93289db73fe702ea56b18f.png" alt="N=4"/>.
 The traffic density in cell <img class="math" src="_images/math/34857b3ba74ce5cd8607f3ebd23e9015908ada71.png" alt="i"/> is <img class="math" src="_images/math/67bc6daa9d6b964201d6cef60cbeb1ac5fd26ead.png" alt="x_i"/> vehicles per mile,
 <img class="math" src="_images/math/a628f0c440e7cacb1c8702c60c24aa2d0584599a.png" alt="i=1,2,3,4"/>.</p>
 <p>Define</p>
@@ -5042,11 +5042,11 @@ congested system in green; bounds of initial conditions are marked with magenta
 <p>Analyzing the values in array dVec, we conclude that the free-flow reach
 set has nonempty intersection with hyperplane grdHyp at <img class="math" src="_images/math/f473344b7a2074772465305139d5e52356bbc691.png" alt="t=18"/> for
 the first time, and at <img class="math" src="_images/math/0a2db80eff581acd4c65078a2426f481e80eb8e8.png" alt="t=68"/> for the last time. Between
-<img class="math" src="_images/math/f473344b7a2074772465305139d5e52356bbc691.png" alt="t=18"/> and <img class="math" src="_images/math/0a2db80eff581acd4c65078a2426f481e80eb8e8.png" alt="t=68"/> it crosses the guard. <a class="pageref" href="#hwreachfig">Figure  16</a> (a)
+<img class="math" src="_images/math/f473344b7a2074772465305139d5e52356bbc691.png" alt="t=18"/> and <img class="math" src="_images/math/0a2db80eff581acd4c65078a2426f481e80eb8e8.png" alt="t=68"/> it crosses the guard. <a class="pageref" href="old/chap_examples.html#hwreachfig">Figure  16</a> (a)
 shows the free-flow reach set projection onto
 <img class="math" src="_images/math/245e7f3c330c698151804ac8852cec8100848f36.png" alt="(x_1,x_2,x_3)"/> subspace for <img class="math" src="_images/math/21460a1064b496932ab255e861498acf761f645f.png" alt="t=10"/>, before the guard
-crossing; <a class="pageref" href="#hwreachfig">figure  16</a> (b) for <img class="math" src="_images/math/c2155302f7dec28f85733e766cfb37ca2ca9e329.png" alt="t=50"/>, during the guard
-crossing; and <a class="pageref" href="#hwreachfig">figure  16</a> (c) for <img class="math" src="_images/math/c1783c816b02e354608317b04b77604cacfa44a8.png" alt="t=80"/>, after the guard
+crossing; <a class="pageref" href="old/chap_examples.html#hwreachfig">figure  16</a> (b) for <img class="math" src="_images/math/c2155302f7dec28f85733e766cfb37ca2ca9e329.png" alt="t=50"/>, during the guard
+crossing; and <a class="pageref" href="old/chap_examples.html#hwreachfig">figure  16</a> (c) for <img class="math" src="_images/math/c1783c816b02e354608317b04b77604cacfa44a8.png" alt="t=80"/>, after the guard
 was crossed.</p>
 <p>For each time step that the intersection of the free-flow reach set and
 the guard is nonempty, we establish a new initial time and a set of
@@ -5075,7 +5075,7 @@ the guard.</p>
 congested dynamics.</p>
 <p>A summary of the reach set computation of the linear hybrid system
 <a href="#equation-fflow">(145)</a>-<a href="#equation-cflow">(146)</a> for <img class="math" src="_images/math/85710a1e86eb80e50393384531ce9c83f3f1dfbc.png" alt="N=100"/> time steps with one guard crossing
-is given in <a class="pageref" href="#hwreachfig">figure  16</a> (d), which shows the projection of the
+is given in <a class="pageref" href="old/chap_examples.html#hwreachfig">figure  16</a> (d), which shows the projection of the
 reach set trace onto <img class="math" src="_images/math/b8f653df0b5080df4f9b612416fb9b1218719566.png" alt="(x_1,x_2)"/> subspace. The system starts
 evolving in time in free-flow mode from a set of initial conditions at
 <img class="math" src="_images/math/5a607fd61885c014512c949fee18869690330407.png" alt="t=0"/>, whose boundary is shown in magenta. The free-flow reach set
@@ -5456,7 +5456,7 @@ Connections Catalogue</em>.</td></tr>
                         title="next chapter">Function Reference</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/chap_intro.txt"
+    <li><a href="_sources/main_source.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">

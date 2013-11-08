@@ -14,7 +14,7 @@
 \usepackage{amssymb}
 
 
-\title{Ellipsoidal Toolbox Documentation}
+\title{Ellipsoidal Toolbox}
 \date{November 08, 2013}
 \release{2.0 beta 1}
 \author{Peter Gagarinov, Alex A. Kurzhanskiy}
@@ -3800,64 +3800,35 @@ by the cut function:
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\}]
-function example
-
-   aMat = [0 1; 0 0]; bMat = eye(2);  
-
-   SUBounds = struct();
-
-   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
-
-   SUBounds.shape = [9 0; 0 2]; 
-
-   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-
-   x0EllObj = ell\_unitball(2);
-
-   timeVec = [0 10]; 
-
-   dirsMat = [1 0; 0 1]';  
-
-   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-
-   ellTubeObj = rsObj.getEllTubeRel();
-
-   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
-
-   projType = gras.ellapx.enums.EProjType.Static;
-
-   statEllTubeProj = ellTubeObj.project(projType,projSpaceList,...
-
-      @fGetProjMat);
-
-   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
-
-   dynEllTubeProj=ellTubeObj.project(projType,projSpaceList,...
-
-      @fGetProjMat);
-
-   plObj=smartdb.disp.RelationDataPlotter();
-
-   statEllTubeProj.plot(plObj);
-
-   dynEllTubeProj.plot(plObj);
-
-
-
-end
-
-
-
-function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-
-    timeVec,varargin)
-
-  nTimePoints=length(timeVec);
-
-  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-
-  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
-
+function example
+   aMat = [0 1; 0 0]; bMat = eye(2);  
+   SUBounds = struct();
+   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
+   SUBounds.shape = [9 0; 0 2]; 
+   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+   x0EllObj = ell\_unitball(2);
+   timeVec = [0 10]; 
+   dirsMat = [1 0; 0 1]';  
+   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+   ellTubeObj = rsObj.getEllTubeRel();
+   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
+   projType = gras.ellapx.enums.EProjType.Static;
+   statEllTubeProj = ellTubeObj.project(projType,projSpaceList,...
+      @fGetProjMat);
+   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+   dynEllTubeProj=ellTubeObj.project(projType,projSpaceList,...
+      @fGetProjMat);
+   plObj=smartdb.disp.RelationDataPlotter();
+   statEllTubeProj.plot(plObj);
+   dynEllTubeProj.plot(plObj);
+
+end
+
+function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+    timeVec,varargin)
+  nTimePoints=length(timeVec);
+  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
  end
 \end{Verbatim}
 
@@ -3880,58 +3851,32 @@ Also we can see projections of good directions for ellipsoidal tubes.
 We can compute tubes by the instant of time using methodfromEllTubes:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-function example
-
-   aMat = [0 1; 0 0]; bMat = eye(2);  
-
-   SUBounds = struct();
-
-   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
-
-   SUBounds.shape = [9 0; 0 2]; 
-
-   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-
-   x0EllObj = ell\_unitball(2);
-
-   timeVec = [0 10]; 
-
-   dirsMat = [1 0; 0 1]';  
-
-   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-
-   ellTubeObj = rsObj.getEllTubeRel();
-
-   unionEllTube = ...
-
-    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-
-   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
-
-   projType = gras.ellapx.enums.EProjType.Static;
-
-   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
-
-      @fGetProjMat);
-
-   plObj=smartdb.disp.RelationDataPlotter();
-
-   statEllTubeProj.plot(plObj);
-
-end
-
-
-
-function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-
-    timeVec,varargin)
-
-  nTimePoints=length(timeVec);
-
-  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-
-  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
-
+function example
+   aMat = [0 1; 0 0]; bMat = eye(2);  
+   SUBounds = struct();
+   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
+   SUBounds.shape = [9 0; 0 2]; 
+   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+   x0EllObj = ell\_unitball(2);
+   timeVec = [0 10]; 
+   dirsMat = [1 0; 0 1]';  
+   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+   ellTubeObj = rsObj.getEllTubeRel();
+   unionEllTube = ...
+    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
+   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
+   projType = gras.ellapx.enums.EProjType.Static;
+   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
+      @fGetProjMat);
+   plObj=smartdb.disp.RelationDataPlotter();
+   statEllTubeProj.plot(plObj);
+end
+
+function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+    timeVec,varargin)
+  nTimePoints=length(timeVec);
+  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
  end
 \end{Verbatim}
 \begin{figure}[htbp]
@@ -4539,40 +4484,23 @@ or three-dimensional subspace before being plotted. This is done by
 means of projection function:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% create two 4-dimensional ellipsoids:
-
-firstEllObj = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
-
-secEllObj = firstEllObj.getInv();
-
-
-
-\% specify 3-dimensional subspace by its basis:
-
-
-
-\% columns of basisMat must be orthogonal
-
-basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1].'; 
-
-
-
-\% get 3-dimensional projections of firstEllObj and secEllObj:
-
-bufEllVec = [firstEllObj secEllObj];
-
-\% array ellVec contains projections of firstEllObj and secEllObj
-
-ellVec = bufEllVec.projection(basisMat)  
-
-
-
-\% ellVec =
-
-\% Array of ellipsoids with dimensionality 1x2
-
-
-
+\% create two 4-dimensional ellipsoids:
+firstEllObj = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
+secEllObj = firstEllObj.getInv();
+
+\% specify 3-dimensional subspace by its basis:
+
+\% columns of basisMat must be orthogonal
+basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1].'; 
+
+\% get 3-dimensional projections of firstEllObj and secEllObj:
+bufEllVec = [firstEllObj secEllObj];
+\% array ellVec contains projections of firstEllObj and secEllObj
+ellVec = bufEllVec.projection(basisMat)  
+
+\% ellVec =
+\% Array of ellipsoids with dimensionality 1x2
+
 ellVec.plot();  \% plot ellipsoids in ellVec
 \end{Verbatim}
 
@@ -4585,36 +4513,21 @@ Function projection exists also for the
 ReachContinuous$\backslash$ReachDiscrete objects:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-aMat = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
-
-bMat = [0; 0; 0; 1];
-
-uBoundsEllObj = ellipsoid(1);
-
-\% 4-dimensional system
-
-sys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj);
-
-dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1].'; \% matrix of directions
-
-\% reach set from time 0 to 5
-
-rsObj = elltool.reach.ReachContinuous(sys, ell\_unitball(4), dirsMat,...
-
-    [0 5], 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
-
-basisMat = [1 0 0 1; 0 1 1 0].';  \% basis of 2-dimensional subspace
-
-
-
-\% project reach set rs onto basis basisMat
-
-psObj = rsObj.projection(basisMat);
-
-psObj.plotByEa();  \% plot external approximation
-
-hold on;
-
+aMat = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
+bMat = [0; 0; 0; 1];
+uBoundsEllObj = ellipsoid(1);
+\% 4-dimensional system
+sys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj);
+dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1].'; \% matrix of directions
+\% reach set from time 0 to 5
+rsObj = elltool.reach.ReachContinuous(sys, ell\_unitball(4), dirsMat,...
+    [0 5], 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
+basisMat = [1 0 0 1; 0 1 1 0].';  \% basis of 2-dimensional subspace
+
+\% project reach set rs onto basis basisMat
+psObj = rsObj.projection(basisMat);
+psObj.plotByEa();  \% plot external approximation
+hold on;
 psObj.plotByIa();  \% plot internal approximation
 \end{Verbatim}
 
