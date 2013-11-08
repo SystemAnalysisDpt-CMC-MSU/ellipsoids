@@ -6,7 +6,7 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
         function obj = interpolateUnary(self, fHandle, mMatFunc)
             dataArray = mMatFunc.evaluate(self.timeVec);
             resDataArray = fHandle(dataArray);
-            obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+            obj = gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                 'column',resDataArray,self.timeVec);
         end
         function obj = interpolateBinary(self, fHandle, lMatFunc,...
@@ -14,7 +14,7 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
             lDataArray = lMatFunc.evaluate(self.timeVec);
             rDataArray = rMatFunc.evaluate(self.timeVec);
             resDataArray = fHandle(lDataArray, rDataArray, varargin{:});
-            obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+            obj = gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                 'column',resDataArray,self.timeVec);
         end
         function obj = interpolateBinarySqueezed(self, fHandle,...
@@ -22,7 +22,7 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
             lDataArray = lMatFunc.evaluate(self.timeVec);
             rDataArray = squeeze(rMatFunc.evaluate(self.timeVec));
             resDataArray = fHandle(lDataArray, rDataArray);
-            obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+            obj = gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                 'column',resDataArray,self.timeVec);
         end
         function obj = interpolateBinaryScalar(self, fHandle, lMatFunc,...
@@ -33,7 +33,7 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
             rDataVec(1,1,:) = rScalFunc.evaluate(self.timeVec);
             rDataArray = repmat(rDataVec, [lsizeVec(1:2), 1]);
             resDataArray = fHandle(lDataArray, rDataArray, varargin{:});
-            obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+            obj = gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                 'column',resDataArray,self.timeVec);
         end
         function obj = interpolateTernary(self, fHandle, lMatFunc,...
@@ -42,7 +42,7 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
             mDataArray = mMatFunc.evaluate(self.timeVec);
             rDataArray = rMatFunc.evaluate(self.timeVec);
             resDataArray = fHandle(lDataArray, mDataArray, rDataArray);
-            obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+            obj = gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                 'column',resDataArray,self.timeVec);
         end
     end
@@ -115,7 +115,7 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
                 for iTimePoint = 1:nTimePoints
                     mArray(:,:,iTimePoint) = expm(mArray(:,:,iTimePoint));
                 end
-                obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+                obj = gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                     'column',mArray,self.timeVec);
             end
         end
@@ -128,7 +128,7 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
                     mArray(:,:,iTimePoint) = expm(mArray(:,:,iTimePoint)*...
                         (self.timeVec(iTimePoint)-t0));
                 end
-                obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+                obj = gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                     'column',mArray,self.timeVec);
             end
         end
@@ -225,7 +225,7 @@ classdef SplineMatrixOperations<gras.mat.AMatrixOperations
                         mArray(:,:,iTimePoint)*xArray(:,:,iTimePoint);
                 end
                 resVec = shiftdim(realsqrt(sum(tmpArray.*xArray,1)),1);
-                obj = gras.interp.MatrixInterpolantFactory.createInstance(...
+                obj = gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                     'column',resVec,self.timeVec);
             end
         end

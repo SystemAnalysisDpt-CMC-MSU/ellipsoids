@@ -6,7 +6,7 @@ classdef LReachProblemLTIDynamics<...
     end
     methods
         function self=LReachProblemLTIDynamics(problemDef,calcPrecision)
-            import gras.interp.MatrixInterpolantFactory;
+            import gras.mat.interp.MatrixInterpolantFactory;
             import gras.gen.MatVector;
             import gras.ode.MatrixODESolver;
             import gras.mat.ConstMatrixFunctionFactory;

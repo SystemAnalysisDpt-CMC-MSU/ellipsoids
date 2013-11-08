@@ -420,7 +420,7 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function isDisturb = isDisturbance(ctStrCMat, qtStrCMat)
-            import gras.mat.symb.iscellofstringconst;
+            import gras.mat.fcnlib.iscellofstringconst;
             import gras.gen.MatVector;
             isDisturb = true;
             if iscellofstringconst(ctStrCMat)

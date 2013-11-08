@@ -1,4 +1,4 @@
-classdef MatrixColCubicSpline<gras.interp.AMatrixCubicSpline
+classdef MatrixColCubicSpline<gras.mat.interp.AMatrixCubicSpline
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
@@ -6,7 +6,7 @@ classdef MatrixColCubicSpline<gras.interp.AMatrixCubicSpline
     %
     methods (Access=protected,Static)
         function ppFormList=buildSplineCoeffs(dataArray,timeVec)
-            import gras.interp.AMatrixCubicSpline
+            import gras.mat.interp.AMatrixCubicSpline
             [~,nDims,~,nCols]=AMatrixCubicSpline.getSizeProps(dataArray);
             ppFormList=cell(1,nCols);
             switch nDims
@@ -57,7 +57,7 @@ classdef MatrixColCubicSpline<gras.interp.AMatrixCubicSpline
             nRows=self.nRows;
             objList=cell(1,nCols);
             for iCol=1:nCols
-                objList{iCol}=gras.interp.MatrixColCubicSpline();
+                objList{iCol}=gras.mat.interp.MatrixColCubicSpline();
                 objList{iCol}.initialize(self.ppFormList(iCol),...
                     nRows,self.timeVec);
             end
@@ -73,7 +73,7 @@ classdef MatrixColCubicSpline<gras.interp.AMatrixCubicSpline
             %       timeVec: double[1,nTimePoints] -
             %
             %
-            self=self@gras.interp.AMatrixCubicSpline(varargin{:});
+            self=self@gras.mat.interp.AMatrixCubicSpline(varargin{:});
         end
     end
 end

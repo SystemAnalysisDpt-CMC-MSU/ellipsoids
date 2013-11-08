@@ -6,7 +6,7 @@ classdef LReachProblemDynamicsInterp<...
     methods
         function self=LReachProblemDynamicsInterp(problemDef,calcPrecision)
             import gras.ellapx.common.*;
-            import gras.interp.MatrixInterpolantFactory;
+            import gras.mat.interp.MatrixInterpolantFactory;
             import gras.ode.MatrixODESolver;
             %
             if ~isa(problemDef,...

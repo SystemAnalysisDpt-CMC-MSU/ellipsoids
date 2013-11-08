@@ -401,7 +401,7 @@ classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
                 projSTimeMat = projArray(:,:,indSTime);
                 %
                 function interpArray=simpleInterp(inpArray,isVector)
-                    import gras.interp.MatrixInterpolantFactory;
+                    import gras.mat.interp.MatrixInterpolantFactory;
                     if nargin<2
                         isVector=false;
                     end

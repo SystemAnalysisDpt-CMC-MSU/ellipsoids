@@ -11,7 +11,7 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
                 calcTransMatDynamics(self, matOpFactory, STimeData, ...
                 AtDynamics, calcPrecision)
             %
-            import gras.interp.MatrixInterpolantFactory;
+            import gras.mat.interp.MatrixInterpolantFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
             import gras.mat.CompositeMatrixOperations;
             import gras.gen.matdot;

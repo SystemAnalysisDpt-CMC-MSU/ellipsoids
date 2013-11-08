@@ -1,4 +1,4 @@
-classdef NNDefMatCholMultCubicSpline<gras.interp.PosDefMatCholCubicSpline
+classdef NNDefMatCholMultCubicSpline<gras.mat.interp.PosDefMatCholCubicSpline
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-10$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
@@ -41,8 +41,8 @@ classdef NNDefMatCholMultCubicSpline<gras.interp.PosDefMatCholCubicSpline
                 throwerror('wrongInput',...
                     'unsupported number of input parameters');
             end
-            self=self@gras.interp.PosDefMatCholCubicSpline(posArgList{:});
-            self.multInterpObj=gras.interp.MatrixColCubicSpline(multArgList{:});
+            self=self@gras.mat.interp.PosDefMatCholCubicSpline(posArgList{:});
+            self.multInterpObj=gras.mat.interp.MatrixColCubicSpline(multArgList{:});
         end
     end
     methods 
@@ -59,7 +59,7 @@ classdef NNDefMatCholMultCubicSpline<gras.interp.PosDefMatCholCubicSpline
             %
             %
             posDataArray=...
-                evaluate@gras.interp.PosDefMatCholCubicSpline(...
+                evaluate@gras.mat.interp.PosDefMatCholCubicSpline(...
                 self,timeVec);
             multDataArray=self.multInterpObj.evaluate(timeVec);
             %

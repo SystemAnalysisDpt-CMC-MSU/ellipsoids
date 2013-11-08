@@ -21,7 +21,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                 AtDynamics, calcPrecision)
             %
             import gras.gen.matdot;
-            import gras.interp.MatrixInterpolantFactory;
+            import gras.mat.interp.MatrixInterpolantFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
             %
             logger=Log4jConfigurator.getLogger();
