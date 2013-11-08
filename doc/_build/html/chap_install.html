@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Ellipsoidal Toolbox 2.0 beta 1 documentation" href="index.html" />
     <link rel="next" title="Implementation" href="chap_implement.html" />
-    <link rel="prev" title="Reachability" href="chap_reach.html" /> 
+    <link rel="prev" title="Ellipsoidal Calculus" href="chap_ellcalc.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,7 +38,7 @@
           <a href="chap_implement.html" title="Implementation"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="chap_reach.html" title="Reachability"
+          <a href="chap_ellcalc.html" title="Ellipsoidal Calculus"
              accesskey="P">previous</a> |</li>
         <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0 beta 1 documentation</a> &raquo;</li> 
       </ul>
@@ -66,8 +66,8 @@ download them separately.</p>
 <li>ellintersection_ia</li>
 <li>ellunion_ea</li>
 </ul>
-<p>require solving semidefinite programming (SDP) problems. We use CVX (
-(“CVX Homepage”)) as an interface to an external SDP solver. CVX is a
+<p>require solving semidefinite programming (SDP) problems.
+We use CVX (<a class="reference external" href="http://cvxr.com/cvx">CVX Homepage</a>) as an interface to an external SDP solver. CVX is a
 reliable toolbox for solving SDP problems of high dimensionality. CVX is
 implemented in Matlab, effectively turning Matlab into an optimization
 modeling language. Model specifications are constructed using common
@@ -75,13 +75,13 @@ Matlab operations and functions, and standard Matlab code can be freely
 mixed with these specifications. This combination makes it simple to
 perform the calculations needed to form optimization problems, or to
 process the results obtained from their solution. CVX distribution
-includes two freeware solvers: SeDuMi(Sturm (1999), (“SeDuMi Homepage”))
-and SDPT3( (“SDPT3 Homepage”)). The default solver used in the toolbox
+includes two freeware solvers: SeDuMi (<a class="reference internal" href="#sturm-1999">Sturm(1999)</a>, <a class="reference external" href="http://sedumi.mcmaster.ca">SeDuMi Homepage</a>)
+and SDPT3 (<a class="reference external" href="http://www.math.nus.edu.sg/\~mattohkc/sdpt3.html">SDPT3 Homepage</a>). The default solver used in the toolbox
 is SeDuMi.</p>
 </div>
 <div class="section" id="mpt">
 <h3>MPT<a class="headerlink" href="#mpt" title="Permalink to this headline">¶</a></h3>
-<p>Multi-Parametric Toolbox( (“Multi-Parametric Toolbox Homepage”)) - a
+<p>Multi-Parametric Toolbox (<a class="reference external" href="http://control.ee.ethz.ch/~mpt">Multi-Parametric Toolbox Homepage</a>) - a
 Matlab toolbox for multi-parametric optimization and computational
 geometry. MPT is a toolbox that defines polytope class used in <em>ET</em>. We
 need MPT for the following methods operating with polytopes.</p>
@@ -98,43 +98,45 @@ need MPT for the following methods operating with polytopes.</p>
 </div>
 <div class="section" id="installation-and-quick-start">
 <h2>Installation and Quick Start<a class="headerlink" href="#installation-and-quick-start" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic">
-<li><p class="first">Go to and download the <em>Ellipsoidal Toolbox</em>.</p>
-</li>
-<li><p class="first">Unzip the distribution file into the directory where you would like
-the toolbox to be.</p>
-</li>
-<li><p class="first">Unzip CVX into cvx folder next to products folder.</p>
-</li>
-<li><p class="first">Unzip MPT into mpt folder next to products folder.</p>
-</li>
-<li><p class="first">Read the copyright notice.</p>
-</li>
-<li><p class="first">In MATLAB command window change the working directory to the one
-where you unzipped the toolbox and type</p>
-</li>
-<li><p class="first">At this point, the directory tree of the <em>Ellipsoidal Toolbox</em> is
+<ol class="arabic simple">
+<li>Go to <a class="reference external" href="http://code.google.com/p/ellipsoids">ellipsoids</a> and download the <em>Ellipsoidal Toolbox</em>.</li>
+<li>Unzip the distribution file into the directory where you would like
+the toolbox to be.</li>
+<li>Unzip CVX into cvx folder next to products folder.</li>
+<li>Unzip MPT into mpt folder next to products folder.</li>
+<li>Read the copyright notice.</li>
+<li>In MATLAB command window change the working directory to the one
+where you unzipped the toolbox and type</li>
+</ol>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">s_install</span>
+</pre></div>
+</td></tr></table></div>
+<ol class="arabic simple">
+<li>At this point, the directory tree of the <em>Ellipsoidal Toolbox</em> is
 added to the MATLAB path list. In order to save the updated path
 list, in your MATLAB window menu go to File <img class="math" src="_images/math/e12b6767375342ed57d27678e3ea1cdb97f47e15.png" alt="\rightarrow"/> Set
-Path... and click Save.</p>
-</li>
-<li><p class="first">To get an idea of what the toolbox is about, type</p>
+Path... and click Save.</li>
+<li>To get an idea of what the toolbox is about, type</li>
+</ol>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ell_demo1</span>
+</pre></div>
+</td></tr></table></div>
 <p>This will produce a demo of basic <em>ET</em> functionality: how to create
 and manipulate ellipsoids.</p>
 <p>Type</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre> <span class="n">ell_demo2</span>
+</pre></div>
+</td></tr></table></div>
 <p>to learn how to plot ellipsoids and hyperplanes in 2 and 3D. For a
 quick tutorial on how to use the toolbox for reachability analysis
 and verification, type</p>
-</li>
-</ol>
-<div class="references"><p>“CVX Homepage.” cvxr.com/cvx.</p>
-<p>“Multi-Parametric Toolbox Homepage.” control.ee.ethz.ch/\~mpt.</p>
-<p>“SDPT3 Homepage.” <a class="reference external" href="http://www.math.nus.edu.sg/">http://www.math.nus.edu.sg/</a>\~mattohkc/sdpt3.html.</p>
-<p>“SeDuMi Homepage.” sedumi.mcmaster.ca.</p>
-<p>Sturm, J. F. 1999. “Using SeDuMi 1.02, A MATLAB Toolbox for Optimization
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ell_demo3</span>
+</pre></div>
+</td></tr></table></div>
+<p><span class="target" id="sturm-1999">Sturm(1999)</span>: Sturm, J. F. 1999. “Using SeDuMi 1.02, A MATLAB Toolbox for Optimization
 over Symmetric Cones.” <em>Optimization Methods and Software</em> 11-12:
 625–653.</p>
-</div></div>
+</div>
 </div>
 
 
@@ -157,8 +159,8 @@ over Symmetric Cones.” <em>Optimization Methods and Software</em> 11-12:
 </ul>
 
   <h4>Previous topic</h4>
-  <p class="topless"><a href="chap_reach.html"
-                        title="previous chapter">Reachability</a></p>
+  <p class="topless"><a href="chap_ellcalc.html"
+                        title="previous chapter">Ellipsoidal Calculus</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="chap_implement.html"
                         title="next chapter">Implementation</a></p>
@@ -194,7 +196,7 @@ over Symmetric Cones.” <em>Optimization Methods and Software</em> 11-12:
           <a href="chap_implement.html" title="Implementation"
              >next</a> |</li>
         <li class="right" >
-          <a href="chap_reach.html" title="Reachability"
+          <a href="chap_ellcalc.html" title="Ellipsoidal Calculus"
              >previous</a> |</li>
         <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0 beta 1 documentation</a> &raquo;</li> 
       </ul>

@@ -138,9 +138,9 @@ and taking its projection onto :math:`(x_1, x_2)` subspace.
    :linenos:
 
   
-:num:`Figure #mechreachfig` (a) shows the reach set of the system
+Figure :num:`#mechreachfig` (a) shows the reach set of the system
 :eq:`spmass1`-:eq:`spmass2` evolving in time from :math:`t=0` to :math:`t=4`.
-:num:`Figure #mechreachfig` (b) presents a snapshot of this reach set at time
+Figure :num:`#mechreachfig` (b) presents a snapshot of this reach set at time
 :math:`t=4`.
 
 So far we considered an ideal system without any disturbance, such as
@@ -178,9 +178,9 @@ closed-loop reach set of the system with disturbance.
    :linenos:
 
 
-:num:`Figure #mechreachfig`(c) shows the reach set of the system
+:num:`Figure #mechreachfig` (c) shows the reach set of the system
 :eq:`smdist1`-:eq:`smdist2` evolving in time from :math:`t=0` to :math:`t=4`.
-:num:`Figure #mechreachfig`(d) presents a snapshot of this reach set at time
+:num:`Figure #mechreachfig` (d) presents a snapshot of this reach set at time
 :math:`t=4`.
 
 Switched System

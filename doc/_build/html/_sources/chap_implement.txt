@@ -251,11 +251,10 @@ of arbitrary dimension.
    Implementation of an operation 'difference-sum'.
    
 
-Figure :math:`\ref{minkpic}` displays results of
+Figures :num:`#minkpmpic` and :num:`#minkmppic` display results of
 the implementation of minkpm and minkmp operations. 
 
-Similarly, operation
-’sum-difference’ described in section 2.2.5 is implemented in functions
+Similarly, operation ’sum-difference’ described in section `Geometric sum-difference`_ is implemented in functions
 minkpm, minkpm\_ea, minkpm\_ia, the first one of which is used for
 visualization and works for dimensions not higher than :math:`3`,
 whereas the last two can deal with ellipsoids of arbitrary dimension.
@@ -468,7 +467,7 @@ tube onto time-dependent subspace.
 
    Dynamic projection of the ellipsoidal tube.
 
-Figure :math:`\ref{project}` displays static and dynamic projections.
+Figures :num:`#stat-proj` and :num:`#dyn-proj` display static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.
 
 We can compute tubes by the instant of time using methodfromEllTubes:
@@ -477,7 +476,7 @@ We can compute tubes by the instant of time using methodfromEllTubes:
    :language: matlab
    :linenos:
    
-.. _unionTubeStatProj:
+.. _uniontubestatproj:
 
 .. figure:: /pic/unionTubeStatProj.png
 .. :align: center
@@ -486,7 +485,7 @@ We can compute tubes by the instant of time using methodfromEllTubes:
 
    Ellipsoidal tubes by the instant of time.
    
-Figure :num:`#unionTubeStatProj` shows projection of ellipsoidal
+Figure :num:`#uniontubestatproj` shows projection of ellipsoidal
 tubes by the instant of time.
 
 Also we can get initial data from the resulting tube: 

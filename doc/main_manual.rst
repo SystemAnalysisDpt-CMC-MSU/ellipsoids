@@ -10,8 +10,6 @@ Welcome to Ellipsoidal Toolbox documentation!
    :maxdepth: 2
 
    chap_intro
-   chap_ellcalc
-   chap_reach
    chap_install
    chap_implement
    chap_examples
