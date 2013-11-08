@@ -15,23 +15,25 @@ classdef SuiteBasic < mlunitext.test_case
             [pathstrVec, ~, ~] = fileparts(which(testFileName));
             TmpDataManager.setRootDir(pathstrVec);
             testDirPath = TmpDataManager.getDirByCallerKey('test', 1);
-%             testDirName = modgen.string.splitpart(testDirPath, filesep, 'last');
-%             PicGenController.setPicDestDir(['products'...
-%             filesep '+elltool' filesep '+doc' filesep '+picgen' filesep...
-%             '+test' filesep '+mlunit' filesep testDirName]);
             PicGenController.setPicDestDir(testDirPath);
-
+            
             picFileNameVec = [];
-            picgenDirName = [modgen.path.rmlastnpathparts(pathstrVec, 2) filesep '*.m'];
-            SPicgenFilesArray = dir(picgenDirName);            
+            picgenDirName = [modgen.path.rmlastnpathparts(pathstrVec, 2)...
+                filesep '*.m'];
+            SPicgenFilesArray = dir(picgenDirName);
             for iElem = 1 : size(SPicgenFilesArray, 1)
-                picgenFileName = modgen.string.splitpart(SPicgenFilesArray(iElem).name, '.', 'first');
-                picFileName = strcat(modgen.string.splitpart(picgenFileName,'_gen', 1), '.eps');
+                picgenFileName = modgen.string.splitpart...
+                    (SPicgenFilesArray(iElem).name, '.', 'first');
+                picFileName = strcat(modgen.string.splitpart(...
+                    picgenFileName, '_gen', 1), '.png');
                 picFileNameVec = [picFileNameVec picFileName];
-                picgenFunctionName =  strcat('elltool.doc.picgen.', picgenFileName);
+                picgenFunctionName =  strcat('elltool.doc.picgen.',...
+                    picgenFileName);
                 fPicGen = str2func(picgenFunctionName);
-                fPicGen();           
-                isFileExistVec(iElem) = modgen.system.ExistanceChecker.isFile([testDirPath filesep picFileName]);
+                fPicGen();
+                isFileExistVec(iElem) = ...
+                    modgen.system.ExistanceChecker.isFile(...
+                    [testDirPath filesep picFileName]);
             end
             close all;
             PicGenController.flush();
