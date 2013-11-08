@@ -9,10 +9,5 @@ Welcome to Ellipsoidal Toolbox documentation!
 .. toctree::
    :maxdepth: 2
 
-   chap_intro
-   chap_install
-   chap_implement
-   chap_examples
-   chap_summary
-   chap_acknowledge
+   main_source
    chap_func		

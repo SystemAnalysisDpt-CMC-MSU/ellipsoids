@@ -201,7 +201,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto/manual]).
 latex_documents = [
-  ('main_manual', 'elltool_manual.tex', u'Ellipsoidal Toolbox Documentation',
+  ('main_manual', 'elltool_manual.tex', u'Ellipsoidal Toolbox',
    u'Peter Gagarinov, Alex A. Kurzhanskiy', 'manual'),
 ]
 

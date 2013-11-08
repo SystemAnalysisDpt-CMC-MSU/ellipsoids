@@ -23,9 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Ellipsoidal Toolbox 2.0 beta 1 documentation" href="index.html" />
-    <link rel="next" title="Examples" href="chap_examples.html" />
-    <link rel="prev" title="Installation" href="chap_install.html" /> 
+    <link rel="top" title="Ellipsoidal Toolbox 2.0 beta 1 documentation" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -34,12 +32,6 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="chap_examples.html" title="Examples"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="chap_install.html" title="Installation"
-             accesskey="P">previous</a> |</li>
         <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0 beta 1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
@@ -336,7 +328,7 @@ sum can be computed explicitely and plotted:</p>
 <img alt="approximation" src="_images/minksum.png" />
 <p class="caption">Figure 1: The geometric sum of ellipsoids.</p>
 </div>
-<p>Figure <a class="pageref" href="#minksumpic"> 1</a> displays the geometric sum of ellipsoids. If
+<p>Figure <a class="pageref" href="chap_intro.html#minksumpic"> 1</a> displays the geometric sum of ellipsoids. If
 the dimension of the space in which the ellipsoids are defined exceeds
 <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>, an error is returned. The result of the geometric sum
 operation is not generally an ellipsoid, but it can be approximated by
@@ -420,7 +412,7 @@ can be computed explicitely and plotted for ellipsoids in
 <img alt="approximation" src="_images/minkdiff.png" />
 <p class="caption">Figure 2: The geometric difference of ellipsoids.</p>
 </div>
-<p>Figure <a class="pageref" href="#minkdiffpic"> 2</a> shows the geometric difference of ellipsoids.</p>
+<p>Figure <a class="pageref" href="chap_intro.html#minkdiffpic"> 2</a> shows the geometric difference of ellipsoids.</p>
 <p>Similar to minksum, minkdiff is there for visualization purpose. It
 works only for dimensions <img class="math" src="_images/math/dce34f4dfb2406144304ad0d6106c5382ddd1446.png" alt="1"/>, <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> and <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>, and for
 higher dimensions it returns an error. For arbitrary dimensions, the
@@ -510,7 +502,7 @@ of arbitrary dimension.</p>
 <div class="figure" id="minkmppic">
 <img alt="_images/minkmp.png" src="_images/minkmp.png" />
 </div>
-<p>Figures <a class="pageref" href="#minkpmpic"> 3</a> and <a class="pageref" href="#minkmppic"> 4</a> display results of
+<p>Figures <a class="pageref" href="chap_intro.html#minkpmpic"> 3</a> and <a class="pageref" href="chap_intro.html#minkmppic"> 4</a> display results of
 the implementation of minkpm and minkmp operations.</p>
 <p>Similarly, operation ’sum-difference’ described in section <a href="#id1"><span class="problematic" id="id2">`Geometric sum-difference`_</span></a> is implemented in functions
 minkpm, minkpm_ea, minkpm_ia, the first one of which is used for
@@ -1090,7 +1082,7 @@ tube onto time-dependent subspace.</p>
 <div class="figure" id="dyn-proj">
 <img alt="_images/reachTubeDynProj.png" src="_images/reachTubeDynProj.png" />
 </div>
-<p>Figures <a class="pageref" href="#stat-proj"> 5</a> and <a class="pageref" href="#dyn-proj"> 6</a> display static and dynamic projections.
+<p>Figures <a class="pageref" href="chap_intro.html#stat-proj"> 5</a> and <a class="pageref" href="chap_intro.html#dyn-proj"> 6</a> display static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.</p>
 <p>We can compute tubes by the instant of time using methodfromEllTubes:</p>
 <div class="highlight-matlab"><pre>function example
@@ -1124,7 +1116,7 @@ function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
 <div class="figure" id="uniontubestatproj">
 <img alt="_images/unionTubeStatProj.png" src="_images/unionTubeStatProj.png" />
 </div>
-<p>Figure <a class="pageref" href="#uniontubestatproj"> 7</a> shows projection of ellipsoidal
+<p>Figure <a class="pageref" href="chap_intro.html#uniontubestatproj"> 7</a> shows projection of ellipsoidal
 tubes by the instant of time.</p>
 <p>Also we can get initial data from the resulting tube:</p>
 <div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -1174,7 +1166,7 @@ to display a content of ellipsoidal tubes.</p>
 <div class="figure" id="disppic">
 <img alt="_images/dispPic.png" src="_images/dispPic.png" />
 </div>
-<p>Figure <a class="pageref" href="#disppic"> 8</a>
+<p>Figure <a class="pageref" href="chap_intro.html#disppic"> 8</a>
 displays all fields of the ellipsoidal tube.</p>
 <p>There are several methods to find the tubes with necessary parameters.</p>
 <div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -1872,12 +1864,6 @@ Transactions on Systems, Man and Cybernetics, Part B: Cybernetics</em> 32 (4).</
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="chap_install.html"
-                        title="previous chapter">Installation</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="chap_examples.html"
-                        title="next chapter">Examples</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/chap_implement.txt"
@@ -1906,12 +1892,6 @@ Transactions on Systems, Man and Cybernetics, Part B: Cybernetics</em> 32 (4).</
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              >index</a></li>
-        <li class="right" >
-          <a href="chap_examples.html" title="Examples"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="chap_install.html" title="Installation"
-             >previous</a> |</li>
         <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0 beta 1 documentation</a> &raquo;</li> 
       </ul>
     </div>
