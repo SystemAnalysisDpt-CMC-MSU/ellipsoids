@@ -28,9 +28,9 @@ where :math:`{\mathcal X}_0` is the set of initial conditions, and
 
 .. _ellpolyfig:
 
-.. figure:: /pic/ellpoly.png
+.. figure:: /pic/chapter06_section01_ellpoly.png
    :alt: approximation
-   :figwidth: 70 %
+   :width: 50 %
 
    Reach set computation performance comparison.
 
@@ -67,9 +67,9 @@ System with Disturbance
 
 .. _springmassfig:
 
-.. figure:: /pic/springmass.png
+.. figure:: /pic/chapter06_section02_springmass.png
    :alt: spmass
-   :figwidth: 50 %
+   :width: 30 %
 
    Spring-mass system.
 
@@ -124,9 +124,9 @@ and taking its projection onto :math:`(x_1, x_2)` subspace.
 
 .. _mechreachfig:
 
-.. figure:: /pic/reachmech.png
+.. figure:: /pic/chapter06_section02_reachmech.png
    :alt: reachmech
-   :figwidth: 40 %
+   :width: 70 %
 
    Spring-mass system without disturbance:
    (a) reach tube for time :math:`t\in[0,4]`; (b) reach set at time :math:`t=4`.
@@ -188,9 +188,9 @@ Switched System
 
 .. _rlcfig:
 
-.. figure:: /pic/rlc.png
+.. figure:: /pic/chapter06_section03_rlc.png
    :alt: rlc
-   :figwidth: 60 %
+   :width: 30 %
 
    RLC circuit with two inputs.
 
@@ -282,9 +282,9 @@ say, :math:`t=3`.
    
 .. _rlcreachfig:
 
-.. figure:: /pic/rlcreach.png
+.. figure:: /pic/chapter06_section03_rlcreach.png
    :alt: rlcreach
-   :scale: 70 %
+   :width: 80 %
 
    Forward and backward reach sets of the switched system
    (external and internal approximations).
@@ -319,9 +319,9 @@ Hybrid System
 
 .. _hwfig:
 
-.. figure:: /pic/hw.png
+.. figure:: /pic/chapter06_section04_hw.png
    :alt: highway
-   :figwidth: 60 %
+   :width: 30 %
 
    Highway model. Adapted from [SUN2003]_.
 
@@ -464,9 +464,9 @@ that intersect the guard.
    
 .. _hwreachfig:
 
-.. figure:: /pic/hwreach.png
+.. figure:: /pic/chapter06_section04_hwreach.png
    :alt: highway
-   :figwidth: 70 %
+   :width: 80 %
 
    Reach set of the free-flow system is blue, reach set of the congested
    system is green, the guard is red.

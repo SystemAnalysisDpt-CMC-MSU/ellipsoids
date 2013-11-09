@@ -54,7 +54,7 @@ unions of rectangular polytopes [ASAR2000]_.
 
 .. _ddtfig:
 
-.. figure:: /pic/ddt.png
+.. figure:: /pic/chapter01_ddt.png
    :align: center
    :alt: approximation
    :figwidth: 50 %

@@ -169,12 +169,11 @@ sum can be computed explicitely and plotted:
 
 .. _minksumpic:
 
-.. figure:: /pic/minksum.png
+.. figure:: /pic/chapter05_section01_minksum.png
    :alt: approximation
-   :figwidth: 40 %
+   :width: 40 %
 
    The geometric sum of ellipsoids.
-
 
 Figure :num:`#minksumpic` displays the geometric sum of ellipsoids. If
 the dimension of the space in which the ellipsoids are defined exceeds
@@ -201,9 +200,9 @@ can be computed explicitely and plotted for ellipsoids in
    
 .. _minkdiffpic:
 
-.. figure:: /pic/minkdiff.png
+.. figure:: /pic/chapter05_section01_minkdiff.png
    :alt: approximation
-   :figwidth: 40 %
+   :width: 60 %
 
    The geometric difference of ellipsoids.
 
@@ -233,19 +232,17 @@ of arbitrary dimension.
    
 .. _minkpmpic:
 
-.. figure:: /pic/minkpm.png
-.. :align: left
+.. figure:: /pic/chapter05_section01_minkpm.png
    :alt: approximation
-   :figwidth: 40 %
+   :width: 50 %
 
    Implementation of an operation 'sum-difference'.
 
 .. _minkmppic:
 
-.. figure:: /pic/minkmp.png
-.. :align: left
+.. figure:: /pic/chapter05_section01_minkmp.png
    :alt: approximation
-   :figwidth: 40 %
+   :width: 50 %
 
    Implementation of an operation 'difference-sum'.
    
@@ -449,19 +446,17 @@ tube onto time-dependent subspace.
 
 .. _stat-proj:
 
-.. figure:: /pic/reachTubeStatProj.png
-.. :align: center
+.. figure:: /pic/chapter05_section03_reachTubeStatProj.png
    :alt: approximation
-   :figwidth: 50 %
+   :width: 50 %
 
    Static projection of the ellipsoidal tube.
 
 .. _dyn-proj:
 
-.. figure:: /pic/reachTubeDynProj.png
-.. :align: center
+.. figure:: /pic/chapter05_section03_reachTubeDynProj.png
    :alt: approximation
-   :figwidth: 50 %
+   :width: 50 %
 
    Dynamic projection of the ellipsoidal tube.
 
@@ -476,10 +471,9 @@ We can compute tubes by the instant of time using methodfromEllTubes:
    
 .. _uniontubestatproj:
 
-.. figure:: /pic/unionTubeStatProj.png
-.. :align: center
+.. figure:: /pic/chapter05_section03_unionTubeStatProj.png
    :alt: approximation
-   :figwidth: 50 %
+   :width: 70 %
 
    Ellipsoidal tubes by the instant of time.
    
@@ -501,10 +495,9 @@ to display a content of ellipsoidal tubes.
    
 .. _disppic:
 
-.. figure:: /pic/dispPic.png
-.. :align: center
+.. figure:: /pic/chapter05_section03_dispPic.png
    :alt: approximation
-   :figwidth: 40 %
+   :width: 50 %
 
    Content of the ellipsoidal tube.
 

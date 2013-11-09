@@ -184,7 +184,7 @@ unions of rectangular polytopes {\hyperref[chap_intro:asar2000]{{[}ASAR2000{]}}}
 \centering
 \capstart
 
-\includegraphics{ddt.png}
+\includegraphics{chapter01_ddt.png}
 \caption{Reach set approximation by union of rectangles. Source: adapted from {\hyperref[chap_intro:asar2000]{{[}ASAR2000{]}}}.}\label{chap_intro:ddtfig}\end{figure}
 
 The algorithm works as follows. First, given the set of initial
@@ -3280,7 +3280,7 @@ sum can be computed explicitely and plotted:
 \centering
 \capstart
 
-\includegraphics{minksum.png}
+\includegraphics[width=0.400\linewidth]{chapter05_section01_minksum.png}
 \caption{The geometric sum of ellipsoids.}\label{chap_implement:minksumpic}\end{figure}
 
 Figure \hyperref[chap_implement:minksumpic]{ \ref*{chap_implement:minksumpic}} displays the geometric sum of ellipsoids. If
@@ -3340,7 +3340,7 @@ ${\bf R}$, ${\bf R}^2$ and ${\bf R}^3$:
 \centering
 \capstart
 
-\includegraphics{minkdiff.png}
+\includegraphics[width=0.600\linewidth]{chapter05_section01_minkdiff.png}
 \caption{The geometric difference of ellipsoids.}\label{chap_implement:minkdiffpic}\end{figure}
 
 Figure \hyperref[chap_implement:minkdiffpic]{ \ref*{chap_implement:minkdiffpic}} shows the geometric difference of ellipsoids.
@@ -3400,14 +3400,16 @@ of arbitrary dimension.
 \end{Verbatim}
 \begin{figure}[htbp]
 \centering
+\capstart
 
-\includegraphics{minkpm.png}
-\label{chap_implement:minkpmpic}\end{figure}
+\includegraphics[width=0.500\linewidth]{chapter05_section01_minkpm.png}
+\caption{Implementation of an operation `sum-difference'.}\label{chap_implement:minkpmpic}\end{figure}
 \begin{figure}[htbp]
 \centering
+\capstart
 
-\includegraphics{minkmp.png}
-\label{chap_implement:minkmppic}\end{figure}
+\includegraphics[width=0.500\linewidth]{chapter05_section01_minkmp.png}
+\caption{Implementation of an operation `difference-sum'.}\label{chap_implement:minkmppic}\end{figure}
 
 Figures \hyperref[chap_implement:minkpmpic]{ \ref*{chap_implement:minkpmpic}} and \hyperref[chap_implement:minkmppic]{ \ref*{chap_implement:minkmppic}} display results of
 the implementation of minkpm and minkmp operations.
@@ -3865,14 +3867,16 @@ We can compute the projection of the ellipsoidal
 tube onto time-dependent subspace.
 \begin{figure}[htbp]
 \centering
+\capstart
 
-\includegraphics{reachTubeStatProj.png}
-\label{chap_implement:stat-proj}\end{figure}
+\includegraphics[width=0.500\linewidth]{chapter05_section03_reachTubeStatProj.png}
+\caption{Static projection of the ellipsoidal tube.}\label{chap_implement:stat-proj}\end{figure}
 \begin{figure}[htbp]
 \centering
+\capstart
 
-\includegraphics{reachTubeDynProj.png}
-\label{chap_implement:dyn-proj}\end{figure}
+\includegraphics[width=0.500\linewidth]{chapter05_section03_reachTubeDynProj.png}
+\caption{Dynamic projection of the ellipsoidal tube.}\label{chap_implement:dyn-proj}\end{figure}
 
 Figures \hyperref[chap_implement:stat-proj]{ \ref*{chap_implement:stat-proj}} and \hyperref[chap_implement:dyn-proj]{ \ref*{chap_implement:dyn-proj}} display static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.
@@ -3936,9 +3940,10 @@ function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
 \end{Verbatim}
 \begin{figure}[htbp]
 \centering
+\capstart
 
-\includegraphics{unionTubeStatProj.png}
-\label{chap_implement:uniontubestatproj}\end{figure}
+\includegraphics[width=0.700\linewidth]{chapter05_section03_unionTubeStatProj.png}
+\caption{Ellipsoidal tubes by the instant of time.}\label{chap_implement:uniontubestatproj}\end{figure}
 
 Figure \hyperref[chap_implement:uniontubestatproj]{ \ref*{chap_implement:uniontubestatproj}} shows projection of ellipsoidal
 tubes by the instant of time.
@@ -3975,9 +3980,10 @@ to display a content of ellipsoidal tubes.
 \end{Verbatim}
 \begin{figure}[htbp]
 \centering
+\capstart
 
-\includegraphics{dispPic.png}
-\label{chap_implement:disppic}\end{figure}
+\includegraphics[width=0.500\linewidth]{chapter05_section03_dispPic.png}
+\caption{Content of the ellipsoidal tube.}\label{chap_implement:disppic}\end{figure}
 
 Figure \hyperref[chap_implement:disppic]{ \ref*{chap_implement:disppic}}
 displays all fields of the ellipsoidal tube.
@@ -4651,7 +4657,7 @@ $U$ is the control set.
 \centering
 \capstart
 
-\includegraphics{ellpoly.png}
+\includegraphics[width=0.500\linewidth]{chapter06_section01_ellpoly.png}
 \caption{Reach set computation performance comparison.}\label{chap_examples:ellpolyfig}\end{figure}
 
 Let ${\mathcal X}_0$ and $U$ be unit boxes in
@@ -4697,7 +4703,7 @@ complexity of ellipsoidal method grows linearly.
 \centering
 \capstart
 
-\includegraphics{springmass.png}
+\includegraphics[width=0.300\linewidth]{chapter06_section02_springmass.png}
 \caption{Spring-mass system.}\label{chap_examples:springmassfig}\end{figure}
 
 The mechanical system presented in \hyperref[chap_examples:springmassfig]{figure  \ref*{chap_examples:springmassfig}}, is described
@@ -4742,7 +4748,7 @@ and taking its projection onto $(x_1, x_2)$ subspace.
 \centering
 \capstart
 
-\includegraphics{reachmech.png}
+\includegraphics[width=0.700\linewidth]{chapter06_section02_reachmech.png}
 \caption{Spring-mass system without disturbance:
 (a) reach tube for time $t\in[0,4]$; (b) reach set at time $t=4$.
 Spring-mass system with disturbance:
@@ -4832,7 +4838,7 @@ $t=4$.
 \centering
 \capstart
 
-\includegraphics{rlc.png}
+\includegraphics[width=0.300\linewidth]{chapter06_section03_rlc.png}
 \caption{RLC circuit with two inputs.}\label{chap_examples:rlcfig}\end{figure}
 
 By \emph{switched systems} we mean systems whose dynamics changes at known
@@ -4963,7 +4969,7 @@ say, $t=3$.
 \centering
 \capstart
 
-\scalebox{0.700000}{\includegraphics{rlcreach.png}}
+\includegraphics[width=0.800\linewidth]{chapter06_section03_rlcreach.png}
 \caption{Forward and backward reach sets of the switched system
 (external and internal approximations).}\label{chap_examples:rlcreachfig}\end{figure}
 
@@ -5024,7 +5030,7 @@ system \eqref{chap_examples-rlceq2} at time $t=0$ is shown in \hyperref[chap_exa
 \centering
 \capstart
 
-\includegraphics{hw.png}
+\includegraphics[width=0.300\linewidth]{chapter06_section04_hw.png}
 \caption{Highway model. Adapted from {\hyperref[chap_examples:sun2003]{{[}SUN2003{]}}}.}\label{chap_examples:hwfig}\end{figure}
 
 There is no explicit implementation of the reachability analysis for
@@ -5229,7 +5235,7 @@ that intersect the guard.
 \centering
 \capstart
 
-\includegraphics{hwreach.png}
+\includegraphics[width=0.800\linewidth]{chapter06_section04_hwreach.png}
 \caption{Reach set of the free-flow system is blue, reach set of the congested
 system is green, the guard is red.
 (a) Reach set of the free-flow system at $t = 10$, before reaching the guard
