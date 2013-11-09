@@ -180,10 +180,10 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
         end
         function obj = rSymbMultiply(self, lCMat, mCMat, rCMat)
-            import gras.mat.symb.MatrixSFTripleProd;
-            import gras.mat.symb.MatrixSFBinaryProd;
+            import gras.mat.fcnlib.MatrixSFTripleProd;
+            import gras.mat.fcnlib.MatrixSFBinaryProd;
             import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.symb.iscellofstringconst;
+            import gras.mat.fcnlib.iscellofstringconst;
             import gras.gen.MatVector;
             %
             if nargin > 3
@@ -209,9 +209,9 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
         end
         %
         function obj = rSymbMultiplyByVec(self, mCMat, vCVec)
-            import gras.mat.symb.MatrixSFBinaryProdByVec;
+            import gras.mat.fcnlib.MatrixSFBinaryProdByVec;
             import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.symb.iscellofstringconst;
+            import gras.mat.fcnlib.iscellofstringconst;
             import gras.gen.MatVector;
             %
             if iscellofstringconst({mCMat{:},vCVec{:}})
@@ -226,9 +226,9 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
     end
     methods(Static)
         function obj = fromSymbMatrix(mCMat)
-            import gras.mat.symb.MatrixSymbFormulaBased;
+            import gras.mat.fcnlib.MatrixSymbFormulaBased;
             import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.symb.iscellofstringconst;
+            import gras.mat.fcnlib.iscellofstringconst;
             %
             if iscellofstringconst(mCMat)
                 obj = ConstMatrixFunctionFactory.createInstance(mCMat);

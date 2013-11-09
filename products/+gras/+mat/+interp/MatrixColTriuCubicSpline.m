@@ -1,13 +1,13 @@
-classdef MatrixColTriuCubicSpline<gras.interp.AMatrixCubicSpline
+classdef MatrixColTriuCubicSpline<gras.mat.interp.AMatrixCubicSpline
     % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08$
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2011 $
-    %    
+    %
     methods (Access=protected,Static)
         function ppFormList=buildSplineCoeffs(dataArray,timeVec)
             import modgen.common.throwerror;
-            import gras.interp.AMatrixCubicSpline;
+            import gras.mat.interp.AMatrixCubicSpline;
             [mSizeVec,nDims,nRows,nCols]=AMatrixCubicSpline.getSizeProps(dataArray);
             switch nDims
                 case 1
@@ -32,18 +32,22 @@ classdef MatrixColTriuCubicSpline<gras.interp.AMatrixCubicSpline
         end
     end
     methods (Access=public)
-        function resArray=evaluate(self,timeVec)
-            nRows=self.mSizeVec(1);
-            nDims=self.nDims;
-            nCols=self.nCols;
-            nTimePoints=length(timeVec);
+        function resArray = evaluate(self, timeVec)
+            nRows = self.mSizeVec(1);
+            nDims = self.nDims;
+            nCols = self.nCols;
+            nTimePoints = length(timeVec);
+            
+            resArray = zeros(nRows, nCols, nTimePoints);
             switch nDims
                 case 1
-                    resArray=fnval(self.ppFormList{1},timeVec);
-                case 2,
-                    resArray=zeros(nRows,nCols,nTimePoints);                    
-                    for k=1:1:nCols
-                        resArray(1:k,k,:)=fnval(self.ppFormList{k},timeVec);
+                    resArray = fnval(self.ppFormList{1}, timeVec);
+                    resArray = reshape(resArray, nRows, nCols,...
+                        nTimePoints);
+                case 2
+                    for k = 1 : 1 : nCols
+                        resArray(1 : k, k, :) = fnval(self.ppFormList{k},...
+                            timeVec);
                     end
             end
         end
@@ -58,11 +62,11 @@ classdef MatrixColTriuCubicSpline<gras.interp.AMatrixCubicSpline
             %       dataArray: double[nCols,nRows,nTimePoints]
             %               /double[nRows,nTimes] - data array
             %       timeVec: double[1,nTimePoints] -
-            %           
             %
-            import gras.interp.MatrixColTriuCubicSpline
+            %
+            import gras.mat.interp.MatrixColTriuCubicSpline
             import modgen.common.throwerror;
-            self=self@gras.interp.AMatrixCubicSpline(varargin{:});
+            self=self@gras.mat.interp.AMatrixCubicSpline(varargin{:});
         end
     end
 end
