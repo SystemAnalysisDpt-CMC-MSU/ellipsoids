@@ -122,9 +122,10 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     methods (Static) 
         function  [QIntArray, MIntArray, QExtArray,  MExtArray]=fCalcTube(self, ...
                 sTime, lsGoodDirMat,...
-            solverObj, isFirstPointToRemove,  logger, fOdeReg, solveTimeVec,...
+            solverObj, isFirstPointToRemove, fOdeReg, solveTimeVec,...
                 fHandle, initValueMat)
-        
+            import modgen.logging.log4j.Log4jConfigurator;
+            logger=Log4jConfigurator.getLogger();
              logStr=sprintf(...
                     'solving ode for direction \n %s  defined at time %f',...  
                     mat2str(lsGoodDirMat.'),sTime);
@@ -155,13 +156,11 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             import gras.ellapx.common.*;
             import gras.gen.SquareMatVector;
             import gras.ode.MatrixSysODESolver;
-            import modgen.logging.log4j.Log4jConfigurator;
             odeArgList={'NormControl',self.ODE_NORM_CONTROL,...
                 'RelTol',self.getRelODECalcPrecision(),...
                 'AbsTol',self.getAbsODECalcPrecision()};
             %
             sysDim=self.getProblemDef.getDimensionality();
-            logger=Log4jConfigurator.getLogger();
             %
             %% Constructor solver object
             fOdeReg=@(t,QIntMat,QExtMat)calcRegEllApxMatrix(self,...
@@ -216,7 +215,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             sTimeCVec=cell(1,nLDirs);
             solverObjCVec=cell(1,nLDirs);
             isFirstPointToRemoveCVec=cell(1,nLDirs);
-            loggerCVec=cell(1,nLDirs);
             fOdeRegCVec=cell(1,nLDirs);
             solveTimeVecCVec=cell(1,nLDirs);
             
@@ -225,7 +223,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             sTimeCVec(:)={sTime};
             solverObjCVec(:)={solverObj};
             isFirstPointToRemoveCVec(:)={isFirstPointToRemove};
-            loggerCVec(:)={logger};
             fOdeRegCVec(:)={fOdeReg};
             solveTimeVecCVec(:)={solveTimeVec};
             
@@ -233,7 +230,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             [QIntArrayList, MIntArrayList, QExtArrayList,  MExtArrayList]=...
                 pCalc.eval(@gras.ellapx.lreachuncert.ExtIntEllApxBuilder.fCalcTube,selfCVec, ...
                 sTimeCVec, lsGoodDirMatCVec,...
-                solverObjCVec, isFirstPointToRemoveCVec,  loggerCVec, fOdeRegCVec, solveTimeVecCVec,...
+                solverObjCVec, isFirstPointToRemoveCVec, fOdeRegCVec, solveTimeVecCVec,...
                 fHandleCVec, initValueMatCVec);
             QIntArrayList=transpose(QIntArrayList);
             MIntArrayList=transpose(MIntArrayList);

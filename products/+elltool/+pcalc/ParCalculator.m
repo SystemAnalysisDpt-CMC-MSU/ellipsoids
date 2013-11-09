@@ -20,7 +20,11 @@ classdef ParCalculator
           if (SProp.isMain==false)
               [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',1);
               
-          else    
+          else
+             % закомментирована отладка по сохранению в mat файл
+             % nargout
+             % path='C:\Users\Ivan\good\products\+elltool\+pcalc\';
+             %save([path 'Pc.mat'],'f','d');
             %[varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',nMaxParProcess);
             [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',2);
           

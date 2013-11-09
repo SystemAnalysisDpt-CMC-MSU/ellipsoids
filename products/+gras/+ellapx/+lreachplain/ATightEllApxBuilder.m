@@ -8,9 +8,11 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     end
     methods (Static)
         function  [QArray]=fCalcTube(self,...
-              logger, solverObj,...
+              solverObj,...
               lsGoodDirMat, sTime, isFirstPointToRemove,solveTimeVec,...
                fHandle, initValueMat)
+                import modgen.logging.log4j.Log4jConfigurator;
+                logger=Log4jConfigurator.getLogger();
                 tStart=tic;
                 logStr=sprintf(...
                     'solving ode for direction \n %s  defined at time %f',...
@@ -35,8 +37,6 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             import gras.ellapx.common.*;
             import gras.gen.SquareMatVector;
             import gras.ode.MatrixODESolver;
-            import modgen.logging.log4j.Log4jConfigurator;
-            logger=Log4jConfigurator.getLogger();
             ODE_NORM_CONTROL='on';
             odeArgList={'NormControl',ODE_NORM_CONTROL,...
                 'RelTol',self.getRelODECalcPrecision(),...
@@ -81,19 +81,17 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             sTimeCVec=cell(1,nLDirs);
             solverObjCVec=cell(1,nLDirs);
             isFirstPointToRemoveCVec=cell(1,nLDirs);
-            loggerCVec=cell(1,nLDirs);
             solveTimeVecCVec=cell(1,nLDirs);
             
             selfCVec(:)={self};
             sTimeCVec(:)={sTime};
             solverObjCVec(:)={solverObj};
             isFirstPointToRemoveCVec(:)={isFirstPointToRemove};
-            loggerCVec(:)={logger};
             solveTimeVecCVec(:)={solveTimeVec};
             
             
             [QArrayList]=pCalc.eval(@gras.ellapx.lreachplain.ATightEllApxBuilder.fCalcTube,selfCVec,...
-              loggerCVec, solverObjCVec,...
+              solverObjCVec,...
               lsGoodDirMatCVec, sTimeCVec, isFirstPointToRemoveCVec,solveTimeVecCVec,...
                fHandleCVec, initValueMatCVec);
            

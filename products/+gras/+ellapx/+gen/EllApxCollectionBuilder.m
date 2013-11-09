@@ -3,7 +3,9 @@ classdef EllApxCollectionBuilder<gras.ellapx.gen.IEllApxBuilder
         builderList
     end
     methods(Static)
-        function fCalcTube(logger, ellTubeTempRel, CalcPrec)
+        function fCalcTube(ellTubeTempRel, CalcPrec)
+              import gras.ellapx.uncertcalc.log.Log4jConfigurator;
+               logger=Log4jConfigurator.getLogger();
                 tStart=tic;
                 schemaNamesStr=...
                     ['{',modgen.string.catwithsep(...
@@ -53,8 +55,6 @@ classdef EllApxCollectionBuilder<gras.ellapx.gen.IEllApxBuilder
             self.builderList=builderList;
         end
         function ellTubeRel=getEllTubes(self)
-            import gras.ellapx.uncertcalc.log.Log4jConfigurator;
-            logger=Log4jConfigurator.getLogger();
             ellTubeRel=gras.ellapx.smartdb.rels.EllTube();
             nBuilders=length(self.builderList);
             
@@ -66,13 +66,12 @@ classdef EllApxCollectionBuilder<gras.ellapx.gen.IEllApxBuilder
             CalcPrecCVec=cell(1,nBuilders);
             CalcPrecCVec{:}=self.builderList{1:nBuilders}.getCalcPrecision();
             
-            loggerCVec=cell(1,nBuilders);
-            loggerCVec{:}=logger;
+           
             
             ellTubeRel=smartdb.relationoperators.union(ellTubeTempRelCVec{:});
 
             pCalc.eval(@gras.ellapx.gen.EllApxCollectionBuilder.fCalcTube,...
-              loggerCVec, ellTubeTempRelCVec,CalcPrecCVec);
+              ellTubeTempRelCVec,CalcPrecCVec);
 
         end
     end
