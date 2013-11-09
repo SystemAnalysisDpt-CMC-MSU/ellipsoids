@@ -15,7 +15,7 @@
 
 
 \title{Ellipsoidal Toolbox}
-\date{November 08, 2013}
+\date{November 09, 2013}
 \release{2.0 beta 1}
 \author{Peter Gagarinov, Alex A. Kurzhanskiy}
 \newcommand{\sphinxlogo}{}
@@ -124,7 +124,7 @@
 
 
 \chapter{Introduction}
-\label{main_source:introduction}\label{main_source::doc}\label{main_source:welcome-to-ellipsoidal-toolbox-documentation}
+\label{chap_intro:introduction}\label{chap_intro::doc}\label{chap_intro:welcome-to-ellipsoidal-toolbox-documentation}
 Research on dynamical and hybrid systems has produced several methods
 for verification and controller synthesis. A common step in these
 methods is the reachability analysis of the system. Reachability
@@ -157,12 +157,12 @@ polytopes of various types, including general polytopes, zonotopes,
 parallelotopes, rectangular polytopes; and ellipsoids.
 
 Reachability analysis for general polytopes is implemented in the Multi
-Parametric Toolbox (MPT) for Matlab ({\hyperref[main_source:kvas2004]{{[}KVAS2004{]}}}, {\hyperref[main_source:mpthp]{{[}MPTHP{]}}}). The reach set at every time step
+Parametric Toolbox (MPT) for Matlab ({\hyperref[chap_implement:kvas2004]{{[}KVAS2004{]}}}, {\hyperref[chap_install:mpthp]{{[}MPTHP{]}}}). The reach set at every time step
 is computed as the geometric sum of two polytopes. The procedure
 consists in finding the vertices of the resulting polytope and
 calculating their convex hull. MPT’s convex hull algorithm is based on
-the Double Description method {\hyperref[main_source:motz1953]{{[}MOTZ1953{]}}} and implemented in
-the CDD/CDD+ package {\hyperref[main_source:cddhp]{{[}CDDHP{]}}}. Its complexity is
+the Double Description method {\hyperref[chap_intro:motz1953]{{[}MOTZ1953{]}}} and implemented in
+the CDD/CDD+ package {\hyperref[chap_intro:cddhp]{{[}CDDHP{]}}}. Its complexity is
 $V^n$, where $V$ is the number of vertices and $n$ is
 the state space dimension. Hence the use of MPT is practicable for low
 dimensional systems. But even in low dimensional systems the number of
@@ -178,29 +178,29 @@ and $x_0 \in \{x\in {\bf R}^2 ~|~ \|x\|_{\infty}\leqslant1\}$.
 Starting with a rectangular initial set, the number of vertices of the
 reach set polytope is $4k + 4$ at the $k$th step.
 
-In $d/dt$ {\hyperref[main_source:ddthp]{{[}DDTHP{]}}}, the reach set is approximated by
-unions of rectangular polytopes {\hyperref[main_source:asar2000]{{[}ASAR2000{]}}}.
+In $d/dt$ {\hyperref[chap_intro:ddthp]{{[}DDTHP{]}}}, the reach set is approximated by
+unions of rectangular polytopes {\hyperref[chap_intro:asar2000]{{[}ASAR2000{]}}}.
 \begin{figure}[htbp]
 \centering
 \capstart
 
 \includegraphics{ddt.png}
-\caption{Reach set approximation by union of rectangles. Source: adapted from {\hyperref[main_source:asar2000]{{[}ASAR2000{]}}}.}\label{main_source:ddtfig}\end{figure}
+\caption{Reach set approximation by union of rectangles. Source: adapted from {\hyperref[chap_intro:asar2000]{{[}ASAR2000{]}}}.}\label{chap_intro:ddtfig}\end{figure}
 
 The algorithm works as follows. First, given the set of initial
 conditions defined as a polytope, the evolution in time of the
-polytope’s extreme points is computed (\hyperref[main_source:ddtfig]{figure  \ref*{main_source:ddtfig}} (a)).
+polytope’s extreme points is computed (\hyperref[chap_intro:ddtfig]{figure  \ref*{chap_intro:ddtfig}} (a)).
 
-$R(t_1)$ in \hyperref[main_source:ddtfig]{figure  \ref*{main_source:ddtfig}} (a) is the reach set of the system at
+$R(t_1)$ in \hyperref[chap_intro:ddtfig]{figure  \ref*{chap_intro:ddtfig}} (a) is the reach set of the system at
 time $t_1$, and $R[t_0, t_1]$ is the set of all points that
 can be reached during $[t_0, t_1]$. Second, the algorithm computes
 the convex hull of vertices of both, the initial polytope and
-$R(t_1)$ (\hyperref[main_source:ddtfig]{figure  \ref*{main_source:ddtfig}} (b)). The resulting polytope is then
-bloated to include all the reachable states in $[t_0,t_1]$ (\hyperref[main_source:ddtfig]{figure  \ref*{main_source:ddtfig}} (c)).
+$R(t_1)$ (\hyperref[chap_intro:ddtfig]{figure  \ref*{chap_intro:ddtfig}} (b)). The resulting polytope is then
+bloated to include all the reachable states in $[t_0,t_1]$ (\hyperref[chap_intro:ddtfig]{figure  \ref*{chap_intro:ddtfig}} (c)).
 Finally, this overapproximating polytope is in its turn
-overapproximated by the union of rectangles (\hyperref[main_source:ddtfig]{figure  \ref*{main_source:ddtfig}} (d)). The
+overapproximated by the union of rectangles (\hyperref[chap_intro:ddtfig]{figure  \ref*{chap_intro:ddtfig}} (d)). The
 same procedure is repeated for the next time interval $[t_1,t_2]$,
-and the union of both rectangular approximations is taken (\hyperref[main_source:ddtfig]{figure  \ref*{main_source:ddtfig}} (e,f)),
+and the union of both rectangular approximations is taken (\hyperref[chap_intro:ddtfig]{figure  \ref*{chap_intro:ddtfig}} (e,f)),
 and so on. Rectangular polytopes are easy to represent
 and the number of facets grows linearly with dimension, but a large
 number of rectangles must be used to assure the approximation is not
@@ -211,12 +211,12 @@ interval for which it is feasible to calculate the reach set.
 
 Polytopes can give arbitrarily close approximations to any convex set,
 but the number of vertices can grow prohibitively large and, as shown in
-{\hyperref[main_source:avis1997]{{[}AVIS1997{]}}}, the computation of a polytope by its
+{\hyperref[chap_intro:avis1997]{{[}AVIS1997{]}}}, the computation of a polytope by its
 convex hull becomes intractable for large number of vertices in high
 dimensions.
 
-The method of zonotopes for approximation of reach sets ({\hyperref[main_source:gir2005]{{[}GIR2005{]}}}, {\hyperref[main_source:gir2006]{{[}GIR2006{]}}}, {\hyperref[main_source:mathp]{{[}MATHP{]}}})
-uses a special class of polytopes (see {\hyperref[main_source:zonohp]{{[}ZONOHP{]}}})
+The method of zonotopes for approximation of reach sets ({\hyperref[chap_intro:gir2005]{{[}GIR2005{]}}}, {\hyperref[chap_intro:gir2006]{{[}GIR2006{]}}}, {\hyperref[chap_intro:mathp]{{[}MATHP{]}}})
+uses a special class of polytopes (see {\hyperref[chap_intro:zonohp]{{[}ZONOHP{]}}})
 of the form,
 \begin{gather}
 \begin{split}Z=\{x \in {\bf R}^n ~|~
@@ -243,13 +243,13 @@ however, appear to diminish because in order to plot them or check if
 they intersect with given objects and compute those intersections, these
 operations are performed after converting zonotopes to polytopes.
 
-CheckMate {\hyperref[main_source:cmhp]{{[}CMHP{]}}} is a Matlab toolbox that can evaluate
+CheckMate {\hyperref[chap_intro:cmhp]{{[}CMHP{]}}} is a Matlab toolbox that can evaluate
 specifications for trajectories starting from the set of initial
 (continuous) states corresponding to the parameter values at the
 vertices of the parameter set. This provides preliminary insight into
 whether the specifications will be true for all parameter values. The
 method of oriented rectangluar polytopes for external approximation of
-reach sets is introduced in {\hyperref[main_source:stur2003]{{[}STUR2003{]}}}. The basic idea
+reach sets is introduced in {\hyperref[chap_intro:stur2003]{{[}STUR2003{]}}}. The basic idea
 is to construct an oriented rectangular hull of the reach set for every
 time step, whose orientation is determined by the singular value
 decomposition of the sample covariance matrix for the states reachable
@@ -265,14 +265,14 @@ analytic methods which we are about to discuss, provide a formula or
 differential equation describing the (continuous) time evolution of the
 reach set or its approximation.
 
-The level set method ({\hyperref[main_source:mit2000]{{[}MIT2000{]}}}, {\hyperref[main_source:lsthp]{{[}LSTHP{]}}})
+The level set method ({\hyperref[chap_intro:mit2000]{{[}MIT2000{]}}}, {\hyperref[chap_intro:lsthp]{{[}LSTHP{]}}})
 deals with general nonlinear controlled systems and gives
 exact representation of their reach sets, but requires solving the HJB
 equation and finding the set of states that belong to sub-zero level set
-of the value function. The method {\hyperref[main_source:lsthp]{{[}LSTHP{]}}} is
+of the value function. The method {\hyperref[chap_intro:lsthp]{{[}LSTHP{]}}} is
 impractical for systems of dimension higher than three.
 
-Requiem {\hyperref[main_source:reqhp]{{[}REQHP{]}}} is a Mathematica notebook which, given a
+Requiem {\hyperref[chap_intro:reqhp]{{[}REQHP{]}}} is a Mathematica notebook which, given a
 linear system, the set of initial conditions and control bounds,
 symbolically computes the exact reach set, using the experimental
 quantifier elimination package. Quantifier elimination is the removal of
@@ -299,7 +299,7 @@ which is equivalent to the quantifier-free expression
 \begin{gather}
 \begin{split}-1\leqslant[1 ~~ 0]x\leqslant1 ~ \wedge ~ -1\leqslant[0 ~~ 1]x\leqslant1.\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
-It is proved in {\hyperref[main_source:laff2001]{{[}LAFF2001{]}}} that for
+It is proved in {\hyperref[chap_intro:laff2001]{{[}LAFF2001{]}}} that for
 continuous-time systems, $\dot{x}(t) = Ax(t) + Bu(t)$, if
 $A$ is constant and nilpotent or is diagonalizable with rational
 real or purely imaginary eigenvalues, and with suitable restrictions on
@@ -307,24 +307,24 @@ the control and initial conditions, the quantifier elimination package
 returns a quantifier free formula describing the reach set. Quantifier
 elimination has limited applicability.
 
-The reach set approximation via parallelotopes {\hyperref[main_source:kost2001]{{[}KOST2001{]}}} employs
-the idea of parametrization described in {\hyperref[main_source:kur2000]{{[}KUR2000{]}}}
+The reach set approximation via parallelotopes {\hyperref[chap_intro:kost2001]{{[}KOST2001{]}}} employs
+the idea of parametrization described in {\hyperref[chap_intro:kur2000]{{[}KUR2000{]}}}
 for ellipsoids. The reach set is represented as the intersection of
 tight external, and the union of tight internal, parallelotopes. The
 evolution equations for the centers and orientation matrices of both
 external and internal parallelotopes are provided. This method also
 finds controls that can drive the system to the boundary points of the
-reach set, similarly to {\hyperref[main_source:var1998]{{[}VAR1998{]}}} and {\hyperref[main_source:kur2000]{{[}KUR2000{]}}}.
+reach set, similarly to {\hyperref[chap_intro:var1998]{{[}VAR1998{]}}} and {\hyperref[chap_intro:kur2000]{{[}KUR2000{]}}}.
 It works for general linear systems. The computation to solve
 the evolution equation for tight approximating parallelotopes, however,
 is more involved than that for ellipsoids, and for discrete-time systems
 this method does not deal with singular state transition matrices.
 
 \emph{Ellipsoidal Toolbox} (ET) implements in MATLAB the ellipsoidal calculus
-{\hyperref[main_source:kur1997]{{[}KUR1997{]}}} and its application to the reachability
-analysis of continuous-time {\hyperref[main_source:kur2000]{{[}KUR2000{]}}}, discrete-time
-{\hyperref[main_source:var2007]{{[}VAR2007{]}}}, possibly time-varying linear systems, and
-linear systems with disturbances {\hyperref[main_source:kur2001]{{[}KUR2001{]}}},
+{\hyperref[chap_intro:kur1997]{{[}KUR1997{]}}} and its application to the reachability
+analysis of continuous-time {\hyperref[chap_intro:kur2000]{{[}KUR2000{]}}}, discrete-time
+{\hyperref[chap_reach:var2007]{{[}VAR2007{]}}}, possibly time-varying linear systems, and
+linear systems with disturbances {\hyperref[chap_intro:kur2001]{{[}KUR2001{]}}},
 for which ET calculates both open-loop and close-loop reach sets. The
 ellipsoidal calculus provides the following benefits:
 \begin{itemize}
@@ -365,16 +365,16 @@ together with their descriptions are listed in appendix A.
 
 
 \chapter{Ellipsoidal Calculus}
-\label{main_source:ellipsoidal-calculus}
+\label{chap_ellcalc:ellipsoidal-calculus}\label{chap_ellcalc::doc}
 
 \section{Basic Notions}
-\label{main_source:basic-notions}
+\label{chap_ellcalc:basic-notions}
 We start with basic definitions.
 Ellipsoid ${\mathcal E}(q,Q)$ in
 ${\bf R}^n$ with center $q$ and shape matrix $Q$ is
 the set
-\phantomsection\label{main_source:equation-ellipsoid}\begin{gather}
-\begin{split}{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~ \langle (x-q), Q^{-1}(x-q)\rangle\leqslant1 \},\end{split}\label{main_source-ellipsoid}
+\phantomsection\label{chap_ellcalc:equation-ellipsoid}\begin{gather}
+\begin{split}{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~ \langle (x-q), Q^{-1}(x-q)\rangle\leqslant1 \},\end{split}\label{chap_ellcalc-ellipsoid}
 \end{gather}
 wherein $Q$ is positive definite ($Q=Q^T$ and
 $\langle x, Qx\rangle>0$ for all nonzero $x\in{\bf R}^n$).
@@ -384,44 +384,44 @@ ${\mathcal X}\subseteq{\bf R}^n$ is
 \begin{gather}
 \begin{split}\rho(l~|~{\mathcal X}) = \sup_{x\in{\mathcal X}} \langle l,x\rangle.\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
-In particular, the support function of the ellipsoid \eqref{main_source-ellipsoid} is
-\phantomsection\label{main_source:equation-ellsupp}\begin{gather}
-\begin{split}\rho(l~|~{\mathcal E}(q,Q)) = \langle l, q\rangle + \langle l, Ql\rangle^{1/2}.\end{split}\label{main_source-ellsupp}
+In particular, the support function of the ellipsoid \eqref{chap_ellcalc-ellipsoid} is
+\phantomsection\label{chap_ellcalc:equation-ellsupp}\begin{gather}
+\begin{split}\rho(l~|~{\mathcal E}(q,Q)) = \langle l, q\rangle + \langle l, Ql\rangle^{1/2}.\end{split}\label{chap_ellcalc-ellsupp}
 \end{gather}
-Although in \eqref{main_source-ellipsoid} $Q$ is assumed to be positive definite,
+Although in \eqref{chap_ellcalc-ellipsoid} $Q$ is assumed to be positive definite,
 in practice we may deal with situations when $Q$ is singular, that
 is, with degenerate ellipsoids flat in those directions for which the
 corresponding eigenvalues are zero. Therefore, it is useful to give an
-alternative definition of an ellipsoid using the expression \eqref{main_source-ellsupp}.
+alternative definition of an ellipsoid using the expression \eqref{chap_ellcalc-ellsupp}.
 Ellipsoid ${\mathcal E}(q,Q)$ in ${\bf R}^n$ with center
 $q$ and shape matrix $Q$ is the set
-\phantomsection\label{main_source:equation-ellipsoid2}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-ellipsoid2}\begin{gather}
 \begin{split}{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~
 \langle l,x\rangle\leqslant\langle l,q\rangle + \langle l,Ql\rangle^{1/2}
-\mbox{ for all } l\in{\bf R}^n \},\end{split}\label{main_source-ellipsoid2}
+\mbox{ for all } l\in{\bf R}^n \},\end{split}\label{chap_ellcalc-ellipsoid2}
 \end{gather}
 wherein matrix $Q$ is positive semidefinite ($Q=Q^T$ and
 $\langle x, Qx\rangle\geqslant0$ for all $x\in{\bf R}^n$).
 The volume of ellipsoid ${\mathcal E}(q,Q)$ is
-\phantomsection\label{main_source:equation-ellvolume}\begin{gather}
-\begin{split}{\bf Vol}(E(q,Q)) = {\bf Vol}_{\langle x,x\rangle\leqslant1}\sqrt{\det Q},\end{split}\label{main_source-ellvolume}
+\phantomsection\label{chap_ellcalc:equation-ellvolume}\begin{gather}
+\begin{split}{\bf Vol}(E(q,Q)) = {\bf Vol}_{\langle x,x\rangle\leqslant1}\sqrt{\det Q},\end{split}\label{chap_ellcalc-ellvolume}
 \end{gather}
 where ${\bf Vol}_{\langle x,x\rangle\leqslant1}$ is the volume of
 the unit ball in ${\bf R}^n$:
-\phantomsection\label{main_source:equation-ellunitball}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-ellunitball}\begin{gather}
 \begin{split}{\bf Vol}_{\langle x,x\rangle\leqslant1} = \left\{\begin{array}{ll}
 \frac{\pi^{n/2}}{(n/2)!}, &
 \mbox{ for even } n,\\
 \frac{2^n\pi^{(n-1)/2}\left((n-1)/2\right)!}{n!}, &
-\mbox{ for odd } n. \end{array}\right.\end{split}\label{main_source-ellunitball}
+\mbox{ for odd } n. \end{array}\right.\end{split}\label{chap_ellcalc-ellunitball}
 \end{gather}
 The distance from ${\mathcal E}(q,Q)$ to the fixed point $a$
 is
-\phantomsection\label{main_source:equation-dist_point}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-dist_point}\begin{gather}
 \begin{split}{\bf dist}({\mathcal E}(q,Q),a) = \max_{\langle l,l\rangle=1}\left(\langle l,a\rangle -
 \rho(l ~|~ {\mathcal E}(q,Q)) \right) =
 \max_{\langle l,l\rangle=1}\left(\langle l,a\rangle - \langle l,q\rangle -
-\langle l,Ql\rangle^{1/2}\right).\end{split}\label{main_source-dist_point}
+\langle l,Ql\rangle^{1/2}\right).\end{split}\label{chap_ellcalc-dist_point}
 \end{gather}
 If ${\bf dist}({\mathcal E}(q,Q),a) > 0$, $a$ lies outside
 ${\mathcal E}(q,Q)$; if
@@ -432,14 +432,14 @@ point of ${\mathcal E}(q,Q)$.
 
 Given two ellipsoids, ${\mathcal E}(q_1,Q_1)$ and
 ${\mathcal E}(q_2,Q_2)$, the distance between them is
-\phantomsection\label{main_source:equation-dist_ell}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-dist_ell}\begin{gather}
 \begin{split}\begin{aligned}
 {\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) & = \max_{\langle l,l\rangle=1}
 \left(-\rho(-l ~|~ {\mathcal E}(q_1,Q_1)) - \rho(l ~|~ {\mathcal E}(q_2,Q_2))\right) \\
 & = \max_{\langle l,l\rangle=1}\left(\langle l,q_1\rangle -
 \langle l,Q_1l\rangle^{1/2} - \langle l,q_2\rangle -
 \langle l,Q_2l\rangle^{1/2}\right).
-\end{aligned}\end{split}\label{main_source-dist_ell}
+\end{aligned}\end{split}\label{chap_ellcalc-dist_ell}
 \end{gather}
 If ${\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) > 0$,
 the ellipsoids have no common points; if
@@ -521,15 +521,15 @@ The special case is
 Given $k$ compact sets
 ${\mathcal X}_1, \cdots, {\mathcal X}_k\subseteq{\bf R}^n$, their
 geometric (Minkowski) sum is
-\phantomsection\label{main_source:equation-minksum}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-minksum}\begin{gather}
 \begin{split}{\mathcal X}_1\oplus\cdots\oplus{\mathcal X}_k=\bigcup_{x_1\in{\mathcal X}_1}\cdots\bigcup_{x_k\in{\mathcal X}_k}
-\{x_1 + \cdots + x_k\} .\end{split}\label{main_source-minksum}
+\{x_1 + \cdots + x_k\} .\end{split}\label{chap_ellcalc-minksum}
 \end{gather}
 Given two compact sets
 ${\mathcal X}_1, {\mathcal X}_2 \subseteq{\bf R}^n$, their
 geometric (Minkowski) difference is
-\phantomsection\label{main_source:equation-minkdiff}\begin{gather}
-\begin{split}{\mathcal X}_1\dot{-}{\mathcal X}_2 = \{x\in{\bf R}^n ~|~ x + {\mathcal X}_2 \subseteq {\mathcal X}_1 \}.\end{split}\label{main_source-minkdiff}
+\phantomsection\label{chap_ellcalc:equation-minkdiff}\begin{gather}
+\begin{split}{\mathcal X}_1\dot{-}{\mathcal X}_2 = \{x\in{\bf R}^n ~|~ x + {\mathcal X}_2 \subseteq {\mathcal X}_1 \}.\end{split}\label{chap_ellcalc-minkdiff}
 \end{gather}
 Ellipsoidal calculus concerns the following set of operations:
 \begin{itemize}
@@ -557,16 +557,16 @@ Additional operations implemented in the \emph{Ellipsoidal Toolbox} include
 external and internal approximations of intersections of ellipsoids with
 hyperplanes, halfspaces and polytopes. Hyperplane $H(c,\gamma)$ in
 ${\bf R}^n$ is the set
-\phantomsection\label{main_source:equation-hyperplane}\begin{gather}
-\begin{split}H = \{x\in{\bf R}^n ~|~ \langle c, x\rangle = \gamma\}\end{split}\label{main_source-hyperplane}
+\phantomsection\label{chap_ellcalc:equation-hyperplane}\begin{gather}
+\begin{split}H = \{x\in{\bf R}^n ~|~ \langle c, x\rangle = \gamma\}\end{split}\label{chap_ellcalc-hyperplane}
 \end{gather}
 with $c\in{\bf R}^n$ and $\gamma\in{\bf R}$ fixed.
 The distance from ellipsoid ${\mathcal E}(q,Q)$ to
 hyperplane $H(c,\gamma)$ is
-\phantomsection\label{main_source:equation-dist_hp}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-dist_hp}\begin{gather}
 \begin{split}{\bf dist}({\mathcal E}(q,Q),H(c,\gamma)) =
 \frac{\left|\gamma-\langle c,q\rangle\right| -
-\langle c,Qc\rangle^{1/2}}{\langle c,c\rangle^{1/2}}.\end{split}\label{main_source-dist_hp}
+\langle c,Qc\rangle^{1/2}}{\langle c,c\rangle^{1/2}}.\end{split}\label{chap_ellcalc-dist_hp}
 \end{gather}
 If ${\bf dist}({\mathcal E}(q,Q),H(c,\gamma))>0$, the ellipsoid
 and the hyperplane do not intersect; if
@@ -590,15 +590,15 @@ subject to:
 \langle c, x\rangle - \gamma = 0. & &\end{aligned}\end{split}\notag
 \end{gather}
 A hyperplane defines two (closed) \emph{halfspaces}:
-\phantomsection\label{main_source:equation-halfspace1}\begin{gather}
-\begin{split}{\bf S}_1 = \{x\in{\bf R}^n ~|~ \langle c, x\rangle \leqslant\gamma\}\end{split}\label{main_source-halfspace1}
+\phantomsection\label{chap_ellcalc:equation-halfspace1}\begin{gather}
+\begin{split}{\bf S}_1 = \{x\in{\bf R}^n ~|~ \langle c, x\rangle \leqslant\gamma\}\end{split}\label{chap_ellcalc-halfspace1}
 \end{gather}
 and
-\phantomsection\label{main_source:equation-halfspace2}\begin{gather}
-\begin{split}{\bf S}_2 = \{x\in{\bf R}^n ~|~ \langle c, x\rangle \geqslant\gamma\}.\end{split}\label{main_source-halfspace2}
+\phantomsection\label{chap_ellcalc:equation-halfspace2}\begin{gather}
+\begin{split}{\bf S}_2 = \{x\in{\bf R}^n ~|~ \langle c, x\rangle \geqslant\gamma\}.\end{split}\label{chap_ellcalc-halfspace2}
 \end{gather}
 To avoid confusion, however, we shall further assume that a hyperplane
-$H(c,\gamma)$ specifies the halfspace in the sense \eqref{main_source-halfspace1}.
+$H(c,\gamma)$ specifies the halfspace in the sense \eqref{chap_ellcalc-halfspace1}.
 In order to refer to the other halfspace, the same hyperplane should be
 defined as $H(-c,-\gamma)$.
 
@@ -608,16 +608,16 @@ as the ellipsoid with the shape matrix all but one of whose eigenvalues
 are $\infty$.
 Polytope $P(C,g)$ is the
 intersection of a finite number of closed halfspaces:
-\phantomsection\label{main_source:equation-polytope}\begin{gather}
-\begin{split}P = \{x\in{\bf R}^n ~|~ Cx\leqslant g\},\end{split}\label{main_source-polytope}
+\phantomsection\label{chap_ellcalc:equation-polytope}\begin{gather}
+\begin{split}P = \{x\in{\bf R}^n ~|~ Cx\leqslant g\},\end{split}\label{chap_ellcalc-polytope}
 \end{gather}
 wherein $C=[c_1 ~ \cdots ~ c_m]^T\in{\bf R}^{m\times n}$ and
 $g=[\gamma_1 ~ \cdots ~ \gamma_m]^T\in{\bf R}^m$.
 The distance
 from ellipsoid ${\mathcal E}(q,Q)$ to the polytope $P(C,g)$
 is
-\phantomsection\label{main_source:equation-dist_poly}\begin{gather}
-\begin{split}{\bf dist}({\mathcal E}(q,Q),P(C,g))=\min_{y\in P(C,g)}{\bf dist}({\mathcal E}(q,Q),y),\end{split}\label{main_source-dist_poly}
+\phantomsection\label{chap_ellcalc:equation-dist_poly}\begin{gather}
+\begin{split}{\bf dist}({\mathcal E}(q,Q),P(C,g))=\min_{y\in P(C,g)}{\bf dist}({\mathcal E}(q,Q),y),\end{split}\label{chap_ellcalc-dist_poly}
 \end{gather}
 where ${\bf dist}({\mathcal E}(q,Q),y)$ comes from
 ({[}dist:sub:\emph{p}oint{]}). If
@@ -642,15 +642,15 @@ subject to:
 \end{gather}
 
 \section{Operations with Ellipsoids}
-\label{main_source:operations-with-ellipsoids}
+\label{chap_ellcalc:operations-with-ellipsoids}
 
 \subsection{Affine Transformation}
-\label{main_source:affine-transformation}
+\label{chap_ellcalc:affine-transformation}
 The simplest operation with ellipsoids is an affine transformation. Let
 ellipsoid ${\mathcal E}(q,Q)\subseteq{\bf R}^n$, matrix
 $A\in{\bf R}^{m\times n}$ and vector $b\in{\bf R}^m$. Then
-\phantomsection\label{main_source:equation-affinetrans}\begin{gather}
-\begin{split}A{\mathcal E}(q,Q) + b = {\mathcal E}(Aq+b, AQA^T) .\end{split}\label{main_source-affinetrans}
+\phantomsection\label{chap_ellcalc:equation-affinetrans}\begin{gather}
+\begin{split}A{\mathcal E}(q,Q) + b = {\mathcal E}(Aq+b, AQA^T) .\end{split}\label{chap_ellcalc-affinetrans}
 \end{gather}
 Thus, ellipsoids are preserved under affine transformation. If the rows
 of $A$ are linearly independent (which implies
@@ -659,8 +659,8 @@ called \emph{projection}.
 
 
 \subsection{Geometric Sum}
-\label{main_source:geometric-sum}
-Consider the geometric sum \eqref{main_source-minksum} in which
+\label{chap_ellcalc:geometric-sum}
+Consider the geometric sum \eqref{chap_ellcalc-minksum} in which
 ${\mathcal X}_1,\cdots$,${\mathcal X}_k$ are nondegenerate
 ellipsoids ${\mathcal E}(q_1,Q_1),\cdots$,
 ${\mathcal E}(q_k,Q_k)\subseteq{\bf R}^n$. The resulting set is
@@ -683,20 +683,20 @@ and
 \rho(\pm l ~|~ {\mathcal E}(q,Q_l^+)).\end{split}\notag
 \end{gather}
 Here the center $q$ is
-\phantomsection\label{main_source:equation-minksum_c}\begin{gather}
-\begin{split}q = q_1 + \cdots + q_k ,\end{split}\label{main_source-minksum_c}
+\phantomsection\label{chap_ellcalc:equation-minksum_c}\begin{gather}
+\begin{split}q = q_1 + \cdots + q_k ,\end{split}\label{chap_ellcalc-minksum_c}
 \end{gather}
 the shape matrix of the external ellipsoid $Q_l^+$ is
-\phantomsection\label{main_source:equation-minksum_ea}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-minksum_ea}\begin{gather}
 \begin{split}Q_l^+ = \left(\langle l,Q_1l\rangle^{1/2} + \cdots
 + \langle l,Q_kl\rangle^{1/2}\right)
 \left(\frac{1}{\langle l,Q_1l\rangle^{1/2}}Q_1 + \cdots +
-\frac{1}{\langle l,Q_kl\rangle^{1/2}}Q_k\right),\end{split}\label{main_source-minksum_ea}
+\frac{1}{\langle l,Q_kl\rangle^{1/2}}Q_k\right),\end{split}\label{chap_ellcalc-minksum_ea}
 \end{gather}
 and the shape matrix of the internal ellipsoid $Q_l^-$ is
-\phantomsection\label{main_source:equation-minksum_ia}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-minksum_ia}\begin{gather}
 \begin{split}Q_l^- = \left(Q_1^{1/2} + S_2Q_2^{1/2} + \cdots + S_kQ_k^{1/2}\right)^T
-\left(Q_1^{1/2} + S_2Q_2^{1/2} + \cdots + S_kQ_k^{1/2}\right),\end{split}\label{main_source-minksum_ia}
+\left(Q_1^{1/2} + S_2Q_2^{1/2} + \cdots + S_kQ_k^{1/2}\right),\end{split}\label{chap_ellcalc-minksum_ia}
 \end{gather}
 with matrices $S_i$, $i=2,\cdots,k$, being orthogonal
 ($S_iS_i^T=I$) and such that vectors
@@ -709,7 +709,7 @@ approximations,
 {\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k) =
 \bigcap_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^+) .\end{split}\notag
 \end{gather}
-For proofs of formulas given in this section, see {\hyperref[main_source:kur1997]{{[}KUR1997{]}}}, {\hyperref[main_source:kur2000]{{[}KUR2000{]}}}.
+For proofs of formulas given in this section, see {\hyperref[chap_intro:kur1997]{{[}KUR1997{]}}}, {\hyperref[chap_intro:kur2000]{{[}KUR2000{]}}}.
 
 One last comment is about how to find orthogonal matrices
 $S_2,\cdots,S_k$ that align vectors
@@ -718,24 +718,24 @@ $v_1$ and $v_2$ be some unit vectors in ${\bf R}^n$.
 We have to find matrix $S$ such that
 $Sv_2\uparrow\uparrow v_1$.
 We suggest explicit formulas for the
-calculation of this matrix {\hyperref[main_source:dar2012]{{[}DAR2012{]}}}:
-\phantomsection\label{main_source:equation-valign1}\begin{gather}
-\begin{split}T = I + Q_1(S - I)Q_1^T,\end{split}\label{main_source-valign1}
-\end{gather}\phantomsection\label{main_source:equation-valign2}\begin{gather}
+calculation of this matrix {\hyperref[chap_ellcalc:dar2012]{{[}DAR2012{]}}}:
+\phantomsection\label{chap_ellcalc:equation-valign1}\begin{gather}
+\begin{split}T = I + Q_1(S - I)Q_1^T,\end{split}\label{chap_ellcalc-valign1}
+\end{gather}\phantomsection\label{chap_ellcalc:equation-valign2}\begin{gather}
 \begin{split}S = \begin{pmatrix}
      c & s\\
      -s & c
-    \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}\end{split}\label{main_source-valign2}
-\end{gather}\phantomsection\label{main_source:equation-valign3}\begin{gather}
+    \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}\end{split}\label{chap_ellcalc-valign2}
+\end{gather}\phantomsection\label{chap_ellcalc:equation-valign3}\begin{gather}
 \begin{split}Q_1 = [q_1 \, q_2]\in \mathbb{R}^{n\times2},\ \quad q_1 = \hat{v_1},\ \quad q_2 = \begin{cases}
 s^{-1}(\hat{v_2} - c\hat{v_1}),& s\ne 0\\
 0,& s = 0.
-\end{cases}\end{split}\label{main_source-valign3}
+\end{cases}\end{split}\label{chap_ellcalc-valign3}
 \end{gather}
 
 \subsection{Geometric Difference}
-\label{main_source:geometric-difference}
-Consider the geometric difference \eqref{main_source-minkdiff} in which the sets
+\label{chap_ellcalc:geometric-difference}
+Consider the geometric difference \eqref{chap_ellcalc-minkdiff} in which the sets
 ${\mathcal X}_1$ and ${\mathcal X}_2$ are nondegenerate
 ellipsoids ${\mathcal E}(q_1,Q_1)$ and
 ${\mathcal E}(q_2,Q_2)$. We say that ellipsoid
@@ -768,19 +768,19 @@ find matrix $T$ such that
 \end{gather}
 where $D$ is some diagonal matrix. Simultaneous diagonalization
 of $Q_1$ and $Q_2$ is possible because both are symmetric
-positive definite (see {\hyperref[main_source:gant1960]{{[}GANT1960{]}}}). To find such matrix
+positive definite (see {\hyperref[chap_ellcalc:gant1960]{{[}GANT1960{]}}}). To find such matrix
 $T$, we first do the SVD of $Q_1$:
-\phantomsection\label{main_source:equation-simdiag1}\begin{gather}
-\begin{split}Q_1 = U_1\Sigma_1V_1^T .\end{split}\label{main_source-simdiag1}
+\phantomsection\label{chap_ellcalc:equation-simdiag1}\begin{gather}
+\begin{split}Q_1 = U_1\Sigma_1V_1^T .\end{split}\label{chap_ellcalc-simdiag1}
 \end{gather}
 Then the SVD of matrix
 $\Sigma_1^{-1/2}U_1^TQ_2U_1\Sigma_1^{-1/2}$:
-\phantomsection\label{main_source:equation-simdiag2}\begin{gather}
-\begin{split}\Sigma_1^{-1/2}U_1^TQ_2U_1\Sigma_1^{-1/2} = U_2\Sigma_2V_2^T.\end{split}\label{main_source-simdiag2}
+\phantomsection\label{chap_ellcalc:equation-simdiag2}\begin{gather}
+\begin{split}\Sigma_1^{-1/2}U_1^TQ_2U_1\Sigma_1^{-1/2} = U_2\Sigma_2V_2^T.\end{split}\label{chap_ellcalc-simdiag2}
 \end{gather}
 Now, $T$ is defined as
-\phantomsection\label{main_source:equation-simdiag3}\begin{gather}
-\begin{split}T = U_2^T \Sigma_1^{-1/2}U_1^T.\end{split}\label{main_source-simdiag3}
+\phantomsection\label{chap_ellcalc:equation-simdiag3}\begin{gather}
+\begin{split}T = U_2^T \Sigma_1^{-1/2}U_1^T.\end{split}\label{chap_ellcalc-simdiag3}
 \end{gather}
 If the biggest diagonal element (eigenvalue) of matrix $D=TQ_2T^T$
 is less than or equal to $1$,
@@ -808,7 +808,7 @@ in which $r$ is a minimal root of the equation
 \begin{gather}
 \begin{split}{\bf det}(Q_1-rQ_2) = 0.\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
-To find $r$, compute matrix $T$ by \eqref{main_source-simdiag1}-\eqref{main_source-simdiag3}
+To find $r$, compute matrix $T$ by \eqref{chap_ellcalc-simdiag1}-\eqref{chap_ellcalc-simdiag3}
 and define
 \begin{gather}
 \begin{split}r = \frac{1}{\max({\bf diag}(TQ_2T^T))}.\end{split}\notag\\\begin{split}\end{split}\notag
@@ -826,8 +826,8 @@ and
 \rho(\pm l ~|~ {\mathcal E}(q,Q_l^+)).\end{split}\notag
 \end{gather}
 The center $q$ is
-\phantomsection\label{main_source:equation-minkdiff_c}\begin{gather}
-\begin{split}q = q_1 - q_2;\end{split}\label{main_source-minkdiff_c}
+\phantomsection\label{chap_ellcalc:equation-minkdiff_c}\begin{gather}
+\begin{split}q = q_1 - q_2;\end{split}\label{chap_ellcalc-minkdiff_c}
 \end{gather}
 the shape matrix of the internal ellipsoid $Q^-_l$ is
 \begin{gather}
@@ -837,13 +837,13 @@ the shape matrix of the internal ellipsoid $Q^-_l$ is
 \label{minkdiff_ia}\end{aligned}\end{split}\notag
 \end{gather}
 and the shape matrix of the external ellipsoid $Q^+_l$ is
-\phantomsection\label{main_source:equation-minkdiff_ea}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-minkdiff_ea}\begin{gather}
 \begin{split}Q^+_l = \left(Q_1^{1/2} - SQ_2^{1/2}\right)^T
-\left(Q_1^{1/2} - SQ_2^{1/2}\right).\end{split}\label{main_source-minkdiff_ea}
+\left(Q_1^{1/2} - SQ_2^{1/2}\right).\end{split}\label{chap_ellcalc-minkdiff_ea}
 \end{gather}
 Here $S$ is an orthogonal matrix such that vectors
 $Q_1^{1/2}l$ and $SQ_2^{1/2}l$ are parallel. $S$ is
-found from \eqref{main_source-valign1}-\eqref{main_source-valign3}, with $v_1=Q_2^{1/2}l$ and
+found from \eqref{chap_ellcalc-valign1}-\eqref{chap_ellcalc-valign3}, with $v_1=Q_2^{1/2}l$ and
 $v_2=Q_1^{1/2}l$.
 
 Running $l$ over all unit directions that are not bad, we get
@@ -852,17 +852,17 @@ Running $l$ over all unit directions that are not bad, we get
 {\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2) =
 \bigcap_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^+) .\end{split}\notag
 \end{gather}
-For proofs of formulas given in this section, see {\hyperref[main_source:kur1997]{{[}KUR1997{]}}}.
+For proofs of formulas given in this section, see {\hyperref[chap_intro:kur1997]{{[}KUR1997{]}}}.
 
 
 \subsection{Geometric Difference-Sum}
-\label{main_source:geometric-difference-sum}
+\label{chap_ellcalc:diff-sum-label}\label{chap_ellcalc:geometric-difference-sum}
 Given ellipsoids ${\mathcal E}(q_1,Q_1)$,
 ${\mathcal E}(q_2,Q_2)$ and ${\mathcal E}(q_3,Q_3)$, it is
 possible to compute families of external and internal approximating
 ellipsoids for
-\phantomsection\label{main_source:equation-minkmp}\begin{gather}
-\begin{split}{\mathcal E}(q_1,Q_1) \dot{-} {\mathcal E}(q_2,Q_2) \oplus {\mathcal E}(q_3,Q_3)\end{split}\label{main_source-minkmp}
+\phantomsection\label{chap_ellcalc:equation-minkmp}\begin{gather}
+\begin{split}{\mathcal E}(q_1,Q_1) \dot{-} {\mathcal E}(q_2,Q_2) \oplus {\mathcal E}(q_3,Q_3)\end{split}\label{chap_ellcalc-minkmp}
 \end{gather}
 parametrized by direction $l$, if this set is nonempty
 (${\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)$).
@@ -902,13 +902,13 @@ translates to
 \end{gather}
 
 \subsection{Geometric Sum-Difference}
-\label{main_source:geometric-sum-difference}
+\label{chap_ellcalc:sum-diff-label}\label{chap_ellcalc:geometric-sum-difference}
 Given ellipsoids ${\mathcal E}(q_1,Q1)$,
 ${\mathcal E}(q_2,Q_2)$ and ${\mathcal E}(q_3,Q_3)$, it is
 possible to compute families of external and internal approximating
 ellipsoids for
-\phantomsection\label{main_source:equation-minkpm}\begin{gather}
-\begin{split}{\mathcal E}(q_1,Q_1) \oplus {\mathcal E}(q_2,Q_2) \dot{-} {\mathcal E}(q_3,Q_3)\end{split}\label{main_source-minkpm}
+\phantomsection\label{chap_ellcalc:equation-minkpm}\begin{gather}
+\begin{split}{\mathcal E}(q_1,Q_1) \oplus {\mathcal E}(q_2,Q_2) \dot{-} {\mathcal E}(q_3,Q_3)\end{split}\label{chap_ellcalc-minkpm}
 \end{gather}
 parametrized by direction $l$, if this set is nonempty
 (${\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_1)\oplus{\mathcal E}(0,Q_2)$).
@@ -917,14 +917,14 @@ First, using the result of section 2.2.2, we obtain tight external
 ${\mathcal E}(q_1+q_2,Q_l^{0+})$ and internal
 ${\mathcal E}(q_1+q_2,Q_l^{0-})$ ellipsoidal approximations of the
 set ${\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)$. In order
-for the set \eqref{main_source-minkpm} to be nonempty, inclusion
+for the set \eqref{chap_ellcalc-minkpm} to be nonempty, inclusion
 ${\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_l^{0+})$ must be
-true for any $l$. Note, however, that even if \eqref{main_source-minkpm} is
+true for any $l$. Note, however, that even if \eqref{chap_ellcalc-minkpm} is
 nonempty, it may be that
 ${\mathcal E}(0,Q_3)\not\subseteq{\mathcal E}(0,Q_l^{0-})$, then
 internal approximation for this direction does not exist.
 
-Assuming that \eqref{main_source-minkpm} is nonempty and
+Assuming that \eqref{chap_ellcalc-minkpm} is nonempty and
 ${\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_l^{0-})$, the second
 step would be, using the results of section 2.2.3, to compute tight
 external ellipsoidal approximation
@@ -961,7 +961,7 @@ external nor internal tight ellipsoidal approximations exist.
 
 
 \subsection{Intersection of Ellipsoid and Hyperplane}
-\label{main_source:intersection-of-ellipsoid-and-hyperplane}
+\label{chap_ellcalc:intersection-of-ellipsoid-and-hyperplane}
 Let nondegenerate ellipsoid ${\mathcal E}(q,Q)$ and hyperplane
 $H(c,\gamma)$ be such that
 ${\bf dist}({\mathcal E}(q,Q),H(c,\gamma))<0$. In other words,
@@ -976,7 +976,7 @@ $H([1~0~\cdots~0]^T, 0)$ by the affine transformation
 \begin{gather}
 \begin{split}y = Sx - \frac{\gamma}{\langle c,c\rangle^{1/2}}Sc,\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
-where $S$ is an orthogonal matrix found by \eqref{main_source-valign1}-\eqref{main_source-valign3}
+where $S$ is an orthogonal matrix found by \eqref{chap_ellcalc-valign1}-\eqref{chap_ellcalc-valign3}
 with $v_1=c$ and $v_2=[1~0~\cdots~0]^T$. The ellipsoid in
 the new coordinates becomes ${\mathcal E}(q',Q')$ with
 \begin{gather}
@@ -1023,7 +1023,7 @@ W & = S^TW'S.\end{aligned}\end{split}\notag
 \end{gather}
 
 \subsection{Intersection of Ellipsoid and Ellipsoid}
-\label{main_source:intersection-of-ellipsoid-and-ellipsoid}
+\label{chap_ellcalc:intersection-of-ellipsoid-and-ellipsoid}
 Given two nondegenerate ellipsoids ${\mathcal E}(q_1,Q_1)$ and
 ${\mathcal E}(q_2,Q_2)$,
 ${\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))<0$
@@ -1045,25 +1045,25 @@ Minimal volume external ellipsoidal approximation
 ${\mathcal E}(q+,Q^+)$ of the intersection
 ${\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)$ is determined
 from the set of equations:
-\phantomsection\label{main_source:equation-fusion1}\begin{gather}
-\begin{split}Q^+  = \alpha X^{-1}, \\\end{split}\label{main_source-fusion1}
-\end{gather}\phantomsection\label{main_source:equation-fusion2}\begin{gather}
-\begin{split}X  =  \pi W_1 + (1-\pi)W_2,\\\end{split}\label{main_source-fusion2}
-\end{gather}\phantomsection\label{main_source:equation-fusion3}\begin{gather}
-\begin{split}\alpha  =  1-\pi(1-\pi)\langle(q_2-q_1), W_2X^{-1}W_1(q_2-q_1)\rangle, \\\end{split}\label{main_source-fusion3}
-\end{gather}\phantomsection\label{main_source:equation-fusion4}\begin{gather}
-\begin{split}q^+  = X^{-1}(\pi W_1q_1 + (1-\pi)W_2q_2), \\\end{split}\label{main_source-fusion4}
-\end{gather}\phantomsection\label{main_source:equation-fusion5}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-fusion1}\begin{gather}
+\begin{split}Q^+  = \alpha X^{-1}, \\\end{split}\label{chap_ellcalc-fusion1}
+\end{gather}\phantomsection\label{chap_ellcalc:equation-fusion2}\begin{gather}
+\begin{split}X  =  \pi W_1 + (1-\pi)W_2,\\\end{split}\label{chap_ellcalc-fusion2}
+\end{gather}\phantomsection\label{chap_ellcalc:equation-fusion3}\begin{gather}
+\begin{split}\alpha  =  1-\pi(1-\pi)\langle(q_2-q_1), W_2X^{-1}W_1(q_2-q_1)\rangle, \\\end{split}\label{chap_ellcalc-fusion3}
+\end{gather}\phantomsection\label{chap_ellcalc:equation-fusion4}\begin{gather}
+\begin{split}q^+  = X^{-1}(\pi W_1q_1 + (1-\pi)W_2q_2), \\\end{split}\label{chap_ellcalc-fusion4}
+\end{gather}\phantomsection\label{chap_ellcalc:equation-fusion5}\begin{gather}
 \begin{split}0 &=  \alpha({\bf det}(X))^2{\bf trace}(X^{-1}(W_1-W_2)) - {}\\
   &- n({\bf det}(X))^2 (2\langle q^+,W_1q_1-W_2q_2\rangle + \langle q^+,(W_2-W_1)q^+\rangle - {}\\
-  &- \langle q_1,W_1q_1\rangle + \langle q_2,W_2q_2\rangle),\end{split}\label{main_source-fusion5}
+  &- \langle q_1,W_1q_1\rangle + \langle q_2,W_2q_2\rangle),\end{split}\label{chap_ellcalc-fusion5}
 \end{gather}
 with $0\leqslant\pi\leqslant1$. We substitute $X$,
-$\alpha$, $q^+$ defined in \eqref{main_source-fusion2}-\eqref{main_source-fusion4} into
-\eqref{main_source-fusion5} and get a polynomial of degree $2n-1$ with respect to
+$\alpha$, $q^+$ defined in \eqref{chap_ellcalc-fusion2}-\eqref{chap_ellcalc-fusion4} into
+\eqref{chap_ellcalc-fusion5} and get a polynomial of degree $2n-1$ with respect to
 $\pi$, which has only one root in the interval $[0,1]$,
 $\pi_0$. Then, substituting $\pi=\pi_0$ into
-\eqref{main_source-fusion1}-\eqref{main_source-fusion4}, we obtain $q^+$ and $Q^+$. Special
+\eqref{chap_ellcalc-fusion1}-\eqref{chap_ellcalc-fusion4}, we obtain $q^+$ and $Q^+$. Special
 cases are $\pi_0=1$, whence
 ${\mathcal E}(q^+,Q^+)={\mathcal E}(q_1,Q_1)$, and
 $\pi_0=0$, whence
@@ -1073,20 +1073,20 @@ may occur if, for example, one ellipsoid is contained in the other:
 \begin{split}{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) & \Rightarrow \pi_0 = 1,\\
 {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) & \Rightarrow \pi_0 = 0.\end{split}\notag
 \end{gather}
-The proof that the system of equations \eqref{main_source-fusion1}-\eqref{main_source-fusion5} correctly
+The proof that the system of equations \eqref{chap_ellcalc-fusion1}-\eqref{chap_ellcalc-fusion5} correctly
 defines the minimal volume external ellipsoidal approximationi of the
 intersection ${\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)$ is
-given in {\hyperref[main_source:ros2002]{{[}ROS2002{]}}}.
+given in {\hyperref[chap_ellcalc:ros2002]{{[}ROS2002{]}}}.
 
 To find the internal approximating ellipsoid
 ${\mathcal E}(q^-,Q^-)\subseteq{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)$,
 define
-\phantomsection\label{main_source:equation-beta1}\begin{gather}
-\begin{split}\beta_1 = \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle,\end{split}\label{main_source-beta1}
-\end{gather}\phantomsection\label{main_source:equation-beta2}\begin{gather}
-\begin{split}\beta_2 = \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle,\end{split}\label{main_source-beta2}
+\phantomsection\label{chap_ellcalc:equation-beta1}\begin{gather}
+\begin{split}\beta_1 = \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle,\end{split}\label{chap_ellcalc-beta1}
+\end{gather}\phantomsection\label{chap_ellcalc:equation-beta2}\begin{gather}
+\begin{split}\beta_2 = \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle,\end{split}\label{chap_ellcalc-beta2}
 \end{gather}
-Notice that \eqref{main_source-beta1} and \eqref{main_source-beta2} are QCQP problems. Parameters
+Notice that \eqref{chap_ellcalc-beta1} and \eqref{chap_ellcalc-beta2} are QCQP problems. Parameters
 $\beta_1$ and $\beta_2$ are invariant with respect to affine
 coordinate transformation and describe the position of ellipsoids
 ${\mathcal E}(q_1,Q_1)$, ${\mathcal E}(q_2,Q_2)$ with
@@ -1098,18 +1098,18 @@ respect to each other:
 \end{gather}
 Define parametrized family of internal ellipsoids
 ${\mathcal E}(q^-_{\theta_1\theta_2},Q^-_{\theta_1\theta_2})$ with
-\phantomsection\label{main_source:equation-paramell1}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-paramell1}\begin{gather}
 \begin{split}q^-_{\theta_1\theta_2}  =  (\theta_1W_1 +
-\theta_2W_2)^{-1}(\theta_1W_1q_1 + \theta_2W_2q_2),\\\end{split}\label{main_source-paramell1}
-\end{gather}\phantomsection\label{main_source:equation-paramell2}\begin{gather}
+\theta_2W_2)^{-1}(\theta_1W_1q_1 + \theta_2W_2q_2),\\\end{split}\label{chap_ellcalc-paramell1}
+\end{gather}\phantomsection\label{chap_ellcalc:equation-paramell2}\begin{gather}
 \begin{split}Q^-_{\theta_1\theta_2} =  (1 - \theta_1\langle q_1,W_1q_1\rangle -
 \theta_2\langle q_2,W_2q_2\rangle +
 \langle q^-_{\theta_1\theta_2},(Q^-)^{-1}q^-_{\theta_1\theta_2}\rangle)
-(\theta_1W_1 + \theta_2W_2)^{-1} .\end{split}\label{main_source-paramell2}
+(\theta_1W_1 + \theta_2W_2)^{-1} .\end{split}\label{chap_ellcalc-paramell2}
 \end{gather}
 The best internal ellipsoid
 ${\mathcal E}(q^-_{\hat{\theta}_1\hat{\theta}_2},Q^-_{\hat{\theta}_1\hat{\theta}_2})$
-in the class \eqref{main_source-paramell1}-\eqref{main_source-paramell2}, namely, such that
+in the class \eqref{chap_ellcalc-paramell1}-\eqref{chap_ellcalc-paramell2}, namely, such that
 \begin{gather}
 \begin{split}{\mathcal E}(q^-_{{\theta}_1{\theta}_2},Q^-_{{\theta}_1{\theta}_2})\subseteq
 {\mathcal E}(q^-_{\hat{\theta}_1\hat{\theta}_2},Q^-_{\hat{\theta}_1\hat{\theta}_2})
@@ -1117,9 +1117,9 @@ in the class \eqref{main_source-paramell1}-\eqref{main_source-paramell2}, namely
 \end{gather}
 for all $0\leqslant\theta_1,\theta_2\leqslant1$, is specified by
 the parameters
-\phantomsection\label{main_source:equation-thetapar}\begin{gather}
+\phantomsection\label{chap_ellcalc:equation-thetapar}\begin{gather}
 \begin{split}\hat{\theta}_1 = \frac{1-\hat{\beta}_2}{1-\hat{\beta}_1\hat{\beta}_2}, ~~~~
-\hat{\theta}_2 = \frac{1-\hat{\beta}_1}{1-\hat{\beta}_1\hat{\beta}_2},\end{split}\label{main_source-thetapar}
+\hat{\theta}_2 = \frac{1-\hat{\beta}_1}{1-\hat{\beta}_1\hat{\beta}_2},\end{split}\label{chap_ellcalc-thetapar}
 \end{gather}
 with
 \begin{gather}
@@ -1140,11 +1140,11 @@ and
 {\mathcal E}(q^-,Q^-)={\mathcal E}(q_2,Q_2).\end{split}\notag
 \end{gather}
 The method of finding the internal ellipsoidal approximation of the
-intersection of two ellipsoids is described in {\hyperref[main_source:vaz1999]{{[}VAZ1999{]}}}.
+intersection of two ellipsoids is described in {\hyperref[chap_ellcalc:vaz1999]{{[}VAZ1999{]}}}.
 
 
 \subsection{Intersection of Ellipsoid and Halfspace}
-\label{main_source:intersection-of-ellipsoid-and-halfspace}
+\label{chap_ellcalc:intersection-of-ellipsoid-and-halfspace}
 Finding the intersection of ellipsoid and halfspace can be reduced to
 finding the intersection of two ellipsoids, one of which is unbounded.
 Let ${\mathcal E}(q_1,Q_1)$ be a nondegenerate ellipsoid and let
@@ -1178,20 +1178,20 @@ ellipsoid intersects the hyperplane,
 {\mathcal E}(q_1,Q_1)\cap\{x ~|~ \langle (x-q_2),W_2(x-q_2)\rangle\leqslant1\},\end{split}\notag
 \end{gather}
 with
-\phantomsection\label{main_source:equation-hsell1}\begin{gather}
-\begin{split}q_2  =  (\gamma + 2\sqrt{\overline{\lambda}})c,\\\end{split}\label{main_source-hsell1}
-\end{gather}\phantomsection\label{main_source:equation-hsell2}\begin{gather}
-\begin{split}W_2  =  \frac{1}{4\overline{\lambda}}cc^T,\end{split}\label{main_source-hsell2}
+\phantomsection\label{chap_ellcalc:equation-hsell1}\begin{gather}
+\begin{split}q_2  =  (\gamma + 2\sqrt{\overline{\lambda}})c,\\\end{split}\label{chap_ellcalc-hsell1}
+\end{gather}\phantomsection\label{chap_ellcalc:equation-hsell2}\begin{gather}
+\begin{split}W_2  =  \frac{1}{4\overline{\lambda}}cc^T,\end{split}\label{chap_ellcalc-hsell2}
 \end{gather}
 $\overline{\lambda}$ being the biggest eigenvalue of matrix
 $Q_1$. After defining $W_1=Q_1^{-1}$, we obtain
-${\mathcal E}(q^+,Q^+)$ from equations \eqref{main_source-fusion1}-\eqref{main_source-fusion5}, and
-${\mathcal E}(q^-,Q^-)$ from \eqref{main_source-paramell1}-\eqref{main_source-paramell2},
-\eqref{main_source-thetapar}.
+${\mathcal E}(q^+,Q^+)$ from equations \eqref{chap_ellcalc-fusion1}-\eqref{chap_ellcalc-fusion5}, and
+${\mathcal E}(q^-,Q^-)$ from \eqref{chap_ellcalc-paramell1}-\eqref{chap_ellcalc-paramell2},
+\eqref{chap_ellcalc-thetapar}.
 
 \textbf{Remark.} Notice that matrix $W_2$ has rank $1$, which
 makes it singular for $n>1$. Nevertheless, expressions
-\eqref{main_source-fusion1}-\eqref{main_source-fusion2}, \eqref{main_source-paramell1}-\eqref{main_source-paramell2} make sense because
+\eqref{chap_ellcalc-fusion1}-\eqref{chap_ellcalc-fusion2}, \eqref{chap_ellcalc-paramell1}-\eqref{chap_ellcalc-paramell2} make sense because
 $W_1$ is nonsingular, $\pi_0\neq0$ and
 $\hat{\theta}_1\neq0$.
 
@@ -1226,8 +1226,8 @@ The resulting ellipsoidal approximations are
 \end{gather}
 
 \subsection{Checking if one ellipsoid contains another}
-\label{main_source:checking-if-one-ellipsoid-contains-another}
-Theorem of alternatives, also known as $S$-procedure {\hyperref[main_source:boyd2004]{{[}BOYD2004{]}}},
+\label{chap_ellcalc:checking-if-one-ellipsoid-contains-another}
+Theorem of alternatives, also known as $S$-procedure {\hyperref[chap_ellcalc:boyd2004]{{[}BOYD2004{]}}},
 states that the implication
 \begin{gather}
 \begin{split}\langle x, A_1x\rangle + 2\langle b_1,x\rangle + c_1 \leqslant0
@@ -1269,7 +1269,7 @@ where $\lambda\in{\bf R}$ is the variable.
 
 
 \subsection{Minimum Volume Ellipsoids}
-\label{main_source:minimum-volume-ellipsoids}
+\label{chap_ellcalc:minimum-volume-ellipsoids}
 The minimum volume ellipsoid that contains set $S$ is called
 \emph{Löwner-John ellipsoid} of the set $S$. To characterize it we
 rewrite general ellipsoid ${\mathcal E}(q,Q)$ as
@@ -1344,11 +1344,11 @@ After $A$ and $b$ are found,
 \begin{split}q=-A^{-1}b ~~~ \mbox{ and } ~~~ Q=(A^TA)^{-1}.\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
 The results on the minimum volume ellipsoids are explained and proven in
-{\hyperref[main_source:boyd2004]{{[}BOYD2004{]}}}.
+{\hyperref[chap_ellcalc:boyd2004]{{[}BOYD2004{]}}}.
 
 
 \subsection{Maximum Volume Ellipsoids}
-\label{main_source:maximum-volume-ellipsoids}
+\label{chap_ellcalc:maximum-volume-ellipsoids}
 Consider a problem of finding the maximum volume ellipsoid that lies
 inside a bounded convex set $S$ with nonempty interior. To
 formulate this problem we rewrite general ellipsoid
@@ -1377,7 +1377,7 @@ where $I_S$ is the indicator function:
 \infty, & \mbox{ otherwise.}\end{array}\right.\end{split}\notag
 \end{gather}
 In case of polytope, $S=P(C,g)$ with $P(C,g)$ defined in
-\eqref{main_source-polytope}, the SDP has the form
+\eqref{chap_ellcalc-polytope}, the SDP has the form
 \begin{gather}
 \begin{split}\min \log \det B^{-1}\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
@@ -1417,24 +1417,24 @@ After $B$ and $q$ are found,
 \begin{split}Q = B^TB.\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
 The results on the maximum volume ellipsoids are explained and proven in
-{\hyperref[main_source:boyd2004]{{[}BOYD2004{]}}}.
+{\hyperref[chap_ellcalc:boyd2004]{{[}BOYD2004{]}}}.
 
 
 \chapter{Reachability}
-\label{main_source:reachability}
+\label{chap_reach:reachability}\label{chap_reach::doc}
 
 \section{Basics of Reachability Analysis}
-\label{main_source:basics-of-reachability-analysis}
+\label{chap_reach:basics-of-reachability-analysis}
 
 \subsection{Systems without disturbances}
-\label{main_source:systems-without-disturbances}
+\label{chap_reach:systems-without-disturbances}
 Consider a general continuous-time
-\phantomsection\label{main_source:equation-ctds1}\begin{gather}
-\begin{split}\dot{x}(t) = f(t, x, u),\end{split}\label{main_source-ctds1}
+\phantomsection\label{chap_reach:equation-ctds1}\begin{gather}
+\begin{split}\dot{x}(t) = f(t, x, u),\end{split}\label{chap_reach-ctds1}
 \end{gather}
 or discrete-time dynamical system
-\phantomsection\label{main_source:equation-dtds1}\begin{gather}
-\begin{split}x(t+1) = f(t, x, u),\end{split}\label{main_source-dtds1}
+\phantomsection\label{chap_reach:equation-dtds1}\begin{gather}
+\begin{split}x(t+1) = f(t, x, u),\end{split}\label{chap_reach-dtds1}
 \end{gather}
 wherein $t$ is time \footnote{
 In discrete-time case $t$ assumes integer values.
@@ -1446,7 +1446,7 @@ is important to understand that for any specific \emph{continuous-time}
 dynamical system it must be determined whether the solution exists
 and is unique, and in which class of solutions these conditions are
 met. Here we shall assume that function $f$ is such that the
-solution of the differential equation \eqref{main_source-ctds1} exists and is unique
+solution of the differential equation \eqref{chap_reach-ctds1} exists and is unique
 in Fillipov sense. This allows the right-hand side to be
 discontinuous. For discrete-time systems this problem does not exist.
 } The control
@@ -1457,8 +1457,8 @@ $u=u(t, x(t))$.
 
 The (forward) reach set ${\mathcal X}(t, t_0, x_0)$ at time
 $t>t_0$ from the initial position $(t_0, x_0)$ is the set of
-all states $x(t)$ reachable at time $t$ by system \eqref{main_source-ctds1},
-or \eqref{main_source-dtds1}, with $x(t_0)=x_0$ through all possible controls
+all states $x(t)$ reachable at time $t$ by system \eqref{chap_reach-ctds1},
+or \eqref{chap_reach-dtds1}, with $x(t_0)=x_0$ through all possible controls
 $u(\tau, x(\tau))\in{\mathcal U}(\tau)$,
 $t_0\leqslant\tau< t$. For a given set of initial states
 ${\mathcal X}_0$, the reach set
@@ -1475,15 +1475,15 @@ open-loop and closed-loop control.
 \item {} 
 ${\mathcal X}(t, t_0, {\mathcal X}_0)$ satisfies the semigroup
 property,
-\phantomsection\label{main_source:equation-semigroup}\begin{gather}
+\phantomsection\label{chap_reach:equation-semigroup}\begin{gather}
 \begin{split}{\mathcal X}(t, t_0, {\mathcal X}_0) = {\mathcal X}(t, \tau, {\mathcal X}(\tau, t_0, {\mathcal X}_0)), \;\;\;
-t_0\leqslant\tau< t.\end{split}\label{main_source-semigroup}
+t_0\leqslant\tau< t.\end{split}\label{chap_reach-semigroup}
 \end{gather}
 \end{enumerate}
 
 For linear systems
-\phantomsection\label{main_source:equation-linearrhs}\begin{gather}
-\begin{split}f(t, x, u) = A(t)x(t) + B(t)u,\end{split}\label{main_source-linearrhs}
+\phantomsection\label{chap_reach:equation-linearrhs}\begin{gather}
+\begin{split}f(t, x, u) = A(t)x(t) + B(t)u,\end{split}\label{chap_reach-linearrhs}
 \end{gather}
 with matrices $A(t)$ in ${\bf R}^{n\times n}$ and
 $B(t)$ in ${\bf R}^{m\times n}$. For continuous-time linear
@@ -1514,14 +1514,14 @@ and cannot be inverted.
 Following Cauchy’s formula, the reach set
 ${\mathcal X}(t, t_0, {\mathcal X}_0)$ for a linear system can be
 expressed as
-\phantomsection\label{main_source:equation-ctlsrs}\begin{gather}
+\phantomsection\label{chap_reach:equation-ctlsrs}\begin{gather}
 \begin{split}{\mathcal X}(t, t_0, {\mathcal X}_0) =
-\Phi(t, t_0){\mathcal X}_0 \oplus \int_{t_0}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\end{split}\label{main_source-ctlsrs}
+\Phi(t, t_0){\mathcal X}_0 \oplus \int_{t_0}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\end{split}\label{chap_reach-ctlsrs}
 \end{gather}
 in continuous-time, and as
-\phantomsection\label{main_source:equation-dtlsrs}\begin{gather}
+\phantomsection\label{chap_reach:equation-dtlsrs}\begin{gather}
 \begin{split}{\mathcal X}(t, t_0, {\mathcal X}_0) =
-\Phi(t, t_0){\mathcal X}_0 \oplus \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\end{split}\label{main_source-dtlsrs}
+\Phi(t, t_0){\mathcal X}_0 \oplus \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\end{split}\label{chap_reach-dtlsrs}
 \end{gather}
 in discrete-time case.
 
@@ -1545,7 +1545,7 @@ The backward reach set ${\mathcal Y}(t_1, t, y_1)$ for the target
 position $(t_1, y_1)$ is the set of all states $y(t)$ for
 which there exists some control
 $u(\tau, x(\tau))\in{\mathcal U}(\tau)$,
-$t\leqslant\tau<t_1$, that steers system \eqref{main_source-ctds1}, or \eqref{main_source-dtds1} to
+$t\leqslant\tau<t_1$, that steers system \eqref{chap_reach-ctds1}, or \eqref{chap_reach-dtds1} to
 the state $y_1$ at time $t_1$. For the target set
 ${\mathcal Y}_1$ at time $t_1$, the backward reach set
 ${\mathcal Y}(t_1, t, {\mathcal Y}_1)$ is
@@ -1571,8 +1571,8 @@ ${\mathcal Y}_1$, $t_0$ and $t$.
 }
 
 \textbf{Remark.} Backward reach set can be computed for continuous-time
-system only if the solution of \eqref{main_source-ctds1} exists for $t<t_1$; and
-for discrete-time system only if the right hand side of \eqref{main_source-dtds1} is
+system only if the solution of \eqref{chap_reach-ctds1} exists for $t<t_1$; and
+for discrete-time system only if the right hand side of \eqref{chap_reach-dtds1} is
 invertible \footnote{
 There exists $f^{-1}(t,x,u)$ such that
 $x(t)=f^{-1}(t, x(t+1), u, v)$.
@@ -1588,22 +1588,22 @@ open-loop and closed-loop control.
 \item {} 
 ${\mathcal Y}(t_1, t, {\mathcal Y}_1)$ satisfies the semigroup
 property,
-\phantomsection\label{main_source:equation-semigroup_b}\begin{gather}
+\phantomsection\label{chap_reach:equation-semigroup_b}\begin{gather}
 \begin{split}{\mathcal Y}(t_1, t, {\mathcal Y}_1) = {\mathcal Y}(\tau, t, {\mathcal Y}(t_1, \tau, {\mathcal Y}_1)), \;\;\;
-t\leqslant\tau< t_1.\end{split}\label{main_source-semigroup_b}
+t\leqslant\tau< t_1.\end{split}\label{chap_reach-semigroup_b}
 \end{gather}
 \end{enumerate}
 
-For the linear system \eqref{main_source-linearrhs} the backward reach set can be
+For the linear system \eqref{chap_reach-linearrhs} the backward reach set can be
 expressed as
-\phantomsection\label{main_source:equation-ctlsbrs}\begin{gather}
+\phantomsection\label{chap_reach:equation-ctlsbrs}\begin{gather}
 \begin{split}{\mathcal Y}(t_1, t, {\mathcal Y}_1) =
-\Phi(t, t_1){\mathcal Y}_1 \oplus \int_{t_1}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\end{split}\label{main_source-ctlsbrs}
+\Phi(t, t_1){\mathcal Y}_1 \oplus \int_{t_1}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\end{split}\label{chap_reach-ctlsbrs}
 \end{gather}
 in the continuous-time case, and as
-\phantomsection\label{main_source:equation-dtlsbrs}\begin{gather}
+\phantomsection\label{chap_reach:equation-dtlsbrs}\begin{gather}
 \begin{split}{\mathcal Y}(t_1, t, {\mathcal Y}_1) =
-\Phi(t, t_1){\mathcal Y}_1 \oplus \sum_{\tau =t}^{t_1-1}-\Phi(t, \tau)B(\tau){\mathcal U}(\tau)\end{split}\label{main_source-dtlsbrs}
+\Phi(t, t_1){\mathcal Y}_1 \oplus \sum_{\tau =t}^{t_1-1}-\Phi(t, \tau)B(\tau){\mathcal U}(\tau)\end{split}\label{chap_reach-dtlsbrs}
 \end{gather}
 in discrete-time case. The last formula makes sense only for
 discrete-time linear systems with invertible state transition matrix.
@@ -1623,14 +1623,14 @@ set is also called the \emph{solvability set}.
 
 
 \subsection{Systems with disturbances}
-\label{main_source:systems-with-disturbances}
+\label{chap_reach:systems-with-disturbances}
 Consider the continuous-time dynamical system with disturbance
-\phantomsection\label{main_source:equation-ctds2}\begin{gather}
-\begin{split}\dot{x}(t) = f(t, x, u, v),\end{split}\label{main_source-ctds2}
+\phantomsection\label{chap_reach:equation-ctds2}\begin{gather}
+\begin{split}\dot{x}(t) = f(t, x, u, v),\end{split}\label{chap_reach-ctds2}
 \end{gather}
 or the discrete-time dynamical system with disturbance
-\phantomsection\label{main_source:equation-dtds2}\begin{gather}
-\begin{split}x(t+1) = f(t, x, u, v),\end{split}\label{main_source-dtds2}
+\phantomsection\label{chap_reach:equation-dtds2}\begin{gather}
+\begin{split}x(t+1) = f(t, x, u, v),\end{split}\label{chap_reach-dtds2}
 \end{gather}
 in which we also have the disturbance input $v\in{\bf R}^d$ with
 values $v(t)$ restricted to a closed compact set
@@ -1649,7 +1649,7 @@ of all states $x$, such that for any disturbance
 $v(\tau)\in{\mathcal V}(\tau)$, there exist an initial state
 $x_0\in{\mathcal X}_0$ and a control
 $u(\tau)\in{\mathcal U}(\tau)$, $t_0\leqslant\tau<t$, that
-steers system \eqref{main_source-ctds2} or \eqref{main_source-dtds2} from $x(t_0)=x_0$ to
+steers system \eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} from $x(t_0)=x_0$ to
 $x(t)=x$.
 
 The minmax open-loop reach set
@@ -1658,7 +1658,7 @@ of all states $x$, such that there exists a control
 $u(\tau)\in{\mathcal U}(\tau)$ that for all disturbances
 $v(\tau)\in{\mathcal V}(\tau)$, $t_0\leqslant\tau<t$,
 assigns an initial state $x_0\in{\mathcal X}_0$ and steers system
-\eqref{main_source-ctds2}, or \eqref{main_source-dtds2}, from $x(t_0)=x_0$ to $x(t)=x$.
+\eqref{chap_reach-ctds2}, or \eqref{chap_reach-dtds2}, from $x(t_0)=x_0$ to $x(t)=x$.
 
 In the maxmin case the control is chosen
 \emph{after} knowing the disturbance over the entire time interval
@@ -1669,19 +1669,19 @@ satisfy the semigroup property.
 The terms ‘maxmin’ and ‘minmax’ come from the fact that
 $\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)$ is the
 subzero level set of the value function
-\phantomsection\label{main_source:equation-maxminvf}\begin{gather}
+\phantomsection\label{chap_reach:equation-maxminvf}\begin{gather}
 \begin{split}\underline{V}(t, x) =
 \max_v\min_u\{{\bf dist}(x(t_0), {\mathcal X}_0) ~|~ x(t)=x, \; u(\tau)\in{\mathcal U}(\tau), \;
-v(\tau)\in{\mathcal V}(\tau), \; t_0\leqslant\tau<t\},\end{split}\label{main_source-maxminvf}
+v(\tau)\in{\mathcal V}(\tau), \; t_0\leqslant\tau<t\},\end{split}\label{chap_reach-maxminvf}
 \end{gather}
 i.e.,
 $\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \{ x~|~\underline{V}(t, x) \leqslant0\}$,
 and $\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)$ is the
 subzero level set of the value function
-\phantomsection\label{main_source:equation-minmaxvf}\begin{gather}
+\phantomsection\label{chap_reach:equation-minmaxvf}\begin{gather}
 \begin{split}\overline{V}(t, x) =
 \min_u\max_v\{{\bf dist}(x(t_0), {\mathcal X}_0) ~|~ x(t)=x, \; u(\tau)\in{\mathcal U}(\tau), \;
-v(\tau)\in{\mathcal V}(\tau), \; t_0\leqslant\tau<t\},\end{split}\label{main_source-minmaxvf}
+v(\tau)\in{\mathcal V}(\tau), \; t_0\leqslant\tau<t\},\end{split}\label{chap_reach-minmaxvf}
 \end{gather}
 in which ${\bf dist}(\cdot, \cdot)$ denotes Hausdorff
 semidistance. \footnote{
@@ -1703,22 +1703,22 @@ empty.
 
 Fixing time instant $\tau_1$, $t_0<\tau_1<t$, define the
 \emph{piecewise maxmin open-loop reach set with one correction},
-\phantomsection\label{main_source:equation-maxmin1}\begin{gather}
-\begin{split}\overline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) = \overline{{\mathcal X}}_{OL}(t, \tau_1, \overline{{\mathcal X}}_{OL}(\tau_1, t_0, {\mathcal X}_0)),\end{split}\label{main_source-maxmin1}
+\phantomsection\label{chap_reach:equation-maxmin1}\begin{gather}
+\begin{split}\overline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) = \overline{{\mathcal X}}_{OL}(t, \tau_1, \overline{{\mathcal X}}_{OL}(\tau_1, t_0, {\mathcal X}_0)),\end{split}\label{chap_reach-maxmin1}
 \end{gather}
 and the \emph{piecewise minmax open-loop reach set with one correction},
-\phantomsection\label{main_source:equation-minmax1}\begin{gather}
-\begin{split}\underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) = \underline{{\mathcal X}}_{OL}(t, \tau_1, \underline{{\mathcal X}}_{OL}(\tau_1, t_0, {\mathcal X}_0)).\end{split}\label{main_source-minmax1}
+\phantomsection\label{chap_reach:equation-minmax1}\begin{gather}
+\begin{split}\underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) = \underline{{\mathcal X}}_{OL}(t, \tau_1, \underline{{\mathcal X}}_{OL}(\tau_1, t_0, {\mathcal X}_0)).\end{split}\label{chap_reach-minmax1}
 \end{gather}
 The piecewise maxmin OLRS
 $\overline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0)$ is the
 subzero level set of the value function
-\phantomsection\label{main_source:equation-maxminvf1}\begin{gather}
+\phantomsection\label{chap_reach:equation-maxminvf1}\begin{gather}
 \begin{split}\underline{V}^1(t, x) =
 \max_v\min_u\{\underline{V}(\tau_1, x(\tau_1)) ~|~ x(t)=x, \;
-u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_1\leqslant\tau<t\},\end{split}\label{main_source-maxminvf1}
+u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_1\leqslant\tau<t\},\end{split}\label{chap_reach-maxminvf1}
 \end{gather}
-with $V(\tau_1, x(\tau_1))$ given by \eqref{main_source-maxminvf}, which yields
+with $V(\tau_1, x(\tau_1))$ given by \eqref{chap_reach-maxminvf}, which yields
 \begin{gather}
 \begin{split}\underline{V}^1(t, x) \geqslant\underline{V}(t, x),\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
@@ -1729,12 +1729,12 @@ and thus,
 On the other hand, the piecewise minmax OLRS
 $\underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0)$ is the
 subzero level set of the value function
-\phantomsection\label{main_source:equation-minmaxvf1}\begin{gather}
+\phantomsection\label{chap_reach:equation-minmaxvf1}\begin{gather}
 \begin{split}\overline{V}^1(t, x) =
 \min_u\max_v\{\overline{V}(\tau_1, x(\tau_1)) ~|~ x(t)=x, \;
-u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_1\leqslant\tau<t\},\end{split}\label{main_source-minmaxvf1}
+u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_1\leqslant\tau<t\},\end{split}\label{chap_reach-minmaxvf1}
 \end{gather}
-with $V(\tau_1, x(\tau_1))$ given by \eqref{main_source-minmaxvf}, which yields
+with $V(\tau_1, x(\tau_1))$ given by \eqref{chap_reach-minmaxvf}, which yields
 \begin{gather}
 \begin{split}\overline{V}(t, x) \geqslant\overline{V}^1(t, x),\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
@@ -1745,32 +1745,32 @@ and thus,
 We can now recursively define piecewise maxmin and minmax OLRS with
 $k$ corrections for $t_0<\tau_1<\cdots<\tau_k<t$. The maxmin
 piecewise OLRS with $k$ corrections is
-\phantomsection\label{main_source:equation-maxmink}\begin{gather}
+\phantomsection\label{chap_reach:equation-maxmink}\begin{gather}
 \begin{split}\overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) =
-\overline{{\mathcal X}}_{OL}(t, \tau_k, \overline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0)),\end{split}\label{main_source-maxmink}
+\overline{{\mathcal X}}_{OL}(t, \tau_k, \overline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0)),\end{split}\label{chap_reach-maxmink}
 \end{gather}
 which is the subzero level set of the corresponding value function
-\phantomsection\label{main_source:equation-maxminvfk}\begin{gather}
+\phantomsection\label{chap_reach:equation-maxminvfk}\begin{gather}
 \begin{split}\begin{aligned}
 &&\underline{V}^k(t, x) = \nonumber \\
 &&\max_v\min_u\{\underline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
 u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_k\leqslant\tau<t\}.
-\end{aligned}\end{split}\label{main_source-maxminvfk}
+\end{aligned}\end{split}\label{chap_reach-maxminvfk}
 \end{gather}
 The minmax piecewise OLRS with $k$ corrections is
-\phantomsection\label{main_source:equation-minmaxk}\begin{gather}
+\phantomsection\label{chap_reach:equation-minmaxk}\begin{gather}
 \begin{split}\underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) =
-\underline{{\mathcal X}}_{OL}(t, \tau_k, \underline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0)),\end{split}\label{main_source-minmaxk}
+\underline{{\mathcal X}}_{OL}(t, \tau_k, \underline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0)),\end{split}\label{chap_reach-minmaxk}
 \end{gather}
 which is the subzero level set of the corresponding value function
-\phantomsection\label{main_source:equation-minmaxvfk}\begin{gather}
+\phantomsection\label{chap_reach:equation-minmaxvfk}\begin{gather}
 \begin{split}\begin{aligned}
 &&\overline{V}^k(t, x) = \nonumber \\
 &&\min_u\max_v\{\overline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
 u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_k\leqslant\tau<t\}.
-\end{aligned}\end{split}\label{main_source-minmaxvfk}
+\end{aligned}\end{split}\label{chap_reach-minmaxvfk}
 \end{gather}
-From \eqref{main_source-maxminvf1}, \eqref{main_source-minmaxvf1}, \eqref{main_source-maxminvfk} and \eqref{main_source-minmaxvfk} it
+From \eqref{chap_reach-maxminvf1}, \eqref{chap_reach-minmaxvf1}, \eqref{chap_reach-maxminvfk} and \eqref{chap_reach-minmaxvfk} it
 follows that
 \begin{gather}
 \begin{split}\underline{V}(t, x) \leqslant\underline{V}^1(t, x)\leqslant\cdots
@@ -1778,35 +1778,35 @@ follows that
 \leqslant\overline{V}^1(t, x) \leqslant\overline{V}(t, x) .\end{split}\notag
 \end{gather}
 Hence,
-\phantomsection\label{main_source:equation-olrsinclusion}\begin{gather}
+\phantomsection\label{chap_reach:equation-olrsinclusion}\begin{gather}
 \begin{split}\begin{aligned}
 &&\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) \subseteq \underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) \subseteq \cdots
 \subseteq \underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) \subseteq \nonumber \\
 &&\overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) \subseteq \cdots \subseteq \overline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0)
 \subseteq \overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) .
-\end{aligned}\end{split}\label{main_source-olrsinclusion}
+\end{aligned}\end{split}\label{chap_reach-olrsinclusion}
 \end{gather}
 We call
-\phantomsection\label{main_source:equation-maxminclrs}\begin{gather}
+\phantomsection\label{chap_reach:equation-maxminclrs}\begin{gather}
 \begin{split}\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = \overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0), \;\;
 k = \left\{\begin{array}{ll}
 \infty & \mbox{ for continuous-time system}\\
-t-t_0-1 & \mbox{ for discrete-time system}\end{array}\right.\end{split}\label{main_source-maxminclrs}
+t-t_0-1 & \mbox{ for discrete-time system}\end{array}\right.\end{split}\label{chap_reach-maxminclrs}
 \end{gather}
-the \emph{maxmin closed-loop reach set} of system \eqref{main_source-ctds2} or \eqref{main_source-dtds2} at
+the \emph{maxmin closed-loop reach set} of system \eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at
 time $t$, and we call
-\phantomsection\label{main_source:equation-minmaxclrs}\begin{gather}
+\phantomsection\label{chap_reach:equation-minmaxclrs}\begin{gather}
 \begin{split}\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = \underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0), \;\;
 k = \left\{\begin{array}{ll}
 \infty & \mbox{ for continuous-time system}\\
-t-t_0-1 & \mbox{ for discrete-time system}\end{array}\right.\end{split}\label{main_source-minmaxclrs}
+t-t_0-1 & \mbox{ for discrete-time system}\end{array}\right.\end{split}\label{chap_reach-minmaxclrs}
 \end{gather}
-the \emph{minmax closed-loop reach set} of system \eqref{main_source-ctds2} or \eqref{main_source-dtds2} at
+the \emph{minmax closed-loop reach set} of system \eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at
 time $t$.
 Given initial time $t_0$ and the set of initial
 states ${\mathcal X}_0$, the maxmin CLRS
 $\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)$ of system
-\eqref{main_source-ctds2} or \eqref{main_source-dtds2} at time $t>t_0$, is the set of all states
+\eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at time $t>t_0$, is the set of all states
 $x$, for each of which and for every disturbance
 $v(\tau)\in{\mathcal V}(\tau)$, there exist an initial state
 $x_0\in{\mathcal X}_0$ and a control
@@ -1826,7 +1826,7 @@ in the discrete-time case, with $t_0\leqslant\tau<t$, is such
 that $x(t)=x$.
 Given initial time $t_0$ and the set of initial states ${\mathcal X}_0$, the
 maxmin CLRS $\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)$ of system
-\eqref{main_source-ctds2} or \eqref{main_source-dtds2}, at time $t>t_0$, is the set of all states
+\eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2}, at time $t>t_0$, is the set of all states
 $x$, for each of which there exists a control
 $u(\tau, x(\tau))\in{\mathcal U}(\tau)$, and for every disturbance
 $v(\tau)\in{\mathcal V}(\tau)$ there exists an initial state
@@ -1845,7 +1845,7 @@ f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))\end{split}\notag
 in the discrete-time case, with $t_0\leqslant\tau<t$, is such
 that $x(t)=x$.
 By construction, both
-maxmin and minmax CLRS satisfy the semigroup property \eqref{main_source-semigroup}.
+maxmin and minmax CLRS satisfy the semigroup property \eqref{chap_reach-semigroup}.
 
 For some classes of dynamical systems and some types of constraints on
 initial conditions, controls and disturbances, the maxmin and minmax
@@ -1857,47 +1857,47 @@ ${\mathcal X}(t_0+\epsilon, t_0, {\mathcal X}_0)$ is nonempty for
 some small $\epsilon>0$.
 
 Consider the linear system case,
-\phantomsection\label{main_source:equation-linearrhsdist}\begin{gather}
-\begin{split}f(t, x, u) = A(t)x(t) + B(t)u + G(t)v,\end{split}\label{main_source-linearrhsdist}
+\phantomsection\label{chap_reach:equation-linearrhsdist}\begin{gather}
+\begin{split}f(t, x, u) = A(t)x(t) + B(t)u + G(t)v,\end{split}\label{chap_reach-linearrhsdist}
 \end{gather}
-where $A(t)$ and $B(t)$ are as in \eqref{main_source-linearrhs}, and
+where $A(t)$ and $B(t)$ are as in \eqref{chap_reach-linearrhs}, and
 $G(t)$ takes its values in ${\bf R}^d$.
 
 The maxmin OLRS for the continuous-time linear system can be expressed
 through set valued integrals,
-\phantomsection\label{main_source:equation-ctlsmaxmin}\begin{gather}
+\phantomsection\label{chap_reach:equation-ctlsmaxmin}\begin{gather}
 \begin{split}\begin{array}{l}
 \overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, t_0){\mathcal X}_0 \oplus
 \int_{t_0}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\right) \dot{-} \\
 \int_{t_0}^t\Phi(t, \tau)(-G(\tau)){\mathcal V}(\tau)d\tau,
-\end{array}\end{split}\label{main_source-ctlsmaxmin}
+\end{array}\end{split}\label{chap_reach-ctlsmaxmin}
 \end{gather}
 and for discrete-time linear system through set-valued sums,
-\phantomsection\label{main_source:equation-dtlsmaxmin}\begin{gather}
+\phantomsection\label{chap_reach:equation-dtlsmaxmin}\begin{gather}
 \begin{split}\begin{array}{l}
 \overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, t_0){\mathcal X}_0 \oplus \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
 \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau).
-\end{array}\end{split}\label{main_source-dtlsmaxmin}
+\end{array}\end{split}\label{chap_reach-dtlsmaxmin}
 \end{gather}
 Similarly, the minmax OLRS for the continuous-time linear system is
-\phantomsection\label{main_source:equation-ctlsminmax}\begin{gather}
+\phantomsection\label{chap_reach:equation-ctlsminmax}\begin{gather}
 \begin{split}\begin{array}{l}
 \underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, t_0){\mathcal X}_0 \dot{-}
 \int_{t_0}^t\Phi(t, \tau)(-G(\tau)){\mathcal V}(\tau)d\tau\right)
 \oplus \\
 \int_{t_0}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau,
-\end{array}\end{split}\label{main_source-ctlsminmax}
+\end{array}\end{split}\label{chap_reach-ctlsminmax}
 \end{gather}
 and for the discrete-time linear system it is
-\phantomsection\label{main_source:equation-dtlsminmax}\begin{gather}
+\phantomsection\label{chap_reach:equation-dtlsminmax}\begin{gather}
 \begin{split}\begin{array}{l}
 \underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, t_0){\mathcal X}_0 \dot{-} \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau)\right) \oplus \\
 \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
-\end{array}\end{split}\label{main_source-dtlsminmax}
+\end{array}\end{split}\label{chap_reach-dtlsminmax}
 \end{gather}
 The operation ‘$\dot{-}$’ is \emph{geometric difference}, also known as
 \emph{Minkowski difference}. \footnote{
@@ -1910,43 +1910,43 @@ ${\mathcal W}\dot{-}{\mathcal Z}$ is convex if it is nonempty.
 }
 
 Now consider the piecewise OLRS with $k$ corrections. Expression
-\eqref{main_source-maxmink} translates into
-\phantomsection\label{main_source:equation-ctlsmaxmink}\begin{gather}
+\eqref{chap_reach-maxmink} translates into
+\phantomsection\label{chap_reach:equation-ctlsmaxmink}\begin{gather}
 \begin{split}\begin{array}{l}
 \overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, \tau_k)\overline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0) \oplus
 \int_{\tau_k}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\right) \dot{-} \\
 \int_{\tau_k}^t\Phi(t, \tau)(-G(\tau)){\mathcal V}(\tau)d\tau,
-\end{array}\end{split}\label{main_source-ctlsmaxmink}
+\end{array}\end{split}\label{chap_reach-ctlsmaxmink}
 \end{gather}
 in the continuous-time case, and for the discrete-time case into
-\phantomsection\label{main_source:equation-dtlsmaxmink}\begin{gather}
+\phantomsection\label{chap_reach:equation-dtlsmaxmink}\begin{gather}
 \begin{split}\begin{array}{l}
 \overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, \tau_k)\overline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0) \oplus
 \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
 \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau).
-\end{array}\end{split}\label{main_source-dtlsmaxmink}
+\end{array}\end{split}\label{chap_reach-dtlsmaxmink}
 \end{gather}
-Expression \eqref{main_source-minmaxk} translates into
-\phantomsection\label{main_source:equation-ctlsminmaxk}\begin{gather}
+Expression \eqref{chap_reach-minmaxk} translates into
+\phantomsection\label{chap_reach:equation-ctlsminmaxk}\begin{gather}
 \begin{split}\begin{array}{l}
 \underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, \tau_k)\underline{{\mathcal X}}_{OL}^{k-1}(t, t_0, {\mathcal X}_0) \dot{-}
 \int_{\tau_k}^t\Phi(t, \tau)(-G(\tau)){\mathcal V}(\tau)d\tau\right)
 \oplus \\
 \int_{\tau_k}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau,
-\end{array}\end{split}\label{main_source-ctlsminmaxk}
+\end{array}\end{split}\label{chap_reach-ctlsminmaxk}
 \end{gather}
 in the continuous-time case, and for the discrete-time case into
-\phantomsection\label{main_source:equation-dtlsminmaxk}\begin{gather}
+\phantomsection\label{chap_reach:equation-dtlsminmaxk}\begin{gather}
 \begin{split}\begin{array}{l}
 \underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, \tau_k)\underline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0) \dot{-}
 \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau)\right)
 \oplus \\
 \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
-\end{array}\end{split}\label{main_source-dtlsminmaxk}
+\end{array}\end{split}\label{chap_reach-dtlsminmaxk}
 \end{gather}
 Since for any
 ${\mathcal W}_1, {\mathcal W}_2, {\mathcal W}_3 \subseteq {\bf R}^n$
@@ -1956,8 +1956,8 @@ it is true that
 ({\mathcal W}_1 \oplus {\mathcal W}_3) \dot{-} ({\mathcal W}_2 \oplus {\mathcal W}_3) \subseteq
 ({\mathcal W}_1 \oplus {\mathcal W}_3) \dot{-} {\mathcal W}_2,\end{split}\notag
 \end{gather}
-from \eqref{main_source-ctlsmaxmink}, \eqref{main_source-ctlsminmaxk} and from \eqref{main_source-dtlsmaxmink},
-\eqref{main_source-dtlsminmaxk}, it is clear that \eqref{main_source-olrsinclusion} is true.
+from \eqref{chap_reach-ctlsmaxmink}, \eqref{chap_reach-ctlsminmaxk} and from \eqref{chap_reach-dtlsmaxmink},
+\eqref{chap_reach-dtlsminmaxk}, it is clear that \eqref{chap_reach-olrsinclusion} is true.
 For linear systems, if the initial set ${\mathcal X}_0$, control
 bounds ${\mathcal U}(\tau)$ and disturbance bounds
 ${\mathcal V}(\tau)$, $t_0\leqslant\tau<t$, are compact and
@@ -1974,7 +1974,7 @@ Just as for forward reach sets, the backward reach sets can be open-loop
 Given the terminal time $t_1$ and target set
 ${\mathcal Y}_1$, the maxmin open-loop backward reach set
 $\overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)$ of system
-\eqref{main_source-ctds2} or \eqref{main_source-dtds2} at time $t<t_1$, is the set of all $y$,
+\eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at time $t<t_1$, is the set of all $y$,
 such that for any disturbance $v(\tau)\in{\mathcal V}(\tau)$ there
 exists a terminal state $y_1\in{\mathcal Y}_1$ and control
 $u(\tau)\in{\mathcal U}(\tau)$, $t\leqslant\tau<t_1$, which
@@ -1982,17 +1982,17 @@ steers the system from $y(t)=y$ to $y(t_1)=y_1$.
 
 $\overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)$ is the
 subzero level set of the value function
-\phantomsection\label{main_source:equation-maxminvfb}\begin{gather}
+\phantomsection\label{chap_reach:equation-maxminvfb}\begin{gather}
 \begin{split}\begin{aligned}
 &&\underline{V}_b(t, y) = \nonumber \\
 &&\max_v\min_u\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<t_1\},
-\end{aligned}\end{split}\label{main_source-maxminvfb}
+\end{aligned}\end{split}\label{chap_reach-maxminvfb}
 \end{gather}
 Given the terminal time $t_1$ and target set
 ${\mathcal Y}_1$, the minmax open-loop backward reach set
 $\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)$ of system
-\eqref{main_source-ctds2} or \eqref{main_source-dtds2} at time $t<t_1$, is the set of all $y$,
+\eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at time $t<t_1$, is the set of all $y$,
 such that there exists a control $u(\tau)\in{\mathcal U}(\tau)$
 that for all disturbances $v(\tau\in{\mathcal V}(\tau)$,
 $t\leqslant\tau<t_1$, assigns a terminal state
@@ -2000,75 +2000,75 @@ $y_1\in{\mathcal Y}_1$ and steers the system from $y(t)=y$
 to $y(t_1)=y_1$.
 $\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)$ is the
 subzero level set of the value function
-\phantomsection\label{main_source:equation-minmaxvfb}\begin{gather}
+\phantomsection\label{chap_reach:equation-minmaxvfb}\begin{gather}
 \begin{split}\begin{aligned}
 &&\overline{V}_b(t, y) = \nonumber \\
 &&\min_u\max_v\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<t_1\},
-\end{aligned}\end{split}\label{main_source-minmaxvfb}
+\end{aligned}\end{split}\label{chap_reach-minmaxvfb}
 \end{gather}
 \textbf{Remark.} The backward reach set can be computed for a continuous-time
-system only if the solution of \eqref{main_source-ctds2} exists for $t<t_1$, and
-for a discrete-time system only if the right hand side of \eqref{main_source-dtds2} is
+system only if the solution of \eqref{chap_reach-ctds2} exists for $t<t_1$, and
+for a discrete-time system only if the right hand side of \eqref{chap_reach-dtds2} is
 invertible.
 
 Similarly to the forward reachability case, we construct piecewise OLBRS
 with one correction at time $\tau_1$, $t<\tau_1<t_1$. The
 piecewise maxmin OLBRS with one correction is
-\phantomsection\label{main_source:equation-maxminb1}\begin{gather}
-\begin{split}\overline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}(\tau_1, t, \overline{{\mathcal Y}}_{OL}(t_1, \tau_1, {\mathcal Y}_1)),\end{split}\label{main_source-maxminb1}
+\phantomsection\label{chap_reach:equation-maxminb1}\begin{gather}
+\begin{split}\overline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}(\tau_1, t, \overline{{\mathcal Y}}_{OL}(t_1, \tau_1, {\mathcal Y}_1)),\end{split}\label{chap_reach-maxminb1}
 \end{gather}
 and it is the subzero level set of the function
-\phantomsection\label{main_source:equation-maxminvfb1}\begin{gather}
+\phantomsection\label{chap_reach:equation-maxminvfb1}\begin{gather}
 \begin{split}\begin{aligned}
 &&\underline{V}^1_b(t, y) = \nonumber \\
 &&\max_v\min_u\{\underline{V}_b(\tau_1, y(\tau_1)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_1\}.
-\end{aligned}\end{split}\label{main_source-maxminvfb1}
+\end{aligned}\end{split}\label{chap_reach-maxminvfb1}
 \end{gather}
 The piecewise minmax OLBRS with one correction is
-\phantomsection\label{main_source:equation-minmaxb1}\begin{gather}
-\begin{split}\underline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}(\tau_1, t, \underline{{\mathcal Y}}_{OL}(t_1, \tau_1, {\mathcal Y}_1)),\end{split}\label{main_source-minmaxb1}
+\phantomsection\label{chap_reach:equation-minmaxb1}\begin{gather}
+\begin{split}\underline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}(\tau_1, t, \underline{{\mathcal Y}}_{OL}(t_1, \tau_1, {\mathcal Y}_1)),\end{split}\label{chap_reach-minmaxb1}
 \end{gather}
 and it is the subzero level set of the function
-\phantomsection\label{main_source:equation-minmaxvfb1}\begin{gather}
+\phantomsection\label{chap_reach:equation-minmaxvfb1}\begin{gather}
 \begin{split}\begin{aligned}
 &&\overline{V}^1_b(t, y) = \nonumber \\
 &&\min_u\max_v\{\overline{V}_b(\tau_1, y(\tau_1)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_1\},
-\end{aligned}\end{split}\label{main_source-minmaxvfb1}
+\end{aligned}\end{split}\label{chap_reach-minmaxvfb1}
 \end{gather}
 Recursively define maxmin and minmax OLBRS with $k$ corrections
 for $t<\tau_k<\cdots<\tau_1<t_1$. The maxmin OLBRS with $k$
 corrections is
-\phantomsection\label{main_source:equation-maxminbk}\begin{gather}
-\begin{split}\overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}(\tau_k, t, \overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1)),\end{split}\label{main_source-maxminbk}
+\phantomsection\label{chap_reach:equation-maxminbk}\begin{gather}
+\begin{split}\overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}(\tau_k, t, \overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1)),\end{split}\label{chap_reach-maxminbk}
 \end{gather}
 which is the subzero level set of function
-\phantomsection\label{main_source:equation-maxminvfbk}\begin{gather}
+\phantomsection\label{chap_reach:equation-maxminvfbk}\begin{gather}
 \begin{split}\begin{aligned}
 &&\underline{V}^k_b(t, y) = \nonumber \\
 &&\max_v\min_u\{\underline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_k\}.
-\end{aligned}\end{split}\label{main_source-maxminvfbk}
+\end{aligned}\end{split}\label{chap_reach-maxminvfbk}
 \end{gather}
 The minmax OLBRS with $k$ corrections is
-\phantomsection\label{main_source:equation-minmaxbk}\begin{gather}
-\begin{split}\underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}(\tau_k, t, \underline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1)),\end{split}\label{main_source-minmaxbk}
+\phantomsection\label{chap_reach:equation-minmaxbk}\begin{gather}
+\begin{split}\underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}(\tau_k, t, \underline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1)),\end{split}\label{chap_reach-minmaxbk}
 \end{gather}
 which is the subzero level set of the function
-\phantomsection\label{main_source:equation-minmaxvfbk}\begin{gather}
+\phantomsection\label{chap_reach:equation-minmaxvfbk}\begin{gather}
 \begin{split}\begin{aligned}
 &&\overline{V}^k_b(t, y) = \nonumber \\
 &&\min_u\max_v\{\overline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_k\},
-\end{aligned}\end{split}\label{main_source-minmaxvfbk}
+\end{aligned}\end{split}\label{chap_reach-minmaxvfbk}
 \end{gather}
-From \eqref{main_source-maxminvfb1}, \eqref{main_source-minmaxvfb1}, \eqref{main_source-maxminvfbk} and \eqref{main_source-minmaxvfbk}
+From \eqref{chap_reach-maxminvfb1}, \eqref{chap_reach-minmaxvfb1}, \eqref{chap_reach-maxminvfbk} and \eqref{chap_reach-minmaxvfbk}
 it follows that
 \begin{gather}
 \begin{split}\underline{V}_b(t, y) \leqslant\underline{V}^1_b(t, y)\leqslant\cdots
@@ -2076,38 +2076,38 @@ it follows that
 \leqslant\overline{V}^1_b(t, y) \leqslant\overline{V}_b(t, y) .\end{split}\notag
 \end{gather}
 Hence,
-\phantomsection\label{main_source:equation-olbrsinclusion}\begin{gather}
+\phantomsection\label{chap_reach:equation-olbrsinclusion}\begin{gather}
 \begin{split}\begin{aligned}
 &&\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) \subseteq \underline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1) \subseteq \cdots
 \subseteq \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) \subseteq \nonumber \\
 &&\overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) \subseteq \cdots \subseteq \overline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1)
 \subseteq \overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) .
-\end{aligned}\end{split}\label{main_source-olbrsinclusion}
+\end{aligned}\end{split}\label{chap_reach-olbrsinclusion}
 \end{gather}
 We say that
-\phantomsection\label{main_source:equation-maxminclbrs}\begin{gather}
+\phantomsection\label{chap_reach:equation-maxminclbrs}\begin{gather}
 \begin{split}\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1), \;\;
 k = \left\{\begin{array}{ll}
 \infty & \mbox{ for continuous-time system}\\
-t_1-t-1 & \mbox{ for discrete-time system}\end{array}\right.\end{split}\label{main_source-maxminclbrs}
+t_1-t-1 & \mbox{ for discrete-time system}\end{array}\right.\end{split}\label{chap_reach-maxminclbrs}
 \end{gather}
-is the \emph{maxmin closed-loop backward reach set} of system \eqref{main_source-ctds2} or
-\eqref{main_source-dtds2} at time $t$.
+is the \emph{maxmin closed-loop backward reach set} of system \eqref{chap_reach-ctds2} or
+\eqref{chap_reach-dtds2} at time $t$.
 
 We say that
-\phantomsection\label{main_source:equation-minmaxclbrs}\begin{gather}
+\phantomsection\label{chap_reach:equation-minmaxclbrs}\begin{gather}
 \begin{split}\underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1), \;\;
 k = \left\{\begin{array}{ll}
 \infty & \mbox{ for continuous-time system}\\
-t_1-t-1 & \mbox{ for discrete-time system}\end{array}\right.\end{split}\label{main_source-minmaxclbrs}
+t_1-t-1 & \mbox{ for discrete-time system}\end{array}\right.\end{split}\label{chap_reach-minmaxclbrs}
 \end{gather}
-is the \emph{minmax closed-loop backward reach set} of system \eqref{main_source-ctds2} or
-\eqref{main_source-dtds2} at time $t$.
+is the \emph{minmax closed-loop backward reach set} of system \eqref{chap_reach-ctds2} or
+\eqref{chap_reach-dtds2} at time $t$.
 
 Given the terminal time $t_1$ and
 target set ${\mathcal Y}_1$, the maxmin CLBRS
 $\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)$ of system
-\eqref{main_source-ctds2} or \eqref{main_source-dtds2} at time $t<t_1$, is the set of all states
+\eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at time $t<t_1$, is the set of all states
 $y$, for each of which for every disturbance
 $v(\tau)\in{\mathcal V}(\tau)$ there exists terminal state
 $y_1\in{\mathcal Y}_1$ and control
@@ -2147,85 +2147,85 @@ $y(t) = y$ and $y(t_1)=y_1$.
 
 Both
 maxmin and minmax CLBRS satisfy the semigroup property
-\eqref{main_source-semigroup_b}.
+\eqref{chap_reach-semigroup_b}.
 
 The maxmin OLBRS for the continuous-time linear system can be expressed
 through set valued integrals,
-\phantomsection\label{main_source:equation-ctlsmaxminb}\begin{gather}
+\phantomsection\label{chap_reach:equation-ctlsmaxminb}\begin{gather}
 \begin{split}\begin{array}{l}
 \overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, t_1){\mathcal Y}_1 \oplus
 \int_{t_1}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\right) \dot{-} \\
 \int_{t}^{t_1}\Phi(t, \tau)G(\tau){\mathcal V}(\tau)d\tau,
-\end{array}\end{split}\label{main_source-ctlsmaxminb}
+\end{array}\end{split}\label{chap_reach-ctlsmaxminb}
 \end{gather}
 and for the discrete-time linear system through set-valued sums,
-\phantomsection\label{main_source:equation-dtlsmaxminb}\begin{gather}
+\phantomsection\label{chap_reach:equation-dtlsmaxminb}\begin{gather}
 \begin{split}\begin{array}{l}
 \overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, t_1){\mathcal Y}_1 \oplus
 \sum_{\tau=t}^{t_1-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
 \sum_{\tau=t}^{t_1-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau).
-\end{array}\end{split}\label{main_source-dtlsmaxminb}
+\end{array}\end{split}\label{chap_reach-dtlsmaxminb}
 \end{gather}
 Similarly, the minmax OLBRS for the continuous-time linear system is
-\phantomsection\label{main_source:equation-ctlsminmaxb}\begin{gather}
+\phantomsection\label{chap_reach:equation-ctlsminmaxb}\begin{gather}
 \begin{split}\begin{array}{l}
 \underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, t_1){\mathcal Y}_1 \dot{-}
 \int_{t}^{t_1}\Phi(t, \tau)G(\tau){\mathcal V}(\tau)d\tau\right)
 \oplus \\
 \int_{t_1}^{t}\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau,
-\end{array}\end{split}\label{main_source-ctlsminmaxb}
+\end{array}\end{split}\label{chap_reach-ctlsminmaxb}
 \end{gather}
 and for the discrete-time linear system it is
-\phantomsection\label{main_source:equation-dtlsminmaxb}\begin{gather}
+\phantomsection\label{chap_reach:equation-dtlsminmaxb}\begin{gather}
 \begin{split}\begin{array}{l}
 \underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, t_1){\mathcal Y}_1 \dot{-}
 \sum_{\tau=t}^{t_1-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau)\right)
 \oplus \\
 \sum_{\tau=t}^{t_1-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
-\end{array}\end{split}\label{main_source-dtlsminmaxb}
+\end{array}\end{split}\label{chap_reach-dtlsminmaxb}
 \end{gather}
 Now consider piecewise OLBRS with $k$ corrections. Expression
-\eqref{main_source-maxminbk} translates into
-\phantomsection\label{main_source:equation-ctlsmaxminbk}\begin{gather}
+\eqref{chap_reach-maxminbk} translates into
+\phantomsection\label{chap_reach:equation-ctlsmaxminbk}\begin{gather}
 \begin{split}\begin{array}{l}
 \overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \oplus
 \int_{\tau_k}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\right) \dot{-} \\
 \int^{\tau_k}_t\Phi(t, \tau)G(\tau){\mathcal V}(\tau)d\tau,
-\end{array}\end{split}\label{main_source-ctlsmaxminbk}
+\end{array}\end{split}\label{chap_reach-ctlsmaxminbk}
 \end{gather}
 in the continuous-time case, and for the discrete-time case into
-\phantomsection\label{main_source:equation-dtlsmaxminbk}\begin{gather}
+\phantomsection\label{chap_reach:equation-dtlsmaxminbk}\begin{gather}
 \begin{split}\begin{array}{l}
 \overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \oplus
 \sum_{\tau=t}^{\tau_k-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
 \sum_{\tau=t}^{\tau_k-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau).
-\end{array}\end{split}\label{main_source-dtlsmaxminbk}
+\end{array}\end{split}\label{chap_reach-dtlsmaxminbk}
 \end{gather}
-Expression \eqref{main_source-minmaxbk} translates into
-\phantomsection\label{main_source:equation-ctlsminmaxbk}\begin{gather}
+Expression \eqref{chap_reach-minmaxbk} translates into
+\phantomsection\label{chap_reach:equation-ctlsminmaxbk}\begin{gather}
 \begin{split}\begin{array}{l}
 \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \dot{-}
 \int^{\tau_k}_t\Phi(t, \tau)G(\tau){\mathcal V}(\tau)d\tau\right)
 \oplus \\
 \int_{\tau_k}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau,
-\end{array}\end{split}\label{main_source-ctlsminmaxbk}
+\end{array}\end{split}\label{chap_reach-ctlsminmaxbk}
 \end{gather}
 in the continuous-time case, and for the discrete-time case into
-\phantomsection\label{main_source:equation-dtlsminmaxbk}\begin{gather}
+\phantomsection\label{chap_reach:equation-dtlsminmaxbk}\begin{gather}
 \begin{split}\begin{array}{l}
 \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \\
 (\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \dot{-}
 \sum_{\tau=t}^{\tau_k-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau))
 \oplus \\
 \sum_{\tau=t}^{\tau_k-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
-\end{array}\end{split}\label{main_source-dtlsminmaxbk}
+\end{array}\end{split}\label{chap_reach-dtlsminmaxbk}
 \end{gather}
 For continuous-time linear systems
 $\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = {\mathcal Y}_{CL}(t_1, t, {\mathcal Y}_1)$
@@ -2248,7 +2248,7 @@ compact and convex, if they are nonempty.
 
 
 \subsection{Reachability problem}
-\label{main_source:reachability-problem}
+\label{chap_reach:reachability-problem}
 Reachability analysis is concerned with the computation of the forward
 ${\mathcal X}(t, t_0, {\mathcal X}_0)$ and backward
 ${\mathcal Y}(t_1, t, {\mathcal Y}_1)$ reach sets (the reach sets
@@ -2315,13 +2315,13 @@ approaches in fact use reachability methods for linear systems.
 
 
 \section{Ellipsoidal Method}
-\label{main_source:ellipsoidal-method}
+\label{chap_reach:ellipsoidal-method}
 
 \subsection{Continuous-time systems}
-\label{main_source:continuous-time-systems}
+\label{chap_reach:continuous-time-systems}
 Consider the system
-\phantomsection\label{main_source:equation-ctsystem}\begin{gather}
-\begin{split}\dot{x}(t) = A(t)x(t) + B(t)u + G(t)v,\end{split}\label{main_source-ctsystem}
+\phantomsection\label{chap_reach:equation-ctsystem}\begin{gather}
+\begin{split}\dot{x}(t) = A(t)x(t) + B(t)u + G(t)v,\end{split}\label{chap_reach-ctsystem}
 \end{gather}
 in which $x\in{\bf R}^n$ is the state, $u\in{\bf R}^m$ is
 the control and $v\in{\bf R}^d$ is the disturbance. $A(t)$,
@@ -2340,7 +2340,7 @@ reach sets refer to CLRS or CLBRS. Recall that for continuous-time
 linear systems maxmin and minmax CLRS coincide, and the same is true for
 maxmin and minmax CLBRS.
 
-If the matrix $Q(\cdot)=0$, the system \eqref{main_source-ctsystem} becomes an
+If the matrix $Q(\cdot)=0$, the system \eqref{chap_reach-ctsystem} becomes an
 ordinary affine system with known $v(\cdot)=q(\cdot)$. If
 $G(\cdot) = 0$, the system becomes linear. For these two cases
 ($Q(\cdot)=0$ or $G(\cdot)=0$) the reach set is as given in
@@ -2349,14 +2349,14 @@ ${\mathcal X}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)) = {\mathcal X}(t, t_0, {\math
 
 The reach set ${\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))$ is a
 symmetric compact convex set, whose center evolves in time according to
-\phantomsection\label{main_source:equation-fwdcenter}\begin{gather}
+\phantomsection\label{chap_reach:equation-fwdcenter}\begin{gather}
 \begin{split}\dot{x}_c(t) = A(t)x_c(t) + B(t)p(t) + G(t)q(t), \;\;\;
-x_c(t_0)=x_0.\end{split}\label{main_source-fwdcenter}
+x_c(t_0)=x_0.\end{split}\label{chap_reach-fwdcenter}
 \end{gather}
 Fix a vector $l_0\in{\bf R}^n$, and consider the solution
 $l(t)$ of the adjoint equation
-\phantomsection\label{main_source:equation-adjointct}\begin{gather}
-\begin{split}\dot{l}(t) = -A^T(t)l(t), \;\;\; l(t_0) = l_0,\end{split}\label{main_source-adjointct}
+\phantomsection\label{chap_reach:equation-adjointct}\begin{gather}
+\begin{split}\dot{l}(t) = -A^T(t)l(t), \;\;\; l(t_0) = l_0,\end{split}\label{chap_reach-adjointct}
 \end{gather}
 which is equivalent to
 \begin{gather}
@@ -2366,24 +2366,24 @@ If the reach set ${\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))$ is
 nonempty, there exist tight external and tight internal approximating
 ellipsoids ${\mathcal E}(x_c(t), X^+_l(t))$ and
 ${\mathcal E}(x_c(t), X^-_l(t))$, respectively, such that
-\phantomsection\label{main_source:equation-fwdinclusion}\begin{gather}
+\phantomsection\label{chap_reach:equation-fwdinclusion}\begin{gather}
 \begin{split}{\mathcal E}(x_c(t), X^-_l(t))\subseteq{\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))
-\subseteq {\mathcal E}(x_c(t), X^+_l(t)),\end{split}\label{main_source-fwdinclusion}
+\subseteq {\mathcal E}(x_c(t), X^+_l(t)),\end{split}\label{chap_reach-fwdinclusion}
 \end{gather}
 and
-\phantomsection\label{main_source:equation-fwdtightness}\begin{gather}
+\phantomsection\label{chap_reach:equation-fwdtightness}\begin{gather}
 \begin{split}\rho(l(t) ~|~ {\mathcal E}(x_c(t), X^-_l(t))) =
 \rho(l(t) ~|~ {\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))) =
-\rho(l(t) ~|~ {\mathcal E}(x_c(t), X^+_l(t))) .\end{split}\label{main_source-fwdtightness}
+\rho(l(t) ~|~ {\mathcal E}(x_c(t), X^+_l(t))) .\end{split}\label{chap_reach-fwdtightness}
 \end{gather}
 The equation for the shape matrix of the external ellipsoid is
-\phantomsection\label{main_source:equation-fwdext1}\begin{gather}
+\phantomsection\label{chap_reach:equation-fwdext1}\begin{gather}
 \begin{split}\dot{X}^+_l(t) & = A(t)X^+_l(t) + X^+_l(t)A^T(t) +\nonumber \\
 &\pi_l(t)X^+_l(t) + \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) -\nonumber \\
 & (X_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} \nonumber -\\
-& (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(X_l^{+}(t))^{1/2}, \\\end{split}\label{main_source-fwdext1}
-\end{gather}\phantomsection\label{main_source:equation-fwdext2}\begin{gather}
-\begin{split}X^+_l(t_0) =X_0,\end{split}\label{main_source-fwdext2}
+& (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(X_l^{+}(t))^{1/2}, \\\end{split}\label{chap_reach-fwdext1}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdext2}\begin{gather}
+\begin{split}X^+_l(t_0) =X_0,\end{split}\label{chap_reach-fwdext2}
 \end{gather}
 in which
 \begin{gather}
@@ -2400,16 +2400,16 @@ X_l^+(t)l(t)\rangle^{1/2}}(X_l^{+}(t))^{1/2}l(t).\end{split}\notag
 In the presence of disturbance, if the reach set is empty, the matrix
 $X^+_l(t)$ becomes sign indefinite. For a system without
 disturbance, the terms containing $G(t)$ and $Q(t)$ vanish
-from the equation \eqref{main_source-fwdext1}.
+from the equation \eqref{chap_reach-fwdext1}.
 
 The equation for the shape matrix of the internal ellipsoid is
-\phantomsection\label{main_source:equation-fwdint1}\begin{gather}
+\phantomsection\label{chap_reach:equation-fwdint1}\begin{gather}
 \begin{split}\dot{X}^-_l(t) & = A(t)X^-_l(t) + X^-_l(t)A^T(t) +\nonumber \\
 & (X_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} +\nonumber \\
 & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(X_l^{-}(t))^{1/2} -\nonumber \\
-& \eta_l(t)X^-_l(t) - \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \\\end{split}\label{main_source-fwdint1}
-\end{gather}\phantomsection\label{main_source:equation-fwdint2}\begin{gather}
-\begin{split}X^-_l(t_0) = X_0,\end{split}\label{main_source-fwdint2}
+& \eta_l(t)X^-_l(t) - \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \\\end{split}\label{chap_reach-fwdint1}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdint2}\begin{gather}
+\begin{split}X^-_l(t_0) = X_0,\end{split}\label{chap_reach-fwdint2}
 \end{gather}
 in which
 \begin{gather}
@@ -2438,20 +2438,20 @@ transition matrix $\Phi(t,t_0)$, every boundary point of the reach
 set belongs to an extremal trajectory. To follow an extremal trajectory
 specified by parameter $l_0$, the system has to start at time
 $t_0$ at initial state
-\phantomsection\label{main_source:equation-x0lct}\begin{gather}
-\begin{split}x^0_l = x_0 + \frac{X_0l_0}{\langle l_0,X_0l_0\rangle^{1/2}}.\end{split}\label{main_source-x0lct}
+\phantomsection\label{chap_reach:equation-x0lct}\begin{gather}
+\begin{split}x^0_l = x_0 + \frac{X_0l_0}{\langle l_0,X_0l_0\rangle^{1/2}}.\end{split}\label{chap_reach-x0lct}
 \end{gather}
 In the absence of disturbances, the open-loop control
-\phantomsection\label{main_source:equation-uct}\begin{gather}
+\phantomsection\label{chap_reach:uct-label}\phantomsection\label{chap_reach:equation-uct}\begin{gather}
 \begin{split}u_l(t) = p(t) + \frac{P(t)B^T(t)l(t)}{\langle l(t),
-B(t)P(t)B^T(t)l(t)\rangle^{1/2}}.\end{split}\label{main_source-uct}
+B(t)P(t)B^T(t)l(t)\rangle^{1/2}}.\end{split}\label{chap_reach-uct}
 \end{gather}
 steers the system along the extremal trajectory defined by the vector
 $l_0$. When a disturbance is present, this control keeps the
 system on an extremal trajectory if and only if the disturbance plays
 against the control always taking its extreme values.
 
-Expressions \eqref{main_source-fwdinclusion} and \eqref{main_source-fwdtightness} lead to the following
+Expressions \eqref{chap_reach-fwdinclusion} and \eqref{chap_reach-fwdtightness} lead to the following
 fact,
 \begin{gather}
 \begin{split}\bigcup_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),X^-_l(t)) =
@@ -2469,36 +2469,36 @@ ${\mathcal E}_(y_1,Y_1)$, the CLBRS
 ${\mathcal Y}_{CL}(t_1, t, {\mathcal Y}_1)={\mathcal Y}(t_1, t, {\mathcal Y}_1)$,
 $t<t_1$, if it is nonempty, is a symmetric compact convex set
 whose center is governed by
-\phantomsection\label{main_source:equation-bckcenter}\begin{gather}
-\begin{split}y_c(t) = Ay_c(t) + B(t)p(t) + G(t)q(t), \;\;\; y_c(t_1) = y_1.\end{split}\label{main_source-bckcenter}
+\phantomsection\label{chap_reach:equation-bckcenter}\begin{gather}
+\begin{split}y_c(t) = Ay_c(t) + B(t)p(t) + G(t)q(t), \;\;\; y_c(t_1) = y_1.\end{split}\label{chap_reach-bckcenter}
 \end{gather}
 Fix a vector $l_1\in{\bf R}^n$, and consider
-\phantomsection\label{main_source:equation-bckadjoint}\begin{gather}
-\begin{split}l(t) = \Phi(t_1, t)^Tl_1 .\end{split}\label{main_source-bckadjoint}
+\phantomsection\label{chap_reach:equation-bckadjoint}\begin{gather}
+\begin{split}l(t) = \Phi(t_1, t)^Tl_1 .\end{split}\label{chap_reach-bckadjoint}
 \end{gather}
 If the backward reach set
 ${\mathcal Y}(t_1, t, {\mathcal E}(y_1,Y_1))$ is nonempty, there
 exist tight external and tight internal approximating ellipsoids
 ${\mathcal E}(y_c(t), Y^+_l(t))$ and
 ${\mathcal E}(y_c(t), Y^-_l(t))$ respectively, such that
-\phantomsection\label{main_source:equation-bckinclusion}\begin{gather}
+\phantomsection\label{chap_reach:equation-bckinclusion}\begin{gather}
 \begin{split}{\mathcal E}(y_c(t), Y^-_l(t))\subseteq{\mathcal Y}(t_1,t,{\mathcal E}(y_1,Y_1))
-\subseteq {\mathcal E}(y_c(t), Y^+_l(t)),\end{split}\label{main_source-bckinclusion}
+\subseteq {\mathcal E}(y_c(t), Y^+_l(t)),\end{split}\label{chap_reach-bckinclusion}
 \end{gather}
 and
-\phantomsection\label{main_source:equation-bcktightness}\begin{gather}
+\phantomsection\label{chap_reach:equation-bcktightness}\begin{gather}
 \begin{split}\rho(l(t) ~|~ {\mathcal E}(y_c(t), Y^-_l(t))) =
 \rho(l(t) ~|~ {\mathcal Y}(t_1, t, {\mathcal E}(y_0,Y_0))) =
-\rho(l(t) ~|~ {\mathcal E}(y_c(t), Y^+_l(t))) .\end{split}\label{main_source-bcktightness}
+\rho(l(t) ~|~ {\mathcal E}(y_c(t), Y^+_l(t))) .\end{split}\label{chap_reach-bcktightness}
 \end{gather}
 The equation for the shape matrix of the external ellipsoid is
-\phantomsection\label{main_source:equation-bckext1}\begin{gather}
+\phantomsection\label{chap_reach:equation-bckext1}\begin{gather}
 \begin{split}\dot{Y}^+_l(t) & = A(t)Y^+_l(t) + Y^+_l(t)A^T(t) -\nonumber \\
 & \pi_l(t)Y^+_l(t) - \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) +\nonumber \\
 & (Y_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} +\nonumber \\
-& (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(Y_l^{+}(t))^{1/2},\\\end{split}\label{main_source-bckext1}
-\end{gather}\phantomsection\label{main_source:equation-bckext2}\begin{gather}
-\begin{split}Y^+_l(t_1)  = Y_1,\end{split}\label{main_source-bckext2}
+& (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(Y_l^{+}(t))^{1/2},\\\end{split}\label{chap_reach-bckext1}
+\end{gather}\phantomsection\label{chap_reach:equation-bckext2}\begin{gather}
+\begin{split}Y^+_l(t_1)  = Y_1,\end{split}\label{chap_reach-bckext2}
 \end{gather}
 in which
 \begin{gather}
@@ -2513,13 +2513,13 @@ G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t),
 Y_l^+(t)l(t)\rangle^{1/2}}(Y_l^{+}(t))^{1/2}l(t).\end{split}\notag
 \end{gather}
 The equation for the shape matrix of the internal ellipsoid is
-\phantomsection\label{main_source:equation-bckint1}\begin{gather}
+\phantomsection\label{chap_reach:equation-bckint1}\begin{gather}
 \begin{split}\dot{Y}^-_l(t) & =  A(t)Y^-_l(t) + Y^-_l(t)A^T(t) -\nonumber \\
 & (Y_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} -\nonumber \\
 & (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(Y_l^{-}(t))^{1/2} +\nonumber \\
-& \eta_l(t)Y^-_l(t) + \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t),\\\end{split}\label{main_source-bckint1}
-\end{gather}\phantomsection\label{main_source:equation-bckint2}\begin{gather}
-\begin{split}Y^-_l(t_1) & = Y_1,\end{split}\label{main_source-bckint2}
+& \eta_l(t)Y^-_l(t) + \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t),\\\end{split}\label{chap_reach-bckint1}
+\end{gather}\phantomsection\label{chap_reach:equation-bckint2}\begin{gather}
+\begin{split}Y^-_l(t_1) & = Y_1,\end{split}\label{chap_reach-bckint2}
 \end{gather}
 in which
 \begin{gather}
@@ -2534,19 +2534,19 @@ B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t),
 Y_l^-(t)l(t)\rangle^{1/2}}(Y_l^{-}(t))^{1/2}l(t).\end{split}\notag
 \end{gather}
 Just as in the forward reachability case, the terms containing
-$G(t)$ and $Q(t)$ vanish from equations \eqref{main_source-bckext1} and
-\eqref{main_source-bckint1} in the absence of disturbances. The boundary value problems
-\eqref{main_source-bckcenter}, \eqref{main_source-bckext1} and \eqref{main_source-bckint1} are converted to the initial
+$G(t)$ and $Q(t)$ vanish from equations \eqref{chap_reach-bckext1} and
+\eqref{chap_reach-bckint1} in the absence of disturbances. The boundary value problems
+\eqref{chap_reach-bckcenter}, \eqref{chap_reach-bckext1} and \eqref{chap_reach-bckint1} are converted to the initial
 value problems by the change of variables $s = -t$.
 
-Due to \eqref{main_source-bckinclusion} and \eqref{main_source-bcktightness},
+Due to \eqref{chap_reach-bckinclusion} and \eqref{chap_reach-bcktightness},
 \begin{gather}
 \begin{split}\bigcup_{\langle l_1,l_1\rangle=1}{\mathcal E}(y_c(t),Y^-_l(t)) =
 {\mathcal Y}(t_1,t,{\mathcal E}(y_1,Y_1)) =
 \bigcap_{\langle l_1,l_1\rangle=1}{\mathcal E}(y_c(t),Y^+_l(t)).\end{split}\notag
 \end{gather}
-\textbf{Remark.} In expressions \eqref{main_source-fwdext1}, \eqref{main_source-fwdint1}, \eqref{main_source-bckext1} and
-\eqref{main_source-bckint1} the terms $\frac{1}{\pi_l(t)}$ and
+\textbf{Remark.} In expressions \eqref{chap_reach-fwdext1}, \eqref{chap_reach-fwdint1}, \eqref{chap_reach-bckext1} and
+\eqref{chap_reach-bckint1} the terms $\frac{1}{\pi_l(t)}$ and
 $\frac{1}{\eta_l(t)}$ may not be well defined for some vectors
 $l$, because matrices $B(t)P(t)B^T(t)$ and
 $G(t)Q(t)G^T(t)$ may be singular. In such cases, we set these
@@ -2554,10 +2554,10 @@ entire expressions to zero.
 
 
 \subsection{Discrete-time systems}
-\label{main_source:discrete-time-systems}
+\label{chap_reach:discrete-time-systems}
 Consider the discrete-time linear system,
-\phantomsection\label{main_source:equation-dtsystem}\begin{gather}
-\begin{split}x(t+1) = A(t)x(t) + B(t)u(t,x(t)) + G(t)v(t),\end{split}\label{main_source-dtsystem}
+\phantomsection\label{chap_reach:equation-dtsystem}\begin{gather}
+\begin{split}x(t+1) = A(t)x(t) + B(t)u(t,x(t)) + G(t)v(t),\end{split}\label{chap_reach-dtsystem}
 \end{gather}
 in which $x(t)\in{\bf R}^n$ is the state,
 $u(t, x(t))\in{\bf R}^m$ is the control bounded by the ellipsoid
@@ -2567,7 +2567,7 @@ $A(t)$, $B(t)$, $G(t)$ are in
 ${\bf R}^{n\times n}$, ${\bf R}^{n\times m}$,
 ${\bf R}^{n\times d}$ respectively. Here we shall assume
 $A(t)$ to be nonsingular. \footnote{
-The case when $A(t)$ is singular is described in {\hyperref[main_source:var2007]{{[}VAR2007{]}}}.
+The case when $A(t)$ is singular is described in {\hyperref[chap_reach:var2007]{{[}VAR2007{]}}}.
 The idea is to substitute $A(t)$ with the
 nonsingular $A_\delta(t) = A(t) + \delta U(t)W(t)$, in which
 $U(t)$ and $W(t)$ are obtained from the singular value
@@ -2578,7 +2578,7 @@ decomposition
 The parameter $\delta$ can be chosen based on the number of
 time steps for which the reach set must be computed and the required
 accuracy. The issue of inverting ill-conditioned matrices is also
-addressed in {\hyperref[main_source:var2007]{{[}VAR2007{]}}}.
+addressed in {\hyperref[chap_reach:var2007]{{[}VAR2007{]}}}.
 } The set of initial conditions at
 initial time $t_0$ is ellipsoid ${\mathcal E}(x_0,X_0)$.
 
@@ -2587,7 +2587,7 @@ $\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)$ and
 $\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)$ for
 discrete-time systems.
 
-If matrix $Q(\cdot)=0$, the system \eqref{main_source-dtsystem} becomes an
+If matrix $Q(\cdot)=0$, the system \eqref{chap_reach-dtsystem} becomes an
 ordinary affine system with known $v(\cdot)=q(\cdot)$. If matrix
 $G(\cdot)=0$, the system reduces to a linear controlled system. In
 the absence of disturbance ($Q(\cdot)=0$ or $G(\cdot)=0$),
@@ -2599,17 +2599,17 @@ $\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)$ and
 $\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)$, if
 nonempty, are symmetric convex and compact, with the center evolving in
 time according to
-\phantomsection\label{main_source:equation-fwdcenterd}\begin{gather}
+\phantomsection\label{chap_reach:equation-fwdcenterd}\begin{gather}
 \begin{split}x_c(t+1) = A(t)x_c(t) + B(t)p(t) + G(t)v(t), \\
-x_c(t_0)= x_0.\end{split}\label{main_source-fwdcenterd}
+x_c(t_0)= x_0.\end{split}\label{chap_reach-fwdcenterd}
 \end{gather}
 Fix some vector $l_0\in{\bf R}^n$ and consider $l(t)$ that
 satisfies the discrete-time adjoint equation, \footnote{
-Note that for \eqref{main_source-adjointdt} $A(t)$ must be invertible.
+Note that for \eqref{chap_reach-adjointdt} $A(t)$ must be invertible.
 }
-\phantomsection\label{main_source:equation-adjointdt}\begin{gather}
+\phantomsection\label{chap_reach:equation-adjointdt}\begin{gather}
 \begin{split}l(t+1) = \left(A^T\right)^{-1}(t)l(t), \\
-l(t_0) = l_0,\end{split}\label{main_source-adjointdt}
+l(t_0) = l_0,\end{split}\label{chap_reach-adjointdt}
 \end{gather}
 or, equivalently
 \begin{gather}
@@ -2620,36 +2620,36 @@ ${\mathcal E}(x_c(t), \overline{X}^+_l(t))$,
 ${\mathcal E}(x_c(t), \underline{X}^+_l(t))$ and tight internal
 ellipsoids ${\mathcal E}(x_c(t), \overline{X}^-_l(t))$,
 ${\mathcal E}(x_c(t), \underline{X}^-_l(t))$ such that
-\phantomsection\label{main_source:equation-maxmininclusion}\begin{gather}
+\phantomsection\label{chap_reach:equation-maxmininclusion}\begin{gather}
 \begin{split}{\mathcal E}(x_c(t), \overline{X}^-_l(t))\subseteq\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))
-\subseteq {\mathcal E}(x_c(t), \overline{X}^+_l(t)),\end{split}\label{main_source-maxmininclusion}
-\end{gather}\phantomsection\label{main_source:equation-maxmintightness}\begin{gather}
+\subseteq {\mathcal E}(x_c(t), \overline{X}^+_l(t)),\end{split}\label{chap_reach-maxmininclusion}
+\end{gather}\phantomsection\label{chap_reach:equation-maxmintightness}\begin{gather}
 \begin{split}\rho(l(t) ~|~ {\mathcal E}(x_c(t), \overline{X}^-_l(t))) =
 \rho(l(t) ~|~ \overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0,X_0))) =
-\rho(l(t) ~|~ {\mathcal E}(x_c(t), \overline{X}^+_l(t))) .\end{split}\label{main_source-maxmintightness}
+\rho(l(t) ~|~ {\mathcal E}(x_c(t), \overline{X}^+_l(t))) .\end{split}\label{chap_reach-maxmintightness}
 \end{gather}
 and
-\phantomsection\label{main_source:equation-minmaxinclusion}\begin{gather}
+\phantomsection\label{chap_reach:equation-minmaxinclusion}\begin{gather}
 \begin{split}{\mathcal E}(x_c(t), \underline{X}^-_l(t))\subseteq\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))
-\subseteq {\mathcal E}(x_c(t), \underline{X}^+_l(t)),\end{split}\label{main_source-minmaxinclusion}
-\end{gather}\phantomsection\label{main_source:equation-minmaxtightness}\begin{gather}
+\subseteq {\mathcal E}(x_c(t), \underline{X}^+_l(t)),\end{split}\label{chap_reach-minmaxinclusion}
+\end{gather}\phantomsection\label{chap_reach:equation-minmaxtightness}\begin{gather}
 \begin{split}\rho(l(t) ~|~ {\mathcal E}(x_c(t), \underline{X}^-_l(t))) =
 \rho(l(t) ~|~ \underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0,X_0))) =
-\rho(l(t) ~|~ {\mathcal E}(x_c(t), \underline{X}^+_l(t))) .\end{split}\label{main_source-minmaxtightness}
+\rho(l(t) ~|~ {\mathcal E}(x_c(t), \underline{X}^+_l(t))) .\end{split}\label{chap_reach-minmaxtightness}
 \end{gather}
 The shape matrix of the external ellipsoid for maxmin reach set is
 determined from
-\phantomsection\label{main_source:equation-fwdextmaxmin1}\begin{gather}
+\phantomsection\label{chap_reach:equation-fwdextmaxmin1}\begin{gather}
 \begin{split}\hat{X}^+_l(t) & = (1+\overline{\pi}_l(t))A(t)\overline{X}^+_l(t)A^T(t) +
 \left(1+\frac{1}{\overline{\pi}_l(t)}\right)
-B(t)P(t)B^T(t),  \\\end{split}\label{main_source-fwdextmaxmin1}
-\end{gather}\phantomsection\label{main_source:equation-fwdextmaxmin2}\begin{gather}
+B(t)P(t)B^T(t),  \\\end{split}\label{chap_reach-fwdextmaxmin1}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdextmaxmin2}\begin{gather}
 \begin{split}\overline{X}^+_l(t+1) & = \left((\hat{X}^+_l(t))^{1/2} +
 \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
 \times \nonumber \\
-& \left((\hat{X}^+_l(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right),\\\end{split}\label{main_source-fwdextmaxmin2}
-\end{gather}\phantomsection\label{main_source:equation-fwdextmaxmin3}\begin{gather}
-\begin{split}\overline{X}^+_l(t_0) & = X_0,\end{split}\label{main_source-fwdextmaxmin3}
+& \left((\hat{X}^+_l(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right),\\\end{split}\label{chap_reach-fwdextmaxmin2}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdextmaxmin3}\begin{gather}
+\begin{split}\overline{X}^+_l(t_0) & = X_0,\end{split}\label{chap_reach-fwdextmaxmin3}
 \end{gather}
 wherein
 \begin{gather}
@@ -2666,7 +2666,7 @@ the equation
 G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
 \hat{X}^+_l(t)l(t+1)\rangle^{1/2}}(\hat{X}^+_l(t))^{1/2}l(t+1).\end{aligned}\end{split}\notag
 \end{gather}
-Equation \eqref{main_source-fwdextmaxmin2} is valid only if
+Equation \eqref{chap_reach-fwdextmaxmin2} is valid only if
 ${\mathcal E}(0,G(t)Q(t)G^T(t))\subseteq{\mathcal E}(0,\hat{X}^+_l(t))$,
 otherwise the maxmin CLRS
 $\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))$ is
@@ -2674,20 +2674,20 @@ empty.
 
 The shape matrix of the external ellipsoid for minmax reach set is
 determined from
-\phantomsection\label{main_source:equation-fwdextminmax1}\begin{gather}
+\phantomsection\label{chap_reach:equation-fwdextminmax1}\begin{gather}
 \begin{split}\breve{X}^+_l(t) & =
 \left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
 \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
 \times \nonumber \\
 &\left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
-\underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)\\\end{split}\label{main_source-fwdextminmax1}
-\end{gather}\phantomsection\label{main_source:equation-fwdextminmax2}\begin{gather}
+\underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)\\\end{split}\label{chap_reach-fwdextminmax1}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdextminmax2}\begin{gather}
 \begin{split}\underline{X}^+_l(t+1) & =
 (1+\underline{\pi}_l(t))\breve{X}^+_l(t) +
 \left(1+\frac{1}{\underline{\pi}_l(t)}\right)
-B(t)P(t)B^T(t),\\\end{split}\label{main_source-fwdextminmax2}
-\end{gather}\phantomsection\label{main_source:equation-fwdextminmax3}\begin{gather}
-\begin{split}\underline{X}^+_l(t_0) & = X_0,\end{split}\label{main_source-fwdextminmax3}
+B(t)P(t)B^T(t),\\\end{split}\label{chap_reach-fwdextminmax2}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdextminmax3}\begin{gather}
+\begin{split}\underline{X}^+_l(t_0) & = X_0,\end{split}\label{chap_reach-fwdextminmax3}
 \end{gather}
 where
 \begin{gather}
@@ -2704,7 +2704,7 @@ equation
 G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
 \underline{X}^+_l(t)l(t)\rangle^{1/2}}(A(t)\underline{X}^+_l(t)A^T(t))^{1/2}l(t+1).\end{aligned}\end{split}\notag
 \end{gather}
-Equations \eqref{main_source-fwdextminmax1}, \eqref{main_source-fwdextminmax2} are valid only if
+Equations \eqref{chap_reach-fwdextminmax1}, \eqref{chap_reach-fwdextminmax2} are valid only if
 ${\mathcal E}(0,G(t)Q(t)G^T(t)\subseteq{\mathcal E}(0,A(t)\underline{X}^+_l(t)A^T(t))$,
 otherwise minmax CLRS
 $\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))$ is
@@ -2712,20 +2712,20 @@ empty.
 
 The shape matrix of the internal ellipsoid for maxmin reach set is
 determined from
-\phantomsection\label{main_source:equation-fwdintmaxmin1}\begin{gather}
+\phantomsection\label{chap_reach:equation-fwdintmaxmin1}\begin{gather}
 \begin{split}\hat{X}^-_l(t) & =
 \left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
 \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
 \times \nonumber \\
 & \left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
-\overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)\\\end{split}\label{main_source-fwdintmaxmin1}
-\end{gather}\phantomsection\label{main_source:equation-fwdintmaxmin2}\begin{gather}
+\overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)\\\end{split}\label{chap_reach-fwdintmaxmin1}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdintmaxmin2}\begin{gather}
 \begin{split}\overline{X}^-_l(t+1) & =
 (1+\overline{\eta}_l(t))\hat{X}^-_l(t) +
 \left(1+\frac{1}{\underline{\eta}_l(t)}\right)
-G(t)Q(t)G^T(t), \\\end{split}\label{main_source-fwdintmaxmin2}
-\end{gather}\phantomsection\label{main_source:equation-fwdintmaxmin3}\begin{gather}
-\begin{split}\overline{X}^-_l(t_0) & = X_0,\end{split}\label{main_source-fwdintmaxmin3}
+G(t)Q(t)G^T(t), \\\end{split}\label{chap_reach-fwdintmaxmin2}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdintmaxmin3}\begin{gather}
+\begin{split}\overline{X}^-_l(t_0) & = X_0,\end{split}\label{chap_reach-fwdintmaxmin3}
 \end{gather}
 where
 \begin{gather}
@@ -2742,22 +2742,22 @@ equation
 B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
 \overline{X}^-_l(t)l(t)\rangle^{1/2}}(A(t)\overline{X}^-_l(t)A^T(t))^{1/2}l(t+1).\end{aligned}\end{split}\notag
 \end{gather}
-Equation \eqref{main_source-fwdintmaxmin2} is valid only if
+Equation \eqref{chap_reach-fwdintmaxmin2} is valid only if
 ${\mathcal E}(0,G(t)Q(t)G^T(t)\subseteq{\mathcal E}(0,\hat{X}^-_l(t))$.
 
 The shape matrix of the internal ellipsoid for the minmax reach set is
 determined by
-\phantomsection\label{main_source:equation-fwdintminmax1}\begin{gather}
+\phantomsection\label{chap_reach:equation-fwdintminmax1}\begin{gather}
 \begin{split}\breve{X}^-_l(t) & = (1+\underline{\eta}_l(t))A(t)\underline{X}^-_l(t)A^T(t) +
 \left(1+\frac{1}{\underline{\eta}_l(t)}\right)
-G(t)Q(t)G^T(t),\\\end{split}\label{main_source-fwdintminmax1}
-\end{gather}\phantomsection\label{main_source:equation-fwdintminmax2}\begin{gather}
+G(t)Q(t)G^T(t),\\\end{split}\label{chap_reach-fwdintminmax1}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdintminmax2}\begin{gather}
 \begin{split}\underline{X}^-_l(t+1) & = \left((\breve{X}^-_l(t))^{1/2} +
 \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
 \times \nonumber \\
-&\left((\breve{X}^-_l(t))^{1/2} + \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right),\\\end{split}\label{main_source-fwdintminmax2}
-\end{gather}\phantomsection\label{main_source:equation-fwdintminmax3}\begin{gather}
-\begin{split}\underline{X}^-_l(t_0) & = X_0,\end{split}\label{main_source-fwdintminmax3}
+&\left((\breve{X}^-_l(t))^{1/2} + \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right),\\\end{split}\label{chap_reach-fwdintminmax2}
+\end{gather}\phantomsection\label{chap_reach:equation-fwdintminmax3}\begin{gather}
+\begin{split}\underline{X}^-_l(t_0) & = X_0,\end{split}\label{chap_reach-fwdintminmax3}
 \end{gather}
 wherein
 \begin{gather}
@@ -2774,7 +2774,7 @@ the equation
 B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
 \breve{X}^-_l(t)l(t+1)\rangle^{1/2}}(\breve{X}^-_l(t))^{1/2}l(t+1).\end{aligned}\end{split}\notag
 \end{gather}
-Equations \eqref{main_source-fwdintminmax1}, \eqref{main_source-fwdintminmax2} are valid only if
+Equations \eqref{chap_reach-fwdintminmax1}, \eqref{chap_reach-fwdintminmax2} are valid only if
 ${\mathcal E}(0,G(t)Q(t)G^T(t)\subseteq{\mathcal E}(0,A(t)\underline{X}^-_l(t)A^T(t))$.
 
 The point where the external and the internal ellipsoids both touch the
@@ -2791,17 +2791,17 @@ and the bounday point of minmax CLRS is
 Points $x^{\pm}_l(t)$, $t\geqslant t_0$, form extremal
 trajectories. In order for the system to follow the extremal trajectory
 specified by some vector $l_0$, the initial state must be
-\phantomsection\label{main_source:equation-dx01}\begin{gather}
-\begin{split}x_l^0 = x_0 + \frac{X_0l_0}{\langle l_0, X_0l_0\rangle^{1/2}}.\end{split}\label{main_source-dx01}
+\phantomsection\label{chap_reach:equation-dx01}\begin{gather}
+\begin{split}x_l^0 = x_0 + \frac{X_0l_0}{\langle l_0, X_0l_0\rangle^{1/2}}.\end{split}\label{chap_reach-dx01}
 \end{gather}
 When there is no disturbance ($G(t)=0$ or $Q(t)=0$),
 $\overline{X}^+_l(t)=\underline{X}^+_l(t)$ and
 $\overline{X}^-_l(t)=\underline{X}^-_l(t)$, and the open-loop
 control that steers the system along the extremal trajectory defined by
 $l_0$ is
-\phantomsection\label{main_source:equation-udt}\begin{gather}
+\phantomsection\label{chap_reach:equation-udt}\begin{gather}
 \begin{split}u_l(t) = p(t) + \frac{P(t)B^T(t)l(t+1)}{\langle l(t+1),
-B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}.\end{split}\label{main_source-udt}
+B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}.\end{split}\label{chap_reach-udt}
 \end{gather}
 Each choice of $l_0$ defines an external and internal
 approximation. If $\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))$ is
@@ -2821,14 +2821,14 @@ $\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))$,
 Similarly, tight ellipsoidal approximations of maxmin and minmax CLBRS
 with terminating conditions $(t_1, {\mathcal E}(y_1,Y_1))$ can be
 obtained for those directions $l(t)$ satisfying
-\phantomsection\label{main_source:equation-bckadjointd}\begin{gather}
-\begin{split}l(t) = \Phi^T(t_1,t)l_1,\end{split}\label{main_source-bckadjointd}
+\phantomsection\label{chap_reach:equation-bckadjointd}\begin{gather}
+\begin{split}l(t) = \Phi^T(t_1,t)l_1,\end{split}\label{chap_reach-bckadjointd}
 \end{gather}
 with some fixed $l_1$, for which they exist.
 
 With boundary conditions
-\phantomsection\label{main_source:equation-bndconds}\begin{gather}
-\begin{split}y_c(t_1)=y_1, ~~~ \overline{Y}^+_l(t_1)=\overline{Y}^-_l(t_1)=\underline{Y}^+_l(t_1)=\underline{Y}^-_l(t_1)=Y_1,\end{split}\label{main_source-bndconds}
+\phantomsection\label{chap_reach:equation-bndconds}\begin{gather}
+\begin{split}y_c(t_1)=y_1, ~~~ \overline{Y}^+_l(t_1)=\overline{Y}^-_l(t_1)=\underline{Y}^+_l(t_1)=\underline{Y}^-_l(t_1)=Y_1,\end{split}\label{chap_reach-bndconds}
 \end{gather}
 external and internal ellipsoids for maxmin CLBRS
 $\overline{{\mathcal Y}}_{CL}(t_1,t,{\mathcal E}(y_1,Y_1))$ at
@@ -2849,8 +2849,8 @@ and
 \dot{-}G(t){\mathcal E}(-q(t),Q(t))
 \right)\end{split}\notag
 \end{gather}
-in direction $l(t)$ from \eqref{main_source-bckadjointd}. Section
-{\hyperref[main_source:geometric-sum-difference]{Geometric Sum-Difference}} describes the operation of geometric
+in direction $l(t)$ from \eqref{chap_reach-bckadjointd}. Section
+{\hyperref[chap_ellcalc:sum-diff-label]{\emph{Geometric Sum-Difference}}} describes the operation of geometric
 sum-difference for ellipsoids.
 
 External and internal ellipsoids for minmax CLBRS
@@ -2874,22 +2874,22 @@ and
 \oplus B(t){\mathcal E}(-p(t),P(t))
 \right)\end{split}\notag
 \end{gather}
-in direction $l(t)$ from \eqref{main_source-bckadjointd}. Section
-{\hyperref[main_source:geometric-difference-sum]{Geometric Difference-Sum}} describes the operation of geometric
+in direction $l(t)$ from \eqref{chap_reach-bckadjointd}. Section
+{\hyperref[chap_ellcalc:diff-sum-label]{\emph{Geometric Difference-Sum}}} describes the operation of geometric
 difference-sum for ellipsoids.
 
 
 \chapter{Installation}
-\label{main_source:installation}
+\label{chap_install:installation}\label{chap_install::doc}
 
 \section{Additional Software}
-\label{main_source:additional-software}
+\label{chap_install:additional-software}
 These packages aren’t included in the ET distribution. So, you need to
 download them separately.
 
 
 \subsection{CVX}
-\label{main_source:cvx}
+\label{chap_install:cvx}
 Some methods of the \emph{Ellipsoidal Toolbox}, namely,
 \begin{itemize}
 \item {} 
@@ -2913,7 +2913,7 @@ ellunion\_ea
 \end{itemize}
 
 require solving semidefinite programming (SDP) problems.
-We use CVX {\hyperref[main_source:cvxhp]{{[}CVXHP{]}}} as an interface to an external SDP solver. CVX is a
+We use CVX {\hyperref[chap_install:cvxhp]{{[}CVXHP{]}}} as an interface to an external SDP solver. CVX is a
 reliable toolbox for solving SDP problems of high dimensionality. CVX is
 implemented in Matlab, effectively turning Matlab into an optimization
 modeling language. Model specifications are constructed using common
@@ -2921,14 +2921,14 @@ Matlab operations and functions, and standard Matlab code can be freely
 mixed with these specifications. This combination makes it simple to
 perform the calculations needed to form optimization problems, or to
 process the results obtained from their solution. CVX distribution
-includes two freeware solvers: SeDuMi ({\hyperref[main_source:stur1999]{{[}STUR1999{]}}}, {\hyperref[main_source:sdmhp]{{[}SDMHP{]}}})
-and SDPT3 {\hyperref[main_source:sdpt3hp]{{[}SDPT3HP{]}}}. The default solver used in the toolbox
+includes two freeware solvers: SeDuMi ({\hyperref[chap_install:stur1999]{{[}STUR1999{]}}}, {\hyperref[chap_install:sdmhp]{{[}SDMHP{]}}})
+and SDPT3 {\hyperref[chap_install:sdpt3hp]{{[}SDPT3HP{]}}}. The default solver used in the toolbox
 is SeDuMi.
 
 
 \subsection{MPT}
-\label{main_source:mpt}
-Multi-Parametric Toolbox {\hyperref[main_source:mpthp]{{[}MPTHP{]}}} - a
+\label{chap_install:mpt}
+Multi-Parametric Toolbox {\hyperref[chap_install:mpthp]{{[}MPTHP{]}}} - a
 Matlab toolbox for multi-parametric optimization and computational
 geometry. MPT is a toolbox that defines polytope class used in \emph{ET}. We
 need MPT for the following methods operating with polytopes.
@@ -2958,7 +2958,7 @@ polytope2hyperplane
 
 
 \section{Installation and Quick Start}
-\label{main_source:installation-and-quick-start}\begin{enumerate}
+\label{chap_install:installation-and-quick-start}\begin{enumerate}
 \item {} 
 Go to \href{http://code.google.com/p/ellipsoids}{http://code.google.com/p/ellipsoids} and download the \emph{Ellipsoidal Toolbox}.
 
@@ -3019,10 +3019,10 @@ and verification, type
 
 
 \chapter{Implementation}
-\label{main_source:implementation}
+\label{chap_implement:implementation}\label{chap_implement::doc}
 
 \section{Operations with ellipsoids}
-\label{main_source:id65}
+\label{chap_implement:operations-with-ellipsoids}
 In the \emph{Ellipsoidal Toolbox} we define a new class ellipsoid inside the
 MATLAB programming environment. The following three commands define the
 same ellipsoid ${\mathcal E}(q,Q)$, with $q\in{\bf R}^n$ and
@@ -3180,7 +3180,7 @@ ellipsoid object:
 \end{Verbatim}
 
 One way to check if two ellipsoids intersect, is to
-compute the distance between them ({\hyperref[main_source:stanhp]{{[}STANHP{]}}}, {\hyperref[main_source:lin2002]{{[}LIN2002{]}}}):
+compute the distance between them ({\hyperref[chap_implement:stanhp]{{[}STANHP{]}}}, {\hyperref[chap_implement:lin2002]{{[}LIN2002{]}}}):
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} distance between thirdEllObj and each of the ellipsoids in ellMat}
@@ -3197,7 +3197,7 @@ thirdEllObj does not intersect with the ellipsoid ellMat(2, 2), with all
 the other ellipsoids in ellMat it has nonempty intersection. If the
 intersection of the two ellipsoids is nonempty, it can be approximated
 by ellipsoids from the outside as well as from the inside. See
-{\hyperref[main_source:ros2002]{{[}ROS2002{]}}}
+{\hyperref[chap_ellcalc:ros2002]{{[}ROS2002{]}}}
 for more information about these methods.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
@@ -3281,9 +3281,9 @@ sum can be computed explicitely and plotted:
 \capstart
 
 \includegraphics{minksum.png}
-\caption{The geometric sum of ellipsoids.}\label{main_source:minksumpic}\end{figure}
+\caption{The geometric sum of ellipsoids.}\label{chap_implement:minksumpic}\end{figure}
 
-Figure \hyperref[main_source:minksumpic]{ \ref*{main_source:minksumpic}} displays the geometric sum of ellipsoids. If
+Figure \hyperref[chap_implement:minksumpic]{ \ref*{chap_implement:minksumpic}} displays the geometric sum of ellipsoids. If
 the dimension of the space in which the ellipsoids are defined exceeds
 $3$, an error is returned. The result of the geometric sum
 operation is not generally an ellipsoid, but it can be approximated by
@@ -3341,9 +3341,9 @@ ${\bf R}$, ${\bf R}^2$ and ${\bf R}^3$:
 \capstart
 
 \includegraphics{minkdiff.png}
-\caption{The geometric difference of ellipsoids.}\label{main_source:minkdiffpic}\end{figure}
+\caption{The geometric difference of ellipsoids.}\label{chap_implement:minkdiffpic}\end{figure}
 
-Figure \hyperref[main_source:minkdiffpic]{ \ref*{main_source:minkdiffpic}} shows the geometric difference of ellipsoids.
+Figure \hyperref[chap_implement:minkdiffpic]{ \ref*{chap_implement:minkdiffpic}} shows the geometric difference of ellipsoids.
 
 Similar to minksum, minkdiff is there for visualization purpose. It
 works only for dimensions $1$, $2$ and $3$, and for
@@ -3402,17 +3402,17 @@ of arbitrary dimension.
 \centering
 
 \includegraphics{minkpm.png}
-\label{main_source:minkpmpic}\end{figure}
+\label{chap_implement:minkpmpic}\end{figure}
 \begin{figure}[htbp]
 \centering
 
 \includegraphics{minkmp.png}
-\label{main_source:minkmppic}\end{figure}
+\label{chap_implement:minkmppic}\end{figure}
 
-Figures \hyperref[main_source:minkpmpic]{ \ref*{main_source:minkpmpic}} and \hyperref[main_source:minkmppic]{ \ref*{main_source:minkmppic}} display results of
+Figures \hyperref[chap_implement:minkpmpic]{ \ref*{chap_implement:minkpmpic}} and \hyperref[chap_implement:minkmppic]{ \ref*{chap_implement:minkmppic}} display results of
 the implementation of minkpm and minkmp operations.
 
-Similarly, operation ’sum-difference’ described in section {\hyperref[main_source:geometric-sum-difference]{Geometric sum-difference}} is implemented in functions
+Similarly, operation ’sum-difference’ described in section {\hyperref[chap_ellcalc:sum-diff-label]{\emph{Geometric Sum-Difference}}} is implemented in functions
 minkpm, minkpm\_ea, minkpm\_ia, the first one of which is used for
 visualization and works for dimensions not higher than $3$,
 whereas the last two can deal with ellipsoids of arbitrary dimension.
@@ -3436,7 +3436,7 @@ whereas the last two can deal with ellipsoids of arbitrary dimension.
 
 
 \section{Operations with hyperplanes}
-\label{main_source:operations-with-hyperplanes}
+\label{chap_implement:operations-with-hyperplanes}
 The class hyperplane of the \emph{Ellipsoidal Toolbox} is used to describe
 hyperplanes and halfspaces. The following two commands define one and
 the same hyperplane but two different halfspaces:
@@ -3524,7 +3524,7 @@ with hyperplane arrays. One exception is the function parameters that
 allows only single hyperplane object.
 
 An array of hyperplanes can be converted to the polytope object of the
-Multi-Parametric Toolbox ({\hyperref[main_source:kvas2004]{{[}KVAS2004{]}}}, {\hyperref[main_source:mpthp]{{[}MPTHP{]}}}), and back:
+Multi-Parametric Toolbox ({\hyperref[chap_implement:kvas2004]{{[}KVAS2004{]}}}, {\hyperref[chap_install:mpthp]{{[}MPTHP{]}}}), and back:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{}define array of four hyperplanes:}
@@ -3733,13 +3733,13 @@ polytopes is contained in the intersection of given ellipsoids:
 \end{Verbatim}
 
 Functions distance, intersect, intersection\_ia and isInside use the CVX
-interface ({\hyperref[main_source:cvxhp]{{[}CVXHP{]}}}) to the external optimization package. The
+interface ({\hyperref[chap_install:cvxhp]{{[}CVXHP{]}}}) to the external optimization package. The
 default optimization package included in the distribution of the
-\emph{Ellipsoidal Toolbox} is SeDuMi ({\hyperref[main_source:stur1999]{{[}STUR1999{]}}}, {\hyperref[main_source:sdmhp]{{[}SDMHP{]}}}).
+\emph{Ellipsoidal Toolbox} is SeDuMi ({\hyperref[chap_install:stur1999]{{[}STUR1999{]}}}, {\hyperref[chap_install:sdmhp]{{[}SDMHP{]}}}).
 
 
 \section{Operations with ellipsoidal tubes}
-\label{main_source:operations-with-ellipsoidal-tubes}
+\label{chap_implement:operations-with-ellipsoidal-tubes}
 There are several classes in \emph{Ellipsoidal Toolbox} for operations with
 ellipsoidal tubes. The class gras.ellapx.smartdb.rels.EllTube is used to
 describe ellipsoidal tubes. The class
@@ -3800,35 +3800,64 @@ by the cut function:
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\}]
-function example
-   aMat = [0 1; 0 0]; bMat = eye(2);  
-   SUBounds = struct();
-   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
-   SUBounds.shape = [9 0; 0 2]; 
-   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-   x0EllObj = ell\_unitball(2);
-   timeVec = [0 10]; 
-   dirsMat = [1 0; 0 1]';  
-   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-   ellTubeObj = rsObj.getEllTubeRel();
-   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
-   projType = gras.ellapx.enums.EProjType.Static;
-   statEllTubeProj = ellTubeObj.project(projType,projSpaceList,...
-      @fGetProjMat);
-   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
-   dynEllTubeProj=ellTubeObj.project(projType,projSpaceList,...
-      @fGetProjMat);
-   plObj=smartdb.disp.RelationDataPlotter();
-   statEllTubeProj.plot(plObj);
-   dynEllTubeProj.plot(plObj);
-
-end
-
-function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-    timeVec,varargin)
-  nTimePoints=length(timeVec);
-  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+function example
+
+   aMat = [0 1; 0 0]; bMat = eye(2);  
+
+   SUBounds = struct();
+
+   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
+
+   SUBounds.shape = [9 0; 0 2]; 
+
+   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+
+   x0EllObj = ell\_unitball(2);
+
+   timeVec = [0 10]; 
+
+   dirsMat = [1 0; 0 1]';  
+
+   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+
+   ellTubeObj = rsObj.getEllTubeRel();
+
+   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
+
+   projType = gras.ellapx.enums.EProjType.Static;
+
+   statEllTubeProj = ellTubeObj.project(projType,projSpaceList,...
+
+      @fGetProjMat);
+
+   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+
+   dynEllTubeProj=ellTubeObj.project(projType,projSpaceList,...
+
+      @fGetProjMat);
+
+   plObj=smartdb.disp.RelationDataPlotter();
+
+   statEllTubeProj.plot(plObj);
+
+   dynEllTubeProj.plot(plObj);
+
+
+
+end
+
+
+
+function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+
+    timeVec,varargin)
+
+  nTimePoints=length(timeVec);
+
+  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+
+  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+
  end
 \end{Verbatim}
 
@@ -3838,54 +3867,80 @@ tube onto time-dependent subspace.
 \centering
 
 \includegraphics{reachTubeStatProj.png}
-\label{main_source:stat-proj}\end{figure}
+\label{chap_implement:stat-proj}\end{figure}
 \begin{figure}[htbp]
 \centering
 
 \includegraphics{reachTubeDynProj.png}
-\label{main_source:dyn-proj}\end{figure}
+\label{chap_implement:dyn-proj}\end{figure}
 
-Figures \hyperref[main_source:stat-proj]{ \ref*{main_source:stat-proj}} and \hyperref[main_source:dyn-proj]{ \ref*{main_source:dyn-proj}} display static and dynamic projections.
+Figures \hyperref[chap_implement:stat-proj]{ \ref*{chap_implement:stat-proj}} and \hyperref[chap_implement:dyn-proj]{ \ref*{chap_implement:dyn-proj}} display static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.
 
 We can compute tubes by the instant of time using methodfromEllTubes:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-function example
-   aMat = [0 1; 0 0]; bMat = eye(2);  
-   SUBounds = struct();
-   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
-   SUBounds.shape = [9 0; 0 2]; 
-   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-   x0EllObj = ell\_unitball(2);
-   timeVec = [0 10]; 
-   dirsMat = [1 0; 0 1]';  
-   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-   ellTubeObj = rsObj.getEllTubeRel();
-   unionEllTube = ...
-    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
-   projType = gras.ellapx.enums.EProjType.Static;
-   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
-      @fGetProjMat);
-   plObj=smartdb.disp.RelationDataPlotter();
-   statEllTubeProj.plot(plObj);
-end
-
-function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-    timeVec,varargin)
-  nTimePoints=length(timeVec);
-  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+function example
+
+   aMat = [0 1; 0 0]; bMat = eye(2);  
+
+   SUBounds = struct();
+
+   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
+
+   SUBounds.shape = [9 0; 0 2]; 
+
+   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+
+   x0EllObj = ell\_unitball(2);
+
+   timeVec = [0 10]; 
+
+   dirsMat = [1 0; 0 1]';  
+
+   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+
+   ellTubeObj = rsObj.getEllTubeRel();
+
+   unionEllTube = ...
+
+    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
+
+   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
+
+   projType = gras.ellapx.enums.EProjType.Static;
+
+   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
+
+      @fGetProjMat);
+
+   plObj=smartdb.disp.RelationDataPlotter();
+
+   statEllTubeProj.plot(plObj);
+
+end
+
+
+
+function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+
+    timeVec,varargin)
+
+  nTimePoints=length(timeVec);
+
+  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+
+  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+
  end
 \end{Verbatim}
 \begin{figure}[htbp]
 \centering
 
 \includegraphics{unionTubeStatProj.png}
-\label{main_source:uniontubestatproj}\end{figure}
+\label{chap_implement:uniontubestatproj}\end{figure}
 
-Figure \hyperref[main_source:uniontubestatproj]{ \ref*{main_source:uniontubestatproj}} shows projection of ellipsoidal
+Figure \hyperref[chap_implement:uniontubestatproj]{ \ref*{chap_implement:uniontubestatproj}} shows projection of ellipsoidal
 tubes by the instant of time.
 
 Also we can get initial data from the resulting tube:
@@ -3922,9 +3977,9 @@ to display a content of ellipsoidal tubes.
 \centering
 
 \includegraphics{dispPic.png}
-\label{main_source:disppic}\end{figure}
+\label{chap_implement:disppic}\end{figure}
 
-Figure \hyperref[main_source:disppic]{ \ref*{main_source:disppic}}
+Figure \hyperref[chap_implement:disppic]{ \ref*{chap_implement:disppic}}
 displays all fields of the ellipsoidal tube.
 
 There are several methods to find the tubes with necessary parameters.
@@ -3994,7 +4049,7 @@ We can sort our tubes by certain fields:
 
 
 \section{Reachability}
-\label{main_source:id74}
+\label{chap_implement:reachability}
 To compute the reach sets of the systems described in chapter 3, we
 define few new classes in the \emph{Ellipsoidal Toolbox}: class
 LinSysContinuous for the continuous-time system description, class
@@ -4265,7 +4320,7 @@ array ttVec. Variable gcCMat contains $4$ matrices each of which
 corresponds to a good curve (columns of such matrix are points of the
 good curve evaluated at time values in ttVec). The analytic expression
 for the control driving the system along a good curve is given by
-formula \eqref{main_source-uct}.
+{\hyperref[chap_reach:uct-label]{\emph{formula}}}.
 
 We computed the reach set up to time $10$. It is possible to
 continue the reach set computation for a longer time horizon using the
@@ -4343,7 +4398,7 @@ them as integers.
 
 
 \section{Properties}
-\label{main_source:properties}
+\label{chap_implement:properties}
 Functions of the \emph{Ellipsoidal Toolbox} can be called with user-specified
 values of certain global parameters. System of the parameters are
 configured using xml files, which available from a set of command-line
@@ -4430,7 +4485,7 @@ setters.
 
 
 \section{Visualization}
-\label{main_source:visualization}
+\label{chap_implement:visualization}
 \emph{Ellipsoidal Toolbox} has several plotting routines:
 \begin{itemize}
 \item {} 
@@ -4484,23 +4539,40 @@ or three-dimensional subspace before being plotted. This is done by
 means of projection function:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% create two 4-dimensional ellipsoids:
-firstEllObj = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
-secEllObj = firstEllObj.getInv();
-
-\% specify 3-dimensional subspace by its basis:
-
-\% columns of basisMat must be orthogonal
-basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1].'; 
-
-\% get 3-dimensional projections of firstEllObj and secEllObj:
-bufEllVec = [firstEllObj secEllObj];
-\% array ellVec contains projections of firstEllObj and secEllObj
-ellVec = bufEllVec.projection(basisMat)  
-
-\% ellVec =
-\% Array of ellipsoids with dimensionality 1x2
-
+\% create two 4-dimensional ellipsoids:
+
+firstEllObj = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
+
+secEllObj = firstEllObj.getInv();
+
+
+
+\% specify 3-dimensional subspace by its basis:
+
+
+
+\% columns of basisMat must be orthogonal
+
+basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1].'; 
+
+
+
+\% get 3-dimensional projections of firstEllObj and secEllObj:
+
+bufEllVec = [firstEllObj secEllObj];
+
+\% array ellVec contains projections of firstEllObj and secEllObj
+
+ellVec = bufEllVec.projection(basisMat)  
+
+
+
+\% ellVec =
+
+\% Array of ellipsoids with dimensionality 1x2
+
+
+
 ellVec.plot();  \% plot ellipsoids in ellVec
 \end{Verbatim}
 
@@ -4513,21 +4585,36 @@ Function projection exists also for the
 ReachContinuous$\backslash$ReachDiscrete objects:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-aMat = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
-bMat = [0; 0; 0; 1];
-uBoundsEllObj = ellipsoid(1);
-\% 4-dimensional system
-sys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj);
-dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1].'; \% matrix of directions
-\% reach set from time 0 to 5
-rsObj = elltool.reach.ReachContinuous(sys, ell\_unitball(4), dirsMat,...
-    [0 5], 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
-basisMat = [1 0 0 1; 0 1 1 0].';  \% basis of 2-dimensional subspace
-
-\% project reach set rs onto basis basisMat
-psObj = rsObj.projection(basisMat);
-psObj.plotByEa();  \% plot external approximation
-hold on;
+aMat = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
+
+bMat = [0; 0; 0; 1];
+
+uBoundsEllObj = ellipsoid(1);
+
+\% 4-dimensional system
+
+sys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj);
+
+dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1].'; \% matrix of directions
+
+\% reach set from time 0 to 5
+
+rsObj = elltool.reach.ReachContinuous(sys, ell\_unitball(4), dirsMat,...
+
+    [0 5], 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
+
+basisMat = [1 0 0 1; 0 1 1 0].';  \% basis of 2-dimensional subspace
+
+
+
+\% project reach set rs onto basis basisMat
+
+psObj = rsObj.projection(basisMat);
+
+psObj.plotByEa();  \% plot external approximation
+
+hold on;
+
 psObj.plotByIa();  \% plot internal approximation
 \end{Verbatim}
 
@@ -4537,10 +4624,10 @@ getters of ellipsoid class.
 
 
 \chapter{Examples}
-\label{main_source:examples}
+\label{chap_examples::doc}\label{chap_examples:examples}
 
 \section{Ellipsoids vs. Polytopes}
-\label{main_source:ellipsoids-vs-polytopes}
+\label{chap_examples:ellipsoids-vs-polytopes}
 Depending on the particular dynamical system, certain methods of reach
 set computation may be more suitable than others. Even for a simple
 2-dimensional discrete-time linear time-invariant system, application of
@@ -4565,14 +4652,14 @@ $U$ is the control set.
 \capstart
 
 \includegraphics{ellpoly.png}
-\caption{Reach set computation performance comparison.}\label{main_source:ellpolyfig}\end{figure}
+\caption{Reach set computation performance comparison.}\label{chap_examples:ellpolyfig}\end{figure}
 
 Let ${\mathcal X}_0$ and $U$ be unit boxes in
 ${\bf R}^2$, and compute the reach set using the polytope method
-implemented in MPT {\hyperref[main_source:mpthp]{{[}MPTHP{]}}}. With every
+implemented in MPT {\hyperref[chap_install:mpthp]{{[}MPTHP{]}}}. With every
 time step the number of vertices of the reach set polytope increases by
 $4$. The complexity of the convex hull computation increases
-exponentially with number of vertices. In \hyperref[main_source:ellpolyfig]{figure  \ref*{main_source:ellpolyfig}}, the time
+exponentially with number of vertices. In \hyperref[chap_examples:ellpolyfig]{figure  \ref*{chap_examples:ellpolyfig}}, the time
 required to compute the reach set for different time steps using
 polytopes is shown in red.
 
@@ -4596,37 +4683,37 @@ external and internal ellipsoidal approximations of the reach set:
 \PYG{n}{rsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{lsys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{n}{nSteps}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-In \hyperref[main_source:ellpolyfig]{figure  \ref*{main_source:ellpolyfig}}, the time required to compute both external and
+In \hyperref[chap_examples:ellpolyfig]{figure  \ref*{chap_examples:ellpolyfig}}, the time required to compute both external and
 internal ellipsoidal approximations, with $32$ ellipsoids each,
 for different number of time steps is shown in blue.
 
-\hyperref[main_source:ellpolyfig]{Figure  \ref*{main_source:ellpolyfig}} illustrates the fact that the complexity of polytope
+\hyperref[chap_examples:ellpolyfig]{Figure  \ref*{chap_examples:ellpolyfig}} illustrates the fact that the complexity of polytope
 method grows exponentially with number of time steps, whereas the
 complexity of ellipsoidal method grows linearly.
 
 
 \section{System with Disturbance}
-\label{main_source:system-with-disturbance}\begin{figure}[htbp]
+\label{chap_examples:system-with-disturbance}\begin{figure}[htbp]
 \centering
 \capstart
 
 \includegraphics{springmass.png}
-\caption{Spring-mass system.}\label{main_source:springmassfig}\end{figure}
+\caption{Spring-mass system.}\label{chap_examples:springmassfig}\end{figure}
 
-The mechanical system presented in \hyperref[main_source:springmassfig]{figure  \ref*{main_source:springmassfig}}, is described
+The mechanical system presented in \hyperref[chap_examples:springmassfig]{figure  \ref*{chap_examples:springmassfig}}, is described
 by the following system of equations:
-\phantomsection\label{main_source:equation-spmass1}\begin{gather}
-\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = u_1,\end{split}\label{main_source-spmass1}
-\end{gather}\phantomsection\label{main_source:equation-spmass2}\begin{gather}
-\begin{split}m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = u_2 .\end{split}\label{main_source-spmass2}
+\phantomsection\label{chap_examples:equation-spmass1}\begin{gather}
+\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = u_1,\end{split}\label{chap_examples-spmass1}
+\end{gather}\phantomsection\label{chap_examples:equation-spmass2}\begin{gather}
+\begin{split}m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = u_2 .\end{split}\label{chap_examples-spmass2}
 \end{gather}
 Here $u_1$ and $u_2$ are the forces applied to masses
 $m_1$ and $m_2$, and we shall assume
 $[u_1 ~~ u_2]^T\in{\mathcal E}(0,I)$. The initial conditions can
 be taken as $x_1(0)=0$, $x_2(0)=2$. Defining
 $x_3=\dot{x}_1$ and $x_4=\dot{x}_2$, we can rewrite
-\eqref{main_source-spmass1}-\eqref{main_source-spmass2} as a linear system in standard form:
-\phantomsection\label{main_source:equation-spmassls}\begin{gather}
+\eqref{chap_examples-spmass1}-\eqref{chap_examples-spmass2} as a linear system in standard form:
+\phantomsection\label{chap_examples:equation-spmassls}\begin{gather}
 \begin{split}\left[\begin{array}{c}
 \dot{x}_1 \\
 \dot{x}_2 \\
@@ -4646,10 +4733,10 @@ x_4 \end{array}\right] + \left[\begin{array}{cc}
 \frac{1}{m_1} & 0\\
 0 & \frac{1}{m_2}\end{array}\right]\left[\begin{array}{c}
 u_1\\
-u_2\end{array}\right].\end{split}\label{main_source-spmassls}
+u_2\end{array}\right].\end{split}\label{chap_examples-spmassls}
 \end{gather}
-Now we can compute the reach set of system \eqref{main_source-spmass1}-\eqref{main_source-spmass2} for
-given time by computing the reach set of the linear system \eqref{main_source-spmassls}
+Now we can compute the reach set of system \eqref{chap_examples-spmass1}-\eqref{chap_examples-spmass2} for
+given time by computing the reach set of the linear system \eqref{chap_examples-spmassls}
 and taking its projection onto $(x_1, x_2)$ subspace.
 \begin{figure}[htbp]
 \centering
@@ -4659,7 +4746,7 @@ and taking its projection onto $(x_1, x_2)$ subspace.
 \caption{Spring-mass system without disturbance:
 (a) reach tube for time $t\in[0,4]$; (b) reach set at time $t=4$.
 Spring-mass system with disturbance:
-(c) reach tube for time $t\in[0,4]$; (d) reach set at time $t=4$.}\label{main_source:mechreachfig}\end{figure}
+(c) reach tube for time $t\in[0,4]$; (d) reach set at time $t=4$.}\label{chap_examples:mechreachfig}\end{figure}
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{n}{k1} \PYG{p}{=} \PYG{l+m+mi}{24}\PYG{p}{;}  \PYG{n}{k2} \PYG{p}{=} \PYG{l+m+mi}{32}\PYG{p}{;}
@@ -4690,20 +4777,20 @@ Spring-mass system with disturbance:
 \PYG{n}{psObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} plot reach set approximation at time t = 4}
 \end{Verbatim}
 
-Figure \hyperref[main_source:mechreachfig]{ \ref*{main_source:mechreachfig}} (a) shows the reach set of the system
-\eqref{main_source-spmass1}-\eqref{main_source-spmass2} evolving in time from $t=0$ to $t=4$.
-Figure \hyperref[main_source:mechreachfig]{ \ref*{main_source:mechreachfig}} (b) presents a snapshot of this reach set at time
+Figure \hyperref[chap_examples:mechreachfig]{ \ref*{chap_examples:mechreachfig}} (a) shows the reach set of the system
+\eqref{chap_examples-spmass1}-\eqref{chap_examples-spmass2} evolving in time from $t=0$ to $t=4$.
+Figure \hyperref[chap_examples:mechreachfig]{ \ref*{chap_examples:mechreachfig}} (b) presents a snapshot of this reach set at time
 $t=4$.
 
 So far we considered an ideal system without any disturbance, such as
-friction. We introduce disturbance to \eqref{main_source-spmass1}-\eqref{main_source-spmass2} by adding
+friction. We introduce disturbance to \eqref{chap_examples-spmass1}-\eqref{chap_examples-spmass2} by adding
 extra terms, $v_1$ and $v_2$,
-\phantomsection\label{main_source:equation-smdist1}\begin{gather}
-\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = u_1 + v_1,\end{split}\label{main_source-smdist1}
-\end{gather}\phantomsection\label{main_source:equation-smdist2}\begin{gather}
-\begin{split}m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = u_2 + v_2,\end{split}\label{main_source-smdist2}
+\phantomsection\label{chap_examples:equation-smdist1}\begin{gather}
+\begin{split}m_1\ddot{x}_1+(k_1+k_2)x_1-k_2x_2 & = u_1 + v_1,\end{split}\label{chap_examples-smdist1}
+\end{gather}\phantomsection\label{chap_examples:equation-smdist2}\begin{gather}
+\begin{split}m_2\ddot{x}_2-k_2x_1+(k_1+k_2)x_2 & = u_2 + v_2,\end{split}\label{chap_examples-smdist2}
 \end{gather}
-which results in equation \eqref{main_source-spmassls} getting an extra term
+which results in equation \eqref{chap_examples-spmassls} getting an extra term
 \begin{gather}
 \begin{split}\left[\begin{array}{cc}
 0 & 0\\
@@ -4734,22 +4821,22 @@ closed-loop reach set of the system with disturbance.
 \PYG{n}{psdCutObj}\PYG{p}{.}\PYG{n}{plotEa}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} plot reach set approximation at time t = 4}
 \end{Verbatim}
 
-\hyperref[main_source:mechreachfig]{Figure  \ref*{main_source:mechreachfig}} (c) shows the reach set of the system
-\eqref{main_source-smdist1}-\eqref{main_source-smdist2} evolving in time from $t=0$ to $t=4$.
-\hyperref[main_source:mechreachfig]{Figure  \ref*{main_source:mechreachfig}} (d) presents a snapshot of this reach set at time
+\hyperref[chap_examples:mechreachfig]{Figure  \ref*{chap_examples:mechreachfig}} (c) shows the reach set of the system
+\eqref{chap_examples-smdist1}-\eqref{chap_examples-smdist2} evolving in time from $t=0$ to $t=4$.
+\hyperref[chap_examples:mechreachfig]{Figure  \ref*{chap_examples:mechreachfig}} (d) presents a snapshot of this reach set at time
 $t=4$.
 
 
 \section{Switched System}
-\label{main_source:switched-system}\begin{figure}[htbp]
+\label{chap_examples:switched-system}\begin{figure}[htbp]
 \centering
 \capstart
 
 \includegraphics{rlc.png}
-\caption{RLC circuit with two inputs.}\label{main_source:rlcfig}\end{figure}
+\caption{RLC circuit with two inputs.}\label{chap_examples:rlcfig}\end{figure}
 
 By \emph{switched systems} we mean systems whose dynamics changes at known
-times. Consider the RLC circuit shown in \hyperref[main_source:rlcfig]{figure  \ref*{main_source:rlcfig}}. It has two
+times. Consider the RLC circuit shown in \hyperref[chap_examples:rlcfig]{figure  \ref*{chap_examples:rlcfig}}. It has two
 inputs - the voltage ($v$) and current ($i$) sources. Define
 \begin{itemize}
 \item {} 
@@ -4768,7 +4855,7 @@ across the inductor is $L\dot{x}_3$.
 
 Applying Kirchoff current and voltage laws we arrive at the linear
 system,
-\phantomsection\label{main_source:equation-rlceq}\begin{gather}
+\phantomsection\label{chap_examples:equation-rlceq}\begin{gather}
 \begin{split}\left[\begin{array}{c}
 \dot{x}_1\\
 \dot{x}_2\\
@@ -4784,7 +4871,7 @@ x_3\end{array}\right] + \left[\begin{array}{cc}
 0 & 0\\
 0 & 0\end{array}\right]\left[\begin{array}{c}
 v\\
-i\end{array}\right].\end{split}\label{main_source-rlceq}
+i\end{array}\right].\end{split}\label{chap_examples-rlceq}
 \end{gather}
 The parameters $R_1$, $R_2$, $C_1$, $C_2$ and
 $L$, as well as the inputs, may depend on time. Suppose, for time
@@ -4793,9 +4880,9 @@ $C_1=3$ F, $C_2=7$ F, $L=2$ H, both inputs, $v$
 and $i$ are present and bounded by ellipsoid
 ${\mathcal E}(0,I)$; and for time $t\geqslant2$,
 $R_1=R_2=2$ Ohm, $C_1=C_2=3$ F, $L=6$ H, the current
-source is turned off, and $|v|\leqslant1$. Then, system \eqref{main_source-rlceq}
+source is turned off, and $|v|\leqslant1$. Then, system \eqref{chap_examples-rlceq}
 can be rewritten as
-\phantomsection\label{main_source:equation-rlceq2}\begin{gather}
+\phantomsection\label{chap_examples:equation-rlceq2}\begin{gather}
 \begin{split}\left[\begin{array}{c}
 \dot{x}_1\\
 \dot{x}_2\\
@@ -4823,9 +4910,9 @@ x_2\\
 x_3\end{array}\right] + \left[\begin{array}{c}
 \frac{1}{6} \\
 0 \\
-0 \end{array}\right]v, & 2\leqslant t. \end{array}\right.\end{split}\label{main_source-rlceq2}
+0 \end{array}\right]v, & 2\leqslant t. \end{array}\right.\end{split}\label{chap_examples-rlceq2}
 \end{gather}
-We can compute the reach set of \eqref{main_source-rlceq2} for some time $t>2$,
+We can compute the reach set of \eqref{chap_examples-rlceq2} for some time $t>2$,
 say, $t=3$.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
@@ -4878,16 +4965,16 @@ say, $t=3$.
 
 \scalebox{0.700000}{\includegraphics{rlcreach.png}}
 \caption{Forward and backward reach sets of the switched system
-(external and internal approximations).}\label{main_source:rlcreachfig}\end{figure}
+(external and internal approximations).}\label{chap_examples:rlcreachfig}\end{figure}
 
-\hyperref[main_source:rlcreachfig]{Figure  \ref*{main_source:rlcreachfig}} (a) shows how the reach set projection onto
-$(x_1, x_2)$ of system \eqref{main_source-rlceq2} evolves in time from $t=0$
+\hyperref[chap_examples:rlcreachfig]{Figure  \ref*{chap_examples:rlcreachfig}} (a) shows how the reach set projection onto
+$(x_1, x_2)$ of system \eqref{chap_examples-rlceq2} evolves in time from $t=0$
 to $t=3$. The external reach set approximation for the first
 dynamics is in red, the internal approximation is in green. The dynamics
 switches at $t=2$. The external reach set approximation for the
 second dynamics is in yellow, its internal approximation is in blue. The
 full three-dimensional external (yellow) and internal (blue)
-approximations of the reach set are shown in \hyperref[main_source:rlcreachfig]{figure  \ref*{main_source:rlcreachfig}} (b).
+approximations of the reach set are shown in \hyperref[chap_examples:rlcreachfig]{figure  \ref*{chap_examples:rlcreachfig}} (b).
 
 To find out where the system should start at time $t=0$ in order
 to reach a neighborhood M of the origin at time $t=3$, we compute
@@ -4924,21 +5011,21 @@ the backward reach set from $t=3$ to $t=0$.
 \PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
-\hyperref[main_source:rlcreachfig]{Figure  \ref*{main_source:rlcreachfig}} (c) presents the evolution of the reach set projection onto
+\hyperref[chap_examples:rlcreachfig]{Figure  \ref*{chap_examples:rlcreachfig}} (c) presents the evolution of the reach set projection onto
 $(x_1, x_2)$ in backward time. Again, external and internal
 approximations corresponding to the first dynamics are shown in red and
 green, and to the second dynamics in yellow and blue. The full
 dimensional backward reach set external and internal approximations of
-system \eqref{main_source-rlceq2} at time $t=0$ is shown in \hyperref[main_source:rlcreachfig]{figure  \ref*{main_source:rlcreachfig}} (d).
+system \eqref{chap_examples-rlceq2} at time $t=0$ is shown in \hyperref[chap_examples:rlcreachfig]{figure  \ref*{chap_examples:rlcreachfig}} (d).
 
 
 \section{Hybrid System}
-\label{main_source:hybrid-system}\begin{figure}[htbp]
+\label{chap_examples:hybrid-system}\begin{figure}[htbp]
 \centering
 \capstart
 
 \includegraphics{hw.png}
-\caption{Highway model. Adapted from {\hyperref[main_source:sun2003]{{[}SUN2003{]}}}.}\label{main_source:hwfig}\end{figure}
+\caption{Highway model. Adapted from {\hyperref[chap_examples:sun2003]{{[}SUN2003{]}}}.}\label{chap_examples:hwfig}\end{figure}
 
 There is no explicit implementation of the reachability analysis for
 hybrid systems in the \emph{Ellipsoidal Toolbox}. Nonetheless, the operations
@@ -4948,8 +5035,8 @@ dynamics whose guards are ellipsoids, hyperplanes, halfspaces or
 polytopes.
 
 We consider the \emph{switching-mode model} of highway traffic presented in
-{\hyperref[main_source:sun2003]{{[}SUN2003{]}}}. The highway segment is divided into $N$
-cells as shown in \hyperref[main_source:hwfig]{figure  \ref*{main_source:hwfig}}. In this particular case, $N=4$.
+{\hyperref[chap_examples:sun2003]{{[}SUN2003{]}}}. The highway segment is divided into $N$
+cells as shown in \hyperref[chap_examples:hwfig]{figure  \ref*{chap_examples:hwfig}}. In this particular case, $N=4$.
 The traffic density in cell $i$ is $x_i$ vehicles per mile,
 $i=1,2,3,4$.
 
@@ -4993,7 +5080,7 @@ $u_3$ - on-ramp traffic flow (vph).
 Highway traffic operates in two modes: \emph{free-flow} in normal operation;
 and \emph{congested} mode, when there is a jam. Traffic flow in free-flow
 mode is described by
-\phantomsection\label{main_source:equation-fflow}\begin{gather}
+\phantomsection\label{chap_examples:equation-fflow}\begin{gather}
 \begin{split}\begin{aligned}
 \left[\begin{array}{c}
 x_1[t+1]\\
@@ -5016,10 +5103,10 @@ x_4[t]\end{array}\right] \nonumber\\
 0 & 0 & 0\end{array}\right]\left[\begin{array}{c}
 u_1\\
 u_2\\
-u_3\end{array}\right].\end{aligned}\end{split}\label{main_source-fflow}
+u_3\end{array}\right].\end{aligned}\end{split}\label{chap_examples-fflow}
 \end{gather}
 The equation for the congested mode is
-\phantomsection\label{main_source:equation-cflow}\begin{gather}
+\phantomsection\label{chap_examples:equation-cflow}\begin{gather}
 \begin{split}\begin{aligned}
 \left[\begin{array}{c}
 x_1[t+1]\\
@@ -5052,7 +5139,7 @@ u_3\end{array}\right] \nonumber\\
 x_{M1}\\
 x_{M2}\\
 x_{M3}\\
-x_{M4}\end{array}\right].\end{aligned}\end{split}\label{main_source-cflow}
+x_{M4}\end{array}\right].\end{aligned}\end{split}\label{chap_examples-cflow}
 \end{gather}
 The switch from the free-flow to the congested mode occurs when the
 density $x_2$ reaches $x_{M2}$. In other words, the
@@ -5101,7 +5188,7 @@ system. We first define the two linear systems and the guard.
 
 We assume that initially the system is in free-flow mode. Given a set of
 initial conditions, we compute the reach set according to dynamics
-\eqref{main_source-fflow} for certain number of time steps. We will consider the
+\eqref{chap_examples-fflow} for certain number of time steps. We will consider the
 external approximation of the reach set by a single ellipsoid.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
@@ -5153,22 +5240,22 @@ system is green, the guard is red.
 (projection onto $(x_1,x_2,x_3)$).
 (d) Reach set trace from $t=0$ to \emph{t=100}, free-flow system in blue,
 congested system in green; bounds of initial conditions are marked with magenta
-(projection onto $(x_1,x_2)$).}\label{main_source:hwreachfig}\end{figure}
+(projection onto $(x_1,x_2)$).}\label{chap_examples:hwreachfig}\end{figure}
 
 Analyzing the values in array dVec, we conclude that the free-flow reach
 set has nonempty intersection with hyperplane grdHyp at $t=18$ for
 the first time, and at $t=68$ for the last time. Between
-$t=18$ and $t=68$ it crosses the guard. \hyperref[main_source:hwreachfig]{Figure  \ref*{main_source:hwreachfig}} (a)
+$t=18$ and $t=68$ it crosses the guard. \hyperref[chap_examples:hwreachfig]{Figure  \ref*{chap_examples:hwreachfig}} (a)
 shows the free-flow reach set projection onto
 $(x_1,x_2,x_3)$ subspace for $t=10$, before the guard
-crossing; \hyperref[main_source:hwreachfig]{figure  \ref*{main_source:hwreachfig}} (b) for $t=50$, during the guard
-crossing; and \hyperref[main_source:hwreachfig]{figure  \ref*{main_source:hwreachfig}} (c) for $t=80$, after the guard
+crossing; \hyperref[chap_examples:hwreachfig]{figure  \ref*{chap_examples:hwreachfig}} (b) for $t=50$, during the guard
+crossing; and \hyperref[chap_examples:hwreachfig]{figure  \ref*{chap_examples:hwreachfig}} (c) for $t=80$, after the guard
 was crossed.
 
 For each time step that the intersection of the free-flow reach set and
 the guard is nonempty, we establish a new initial time and a set of
 initial conditions for the reach set computation according to dynamics
-\eqref{main_source-cflow}. The initial time is the array index minus one, and the set of
+\eqref{chap_examples-cflow}. The initial time is the array index minus one, and the set of
 initial conditions is the intersection of the free-flow reach set with
 the guard.
 
@@ -5187,8 +5274,8 @@ The union of reach sets in array crs forms the reach set for the
 congested dynamics.
 
 A summary of the reach set computation of the linear hybrid system
-\eqref{main_source-fflow}-\eqref{main_source-cflow} for $N=100$ time steps with one guard crossing
-is given in \hyperref[main_source:hwreachfig]{figure  \ref*{main_source:hwreachfig}} (d), which shows the projection of the
+\eqref{chap_examples-fflow}-\eqref{chap_examples-cflow} for $N=100$ time steps with one guard crossing
+is given in \hyperref[chap_examples:hwreachfig]{figure  \ref*{chap_examples:hwreachfig}} (d), which shows the projection of the
 reach set trace onto $(x_1,x_2)$ subspace. The system starts
 evolving in time in free-flow mode from a set of initial conditions at
 $t=0$, whose boundary is shown in magenta. The free-flow reach set
@@ -5205,10 +5292,10 @@ to the green region.
 
 
 \chapter{Summary and Outlook}
-\label{main_source:summary-and-outlook}
+\label{chap_summary::doc}\label{chap_summary:summary-and-outlook}
 Although some of the operations with ellipsoids are present in the
-commercial Geometric Bounding Toolbox Veres et al. (2001; “Geometric
-Bounding Toolbox Homepage”), the ellipsoid-related functionality of that
+commercial Geometric Bounding Toolbox ({\hyperref[chap_summary:ver2001]{{[}VER2001{]}}}, {\hyperref[chap_summary:geomhp]{{[}GEOMHP{]}}}),
+the ellipsoid-related functionality of that
 toolbox is rather limited.
 
 \emph{Ellipsoidal Toolbox} is the first free MATLAB package that implements
@@ -5223,7 +5310,7 @@ ellipsoid with halfspace.
 
 
 \chapter{Acknowledgement}
-\label{main_source:acknowledgement}
+\label{chap_acknowledge::doc}\label{chap_acknowledge:acknowledgement}
 The authors would like to thank Alexander B. Kurzhanski, Manfred Morari,
 Johan Löfberg, Michal Kvasnica and Goran Frehse for their support of
 this work by useful advice and encouragement.
@@ -15031,119 +15118,92 @@ Examples:
   sys = elltool.linsys.LinSysFactory.create(aMat, bMat,SUBounds);
 \end{Verbatim}
 
-\begin{thebibliography}{KVAS2004}
-\bibitem[CVXHP]{CVXHP}{\phantomsection\label{main_source:cvxhp} 
-CVX homepage. \href{http://cvxr.com/cvx}{http://cvxr.com/cvx}.
-}
-\bibitem[SDPT3HP]{SDPT3HP}{\phantomsection\label{main_source:sdpt3hp} 
-SDPT3 homepage. \href{http://www.math.nus.edu.sg/~mattohkc/sdpt3.html}{http://www.math.nus.edu.sg/\textasciitilde{}mattohkc/sdpt3.html}.
-}
-\bibitem[SDMHP]{SDMHP}{\phantomsection\label{main_source:sdmhp} 
-SeDuMi homepage. \href{http://sedumi.mcmaster.ca}{http://sedumi.mcmaster.ca}.
-}
-\bibitem[GEOMHP]{GEOMHP}{\phantomsection\label{main_source:geomhp} 
-Geometric Bounding Toolbox Homepage. www.sysbrain.com/gbt.
-}
-\bibitem[MATHP]{MATHP}{\phantomsection\label{main_source:mathp} 
-MATISSE homepage. \href{http://www.seas.upenn.edu/~agirard/Software/MATISSE}{http://www.seas.upenn.edu/\textasciitilde{}agirard/Software/MATISSE}.
-}
-\bibitem[ZONOHP]{ZONOHP}{\phantomsection\label{main_source:zonohp} 
-Zonotope methods on Wolfgang Kühn homepage. \href{http://www.decatur.de}{http://www.decatur.de}.
-}
-\bibitem[MPTHP]{MPTHP}{\phantomsection\label{main_source:mpthp} 
-Multi-Parametric Toolbox homepage. \href{http://control.ee.ethz.ch/~mpt}{http://control.ee.ethz.ch/\textasciitilde{}mpt}.
-}
-\bibitem[CDDHP]{CDDHP}{\phantomsection\label{main_source:cddhp} 
-CDD/CDD+ homepage. \href{http://www.cs.mcgill.ca/~fukuda/soft/cdd\_home/cdd.html}{http://www.cs.mcgill.ca/\textasciitilde{}fukuda/soft/cdd\_home/cdd.html}.
-}
-\bibitem[DDTHP]{DDTHP}{\phantomsection\label{main_source:ddthp} 
-$d/dt$ homepage. \href{http://www-verimag.imag.fr/~tdang/ddt.html}{http://www-verimag.imag.fr/\textasciitilde{}tdang/ddt.html}.
-}
-\bibitem[CMHP]{CMHP}{\phantomsection\label{main_source:cmhp} 
-CheckMate homepage. \href{http://www.ece.cmu.edu/~webk/checkmate}{http://www.ece.cmu.edu/\textasciitilde{}webk/checkmate}.
-}
-\bibitem[LSTHP]{LSTHP}{\phantomsection\label{main_source:lsthp} 
-Level Set Toolbox homepage. \href{http://www.cs.ubc.ca/~mitchell/ToolboxLS}{http://www.cs.ubc.ca/\textasciitilde{}mitchell/ToolboxLS}.
-}
-\bibitem[REQHP]{REQHP}{\phantomsection\label{main_source:reqhp} 
-Requiem homepage. \href{http://www.seas.upenn.edu/~hybrid/requiem/requiem.html}{http://www.seas.upenn.edu/\textasciitilde{}hybrid/requiem/requiem.html}.
-}
-\bibitem[STANHP]{STANHP}{\phantomsection\label{main_source:stanhp} 
-Stanley Chan Article Homepage. \href{http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf}{http://videoprocessing.ucsd.edu/\textasciitilde{}stanleychan/publication/unpublished/Ellipse.pdf}.
-}
-\bibitem[KVAS2004]{KVAS2004}{\phantomsection\label{main_source:kvas2004} 
-M. Kvasnica, P. Grieder, M. Baotic, and M. Morari. Multi-Parametric Toolbox (MPT). In
-R. Alur and G. J. Pappas, editors, \emph{Hybrid Systems: Computation and Control}, volume 2993 of
-\emph{Lecture Notes in Computer Science}, pages 448–462. Springer, 2004.
-}
-\bibitem[MOTZ1953]{MOTZ1953}{\phantomsection\label{main_source:motz1953} 
+\begin{thebibliography}{MOTZ1953}
+\bibitem[MOTZ1953]{MOTZ1953}{\phantomsection\label{chap_intro:motz1953} 
 T. S. Motzkin, H. Raiffa, G. L. Thompson, and R. M. Thrall. The double description method.
 In H. W. Kuhn and A. W. Tucker, editors, \emph{Conttributions to Theory of Games}, volume 2.
 Princeton University Press, 1953.
 }
-\bibitem[ASAR2000]{ASAR2000}{\phantomsection\label{main_source:asar2000} 
+\bibitem[CDDHP]{CDDHP}{\phantomsection\label{chap_intro:cddhp} 
+CDD/CDD+ homepage. \href{http://www.cs.mcgill.ca/~fukuda/soft/cdd\_home/cdd.html}{http://www.cs.mcgill.ca/\textasciitilde{}fukuda/soft/cdd\_home/cdd.html}.
+}
+\bibitem[DDTHP]{DDTHP}{\phantomsection\label{chap_intro:ddthp} 
+$d/dt$ homepage. \href{http://www-verimag.imag.fr/~tdang/ddt.html}{http://www-verimag.imag.fr/\textasciitilde{}tdang/ddt.html}.
+}
+\bibitem[ASAR2000]{ASAR2000}{\phantomsection\label{chap_intro:asar2000} 
 E.Asarin, O.Bournez, T.Dang, and O.Maler. Approximate reachability analysis of piecewise
 linear dynamical systems. In N.Lynch and B.H.Krogh, editors, \emph{Hybrid Systems: Computation
 and Control}, volume 1790 of \emph{Lecture Notes in Computer Science}, pages 482–497. Springer, 2000.
 }
-\bibitem[GIR2005]{GIR2005}{\phantomsection\label{main_source:gir2005} 
+\bibitem[AVIS1997]{AVIS1997}{\phantomsection\label{chap_intro:avis1997} 
+D. Avis, D. Bremner, and R. Seidel. How good are convex hull algorithms? \emph{Computational
+Geometry: Theory and Applications}, 7:265–301, 1997.
+}
+\bibitem[GIR2005]{GIR2005}{\phantomsection\label{chap_intro:gir2005} 
 A. Girard. Reachability of uncertain linear systems using zonotopes. In M. Morari, L. Thiele,
 and F. Rossi, editors, \emph{Hybrid Systems: Computation and Control}, volume 3414 of \emph{Lecture Notes
 in Computer Science}, pages 291–305. Springer, 2005.
 }
-\bibitem[GIR2006]{GIR2006}{\phantomsection\label{main_source:gir2006} 
+\bibitem[GIR2006]{GIR2006}{\phantomsection\label{chap_intro:gir2006} 
 A.Girard, C.Le Guernic, and O.Maler. Computation of reachable sets of linear time-invariant
 systems with inputs. In J.Hespanha and A.Tiwari, editors, \emph{Hybrid Systems: Computation and
 Control}, volume 3927 of \emph{Lecture Notes in Computer Science}, pages 257–271. Springer, 2006.
 }
-\bibitem[AVIS1997]{AVIS1997}{\phantomsection\label{main_source:avis1997} 
-D. Avis, D. Bremner, and R. Seidel. How good are convex hull algorithms? \emph{Computational
-Geometry: Theory and Applications}, 7:265–301, 1997.
+\bibitem[MATHP]{MATHP}{\phantomsection\label{chap_intro:mathp} 
+MATISSE homepage. \href{http://www.seas.upenn.edu/~agirard/Software/MATISSE}{http://www.seas.upenn.edu/\textasciitilde{}agirard/Software/MATISSE}.
 }
-\bibitem[STUR2003]{STUR2003}{\phantomsection\label{main_source:stur2003} 
+\bibitem[ZONOHP]{ZONOHP}{\phantomsection\label{chap_intro:zonohp} 
+Zonotope methods on Wolfgang Kühn homepage. \href{http://www.decatur.de}{http://www.decatur.de}.
+}
+\bibitem[CMHP]{CMHP}{\phantomsection\label{chap_intro:cmhp} 
+CheckMate homepage. \href{http://www.ece.cmu.edu/~webk/checkmate}{http://www.ece.cmu.edu/\textasciitilde{}webk/checkmate}.
+}
+\bibitem[STUR2003]{STUR2003}{\phantomsection\label{chap_intro:stur2003} 
 O. Stursberg and B. H. Krogh. Efficient representation and computation of reachable sets for
 hybrid systems. In O. Maler and A. Pnueli, editors, \emph{Hybrid Systems: Computation and Control},
 volume 2623 of \emph{Lecture Notes in Computer Science}, pages 482–497. Springer, 2003.
 }
-\bibitem[MIT2000]{MIT2000}{\phantomsection\label{main_source:mit2000} 
+\bibitem[MIT2000]{MIT2000}{\phantomsection\label{chap_intro:mit2000} 
 I. Mitchell and C. Tomlin. Level set methods for computation in hybrid systems. In N. Lynch
 and B. H. Krogh, editors, \emph{Hybrid Systems: Computation and Control}, volume 1790 of \emph{Lecture
 Notes in Computer Science}, pages 21–31. Springer, 2000.
 }
-\bibitem[LAFF2001]{LAFF2001}{\phantomsection\label{main_source:laff2001} 
+\bibitem[LSTHP]{LSTHP}{\phantomsection\label{chap_intro:lsthp} 
+Level Set Toolbox homepage. \href{http://www.cs.ubc.ca/~mitchell/ToolboxLS}{http://www.cs.ubc.ca/\textasciitilde{}mitchell/ToolboxLS}.
+}
+\bibitem[REQHP]{REQHP}{\phantomsection\label{chap_intro:reqhp} 
+Requiem homepage. \href{http://www.seas.upenn.edu/~hybrid/requiem/requiem.html}{http://www.seas.upenn.edu/\textasciitilde{}hybrid/requiem/requiem.html}.
+}
+\bibitem[LAFF2001]{LAFF2001}{\phantomsection\label{chap_intro:laff2001} 
 G. Lafferriere, G. J. Pappas, and S. Yovine. Symbolic reachability computation for families of
 linear vector fields. \emph{Journal of Symbolic Computation}, 32:231–253, 2001.
 }
-\bibitem[KOST2001]{KOST2001}{\phantomsection\label{main_source:kost2001} 
+\bibitem[KOST2001]{KOST2001}{\phantomsection\label{chap_intro:kost2001} 
 E. K. Kostousova. Control synthesis via parallelotopes: optimization and parallel computations.
 \emph{Optimization Methods and Software}, 14(4):267–310, 2001.
 }
-\bibitem[KUR2000]{KUR2000}{\phantomsection\label{main_source:kur2000} 
+\bibitem[KUR2000]{KUR2000}{\phantomsection\label{chap_intro:kur2000} 
 A. B. Kurzhanski and P. Varaiya. On ellipsoidal techniques for reachability analysis. \emph{Optimization
 Methods and Software}, 17:177–237, 2000.
 }
-\bibitem[VAR1998]{VAR1998}{\phantomsection\label{main_source:var1998} 
+\bibitem[VAR1998]{VAR1998}{\phantomsection\label{chap_intro:var1998} 
 P. Varaiya. Reach set computation using optimal control. Proc. of KITWorkshop on Verification
 on Hybrid Systems. Verimag, Grenoble., 1998.
 }
-\bibitem[KUR1997]{KUR1997}{\phantomsection\label{main_source:kur1997} 
+\bibitem[KUR1997]{KUR1997}{\phantomsection\label{chap_intro:kur1997} 
 A. B. Kurzhanski and I. Vályi. \emph{Ellipsoidal Calculus for Estimation and Control}. ser. SCFA.
 Birkhäuser, 1997.
 }
-\bibitem[VAR2007]{VAR2007}{\phantomsection\label{main_source:var2007} 
-P. Varaiya A. A. Kurzhanskiy. Ellipsoidal techniques for reachability analysis of discrete-time
-linear systems. \emph{IEEE Transactions on Automatic Control}, 52(1):26–38, 2007.
-}
-\bibitem[KUR2001]{KUR2001}{\phantomsection\label{main_source:kur2001} 
-A.B.Kurzhanski and P.Varaiya. Reachability analysis for uncertain systems - the ellipsoidal
+\bibitem[KUR2001]{KUR2001}{\phantomsection\label{chap_intro:kur2001} 
+A. B. Kurzhanski and P. Varaiya. Reachability analysis for uncertain systems - the ellipsoidal
 technique. \emph{Dynamics of Continuous, Discrete and Impulsive Systems Series B: Applications
 and Algorithms}, 9:347–367, 2001.
 }
-\bibitem[DAR2012]{DAR2012}{\phantomsection\label{main_source:dar2012} 
+\bibitem[DAR2012]{DAR2012}{\phantomsection\label{chap_ellcalc:dar2012} 
 A. N. Dariyn and A. B. Kurzhanski. Method of invariant sets for linear systems of high dimensionality
 under uncertain disturbances. \emph{Doklady Akademii Nauk}, 446(6):607–611, 2012.
 }
-\bibitem[GANT1960]{GANT1960}{\phantomsection\label{main_source:gant1960} \begin{enumerate}
+\bibitem[GANT1960]{GANT1960}{\phantomsection\label{chap_ellcalc:gant1960} \begin{enumerate}
 \setcounter{enumi}{5}
 \item {} \begin{enumerate}
 \setcounter{enumi}{17}
@@ -15154,39 +15214,66 @@ Gantmacher. \emph{Matrix Theory, I-II. Chelsea}, 1960.
 
 \end{enumerate}
 }
-\bibitem[ROS2002]{ROS2002}{\phantomsection\label{main_source:ros2002} 
+\bibitem[ROS2002]{ROS2002}{\phantomsection\label{chap_ellcalc:ros2002} 
 F. Thomas L. Ros, A. Sabater. An Ellipsoidal Calculus Based on Propagation and Fusion.
 \emph{IEEE Transactions on Systems, Man and Cybernetics, Part B: Cybernetics}, 32(4), 2002.
 }
-\bibitem[VAZ1999]{VAZ1999}{\phantomsection\label{main_source:vaz1999} 
+\bibitem[VAZ1999]{VAZ1999}{\phantomsection\label{chap_ellcalc:vaz1999} 
 A. Yu. Vazhentsev. On Internal Ellipsoidal Approximations for Problems of Control and Synthesis
 with Bounded Coordinates. \emph{Izvestiya Rossiiskoi Akademii Nauk. Teoriya i Systemi Upravleniya}.,
 1999.
 }
-\bibitem[BOYD2004]{BOYD2004}{\phantomsection\label{main_source:boyd2004} \begin{enumerate}
+\bibitem[BOYD2004]{BOYD2004}{\phantomsection\label{chap_ellcalc:boyd2004} \begin{enumerate}
 \setcounter{enumi}{18}
 \item {} 
 Boyd and L. Vandenberghe. \emph{Convex Optimization}. Cambridge University Press, 2004.
 
 \end{enumerate}
 }
-\bibitem[STUR1999]{STUR1999}{\phantomsection\label{main_source:stur1999} 
-Sturm, J. F. 1999. “Using SeDuMi 1.02, A MATLAB Toolbox for Optimization
-over Symmetric Cones.” \emph{Optimization Methods and Software} 11-12: 625–653.
+\bibitem[VAR2007]{VAR2007}{\phantomsection\label{chap_reach:var2007} 
+P. Varaiya A. A. Kurzhanskiy. Ellipsoidal techniques for reachability analysis of discrete-time
+linear systems. \emph{IEEE Transactions on Automatic Control}, 52(1):26–38, 2007.
 }
-\bibitem[LIN2002]{LIN2002}{\phantomsection\label{main_source:lin2002} 
-Lin, A., and S. Han. 2002. On the Distance Between Two Ellipsoids.
+\bibitem[MPTHP]{MPTHP}{\phantomsection\label{chap_install:mpthp} 
+Multi-Parametric Toolbox homepage. \href{http://control.ee.ethz.ch/~mpt}{http://control.ee.ethz.ch/\textasciitilde{}mpt}.
+}
+\bibitem[CVXHP]{CVXHP}{\phantomsection\label{chap_install:cvxhp} 
+CVX homepage. \href{http://cvxr.com/cvx}{http://cvxr.com/cvx}.
+}
+\bibitem[SDMHP]{SDMHP}{\phantomsection\label{chap_install:sdmhp} 
+SeDuMi homepage. \href{http://sedumi.mcmaster.ca}{http://sedumi.mcmaster.ca}.
+}
+\bibitem[STUR1999]{STUR1999}{\phantomsection\label{chap_install:stur1999} 
+Sturm, J. F. 1999. Using SeDuMi 1.02, A MATLAB Toolbox for Optimization
+over Symmetric Cones. \emph{Optimization Methods and Software} 11-12: 625–653.
+}
+\bibitem[SDPT3HP]{SDPT3HP}{\phantomsection\label{chap_install:sdpt3hp} 
+SDPT3 homepage. \href{http://www.math.nus.edu.sg/~mattohkc/sdpt3.html}{http://www.math.nus.edu.sg/\textasciitilde{}mattohkc/sdpt3.html}.
+}
+\bibitem[STANHP]{STANHP}{\phantomsection\label{chap_implement:stanhp} 
+Stanley Chan Article Homepage. \href{http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf}{http://videoprocessing.ucsd.edu/\textasciitilde{}stanleychan/publication/unpublished/Ellipse.pdf}.
+}
+\bibitem[LIN2002]{LIN2002}{\phantomsection\label{chap_implement:lin2002} 
+Lin A., and S. Han. 2002. On the Distance Between Two Ellipsoids.
 \emph{SIAM Journal on Optimization} 13 (1): 298–308.
 }
-\bibitem[SUN2003]{SUN2003}{\phantomsection\label{main_source:sun2003} 
+\bibitem[KVAS2004]{KVAS2004}{\phantomsection\label{chap_implement:kvas2004} 
+M. Kvasnica, P. Grieder, M. Baotic, and M. Morari. Multi-Parametric Toolbox (MPT). In
+R. Alur and G. J. Pappas, editors, \emph{Hybrid Systems: Computation and Control}, volume 2993 of
+\emph{Lecture Notes in Computer Science}, pages 448–462. Springer, 2004.
+}
+\bibitem[SUN2003]{SUN2003}{\phantomsection\label{chap_examples:sun2003} 
 L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
 Estimation with the Cell Transmission Model. In \emph{Proceedings of the
 American Control Conference}, 3750–3755. Denver, Colorado, USA.
 }
-\bibitem[VER2001]{VER2001}{\phantomsection\label{main_source:ver2001} 
+\bibitem[VER2001]{VER2001}{\phantomsection\label{chap_summary:ver2001} 
 Veres, S. M., A. V. Kuntsevich, I. V. Vályi, S. Hermsmeyer, and D. S.
 Wall. 2001. Geometric Bounding Toolbox for MATLAB. \emph{MATLAB/Simulink
 Connections Catalogue}.
+}
+\bibitem[GEOMHP]{GEOMHP}{\phantomsection\label{chap_summary:geomhp} 
+Geometric Bounding Toolbox Homepage. www.sysbrain.com/gbt.
 }
 \end{thebibliography}
 
