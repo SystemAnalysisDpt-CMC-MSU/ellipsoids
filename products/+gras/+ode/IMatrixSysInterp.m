@@ -1,7 +1,6 @@
-classdef IMatrixSysInterp
-    
-    methods
-        resultsList = evaluate(inputList);
+classdef IMatrixSysInterp < handle
+    methods(Abstract)
+        resArray = evaluate(newTimeVec);
     end
     
 end

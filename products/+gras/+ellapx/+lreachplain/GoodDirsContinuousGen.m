@@ -88,17 +88,35 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                 timeVec, fRstDerivFunc, sRstInitialMat, ...
                 sXstNormInitial, calcPrecision, varargin)
             %
-            import gras.ode.MatrixODESolver;
+            import gras.ode.MatrixSysODERegInterpSolver;
             %
             sRstExtInitialMat = [sRstInitialMat(:); sXstNormInitial];
             %
-            odeArgList = self.getOdePropList(calcPrecision);
-            sizeSysVec = size(sRstExtInitialMat);
-            %
-            solverObj = MatrixODESolver(sizeSysVec, @ode45, ...
-                odeArgList{:});
-            [timeRstHalfVec, dataRstExtHalfArray] = solverObj.solve(...
-                fRstDerivFunc, timeVec, sRstExtInitialMat);
+            
+            function varargout=fAdvRegFunc(~,varargin)
+                    nEqs=length(varargin);
+                    varargout{1}=false;
+                    for iEq=1:nEqs
+                        varargout{iEq+1} = varargin{iEq};
+                    end
+            end
+                
+            if(length(timeVec) > 1)
+                odeArgList = self.getOdePropList(calcPrecision);
+                sizeSysVec = size(sRstExtInitialMat);
+                fSolver = @gras.ode.ode45reg;
+                fSolveFunc = @(varargin)fSolver(varargin{:},...
+                    odeset(odeArgList{:}));
+                % dont know about outArgStartIndVec !!!
+                solverObj = gras.ode.MatrixSysODERegInterpSolver(...
+                    {sizeSysVec},fSolveFunc,'outArgStartIndVec',[1 2]);                
+                [timeRstHalfVec, dataRstExtHalfArray,~,interpObj] = ...
+                    solverObj.solve({fRstDerivFunc,@fAdvRegFunc},...
+                    timeVec, sRstExtInitialMat);
+            else
+                timeRstHalfVec = timeVec;
+                dataRstExtHalfArray = sRstExtInitialMat;
+            end;
             dataRstHalfArray = reshape(dataRstExtHalfArray(1:end-1,:), ...
                 [size(sRstInitialMat), length(timeRstHalfVec)]);
             dataXstNormHalfArray = dataRstExtHalfArray(end,:);
