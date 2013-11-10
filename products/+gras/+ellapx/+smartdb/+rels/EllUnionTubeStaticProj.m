@@ -283,7 +283,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             import modgen.common.throwerror;
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
-            import gras.interp.MatrixInterpolantFactory;
+            import gras.mat.interp.MatrixInterpolantFactory;
             nDims=size(aMat,1);
             if nDims~=2
                 throwerror('wrongDimensionality',...

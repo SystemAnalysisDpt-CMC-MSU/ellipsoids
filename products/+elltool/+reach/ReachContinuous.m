@@ -95,7 +95,7 @@ classdef ReachContinuous < elltool.reach.AReach
     end
     %
     methods (Access = private)
-        function [ellTubeRel,goodDirSetObj] = auxMakeEllTubeRel(self, probDynObj, ...
+        function ellTubeRel = auxMakeEllTubeRel(self, probDynObj, ...
                 l0Mat, timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
@@ -156,13 +156,13 @@ classdef ReachContinuous < elltool.reach.AReach
         %
     end
     methods (Access=protected)
-        function [ellTubeRel,goodDirSetObj] = internalMakeEllTubeRel(self, probDynObj, l0Mat,...
+        function ellTubeRel = internalMakeEllTubeRel(self, probDynObj, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
             %
             try
-                [ellTubeRel,goodDirSetObj] = self.auxMakeEllTubeRel(...
+                ellTubeRel = self.auxMakeEllTubeRel(...
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
                     calcPrecision, approxTypeVec);
                 if self.isbackward()
@@ -218,7 +218,7 @@ classdef ReachContinuous < elltool.reach.AReach
             backwardStrCMat = cell(size(strCMat));
             backwardStrCMat(symIndMat) = cellfun(@char,...
                 evCMat(symIndMat), 'UniformOutput', false);
-            backwardStrCMat(~symIndMat) = cellfun(@(x)num2str(x,20),...
+            backwardStrCMat(~symIndMat) = cellfun(@num2str,...
                 evCMat(~symIndMat), 'UniformOutput', false);
             if isMinus
                 backwardStrCMat = strcat('-(', backwardStrCMat, ')');

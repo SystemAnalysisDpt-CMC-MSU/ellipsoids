@@ -8,7 +8,7 @@ classdef LReachDiscrForwardDynamics < ...
         function self = LReachDiscrForwardDynamics(problemDef)
             import gras.ellapx.common.*;
             import gras.mat.CompositeMatrixOperations;
-            import gras.interp.MatrixInterpolantFactory;
+            import gras.mat.interp.MatrixInterpolantFactory;
             %
             if ~isa(problemDef,...
                     'gras.ellapx.lreachuncert.probdef.IReachContProblemDef')

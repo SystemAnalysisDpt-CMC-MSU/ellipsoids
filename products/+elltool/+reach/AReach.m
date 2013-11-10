@@ -77,9 +77,6 @@ classdef AReach < elltool.reach.IReach
         isRegEnabled
         isJustCheck
         regTol
-        intProbDynList        
-        extProbDynList
-        goodDirSetList
     end
     methods
         function set.ellTubeRel(self,rel)
@@ -115,7 +112,7 @@ classdef AReach < elltool.reach.IReach
     %
     methods (Abstract, Access = protected)
         %
-        [ellTubeRel,goodDirSetObj] = internalMakeEllTubeRel(self, probDynObj, l0Mat, ...
+        ellTubeRel = internalMakeEllTubeRel(self, probDynObj, l0Mat, ...
             timeVec, isDisturb, calcPrecision, approxTypeVec)
     end
     %
@@ -420,7 +417,7 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function isDisturb = isDisturbance(ctStrCMat, qtStrCMat)
-            import gras.mat.fcnlib.iscellofstringconst;
+            import gras.mat.symb.iscellofstringconst;
             import gras.gen.MatVector;
             isDisturb = true;
             if iscellofstringconst(ctStrCMat)
@@ -460,7 +457,7 @@ classdef AReach < elltool.reach.IReach
                 {'showDiscrete','nSpacePartPoins' ;...
                 false, self.nPlot3dPoints;
                 @(x)isa(x,'logical'),@(x)isa(x,'double')});
-            [colorVec, shade, lineWidth, isFill,plObj,reg] =...
+            [colorVec, shade, lineWidth, isFill,reg] =...
                 parceInputForPlot(approxType,reg{:});
             
             
@@ -480,7 +477,7 @@ classdef AReach < elltool.reach.IReach
                     plotter = projReachObj.ellTubeRel...
                         .getTuplesFilteredBy(...
                         F.APPROX_TYPE, approxType)...
-                        .plotInt(plObj,reg{:},'fGetColor',...
+                        .plotInt(reg{:},'fGetColor',...
                         @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
                         'fGetLineWidth', @(x)(lineWidth),...
                         'fGetFill', @(x)(isFill),...
@@ -501,7 +498,7 @@ classdef AReach < elltool.reach.IReach
                     plotter = projReachObj.ellTubeRel...
                         .getTuplesFilteredBy(...
                         F.APPROX_TYPE, approxType)...
-                        .plotExt(plObj,reg{:},'fGetColor',...
+                        .plotExt(reg{:},'fGetColor',...
                         @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
                         'fGetLineWidth', @(x)(lineWidth),...
                         'fGetFill', @(x)(isFill),...
@@ -517,7 +514,7 @@ classdef AReach < elltool.reach.IReach
         end
     end
     methods (Access = private)
-        function [ellTubeRelList, indVec,probDynObjCell,goodDirSetObjCell] = evolveApprox(self, ...
+        function [ellTubeRelList, indVec] = evolveApprox(self, ...
                 newTimeVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -568,14 +565,13 @@ classdef AReach < elltool.reach.IReach
                     qtStrCMat, qtStrCVec, x0MatArray(:, :, il0Num), ...
                     x0VecMat(:, il0Num), newTimeVec, self.relTol, ...
                     isDisturbance);
-                [ellTubeRelVec{il0Num},goodDirSetObjCell{il0Num},probDynObjCell{il0Num}] = self.makeEllTubeRel(...
+                ellTubeRelVec{il0Num} = self.makeEllTubeRel(...
                     probDynObj, l0Mat(:, il0Num), ...
                     newTimeVec, isDisturbance, self.relTol, approxType);
                 ellTubeRelList{il0Num} = ...
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
-                %probDynObjCell{il0Num}=probDynObj;
-            end 
+            end
         end
     end
     %
@@ -609,40 +605,49 @@ classdef AReach < elltool.reach.IReach
                 projOrthMatTransArray=repmat(projMat.',[1 1 nTimes]);
             end
         end
-        function plObj = plotApprox(self, approxType, varargin)
+        function plotter = plotApprox(self, approxType, varargin)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
-            %
-            [colorVec, shade, lineWidth, isFill,plObj,reg] =...
+            
+            [colorVec, shade, lineWidth, isFill,reg] =...
                 parceInputForPlot(approxType,varargin{:});
             %
             [~, dim] = self.dimension();
+            
+            
             if self.isProj
+                
                 if dim < 2 || dim > 3
                     throwerror('wrongInput',...
                         'Dimension of projection must be 2 or 3.');
                 else
-                    plObj = self.ellTubeRel.getTuplesFilteredBy(...
-                        APPROX_TYPE, approxType).plot(plObj,reg{:}, 'fGetColor',...
+                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
+                        APPROX_TYPE, approxType).plot(reg{:}, 'fGetColor',...
                         @(x)(colorVec), 'fGetAlpha', @(x)(shade),...
                         'fGetLineWidth', @(x)(lineWidth),...
                         'fGetFill', @(x)(isFill));
                 end
             else
                 if dim < 2 || dim > 3
-                    plObj = self.ellTubeRel.getTuplesFilteredBy(...
+                    plObj = smartdb.disp.RelationDataPlotter();
+                    plotter = self.ellTubeRel.getTuplesFilteredBy(...
                         APPROX_TYPE, approxType).plot(plObj);
                 else
                     projReachObj = self.projection(eye(dim));
-                    plObj = projReachObj.ellTubeRel.getTuplesFilteredBy(...
+                    plObj = smartdb.disp.RelationDataPlotter();
+                    plotter = projReachObj.ellTubeRel.getTuplesFilteredBy(...
                         APPROX_TYPE, approxType).plot(plObj);
                 end
+                
             end
+            
+            
+            
         end
         %
-        function [ellTubeRel, goodDirSetObj, probDynObj] = makeEllTubeRel(self, probDynObj, l0Mat,...
+        function ellTubeRel = makeEllTubeRel(self, probDynObj, l0Mat,...
                 timeVec, isDisturb, calcPrecision, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.gen.RegProblemDynamicsFactory;
@@ -651,7 +656,7 @@ classdef AReach < elltool.reach.IReach
             probDynObj = RegProblemDynamicsFactory.create(probDynObj,...
                 self.isRegEnabled, self.isJustCheck, self.regTol);
             try
-                [ellTubeRel, goodDirSetObj] = self.internalMakeEllTubeRel(...
+                ellTubeRel = self.internalMakeEllTubeRel(...
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
                     calcPrecision, approxTypeVec);
             catch meObj
@@ -764,11 +769,8 @@ classdef AReach < elltool.reach.IReach
                 %temporary plug used until we replace calcPrecision with
                 %separate relTol and absTol fields in EllTube classes
                 calcPrecision=max(self.relTol,self.absTol);
-                [self.ellTubeRel,goodDirSetObj,probDynObj] = self.makeEllTubeRel(probDynObj, l0Mat,...
+                self.ellTubeRel = self.makeEllTubeRel(probDynObj, l0Mat,...
                     timeVec, isDisturbance, calcPrecision, approxTypeVec);
-                self.goodDirSetList={{goodDirSetObj}};
-                self.intProbDynList={{probDynObj}};
-                self.extProbDynList={{probDynObj}};
             end
         end
         %
@@ -1199,8 +1201,7 @@ classdef AReach < elltool.reach.IReach
             %       self: - reach tube
             %
             %   optional:
-            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - relation 
-            %           data plotter object.
+            %       relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
             %       charColor: char[1,1]  - color specification code, can be 'r','g',
             %                      etc (any code supported by built-in Matlab function).
             %   properties:
@@ -1214,8 +1215,8 @@ classdef AReach < elltool.reach.IReach
             %                sets default colors in the form [x y z].
             %                   Default value is [0 0 1].
             %       'shade': double[1,1]  -
-            %           level of transparency between 0 and 1 (0 - transparent,
-            %           1 - opaque).  Default value is 0.3.
+            %      level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
+            %                Default value is 0.3.
             %
             % Output:
             %   regular:
@@ -1246,8 +1247,7 @@ classdef AReach < elltool.reach.IReach
             %       self: - reach tube
             %
             %   optional:
-            %       plObj: smartdb.disp.RelationDataPlotter[1,1] - relation data 
-            %           plotter object.
+            %       relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
             %       charColor: char[1,1]  - color specification code, can be 'r','g',
             %                      etc (any code supported by built-in Matlab function).
             %   properties:
@@ -1469,9 +1469,6 @@ classdef AReach < elltool.reach.IReach
                 copyReachObj.isProj = reachObj.isProj;
                 copyReachObj.isBackward = reachObj.isBackward;
                 copyReachObj.projectionBasisMat = reachObj.projectionBasisMat;
-                copyReachObj.intProbDynList=reachObj.intProbDynList;
-                copyReachObj.extProbDynList=reachObj.extProbDynList;
-                copyReachObj.goodDirSetList=reachObj.goodDirSetList;                              
                 %
                 curEllTubeRel=reachObj.ellTubeRel;
                 nTuples=curEllTubeRel.getNTuples();
@@ -1519,181 +1516,6 @@ classdef AReach < elltool.reach.IReach
             %   rsObj.getEllTubeRel();
             %
             ellTubeRel = self.ellTubeRel;
-        end
-        %
-        
-        function intProbDynList = getIntProbDynamicsList(self)
-            %
-            % GETINTPROBDYNAMICSLIST - returns the intProbDynamicsList 
-            %                           property
-            %
-            % Input:
-            %   regular:
-            %       self: - reach tube
-            %
-            % Output:
-            %   intProbDynamicsList: cell[1,nLinSys] of cell[1,nTube] of
-            %       gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
-            %       list of of cell arrays filled with objects which describe 
-            %       the system dynamics between switch time. 
-            %       intProbDynamicsList is constructed during the internal 
-            %       approximations and has the following structure:
-            %       {{probDynObjSys1},{probDynObjSys2dir1,...,probDynObjSys2dirn},...,
-            %       {probDynObjSyskdir1,...,probDynObjSyskdirn}}.           
-            %       Nested cell arrays have dimensionality nTube equal to
-            %       the number of directions. The order of intProbDynList{:}
-            %       corresponds to the time direction.
-            %
-            % Example:
-            %   aMat = [0 1; 0 0]; bMat = eye(2);
-            %   SUBounds = struct();
-            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
-            %   SUBounds.shape = [9 0; 0 2];
-            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-            %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
-            %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-            %   aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
-            %   SUBounds2 = struct();
-            %   SUBounds2.center = {'sin(t)'; 'cos(t)'};
-            %   SUBounds2.shape = [5 0; 0 3];
-            %   sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
-            %   rsObj2=rsObj.evolve(15, sys2);
-            %   rsObj2.getIntProbDynamicsList()
-            %   ans = 
-            % 
-            %       {1x1 cell}    {1x2 cell}
-            %
-            intProbDynList = self.intProbDynList;
-        end
-        %
-        function goodDirSetList = getGoodDirSetList(self)
-            %
-            % GETGOODDIRSETLIST - returns the goodDirSetList 
-            %                           property
-            %
-            % Input:
-            %   regular:
-            %       self: - reach tube
-            %   
-            % Output:
-            %   goodDirSetList: cell[1,nLinSys] of cell[1,nTube] of 
-            %       gras.ellapx.lreachplain.GoodDirsContinuousGen - list of
-            %       cell arrays filled with gras.ellapx.lreachplain.GoodDirsContinuousGen 
-            %       objects which containe good directions and curves data
-            %       between switch time. The order of goodDirSetList{:}
-            %       corresponds to the time direction.
-            %
-            % Example:
-            %   aMat = [0 1; 0 0]; bMat = eye(2);
-            %   SUBounds = struct();
-            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
-            %   SUBounds.shape = [9 0; 0 2];
-            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-            %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
-            %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-            %   aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
-            %   SUBounds2 = struct();
-            %   SUBounds2.center = {'sin(t)'; 'cos(t)'};
-            %   SUBounds2.shape = [5 0; 0 3];
-            %   sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
-            %   rsObj2=rsObj.evolve(15, sys2);
-            %   rsObj2.getGoodDirSetList()
-            %   ans = 
-            % 
-            %       {1x1 cell}    {1x2 cell}
-            %
-            goodDirSetList = self.goodDirSetList;
-        end
-        %
-        function extProbDynList = getExtProbDynamicsList(self)
-            %
-            % GETEXTPROBDYNAMICSLIST - returns the extProbDynamicsList 
-            %                           property
-            %
-            % Input:
-            %   regular:
-            %       self: - reach tube
-            %
-            % Output:
-            %   extProbDynamicsList: cell[1,nLinSys] of cell[1,nTube] of
-            %       gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
-            %       list of cell arrays filled with objects which describe 
-            %       the system dynamics between switch time. 
-            %       extProbDynamicsList is constructed during the external 
-            %       approximations. If time is backward than the order of
-            %       extProbDynamicsList{:} is also backward.
-            %
-            % Example:
-            %   aMat = [0 1; 0 0]; bMat = eye(2);
-            %   SUBounds = struct();
-            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
-            %   SUBounds.shape = [9 0; 0 2];
-            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-            %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
-            %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-            %   aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
-            %   SUBounds2 = struct();
-            %   SUBounds2.center = {'sin(t)'; 'cos(t)'};
-            %   SUBounds2.shape = [5 0; 0 3];
-            %   sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
-            %   rsObj2=rsObj.evolve(15, sys2);
-            %   rsObj2.getExtProbDynamicsList()
-            %   ans = 
-            % 
-            %       {1x1 cell}    {1x2 cell}
-            %
-            extProbDynList = self.extProbDynList;
-        end
-           %        
-        function linSysCVec = getSystemList(self)
-            %
-            % GETSYSTEMLISTLIST - returns the linSysCVec 
-            %                           property
-            %
-            % Input:
-            %   regular:
-            %       self: - reach tube
-            %
-            % Output:
-            %   linSysCVec: cell[1,nLinSys] of elltool.linsys.LinSysContinuous - 
-            %       list of nLinSys objects corresponding to nLinSys systems. Each 
-            %       elltool.linsys.LinSysContinuous object describes
-            %       the particular system between switch time.
-            %
-            % Example:
-            %   aMat = [0 1; 0 0]; bMat = eye(2);
-            %   SUBounds = struct();
-            %   SUBounds.center = {'sin(t)'; 'cos(t)'};
-            %   SUBounds.shape = [9 0; 0 2];
-            %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-            %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
-            %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-            %   aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
-            %   SUBounds2 = struct();
-            %   SUBounds2.center = {'sin(t)'; 'cos(t)'};
-            %   SUBounds2.shape = [5 0; 0 3];
-            %   sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
-            %   rsObj2=rsObj.evolve(15, sys2);
-            %   rsObj2.getSystemList()
-            %   ans = 
-            %
-            %       Column 1
-            %   
-            %           [1x1 elltool.linsys.LinSysContinuous]
-            %                 
-            %       Column 2
-            %                 
-            %           [1x1 elltool.linsys.LinSysContinuous]
-            %
-            linSysCVec = self.linSysCVec;
         end
         %
         function ellTubeUnionRel = getEllTubeUnionRel(self)
@@ -1787,20 +1609,14 @@ classdef AReach < elltool.reach.IReach
             newReachObj.linSysCVec = [newReachObj.linSysCVec {newLinSys}];
             newReachObj.isCut = false;
             %
-            [dataIntCVec, indIntVec,intProbDynCell,~] = self.evolveApprox(newTimeVec, ...
+            [dataIntCVec, indIntVec] = self.evolveApprox(newTimeVec, ...
                 newLinSys, EApproxType.Internal);
-            [dataExtCVec, indExtVec,extProbDynCell,goodDirSetCell] = self.evolveApprox(newTimeVec, ...
+            [dataExtCVec, indExtVec] = self.evolveApprox(newTimeVec, ...
                 newLinSys, EApproxType.External);
             dataCVec = [dataIntCVec, dataExtCVec];
             %
             % cat old and new ellTubeRel
             %
-            self.intProbDynList=[self.intProbDynList {intProbDynCell}];
-            self.extProbDynList=[self.extProbDynList {extProbDynCell}];
-            self.goodDirSetList=[self.goodDirSetList {goodDirSetCell}];            
-            newReachObj.intProbDynList=[newReachObj.intProbDynList {intProbDynCell}];
-            newReachObj.extProbDynList=[newReachObj.extProbDynList {extProbDynCell}];
-            newReachObj.goodDirSetList=[newReachObj.goodDirSetList {goodDirSetCell}];
             newEllTubeRel =...
                 gras.ellapx.smartdb.rels.EllTube.fromStructList(...
                 'gras.ellapx.smartdb.rels.EllTube', dataCVec);
@@ -1823,7 +1639,7 @@ classdef AReach < elltool.reach.IReach
         end
     end
 end
-function [colorVec, shade, lineWidth, isFill,plObj,reg] =...
+function [colorVec, shade, lineWidth, isFill,reg] =...
     parceInputForPlot(approxType,varargin)
 import gras.ellapx.enums.EApproxType;
 import modgen.common.throwerror;
@@ -1860,6 +1676,8 @@ end
 if ischar(colorVec)
     colorVec = elltoll.plot.colorcode2rgb(colorVec);
 end
+
+
 %
 if ~isempty(reg)
     if ischar(reg{1})
@@ -1882,12 +1700,6 @@ if ~isempty(reg)
         end
     end
 end
-if isempty(reg)
-    plObj=smartdb.disp.RelationDataPlotter();
-elseif isa(reg{1},'smartdb.disp.RelationDataPlotter')
-    plObj=reg{1};
-    reg(1)=[];
-else
-    throwerror('wrongInput','conflicting type specificaiton');
-end
+
+
 end

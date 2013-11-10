@@ -181,38 +181,6 @@ classdef ReachFactory < handle
             %
             linSys = self.linSys;
         end
-        %%%
-        function regTol = getRelTol(self)
-            % Example:
-            %   import elltool.reach.ReachFactory;
-            %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-            %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-            %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-            %   regTol = rsObj.getRegTol();
-            %
-            regTol = self.regTol;
-        end
-        function isRegEnabled = getIsRegEnabled(self)
-            % Example:
-            %   import elltool.reach.ReachFactory;
-            %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-            %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-            %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-            %   isRegEnabled = rsObj.getIsRegEnabled();
-            %
-            isRegEnabled = self.isRegEnabled;
-        end
-        function isJustCheck = getIsJustCheck(self)
-            % Example:
-            %   import elltool.reach.ReachFactory;
-            %   crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-            %   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
-            %   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
-            %   isJustCheck = rsObj.getIsJustCheck();
-            %
-            isJustCheck = self.isJustCheck;
-        end
-        %%%
         function dim = getDim(self)
             % Example:
             %   import elltool.reach.ReachFactory;
