@@ -153,7 +153,7 @@ void out_write (float*** Amat,float** bVec,float*** vertMat,float** discrVec)
  }    /* out_write */
 
 
-void conv_go (double* semiaxes,int num /* for convex hull*/)
+void conv_go (double* semiaxes,int num, float* vert /* for convex hull*/)
  {int i, new_dat;
   static int dat_is_read;
 #ifdef CH_LP_PC
@@ -219,10 +219,9 @@ return;
      {printf ("Podozhdite, idet schityvanie\n");
       //gotoxy (1, 1);
 
-#endif
 	wait ();
 //return;
-       }
+       
 #ifdef CH_LP_PC
       if ( ! lp_fromps (model_name, "rhs", "ran", "boun", "obj",
 		64, &Ncon, &Nvar, &Nfunc))
@@ -253,7 +252,7 @@ return;
 	wait ();
 return;
        }
-     coef=NULL;//what is it
+     coef=vert;// tops
 #endif
 #ifdef CH_ELIPSE
       axes = (float*) realloc (axes, ch_N * sizeof (float));
@@ -269,8 +268,9 @@ return;
 #endif
       dat_is_read = 1;
      // clrscr ();
-     }
+     
    }
+  }
 #ifdef CH_TIME
   time (&t0);
 #endif
@@ -280,7 +280,7 @@ return;
 	{if (ch_PRNT > 0) ch_inf_print (0);
 	}
        else printf ("Prodolzhenie scheta nevozmozhno :\n");
-	   
+//#endif	   
 #ifdef CH_ELIPSE
 #ifdef CH_VOLUMES
 #ifndef CH_SURFACE
@@ -404,7 +404,7 @@ void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,double* 
     
     read_par ();
     in_read (size,indProjVec, improveDirectVec);
-    conv_go(semiaxes);
+    conv_go(semiaxes,0,NULL);
     out_write(Amat,bVec,vertMat,discrVec);
    }
 
