@@ -40,53 +40,7 @@ int add_top;
 void read_par (void);
 char *par_name = "set.par";
 //char *par_name = NULL;
-static char in_name [43] ="input.chs";
 
-
-static char out_name [40] =
-#ifdef CH_TXT
-  "output.set";
-#elif defined(CH_ELIPSE)
-  "output.set";
-#else
-  "output.chs";
-#endif
-
-//static char model_name [40]
-//#ifdef CH_TXT
- // =
-//#ifdef CH_LP_PC
-  //"model.mps"
-//#endif
-//#ifdef CH_LPM
-  //"model.dat"
-//#endif
-//#ifdef CH_POINTS
- // "points.pnt"
-//#endif
-//#ifdef CH_ELIPSE
-  //"axes.dat"
-//#endif
-//#endif
-  ;
-
-static char type [4]
-#ifndef CH_TXT
-  =
-#ifdef CH_LP_PC
-  "mps"
-#endif
-#ifdef CH_LPM
-  "lpm"
-#endif
-#ifdef CH_POINTS
-  "pnt"
-#endif
-#ifdef CH_ELIPSE
-  "elp"
-#endif
-#endif
-  ;
 
 #ifdef CH_LPM
 static int IOlpm;
@@ -149,13 +103,13 @@ return (0);
 int objfun (float*, int*, int);
 #endif
 
-void in_read (int size,double* centervec, double* semiaxes) //read not from file now
+void in_read (int size,int* indProjVec,int* improveDirectVec) //read not from file now
  {int i;
 
   //clrscr ();
   printf ("Podozhdite, idet schityvanie\n");
   //gotoxy (1, 1);
-  IOstatus = ch_read_dat(size, &objnums);
+  IOstatus = ch_read_dat(size, indProjVec, improveDirectVec,&objnums);
   if (IOstatus > 0)
    {
 
@@ -182,14 +136,14 @@ void in_read (int size,double* centervec, double* semiaxes) //read not from file
   }
  }    /* in_read */
 
-void out_write (void)
+void out_write (float*** Amat,float** bVec,float*** vertMat,float** discrVec)
  {//clrscr ();
 	 
 	 printf("%d", stage);
   if (stage == 2)
    {printf ("Podozhdite, idet zapis'\n");
     //gotoxy (1, 1);
-    if (ch_write_dat () < 0) wait();
+    if (ch_write_dat (Amat,bVec,vertMat,discrVec) < 0) wait();
    
   }
   else
@@ -198,7 +152,8 @@ void out_write (void)
    }
  }    /* out_write */
 
-void conv_go (double* semiaxes)
+
+void conv_go (double* semiaxes,int num /* for convex hull*/)
  {int i, new_dat;
   static int dat_is_read;
 #ifdef CH_LP_PC
@@ -238,14 +193,14 @@ void conv_go (double* semiaxes)
 #endif
 
   //clrscr ();
- // new_dat = strcmp (model_name, old_name);
-  //if(stage == 0 || stage == 2 && new_dat)
-   //{printf ("Net dannyx. Osuwestvite chtenie.");
-    //wait ();
-//return;
-  // }
+//  new_dat = strcmp (model_name, old_name);
+  if(stage == 0 || stage == 2 )
+   {printf ("Net dannyx. Osuwestvite chtenie.");
+    wait ();
+return;
+   }
 
-//  ch_max_topCOUNT = ch_topCOUNT + add_top;
+  //ch_max_topCOUNT = ch_topCOUNT + add_top;
   if (stage == 1)
    {
 #ifndef CH_ELIPSE
@@ -263,16 +218,20 @@ void conv_go (double* semiaxes)
 #endif
      {printf ("Podozhdite, idet schityvanie\n");
       //gotoxy (1, 1);
-//#ifdef CH_LP_PC
-//      if( ! (lp_comptf(model_name, "mps")))
-//      {printf ("E'to ne MPS-fajl !");
-//#else
-//      //if (NULL == (datstream = fopen (model_name, "r")))
-//       {//printf ("Ne mogu otkryt' fajl %s\n", model_name);
-//#endif
-//	wait ();
-////return;
-//       //}
+
+#endif
+	wait ();
+//return;
+       }
+#ifdef CH_LP_PC
+      if ( ! lp_fromps (model_name, "rhs", "ran", "boun", "obj",
+		64, &Ncon, &Nvar, &Nfunc))
+       {//clreol ();
+	printf ("\nOshibka pri vvode MPS");
+	wait ();
+return;
+       }
+#endif
 
 #ifdef CH_LPM
       IOlpm = lpm_read (model_name, &Ncon, &Nvar, &Nmatr,
@@ -286,15 +245,15 @@ return;
        }
 #endif
 #ifdef CH_POINTS
-      fscanf (datstream, "%d", &numnum);
+      //fscanf (datstream, "%d", &numnum);
+	  numnum=num;//count of points
       coef = (float*) realloc (coef, numnum * sizeof (float));
       if (coef == NULL)
        {printf ("Malo pamyati");
 	wait ();
 return;
        }
-      for (i = 0; i < numnum; i++)
-	fscanf (datstream, "%f", coef + i);
+     coef=NULL;//what is it
 #endif
 #ifdef CH_ELIPSE
       axes = (float*) realloc (axes, ch_N * sizeof (float));
@@ -305,23 +264,23 @@ return;
        }
       for (i = 0; i < ch_N; i++)
        {
-	axes [i] = semiaxes [i]*semiaxes[i];         /* Kvadraty poluosej */
+	axes [i] = semiaxes [i]*semiaxes[i];/* Kvadraty poluosej */
        }
 #endif
-
       dat_is_read = 1;
-      //clrscr ();
+     // clrscr ();
      }
    }
 #ifdef CH_TIME
   time (&t0);
 #endif
   if(IOstatus > 0) IOstatus = ch_primal (c, x, IOstatus);
+  
   else if (IOstatus == 0)
 	{if (ch_PRNT > 0) ch_inf_print (0);
 	}
        else printf ("Prodolzhenie scheta nevozmozhno :\n");
-
+	   
 #ifdef CH_ELIPSE
 #ifdef CH_VOLUMES
 #ifndef CH_SURFACE
@@ -335,7 +294,7 @@ return;
     d *= (j) ? pi : 2. / i;
    }
   printf ("%f", d);
-  //gotoxy (31, y);
+ // gotoxy (31, y);
 #endif
 #endif
 #endif
@@ -348,7 +307,7 @@ return;
     //gotoxy (60,1);
     if (lp_primal (Ncon, Nvar, Nfunc) != 1)
      {IOstatus = -7;
-      //gotoxy (1, y);
+     // gotoxy (1, y);
   break;
      }
     //gotoxy (31, y);
@@ -398,7 +357,6 @@ return;
     d = 0;
     for (i = 0; i < ch_N; i++) d += axes [i] * c [i] * c [i];
     d = 1. / sqrt (d);
-	
     for (i = 0; i < ch_N; i++) x [i] = d * axes [i] * c [i];
 #endif
 #ifdef CH_TIME
@@ -409,7 +367,7 @@ return;
     s = s - m * 60;
     m = m - h * 60;
     y1 = wherey ();
-    //gotoxy (60, y1);
+   // gotoxy (60, y1);
     printf ("%2d h %2d m %2.0f s", h, m, s);
 #endif
     IOstatus = ch_primal (c, x, IOstatus);
@@ -435,36 +393,49 @@ return;
       IOstatus == -7 ) IOstatus=2;
   if (ch_equ_facet == NULL) stage = 2;
   // add_top = 32 - ch_topCOUNT % 32;
-  //textcolor (12);
+ // textcolor (12);
   while (kbhit ()) getch ();
   printf ("Nazhmite lyubuyu klavishu . . .\n");
   getch ();
  }    /* conv_go */
 
-void calcEllipsoidApprox(int size,double* centervec, double* semiaxes){ 
+void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,double* centervec, double* semiaxes,float*** Amat,float** bVec,float*** vertMat,float** discrVec){ 
  //main function for which mex-file will be written 
-
-  read_par ();
-  in_read (size,centervec, semiaxes);
-  conv_go(semiaxes);
-  out_write();
+    
+    read_par ();
+    in_read (size,indProjVec, improveDirectVec);
+    conv_go(semiaxes);
+    out_write(Amat,bVec,vertMat,discrVec);
    }
+
+
 
 int main(void){
 	//for compilation while there is no mex-files
-	//here input data will be defined
+	
 	int i;
     double* centervec;
 	double* semiaxes;
 	int size = 2;
+	//output params
+	int j;
+	int*p=NULL;
+	int*q=NULL;
+    float** Amat=(float**)malloc(size*sizeof(float*));
+    float ** vertMat=(float**)malloc(size*sizeof(float*));
+	float* bVec=(float*)malloc(256*sizeof(float));
+	float* discrVec=(float*)malloc(256*sizeof(float));
+    
+
+	//here input data will be defined
 	centervec=(double*) malloc(2*sizeof(double));
 	semiaxes=(double*) malloc(2*sizeof(double));
 	
 	centervec[0] = 0;
 	centervec[1] = 0;
-	semiaxes[0] = 2;
+	semiaxes[0] = 1;
 	semiaxes[1] = 1;
 	
-    calcEllipsoidApprox(size,centervec,semiaxes);
+    calcEllipsoidApprox(size,p,q,centervec,semiaxes, &Amat, &bVec,&vertMat, &discrVec);
   return 0;
 }

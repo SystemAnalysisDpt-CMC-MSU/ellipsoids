@@ -3,7 +3,7 @@
 #include <malloc.h>
 #include "ch_main.h"
 #include "ch_var.def"
-#define CH_ELIPSE
+//#define CH_ELIPSE
 
 static char *msg [2][8] = {
  {"Не могу открыть файл",
@@ -43,9 +43,8 @@ void ch_no_file (char *name)
   /* not nedeed any moreа */
  {printf("%s %s",msg [ch_LNG] [0], name);
  }    /* ch_no_file */
-#ifndef CH_LP_PC
 
-int ch_read_dat (int size,int **objnums)
+int ch_read_dat (int size,int* indProjVec,int* improveDirectVec,int **objnums)
   /* reading the data describing the set */
  {int i, k, nvar, IOstatus;
   char *obj_names, c;
@@ -55,16 +54,20 @@ int ch_read_dat (int size,int **objnums)
   ch_N1=ch_N+1;
   ch_topCOUNT = 0;
   ch_estCOUNT = 0;
-  IOstatus = 1;
-  ch_state = (int*) realloc (ch_state, ch_N * sizeof (int));
-  obj_names = (char*) malloc (ch_N * 10);
-  if (obj_names == NULL)
-return (-5);
-  // direction of improving 
-  for (i = 0; i < ch_N; i++) ch_state[i] = 0;
-  *objnums = (int*) realloc (*objnums, ch_N * sizeof (int));//indicies of project variables
-  for (i = 1; i<=ch_N;i++)
-	  (*objnums)[i-1]=i;
+  if (indProjVec==NULL)
+  {
+      IOstatus = 1;
+	  *objnums = (int*) realloc (*objnums, ch_N * sizeof (int));//indicies of project variables
+      for (i = 1; i<=ch_N;i++)
+	      (*objnums)[i-1]=i;  
+	  ch_state=NULL;
+  }
+  else
+  {
+	  IOstatus = 4;
+      *objnums = indProjVec;//indicies of project variables
+      ch_state=indProjVec;//direction of improving
+  }
   ch_EPS = ch_EPSdif;
   ch_width = ch_INF;
 
@@ -90,60 +93,7 @@ return(-5);
 return (IOstatus);
  }  /* ch_read_dat */
 
-#endif
-#ifdef CH_LP_PC
-int ch_read_dat (int size, int* indProjVec,int* improveDirectVec ,int **objnums)
-  /* reading dataа */
- {int i, k, nvar, IOstatus;
-  char *obj_names, c;
 
-  ch_free_mem ();
-  if((indProjVec == NULL)||(improveDirectVec == NULL))
-  {   
-	  printf("incorrect input data");
-      return (-8);
-  }
-  ch_N = size; 
-  ch_N1=ch_N+1;
-  ch_topCOUNT = 0;
-  ch_estCOUNT = 0;
-  IOstatus = 1;
-  ch_state = (int*) realloc (ch_state, ch_N * sizeof (int));
-  obj_names = (char*) malloc (ch_N * 10);
-  if (obj_names == NULL)
-return (-5);
-  // direction of improving 
-  ch_state = improveDirectVec;
-  *objnums= indProjVec;
-
-  //if (*objnums == NULL)
-//return (-5);
-
-
-  ch_EPS = ch_EPSdif;
-  ch_width = ch_INF;
-
-  ch_estTOTAL   = 0;
-  ch_facetTOTAL = 0;
-  ch_ex_next    = 0;
-  ch_index_position.bit = (unsigned long) 0L;
-#ifdef CH_SIMPLEX
-  ch_index_position.number =  0;
-  ch_SIZEind = sizeof (ch_simplex);
-#else
-  ch_index_position.number = -1;
-  ch_SIZEind = 0;
-#endif
-  ch_SIZEctop = ch_N * sizeof (float);
-  ch_SIZEcfacet= (ch_N + 2) * sizeof (float);
-  ch_coef = (double*) realloc (ch_coef,
-		(ch_N + 2) * sizeof (double));
-  if(ch_coef == NULL)
-return(-5);
-
-return (IOstatus);
- }  /* ch_read_dat */
-#endif 
 
 
 
