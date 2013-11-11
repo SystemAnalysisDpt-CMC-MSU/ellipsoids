@@ -34,7 +34,6 @@ where :math:`{\mathcal X}_0` is the set of initial conditions, and
 
    Reach set computation performance comparison.
 
-
 Let :math:`{\mathcal X}_0` and :math:`U` be unit boxes in
 :math:`{\bf R}^2`, and compute the reach set using the polytope method
 implemented in MPT [MPTHP]_. With every
@@ -138,9 +137,9 @@ and taking its projection onto :math:`(x_1, x_2)` subspace.
    :linenos:
 
   
-Figure :num:`#mechreachfig` (a) shows the reach set of the system
+:num:`Figure #mechreachfig` (a) shows the reach set of the system
 :eq:`spmass1`-:eq:`spmass2` evolving in time from :math:`t=0` to :math:`t=4`.
-Figure :num:`#mechreachfig` (b) presents a snapshot of this reach set at time
+:num:`Figure #mechreachfig` (b) presents a snapshot of this reach set at time
 :math:`t=4`.
 
 So far we considered an ideal system without any disturbance, such as

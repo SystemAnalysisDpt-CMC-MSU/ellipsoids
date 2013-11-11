@@ -53,8 +53,8 @@
 <h1>Ellipsoidal Calculus<a class="headerlink" href="#ellipsoidal-calculus" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="basic-notions">
 <h2>Basic Notions<a class="headerlink" href="#basic-notions" title="Permalink to this headline">¶</a></h2>
-<p>We start with basic definitions.
-Ellipsoid <img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf549754f2f.png" alt="{\mathcal E}(q,Q)"/> in
+<p>We start with basic definitions.</p>
+<p><strong>Definition.</strong> Ellipsoid <img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf549754f2f.png" alt="{\mathcal E}(q,Q)"/> in
 <img class="math" src="_images/math/9d5b8bcc7aa4f27bc64d1e1817aa4f42c44cffcb.png" alt="{\bf R}^n"/> with center <img class="math" src="_images/math/0615acc3725de21025457e7d6f7694dab8e2f758.png" alt="q"/> and shape matrix <img class="math" src="_images/math/9866e3a998d628ba0941eb4fea0666ac391d149a.png" alt="Q"/> is
 the set</p>
 <div class="math" id="equation-ellipsoid">
@@ -62,7 +62,8 @@ the set</p>
 </div><p>wherein <img class="math" src="_images/math/9866e3a998d628ba0941eb4fea0666ac391d149a.png" alt="Q"/> is positive definite (<img class="math" src="_images/math/bd59cd068d766e594478ad09e423d6fb398c63e1.png" alt="Q=Q^T"/> and
 <img class="math" src="_images/math/11c656f07afcb5a0afee913b8ac128b5f57249f4.png" alt="\langle x, Qx\rangle&gt;0"/> for all nonzero <img class="math" src="_images/math/7bb6c0add112d2fafef9f550e3efdf5a8a90f9fc.png" alt="x\in{\bf R}^n"/>).
 Here <img class="math" src="_images/math/18c2678ef7f3f037c1964e63384099f0313a6fd5.png" alt="\langle\cdot,\cdot\rangle"/> denotes inner
-product. The support function of a set
+product.</p>
+<p><strong>Definition.</strong> The support function of a set
 <img class="math" src="_images/math/b96c8cb69427f15af3797de44c829de5ee81b08d.png" alt="{\mathcal X}\subseteq{\bf R}^n"/> is</p>
 <div class="math">
 <p><img src="_images/math/60bd268c609a7964888987b79b3ff48a56c605c7.png" alt="\rho(l~|~{\mathcal X}) = \sup_{x\in{\mathcal X}} \langle l,x\rangle."/></p>
@@ -73,8 +74,8 @@ product. The support function of a set
 in practice we may deal with situations when <img class="math" src="_images/math/9866e3a998d628ba0941eb4fea0666ac391d149a.png" alt="Q"/> is singular, that
 is, with degenerate ellipsoids flat in those directions for which the
 corresponding eigenvalues are zero. Therefore, it is useful to give an
-alternative definition of an ellipsoid using the expression <a href="#equation-ellsupp">(2)</a>.
-Ellipsoid <img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf549754f2f.png" alt="{\mathcal E}(q,Q)"/> in <img class="math" src="_images/math/9d5b8bcc7aa4f27bc64d1e1817aa4f42c44cffcb.png" alt="{\bf R}^n"/> with center
+alternative definition of an ellipsoid using the expression <a href="#equation-ellsupp">(2)</a>.</p>
+<p><strong>Definition.</strong> Ellipsoid <img class="math" src="_images/math/76d087838f96cc48fcfd327127771bf549754f2f.png" alt="{\mathcal E}(q,Q)"/> in <img class="math" src="_images/math/9d5b8bcc7aa4f27bc64d1e1817aa4f42c44cffcb.png" alt="{\bf R}^n"/> with center
 <img class="math" src="_images/math/0615acc3725de21025457e7d6f7694dab8e2f758.png" alt="q"/> and shape matrix <img class="math" src="_images/math/9866e3a998d628ba0941eb4fea0666ac391d149a.png" alt="Q"/> is the set</p>
 <div class="math" id="equation-ellipsoid2">
 <p><span class="eqno">(3)</span><img src="_images/math/a9d6137062c23d367d64e918d66059511726c3e8.png" alt="{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~
@@ -146,8 +147,8 @@ programming (QCQP) problem:</p>
 </div><p>subject to:</p>
 <div class="math">
 <p><img src="_images/math/448602ad362885e9e460254eadf42db9436cbd85.png" alt="\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leqslant0, ~~~ i=1,\cdots,k."/></p>
-</div><p>If this problem is feasible, the intersection is nonempty. Given
-compact convex set <img class="math" src="_images/math/b96c8cb69427f15af3797de44c829de5ee81b08d.png" alt="{\mathcal X}\subseteq{\bf R}^n"/>, its polar
+</div><p>If this problem is feasible, the intersection is nonempty.</p>
+<p><strong>Definition.</strong> Given compact convex set <img class="math" src="_images/math/b96c8cb69427f15af3797de44c829de5ee81b08d.png" alt="{\mathcal X}\subseteq{\bf R}^n"/>, its polar
 set, denoted <img class="math" src="_images/math/9dcf65b34c9b6571c83e870b229364b7513df564.png" alt="{\mathcal X}^\circ"/>, is</p>
 <div class="math">
 <p><img src="_images/math/34768e4d22ee40d66173aa700efc505485af8983.png" alt="{\mathcal X}^\circ = \{x\in{\bf R}^n ~|~ \langle x,y\rangle\leqslant1, ~ y\in{\mathcal X}\},"/></p>
@@ -176,13 +177,13 @@ origin, its polar set is also an ellipsoid:</p>
 </div><p>The special case is</p>
 <div class="math">
 <p><img src="_images/math/2de1ea6fb3f6676930a240b8391a5207e85936a3.png" alt="{\mathcal E}^\circ(0,Q) = {\mathcal E}(0,Q^{-1})."/></p>
-</div><p>Given <img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/> compact sets
+</div><p><strong>Definition.</strong> Given <img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/> compact sets
 <img class="math" src="_images/math/caa75cd3c3d042f89f0a13f8e5a46481d6b93e65.png" alt="{\mathcal X}_1, \cdots, {\mathcal X}_k\subseteq{\bf R}^n"/>, their
 geometric (Minkowski) sum is</p>
 <div class="math" id="equation-minksum">
 <p><span class="eqno">(8)</span><img src="_images/math/bd592756af7f9948048ca313b4d195268ae78f09.png" alt="{\mathcal X}_1\oplus\cdots\oplus{\mathcal X}_k=\bigcup_{x_1\in{\mathcal X}_1}\cdots\bigcup_{x_k\in{\mathcal X}_k}
 \{x_1 + \cdots + x_k\} ."/></p>
-</div><p>Given two compact sets
+</div><p><strong>Definition.</strong> Given two compact sets
 <img class="math" src="_images/math/27de03ccef6bd8fac119dd0ea6c30b4fbcfba669.png" alt="{\mathcal X}_1, {\mathcal X}_2 \subseteq{\bf R}^n"/>, their
 geometric (Minkowski) difference is</p>
 <div class="math" id="equation-minkdiff">
@@ -201,7 +202,8 @@ ellipsoid but some convex set, for which we can compute external and
 internal ellipsoidal approximations.</p>
 <p>Additional operations implemented in the <em>Ellipsoidal Toolbox</em> include
 external and internal approximations of intersections of ellipsoids with
-hyperplanes, halfspaces and polytopes. Hyperplane <img class="math" src="_images/math/bac0ae63aec09971dd9b5d57245fb790377c8e10.png" alt="H(c,\gamma)"/> in
+hyperplanes, halfspaces and polytopes.</p>
+<p><strong>Definition.</strong> Hyperplane <img class="math" src="_images/math/bac0ae63aec09971dd9b5d57245fb790377c8e10.png" alt="H(c,\gamma)"/> in
 <img class="math" src="_images/math/9d5b8bcc7aa4f27bc64d1e1817aa4f42c44cffcb.png" alt="{\bf R}^n"/> is the set</p>
 <div class="math" id="equation-hyperplane">
 <p><span class="eqno">(10)</span><img src="_images/math/b7b6154b1b249806be929c57a4a66bb864455e6b.png" alt="H = \{x\in{\bf R}^n ~|~ \langle c, x\rangle = \gamma\}"/></p>
@@ -243,8 +245,8 @@ defined as <img class="math" src="_images/math/16e3c1b6fd6e98b81efcca4d744c1d395
 <p>The idea behind the calculation of intersection of an ellipsoid with a
 halfspace is to treat the halfspace as an unbounded ellipsoid, that is,
 as the ellipsoid with the shape matrix all but one of whose eigenvalues
-are <img class="math" src="_images/math/b671f1bb7e4ee86584347d5d22f1dc8abdb5bef2.png" alt="\infty"/>.
-Polytope <img class="math" src="_images/math/7df7554bc8b905a14d174aa3078a101032004660.png" alt="P(C,g)"/> is the
+are <img class="math" src="_images/math/b671f1bb7e4ee86584347d5d22f1dc8abdb5bef2.png" alt="\infty"/>.</p>
+<p><strong>Definition.</strong> Polytope <img class="math" src="_images/math/7df7554bc8b905a14d174aa3078a101032004660.png" alt="P(C,g)"/> is the
 intersection of a finite number of closed halfspaces:</p>
 <div class="math" id="equation-polytope">
 <p><span class="eqno">(14)</span><img src="_images/math/ba36465f80659e02db6d1fc06dc138954c5ff94c.png" alt="P = \{x\in{\bf R}^n ~|~ Cx\leqslant g\},"/></p>

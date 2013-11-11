@@ -12,10 +12,12 @@
 \usepackage{sphinx}
 \usepackage{multirow}
 \usepackage{amssymb}
+\usepackage{hyperref}
+\hypersetup{linkcolor=red}
 
 
 \title{Ellipsoidal Toolbox}
-\date{November 09, 2013}
+\date{November 11, 2013}
 \release{2.0 beta 1}
 \author{Peter Gagarinov, Alex A. Kurzhanskiy}
 \newcommand{\sphinxlogo}{}
@@ -370,7 +372,8 @@ together with their descriptions are listed in appendix A.
 \section{Basic Notions}
 \label{chap_ellcalc:basic-notions}
 We start with basic definitions.
-Ellipsoid ${\mathcal E}(q,Q)$ in
+
+\textbf{Definition.} Ellipsoid ${\mathcal E}(q,Q)$ in
 ${\bf R}^n$ with center $q$ and shape matrix $Q$ is
 the set
 \phantomsection\label{chap_ellcalc:equation-ellipsoid}\begin{gather}
@@ -379,7 +382,9 @@ the set
 wherein $Q$ is positive definite ($Q=Q^T$ and
 $\langle x, Qx\rangle>0$ for all nonzero $x\in{\bf R}^n$).
 Here $\langle\cdot,\cdot\rangle$ denotes inner
-product. The support function of a set
+product.
+
+\textbf{Definition.} The support function of a set
 ${\mathcal X}\subseteq{\bf R}^n$ is
 \begin{gather}
 \begin{split}\rho(l~|~{\mathcal X}) = \sup_{x\in{\mathcal X}} \langle l,x\rangle.\end{split}\notag\\\begin{split}\end{split}\notag
@@ -393,7 +398,8 @@ in practice we may deal with situations when $Q$ is singular, that
 is, with degenerate ellipsoids flat in those directions for which the
 corresponding eigenvalues are zero. Therefore, it is useful to give an
 alternative definition of an ellipsoid using the expression \eqref{chap_ellcalc-ellsupp}.
-Ellipsoid ${\mathcal E}(q,Q)$ in ${\bf R}^n$ with center
+
+\textbf{Definition.} Ellipsoid ${\mathcal E}(q,Q)$ in ${\bf R}^n$ with center
 $q$ and shape matrix $Q$ is the set
 \phantomsection\label{chap_ellcalc:equation-ellipsoid2}\begin{gather}
 \begin{split}{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~
@@ -477,8 +483,9 @@ subject to:
 \begin{gather}
 \begin{split}\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leqslant0, ~~~ i=1,\cdots,k.\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
-If this problem is feasible, the intersection is nonempty. Given
-compact convex set ${\mathcal X}\subseteq{\bf R}^n$, its polar
+If this problem is feasible, the intersection is nonempty.
+
+\textbf{Definition.} Given compact convex set ${\mathcal X}\subseteq{\bf R}^n$, its polar
 set, denoted ${\mathcal X}^\circ$, is
 \begin{gather}
 \begin{split}{\mathcal X}^\circ = \{x\in{\bf R}^n ~|~ \langle x,y\rangle\leqslant1, ~ y\in{\mathcal X}\},\end{split}\notag\\\begin{split}\end{split}\notag
@@ -518,14 +525,14 @@ The special case is
 \begin{gather}
 \begin{split}{\mathcal E}^\circ(0,Q) = {\mathcal E}(0,Q^{-1}).\end{split}\notag\\\begin{split}\end{split}\notag
 \end{gather}
-Given $k$ compact sets
+\textbf{Definition.} Given $k$ compact sets
 ${\mathcal X}_1, \cdots, {\mathcal X}_k\subseteq{\bf R}^n$, their
 geometric (Minkowski) sum is
 \phantomsection\label{chap_ellcalc:equation-minksum}\begin{gather}
 \begin{split}{\mathcal X}_1\oplus\cdots\oplus{\mathcal X}_k=\bigcup_{x_1\in{\mathcal X}_1}\cdots\bigcup_{x_k\in{\mathcal X}_k}
 \{x_1 + \cdots + x_k\} .\end{split}\label{chap_ellcalc-minksum}
 \end{gather}
-Given two compact sets
+\textbf{Definition.} Given two compact sets
 ${\mathcal X}_1, {\mathcal X}_2 \subseteq{\bf R}^n$, their
 geometric (Minkowski) difference is
 \phantomsection\label{chap_ellcalc:equation-minkdiff}\begin{gather}
@@ -555,7 +562,9 @@ internal ellipsoidal approximations.
 
 Additional operations implemented in the \emph{Ellipsoidal Toolbox} include
 external and internal approximations of intersections of ellipsoids with
-hyperplanes, halfspaces and polytopes. Hyperplane $H(c,\gamma)$ in
+hyperplanes, halfspaces and polytopes.
+
+\textbf{Definition.} Hyperplane $H(c,\gamma)$ in
 ${\bf R}^n$ is the set
 \phantomsection\label{chap_ellcalc:equation-hyperplane}\begin{gather}
 \begin{split}H = \{x\in{\bf R}^n ~|~ \langle c, x\rangle = \gamma\}\end{split}\label{chap_ellcalc-hyperplane}
@@ -606,7 +615,8 @@ The idea behind the calculation of intersection of an ellipsoid with a
 halfspace is to treat the halfspace as an unbounded ellipsoid, that is,
 as the ellipsoid with the shape matrix all but one of whose eigenvalues
 are $\infty$.
-Polytope $P(C,g)$ is the
+
+\textbf{Definition.} Polytope $P(C,g)$ is the
 intersection of a finite number of closed halfspaces:
 \phantomsection\label{chap_ellcalc:equation-polytope}\begin{gather}
 \begin{split}P = \{x\in{\bf R}^n ~|~ Cx\leqslant g\},\end{split}\label{chap_ellcalc-polytope}
@@ -1455,7 +1465,7 @@ ${\mathcal U}(t)\subset{\bf R}^m$. An \emph{open-loop} control does not
 depend on the state, $u=u(t)$; for a \emph{closed-loop} control,
 $u=u(t, x(t))$.
 
-The (forward) reach set ${\mathcal X}(t, t_0, x_0)$ at time
+\textbf{Definition.} The (forward) reach set ${\mathcal X}(t, t_0, x_0)$ at time
 $t>t_0$ from the initial position $(t_0, x_0)$ is the set of
 all states $x(t)$ reachable at time $t$ by system \eqref{chap_reach-ctds1},
 or \eqref{chap_reach-dtds1}, with $x(t_0)=x_0$ through all possible controls
@@ -1463,8 +1473,8 @@ $u(\tau, x(\tau))\in{\mathcal U}(\tau)$,
 $t_0\leqslant\tau< t$. For a given set of initial states
 ${\mathcal X}_0$, the reach set
 ${\mathcal X}(t, t_0, {\mathcal X}_0)$ is
-\begin{gather}
-\begin{split}{\mathcal X}(t, t_0, {\mathcal X}_0) = \bigcup_{x_0\in{\mathcal X}_0}{\mathcal X}(t, t_0, x_0).\end{split}\notag\\\begin{split}\end{split}\notag
+\phantomsection\label{chap_reach:equation-def_olrs}\begin{gather}
+\begin{split}{\mathcal X}(t, t_0, {\mathcal X}_0) = \bigcup_{x_0\in{\mathcal X}_0}{\mathcal X}(t, t_0, x_0).\end{split}\label{chap_reach-def_olrs}
 \end{gather}
 Here are two facts about forward reach sets.
 \begin{enumerate}
@@ -1541,7 +1551,7 @@ ${\mathcal U}(\tau)$, $t_0\leqslant\tau<t$, are compact and
 convex, so is the reach set
 ${\mathcal X}(t, t_0, {\mathcal X}_0)$.
 
-The backward reach set ${\mathcal Y}(t_1, t, y_1)$ for the target
+\textbf{Definition.} The backward reach set ${\mathcal Y}(t_1, t, y_1)$ for the target
 position $(t_1, y_1)$ is the set of all states $y(t)$ for
 which there exists some control
 $u(\tau, x(\tau))\in{\mathcal U}(\tau)$,
@@ -1549,8 +1559,8 @@ $t\leqslant\tau<t_1$, that steers system \eqref{chap_reach-ctds1}, or \eqref{cha
 the state $y_1$ at time $t_1$. For the target set
 ${\mathcal Y}_1$ at time $t_1$, the backward reach set
 ${\mathcal Y}(t_1, t, {\mathcal Y}_1)$ is
-\begin{gather}
-\begin{split}{\mathcal Y}(t_1, t, {\mathcal Y}_1) = \bigcup_{y_1\in{\mathcal Y}_1}{\mathcal Y}(t_1, t, y_1).\end{split}\notag\\\begin{split}\end{split}\notag
+\phantomsection\label{chap_reach:equation-def_olbrs}\begin{gather}
+\begin{split}{\mathcal Y}(t_1, t, {\mathcal Y}_1) = \bigcup_{y_1\in{\mathcal Y}_1}{\mathcal Y}(t_1, t, y_1).\end{split}\label{chap_reach-def_olbrs}
 \end{gather}
 The backward reach set
 ${\mathcal Y}(t_1, t, {\mathcal Y}_1)$ is the largest \emph{weakly
@@ -1643,7 +1653,7 @@ Given the initial time $t_0$, the set of initial states
 ${\mathcal X}_0$, and terminal time $t$, there are two types
 of OLRS.
 
-The maxmin open-loop reach set
+\textbf{Definition.} The maxmin open-loop reach set
 $\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)$ is the set
 of all states $x$, such that for any disturbance
 $v(\tau)\in{\mathcal V}(\tau)$, there exist an initial state
@@ -1652,7 +1662,7 @@ $u(\tau)\in{\mathcal U}(\tau)$, $t_0\leqslant\tau<t$, that
 steers system \eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} from $x(t_0)=x_0$ to
 $x(t)=x$.
 
-The minmax open-loop reach set
+\textbf{Definition.} The minmax open-loop reach set
 $\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)$ is the set
 of all states $x$, such that there exists a control
 $u(\tau)\in{\mathcal U}(\tau)$ that for all disturbances
@@ -1751,11 +1761,8 @@ piecewise OLRS with $k$ corrections is
 \end{gather}
 which is the subzero level set of the corresponding value function
 \phantomsection\label{chap_reach:equation-maxminvfk}\begin{gather}
-\begin{split}\begin{aligned}
-&&\underline{V}^k(t, x) = \nonumber \\
-&&\max_v\min_u\{\underline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
-u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_k\leqslant\tau<t\}.
-\end{aligned}\end{split}\label{chap_reach-maxminvfk}
+\begin{split}\underline{V}^k(t, x) = \max_v\min_u\{\underline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
+u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_k\leqslant\tau<t\}.\end{split}\label{chap_reach-maxminvfk}
 \end{gather}
 The minmax piecewise OLRS with $k$ corrections is
 \phantomsection\label{chap_reach:equation-minmaxk}\begin{gather}
@@ -1765,8 +1772,7 @@ The minmax piecewise OLRS with $k$ corrections is
 which is the subzero level set of the corresponding value function
 \phantomsection\label{chap_reach:equation-minmaxvfk}\begin{gather}
 \begin{split}\begin{aligned}
-&&\overline{V}^k(t, x) = \nonumber \\
-&&\min_u\max_v\{\overline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
+\overline{V}^k(t, x) = \min_u\max_v\{\overline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
 u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_k\leqslant\tau<t\}.
 \end{aligned}\end{split}\label{chap_reach-minmaxvfk}
 \end{gather}
@@ -1803,7 +1809,8 @@ t-t_0-1 & \mbox{ for discrete-time system}\end{array}\right.\end{split}\label{ch
 \end{gather}
 the \emph{minmax closed-loop reach set} of system \eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at
 time $t$.
-Given initial time $t_0$ and the set of initial
+
+\textbf{Definition.} Given initial time $t_0$ and the set of initial
 states ${\mathcal X}_0$, the maxmin CLRS
 $\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)$ of system
 \eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at time $t>t_0$, is the set of all states
@@ -1824,7 +1831,8 @@ f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))\end{split}\notag
 \end{gather}
 in the discrete-time case, with $t_0\leqslant\tau<t$, is such
 that $x(t)=x$.
-Given initial time $t_0$ and the set of initial states ${\mathcal X}_0$, the
+
+\textbf{Definition.} Given initial time $t_0$ and the set of initial states ${\mathcal X}_0$, the
 maxmin CLRS $\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)$ of system
 \eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2}, at time $t>t_0$, is the set of all states
 $x$, for each of which there exists a control
@@ -1971,7 +1979,7 @@ $\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = \underline{{\mathcal X}}
 Just as for forward reach sets, the backward reach sets can be open-loop
 (OLBRS) or closed-loop (CLBRS).
 
-Given the terminal time $t_1$ and target set
+\textbf{Definition.} Given the terminal time $t_1$ and target set
 ${\mathcal Y}_1$, the maxmin open-loop backward reach set
 $\overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)$ of system
 \eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at time $t<t_1$, is the set of all $y$,
@@ -1984,12 +1992,11 @@ $\overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)$ is the
 subzero level set of the value function
 \phantomsection\label{chap_reach:equation-maxminvfb}\begin{gather}
 \begin{split}\begin{aligned}
-&&\underline{V}_b(t, y) = \nonumber \\
-&&\max_v\min_u\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
+\underline{V}_b(t, y) = \max_v\min_u\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<t_1\},
 \end{aligned}\end{split}\label{chap_reach-maxminvfb}
 \end{gather}
-Given the terminal time $t_1$ and target set
+\textbf{Definition.} Given the terminal time $t_1$ and target set
 ${\mathcal Y}_1$, the minmax open-loop backward reach set
 $\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)$ of system
 \eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at time $t<t_1$, is the set of all $y$,
@@ -2002,8 +2009,7 @@ $\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)$ is the
 subzero level set of the value function
 \phantomsection\label{chap_reach:equation-minmaxvfb}\begin{gather}
 \begin{split}\begin{aligned}
-&&\overline{V}_b(t, y) = \nonumber \\
-&&\min_u\max_v\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
+\overline{V}_b(t, y) = \min_u\max_v\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<t_1\},
 \end{aligned}\end{split}\label{chap_reach-minmaxvfb}
 \end{gather}
@@ -2021,8 +2027,7 @@ piecewise maxmin OLBRS with one correction is
 and it is the subzero level set of the function
 \phantomsection\label{chap_reach:equation-maxminvfb1}\begin{gather}
 \begin{split}\begin{aligned}
-&&\underline{V}^1_b(t, y) = \nonumber \\
-&&\max_v\min_u\{\underline{V}_b(\tau_1, y(\tau_1)) ~|~
+\underline{V}^1_b(t, y) =  \max_v\min_u\{\underline{V}_b(\tau_1, y(\tau_1)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_1\}.
 \end{aligned}\end{split}\label{chap_reach-maxminvfb1}
@@ -2034,8 +2039,7 @@ The piecewise minmax OLBRS with one correction is
 and it is the subzero level set of the function
 \phantomsection\label{chap_reach:equation-minmaxvfb1}\begin{gather}
 \begin{split}\begin{aligned}
-&&\overline{V}^1_b(t, y) = \nonumber \\
-&&\min_u\max_v\{\overline{V}_b(\tau_1, y(\tau_1)) ~|~
+\overline{V}^1_b(t, y) = \min_u\max_v\{\overline{V}_b(\tau_1, y(\tau_1)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_1\},
 \end{aligned}\end{split}\label{chap_reach-minmaxvfb1}
@@ -2049,8 +2053,7 @@ corrections is
 which is the subzero level set of function
 \phantomsection\label{chap_reach:equation-maxminvfbk}\begin{gather}
 \begin{split}\begin{aligned}
-&&\underline{V}^k_b(t, y) = \nonumber \\
-&&\max_v\min_u\{\underline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
+\underline{V}^k_b(t, y) =  \max_v\min_u\{\underline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_k\}.
 \end{aligned}\end{split}\label{chap_reach-maxminvfbk}
@@ -2062,8 +2065,7 @@ The minmax OLBRS with $k$ corrections is
 which is the subzero level set of the function
 \phantomsection\label{chap_reach:equation-minmaxvfbk}\begin{gather}
 \begin{split}\begin{aligned}
-&&\overline{V}^k_b(t, y) = \nonumber \\
-&&\min_u\max_v\{\overline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
+\overline{V}^k_b(t, y) =  \min_u\max_v\{\overline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_k\},
 \end{aligned}\end{split}\label{chap_reach-minmaxvfbk}
@@ -2104,7 +2106,7 @@ t_1-t-1 & \mbox{ for discrete-time system}\end{array}\right.\end{split}\label{ch
 is the \emph{minmax closed-loop backward reach set} of system \eqref{chap_reach-ctds2} or
 \eqref{chap_reach-dtds2} at time $t$.
 
-Given the terminal time $t_1$ and
+\textbf{Definition.} Given the terminal time $t_1$ and
 target set ${\mathcal Y}_1$, the maxmin CLBRS
 $\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)$ of system
 \eqref{chap_reach-ctds2} or \eqref{chap_reach-dtds2} at time $t<t_1$, is the set of all states
@@ -2125,7 +2127,7 @@ f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))\end{split}\notag
 in discrete-time case, with $t\leqslant\tau<t_1$, such that
 $y(t) = y$ and $y(t_1)=y_1$.
 
-Given the terminal time $t_1$ and target set ${\mathcal Y}_1$, the
+\textbf{Definition.} Given the terminal time $t_1$ and target set ${\mathcal Y}_1$, the
 minmax CLBRS $\underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)$ of system
 ({[}ctds2{]}) or {[}dtds2{]} at time $t<t_1$, is the set of all states
 $y$, for each of which there exists control
@@ -2344,7 +2346,7 @@ If the matrix $Q(\cdot)=0$, the system \eqref{chap_reach-ctsystem} becomes an
 ordinary affine system with known $v(\cdot)=q(\cdot)$. If
 $G(\cdot) = 0$, the system becomes linear. For these two cases
 ($Q(\cdot)=0$ or $G(\cdot)=0$) the reach set is as given in
-Definition {[}def:sub:\emph{o}lrs{]}, and so the reach set will be denoted as
+definition \eqref{chap_reach-def_olrs}, and so the reach set will be denoted as
 ${\mathcal X}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)) = {\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))$.
 
 The reach set ${\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))$ is a
@@ -2592,7 +2594,7 @@ ordinary affine system with known $v(\cdot)=q(\cdot)$. If matrix
 $G(\cdot)=0$, the system reduces to a linear controlled system. In
 the absence of disturbance ($Q(\cdot)=0$ or $G(\cdot)=0$),
 $\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))=\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))={\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))$,
-the reach set is as in Definition.
+the reach set is as in definition \eqref{chap_reach-def_olrs}.
 
 Maxmin and minmax CLRS
 $\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)$ and
@@ -3283,7 +3285,7 @@ sum can be computed explicitely and plotted:
 \includegraphics[width=0.400\linewidth]{chapter05_section01_minksum.png}
 \caption{The geometric sum of ellipsoids.}\label{chap_implement:minksumpic}\end{figure}
 
-Figure \hyperref[chap_implement:minksumpic]{ \ref*{chap_implement:minksumpic}} displays the geometric sum of ellipsoids. If
+\hyperref[chap_implement:minksumpic]{Figure  \ref*{chap_implement:minksumpic}} displays the geometric sum of ellipsoids. If
 the dimension of the space in which the ellipsoids are defined exceeds
 $3$, an error is returned. The result of the geometric sum
 operation is not generally an ellipsoid, but it can be approximated by
@@ -3340,10 +3342,10 @@ ${\bf R}$, ${\bf R}^2$ and ${\bf R}^3$:
 \centering
 \capstart
 
-\includegraphics[width=0.600\linewidth]{chapter05_section01_minkdiff.png}
+\includegraphics[width=0.400\linewidth]{chapter05_section01_minkdiff.png}
 \caption{The geometric difference of ellipsoids.}\label{chap_implement:minkdiffpic}\end{figure}
 
-Figure \hyperref[chap_implement:minkdiffpic]{ \ref*{chap_implement:minkdiffpic}} shows the geometric difference of ellipsoids.
+\hyperref[chap_implement:minkdiffpic]{Figure  \ref*{chap_implement:minkdiffpic}} shows the geometric difference of ellipsoids.
 
 Similar to minksum, minkdiff is there for visualization purpose. It
 works only for dimensions $1$, $2$ and $3$, and for
@@ -3402,16 +3404,10 @@ of arbitrary dimension.
 \centering
 \capstart
 
-\includegraphics[width=0.500\linewidth]{chapter05_section01_minkpm.png}
-\caption{Implementation of an operation `sum-difference'.}\label{chap_implement:minkpmpic}\end{figure}
-\begin{figure}[htbp]
-\centering
-\capstart
+\includegraphics[width=1.000\linewidth]{chapter05_section01_minkpmminkmp.png}
+\caption{Implementation of operations `sum-difference' and `difference-sum'.}\label{chap_implement:minkpic}\end{figure}
 
-\includegraphics[width=0.500\linewidth]{chapter05_section01_minkmp.png}
-\caption{Implementation of an operation `difference-sum'.}\label{chap_implement:minkmppic}\end{figure}
-
-Figures \hyperref[chap_implement:minkpmpic]{ \ref*{chap_implement:minkpmpic}} and \hyperref[chap_implement:minkmppic]{ \ref*{chap_implement:minkmppic}} display results of
+Figure \hyperref[chap_implement:minkpic]{ \ref*{chap_implement:minkpic}} displays results of
 the implementation of minkpm and minkmp operations.
 
 Similarly, operation ’sum-difference’ described in section {\hyperref[chap_ellcalc:sum-diff-label]{\emph{Geometric Sum-Difference}}} is implemented in functions
@@ -3869,16 +3865,10 @@ tube onto time-dependent subspace.
 \centering
 \capstart
 
-\includegraphics[width=0.500\linewidth]{chapter05_section03_reachTubeStatProj.png}
-\caption{Static projection of the ellipsoidal tube.}\label{chap_implement:stat-proj}\end{figure}
-\begin{figure}[htbp]
-\centering
-\capstart
+\includegraphics[width=1.000\linewidth]{chapter05_section03_reachTubeStatProjreachTubeDynProj.png}
+\caption{Static and dynamic projections of the ellipsoidal tube.}\label{chap_implement:statdyn-proj}\end{figure}
 
-\includegraphics[width=0.500\linewidth]{chapter05_section03_reachTubeDynProj.png}
-\caption{Dynamic projection of the ellipsoidal tube.}\label{chap_implement:dyn-proj}\end{figure}
-
-Figures \hyperref[chap_implement:stat-proj]{ \ref*{chap_implement:stat-proj}} and \hyperref[chap_implement:dyn-proj]{ \ref*{chap_implement:dyn-proj}} display static and dynamic projections.
+Figure \hyperref[chap_implement:statdyn-proj]{ \ref*{chap_implement:statdyn-proj}} displays static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.
 
 We can compute tubes by the instant of time using methodfromEllTubes:
@@ -3945,7 +3935,7 @@ function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
 \includegraphics[width=0.700\linewidth]{chapter05_section03_unionTubeStatProj.png}
 \caption{Ellipsoidal tubes by the instant of time.}\label{chap_implement:uniontubestatproj}\end{figure}
 
-Figure \hyperref[chap_implement:uniontubestatproj]{ \ref*{chap_implement:uniontubestatproj}} shows projection of ellipsoidal
+\hyperref[chap_implement:uniontubestatproj]{Figure  \ref*{chap_implement:uniontubestatproj}} shows projection of ellipsoidal
 tubes by the instant of time.
 
 Also we can get initial data from the resulting tube:
@@ -3985,7 +3975,7 @@ to display a content of ellipsoidal tubes.
 \includegraphics[width=0.500\linewidth]{chapter05_section03_dispPic.png}
 \caption{Content of the ellipsoidal tube.}\label{chap_implement:disppic}\end{figure}
 
-Figure \hyperref[chap_implement:disppic]{ \ref*{chap_implement:disppic}}
+\hyperref[chap_implement:disppic]{Figure  \ref*{chap_implement:disppic}}
 displays all fields of the ellipsoidal tube.
 
 There are several methods to find the tubes with necessary parameters.
@@ -4783,9 +4773,9 @@ Spring-mass system with disturbance:
 \PYG{n}{psObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} plot reach set approximation at time t = 4}
 \end{Verbatim}
 
-Figure \hyperref[chap_examples:mechreachfig]{ \ref*{chap_examples:mechreachfig}} (a) shows the reach set of the system
+\hyperref[chap_examples:mechreachfig]{Figure  \ref*{chap_examples:mechreachfig}} (a) shows the reach set of the system
 \eqref{chap_examples-spmass1}-\eqref{chap_examples-spmass2} evolving in time from $t=0$ to $t=4$.
-Figure \hyperref[chap_examples:mechreachfig]{ \ref*{chap_examples:mechreachfig}} (b) presents a snapshot of this reach set at time
+\hyperref[chap_examples:mechreachfig]{Figure  \ref*{chap_examples:mechreachfig}} (b) presents a snapshot of this reach set at time
 $t=4$.
 
 So far we considered an ideal system without any disturbance, such as
@@ -15238,6 +15228,7 @@ Boyd and L. Vandenberghe. \emph{Convex Optimization}. Cambridge University Press
 }
 \bibitem[VAR2007]{VAR2007}{\phantomsection\label{chap_reach:var2007} 
 P. Varaiya A. A. Kurzhanskiy. Ellipsoidal techniques for reachability analysis of discrete-time
+linear systems. \emph{IEEE Transactions on Automatic Control}, 52(1):26–38, 2007.
 linear systems. \emph{IEEE Transactions on Automatic Control}, 52(1):26–38, 2007.
 }
 \bibitem[MPTHP]{MPTHP}{\phantomsection\label{chap_install:mpthp} 

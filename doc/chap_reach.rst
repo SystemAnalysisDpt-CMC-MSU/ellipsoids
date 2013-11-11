@@ -30,7 +30,7 @@ values :math:`u(t, x(t))` are restricted to a closed compact control set
 depend on the state, :math:`u=u(t)`; for a *closed-loop* control,
 :math:`u=u(t, x(t))`.
 
-The (forward) reach set :math:`{\mathcal X}(t, t_0, x_0)` at time
+**Definition.** The (forward) reach set :math:`{\mathcal X}(t, t_0, x_0)` at time
 :math:`t>t_0` from the initial position :math:`(t_0, x_0)` is the set of
 all states :math:`x(t)` reachable at time :math:`t` by system :eq:`ctds1`,
 or :eq:`dtds1`, with :math:`x(t_0)=x_0` through all possible controls
@@ -39,7 +39,10 @@ or :eq:`dtds1`, with :math:`x(t_0)=x_0` through all possible controls
 :math:`{\mathcal X}_0`, the reach set
 :math:`{\mathcal X}(t, t_0, {\mathcal X}_0)` is
 
-.. math:: {\mathcal X}(t, t_0, {\mathcal X}_0) = \bigcup_{x_0\in{\mathcal X}_0}{\mathcal X}(t, t_0, x_0).
+.. math:: 
+   :label: def_olrs
+   
+   {\mathcal X}(t, t_0, {\mathcal X}_0) = \bigcup_{x_0\in{\mathcal X}_0}{\mathcal X}(t, t_0, x_0).
 
 Here are two facts about forward reach sets.
 
@@ -106,7 +109,7 @@ in continuous-time, and as
 
    {\mathcal X}(t, t_0, {\mathcal X}_0) =
    \Phi(t, t_0){\mathcal X}_0 \oplus \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)
-.. \tag*{(\ref{ctlsrs}d)}
+
 
 
 in discrete-time case.
@@ -119,7 +122,7 @@ initial set :math:`{\mathcal X}_0` and the control sets
 convex, so is the reach set
 :math:`{\mathcal X}(t, t_0, {\mathcal X}_0)`.
 
-The backward reach set :math:`{\mathcal Y}(t_1, t, y_1)` for the target
+**Definition.** The backward reach set :math:`{\mathcal Y}(t_1, t, y_1)` for the target
 position :math:`(t_1, y_1)` is the set of all states :math:`y(t)` for
 which there exists some control
 :math:`u(\tau, x(\tau))\in{\mathcal U}(\tau)`,
@@ -128,7 +131,10 @@ the state :math:`y_1` at time :math:`t_1`. For the target set
 :math:`{\mathcal Y}_1` at time :math:`t_1`, the backward reach set
 :math:`{\mathcal Y}(t_1, t, {\mathcal Y}_1)` is
 
-.. math:: {\mathcal Y}(t_1, t, {\mathcal Y}_1) = \bigcup_{y_1\in{\mathcal Y}_1}{\mathcal Y}(t_1, t, y_1).
+.. math:: 
+   :label: def_olbrs
+
+   {\mathcal Y}(t_1, t, {\mathcal Y}_1) = \bigcup_{y_1\in{\mathcal Y}_1}{\mathcal Y}(t_1, t, y_1).
 
 The backward reach set
 :math:`{\mathcal Y}(t_1, t, {\mathcal Y}_1)` is the largest *weakly
@@ -205,7 +211,7 @@ or the discrete-time dynamical system with disturbance
    :label: dtds2
 
    x(t+1) = f(t, x, u, v),
-.. \tag*{(\ref{ctds2}d)}
+
 
 
 in which we also have the disturbance input :math:`v\in{\bf R}^d` with
@@ -219,7 +225,7 @@ Given the initial time :math:`t_0`, the set of initial states
 :math:`{\mathcal X}_0`, and terminal time :math:`t`, there are two types
 of OLRS.
 
-The maxmin open-loop reach set
+**Definition.** The maxmin open-loop reach set
 :math:`\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)` is the set
 of all states :math:`x`, such that for any disturbance
 :math:`v(\tau)\in{\mathcal V}(\tau)`, there exist an initial state
@@ -228,7 +234,7 @@ of all states :math:`x`, such that for any disturbance
 steers system :eq:`ctds2` or :eq:`dtds2` from :math:`x(t_0)=x_0` to
 :math:`x(t)=x`. 
 
-The minmax open-loop reach set
+**Definition.** The minmax open-loop reach set
 :math:`\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)` is the set
 of all states :math:`x`, such that there exists a control
 :math:`u(\tau)\in{\mathcal U}(\tau)` that for all disturbances
@@ -344,11 +350,8 @@ which is the subzero level set of the corresponding value function
 .. math::
    :label: maxminvfk
 
-   \begin{aligned}
-   &&\underline{V}^k(t, x) = \nonumber \\
-   &&\max_v\min_u\{\underline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
+   \underline{V}^k(t, x) = \max_v\min_u\{\underline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
    u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_k\leqslant\tau<t\}.
-   \end{aligned}
 
 The minmax piecewise OLRS with :math:`k` corrections is
 
@@ -365,8 +368,7 @@ which is the subzero level set of the corresponding value function
    :label: minmaxvfk
 
    \begin{aligned}
-   &&\overline{V}^k(t, x) = \nonumber \\
-   &&\min_u\max_v\{\overline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
+   \overline{V}^k(t, x) = \min_u\max_v\{\overline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
    u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_k\leqslant\tau<t\}.
    \end{aligned}
 
@@ -416,7 +418,8 @@ time :math:`t`, and we call
 
 the *minmax closed-loop reach set* of system :eq:`ctds2` or :eq:`dtds2` at
 time :math:`t`. 
-Given initial time :math:`t_0` and the set of initial
+
+**Definition.** Given initial time :math:`t_0` and the set of initial
 states :math:`{\mathcal X}_0`, the maxmin CLRS
 :math:`\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)` of system
 :eq:`ctds2` or :eq:`dtds2` at time :math:`t>t_0`, is the set of all states
@@ -441,7 +444,8 @@ in the continuous-time case, or
 
 in the discrete-time case, with :math:`t_0\leqslant\tau<t`, is such
 that :math:`x(t)=x`. 
-Given initial time :math:`t_0` and the set of initial states :math:`{\mathcal X}_0`, the
+
+**Definition.** Given initial time :math:`t_0` and the set of initial states :math:`{\mathcal X}_0`, the
 maxmin CLRS :math:`\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)` of system
 :eq:`ctds2` or :eq:`dtds2`, at time :math:`t>t_0`, is the set of all states
 :math:`x`, for each of which there exists a control
@@ -622,7 +626,7 @@ linear systems,
 Just as for forward reach sets, the backward reach sets can be open-loop
 (OLBRS) or closed-loop (CLBRS).
 
-Given the terminal time :math:`t_1` and target set
+**Definition.** Given the terminal time :math:`t_1` and target set
 :math:`{\mathcal Y}_1`, the maxmin open-loop backward reach set
 :math:`\overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)` of system
 :eq:`ctds2` or :eq:`dtds2` at time :math:`t<t_1`, is the set of all :math:`y`,
@@ -638,12 +642,11 @@ subzero level set of the value function
    :label: maxminvfb
 
    \begin{aligned}
-   &&\underline{V}_b(t, y) = \nonumber \\
-   &&\max_v\min_u\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
+   \underline{V}_b(t, y) = \max_v\min_u\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
    v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<t_1\},
    \end{aligned}
 
-Given the terminal time :math:`t_1` and target set
+**Definition.** Given the terminal time :math:`t_1` and target set
 :math:`{\mathcal Y}_1`, the minmax open-loop backward reach set
 :math:`\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)` of system
 :eq:`ctds2` or :eq:`dtds2` at time :math:`t<t_1`, is the set of all :math:`y`,
@@ -659,8 +662,7 @@ subzero level set of the value function
    :label: minmaxvfb 
 
    \begin{aligned}
-   &&\overline{V}_b(t, y) = \nonumber \\
-   &&\min_u\max_v\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
+   \overline{V}_b(t, y) = \min_u\max_v\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
    v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<t_1\},
    \end{aligned}
 
@@ -685,8 +687,7 @@ and it is the subzero level set of the function
    :label: maxminvfb1 
 
    \begin{aligned}
-   &&\underline{V}^1_b(t, y) = \nonumber \\
-   &&\max_v\min_u\{\underline{V}_b(\tau_1, y(\tau_1)) ~|~
+   \underline{V}^1_b(t, y) =  \max_v\min_u\{\underline{V}_b(\tau_1, y(\tau_1)) ~|~
    y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
    v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_1\}.
    \end{aligned}
@@ -705,8 +706,7 @@ and it is the subzero level set of the function
    :label: minmaxvfb1
 
    \begin{aligned}
-   &&\overline{V}^1_b(t, y) = \nonumber \\
-   &&\min_u\max_v\{\overline{V}_b(\tau_1, y(\tau_1)) ~|~
+   \overline{V}^1_b(t, y) = \min_u\max_v\{\overline{V}_b(\tau_1, y(\tau_1)) ~|~
    y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
    v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_1\},
    \end{aligned}
@@ -727,8 +727,7 @@ which is the subzero level set of function
    :label: maxminvfbk
 
    \begin{aligned}
-   &&\underline{V}^k_b(t, y) = \nonumber \\
-   &&\max_v\min_u\{\underline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
+   \underline{V}^k_b(t, y) =  \max_v\min_u\{\underline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
    y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
    v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_k\}.
    \end{aligned}
@@ -747,8 +746,7 @@ which is the subzero level set of the function
    :label: minmaxvfbk
 
    \begin{aligned}
-   &&\overline{V}^k_b(t, y) = \nonumber \\
-   &&\min_u\max_v\{\overline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
+   \overline{V}^k_b(t, y) =  \min_u\max_v\{\overline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
    y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
    v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau<\tau_k\},
    \end{aligned}
@@ -802,7 +800,7 @@ We say that
 is the *minmax closed-loop backward reach set* of system :eq:`ctds2` or
 :eq:`dtds2` at time :math:`t`. 
 
-Given the terminal time :math:`t_1` and
+**Definition.** Given the terminal time :math:`t_1` and
 target set :math:`{\mathcal Y}_1`, the maxmin CLBRS
 :math:`\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)` of system
 :eq:`ctds2` or :eq:`dtds2` at time :math:`t<t_1`, is the set of all states
@@ -827,7 +825,7 @@ in continuous-time case, or
 in discrete-time case, with :math:`t\leqslant\tau<t_1`, such that
 :math:`y(t) = y` and :math:`y(t_1)=y_1`. 
 
-Given the terminal time :math:`t_1` and target set :math:`{\mathcal Y}_1`, the
+**Definition.** Given the terminal time :math:`t_1` and target set :math:`{\mathcal Y}_1`, the
 minmax CLBRS :math:`\underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)` of system
 ([ctds2]) or [dtds2] at time :math:`t<t_1`, is the set of all states
 :math:`y`, for each of which there exists control
@@ -1079,7 +1077,7 @@ If the matrix :math:`Q(\cdot)=0`, the system :eq:`ctsystem` becomes an
 ordinary affine system with known :math:`v(\cdot)=q(\cdot)`. If
 :math:`G(\cdot) = 0`, the system becomes linear. For these two cases
 (:math:`Q(\cdot)=0` or :math:`G(\cdot)=0`) the reach set is as given in
-Definition [def:sub:`o`\ lrs], and so the reach set will be denoted as
+definition :eq:`def_olrs`, and so the reach set will be denoted as
 :math:`{\mathcal X}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)) = {\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))`.
 
 The reach set :math:`{\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))` is a
@@ -1403,7 +1401,7 @@ ordinary affine system with known :math:`v(\cdot)=q(\cdot)`. If matrix
 :math:`G(\cdot)=0`, the system reduces to a linear controlled system. In
 the absence of disturbance (:math:`Q(\cdot)=0` or :math:`G(\cdot)=0`),
 :math:`\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))=\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))={\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))`,
-the reach set is as in Definition.
+the reach set is as in definition :eq:`def_olrs`.
 
 Maxmin and minmax CLRS
 :math:`\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)` and
@@ -1879,4 +1877,5 @@ difference-sum for ellipsoids.
 	<h2>References</h2>   
    
 .. [VAR2007] P. Varaiya A. A. Kurzhanskiy. Ellipsoidal techniques for reachability analysis of discrete-time
+   linear systems. *IEEE Transactions on Automatic Control*, 52(1):26–38, 2007.
    linear systems. *IEEE Transactions on Automatic Control*, 52(1):26–38, 2007.

@@ -175,7 +175,7 @@ sum can be computed explicitely and plotted:
 
    The geometric sum of ellipsoids.
 
-Figure :num:`#minksumpic` displays the geometric sum of ellipsoids. If
+:num:`Figure #minksumpic` displays the geometric sum of ellipsoids. If
 the dimension of the space in which the ellipsoids are defined exceeds
 :math:`3`, an error is returned. The result of the geometric sum
 operation is not generally an ellipsoid, but it can be approximated by
@@ -202,12 +202,12 @@ can be computed explicitely and plotted for ellipsoids in
 
 .. figure:: /pic/chapter05_section01_minkdiff.png
    :alt: approximation
-   :width: 60 %
+   :width: 40 %
 
    The geometric difference of ellipsoids.
 
 
-Figure :num:`#minkdiffpic` shows the geometric difference of ellipsoids.
+:num:`Figure #minkdiffpic` shows the geometric difference of ellipsoids.
 
 Similar to minksum, minkdiff is there for visualization purpose. It
 works only for dimensions :math:`1`, :math:`2` and :math:`3`, and for
@@ -230,24 +230,15 @@ of arbitrary dimension.
    :language: matlab
    :linenos:
    
-.. _minkpmpic:
+.. _minkpic:
 
-.. figure:: /pic/chapter05_section01_minkpm.png
+.. figure:: /pic/chapter05_section01_minkpmminkmp.png
    :alt: approximation
-   :width: 50 %
+   :width: 100 %
 
-   Implementation of an operation 'sum-difference'.
+   Implementation of operations 'sum-difference' and 'difference-sum'. 
 
-.. _minkmppic:
-
-.. figure:: /pic/chapter05_section01_minkmp.png
-   :alt: approximation
-   :width: 50 %
-
-   Implementation of an operation 'difference-sum'.
-   
-
-Figures :num:`#minkpmpic` and :num:`#minkmppic` display results of
+Figure :num:`#minkpic` displays results of
 the implementation of minkpm and minkmp operations. 
 
 Similarly, operation ’sum-difference’ described in section :ref:`sum-diff-label` is implemented in functions
@@ -444,23 +435,15 @@ by the cut function:
 We can compute the projection of the ellipsoidal
 tube onto time-dependent subspace.
 
-.. _stat-proj:
+.. _statdyn-proj:
 
-.. figure:: /pic/chapter05_section03_reachTubeStatProj.png
+.. figure:: /pic/chapter05_section03_reachTubeStatProjreachTubeDynProj.png
    :alt: approximation
-   :width: 50 %
+   :width: 100 %
 
-   Static projection of the ellipsoidal tube.
+   Static and dynamic projections of the ellipsoidal tube.
 
-.. _dyn-proj:
-
-.. figure:: /pic/chapter05_section03_reachTubeDynProj.png
-   :alt: approximation
-   :width: 50 %
-
-   Dynamic projection of the ellipsoidal tube.
-
-Figures :num:`#stat-proj` and :num:`#dyn-proj` display static and dynamic projections.
+Figure :num:`#statdyn-proj` displays static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.
 
 We can compute tubes by the instant of time using methodfromEllTubes:
@@ -477,7 +460,7 @@ We can compute tubes by the instant of time using methodfromEllTubes:
 
    Ellipsoidal tubes by the instant of time.
    
-Figure :num:`#uniontubestatproj` shows projection of ellipsoidal
+:num:`Figure #uniontubestatproj` shows projection of ellipsoidal
 tubes by the instant of time.
 
 Also we can get initial data from the resulting tube: 
@@ -502,7 +485,7 @@ to display a content of ellipsoidal tubes.
    Content of the ellipsoidal tube.
 
    
-Figure :num:`#disppic`
+:num:`Figure #disppic`
 displays all fields of the ellipsoidal tube.
 
 There are several methods to find the tubes with necessary parameters.

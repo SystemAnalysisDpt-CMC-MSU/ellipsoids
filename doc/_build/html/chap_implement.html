@@ -335,7 +335,7 @@ sum can be computed explicitely and plotted:</p>
 <a class="reference internal image-reference" href="_images/chapter05_section01_minksum.png"><img alt="approximation" src="_images/chapter05_section01_minksum.png" style="width: 40%;" /></a>
 <p class="caption">Figure 1: The geometric sum of ellipsoids.</p>
 </div>
-<p>Figure <a class="pageref" href="#minksumpic"> 1</a> displays the geometric sum of ellipsoids. If
+<p><a class="pageref" href="#minksumpic">Figure  1</a> displays the geometric sum of ellipsoids. If
 the dimension of the space in which the ellipsoids are defined exceeds
 <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>, an error is returned. The result of the geometric sum
 operation is not generally an ellipsoid, but it can be approximated by
@@ -416,10 +416,10 @@ can be computed explicitely and plotted for ellipsoids in
 </pre></div>
 </td></tr></table></div>
 <div class="figure" id="minkdiffpic">
-<a class="reference internal image-reference" href="_images/chapter05_section01_minkdiff.png"><img alt="approximation" src="_images/chapter05_section01_minkdiff.png" style="width: 60%;" /></a>
+<a class="reference internal image-reference" href="_images/chapter05_section01_minkdiff.png"><img alt="approximation" src="_images/chapter05_section01_minkdiff.png" style="width: 40%;" /></a>
 <p class="caption">Figure 2: The geometric difference of ellipsoids.</p>
 </div>
-<p>Figure <a class="pageref" href="#minkdiffpic"> 2</a> shows the geometric difference of ellipsoids.</p>
+<p><a class="pageref" href="#minkdiffpic">Figure  2</a> shows the geometric difference of ellipsoids.</p>
 <p>Similar to minksum, minkdiff is there for visualization purpose. It
 works only for dimensions <img class="math" src="_images/math/dce34f4dfb2406144304ad0d6106c5382ddd1446.png" alt="1"/>, <img class="math" src="_images/math/41c544263a265ff15498ee45f7392c5f86c6d151.png" alt="2"/> and <img class="math" src="_images/math/7cde695f2e4542fd01f860a89189f47a27143b66.png" alt="3"/>, and for
 higher dimensions it returns an error. For arbitrary dimensions, the
@@ -503,15 +503,11 @@ of arbitrary dimension.</p>
 <span class="n">firstEllObj</span><span class="p">.</span><span class="n">minkmp</span><span class="p">(</span><span class="n">thirdEllObj</span><span class="p">,</span> <span class="n">secEllObj</span><span class="p">);</span>
 </pre></div>
 </td></tr></table></div>
-<div class="figure" id="minkpmpic">
-<a class="reference internal image-reference" href="_images/chapter05_section01_minkpm.png"><img alt="approximation" src="_images/chapter05_section01_minkpm.png" style="width: 50%;" /></a>
-<p class="caption">Figure 3: Implementation of an operation &#8216;sum-difference&#8217;.</p>
+<div class="figure" id="minkpic">
+<a class="reference internal image-reference" href="_images/chapter05_section01_minkpmminkmp.png"><img alt="approximation" src="_images/chapter05_section01_minkpmminkmp.png" style="width: 100%;" /></a>
+<p class="caption">Figure 3: Implementation of operations &#8216;sum-difference&#8217; and &#8216;difference-sum&#8217;.</p>
 </div>
-<div class="figure" id="minkmppic">
-<a class="reference internal image-reference" href="_images/chapter05_section01_minkmp.png"><img alt="approximation" src="_images/chapter05_section01_minkmp.png" style="width: 50%;" /></a>
-<p class="caption">Figure 4: Implementation of an operation &#8216;difference-sum&#8217;.</p>
-</div>
-<p>Figures <a class="pageref" href="#minkpmpic"> 3</a> and <a class="pageref" href="#minkmppic"> 4</a> display results of
+<p>Figure <a class="pageref" href="#minkpic"> 3</a> displays results of
 the implementation of minkpm and minkmp operations.</p>
 <p>Similarly, operation ’sum-difference’ described in section <a class="reference internal" href="chap_ellcalc.html#sum-diff-label"><em>Geometric Sum-Difference</em></a> is implemented in functions
 minkpm, minkpm_ea, minkpm_ia, the first one of which is used for
@@ -1084,15 +1080,11 @@ function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
 </div>
 <p>We can compute the projection of the ellipsoidal
 tube onto time-dependent subspace.</p>
-<div class="figure" id="stat-proj">
-<a class="reference internal image-reference" href="_images/chapter05_section03_reachTubeStatProj.png"><img alt="approximation" src="_images/chapter05_section03_reachTubeStatProj.png" style="width: 50%;" /></a>
-<p class="caption">Figure 5: Static projection of the ellipsoidal tube.</p>
+<div class="figure" id="statdyn-proj">
+<a class="reference internal image-reference" href="_images/chapter05_section03_reachTubeStatProjreachTubeDynProj.png"><img alt="approximation" src="_images/chapter05_section03_reachTubeStatProjreachTubeDynProj.png" style="width: 100%;" /></a>
+<p class="caption">Figure 4: Static and dynamic projections of the ellipsoidal tube.</p>
 </div>
-<div class="figure" id="dyn-proj">
-<a class="reference internal image-reference" href="_images/chapter05_section03_reachTubeDynProj.png"><img alt="approximation" src="_images/chapter05_section03_reachTubeDynProj.png" style="width: 50%;" /></a>
-<p class="caption">Figure 6: Dynamic projection of the ellipsoidal tube.</p>
-</div>
-<p>Figures <a class="pageref" href="#stat-proj"> 5</a> and <a class="pageref" href="#dyn-proj"> 6</a> display static and dynamic projections.
+<p>Figure <a class="pageref" href="#statdyn-proj"> 4</a> displays static and dynamic projections.
 Also we can see projections of good directions for ellipsoidal tubes.</p>
 <p>We can compute tubes by the instant of time using methodfromEllTubes:</p>
 <div class="highlight-matlab"><pre>function example
@@ -1125,9 +1117,9 @@ function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
 </div>
 <div class="figure" id="uniontubestatproj">
 <a class="reference internal image-reference" href="_images/chapter05_section03_unionTubeStatProj.png"><img alt="approximation" src="_images/chapter05_section03_unionTubeStatProj.png" style="width: 70%;" /></a>
-<p class="caption">Figure 7: Ellipsoidal tubes by the instant of time.</p>
+<p class="caption">Figure 5: Ellipsoidal tubes by the instant of time.</p>
 </div>
-<p>Figure <a class="pageref" href="#uniontubestatproj"> 7</a> shows projection of ellipsoidal
+<p><a class="pageref" href="#uniontubestatproj">Figure  5</a> shows projection of ellipsoidal
 tubes by the instant of time.</p>
 <p>Also we can get initial data from the resulting tube:</p>
 <div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
@@ -1176,9 +1168,9 @@ to display a content of ellipsoidal tubes.</p>
 </td></tr></table></div>
 <div class="figure" id="disppic">
 <a class="reference internal image-reference" href="_images/chapter05_section03_dispPic.png"><img alt="approximation" src="_images/chapter05_section03_dispPic.png" style="width: 50%;" /></a>
-<p class="caption">Figure 8: Content of the ellipsoidal tube.</p>
+<p class="caption">Figure 6: Content of the ellipsoidal tube.</p>
 </div>
-<p>Figure <a class="pageref" href="#disppic"> 8</a>
+<p><a class="pageref" href="#disppic">Figure  6</a>
 displays all fields of the ellipsoidal tube.</p>
 <p>There are several methods to find the tubes with necessary parameters.</p>
 <div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1

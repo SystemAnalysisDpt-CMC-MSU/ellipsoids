@@ -5,7 +5,8 @@ Basic Notions
 -------------
 
 We start with basic definitions. 
-Ellipsoid :math:`{\mathcal E}(q,Q)` in
+
+**Definition.** Ellipsoid :math:`{\mathcal E}(q,Q)` in
 :math:`{\bf R}^n` with center :math:`q` and shape matrix :math:`Q` is
 the set
 
@@ -17,7 +18,9 @@ the set
 wherein :math:`Q` is positive definite (:math:`Q=Q^T` and
 :math:`\langle x, Qx\rangle>0` for all nonzero :math:`x\in{\bf R}^n`).
 Here :math:`\langle\cdot,\cdot\rangle` denotes inner
-product. The support function of a set
+product. 
+
+**Definition.** The support function of a set
 :math:`{\mathcal X}\subseteq{\bf R}^n` is
 
 .. math:: \rho(l~|~{\mathcal X}) = \sup_{x\in{\mathcal X}} \langle l,x\rangle.
@@ -34,7 +37,8 @@ in practice we may deal with situations when :math:`Q` is singular, that
 is, with degenerate ellipsoids flat in those directions for which the
 corresponding eigenvalues are zero. Therefore, it is useful to give an
 alternative definition of an ellipsoid using the expression :eq:`ellsupp`.
-Ellipsoid :math:`{\mathcal E}(q,Q)` in :math:`{\bf R}^n` with center
+
+**Definition.** Ellipsoid :math:`{\mathcal E}(q,Q)` in :math:`{\bf R}^n` with center
 :math:`q` and shape matrix :math:`Q` is the set
 
 .. math::
@@ -138,8 +142,9 @@ subject to:
 
 .. math:: \langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leqslant0, ~~~ i=1,\cdots,k.
 
-If this problem is feasible, the intersection is nonempty. Given
-compact convex set :math:`{\mathcal X}\subseteq{\bf R}^n`, its polar
+If this problem is feasible, the intersection is nonempty. 
+
+**Definition.** Given compact convex set :math:`{\mathcal X}\subseteq{\bf R}^n`, its polar
 set, denoted :math:`{\mathcal X}^\circ`, is
 
 .. math:: {\mathcal X}^\circ = \{x\in{\bf R}^n ~|~ \langle x,y\rangle\leqslant1, ~ y\in{\mathcal X}\},
@@ -176,7 +181,7 @@ The special case is
 
 .. math:: {\mathcal E}^\circ(0,Q) = {\mathcal E}(0,Q^{-1}).
 
-Given :math:`k` compact sets
+**Definition.** Given :math:`k` compact sets
 :math:`{\mathcal X}_1, \cdots, {\mathcal X}_k\subseteq{\bf R}^n`, their
 geometric (Minkowski) sum is
 
@@ -186,7 +191,7 @@ geometric (Minkowski) sum is
    {\mathcal X}_1\oplus\cdots\oplus{\mathcal X}_k=\bigcup_{x_1\in{\mathcal X}_1}\cdots\bigcup_{x_k\in{\mathcal X}_k}
    \{x_1 + \cdots + x_k\} .  
 
-Given two compact sets
+**Definition.** Given two compact sets
 :math:`{\mathcal X}_1, {\mathcal X}_2 \subseteq{\bf R}^n`, their
 geometric (Minkowski) difference is
 
@@ -214,7 +219,9 @@ internal ellipsoidal approximations.
 
 Additional operations implemented in the *Ellipsoidal Toolbox* include
 external and internal approximations of intersections of ellipsoids with
-hyperplanes, halfspaces and polytopes. Hyperplane :math:`H(c,\gamma)` in
+hyperplanes, halfspaces and polytopes. 
+
+**Definition.** Hyperplane :math:`H(c,\gamma)` in
 :math:`{\bf R}^n` is the set
 
 .. math::
@@ -281,7 +288,8 @@ The idea behind the calculation of intersection of an ellipsoid with a
 halfspace is to treat the halfspace as an unbounded ellipsoid, that is,
 as the ellipsoid with the shape matrix all but one of whose eigenvalues
 are :math:`\infty`. 
-Polytope :math:`P(C,g)` is the
+
+**Definition.** Polytope :math:`P(C,g)` is the
 intersection of a finite number of closed halfspaces:
 
 .. math:: 
