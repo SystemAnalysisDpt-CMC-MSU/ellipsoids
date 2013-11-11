@@ -168,12 +168,14 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
                     hFigHandleVec, nFigRows, nFigCols, figRegExpList,...
                     cameraPositionsList, viewAngleList);
             end
-            picFileName =...
-                elltool.doc.picgen.PicGenController.getPicFileNameByCaller();
+%             picFileName =...
+%                 elltool.doc.picgen.PicGenController.getPicFileNameByCaller();
             set(hfigHandle, 'Units','normalized');
             set(hfigHandle,'WindowStyle','normal');
             set(hfigHandle, 'Position', [0 0 figWidth figHeight]);
             drawnow
+            picFileName =...
+                elltool.doc.picgen.PicGenController.getPicFileNameByCaller();
             print(hfigHandle,'-dpng', picFileName);
             
         end

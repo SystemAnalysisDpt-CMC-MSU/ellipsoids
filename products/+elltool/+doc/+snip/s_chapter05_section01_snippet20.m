@@ -11,4 +11,4 @@ internalEllVec = bufEllVec.minkpm_ia(thirdEllObj, dirsMat)  % internal
 % Array of ellipsoids with dimensionality 1x4
 
 % plot the set (firstEllObj + secEllObj - thirdEllObj)
-firstEllObj.minkpm(secEllObj, thirdEllObj)
+firstEllObj.minkpm(secEllObj, thirdEllObj, 'newfigure', true)
