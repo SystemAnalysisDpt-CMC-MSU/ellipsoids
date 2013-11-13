@@ -9,7 +9,7 @@ MATLAB programming environment. The following three commands define the
 same ellipsoid :math:`{\mathcal E}(q,Q)`, with :math:`q\in{\bf R}^n` and
 :math:`Q\in{\bf R}^{n\times n}` being symmetric positive semidefinite:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet01.m
    :language: matlab
    :linenos:
    
@@ -62,13 +62,13 @@ operators:
 All the listed operations can be applied to a single ellipsoid as well
 as to a two-dimensional array of ellipsoids. For example, 
    
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet02.m
    :language: matlab
    :linenos:
 
 To access individual elements of the array, the usual MATLAB subindexing is used:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet03.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet03.m
    :language: matlab
    :linenos:
    
@@ -76,7 +76,7 @@ Sometimes it may be useful to modify the shape of the ellipsoid without
 affecting its center. Say, we would like to bloat or squeeze the
 ellipsoid: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet04.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet04.m
    :language: matlab
    :linenos:
 
@@ -85,15 +85,15 @@ ellipsoid, it only accepts scalars or square matrices as its second
 input parameter. Several functions access the internal data of the
 ellipsoid object: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet05.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet05.m
    :language: matlab
    :linenos:
    
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet06.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet06.m
    :language: matlab
    :linenos:
    
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet07.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet07.m
    :language: matlab
    :linenos:
 
@@ -101,7 +101,7 @@ ellipsoid object:
 One way to check if two ellipsoids intersect, is to
 compute the distance between them ([STANHP]_, [LIN2002]_): 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet08.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet08.m
    :language: matlab
    :linenos:
 
@@ -113,7 +113,7 @@ by ellipsoids from the outside as well as from the inside. See
 [ROS2002]_
 for more information about these methods. 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet09.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet09.m
    :language: matlab
    :linenos:
 
@@ -121,11 +121,11 @@ It can be checked that
 resulting ellipsoid externalEllObj contains the given intersection,
 whereas internalEllObj is contained in this intersection: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet10.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet10.m
    :language: matlab
    :linenos:
    
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet11.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet11.m
    :language: matlab
    :linenos:
    
@@ -139,7 +139,7 @@ polytopes.
 It is also possible to solve the feasibility problem, that is, to check
 if the intersection of more than two ellipsoids is empty: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet12.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet12.m
    :language: matlab
    :linenos:
    
@@ -150,11 +150,11 @@ of ellipsoids in ellMat is empty. Function intersect in general checks
 if an ellipsoid, hyperplane or polytope intersects the union or the
 intersection of ellipsoids in the given array: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet13.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet13.m
    :language: matlab
    :linenos:
    
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet14.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet14.m
    :language: matlab
    :linenos:   
 
@@ -163,7 +163,7 @@ For the ellipsoids in
 :math:`{\bf R}`, :math:`{\bf R}^2` and :math:`{\bf R}^3` the geometric
 sum can be computed explicitely and plotted: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet15.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet15.m
    :language: matlab
    :linenos:
 
@@ -182,7 +182,7 @@ operation is not generally an ellipsoid, but it can be approximated by
 families of external and internal ellipsoids parametrized by the
 direction vector: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet16.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet16.m
    :language: matlab
    :linenos:
 
@@ -194,7 +194,7 @@ If the geometric difference of two ellipsoids is not an empty set, it
 can be computed explicitely and plotted for ellipsoids in
 :math:`{\bf R}`, :math:`{\bf R}^2` and :math:`{\bf R}^3`: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet17.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet17.m
    :language: matlab
    :linenos:
    
@@ -216,7 +216,7 @@ geometric difference can be approximated by families of external and
 internal ellipsoids parametrized by the direction vector, provided this
 direction is not bad: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet18.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet18.m
    :language: matlab
    :linenos:
 
@@ -226,7 +226,7 @@ first one of which is used for visualization and works for dimensions
 not higher than :math:`3`, whereas the last two can deal with ellipsoids
 of arbitrary dimension. 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet19.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet19.m
    :language: matlab
    :linenos:
    
@@ -246,7 +246,7 @@ minkpm, minkpm\_ea, minkpm\_ia, the first one of which is used for
 visualization and works for dimensions not higher than :math:`3`,
 whereas the last two can deal with ellipsoids of arbitrary dimension.
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section01_snippet20.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section01_snippet20.m
    :language: matlab
    :linenos:
 
@@ -258,7 +258,7 @@ The class hyperplane of the *Ellipsoidal Toolbox* is used to describe
 hyperplanes and halfspaces. The following two commands define one and
 the same hyperplane but two different halfspaces:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet01.m
    :language: matlab
    :linenos:
 
@@ -293,15 +293,15 @@ class:
 There are several ways to access the internal data of the hyperplane
 object: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet02.m
    :language: matlab
    :linenos:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet03.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet03.m
    :language: matlab
    :linenos:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet04.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet04.m
    :language: matlab
    :linenos:
 
@@ -315,7 +315,7 @@ allows only single hyperplane object.
 An array of hyperplanes can be converted to the polytope object of the
 Multi-Parametric Toolbox ([KVAS2004]_, [MPTHP]_), and back: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet05.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet05.m
    :language: matlab
    :linenos:
 
@@ -326,7 +326,7 @@ installed.
 
 We can compute distance from ellipsoids to hyperplanes and polytopes: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet06.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet06.m
    :language: matlab
    :linenos:
 
@@ -344,24 +344,24 @@ It can be checked if the union or intersection of given ellipsoids
 intersects given hyperplanes or polytopes:
 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet07.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet07.m
    :language: matlab
    :linenos:
 
    
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet08.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet08.m
    :language: matlab
    :linenos:
 
    
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet09.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet09.m
    :language: matlab
    :linenos:
 
 
 The intersection of ellipsoid and hyperplane can be computed exactly:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet10.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet10.m
    :language: matlab
    :linenos:
 
@@ -370,7 +370,7 @@ Functions intersection\_ea and intersection\_ia can be used with
 hyperplane objects, which in this case define halfspaces and polytope
 objects:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet11.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet11.m
    :language: matlab
    :linenos:
 
@@ -378,11 +378,11 @@ objects:
 Function isInside can be used to check if a polytope or union of
 polytopes is contained in the intersection of given ellipsoids:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet12.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet12.m
    :language: matlab
    :linenos:
    
-.. literalinclude:: /mcodesnippets/s_chapter05_section02_snippet13.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section02_snippet13.m
    :language: matlab
    :linenos:
 
@@ -410,11 +410,11 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj for description of the
 projection on static plane tubes by the instant of time. Next we provide
 some examples of the operations with ellipsoidal tubes. 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet01.m
    :language: matlab
    :linenos:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet02.m
    :language: matlab
    :linenos:
 
@@ -424,11 +424,11 @@ interval, smaller than the one for which the ellipsoidal tube was
 computed, say :math:`2\leqslant t\leqslant4`. This data can be extracted
 by the cut function: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet03.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet03.m
    :language: matlab
    :linenos:
    
-.. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet04.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet04.m
    :language: matlab
    :linenos:
 
@@ -448,7 +448,7 @@ Also we can see projections of good directions for ellipsoidal tubes.
 
 We can compute tubes by the instant of time using methodfromEllTubes:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet05.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet05.m
    :language: matlab
    :linenos:
    
@@ -465,14 +465,14 @@ tubes by the instant of time.
 
 Also we can get initial data from the resulting tube: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet06.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet06.m
    :language: matlab
    :linenos:
    
 There is a method
 to display a content of ellipsoidal tubes. 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet07.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet07.m
    :language: matlab
    :linenos:
    
@@ -490,20 +490,20 @@ displays all fields of the ellipsoidal tube.
 
 There are several methods to find the tubes with necessary parameters.
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet08.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet08.m
    :language: matlab
    :linenos:
    
 Also you can use the method display to see the result of the method’s
 work. 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet09.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet09.m
    :language: matlab
    :linenos:
 
 We can sort our tubes by certain fields:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section03_snippet10.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet10.m
    :language: matlab
    :linenos:
 
@@ -545,7 +545,7 @@ with
 
 is done by the following sequence of commands: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet01.m
    :language: matlab
    :linenos:
 
@@ -555,7 +555,7 @@ If matrices :math:`A` or
 -\frac{1}{t} & 0\end{array}\right]`, then matrix aMat should be
 symbolic:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet02.m
    :language: matlab
    :linenos:
 
@@ -579,7 +579,7 @@ To describe the system with disturbance
 with bounds on control as before, and disturbance being
 :math:`-1\leqslant v(t)\leqslant1`, we type: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet03.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet03.m
    :language: matlab
    :linenos:
 
@@ -608,7 +608,7 @@ To declare a discrete-time system
 
 we use LinSysDiscrete constructor: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet04.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet04.m
    :language: matlab
    :linenos:
 
@@ -617,14 +617,14 @@ created, we need to specify the set of initial conditions, the time
 interval and values of the direction vector, for which the reach set
 approximations must be computed: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet05.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet05.m
    :language: matlab
    :linenos:
 
 The reach set approximation is computed
 by calling the constructor of the ReachContinuous object: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet06.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet06.m
    :language: matlab
    :linenos:
 
@@ -635,7 +635,7 @@ conditions computed for given directions. Both external and internal
 approximations are computed. The reach set approximation data can be
 extracted in the form of arrays of ellipsoids:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet07.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet07.m
    :language: matlab
    :linenos:
 
@@ -661,14 +661,14 @@ was computed, say :math:`3\leqslant t\leqslant5`. This data can be
 extracted and returned in the form of ReachContinuous object by the cut
 function:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet08.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet08.m
    :language: matlab
    :linenos:
 
 To obtain a snap shot of the reach set at given time, the same function
 cut is used: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet09.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet09.m
    :language: matlab
    :linenos:
 
@@ -677,19 +677,19 @@ approximation intersects with given ellipsoids, hyperplanes or
 polytopes:
 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet10.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet10.m
    :language: matlab
    :linenos:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet11.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet11.m
    :language: matlab
    :linenos:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet12.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet12.m
    :language: matlab
    :linenos:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet13.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet13.m
    :language: matlab
    :linenos:
 
@@ -704,7 +704,7 @@ is such a case: the quality of the approximation does not allow us to
 determine whether or not ellObj intersects with the actual reach set. To
 improve the quality of approximation, refine function should be used:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet14.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet14.m
    :language: matlab
    :linenos:
 
@@ -718,7 +718,7 @@ refine operations, we can obtain the trajectory of the center of the
 reach set and the good curves along which the actual reach set is
 touched by its ellipsoidal approximations:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet15.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet15.m
    :language: matlab
    :linenos:
 
@@ -742,7 +742,7 @@ time-variant system sys\_t defined above. Switched systems are a special
 case of this situation. To compute the further evolution in time of the
 existing reach set, function evolve should be used: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet16.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet16.m
    :language: matlab
    :linenos:
 
@@ -752,7 +752,7 @@ be viewed as an implementation of the semigroup property.
 To compute the backward reach set for some specified target set, we
 declare the time interval so that the terminating time comes first:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet17.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet17.m
    :language: matlab
    :linenos:
 
@@ -761,7 +761,7 @@ Reach set and backward reach set computation for discrete-time systems
 and manipulations with the resulting reach set object are performed
 using the same functions as for continuous-time systems:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section04_snippet18.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section04_snippet18.m
    :language: matlab
    :linenos:
 
@@ -783,7 +783,7 @@ values of certain global parameters. System of the parameters are
 configured using xml files, which available from a set of command-line
 utilities: 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section05_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section05_snippet01.m
    :language: matlab
    :linenos:
 
@@ -830,14 +830,14 @@ class, providing emulation of static properties for toolbox. It has two
 function types: setters and getters. Using getters we obtain system
 parameters. 
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section05_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section05_snippet02.m
    :language: matlab
    :linenos:
 
 Some of the parameters can be changed in run-time via
 setters.
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section05_snippet03.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section05_snippet03.m
    :language: matlab
    :linenos:
 
@@ -886,7 +886,7 @@ Ellipsoids of dimensions higher than three must be projected onto a two-
 or three-dimensional subspace before being plotted. This is done by
 means of projection function:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section06_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section06_snippet01.m
    :language: matlab
    :linenos:
 
@@ -899,7 +899,7 @@ ellipsoids.
 Function projection exists also for the
 ReachContinuous\ :math:`\backslash`\ ReachDiscrete objects:
 
-.. literalinclude:: /mcodesnippets/s_chapter05_section06_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section06_snippet02.m
    :language: matlab
    :linenos:
 
