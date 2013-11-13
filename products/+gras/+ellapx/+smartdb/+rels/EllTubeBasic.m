@@ -65,6 +65,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             centRegCurve = calcCentCurve(...
                 @SquareMatVector.rMultiplyByVec);
             %
+            
+            aMat = squeeze(aMat);
+            
             xTouchOpMat= aMat - centRegCurve;
             xTouchMat= aMat + centRegCurve;
             function curveMat = calcCentCurve(rMulByVecOp)
@@ -424,6 +427,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         'size along second or higher dimension'],...
                         fieldListStr);
                 end
+                
+                self.aMat = cellfun(@(x)squeeze(x), self.aMat,...
+                    'UniformOutput',false);
+                
                 checkFieldList={'QArray','aMat','scaleFactor',...
                     'MArray','dim','sTime','approxSchemaName',...
                     'approxSchemaDescr','approxType','timeVec',...
@@ -585,7 +592,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 sTime=newTimeVec(indMin);
                 %
                 function interpArray=simpleInterp(inpArray,isVector)
-                    import gras.interp.MatrixInterpolantFactory;
+                    import gras.mat.interp.MatrixInterpolantFactory;
                     if nargin<2
                         isVector=false;
                     end
@@ -840,7 +847,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         %             Mathematics and Computer Science,
         %             System Analysis Department 2013 $
         function interpEllTube = interp(self, timeVec)
-            import gras.interp.MatrixInterpolantFactory;
+            import gras.mat.interp.MatrixInterpolantFactory;
             import gras.ellapx.smartdb.rels.EllTube;
             import modgen.common.throwerror;
             %

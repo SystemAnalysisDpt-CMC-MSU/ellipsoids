@@ -308,7 +308,7 @@ classdef mlunit_test_common < mlunitext.test_case
             import modgen.common.ismembercellstr;
             aList={'asdfsdf','sdfsfd','sdfsdf','sdf'};
             bList={'sdf','sdfsdf','ssdfsfsdfsd','sdf'};
-            [isTVec,indLVec]=ismember(aList,bList);
+            [isTVec,indLVec]=ismember(aList,bList,'legacy');
             [isTOVec,indLOVec]=ismembercellstr(aList,bList,true);
             mlunitext.assert_equals(true,isequal(isTVec,isTOVec));
             mlunitext.assert_equals(true,isequal(indLVec,indLOVec));
@@ -614,7 +614,8 @@ classdef mlunit_test_common < mlunitext.test_case
             check_results();
             %
             function check_results()
-                isOk= isequal(indShrink,expIndShrink) && isequal(indReplicate,expIndReplicate) ...
+                isOk= isequal(indShrink,expIndShrink)&&...
+                    isequal(indReplicate,expIndReplicate) ...
                     && isequal(resCell,expResCell);
                 mlunitext.assert_equals(true,isOk);
             end

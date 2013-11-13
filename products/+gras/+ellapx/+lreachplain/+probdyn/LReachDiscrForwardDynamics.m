@@ -6,7 +6,7 @@ classdef LReachDiscrForwardDynamics <...
     methods
         function self = LReachDiscrForwardDynamics(problemDef)
             import gras.ellapx.common.*;
-            import gras.interp.MatrixInterpolantFactory;
+            import gras.mat.interp.MatrixInterpolantFactory;
             %
             if ~isa(problemDef,...
                     'gras.ellapx.lreachplain.probdef.IReachContProblemDef')

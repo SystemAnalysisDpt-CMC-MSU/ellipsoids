@@ -89,5 +89,16 @@ classdef TestSuite < mlunitext.test_case
             inpCell={modgen.cell.test.SomeClass()};
             evalc('showcell(inpCell)');
         end
+        function testCsvWrite(~)
+            fileName=[fileparts(mfilename('fullpath')) filesep 'test.csv'];
+            inpCell={'C:\Folder','%s%d'};
+            modgen.cell.csvwrite(fileName,inpCell);
+            fid=fopen(fileName);
+            outCell=textscan(fid,'%s %s',-1,'delimiter',';');
+            fclose(fid);
+            mlunitext.assert_equals(true,isequal(num2cell(strcat('"',inpCell,'"')),...
+                outCell));
+            delete(fileName);
+        end
     end
 end

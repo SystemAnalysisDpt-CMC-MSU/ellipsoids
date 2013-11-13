@@ -1,4 +1,21 @@
 function run_helpcollector
+helpcollectorName = modgen.common.getcallername(1);
+[pathstrVec, ~, ~] = fileparts(which(helpcollectorName));
+dirName = [pathstrVec filesep '+picgen' filesep '*.m'];
+SPicgenFilesArray = dir(dirName);
+picDestDir = [modgen.path.rmlastnpathparts(pathstrVec, 3)...
+    filesep 'doc' filesep 'pic'];
+elltool.doc.picgen.PicGenController.setPicDestDir(picDestDir);
+for iElem = 1 : size(SPicgenFilesArray, 1)
+    picgenFileName = modgen.string.splitpart(...
+        SPicgenFilesArray(iElem).name, '.', 'first');
+    picgenFunctionName =  strcat ('elltool.doc.picgen.', picgenFileName);
+    fPicGen = str2func(picgenFunctionName);
+    fPicGen();
+end
+elltool.doc.picgen.PicGenController.flush();
+
+
 import modgen.logging.log4j.Log4jConfigurator;
 import modgen.common.throwerror;
 logger=Log4jConfigurator.getLogger();
@@ -91,15 +108,8 @@ finalHelpCell(isExistAuthorLine)=cellfun(@(x,ind,is)...
 
 finalHelpCell = cellfun(@(x)fDeletePercent(x),finalHelpCell, ...
     'UniformOutput', false);
-for i = 1: numel(finalHelpCell{2})
-    double(finalHelpCell{2}(i))
-end
 finalHelpCell = cellfun(@(x)fShiftText(x),finalHelpCell, ...
     'UniformOutput', false);
-
-for i = 1: numel(finalHelpCell{2})
-    double(finalHelpCell{2}(i))
-end
 finalHelpCell = cellfun(@(x)fDeleteEmptyStr(x),finalHelpCell, ...
     'UniformOutput', false);
 funcOutputCell=funcNameCell;

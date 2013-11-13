@@ -4,7 +4,7 @@ function results=run_support_function_tests(inpConfNameList)
 %             Faculty of Computational Mathematics and Computer Science,
 %             System Analysis Department 2012 $
 import gras.gen.MatVector;
-import gras.mat.symb.iscellofstringconst;
+import gras.mat.fcnlib.iscellofstringconst;
 %
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
