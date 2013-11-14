@@ -9,19 +9,19 @@
 
 /* управляющие параметры */
 CH_EXTERN int   ch_LNG      CH_INIT(0);
-CH_EXTERN int   ch_PRNT     CH_INIT(1);
-CH_EXTERN int   ch_RCHECK   CH_INIT(1);
-CH_EXTERN int   ch_RFREE    CH_INIT(0);
-CH_EXTERN int   ch_INCHECK  CH_INIT(1);
-CH_EXTERN int   ch_RHYPER   CH_INIT(0);
-CH_EXTERN float ch_EPSrel   CH_INIT(1.E-5);
-CH_EXTERN float ch_EPSdif   CH_INIT(.9E-5);
-CH_EXTERN float ch_EPScheck CH_INIT(1.E-4);
+CH_EXTERN int   ch_PRNT;
+CH_EXTERN int   ch_RCHECK;
+CH_EXTERN int   ch_RFREE;
+CH_EXTERN int   ch_INCHECK;
+CH_EXTERN int   ch_RHYPER;
+CH_EXTERN float ch_EPSrel;
+CH_EXTERN float ch_EPSdif;
+CH_EXTERN float ch_EPScheck;
     /* для аппроксимации */
-CH_EXTERN float ch_EPSset   CH_INIT(1.E-3);
-CH_EXTERN float ch_EPSin    CH_INIT(1.E-4);
-CH_EXTERN float ch_EPSest   CH_INIT(1.E-5);
-CH_EXTERN float ch_INF      CH_INIT(1.E6);
+CH_EXTERN float ch_EPSset;
+CH_EXTERN float ch_EPSin  ;
+CH_EXTERN float ch_EPSest ;
+CH_EXTERN float ch_INF;
 
 /* переменные связи */
 CH_EXTERN float     ch_dummy;

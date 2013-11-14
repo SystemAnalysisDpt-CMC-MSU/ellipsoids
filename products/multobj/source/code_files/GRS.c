@@ -37,9 +37,7 @@
 
 
 int add_top;
-void read_par (void);
-char *par_name = "set.par";
-//char *par_name = NULL;
+void read_par (float *);
 
 
 #ifdef CH_LPM
@@ -399,10 +397,10 @@ return;
   getch ();
  }    /* conv_go */
 
-void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,double* centervec, double* semiaxes,float*** Amat,float** bVec,float*** vertMat,float** discrVec){ 
+void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,double* centervec, double* semiaxes,float*** Amat,float** bVec,float*** vertMat,float** discrVec, float* controlParams){ 
  //main function for which mex-file will be written 
     
-    read_par ();
+    read_par (controlParams);	
     in_read (size,indProjVec, improveDirectVec);
     conv_go(semiaxes,0,NULL);
     out_write(Amat,bVec,vertMat,discrVec);
@@ -425,8 +423,8 @@ int main(void){
     float ** vertMat=(float**)malloc(size*sizeof(float*));
 	float* bVec=(float*)malloc(256*sizeof(float));
 	float* discrVec=(float*)malloc(256*sizeof(float));
-    
-
+    float add_top=32-ch_topCOUNT%32;
+	float controlParams[] = {add_top,1.e-3,1.0,0.0,1.0,0.0,.9e-5,1.e-4,1.e-5,1.e-4,1.e-5,1.e6,1};
 	//here input data will be defined
 	centervec=(double*) malloc(2*sizeof(double));
 	semiaxes=(double*) malloc(2*sizeof(double));
@@ -435,7 +433,7 @@ int main(void){
 	centervec[1] = 0;
 	semiaxes[0] = 1;
 	semiaxes[1] = 1;
-	
-    calcEllipsoidApprox(size,p,q,centervec,semiaxes, &Amat, &bVec,&vertMat, &discrVec);
+	 
+    calcEllipsoidApprox(size,p,q,centervec,semiaxes, &Amat, &bVec,&vertMat, &discrVec,controlParams);
   return 0;
 }

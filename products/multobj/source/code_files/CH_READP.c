@@ -92,69 +92,24 @@ struct
 
 
 
-void read_par (void)
+void read_par (float * controlParams)
 
- {FILE *fp;
+ {
+  
+	 add_top = controlParams[0];
+     ch_EPSset = controlParams[1];
+	 ch_RCHECK =(int) controlParams[2];
+	 ch_RFREE =(int) controlParams[3];
+	 ch_INCHECK =(int) controlParams[4];
+	 ch_RHYPER =(int) controlParams[5];
+	 ch_EPSdif = controlParams[6];
+	 ch_EPSin = controlParams[7];
+	 ch_EPSest = controlParams[8];
+	 ch_EPScheck = controlParams[9];
+	 ch_EPSrel = controlParams[10];
+	 ch_INF=controlParams[11];
+	 ch_PRNT=controlParams[12];
 
-  char str [82];
-
-  int i, present;
-
-  float f;
-
-
-
-  fp = fopen (par_name, "r");
-
-  if (fp == NULL)
-
-return;
-
-  while (!feof (fp))
-
-   {fscanf (fp, "%s", str);
-
-    present = 0;
-
-    for (i = 0; i < NUM; i++)
-
-     {if (!strcmp (str, datum [i].name))
-
-       {present = 1;
-
-    break;
-
-       }
-
-     }
-
-    if (present)
-
-      switch (datum [i].type)
-
-       {case 0:
-
-	fscanf (fp, "%s", datum [i].point.ch);
-
-      break;
-
-        case 1:
-
-	fscanf (fp, "%d", datum [i].point.in);
-
-      break;
-
-        case 2:
-
-	fscanf (fp, "%f", datum [i].point.fl);
-
-       }
-
-     fgets (str, 82, fp);
-
-    }
-
-   fclose (fp);
-
+	 
  }  /* read_par */
 
