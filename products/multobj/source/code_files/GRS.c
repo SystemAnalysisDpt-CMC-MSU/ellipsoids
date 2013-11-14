@@ -151,7 +151,7 @@ void out_write (float*** Amat,float** bVec,float*** vertMat,float** discrVec)
  }    /* out_write */
 
 
-void conv_go (double* semiaxes,int num, float* vert /* for convex hull*/)
+void conv_go (float* semiaxes,int num, float* vert /* for convex hull*/)
  {int i, new_dat;
   static int dat_is_read;
 #ifdef CH_LP_PC
@@ -397,7 +397,7 @@ return;
   getch ();
  }    /* conv_go */
 
-void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,double* centervec, double* semiaxes,float*** Amat,float** bVec,float*** vertMat,float** discrVec, float* controlParams){ 
+void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,float* centervec, float* semiaxes,float*** Amat,float** bVec,float*** vertMat,float** discrVec, float* controlParams){ 
  //main function for which mex-file will be written 
     
     read_par (controlParams);	
@@ -406,14 +406,29 @@ void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,double* 
     out_write(Amat,bVec,vertMat,discrVec);
    }
 
+void calcConvexHull(int size,int* indProjVec,int* improveDirectVec,int num_points,float* points,float*** Amat,float** bVec,float*** vertMat,float** discrVec, float* controlParams){ 
+ //main function for which mex-file will be written 
+    
+    read_par (controlParams);	
+    in_read (size,indProjVec, improveDirectVec);
+    conv_go(NULL,num_points,points);
+    out_write(Amat,bVec,vertMat,discrVec);
+   }
 
-
+void calcPolytopeApprox(int size,int* indProjVec,int* improveDirectVec,float ** inEqPolyMat, float ** eqPolyMat,float * inEqPolyVec,float * eqPolyVec, float*** Amat,float** bVec,float*** vertMat,float** discrVec, float* controlParams){ 
+ //main function for which mex-file will be written 
+    
+    read_par (controlParams);	
+    in_read (size,indProjVec, improveDirectVec);
+    conv_go(NULL,0,NULL);
+    out_write(Amat,bVec,vertMat,discrVec);
+   }
 int main(void){
 	//for compilation while there is no mex-files
 	
 	int i;
-    double* centervec;
-	double* semiaxes;
+    float* centervec;
+	float* semiaxes;
 	int size = 2;
 	//output params
 	int j;
@@ -426,11 +441,11 @@ int main(void){
     float add_top=32-ch_topCOUNT%32;
 	float controlParams[] = {add_top,1.e-3,1.0,0.0,1.0,0.0,.9e-5,1.e-4,1.e-5,1.e-4,1.e-5,1.e6,1};
 	//here input data will be defined
-	centervec=(double*) malloc(2*sizeof(double));
-	semiaxes=(double*) malloc(2*sizeof(double));
+	centervec=(float*) malloc(2*sizeof(double));
+	semiaxes=(float*) malloc(2*sizeof(double));
 	
-	centervec[0] = 0;
-	centervec[1] = 0;
+	centervec[0] = 1;
+	centervec[1] = 1;
 	semiaxes[0] = 1;
 	semiaxes[1] = 1;
 	 
