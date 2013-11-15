@@ -731,11 +731,8 @@ Input:
       nPoints: number of boundary points
 
 Output:
-  regular:
-      bpMat: double[nPoints,nDim] - boundary points of ellipsoid
-  optional:
-      fVec: double[1,nFaces]/double[nFacex,nDim] - indices of points in
-          each face of bpMat graph
+   bpMat: double[nPoints, nDims] - boundary points of ellipsoid.
+   fMat: double[nFaces, nDims] - indices of points in each face of bpMat graph.
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.getBoundaryByFactor}{getBoundaryByFactor}}\label{method:ellipsoid.getBoundaryByFactor}
 \begin{verbatim}
@@ -964,6 +961,30 @@ Example:
      1.0e-05 *
 
       1.0000    1.0000
+\end{verbatim}
+\subsection{\texorpdfstring{ellipsoid.getRhoBoundary}{getRhoBoundary}}\label{method:ellipsoid.getRhoBoundary}
+\begin{verbatim}
+GETRHOBOUNDARY - computes the boundary of an ellipsoid and
+support function values.
+
+Input:
+  regular:
+      ellObj: ellipsoid [1, 1]- ellipsoid of the dimention 2 or 3.
+  optional:
+      nPoints: number of boundary points
+
+Output:
+   bpMat: double[nPoints+1, nDims] - boundary points of ellipsoid.
+   fMat: double[nFaces, nDims] - indices of points in each face of
+       bpMat graph.
+   supVec: double[nPoints+1, 1] - vector of values of the support
+       function in directions (bpMat - cenMat).
+   lGridMat: double[nPoints+1, nDims] - array of directions.
+\end{verbatim}
+\subsection{\texorpdfstring{ellipsoid.getRhoBoundaryByFactor}{getRhoBoundaryByFactor}}\label{method:ellipsoid.getRhoBoundaryByFactor}
+\begin{verbatim}
+GETRHOBOUNDARYBYFACTOR - computes grid of 2d or 3d ellipsoid and vertices
+                     for each face in the grid and support function values.
 \end{verbatim}
 \subsection{\texorpdfstring{ellipsoid.getShape}{getShape}}\label{method:ellipsoid.getShape}
 \begin{verbatim}
@@ -7681,6 +7702,83 @@ Example:
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
   getEllTubeUnionRel(rsObj);
 \end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getExtProbDynamicsList}{getExtProbDynamicsList}}\label{method:elltool.reach.AReach.getExtProbDynamicsList}
+\begin{verbatim}
+GETEXTPROBDYNAMICSLIST - returns the extProbDynamicsList
+                          property
+
+Input:
+  regular:
+      self: - reach tube
+
+Output:
+  extProbDynamicsList: cell[1,nLinSys] of cell[1,nTube] of
+      gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
+      list of cell arrays filled with objects which describe
+      the system dynamics between switch time.
+      extProbDynamicsList is constructed during the external
+      approximations. If time is backward than the order of
+      extProbDynamicsList{:} is also backward.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
+  SUBounds2 = struct();
+  SUBounds2.center = {'sin(t)'; 'cos(t)'};
+  SUBounds2.shape = [5 0; 0 3];
+  sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
+  rsObj2=rsObj.evolve(15, sys2);
+  rsObj2.getExtProbDynamicsList()
+  ans =
+
+      {1x1 cell}    {1x2 cell}
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getGoodDirSetList}{getGoodDirSetList}}\label{method:elltool.reach.AReach.getGoodDirSetList}
+\begin{verbatim}
+GETGOODDIRSETLIST - returns the goodDirSetList
+                          property
+
+Input:
+  regular:
+      self: - reach tube
+
+Output:
+  goodDirSetList: cell[1,nLinSys] of cell[1,nTube] of
+      gras.ellapx.lreachplain.GoodDirsContinuousGen - list of
+      cell arrays filled with gras.ellapx.lreachplain.GoodDirsContinuousGen
+      objects which containe good directions and curves data
+      between switch time. The order of goodDirSetList{:}
+      corresponds to the time direction.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
+  SUBounds2 = struct();
+  SUBounds2.center = {'sin(t)'; 'cos(t)'};
+  SUBounds2.shape = [5 0; 0 3];
+  sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
+  rsObj2=rsObj.evolve(15, sys2);
+  rsObj2.getGoodDirSetList()
+  ans =
+
+      {1x1 cell}    {1x2 cell}
+\end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.AReach.getIaScaleFactor}{getIaScaleFactor}}\label{method:elltool.reach.AReach.getIaScaleFactor}
 \begin{verbatim}
 GET_IASCALEFACTOR - return the scale factor for internal approximation
@@ -7747,6 +7845,49 @@ Example:
        0     1
 
   Nondegenerate ellipsoid in R^2.
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getIntProbDynamicsList}{getIntProbDynamicsList}}\label{method:elltool.reach.AReach.getIntProbDynamicsList}
+\begin{verbatim}
+GETINTPROBDYNAMICSLIST - returns the intProbDynamicsList
+                          property
+
+Input:
+  regular:
+      self: - reach tube
+
+Output:
+  intProbDynamicsList: cell[1,nLinSys] of cell[1,nTube] of
+      gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
+      list of of cell arrays filled with objects which describe
+      the system dynamics between switch time.
+      intProbDynamicsList is constructed during the internal
+      approximations and has the following structure:
+      {{probDynObjSys1},{probDynObjSys2dir1,...,probDynObjSys2dirn},...,
+      {probDynObjSyskdir1,...,probDynObjSyskdirn}}.
+      Nested cell arrays have dimensionality nTube equal to
+      the number of directions. The order of intProbDynList{:}
+      corresponds to the time direction.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
+  SUBounds2 = struct();
+  SUBounds2.center = {'sin(t)'; 'cos(t)'};
+  SUBounds2.shape = [5 0; 0 3];
+  sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
+  rsObj2=rsObj.evolve(15, sys2);
+  rsObj2.getIntProbDynamicsList()
+  ans =
+
+      {1x1 cell}    {1x2 cell}
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.AReach.getNPlot2dPoints}{getNPlot2dPoints}}\label{method:elltool.reach.AReach.getNPlot2dPoints}
 \begin{verbatim}
@@ -7826,6 +7967,48 @@ Usage:
 \subsection{\texorpdfstring{elltool.reach.AReach.getSwitchTimeVec}{getSwitchTimeVec}}\label{method:elltool.reach.AReach.getSwitchTimeVec}
 \begin{verbatim}
 
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.AReach.getSystemList}{getSystemList}}\label{method:elltool.reach.AReach.getSystemList}
+\begin{verbatim}
+GETSYSTEMLISTLIST - returns the linSysCVec
+                          property
+
+Input:
+  regular:
+      self: - reach tube
+
+Output:
+  linSysCVec: cell[1,nLinSys] of elltool.linsys.LinSysContinuous -
+      list of nLinSys objects corresponding to nLinSys systems. Each
+      elltool.linsys.LinSysContinuous object describes
+      the particular system between switch time.
+
+Example:
+  aMat = [0 1; 0 0]; bMat = eye(2);
+  SUBounds = struct();
+  SUBounds.center = {'sin(t)'; 'cos(t)'};
+  SUBounds.shape = [9 0; 0 2];
+  sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  x0EllObj = ell_unitball(2);
+  timeVec = [0 10];
+  dirsMat = [1 0; 0 1]';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+  aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
+  SUBounds2 = struct();
+  SUBounds2.center = {'sin(t)'; 'cos(t)'};
+  SUBounds2.shape = [5 0; 0 3];
+  sys2 = elltool.linsys.LinSysContinuous(aMat2, bMat2, SUBounds2);
+  rsObj2=rsObj.evolve(15, sys2);
+  rsObj2.getSystemList()
+  ans =
+
+      Column 1
+
+          [1x1 elltool.linsys.LinSysContinuous]
+
+      Column 2
+
+          [1x1 elltool.linsys.LinSysContinuous]
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.AReach.get\_center}{get\_center}}\label{method:elltool.reach.AReach.getcenter}
 \begin{verbatim}
@@ -8279,7 +8462,8 @@ Input:
       self: - reach tube
 
   optional:
-      relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+      plObj: smartdb.disp.RelationDataPlotter[1,1] - relation
+          data plotter object.
       charColor: char[1,1]  - color specification code, can be 'r','g',
                      etc (any code supported by built-in Matlab function).
   properties:
@@ -8293,8 +8477,8 @@ Input:
                sets default colors in the form [x y z].
                   Default value is [0 0 1].
       'shade': double[1,1]  -
-     level of transparency between 0 and 1 (0 - transparent, 1 - opaque).
-               Default value is 0.3.
+          level of transparency between 0 and 1 (0 - transparent,
+          1 - opaque).  Default value is 0.3.
 
 Output:
   regular:
@@ -8316,7 +8500,8 @@ Input:
       self: - reach tube
 
   optional:
-      relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
+      plObj: smartdb.disp.RelationDataPlotter[1,1] - relation data
+          plotter object.
       charColor: char[1,1]  - color specification code, can be 'r','g',
                      etc (any code supported by built-in Matlab function).
   properties:
@@ -8542,13 +8727,17 @@ See the description of the following methods in section \ref{secClassDescr:ellto
  \item \hyperref[method:elltool.reach.AReach.getEaScaleFactor]{getEaScaleFactor}
  \item \hyperref[method:elltool.reach.AReach.getEllTubeRel]{getEllTubeRel}
  \item \hyperref[method:elltool.reach.AReach.getEllTubeUnionRel]{getEllTubeUnionRel}
+ \item \hyperref[method:elltool.reach.AReach.getExtProbDynamicsList]{getExtProbDynamicsList}
+ \item \hyperref[method:elltool.reach.AReach.getGoodDirSetList]{getGoodDirSetList}
  \item \hyperref[method:elltool.reach.AReach.getIaScaleFactor]{getIaScaleFactor}
  \item \hyperref[method:elltool.reach.AReach.getInitialSet]{getInitialSet}
+ \item \hyperref[method:elltool.reach.AReach.getIntProbDynamicsList]{getIntProbDynamicsList}
  \item \hyperref[method:elltool.reach.AReach.getNPlot2dPoints]{getNPlot2dPoints}
  \item \hyperref[method:elltool.reach.AReach.getNPlot3dPoints]{getNPlot3dPoints}
  \item \hyperref[method:elltool.reach.AReach.getNTimeGridPoints]{getNTimeGridPoints}
  \item \hyperref[method:elltool.reach.AReach.getRelTol]{getRelTol}
  \item \hyperref[method:elltool.reach.AReach.getSwitchTimeVec]{getSwitchTimeVec}
+ \item \hyperref[method:elltool.reach.AReach.getSystemList]{getSystemList}
  \item \hyperref[method:elltool.reach.AReach.get_center]{get\_center}
  \item \hyperref[method:elltool.reach.AReach.get_directions]{get\_directions}
  \item \hyperref[method:elltool.reach.AReach.get_ea]{get\_ea}
@@ -8621,13 +8810,17 @@ See the description of the following methods in section \ref{secClassDescr:ellto
  \item \hyperref[method:elltool.reach.AReach.getEaScaleFactor]{getEaScaleFactor}
  \item \hyperref[method:elltool.reach.AReach.getEllTubeRel]{getEllTubeRel}
  \item \hyperref[method:elltool.reach.AReach.getEllTubeUnionRel]{getEllTubeUnionRel}
+ \item \hyperref[method:elltool.reach.AReach.getExtProbDynamicsList]{getExtProbDynamicsList}
+ \item \hyperref[method:elltool.reach.AReach.getGoodDirSetList]{getGoodDirSetList}
  \item \hyperref[method:elltool.reach.AReach.getIaScaleFactor]{getIaScaleFactor}
  \item \hyperref[method:elltool.reach.AReach.getInitialSet]{getInitialSet}
+ \item \hyperref[method:elltool.reach.AReach.getIntProbDynamicsList]{getIntProbDynamicsList}
  \item \hyperref[method:elltool.reach.AReach.getNPlot2dPoints]{getNPlot2dPoints}
  \item \hyperref[method:elltool.reach.AReach.getNPlot3dPoints]{getNPlot3dPoints}
  \item \hyperref[method:elltool.reach.AReach.getNTimeGridPoints]{getNTimeGridPoints}
  \item \hyperref[method:elltool.reach.AReach.getRelTol]{getRelTol}
  \item \hyperref[method:elltool.reach.AReach.getSwitchTimeVec]{getSwitchTimeVec}
+ \item \hyperref[method:elltool.reach.AReach.getSystemList]{getSystemList}
  \item \hyperref[method:elltool.reach.AReach.get_center]{get\_center}
  \item \hyperref[method:elltool.reach.AReach.get_directions]{get\_directions}
  \item \hyperref[method:elltool.reach.AReach.get_ea]{get\_ea}
@@ -8679,6 +8872,24 @@ Example:
   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
   dim = rsObj.getDim();
 \end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.getIsJustCheck}{getIsJustCheck}}\label{method:elltool.reach.ReachFactory.getIsJustCheck}
+\begin{verbatim}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  isJustCheck = rsObj.getIsJustCheck();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.getIsRegEnabled}{getIsRegEnabled}}\label{method:elltool.reach.ReachFactory.getIsRegEnabled}
+\begin{verbatim}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  isRegEnabled = rsObj.getIsRegEnabled();
+\end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.ReachFactory.getL0Mat}{getL0Mat}}\label{method:elltool.reach.ReachFactory.getL0Mat}
 \begin{verbatim}
 Example:
@@ -8701,6 +8912,15 @@ Example:
   crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
   rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
   linSys = rsObj.getLinSys();
+\end{verbatim}
+\subsection{\texorpdfstring{elltool.reach.ReachFactory.getRelTol}{getRelTol}}\label{method:elltool.reach.ReachFactory.getRelTol}
+\begin{verbatim}
+Example:
+  import elltool.reach.ReachFactory;
+  crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
+  crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
+  rsObj =  ReachFactory('demo3firstTest', crm, crmSys, false, false);
+  regTol = rsObj.getRegTol();
 \end{verbatim}
 \subsection{\texorpdfstring{elltool.reach.ReachFactory.getTVec}{getTVec}}\label{method:elltool.reach.ReachFactory.getTVec}
 \begin{verbatim}
