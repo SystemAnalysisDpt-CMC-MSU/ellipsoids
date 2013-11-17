@@ -1,4 +1,4 @@
-classdef MatrixSysReshapeOde45RegInterp < gras.ode.IMatrixSysInterp
+classdef MatrixSysReshapeOde45RegInterp < gras.mat.IMatrixSysFunction
     properties(Access=private)
         objVecOde45RegInterp
         sizeEqList
@@ -123,5 +123,8 @@ classdef MatrixSysReshapeOde45RegInterp < gras.ode.IMatrixSysInterp
             
         end
         
+        function sizeEqList = getSizeEqList(self)
+            sizeEqList = self.sizeEqList;
+        end
     end
 end

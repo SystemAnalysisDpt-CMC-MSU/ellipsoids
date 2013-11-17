@@ -110,6 +110,23 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                 obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
             end
         end
+        % cat; 
+        function obj=cat(self,lMatFunc,rMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % flipdim
+        function obj=flipdim(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % subarray
+        function obj=subarray(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % reshape
+        function obj=reshape(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        
         function obj=rMultiplyByScalar(self,lMatFunc,rScalFunc)
             if self.isMatFuncConst(lMatFunc,rScalFunc)
                 obj = self.constBinaryOperation(@times,lMatFunc,rScalFunc);

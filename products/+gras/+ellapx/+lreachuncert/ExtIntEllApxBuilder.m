@@ -196,16 +196,12 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                     toc(tStart)));
             end
             %
-            [~,aMat] = pDefObj.getxtDynamics.evaluate(resTimeVec);
-            aMat1Size = size(aMat,1);
-            aMat = reshape(aMat,[aMat1Size length(resTimeVec)]);
+            aMat = pDefObj.getxtDynamics.evaluate(resTimeVec);
             %
             [apxSchemaName,apxSchemaDescr]=self.getApxSchemaNameAndDescr();
             %
             goodDirSetObj=self.getGoodDirSet();            
             sTime=goodDirSetObj.getsTime();
-            
-            class(goodDirSetObj.getRGoodDirCurveSpline())
             
             ltGoodDirArray=goodDirSetObj.getRGoodDirCurveSpline(...
                 ).evaluate(resTimeVec);

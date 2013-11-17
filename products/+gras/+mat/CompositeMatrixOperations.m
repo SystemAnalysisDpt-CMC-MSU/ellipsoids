@@ -66,6 +66,37 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
                 obj=gras.mat.fcnlib.MatrixDotFunc(lMatFunc,rMatFunc);
             end
         end 
+        % cat
+        function obj=cat(self,lMatFunc,rMatFunc,dimCat)
+            obj=cat@gras.mat.AMatrixOperations(self,lMatFunc,rMatFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixCatFunc(lMatFunc,rMatFunc,dimCat);
+            end
+        end
+        % flipdim
+        function obj=flipdim(self,inMatrixFunc,dimFlip)
+            obj=flipdim@gras.mat.AMatrixOperations(self,inMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixFlipdimFunc(inMatrixFunc,...
+                    dimFlip);
+            end
+        end
+        % subarray
+        function obj=subarray(self,inMatrixFunc,indexesList)
+            obj=subarray@gras.mat.AMatrixOperations(self,inMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixSubArrayFunc(inMatrixFunc,...
+                    indexesList);
+            end
+        end
+        % reshape
+        function obj=reshape(self,inMatrixFunc,newSizeVec)
+            obj=reshape@gras.mat.AMatrixOperations(self,inMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixReshapeFunc(inMatrixFunc,...
+                    newSizeVec);
+            end
+        end
         function obj=rMultiplyByScalar(self,lMatFunc,rScalFunc)
             obj=rMultiplyByScalar@gras.mat.AMatrixOperations(...
                 self,lMatFunc,rScalFunc);
