@@ -1,5 +1,6 @@
 nPoints=5;
-calcPrecision=0.001;
+absTol=0.001;
+relTol=0.001;
 approxSchemaDescr=char.empty(1,0);
 approxSchemaName=char.empty(1,0);
 nDims=3;
@@ -13,5 +14,5 @@ qArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
 ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
 fromMatEllTube=gras.ellapx.smartdb.rels.EllTube.fromQArrays(qArrayList,...
                 aMat, timeVec,ltGoodDirArray, sTime, approxType,...
-                approxSchemaName, approxSchemaDescr, calcPrecision);
+                approxSchemaName, approxSchemaDescr, absTol, relTol);
 

@@ -129,7 +129,8 @@ classdef EllTubePlotPropTest < mlunitext.test_case
             
             function [rel,relStatProj] =...
                     auxGenTubeAndProjForPlot(fCreate, nPoints, nTubes)
-                calcPrecision = 0.001;
+                absTol = 0.001;
+                relTol = 0.001;
                 approxSchemaDescr = char.empty(1,0);
                 approxSchemaName = char.empty(1,0);
                 nDims = 2;
@@ -176,7 +177,7 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                     ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
                     rel = fCreate(QArrayList, aMat, timeVec,...
                         ltGoodDirArray, sTime, approxType,...
-                        approxSchemaName, approxSchemaDescr, calcPrecision);
+                        approxSchemaName, approxSchemaDescr, absTol, relTol);
                 end
             end
             

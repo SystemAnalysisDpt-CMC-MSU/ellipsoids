@@ -140,7 +140,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         'sTime is expected to be among elements of timeVec');
                 end
                 %
-                absTol=STubeData.calcPrecision(iLDir);
+                absTol=STubeData.absTol(iLDir);
                 %
                 ltGoodDirMat=STubeData.ltGoodDirMat{iLDir};
                 lsGoodDirVec=ltGoodDirMat(:,indSTime);
@@ -203,7 +203,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         end
         function STubeData=fromQArraysInternal(QArrayList,aMat,...
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
-                approxSchemaName,approxSchemaDescr,calcPrecision,scaleFactorVec)
+                approxSchemaName,approxSchemaDescr,absTol,relTol,scaleFactorVec)
             %
             % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $
             % $Copyright: Moscow State University,
@@ -259,8 +259,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData.ltGoodDirMat=cell(nLDirs,1);
             %
             STubeData.ltGoodDirNormVec=cell(nLDirs,1);
-            STubeData.calcPrecision=repmat(calcPrecision,nLDirs,1);
+%             STubeData.calcPrecision=repmat(calcPrecision,nLDirs,1);
             %
+            STubeData.absTol=repmat(absTol,nLDirs,1);
+            %
+            STubeData.relTol=repmat(relTol,nLDirs,1);
+            % 
             for iLDir=1:1:nLDirs
                 STubeData.ltGoodDirMat{iLDir}=...
                     squeeze(ltGoodDirArray(:,iLDir,:));
@@ -705,15 +709,17 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     tubeProjDataCMat{iGroup,iProj}.approxType=...
                         STubeData.approxType(indLDirs);
                     %
-                    tubeProjDataCMat{iGroup,iProj}.calcPrecision=...
-                        STubeData.calcPrecision(indLDirs);
+                    tubeProjDataCMat{iGroup,iProj}.relTol=...
+                        STubeData.relTol(indLDirs);
+                    tubeProjDataCMat{iGroup,iProj}.absTol=...
+                        STubeData.absTol(indLDirs);
                     tubeProjDataCMat{iGroup,iProj}.scaleFactor=...
                         STubeData.scaleFactor(indLDirs);
                     %
                     for iLDir=1:nLDirs
                         iOLDir=indLDirs(iLDir);
                         %
-                        absTol=STubeData.calcPrecision(iOLDir);
+                        absTol=STubeData.absTol(iOLDir);
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirOrigVec{iLDir}=...
                             STubeData.lsGoodDirVec{iOLDir};
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirOrigMat{iLDir}=...

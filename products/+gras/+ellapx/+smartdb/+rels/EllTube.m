@@ -15,7 +15,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
     %   approxType:gras.ellapx.enums.EApproxType - Type of approximation
     %                 (external, internal, not defined)
     %   timeVec:cell[1, m] - Time vector
-    %   calcPrecision:double[1, 1] - Calculation precision
+    %    absTol:double[1, 1] - absolute tolerance
+    %    relTol:double[1, 1] - relative tolerance
     %   indSTime:double[1, 1]  - index of sTime within timeVec
     %   ltGoodDirMat:cell[1, nElem] - Good direction curve
     %   lsGoodDirVec:cell[1, nElem] - Good direction at time s
@@ -252,8 +253,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %                 (external, internal, not defined)
             %    approxSchemaName:cell[1,] - name of the schema
             %    approxSchemaDescr:cell[1,] - description of the schema
-            %    calcPrecision:double[1, 1] - calculation precision
-            %
+            %    absTol:double[1, 1] - absolute tolerance
+            %    relTol:double[1, 1] - relative tolerance            
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
             %        object
@@ -291,7 +292,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %                 (external, internal, not defined)
             %    approxSchemaName:cell[1,] - name of the schema
             %    approxSchemaDescr:cell[1,] - description of the schema
-            %    calcPrecision:double[1, 1] - calculation precision
+            %    absTol:double[1, 1] - absolute tolerance
+            %    relTol:double[1, 1] - relative tolerance
             %
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
@@ -329,8 +331,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %                 (external, internal, not defined)
             %    approxSchemaName:cell[1,] - name of the schema
             %    approxSchemaDescr:cell[1,] - description of the schema
-            %    calcPrecision:double[1, 1] - calculation precision
-            %
+            %    absTol:double[1, 1] - absolute tolerance
+            %    relTol:double[1, 1] - relative tolerance            %
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
             %          object
@@ -360,7 +362,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %                 (external, internal, not defined)
             %    approxSchemaName:cell[1,] - name of the schema
             %    approxSchemaDescr:cell[1,] - description of the schema
-            %    calcPrecision:double[1, 1] - calculation precision
+            %    absTol:double[1, 1] - absolute tolerance
+            %    relTol:double[1, 1] - relative tolerance
             %
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
@@ -398,7 +401,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %                 (external, internal, not defined)
             %    approxSchemaName:cell[1,] - name of the schema
             %    approxSchemaDescr:cell[1,] - description of the schema
-            %    calcPrecision:double[1, 1] - calculation precision
+            %    absTol:double[1, 1] - absolute tolerance
+            %    relTol:double[1, 1] - relative tolerance
             %
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
@@ -585,7 +589,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %
             % Example:
             %   nPoints=5;
-            %   calcPrecision=0.001;
+            %   absTol=0.001;
+            %   relTol = 0.001;
             %   approxSchemaDescr=char.empty(1,0);
             %   approxSchemaName=char.empty(1,0);
             %   nDims=3;
@@ -600,7 +605,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %   fromMatEllTube=...
             %         gras.ellapx.smartdb.rels.EllTube.fromQArrays(qArrayList,...
             %         aMat, timeVec,ltGoodDirArray, sTime, approxType,...
-            %         approxSchemaName, approxSchemaDescr, calcPrecision);
+            %         approxSchemaName, approxSchemaDescr, absTol, relTol);
             %   fromMatEllTube.scale(@(varargin)2,{});
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             scaleFactorVec=self.applyTupleGetFunc(fCalcFactor,...

@@ -51,11 +51,12 @@ classdef SuiteEllTube < mlunitext.test_case
             ltGDir = repmat(ltGDir,[1 1 T]);
             aMat = repmat([1 0]',[1,T]);
             approxType = gras.ellapx.enums.EApproxType(1);
-            calcPrecision = 10^(-3);
+            absTol = 10^(-3);
+            relTol = 10^(-3);
             rel = gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(gras.ellapx.smartdb.rels.EllTube.fromQArrays(QArrList',aMat...
                 ,timeVec,ltGDir,sTime',approxType,...
                 char.empty(1,0),char.empty(1,0),...
-                calcPrecision));
+                absTol, relTol));
             projSpaceList = {eye(1, 2)};
             projType = gras.ellapx.enums.EProjType.Static;
             
@@ -92,7 +93,8 @@ classdef SuiteEllTube < mlunitext.test_case
         end
         %
         function testCut(~)
-            calcPrecision=0.001;
+            absTol = 10^(-3);
+            relTol = 10^(-3);
             nTubes=3;
             nDims=2;
             cutTimeVec = [20, 80];
@@ -145,7 +147,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                         QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
                         gras.ellapx.enums.EApproxType.Internal,...
-                        char.empty(1,0),char.empty(1,0),calcPrecision);
+                        char.empty(1,0),char.empty(1,0),absTol, relTol);
                     if nargout>1
                         projMatList = {[1 0; 0 1].'};
                         %
@@ -158,7 +160,8 @@ classdef SuiteEllTube < mlunitext.test_case
         function testCat(~)
             nDims=2;
             nTubes=3;
-            calcPrecision=0.001;
+            absTol = 10^(-3);
+            relTol = 10^(-3);
             timeVec = 1 : 100;
             evolveTimeVec = 101 : 200;
             rel=create();
@@ -205,7 +208,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                         QArrayList,aMat,timeVec,ltGoodDirArray,timeVec(1),...
                         gras.ellapx.enums.EApproxType.Internal,...
-                        char.empty(1,0),char.empty(1,0),calcPrecision);
+                        char.empty(1,0),char.empty(1,0),absTol, relTol);
                 end
             end
         end
@@ -267,7 +270,8 @@ classdef SuiteEllTube < mlunitext.test_case
             end
             %
             function checkMaster(fGetScaleAndReg)
-                calcPrecision=0.001;
+                absTol = 10^(-3);
+                relTol = 10^(-3);
                 scaleFactor=1.01;
                 lsGoodDirVec=[1;0];
                 QArrayList=repmat({repmat(eye(nDims),[1,1,nPoints])},1,nTubes);
@@ -326,7 +330,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     rel=gras.ellapx.smartdb.rels.EllTube.fromQMScaledArrays(...
                         QArrayList,aMat,MArrayList,timeVec,...
                         ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                        approxSchemaDescr,calcPrecision,...
+                        approxSchemaDescr,absTol, relTol,...
                         scaleFactor(ones(1,nTubes)));
                 end
             end
@@ -365,7 +369,8 @@ classdef SuiteEllTube < mlunitext.test_case
             relProj=gras.ellapx.smartdb.rels.EllTubeProj(); %#ok<NASGU>
             %
             nPoints = 5;
-            calcPrecision = 0.001;
+            absTol = 10^(-3);
+            relTol = 10^(-3);
             approxSchemaDescr = char.empty(1,0);
             approxSchemaName = char.empty(1,0);
             nDims = 3;
@@ -417,17 +422,18 @@ classdef SuiteEllTube < mlunitext.test_case
                 gras.ellapx.smartdb.rels.EllTube.fromQMScaledArrays(...
                     QArrayList,aMat,MArrayList,timeVec,...
                     ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision,...
+                    approxSchemaDescr,absTol, relTol,...
                     scaleFactor(ones(1,nTubes)));
                 rel=gras.ellapx.smartdb.rels.EllTube.fromQMArrays(...
                     QArrayList,aMat,MArrayList,timeVec,...
                     ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision);
+                    approxSchemaDescr,absTol, relTol);
             end
         end
         function testSimpleNegRegCreate(self)
             nPoints = 3;
-            calcPrecision = 0.001;
+            absTol = 10^(-3);
+            relTol = 10^(-3);
             approxSchemaDescr = char.empty(1,0);
             approxSchemaName = char.empty(1,0);
             nDims = 2;
@@ -471,12 +477,12 @@ classdef SuiteEllTube < mlunitext.test_case
                 gras.ellapx.smartdb.rels.EllTube.fromQMScaledArrays(...
                     QArrayList,aMat,MArrayList,timeVec,...
                     ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision,...
+                    approxSchemaDescr,absTol, relTol,...
                     scaleFactor(ones(1,nTubes)));
                 rel=gras.ellapx.smartdb.rels.EllTube.fromQMArrays(...
                     QArrayList,aMat,MArrayList,timeVec,...
                     ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision);
+                    approxSchemaDescr,absTol, relTol);
             end
             function check(errorTag,cmdStr)
                 CMD_STR='rel1.getCopy().unionWith(rel2)';
@@ -643,7 +649,8 @@ classdef SuiteEllTube < mlunitext.test_case
                 argList=hashMap(keyStr);
                 [varargout{:}]=deal(argList{:});
             else
-                calcPrecision=0.001;
+                absTol = 10^(-3);
+                relTol = 10^(-3);
                 approxSchemaDescr=char.empty(1,0);
                 approxSchemaName=char.empty(1,0);
                 nDims=2;
@@ -704,12 +711,13 @@ classdef SuiteEllTube < mlunitext.test_case
                 rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                     QArrayList, aMat, timeVec,...
                     ltGoodDirArray, sTime, approxType, approxSchemaName,...
-                    approxSchemaDescr, calcPrecision);
+                    approxSchemaDescr, absTol, relTol);
             end
         end
         function aux_testSimpleCreate(self,isApproxSchemaUniform)
             nPoints=3;
-            calcPrecision=0.001;
+            absTol = 10^(-3);
+            relTol = 10^(-3);
             approxSchemaDescr=char.empty(1,0);
             approxSchemaName=char.empty(1,0);
             nDims=2;
@@ -753,7 +761,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                         QArrayList,aMat,timeVec,...
                         ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                        approxSchemaDescr,calcPrecision);
+                        approxSchemaDescr,absTol, relTol);
                 else
                     approxTypeVec = repmat(approxType,nTubes,1);
                     approxSchemaNameCVec = repmat({approxSchemaName},nTubes,1);
@@ -761,7 +769,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                         QArrayList,aMat,timeVec,...
                         ltGoodDirArray,sTime,approxTypeVec,approxSchemaNameCVec,...
-                        approxSchemaDescrCVec,calcPrecision);
+                        approxSchemaDescrCVec,absTol, relTol);
                 end
             end
         end
@@ -772,7 +780,8 @@ classdef SuiteEllTube < mlunitext.test_case
         
         function testCreateSTimeOutOfBounds(self)
             nPoints=3;
-            calcPrecision=0.001;
+            absTol = 10^(-3);
+            relTol = 10^(-3);
             approxSchemaDescr=char.empty(1,0);
             approxSchemaName=char.empty(1,0);
             nDims=2;
@@ -791,14 +800,15 @@ classdef SuiteEllTube < mlunitext.test_case
                 rel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                     QArrayList,aMat,timeVec,...
                     ltGoodDirArray,sTime,approxType,approxSchemaName,...
-                    approxSchemaDescr,calcPrecision);
+                    approxSchemaDescr,absTol,relTol);
             end
         end
         function testEllTubeFromEllArray(~)
             import gras.ellapx.smartdb.rels.EllTube.fromQArrays;
             import gras.ellapx.smartdb.rels.EllTube.fromEllArray;
             nPoints=5;
-            calcPrecision=0.001;
+            absTol = 10^(-3);
+            relTol = 10^(-3);
             approxSchemaDescr=char.empty(1,0);
             approxSchemaName=char.empty(1,0);
             nDims=3;
@@ -821,21 +831,21 @@ classdef SuiteEllTube < mlunitext.test_case
             fromMatEllTube=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                 qArrayList, aMat, timeVec,...
                 ltGoodDirArray, sTime, approxType, approxSchemaName,...
-                approxSchemaDescr, calcPrecision);
+                approxSchemaDescr, absTol, relTol);
             fromMatMEllTube=gras.ellapx.smartdb.rels.EllTube.fromQMArrays(...
                 qArrayList, aMat, mArrayList, timeVec,...
                 ltGoodDirArray, sTime, approxType, approxSchemaName,...
-                approxSchemaDescr, calcPrecision);
+                approxSchemaDescr, absTol, relTol);
             fromEllArrayEllTube = ...
                 gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
                 ellArray, timeVec,...
                 ltGoodDirArray, sTime, approxType, approxSchemaName,...
-                approxSchemaDescr, calcPrecision);
+                approxSchemaDescr, absTol, relTol);
             fromEllMArrayEllTube=...
                 gras.ellapx.smartdb.rels.EllTube.fromEllMArray(...
                 ellArray, mArrayList{1}, timeVec,...
                 ltGoodDirArray, sTime, approxType, approxSchemaName,...
-                approxSchemaDescr, calcPrecision);
+                approxSchemaDescr, absTol, relTol);
             %
             [isEqual,reportStr]=...
                 fromEllArrayEllTube.isEqual(fromMatEllTube);
@@ -864,13 +874,14 @@ classdef SuiteEllTube < mlunitext.test_case
             lsGoodDirArray(:,:,2) = lsGoodDirMat;
             approxSchemaDescr=char.empty(1,0);
             approxSchemaName=char.empty(1,0);
-            calcPrecision=0.001;
+            absTol = 10^(-3);
+            relTol = 10^(-3);
             extFromEllArrayEllTube = ...
                 gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
                 ellArray, timeVec,...
                 lsGoodDirArray, sTime, EApproxType.External, ...
                 approxSchemaName,...
-                approxSchemaDescr, calcPrecision);
+                approxSchemaDescr, absTol, relTol);
             [extFromEllTubeEllArray extTimeVec] =...
                 extFromEllArrayEllTube.getEllArray(EApproxType.External);
             [isOk, reportStr] = extFromEllTubeEllArray(1).isEqual(ellArray(1));
@@ -884,7 +895,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 ellArray, timeVec,...
                 lsGoodDirArray, sTime, EApproxType.Internal, ...
                 approxSchemaName,...
-                approxSchemaDescr, calcPrecision);
+                approxSchemaDescr, absTol, relTol);
             [intFromEllTubeEllArray intTimeVec] =...
                 intFromEllArrayEllTube.getEllArray(EApproxType.Internal);
             [isOk, reportStr] = intFromEllTubeEllArray(1).isEqual(ellArray(1));
@@ -1182,13 +1193,14 @@ classdef SuiteEllTube < mlunitext.test_case
                 ltGoodDirArray(:,:,2) = lsGoodDirMat*multVec(2);
                 approxSchemaDescr=char.empty(1,0);
                 approxSchemaName=char.empty(1,0);
-                calcPrecision=0.001;
+                absTol = 10^(-3);
+                relTol = 10^(-3);
                 testEllTube = ...
                     gras.ellapx.smartdb.rels.EllTube.fromEllArray(...
                     ellArray, timeVec,...
                     ltGoodDirArray, sTime, EApproxType.External, ...
                     approxSchemaName,...
-                    approxSchemaDescr, calcPrecision);
+                    approxSchemaDescr, absTol, relTol);
                 %
                 testEllUnionTube=...
                     gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(...
@@ -1246,7 +1258,8 @@ classdef SuiteEllTube < mlunitext.test_case
                     timeVec, sTime)
                 import gras.ellapx.smartdb.rels.EllTube;
                 %
-                calcPrecision = 0.001;
+                absTol = 10^(-3);
+                relTol = 10^(-3);
                 nTubes = size(qArrayList, 2);
                 approxSchemaDescr = char.empty(1,0);
                 approxSchemaName = char.empty(1,0);
@@ -1263,7 +1276,7 @@ classdef SuiteEllTube < mlunitext.test_case
                 %
                 rel = EllTube.fromQArrays(qArrayList, aMat, timeVec,...
                     ltGoodDirArray, sTime, approxType, approxSchemaName,...
-                    approxSchemaDescr, calcPrecision);
+                    approxSchemaDescr, absTol, relTol);
             end
         end
     end
