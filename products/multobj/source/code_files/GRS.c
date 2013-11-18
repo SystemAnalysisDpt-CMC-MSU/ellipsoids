@@ -4,6 +4,7 @@
 #define CH_ELIPSE /*approksimaciya e'lipsoidov*/ 
 
 #include "StdAfx.h"
+//#include <mex.h>
 
 
 #ifdef CH_ELIPSE
@@ -397,7 +398,7 @@ return;
   getch ();
  }    /* conv_go */
 
-void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,float* centervec, float* semiaxes,float*** Amat,float** bVec,float*** vertMat,float** discrVec, float* controlParams){ 
+void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,float* centervec, float* semiaxes,float** Amat,float* bVec,float** vertMat,float* discrVec, float* controlParams){ 
  //main function for which mex-file will be written 
     
     read_par (controlParams);	
@@ -406,7 +407,8 @@ void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,float* c
     out_write(Amat,bVec,vertMat,discrVec);
    }
 
-void calcConvexHull(int size,int* indProjVec,int* improveDirectVec,int num_points,float* points,float*** Amat,float** bVec,float*** vertMat,float** discrVec, float* controlParams){ 
+
+void calcConvexHull(int size,int* indProjVec,int* improveDirectVec,int num_points,float* points,float** Amat,float* bVec,float** vertMat,float* discrVec, float* controlParams){ 
  //main function for which mex-file will be written 
     
     read_par (controlParams);	
@@ -415,7 +417,7 @@ void calcConvexHull(int size,int* indProjVec,int* improveDirectVec,int num_point
     out_write(Amat,bVec,vertMat,discrVec);
    }
 
-void calcPolytopeApprox(int size,int* indProjVec,int* improveDirectVec,float ** inEqPolyMat, float ** eqPolyMat,float * inEqPolyVec,float * eqPolyVec, float*** Amat,float** bVec,float*** vertMat,float** discrVec, float* controlParams){ 
+void calcPolytopeApprox(int size,int* indProjVec,int* improveDirectVec,float ** inEqPolyMat, float ** eqPolyMat,float * inEqPolyVec,float * eqPolyVec, float** Amat,float* bVec,float** vertMat,float* discrVec, float* controlParams){ 
  //main function for which mex-file will be written 
     
     read_par (controlParams);	
@@ -423,6 +425,44 @@ void calcPolytopeApprox(int size,int* indProjVec,int* improveDirectVec,float ** 
     conv_go(NULL,0,NULL);
     out_write(Amat,bVec,vertMat,discrVec);
    }
+
+/*void mexFunction(int nlhs,mxArray *plhs[],
+
+int nrhs,const mxArray *prhs[])
+
+{ //mex-function for ellipsoid's approx
+	int size,i ;
+	int *indProjVec,*improveDirectVec;
+	float *centervec,*semiaxes,*controlParams,*bVec,*discrVec;
+	float **Amat,**vertMat;
+
+
+	if (nrhs !=6) { 
+		mexErrMsgTxt("Six input arguments are nedeed.");
+	}
+
+	else if (nlhs !=4) { 
+		mexErrMsgTxt("Four input arguments are nedeed.");
+		}
+	    size = mxGetScalar(prhs[0]);
+		indProjVec=mxGetPr(prhs[1]);
+		improveDirectVec= mxGetPr(prhs[2]);
+		centervec= mxGetPr(prhs[3]);
+		semiaxes= mxGetPr(prhs[4]);
+		controlParams= mxGetPr(prhs[5]);
+		plhs[1] = mxCreateDoubleMatrix(1, 256, mxREAL);
+		plhs[3] = mxCreateDoubleMatrix(1, 256, mxREAL);
+		plhs[0] = mxCreateDoubleMatrix(size, 256, mxREAL);
+		plhs[2] = mxCreateDoubleMatrix(size, 256, mxREAL);
+	    for(i=0;i<size;i++)
+		    Amat[i]=(float*)(mxGetPr(plhs[0])+i*256);
+		bVec=(float *)mxGetPr(plhs[1]);
+		for(i=0;i<size;i++)
+		    vertMat[i]=(float*)mxGetPr(plhs[2]);
+		discrVec=(float*)(mxGetPr(plhs[3])+i*256);
+		calcEllipsoidApprox(size,indProjVec, improveDirectVec, centervec, semiaxes, Amat, bVec, vertMat, discrVec, controlParams);
+ }*/
+
 int main(void){
 	//for compilation while there is no mex-files
 	
@@ -449,6 +489,6 @@ int main(void){
 	semiaxes[0] = 1;
 	semiaxes[1] = 1;
 	 
-    calcEllipsoidApprox(size,p,q,centervec,semiaxes, &Amat, &bVec,&vertMat, &discrVec,controlParams);
-  return 0;
+    calcEllipsoidApprox(size,p,q,centervec,semiaxes, Amat, bVec,vertMat, discrVec,controlParams);
+return 0;
 }

@@ -26,7 +26,7 @@ static int end;
 /* float max_all_est,EPSdif,INF;         */
 
 
-int ch_write_dat (float*** Amat,float** bVec,float*** vertMat,float** discrVec)
+int ch_write_dat (float** Amat,float* bVec,float** vertMat,float* discrVec)
   /* recording output data  */
  {int i, j, k, current, num, topTOTAL, row, idx;
   int ok;
@@ -50,14 +50,14 @@ int ch_write_dat (float*** Amat,float** bVec,float*** vertMat,float** discrVec)
    }
   topTOTAL = ch_estCOUNT;
   VIEW (ptop, ch_first_top) topTOTAL++;
- (*Amat)=(float**)realloc(*Amat,ch_N*sizeof(float*));
+ (Amat)=(float**)realloc(Amat,ch_N*sizeof(float*));
        for (j=0;j<ch_N;j++)
-	        (*Amat)[j]=(float*)malloc(ch_facetCOUNT*sizeof(float));
-   (*vertMat)=(float**)realloc((*vertMat),ch_N*sizeof(float*));
+	        (Amat)[j]=(float*)malloc(ch_facetCOUNT*sizeof(float));
+   (vertMat)=(float**)realloc((vertMat),ch_N*sizeof(float*));
       for (j=0;j<ch_N;j++)
-	          (*vertMat)[j]=(float*)malloc(topTOTAL*sizeof(float));
-     (*bVec)=(float*)realloc((*bVec),ch_facetCOUNT*sizeof(float));
-    (*discrVec)=(float*)realloc((*discrVec),ch_topCOUNT*sizeof(float));
+	          (vertMat)[j]=(float*)malloc(topTOTAL*sizeof(float));
+     (bVec)=(float*)realloc((bVec),ch_facetCOUNT*sizeof(float));
+    (discrVec)=(float*)realloc((discrVec),ch_topCOUNT*sizeof(float));
 /* recording faces */
 
   
@@ -70,17 +70,17 @@ int ch_write_dat (float*** Amat,float** bVec,float*** vertMat,float** discrVec)
     { 
 		
 	if (row<ch_N){
-		(*Amat)[row][idx]=pfacet->c [i];
+		(Amat)[row][idx]=pfacet->c [i];
 		
 	}
 	else if (row==ch_N)
 	{
 		
-		(*bVec)[idx]=pfacet->c [i];
+		(bVec)[idx]=pfacet->c [i];
 	}
 	else 
 	{
-		(*discrVec)[idx]=pfacet->c [i];
+		(discrVec)[idx]=pfacet->c [i];
 	}
 	idx++;
       if ((num++) == 4)
@@ -107,7 +107,7 @@ int ch_write_dat (float*** Amat,float** bVec,float*** vertMat,float** discrVec)
    {num = 0;
     VIEW (ptop, ch_first_top)
      {
-	 (*vertMat)[row][idx]=ptop->c [i];
+	 (vertMat)[row][idx]=ptop->c [i];
 	 idx++;
       if ((num++) == 4)
       {
@@ -117,7 +117,7 @@ int ch_write_dat (float*** Amat,float** bVec,float*** vertMat,float** discrVec)
     VIEW (pfacet, ch_first_facet)
       if (pfacet->top)
 	  {
-		  (*vertMat)[row][idx]=pfacet->top [i];
+		  (vertMat)[row][idx]=pfacet->top [i];
 		   idx++;
 	if ((num++) == 4)
 	 {
