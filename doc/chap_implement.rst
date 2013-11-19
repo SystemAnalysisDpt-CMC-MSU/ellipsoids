@@ -170,7 +170,7 @@ sum can be computed explicitely and plotted:
 .. _minksumpic:
 
 .. figure:: /pic/chapter05_section01_minksum.png
-   :alt: approximation
+   :alt: minksum
    :width: 40 %
 
    The geometric sum of ellipsoids.
@@ -201,7 +201,7 @@ can be computed explicitely and plotted for ellipsoids in
 .. _minkdiffpic:
 
 .. figure:: /pic/chapter05_section01_minkdiff.png
-   :alt: approximation
+   :alt: minkdiff
    :width: 40 %
 
    The geometric difference of ellipsoids.
@@ -233,7 +233,7 @@ of arbitrary dimension.
 .. _minkpic:
 
 .. figure:: /pic/chapter05_section01_minkpmminkmp.png
-   :alt: approximation
+   :alt: minkpmminkmp
    :width: 100 %
 
    Implementation of operations 'sum-difference' and 'difference-sum'. 
@@ -438,7 +438,7 @@ tube onto time-dependent subspace.
 .. _statdyn-proj:
 
 .. figure:: /pic/chapter05_section03_reachTubeStatProjreachTubeDynProj.png
-   :alt: approximation
+   :alt: reachTubeStatProjreachTubeDynProj
    :width: 100 %
 
    Static and dynamic projections of the ellipsoidal tube.
@@ -455,7 +455,7 @@ We can compute tubes by the instant of time using methodfromEllTubes:
 .. _uniontubestatproj:
 
 .. figure:: /pic/chapter05_section03_unionTubeStatProj.png
-   :alt: approximation
+   :alt: unionTubeStatProj
    :width: 70 %
 
    Ellipsoidal tubes by the instant of time.
@@ -479,7 +479,7 @@ to display a content of ellipsoidal tubes.
 .. _disppic:
 
 .. figure:: /pic/chapter05_section03_dispPic.png
-   :alt: approximation
+   :alt: disp
    :width: 50 %
 
    Content of the ellipsoidal tube.

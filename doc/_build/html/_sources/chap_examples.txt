@@ -29,7 +29,7 @@ where :math:`{\mathcal X}_0` is the set of initial conditions, and
 .. _ellpolyfig:
 
 .. figure:: /pic/chapter06_section01_ellpoly.png
-   :alt: approximation
+   :alt: ellpoly
    :width: 50 %
 
    Reach set computation performance comparison.
