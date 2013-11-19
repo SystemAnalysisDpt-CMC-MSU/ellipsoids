@@ -101,24 +101,25 @@ classdef ReachDiscrete < elltool.reach.AReach
          function  [qArrayListArray, ltGoodDirArrayMat]=fCalcTube(probDynObj,  ...
                    xDim, timeVec, ...
                   lMat,  isDisturb, isMinMax,...
-                   fMinkmp,  fMinksum, fMinkdiff, isBack, l0Vec)
-               
+                   fMinkmp,  fMinksum, fMinkdiff, isBack, l0Vec, bpbMatCMat)
                
                 qMat = probDynObj.getX0Mat;
                 qMat = 0.5 * (qMat + qMat');
                 qArrayListArray(:,:,1)=qMat;
                 lVec = l0Vec;
                 lMat(:, 1) = lVec;
+                Q=cell(1, (length(timeVec) - 1));
                 for iTime = 1:(length(timeVec) - 1)  
                     aMat = probDynObj.getAtDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
-                    aInvMat = inv(aMat);
-                    bpbMat = probDynObj.getBPBTransDynamics(). ...
-                        evaluate(timeVec(iTime + isBack));
-                    bpbMat = 0.5 * (bpbMat + bpbMat');
+                  
+                     aInvMat = inv(aMat);
+                    bpbMat=bpbMatCMat{iTime};
+                    bpbMat = 0.5 * (bpbMat + (bpbMat)');
                     if isDisturb
                         gqgMat = probDynObj.getCQCTransDynamics(). ...
                             evaluate(timeVec(iTime + isBack));
+                         
                     end
                     qMat = aMat * qMat * aMat';
                     qMat = 0.5 * (qMat + qMat');
@@ -136,9 +137,15 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
                         end
                     else
-                        eEll = fMinksum([ellipsoid(0.5 * (qMat + qMat')) ...
+                            %commented actions for catching the error
+                            %Q{iTime}=qMat;
+                            %path='C:\Users\Ivan\mimi\products\+elltool\+pcalc\';
+                            %save([path 'Q2' '.mat'],'Q');
+                            %ellipsoid(0.5 * (qMat + qMat'))
+                            eEll = fMinksum([ellipsoid(0.5 * (qMat + qMat')) ...
                             ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
-                    end
+                            
+                   end
                     %
                     if ~isempty(eEll)
                         qMat = double(eEll);
@@ -149,8 +156,9 @@ classdef ReachDiscrete < elltool.reach.AReach
                     qArrayListArray(:, :, iTime + 1) = qMat;
                     lMat(:, iTime + 1) = aInvMat' * lMat(:, iTime);
                 end
+        
                 ltGoodDirArrayMat=lMat;
-       
+                        
     end
         
     end 
@@ -214,12 +222,23 @@ classdef ReachDiscrete < elltool.reach.AReach
             fMinksumCVec(:)={fMinksum};
             fMinkdiffCVec(:)={fMinkdiff};
             isBackCVec(:)={isBack};
-       
+            
+            bpbMatCMat=cell(1,length(timeVec) - 1);
+            for iTime = 1:(length(timeVec) - 1)
+                 bpbMat=probDynObj.getBPBTransDynamics(). ...
+                        evaluate(timeVec(iTime + isBack));
+                bpbMatCMat{iTime}=bpbMat;    
+                
+            end
+            
+            bpbMatCMatCVec=cell(1,nTubes);
+            bpbMatCMatCVec(:)={bpbMatCMat};
+            
             [qArrayListCVec, ltGoodDirArrayCVec]=pCalc.eval(@elltool.reach.ReachDiscrete.fCalcTube, probDynObjCVec,...   
                    xDimCVec, timeVecCVec, ...
                    lMatCVec,  isDisturbCVec, isMinMaxCVec, ...
-                  fMinkmpCVec,  fMinksumCVec, fMinkdiffCVec, isBackCVec, l0CVec);
-           
+                  fMinkmpCVec,  fMinksumCVec, fMinkdiffCVec, isBackCVec, l0CVec, bpbMatCMatCVec);
+              
            for iTube=1:nTubes
                   qArrayList{iTube}(:, :, :)=cell2mat(qArrayListCVec(iTube));
                   ltGoodDirArray(:, iTube, :)=cell2mat(ltGoodDirArrayCVec(iTube));
