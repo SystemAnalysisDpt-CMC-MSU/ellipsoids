@@ -7,7 +7,7 @@ Welcome to Ellipsoidal Toolbox documentation!
 =============================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    chap_intro
    chap_ellcalc
@@ -17,4 +17,4 @@ Welcome to Ellipsoidal Toolbox documentation!
    chap_examples
    chap_summary
    chap_acknowledge
-   chap_func		
+   chap_functions		

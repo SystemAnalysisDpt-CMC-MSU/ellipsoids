@@ -49,7 +49,7 @@ assume :math:`{\mathcal X}_0` and :math:`U` to be unit balls in
 corresponds to the number of ellipsoidal approximations, and obtain
 external and internal ellipsoidal approximations of the reach set:
 
-.. literalinclude:: /mcodesnippets/s_chapter06_section01_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section01_snippet01.m
    :language: matlab
    :linenos:
 
@@ -132,7 +132,7 @@ and taking its projection onto :math:`(x_1, x_2)` subspace.
    Spring-mass system with disturbance:
    (c) reach tube for time :math:`t\in[0,4]`; (d) reach set at time :math:`t=4`.
 
-.. literalinclude:: /mcodesnippets/s_chapter06_section02_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section02_snippet01.m
    :language: matlab
    :linenos:
 
@@ -172,7 +172,7 @@ Assuming that :math:`[v_1 ~~ v_2]^T` is unknown but bounded by
 ellipsoid :math:`{\mathcal E}(0, \frac{1}{4}I)`, we can compute the
 closed-loop reach set of the system with disturbance.
 
-.. literalinclude:: /mcodesnippets/s_chapter06_section02_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section02_snippet02.m
    :language: matlab
    :linenos:
 
@@ -275,7 +275,7 @@ can be rewritten as
 We can compute the reach set of :eq:`rlceq2` for some time :math:`t>2`,
 say, :math:`t=3`.
 
-.. literalinclude:: /mcodesnippets/s_chapter06_section03_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section03_snippet01.m
    :language: matlab
    :linenos:
    
@@ -302,7 +302,7 @@ To find out where the system should start at time :math:`t=0` in order
 to reach a neighborhood M of the origin at time :math:`t=3`, we compute
 the backward reach set from :math:`t=3` to :math:`t=0`. 
 
-.. literalinclude:: /mcodesnippets/s_chapter06_section03_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section03_snippet02.m
    :language: matlab
    :linenos:
 
@@ -440,7 +440,7 @@ hyperplane :math:`H([0 ~ 1 ~ 0 ~ 0]^T, x_{M2})` is the guard.
 We indicate how to implement the reach set computation of this hybrid
 system. We first define the two linear systems and the guard.
 
-.. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section04_snippet01.m
    :language: matlab
    :linenos:
 
@@ -449,7 +449,7 @@ initial conditions, we compute the reach set according to dynamics
 :eq:`fflow` for certain number of time steps. We will consider the
 external approximation of the reach set by a single ellipsoid.
 
-.. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section04_snippet02.m
    :language: matlab
    :linenos:
 
@@ -457,7 +457,7 @@ Having obtained the ellipsoidal array externalEllMat representing the
 reach set evolving in time, we determine the ellipsoids in the array
 that intersect the guard.
 
-.. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet03.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section04_snippet03.m
    :language: matlab
    :linenos:
    
@@ -496,7 +496,7 @@ initial conditions for the reach set computation according to dynamics
 initial conditions is the intersection of the free-flow reach set with
 the guard.
 
-.. literalinclude:: /mcodesnippets/s_chapter06_section04_snippet04.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section04_snippet04.m
    :language: matlab
    :linenos:
 

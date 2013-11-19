@@ -1,19 +1,19 @@
 function run_helpcollector
-helpcollectorName = modgen.common.getcallername(1);
-[pathstrVec, ~, ~] = fileparts(which(helpcollectorName));
-dirName = [pathstrVec filesep '+picgen' filesep '*.m'];
-SPicgenFilesArray = dir(dirName);
-picDestDir = [modgen.path.rmlastnpathparts(pathstrVec, 3)...
-    filesep 'doc' filesep 'pic'];
-elltool.doc.picgen.PicGenController.setPicDestDir(picDestDir);
-for iElem = 1 : size(SPicgenFilesArray, 1)
-    picgenFileName = modgen.string.splitpart(...
-        SPicgenFilesArray(iElem).name, '.', 'first');
-    picgenFunctionName =  strcat ('elltool.doc.picgen.', picgenFileName);
-    fPicGen = str2func(picgenFunctionName);
-    fPicGen();
-end
-elltool.doc.picgen.PicGenController.flush();
+% helpcollectorName = modgen.common.getcallername(1);
+% [pathstrVec, ~, ~] = fileparts(which(helpcollectorName));
+% dirName = [pathstrVec filesep '+picgen' filesep '*.m'];
+% SPicgenFilesArray = dir(dirName);
+% picDestDir = [modgen.path.rmlastnpathparts(pathstrVec, 3)...
+%     filesep 'doc' filesep 'pic'];
+% elltool.doc.picgen.PicGenController.setPicDestDir(picDestDir);
+% for iElem = 1 : size(SPicgenFilesArray, 1)
+%     picgenFileName = modgen.string.splitpart(...
+%         SPicgenFilesArray(iElem).name, '.', 'first');
+%     picgenFunctionName =  strcat ('elltool.doc.picgen.', picgenFileName);
+%     fPicGen = str2func(picgenFunctionName);
+%     fPicGen();
+% end
+% elltool.doc.picgen.PicGenController.flush();
 
 
 import modgen.logging.log4j.Log4jConfigurator;
@@ -93,6 +93,8 @@ helpCellNew(~isEmptyHelp)=cellfun(@(x) [x{:}],helpCellNew(~isEmptyHelp),...
 finalHelpCell=helpCellNew;
 %
 
+
+
 isnSpace=cellfun(@(x) ~isspace(x) | (x==newLineSymbol),helpCellNew,...
     'UniformOutput',false);
 %
@@ -108,20 +110,23 @@ finalHelpCell(isExistAuthorLine)=cellfun(@(x,ind,is)...
 
 finalHelpCell = cellfun(@(x)fDeletePercent(x),finalHelpCell, ...
     'UniformOutput', false);
+
 finalHelpCell = cellfun(@(x)fShiftText(x),finalHelpCell, ...
     'UniformOutput', false);
+
 finalHelpCell = cellfun(@(x)fDeleteEmptyStr(x),finalHelpCell, ...
     'UniformOutput', false);
+
 funcOutputCell=funcNameCell;
 
-%% substitutions (for TeX requirements)
+%% substitutions (for rst requirements)
 %
-symbListHelp={'\n'};
-substListHelp={'\n\t'};
+symbListHelp={};
+substListHelp={};
 
 %funcOutputCell=makeNewName(funcOutputCell);
 %funcNameCell=makeNewName(funcNameCell);
-%
+
 for iSymb=1:length(symbListHelp)
     finalHelpCell=cellfun(@(x) strrep(x,symbListHelp{iSymb},...
         substListHelp{iSymb}),finalHelpCell,'UniformOutput',false);
@@ -129,7 +134,18 @@ end
 
 labelFuncCell = cellfun(@(x)fDeleteSymbols(x),funcOutputCell, ...
     'UniformOutput', false);
-%% create tex doc
+
+for iElem = 1 : numel(finalHelpCell)
+    if ~isempty(finalHelpCell{iElem})
+        string = [sprintf('\t'), strrep(helpCellNew{iElem},sprintf('\n'),sprintf('\n\t'))];
+        string = strrep(string, sprintf('\t%%'), sprintf('\t'));
+        [string remain] = strtok(string, '$');
+        string = strrep(string, sprintf('%%'), sprintf(''));
+        finalHelpCell{iElem}= string;
+    end
+end
+
+%% create rst doc
 fid = fopen(resultTexFileName, 'wt');
 indFunc = 1;
 indMethod = 1;
@@ -137,6 +153,7 @@ flag = 0;
 indInhClass = 1;
 iClass = 1;
 indClass = 1;
+fprintf(fid, '%s\n\n', ':tocdepth: 2');
 fprintf(fid, '%s\n', 'Function Reference');
 fprintf(fid, '%s\n\n', '==================');
 for iSect=1:length(sectionNameCell)
@@ -163,8 +180,10 @@ for iSect=1:length(sectionNameCell)
         end
         fprintf(fid, '%s\n%s\n\n',[sectionNameCell{iSect}, '.',funcOutputCell{iFunc}], underline);
         % print function help
-        fprintf(fid,'::\n\n');
-        fprintf(fid,'\t%s\n', finalHelpCell{iFunc});
+        if ~isempty(finalHelpCell{iFunc})
+            fprintf(fid,'::\n\n');
+        end
+        fprintf(fid,'%s\n', finalHelpCell{iFunc});
         fprintf(fid,'\n');
         if flag
             numbInhFunc = numberOfInheritedFunctions(indInhClass);
@@ -220,7 +239,7 @@ if any(linesForShift)
         lines{iElem} = lines{iElem}(m+1:end);
     end
 end
-nl = repmat({'\n   '}, 1, nLines);
+nl = repmat({'\n'}, 1, nLines);
 lines = [lines; nl];
 result = sprintf(strcat(lines{:}));
 end
@@ -237,5 +256,3 @@ for iSymb=1:length(symbList)
     nameList=strrep(nameList,symbList{iSymb},substList{iSymb});
 end
 end
-
-

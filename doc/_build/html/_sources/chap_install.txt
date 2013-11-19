@@ -76,7 +76,7 @@ Installation and Quick Start
 #. In MATLAB command window change the working directory to the one
    where you unzipped the toolbox and type
    
-.. literalinclude:: /mcodesnippets/s_chapter04_section01_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter04_section01_snippet01.m
    :language: matlab
    :linenos:
 
@@ -87,7 +87,7 @@ Installation and Quick Start
 
 #. To get an idea of what the toolbox is about, type
 
-.. literalinclude:: /mcodesnippets/s_chapter04_section01_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter04_section01_snippet02.m
    :language: matlab
    :linenos:
 
@@ -97,7 +97,7 @@ and manipulate ellipsoids.
 
 Type
 
-.. literalinclude:: /mcodesnippets/s_chapter04_section01_snippet03.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter04_section01_snippet03.m
    :language: matlab
    :linenos:
 
@@ -106,7 +106,7 @@ to learn how to plot ellipsoids and hyperplanes in 2 and 3D. For a
 quick tutorial on how to use the toolbox for reachability analysis
 and verification, type
    
-.. literalinclude:: /mcodesnippets/s_chapter04_section01_snippet04.m
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter04_section01_snippet04.m
    :language: matlab
    :linenos:
 

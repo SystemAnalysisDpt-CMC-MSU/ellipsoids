@@ -52,16 +52,42 @@
 <li class="toctree-l1"><a class="reference internal" href="chap_intro.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap_ellcalc.html">Ellipsoidal Calculus</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="chap_ellcalc.html#basic-notions">Basic Notions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_ellcalc.html#operations-with-ellipsoids">Operations with Ellipsoids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_ellcalc.html#operations-with-ellipsoids">Operations with Ellipsoids</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#affine-transformation">Affine Transformation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#geometric-sum">Geometric Sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#geometric-difference">Geometric Difference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#geometric-difference-sum">Geometric Difference-Sum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#geometric-sum-difference">Geometric Sum-Difference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#intersection-of-ellipsoid-and-hyperplane">Intersection of Ellipsoid and Hyperplane</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#intersection-of-ellipsoid-and-ellipsoid">Intersection of Ellipsoid and Ellipsoid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#intersection-of-ellipsoid-and-halfspace">Intersection of Ellipsoid and Halfspace</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#checking-if-one-ellipsoid-contains-another">Checking if one ellipsoid contains another</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#minimum-volume-ellipsoids">Minimum Volume Ellipsoids</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_ellcalc.html#maximum-volume-ellipsoids">Maximum Volume Ellipsoids</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="chap_reach.html">Reachability</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap_reach.html#basics-of-reachability-analysis">Basics of Reachability Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_reach.html#ellipsoidal-method">Ellipsoidal Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_reach.html#basics-of-reachability-analysis">Basics of Reachability Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="chap_reach.html#systems-without-disturbances">Systems without disturbances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_reach.html#systems-with-disturbances">Systems with disturbances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_reach.html#reachability-problem">Reachability problem</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chap_reach.html#ellipsoidal-method">Ellipsoidal Method</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="chap_reach.html#continuous-time-systems">Continuous-time systems</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_reach.html#discrete-time-systems">Discrete-time systems</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="chap_install.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap_install.html#additional-software">Additional Software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_install.html#additional-software">Additional Software</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="chap_install.html#cvx">CVX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chap_install.html#mpt">MPT</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="chap_install.html#installation-and-quick-start">Installation and Quick Start</a></li>
 </ul>
 </li>
@@ -83,24 +109,24 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="chap_summary.html">Summary and Outlook</a></li>
 <li class="toctree-l1"><a class="reference internal" href="chap_acknowledge.html">Acknowledgement</a></li>
-<li class="toctree-l1"><a class="reference internal" href="chap_func.html">Function Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#ellipsoid">ellipsoid</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#hyperplane">hyperplane</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#elltool-conf-properties">elltool.conf.Properties</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#elltool-core-genellipsoid">elltool.core.GenEllipsoid</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#smartdb-relations-atypifiedstaticrelation">smartdb.relations.ATypifiedStaticRelation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#gras-ellapx-smartdb-rels-elltube">gras.ellapx.smartdb.rels.EllTube</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#gras-ellapx-smartdb-rels-elltubeproj">gras.ellapx.smartdb.rels.EllTubeProj</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#gras-ellapx-smartdb-rels-elluniontube">gras.ellapx.smartdb.rels.EllUnionTube</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#gras-ellapx-smartdb-rels-elluniontubestaticproj">gras.ellapx.smartdb.rels.EllUnionTubeStaticProj</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#elltool-reach-areach">elltool.reach.AReach</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#elltool-reach-reachcontinuous">elltool.reach.ReachContinuous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#elltool-reach-reachdiscrete">elltool.reach.ReachDiscrete</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#elltool-reach-reachfactory">elltool.reach.ReachFactory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#elltool-linsys-alinsys">elltool.linsys.ALinSys</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#elltool-linsys-linsyscontinuous">elltool.linsys.LinSysContinuous</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#elltool-linsys-linsysdiscrete">elltool.linsys.LinSysDiscrete</a></li>
-<li class="toctree-l2"><a class="reference internal" href="chap_func.html#elltool-linsys-linsysfactory">elltool.linsys.LinSysFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="chap_functions.html">Function Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#ellipsoid">ellipsoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#hyperplane">hyperplane</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#elltool-conf-properties">elltool.conf.Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#elltool-core-genellipsoid">elltool.core.GenEllipsoid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#smartdb-relations-atypifiedstaticrelation">smartdb.relations.ATypifiedStaticRelation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#gras-ellapx-smartdb-rels-elltube">gras.ellapx.smartdb.rels.EllTube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#gras-ellapx-smartdb-rels-elltubeproj">gras.ellapx.smartdb.rels.EllTubeProj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#gras-ellapx-smartdb-rels-elluniontube">gras.ellapx.smartdb.rels.EllUnionTube</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#gras-ellapx-smartdb-rels-elluniontubestaticproj">gras.ellapx.smartdb.rels.EllUnionTubeStaticProj</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#elltool-reach-areach">elltool.reach.AReach</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#elltool-reach-reachcontinuous">elltool.reach.ReachContinuous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#elltool-reach-reachdiscrete">elltool.reach.ReachDiscrete</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#elltool-reach-reachfactory">elltool.reach.ReachFactory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#elltool-linsys-alinsys">elltool.linsys.ALinSys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#elltool-linsys-linsyscontinuous">elltool.linsys.LinSysContinuous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#elltool-linsys-linsysdiscrete">elltool.linsys.LinSysDiscrete</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chap_functions.html#elltool-linsys-linsysfactory">elltool.linsys.LinSysFactory</a></li>
 </ul>
 </li>
 </ul>
