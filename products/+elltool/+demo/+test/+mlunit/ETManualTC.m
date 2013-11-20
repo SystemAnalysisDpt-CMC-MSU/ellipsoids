@@ -9,13 +9,13 @@ classdef ETManualTC < mlunitext.test_case
         function self = testBasic(self)
             currentDir = fileparts(which(mfilename('class')));
             rootDir = modgen.path.rmlastnpathparts(currentDir, 5);
-            snippetsDir = [rootDir, filesep, 'doc', filesep,...
-                'mcodesnippets'];
+            snippetsDir = [rootDir, filesep, 'products', filesep,...
+                '+elltool', filesep, '+doc', filesep, '+snip'];
             snippetsPattern = [snippetsDir, filesep, '*.m'];
             fileList = dir(snippetsPattern);
             nFiles = length(fileList);
             BAD_SNIPPET_NAMES = {};
-            oldFolder = cd(snippetsDir);
+            oldFolder = cd([rootDir, filesep, 'products']);
             for iFile = 1 : nFiles
                 isBad = false;
                 nameStr = fileList(iFile).name;
@@ -26,7 +26,7 @@ classdef ETManualTC < mlunitext.test_case
                 end
                 if ~isBad
                     [~, fileName] = fileparts(nameStr);
-                    eval(fileName);
+                    eval(['elltool.doc.snip.' fileName]);
                 end
             end
             cd(oldFolder);
