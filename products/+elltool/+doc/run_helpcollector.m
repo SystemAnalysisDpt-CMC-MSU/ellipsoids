@@ -21,7 +21,7 @@ import modgen.common.throwerror;
 logger=Log4jConfigurator.getLogger();
 docDirName='doc';
 %
-texFileName='chap_functions.tex';
+texFileName='chap_functions.rst';
 newLineSymbol=10;
 
 %% obtain full path
@@ -93,6 +93,8 @@ helpCellNew(~isEmptyHelp)=cellfun(@(x) [x{:}],helpCellNew(~isEmptyHelp),...
 finalHelpCell=helpCellNew;
 %
 
+
+
 isnSpace=cellfun(@(x) ~isspace(x) | (x==newLineSymbol),helpCellNew,...
     'UniformOutput',false);
 %
@@ -108,20 +110,23 @@ finalHelpCell(isExistAuthorLine)=cellfun(@(x,ind,is)...
 
 finalHelpCell = cellfun(@(x)fDeletePercent(x),finalHelpCell, ...
     'UniformOutput', false);
+
 finalHelpCell = cellfun(@(x)fShiftText(x),finalHelpCell, ...
     'UniformOutput', false);
+
 finalHelpCell = cellfun(@(x)fDeleteEmptyStr(x),finalHelpCell, ...
     'UniformOutput', false);
+
 funcOutputCell=funcNameCell;
 
-%% substitutions (for TeX requirements)
+%% substitutions (for rst requirements)
 %
 symbListHelp={};
 substListHelp={};
 
-funcOutputCell=makeLatexName(funcOutputCell);
-funcNameCell=makeLatexName(funcNameCell);
-%
+%funcOutputCell=makeNewName(funcOutputCell);
+%funcNameCell=makeNewName(funcNameCell);
+
 for iSymb=1:length(symbListHelp)
     finalHelpCell=cellfun(@(x) strrep(x,symbListHelp{iSymb},...
         substListHelp{iSymb}),finalHelpCell,'UniformOutput',false);
@@ -129,7 +134,18 @@ end
 
 labelFuncCell = cellfun(@(x)fDeleteSymbols(x),funcOutputCell, ...
     'UniformOutput', false);
-%% create tex doc
+
+for iElem = 1 : numel(finalHelpCell)
+    if ~isempty(finalHelpCell{iElem})
+        string = [sprintf('\t'), strrep(helpCellNew{iElem},sprintf('\n'),sprintf('\n\t'))];
+        string = strrep(string, sprintf('\t%%'), sprintf('\t'));
+        [string remain] = strtok(string, '$');
+        string = strrep(string, sprintf('%%'), sprintf(''));
+        finalHelpCell{iElem}= string;
+    end
+end
+
+%% create rst doc
 fid = fopen(resultTexFileName, 'wt');
 indFunc = 1;
 indMethod = 1;
@@ -137,44 +153,49 @@ flag = 0;
 indInhClass = 1;
 iClass = 1;
 indClass = 1;
+fprintf(fid, '%s\n\n', ':tocdepth: 2');
+fprintf(fid, '%s\n', 'Function Reference');
+fprintf(fid, '%s\n\n', '==================');
 for iSect=1:length(sectionNameCell)
-    
-    fprintf(fid,'\\section{%s}\\label{secClassDescr:%s}\n',...
-        sectionNameCell{iSect}, sectionNameCell{iSect});
+    underline = '';
+    for jSym = 1:numel(sectionNameCell{iSect})
+        underline = [underline '-'];
+    end
+    fprintf(fid,'%s\n%s\n\n', sectionNameCell{iSect}, underline);
     numbFunc = indFunc + numberOfFunctions(iSect) -1;
     for jClass = indClass:numberOfClassInSection(iSect) + indClass -1
         if ismember(jClass,indOfClasses)
             flag = 1;
             helpPattern = sprintf...
-                ('\n\nSee the description of the following methods in section \\ref{secClassDescr:%s}\n for %s:\n',...
+                ('\n\nSee the description of the following methods in `%s`_ for %s:\n',...
                 char(defClassNameCell{indInhClass}), char(defClassNameCell{indInhClass}));
         end
         indClass = indClass+1;
     end
     numbFunc = indFunc + numberOfFunctions(iSect)-1;
     for iFunc = indFunc: numbFunc
-        fprintf(fid,...
-            '\\subsection{\\texorpdfstring{%s}{%s}}\\label{method:%s}\n',...
-            [sectionNameCell{iSect}, '.',funcOutputCell{iFunc}],...
-            funcOutputCell{iFunc},...
-            [sectionNameCell{iSect}, '.',labelFuncCell{iFunc}]);
+        underline = '';
+        for jSym = 1:numel([sectionNameCell{iSect} '.' funcOutputCell{iFunc}])
+            underline = [underline '~'];
+        end
+        fprintf(fid, '%s\n%s\n\n',[sectionNameCell{iSect}, '.',funcOutputCell{iFunc}], underline);
         % print function help
-        fprintf(fid,'\\begin{verbatim}\n');
-        fprintf(fid,'%s\n',finalHelpCell{iFunc});
-        fprintf(fid,'\\end{verbatim}\n');
+        if ~isempty(finalHelpCell{iFunc})
+            fprintf(fid,'::\n\n');
+        end
+        fprintf(fid,'%s\n', finalHelpCell{iFunc});
+        fprintf(fid,'\n');
         if flag
             numbInhFunc = numberOfInheritedFunctions(indInhClass);
             fprintf(fid,'%s\n',helpPattern);
-            fprintf(fid,'\\begin{list}{}{}\n');
+            fprintf(fid,'\n');
             for iMethod = 1:numbInhFunc
-                printLatexName=makeLatexName(inhFuncNameCell{indInhClass}{iMethod});
-                fprintf(fid,' \\item \\hyperref[method:%s]{%s}\n',...
+                fprintf(fid,'- %s_\n',...
                     [char(defClassNameCell{indInhClass}), '.',...
-                    char(inhFuncNameCell{indInhClass}{iMethod})],...
-                    char(printLatexName));
+                    char(inhFuncNameCell{indInhClass}{iMethod})]);
                 indMethod = indMethod+1;
             end
-            fprintf(fid,'\\end{list}\n');
+            fprintf(fid, '\n');
             flag = 0;
             indInhClass = indInhClass + 1;
         end
@@ -226,7 +247,7 @@ end
 function result = fDeleteSymbols(str)
 result = regexprep(str, '(\\_)', '');
 end
-function nameList=makeLatexName(nameList)
+function nameList=makeNewName(nameList)
 %% substitutions (for TeX requirements)
 symbList={'\','_','&'};
 substList={'/','\_','\&'};
@@ -235,4 +256,3 @@ for iSymb=1:length(symbList)
     nameList=strrep(nameList,symbList{iSymb},substList{iSymb});
 end
 end
-
