@@ -17,7 +17,7 @@
 
 
 \title{Ellipsoidal Toolbox}
-\date{November 19, 2013}
+\date{November 22, 2013}
 \release{2.0 beta 1}
 \author{Peter Gagarinov, Alex A. Kurzhanskiy}
 \newcommand{\sphinxlogo}{}
@@ -3798,35 +3798,64 @@ by the cut function:
 \end{Verbatim}
 
 \begin{Verbatim}[commandchars=\\\{\}]
-function example
-   aMat = [0 1; 0 0]; bMat = eye(2);  
-   SUBounds = struct();
-   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
-   SUBounds.shape = [9 0; 0 2]; 
-   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-   x0EllObj = ell\_unitball(2);
-   timeVec = [0 10]; 
-   dirsMat = [1 0; 0 1]';  
-   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-   ellTubeObj = rsObj.getEllTubeRel();
-   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
-   projType = gras.ellapx.enums.EProjType.Static;
-   statEllTubeProj = ellTubeObj.project(projType,projSpaceList,...
-      @fGetProjMat);
-   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
-   dynEllTubeProj=ellTubeObj.project(projType,projSpaceList,...
-      @fGetProjMat);
-   plObj=smartdb.disp.RelationDataPlotter();
-   statEllTubeProj.plot(plObj);
-   dynEllTubeProj.plot(plObj);
-
-end
-
-function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-    timeVec,varargin)
-  nTimePoints=length(timeVec);
-  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+function example
+
+   aMat = [0 1; 0 0]; bMat = eye(2);  
+
+   SUBounds = struct();
+
+   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
+
+   SUBounds.shape = [9 0; 0 2]; 
+
+   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+
+   x0EllObj = ell\_unitball(2);
+
+   timeVec = [0 10]; 
+
+   dirsMat = [1 0; 0 1]';  
+
+   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+
+   ellTubeObj = rsObj.getEllTubeRel();
+
+   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
+
+   projType = gras.ellapx.enums.EProjType.Static;
+
+   statEllTubeProj = ellTubeObj.project(projType,projSpaceList,...
+
+      @fGetProjMat);
+
+   projType = gras.ellapx.enums.EProjType.DynamicAlongGoodCurve;
+
+   dynEllTubeProj=ellTubeObj.project(projType,projSpaceList,...
+
+      @fGetProjMat);
+
+   plObj=smartdb.disp.RelationDataPlotter();
+
+   statEllTubeProj.plot(plObj);
+
+   dynEllTubeProj.plot(plObj);
+
+
+
+end
+
+
+
+function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+
+    timeVec,varargin)
+
+  nTimePoints=length(timeVec);
+
+  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+
+  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+
  end
 \end{Verbatim}
 
@@ -3845,32 +3874,58 @@ Also we can see projections of good directions for ellipsoidal tubes.
 We can compute tubes by the instant of time using methodfromEllTubes:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-function example
-   aMat = [0 1; 0 0]; bMat = eye(2);  
-   SUBounds = struct();
-   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
-   SUBounds.shape = [9 0; 0 2]; 
-   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-   x0EllObj = ell\_unitball(2);
-   timeVec = [0 10]; 
-   dirsMat = [1 0; 0 1]';  
-   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-   ellTubeObj = rsObj.getEllTubeRel();
-   unionEllTube = ...
-    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
-   projType = gras.ellapx.enums.EProjType.Static;
-   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
-      @fGetProjMat);
-   plObj=smartdb.disp.RelationDataPlotter();
-   statEllTubeProj.plot(plObj);
-end
-
-function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-    timeVec,varargin)
-  nTimePoints=length(timeVec);
-  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+function example
+
+   aMat = [0 1; 0 0]; bMat = eye(2);  
+
+   SUBounds = struct();
+
+   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
+
+   SUBounds.shape = [9 0; 0 2]; 
+
+   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+
+   x0EllObj = ell\_unitball(2);
+
+   timeVec = [0 10]; 
+
+   dirsMat = [1 0; 0 1]';  
+
+   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+
+   ellTubeObj = rsObj.getEllTubeRel();
+
+   unionEllTube = ...
+
+    gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
+
+   projSpaceList = \PYGZob{}[1 0;0 1]\PYGZcb{};
+
+   projType = gras.ellapx.enums.EProjType.Static;
+
+   statEllTubeProj = unionEllTube.project(projType,projSpaceList,...
+
+      @fGetProjMat);
+
+   plObj=smartdb.disp.RelationDataPlotter();
+
+   statEllTubeProj.plot(plObj);
+
+end
+
+
+
+function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
+
+    timeVec,varargin)
+
+  nTimePoints=length(timeVec);
+
+  projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
+
+  projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
+
  end
 \end{Verbatim}
 \begin{figure}[htbp]
@@ -4480,23 +4535,40 @@ or three-dimensional subspace before being plotted. This is done by
 means of projection function:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-\% create two 4-dimensional ellipsoids:
-firstEllObj = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
-secEllObj = firstEllObj.getInv();
-
-\% specify 3-dimensional subspace by its basis:
-
-\% columns of basisMat must be orthogonal
-basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1].'; 
-
-\% get 3-dimensional projections of firstEllObj and secEllObj:
-bufEllVec = [firstEllObj secEllObj];
-\% array ellVec contains projections of firstEllObj and secEllObj
-ellVec = bufEllVec.projection(basisMat)  
-
-\% ellVec =
-\% Array of ellipsoids with dimensionality 1x2
-
+\% create two 4-dimensional ellipsoids:
+
+firstEllObj = ellipsoid([14 -4 2 -5; -4 6 0 1; 2 0 6 -1; -5 1 -1 2]);
+
+secEllObj = firstEllObj.getInv();
+
+
+
+\% specify 3-dimensional subspace by its basis:
+
+
+
+\% columns of basisMat must be orthogonal
+
+basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1].'; 
+
+
+
+\% get 3-dimensional projections of firstEllObj and secEllObj:
+
+bufEllVec = [firstEllObj secEllObj];
+
+\% array ellVec contains projections of firstEllObj and secEllObj
+
+ellVec = bufEllVec.projection(basisMat)  
+
+
+
+\% ellVec =
+
+\% Array of ellipsoids with dimensionality 1x2
+
+
+
 ellVec.plot();  \% plot ellipsoids in ellVec
 \end{Verbatim}
 
@@ -4509,21 +4581,36 @@ Function projection exists also for the
 ReachContinuous$\backslash$ReachDiscrete objects:
 
 \begin{Verbatim}[commandchars=\\\{\}]
-aMat = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
-bMat = [0; 0; 0; 1];
-uBoundsEllObj = ellipsoid(1);
-\% 4-dimensional system
-sys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj);
-dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1].'; \% matrix of directions
-\% reach set from time 0 to 5
-rsObj = elltool.reach.ReachContinuous(sys, ell\_unitball(4), dirsMat,...
-    [0 5], 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
-basisMat = [1 0 0 1; 0 1 1 0].';  \% basis of 2-dimensional subspace
-
-\% project reach set rs onto basis basisMat
-psObj = rsObj.projection(basisMat);
-psObj.plotByEa();  \% plot external approximation
-hold on;
+aMat = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
+
+bMat = [0; 0; 0; 1];
+
+uBoundsEllObj = ellipsoid(1);
+
+\% 4-dimensional system
+
+sys = elltool.linsys.LinSysFactory.create(aMat, bMat, uBoundsEllObj);
+
+dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1].'; \% matrix of directions
+
+\% reach set from time 0 to 5
+
+rsObj = elltool.reach.ReachContinuous(sys, ell\_unitball(4), dirsMat,...
+
+    [0 5], 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
+
+basisMat = [1 0 0 1; 0 1 1 0].';  \% basis of 2-dimensional subspace
+
+
+
+\% project reach set rs onto basis basisMat
+
+psObj = rsObj.projection(basisMat);
+
+psObj.plotByEa();  \% plot external approximation
+
+hold on;
+
 psObj.plotByIa();  \% plot internal approximation
 \end{Verbatim}
 
@@ -4678,7 +4765,8 @@ Spring-mass system with disturbance:
 \PYG{n}{psObj} \PYG{p}{=} \PYG{n}{rsObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} reach set projection}
 \PYG{c}{\PYGZpc{} plot projection of reach set external approximation:}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}tube\PYGZus{}without\PYGZus{}disturbance\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}tube\PYGZus{}without\PYGZus{}disturbance\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} plot the whole reach tube:}
 \PYG{n}{psObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{c}{\PYGZpc{}psObj.plotByEa(\PYGZsq{}g\PYGZsq{});}
@@ -4687,7 +4775,8 @@ Spring-mass system with disturbance:
 \PYG{c}{\PYGZpc{} ReachContinuous\PYGZsq{}s cut() doesn\PYGZsq{}t work with projections:}
 \PYG{n}{psObj} \PYG{p}{=} \PYG{n}{psObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{p}{;}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}set\PYGZus{}without\PYGZus{}disturbance\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}set\PYGZus{}without\PYGZus{}disturbance\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} plot reach set approximation at time t = 4:}
 \PYG{n}{psObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary}
 \PYG{c}{\PYGZpc{}psObj.plotByEa(\PYGZsq{}g\PYGZsq{});}
@@ -4733,7 +4822,8 @@ closed-loop reach set of the system with disturbance.
 \PYG{n}{psdObj} \PYG{p}{=} \PYG{n}{rsdObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} reach set projection onto (x1, x2)}
 \PYG{c}{\PYGZpc{} plot projection of reach set external approximation:}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}tube\PYGZus{}with\PYGZus{}disturbance\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}tube\PYGZus{}with\PYGZus{}disturbance\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 
 \PYG{c}{\PYGZpc{} plot the whole reach tube:}
 \PYG{n}{psdObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
@@ -4742,7 +4832,8 @@ closed-loop reach set of the system with disturbance.
 \PYG{c}{\PYGZpc{} plot reach set approximation at time t = 4:}
 \PYG{n}{psdCutObj} \PYG{p}{=} \PYG{n}{psdObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{4}\PYG{p}{)}\PYG{p}{;}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}set\PYGZus{}with\PYGZus{}disturbance\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}set\PYGZus{}with\PYGZus{}disturbance\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{psdCutObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{c}{\PYGZpc{}psdCutObj.plotByEa();}
 \end{Verbatim}
@@ -4874,33 +4965,39 @@ say, $t=3$.
 
 \PYG{c}{\PYGZpc{} plot the results:}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj1\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj1\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{firstPsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{r\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} external apprx. of reach set 1 (red)}
 \PYG{c}{\PYGZpc{}firstPsObj.plotByEa(\PYGZsq{}r\PYGZsq{});}
 \PYG{n}{hold} \PYG{n}{on}\PYG{p}{;}
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj2\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj2\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{firstPsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} internal apprx. of reach set 1 (green)}
 \PYG{c}{\PYGZpc{}firstPsObj.plotByIa(\PYGZsq{}g\PYGZsq{});}
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj3\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj3\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{secPsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} external apprx. of reach set 2 (yellow)}
 \PYG{c}{\PYGZpc{}secPsObj.plotByEa(\PYGZsq{}y\PYGZsq{});}
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj4\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj4\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{secPsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{b\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} internal apprx. of reach set 2 (blue)}
 \PYG{c}{\PYGZpc{}secPsObj.plotByIa(\PYGZsq{}b\PYGZsq{});}
 
 \PYG{c}{\PYGZpc{} plot the 3\PYGZhy{}dimensional reach set at time t = 3:}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}3D\PYGZus{}1\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}3D\PYGZus{}1\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{secRsObj} \PYG{p}{=} \PYG{n}{secRsObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{secRsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{}secRsObj.plotByEa(\PYGZsq{}y\PYGZsq{});}
 \PYG{n}{hold} \PYG{n}{on}\PYG{p}{;}
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}3D\PYGZus{}2\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}forward\PYGZus{}reach\PYGZus{}set\PYGZus{}3D\PYGZus{}2\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{secRsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{b\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{}secRsObj.plotByIa(\PYGZsq{}b\PYGZsq{});}
@@ -4943,36 +5040,42 @@ the backward reach set from $t=3$ to $t=0$.
 
 \PYG{c}{\PYGZpc{} plot the results:}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj1\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj1\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{firstBpsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{r\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} external apprx. of backward reach set 1 (red)}
 \PYG{c}{\PYGZpc{} firstBpsObj.plotByEa(\PYGZsq{}r\PYGZsq{});}
 \PYG{n}{hold} \PYG{n}{on}\PYG{p}{;}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj2\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj2\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{firstBpsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} internal apprx. of backward reach set 1 (green)}
 \PYG{c}{\PYGZpc{} firstBpsObj.plotByIa(\PYGZsq{}g\PYGZsq{});}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj3\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj3\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{secBpsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{y\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} external apprx. of backward reach set 2 (yellow)}
 \PYG{c}{\PYGZpc{} secBpsObj.plotByEa(\PYGZsq{}y\PYGZsq{});}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj4\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}proj4\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{secBpsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{b\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;} \PYG{c}{\PYGZpc{} internal apprx. of backward reach set 2 (blue)}
 \PYG{c}{\PYGZpc{} secBpsObj.plotByIa(\PYGZsq{}b\PYGZsq{});}
 
 \PYG{c}{\PYGZpc{} plot the 3\PYGZhy{}dimensional backward reach set at time t = 0:}
 
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}3D\PYGZus{}1\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}3D\PYGZus{}1\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{firstBrsObj} \PYG{p}{=} \PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{plotByEa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{r\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} firstBrsObj.plotByEa(\PYGZsq{}r\PYGZsq{});}
 \PYG{n}{hold} \PYG{n}{on}\PYG{p}{;}
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}3D\PYGZus{}2\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}backward\PYGZus{}reach\PYGZus{}set\PYGZus{}3D\PYGZus{}2\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{plotByIa}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{g\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} firstBrsObj.plotByIa(\PYGZsq{}g\PYGZsq{});}
@@ -5239,7 +5342,8 @@ the guard.
 \PYG{n}{copyEllMat} \PYG{p}{=} \PYG{n}{externalEllMat}\PYG{p}{.}\PYG{n}{getCopy}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{basisMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
 \PYG{n}{ellObj} \PYG{p}{=} \PYG{n}{externalEllMat}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{)}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}before\PYGZus{}the\PYGZus{}guard\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}before\PYGZus{}the\PYGZus{}guard\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary }
 \PYG{n}{ellObj}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{newFigure\PYGZsq{}}\PYG{p}{,} \PYG{n}{true}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} ellObj.plot(\PYGZsq{}color\PYGZsq{}, [0 0 1], \PYGZsq{}newFigure\PYGZsq{}, true);}
@@ -5247,31 +5351,37 @@ the guard.
  \PYG{p}{[}\PYG{n}{hypVec}\PYG{p}{,} \PYG{n}{hypScal}\PYG{p}{]} \PYG{p}{=} \PYG{n}{grdHypObj}\PYG{p}{.}\PYG{n}{double}\PYG{p}{;}
 \PYG{n}{hyp} \PYG{p}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{n}{hypVec}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;} \PYG{n}{hypVec}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;} \PYG{n}{hypVec}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{]}\PYG{p}{,} \PYG{n}{hypScal}\PYG{p}{)}\PYG{p}{;}
 \PYG{p}{[}\PYG{n}{centVec}\PYG{p}{,} \PYG{o}{\PYGZti{}}\PYG{p}{]} \PYG{p}{=} \PYG{n}{double}\PYG{p}{(}\PYG{n}{ellObj}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{hyp}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{center\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{l+m+mi}{200} \PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{hyp}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{center\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{l+m+mi}{200} \PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{c}{...}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} hyp.plot(\PYGZsq{}center\PYGZsq{}, [centVec(1) 200 centVec(3)], \PYGZsq{}color\PYGZsq{}, [1 0 0]);}
 
 \PYG{n}{ellObj} \PYG{p}{=} \PYG{n}{externalEllMat}\PYG{p}{(}\PYG{l+m+mi}{50}\PYG{p}{)}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}crossing\PYGZus{}the\PYGZus{}guard\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}crossing\PYGZus{}the\PYGZus{}guard\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary}
 \PYG{n}{ellObj}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{newFigure\PYGZsq{}}\PYG{p}{,} \PYG{n}{true}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} ellObj.plot(\PYGZsq{}color\PYGZsq{}, [0 0 1], \PYGZsq{}newFigure\PYGZsq{}, true);}
 \PYG{n}{hold} \PYG{n}{on}
-\PYG{n}{hyp}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{center\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{l+m+mi}{200} \PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{hyp}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{center\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{l+m+mi}{200} \PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{c}{...}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} hyp.plot(\PYGZsq{}center\PYGZsq{}, [centVec(1) 200 centVec(3)], \PYGZsq{}color\PYGZsq{}, [1 0 0]);}
 
 \PYG{n}{ellObj} \PYG{p}{=} \PYG{n}{externalEllMat}\PYG{p}{(}\PYG{l+m+mi}{80}\PYG{p}{)}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}after\PYGZus{}the\PYGZus{}guard\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}after\PYGZus{}the\PYGZus{}guard\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary}
 \PYG{n}{ellObj}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{newFigure\PYGZsq{}}\PYG{p}{,} \PYG{n}{true}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} ellObj.plot(\PYGZsq{}color\PYGZsq{}, [0 0 1], \PYGZsq{}newFigure\PYGZsq{}, true);}
 \PYG{n}{hold} \PYG{n}{on}
-\PYG{n}{hyp}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{center\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{l+m+mi}{200} \PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{hyp}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{center\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{l+m+mi}{200} \PYG{n}{centVec}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{)}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{c}{...}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} hyp.plot(\PYGZsq{}center\PYGZsq{}, [centVec(1) 200 centVec(3)], \PYGZsq{}color\PYGZsq{}, [1 0 0]);}
 
 
 \PYG{n}{basisMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
 \PYG{n}{ellObjVec} \PYG{p}{=} \PYG{n}{copyEllMat}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{101}\PYG{p}{)}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,}\PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}all2D\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{figureGroupKeySuffFunc\PYGZsq{}}\PYG{p}{,} \PYG{c}{...}
+    \PYG{p}{@}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}\PYG{n}{sprintf}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZus{}all2D\PYGZpc{}d\PYGZsq{}}\PYG{p}{,}\PYG{n}{x}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} to have the use of plObj isn\PYGZsq{}t necessary}
 \PYG{k}{for} \PYG{n}{iElem} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{101}
 \PYG{n}{ellObjVec}\PYG{p}{(}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{fill\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}

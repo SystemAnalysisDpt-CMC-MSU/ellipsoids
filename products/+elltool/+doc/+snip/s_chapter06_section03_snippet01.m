@@ -30,33 +30,39 @@ secPsObj = secRsObj.projection(basisMat);
 
 % plot the results:
 
-plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_forward_reach_set_proj1%d',x));
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc', ...
+    @(x)sprintf('_forward_reach_set_proj1%d',x));
 % to have the use of plObj isn't necessary 
 firstPsObj.plotByEa('r', plObj);  % external apprx. of reach set 1 (red)
 %firstPsObj.plotByEa('r');
 hold on;
-plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_forward_reach_set_proj2%d',x));
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc', ...
+    @(x)sprintf('_forward_reach_set_proj2%d',x));
 % to have the use of plObj isn't necessary 
 firstPsObj.plotByIa('g', plObj);  % internal apprx. of reach set 1 (green)
 %firstPsObj.plotByIa('g');
-plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_forward_reach_set_proj3%d',x));
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc', ...
+    @(x)sprintf('_forward_reach_set_proj3%d',x));
 % to have the use of plObj isn't necessary 
 secPsObj.plotByEa('y', plObj);  % external apprx. of reach set 2 (yellow)
 %secPsObj.plotByEa('y');
-plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_forward_reach_set_proj4%d',x));
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc', ...
+    @(x)sprintf('_forward_reach_set_proj4%d',x));
 % to have the use of plObj isn't necessary 
 secPsObj.plotByIa('b', plObj);  % internal apprx. of reach set 2 (blue)
 %secPsObj.plotByIa('b');
 
 % plot the 3-dimensional reach set at time t = 3:
 
-plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_forward_reach_set_3D_1%d',x));
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc', ...
+    @(x)sprintf('_forward_reach_set_3D_1%d',x));
 % to have the use of plObj isn't necessary 
 secRsObj = secRsObj.cut(3);
 secRsObj.plotByEa('y', plObj);
 %secRsObj.plotByEa('y');
 hold on;
-plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_forward_reach_set_3D_2%d',x));
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc', ...
+    @(x)sprintf('_forward_reach_set_3D_2%d',x));
 % to have the use of plObj isn't necessary 
 secRsObj.plotByIa('b', plObj);
 %secRsObj.plotByIa('b');
