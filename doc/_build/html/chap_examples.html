@@ -198,7 +198,9 @@ Spring-mass system with disturbance:
 30
 31
 32
-33</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">k1</span> <span class="p">=</span> <span class="mi">24</span><span class="p">;</span>  <span class="n">k2</span> <span class="p">=</span> <span class="mi">32</span><span class="p">;</span>
+33
+34
+35</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">k1</span> <span class="p">=</span> <span class="mi">24</span><span class="p">;</span>  <span class="n">k2</span> <span class="p">=</span> <span class="mi">32</span><span class="p">;</span>
 <span class="n">m1</span> <span class="p">=</span> <span class="mf">1.5</span><span class="p">;</span> <span class="n">m2</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
 <span class="c">% define matrices aMat, bMat, and control bounds uBoundsEll:</span>
 <span class="n">aMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="o">-</span><span class="p">(</span><span class="n">k1</span><span class="o">+</span><span class="n">k2</span><span class="p">)</span><span class="o">/</span><span class="n">m1</span> <span class="n">k2</span><span class="o">/</span><span class="n">m1</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k2</span><span class="o">/</span><span class="n">m2</span> <span class="o">-</span><span class="p">(</span><span class="n">k1</span><span class="o">+</span><span class="n">k2</span><span class="p">)</span><span class="o">/</span><span class="n">m2</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
@@ -218,7 +220,8 @@ Spring-mass system with disturbance:
 <span class="n">psObj</span> <span class="p">=</span> <span class="n">rsObj</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">basisMat</span><span class="p">);</span>  <span class="c">% reach set projection</span>
 <span class="c">% plot projection of reach set external approximation:</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_tube_without_disturbance%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_tube_without_disturbance%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% plot the whole reach tube:</span>
 <span class="n">psObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span> <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="c">%psObj.plotByEa(&#39;g&#39;);</span>
@@ -227,7 +230,8 @@ Spring-mass system with disturbance:
 <span class="c">% ReachContinuous&#39;s cut() doesn&#39;t work with projections:</span>
 <span class="n">psObj</span> <span class="p">=</span> <span class="n">psObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_set_without_disturbance%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_set_without_disturbance%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% plot reach set approximation at time t = 4:</span>
 <span class="n">psObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span> <span class="c">% to have the use of plObj isn&#39;t necessary</span>
 <span class="c">%psObj.plotByEa(&#39;g&#39;);</span>
@@ -279,7 +283,9 @@ closed-loop reach set of the system with disturbance.</p>
 21
 22
 23
-24</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% define disturbance:</span>
+24
+25
+26</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% define disturbance:</span>
 <span class="n">gMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">];</span>
 <span class="n">vEllObj</span> <span class="p">=</span> <span class="mf">0.05</span><span class="o">*</span><span class="n">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 <span class="c">% linear system with disturbance</span>
@@ -291,7 +297,8 @@ closed-loop reach set of the system with disturbance.</p>
 <span class="n">psdObj</span> <span class="p">=</span> <span class="n">rsdObj</span><span class="p">.</span><span class="n">projection</span><span class="p">(</span><span class="n">basisMat</span><span class="p">);</span>  <span class="c">% reach set projection onto (x1, x2)</span>
 <span class="c">% plot projection of reach set external approximation:</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_tube_with_disturbance%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_tube_with_disturbance%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 
 <span class="c">% plot the whole reach tube:</span>
 <span class="n">psdObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="n">plObj</span><span class="p">);</span> <span class="c">% to have the use of plObj isn&#39;t necessary </span>
@@ -300,7 +307,8 @@ closed-loop reach set of the system with disturbance.</p>
 <span class="c">% plot reach set approximation at time t = 4:</span>
 <span class="n">psdCutObj</span> <span class="p">=</span> <span class="n">psdObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_set_with_disturbance%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_set_with_disturbance%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="n">psdCutObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="n">plObj</span><span class="p">);</span>  <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="c">%psdCutObj.plotByEa();</span>
 </pre></div>
@@ -447,7 +455,13 @@ say, <img class="math" src="_images/math/35c913cff7776ae19bed793a777bfc715759152
 59
 60
 61
-62</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% define system 1</span>
+62
+63
+64
+65
+66
+67
+68</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% define system 1</span>
 <span class="n">firstAMat</span> <span class="p">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span> <span class="mi">0</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">1</span><span class="o">/</span><span class="mi">7</span><span class="p">;</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">];</span>
 <span class="n">firstBMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">/</span><span class="mi">6</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
 <span class="n">firstUBoundsEllObj</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="nb">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
@@ -479,33 +493,39 @@ say, <img class="math" src="_images/math/35c913cff7776ae19bed793a777bfc715759152
 
 <span class="c">% plot the results:</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_proj1%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_proj1%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">firstPsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span>  <span class="c">% external apprx. of reach set 1 (red)</span>
 <span class="c">%firstPsObj.plotByEa(&#39;r&#39;);</span>
 <span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_proj2%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_proj2%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">firstPsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span>  <span class="c">% internal apprx. of reach set 1 (green)</span>
 <span class="c">%firstPsObj.plotByIa(&#39;g&#39;);</span>
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_proj3%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_proj3%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">secPsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span>  <span class="c">% external apprx. of reach set 2 (yellow)</span>
 <span class="c">%secPsObj.plotByEa(&#39;y&#39;);</span>
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_proj4%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_proj4%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">secPsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span>  <span class="c">% internal apprx. of reach set 2 (blue)</span>
 <span class="c">%secPsObj.plotByIa(&#39;b&#39;);</span>
 
 <span class="c">% plot the 3-dimensional reach set at time t = 3:</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_3D_1%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_3D_1%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">secRsObj</span> <span class="p">=</span> <span class="n">secRsObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 <span class="n">secRsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span>
 <span class="c">%secRsObj.plotByEa(&#39;y&#39;);</span>
 <span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_3D_2%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_forward_reach_set_3D_2%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">secRsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span>
 <span class="c">%secRsObj.plotByIa(&#39;b&#39;);</span>
@@ -575,7 +595,13 @@ the backward reach set from <img class="math" src="_images/math/35c913cff7776ae1
 46
 47
 48
-49</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">mEllObj</span>  <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="mf">0.01</span><span class="o">*</span><span class="nb">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>  <span class="c">% terminating set</span>
+49
+50
+51
+52
+53
+54
+55</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">mEllObj</span>  <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="mf">0.01</span><span class="o">*</span><span class="nb">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">));</span>  <span class="c">% terminating set</span>
 <span class="n">termTime</span> <span class="p">=</span> <span class="mi">3</span><span class="p">;</span>  <span class="c">% terminating time</span>
 
 <span class="c">% compute backward reach set:</span>
@@ -591,36 +617,42 @@ the backward reach set from <img class="math" src="_images/math/35c913cff7776ae1
 
 <span class="c">% plot the results:</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_proj1%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_proj1%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">firstBpsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span> <span class="c">% external apprx. of backward reach set 1 (red)</span>
 <span class="c">% firstBpsObj.plotByEa(&#39;r&#39;);</span>
 <span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_proj2%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_proj2%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">firstBpsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span> <span class="c">% internal apprx. of backward reach set 1 (green)</span>
 <span class="c">% firstBpsObj.plotByIa(&#39;g&#39;);</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_proj3%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_proj3%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">secBpsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span> <span class="c">% external apprx. of backward reach set 2 (yellow)</span>
 <span class="c">% secBpsObj.plotByEa(&#39;y&#39;);</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_proj4%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_proj4%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">secBpsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="s">&#39;b&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span> <span class="c">% internal apprx. of backward reach set 2 (blue)</span>
 <span class="c">% secBpsObj.plotByIa(&#39;b&#39;);</span>
 
 <span class="c">% plot the 3-dimensional backward reach set at time t = 0:</span>
 
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_3D_1%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_3D_1%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">firstBrsObj</span> <span class="p">=</span> <span class="n">firstBrsObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
 <span class="n">firstBrsObj</span><span class="p">.</span><span class="n">plotByEa</span><span class="p">(</span><span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span>
 <span class="c">% firstBrsObj.plotByEa(&#39;r&#39;);</span>
 <span class="n">hold</span> <span class="n">on</span><span class="p">;</span>
-<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_3D_2%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">(</span><span class="s">&#39;figureGroupKeySuffFunc&#39;</span><span class="p">,</span> <span class="c">...</span>
+    <span class="p">@(</span><span class="n">x</span><span class="p">)</span><span class="n">sprintf</span><span class="p">(</span><span class="s">&#39;_backward_reach_set_3D_2%d&#39;</span><span class="p">,</span><span class="n">x</span><span class="p">));</span>
 <span class="c">% to have the use of plObj isn&#39;t necessary </span>
 <span class="n">firstBrsObj</span><span class="p">.</span><span class="n">plotByIa</span><span class="p">(</span><span class="s">&#39;g&#39;</span><span class="p">,</span> <span class="n">plObj</span><span class="p">);</span>
 <span class="c">% firstBrsObj.plotByIa(&#39;g&#39;);</span>

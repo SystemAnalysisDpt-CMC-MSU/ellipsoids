@@ -10,7 +10,8 @@ rsdObj = elltool.reach.ReachContinuous(lsysd, x0EllObj, dirsMat,...
 psdObj = rsdObj.projection(basisMat);  % reach set projection onto (x1, x2)
 % plot projection of reach set external approximation:
 
-plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_tube_with_disturbance%d',x));
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc', ...
+    @(x)sprintf('_tube_with_disturbance%d',x));
 
 % plot the whole reach tube:
 psdObj.plotByEa(plObj); % to have the use of plObj isn't necessary 
@@ -19,6 +20,7 @@ psdObj.plotByEa(plObj); % to have the use of plObj isn't necessary
 % plot reach set approximation at time t = 4:
 psdCutObj = psdObj.cut(4);
 
-plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc',@(x)sprintf('_set_with_disturbance%d',x));
+plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc', ...
+    @(x)sprintf('_set_with_disturbance%d',x));
 psdCutObj.plotByEa(plObj);  % to have the use of plObj isn't necessary 
 %psdCutObj.plotByEa();
