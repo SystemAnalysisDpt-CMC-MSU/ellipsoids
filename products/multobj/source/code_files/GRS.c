@@ -1,10 +1,10 @@
 /*#define CH_LP_PC   approksimaciya po MPS-fajlu */
 /*#define CH_LPM     simpleks Malkova */
-/*#define CH_POINTS*/  
-#define CH_ELIPSE /*approksimaciya e'lipsoidov*/ 
+#define CH_POINTS  
+/*#define CH_ELIPSE /*approksimaciya e'lipsoidov*/ 
 
 #include "StdAfx.h"
-//#include <mex.h>
+#include <mex.h>
 
 
 #ifdef CH_ELIPSE
@@ -38,7 +38,7 @@
 
 
 int add_top;
-void read_par (float *);
+void read_par (double*);
 
 
 #ifdef CH_LPM
@@ -54,7 +54,7 @@ void wait (void)
  {////clreol ();
   //gotoxy (10, 15);
   //textcolor (12);
-  printf ("Nazhmite lyubuyu klavishu . . .\n");
+  mexPrintf ("Nazhmite lyubuyu klavishu . . .\n");
   //getch ();
  }    /* wait */
 
@@ -71,7 +71,7 @@ int Nfunc;    /* nomer stroki celevoj funkcii */
   while (i < imatr [0])
    {if ( ! im)
      {if (Nc != ch_N)
-       {printf ("Ne nashli stroku %8d v stolbce %8d",
+       {mexPrintf ("Ne nashli stroku %8d v stolbce %8d",
 		Nfunc, Ncol);
 return (-7);
        }
@@ -93,7 +93,7 @@ return (-7);
     im = imatr [++i];
    }
   if (done != ch_N)
-   {printf ("Ne vse stolbcy najdeny");
+   {mexPrintf ("Ne vse stolbcy najdeny");
 return (-7);
    }
 return (0);
@@ -102,11 +102,11 @@ return (0);
 int objfun (float*, int*, int);
 #endif
 
-void in_read (int size,int* indProjVec,int* improveDirectVec) //read not from file now
+void in_read (int size,double* indProjVec,double* improveDirectVec) //read not from file now
  {int i;
 
   //clrscr ();
-  printf ("Podozhdite, idet schityvanie\n");
+  mexPrintf ("Podozhdite, idet schityvanie\n");
   //gotoxy (1, 1);
   IOstatus = ch_read_dat(size, indProjVec, improveDirectVec,&objnums);
   if (IOstatus > 0)
@@ -118,7 +118,7 @@ void in_read (int size,int* indProjVec,int* improveDirectVec) //read not from fi
    }
   if (IOstatus <= 0)
    {////clreol ();
-    printf ("\n%s\n", ch_inform (IOstatus));
+    mexPrintf ("\n%s\n", ch_inform (IOstatus));
     stage = 0;
     ch_free_mem ();
     //wait ();
@@ -135,24 +135,24 @@ void in_read (int size,int* indProjVec,int* improveDirectVec) //read not from fi
   }
  }    /* in_read */
 
-void out_write (float*** Amat,float** bVec,float*** vertMat,float** discrVec)
+void out_write (double* Amat,double* bVec,double* discrVec,double* vertMat,double* size_arr)
  {//clrscr ();
 	 
-	 printf("%d", stage);
+	 mexPrintf("%d", stage);
   if (stage == 2)
-   {printf ("Podozhdite, idet zapis'\n");
+   {mexPrintf ("Podozhdite, idet zapis'\n");
     //gotoxy (1, 1);
-    if (ch_write_dat (Amat,bVec,vertMat,discrVec) < 0) wait();
+    if (ch_write_dat (Amat,bVec,discrVec,vertMat, size_arr) < 0) wait();
    
   }
   else
-   {printf ("Nechego zapisyvat' !\n");
+   {mexPrintf ("Nechego zapisyvat' !\n");
     wait ();
    }
  }    /* out_write */
 
 
-void conv_go (float* semiaxes,int num, float* vert /* for convex hull*/)
+void conv_go (double* semiaxes,int num, double* vert /* for convex hull*/)
  {int i, new_dat;
   static int dat_is_read;
 #ifdef CH_LP_PC
@@ -170,7 +170,7 @@ void conv_go (float* semiaxes,int num, float* vert /* for convex hull*/)
   int j, jmax;
   double sum;
   float max;
-  static float *coef;
+  static double *coef;
   static int numnum;
 #endif
 
@@ -182,7 +182,7 @@ void conv_go (float* semiaxes,int num, float* vert /* for convex hull*/)
 #endif
 #endif
   double d;
-  static float *axes;
+  static double *axes;
 #endif
 
 #ifdef CH_TIME
@@ -194,7 +194,7 @@ void conv_go (float* semiaxes,int num, float* vert /* for convex hull*/)
   //clrscr ();
 //  new_dat = strcmp (model_name, old_name);
   if(stage == 0 || stage == 2 )
-   {printf ("Net dannyx. Osuwestvite chtenie.");
+   {mexPrintf ("Net dannyx. Osuwestvite chtenie.");
     wait ();
 return;
    }
@@ -215,7 +215,7 @@ return;
      }
     if( ! dat_is_read)
 #endif
-     {printf ("Podozhdite, idet schityvanie\n");
+     {mexPrintf ("Podozhdite, idet schityvanie\n");
       //gotoxy (1, 1);
 
 	wait ();
@@ -225,7 +225,7 @@ return;
       if ( ! lp_fromps (model_name, "rhs", "ran", "boun", "obj",
 		64, &Ncon, &Nvar, &Nfunc))
        {//clreol ();
-	printf ("\nOshibka pri vvode MPS");
+	mexPrintf ("\nOshibka pri vvode MPS");
 	wait ();
 return;
        }
@@ -236,8 +236,8 @@ return;
 		&Nvar0, 0, 0, 0);
       if (IOlpm < 0)
        {//clreol ();
-	printf ("\n%s\n", lpm_inform (IOlpm));
-	printf ("Oshibka pri vvode dannyx");
+	mexPrintf ("\n%s\n", lpm_inform (IOlpm));
+	mexPrintf ("Oshibka pri vvode dannyx");
 	wait ();
 return;
        }
@@ -245,18 +245,18 @@ return;
 #ifdef CH_POINTS
       //fscanf (datstream, "%d", &numnum);
 	  numnum=num;//count of points
-      coef = (float*) realloc (coef, numnum * sizeof (float));
+      coef = (double*) realloc (coef, numnum * sizeof (double));
       if (coef == NULL)
-       {printf ("Malo pamyati");
+       {mexPrintf ("Malo pamyati");
 	wait ();
 return;
        }
      coef=vert;// tops
 #endif
 #ifdef CH_ELIPSE
-      axes = (float*) realloc (axes, ch_N * sizeof (float));
+      axes = (double*) realloc (axes, ch_N * sizeof (double));
       if (axes == NULL)
-       {printf ("Malo pamyati\n");
+       {mexPrintf ("Malo pamyati\n");
 	wait ();
 return;
        }
@@ -278,7 +278,7 @@ return;
   else if (IOstatus == 0)
 	{if (ch_PRNT > 0) ch_inf_print (0);
 	}
-       else printf ("Prodolzhenie scheta nevozmozhno :\n");
+       else mexPrintf ("Prodolzhenie scheta nevozmozhno :\n");
 //#endif	   
 #ifdef CH_ELIPSE
 #ifdef CH_VOLUMES
@@ -292,7 +292,7 @@ return;
     j = ! j;
     d *= (j) ? pi : 2. / i;
    }
-  printf ("%f", d);
+  mexPrintf ("%f", d);
  // gotoxy (31, y);
 #endif
 #endif
@@ -338,7 +338,7 @@ return;
      }
 #endif
     if (IOlpm < 0)
-     {printf ("%s\n", lpm_inform (IOlpm));
+     {mexPrintf ("%s\n", lpm_inform (IOlpm));
       IOstatus = -7;
   break;
      }
@@ -367,7 +367,7 @@ return;
     m = m - h * 60;
     y1 = wherey ();
    // gotoxy (60, y1);
-    printf ("%2d h %2d m %2.0f s", h, m, s);
+    mexPrintf ("%2d h %2d m %2.0f s", h, m, s);
 #endif
     IOstatus = ch_primal (c, x, IOstatus);
 #ifdef CH_SOUND
@@ -384,9 +384,9 @@ return;
   nosound ();
 #endif
   //textcolor (2);
-  printf ("\n\r");
+  mexPrintf ("\n\r");
   //clreol ();
-  printf ("%s\n\r", ch_inform (IOstatus ? IOstatus : -7));
+  mexPrintf ("%s\n\r", ch_inform (IOstatus ? IOstatus : -7));
   //clreol ();
   if (IOstatus < 0 && IOstatus >= -4 ||
       IOstatus == -7 ) IOstatus=2;
@@ -394,78 +394,42 @@ return;
   // add_top = 32 - ch_topCOUNT % 32;
  // textcolor (12);
   while (kbhit ()) getch ();
-  printf ("Nazhmite lyubuyu klavishu . . .\n");
+  mexPrintf ("Nazhmite lyubuyu klavishu . . .\n");
   getch ();
  }    /* conv_go */
 
-void calcEllipsoidApprox(int size,int* indProjVec,int* improveDirectVec,float* centervec, float* semiaxes,float** Amat,float* bVec,float** vertMat,float* discrVec, float* controlParams){ 
- //main function for which mex-file will be written 
-    
-    read_par (controlParams);	
-    in_read (size,indProjVec, improveDirectVec);
-    conv_go(semiaxes,0,NULL);
-    out_write(Amat,bVec,vertMat,discrVec);
-   }
+//void calcEllipsoidApprox(int size,double* indProjVec,double* improveDirectVec,double* centervec, double* semiaxes,double* Amat,double* bVec,double* vertMat,double* discrVec, double* controlParams){ 
+// //main function for which mex-file will be written 
+//    read_par (controlParams);
+//    in_read (size,indProjVec, improveDirectVec);
+//    conv_go(semiaxes,0,NULL);
+//    out_write(Amat,bVec,vertMat,discrVec);
+//   }
+//
+//
+//void calcConvexHull(int size,double* indProjVec,double* improveDirectVec,int num_points,double* points,double* Amat,double* bVec,double* vertMat,double* discrVec, double* controlParams){ 
+// //main function for which mex-file will be written 
+//    
+//    read_par (controlParams);
+//	
+//    in_read (size,indProjVec, improveDirectVec);
+//    conv_go(NULL,num_points,points);
+//    out_write(Amat,bVec,vertMat,discrVec);
+//   }
+//
+//void calcPolytopeApprox(int size,double* indProjVec,double* improveDirectVec,double ** inEqPolyMat, double ** eqPolyMat,double * inEqPolyVec,double * eqPolyVec, double* Amat,double* bVec,double* vertMat,double* discrVec, double* controlParams){ 
+// //main function for which mex-file will be written 
+//    
+//    read_par (controlParams);	
+//    in_read (size,indProjVec, improveDirectVec);
+//    conv_go(NULL,0,NULL);
+//    out_write(Amat,bVec,vertMat,discrVec);
+//   }
 
 
-void calcConvexHull(int size,int* indProjVec,int* improveDirectVec,int num_points,float* points,float** Amat,float* bVec,float** vertMat,float* discrVec, float* controlParams){ 
- //main function for which mex-file will be written 
-    
-    read_par (controlParams);	
-    in_read (size,indProjVec, improveDirectVec);
-    conv_go(NULL,num_points,points);
-    out_write(Amat,bVec,vertMat,discrVec);
-   }
-
-void calcPolytopeApprox(int size,int* indProjVec,int* improveDirectVec,float ** inEqPolyMat, float ** eqPolyMat,float * inEqPolyVec,float * eqPolyVec, float** Amat,float* bVec,float** vertMat,float* discrVec, float* controlParams){ 
- //main function for which mex-file will be written 
-    
-    read_par (controlParams);	
-    in_read (size,indProjVec, improveDirectVec);
-    conv_go(NULL,0,NULL);
-    out_write(Amat,bVec,vertMat,discrVec);
-   }
-
-/*void mexFunction(int nlhs,mxArray *plhs[],
-
-int nrhs,const mxArray *prhs[])
-
-{ //mex-function for ellipsoid's approx
-	int size,i ;
-	int *indProjVec,*improveDirectVec;
-	float *centervec,*semiaxes,*controlParams,*bVec,*discrVec;
-	float **Amat,**vertMat;
-
-
-	if (nrhs !=6) { 
-		mexErrMsgTxt("Six input arguments are nedeed.");
-	}
-
-	else if (nlhs !=4) { 
-		mexErrMsgTxt("Four input arguments are nedeed.");
-		}
-	    size = mxGetScalar(prhs[0]);
-		indProjVec=mxGetPr(prhs[1]);
-		improveDirectVec= mxGetPr(prhs[2]);
-		centervec= mxGetPr(prhs[3]);
-		semiaxes= mxGetPr(prhs[4]);
-		controlParams= mxGetPr(prhs[5]);
-		plhs[1] = mxCreateDoubleMatrix(1, 256, mxREAL);
-		plhs[3] = mxCreateDoubleMatrix(1, 256, mxREAL);
-		plhs[0] = mxCreateDoubleMatrix(size, 256, mxREAL);
-		plhs[2] = mxCreateDoubleMatrix(size, 256, mxREAL);
-	    for(i=0;i<size;i++)
-		    Amat[i]=(float*)(mxGetPr(plhs[0])+i*256);
-		bVec=(float *)mxGetPr(plhs[1]);
-		for(i=0;i<size;i++)
-		    vertMat[i]=(float*)mxGetPr(plhs[2]);
-		discrVec=(float*)(mxGetPr(plhs[3])+i*256);
-		calcEllipsoidApprox(size,indProjVec, improveDirectVec, centervec, semiaxes, Amat, bVec, vertMat, discrVec, controlParams);
- }*/
-
-int main(void){
-	//for compilation while there is no mex-files
-	
+/*int main(void){
+//	//for compilation while there is no mex-files
+//	
 	int i;
     float* centervec;
 	float* semiaxes;
@@ -473,7 +437,7 @@ int main(void){
 	//output params
 	int j;
 	int*p=NULL;
-	int*q=NULL;
+    int*q=NULL;
     float** Amat=(float**)malloc(size*sizeof(float*));
     float ** vertMat=(float**)malloc(size*sizeof(float*));
 	float* bVec=(float*)malloc(256*sizeof(float));
@@ -491,4 +455,4 @@ int main(void){
 	 
     calcEllipsoidApprox(size,p,q,centervec,semiaxes, Amat, bVec,vertMat, discrVec,controlParams);
 return 0;
-}
+}*/

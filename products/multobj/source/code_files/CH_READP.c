@@ -92,23 +92,23 @@ struct
 
 
 
-void read_par (float * controlParams)
+void read_par (double * controlParams)
 
  {
   
-	 add_top = controlParams[0];
-     ch_EPSset = controlParams[1];
+	 add_top =(float) controlParams[0];
+     ch_EPSset =(float) controlParams[1];
 	 ch_RCHECK =(int) controlParams[2];
 	 ch_RFREE =(int) controlParams[3];
 	 ch_INCHECK =(int) controlParams[4];
 	 ch_RHYPER =(int) controlParams[5];
-	 ch_EPSdif = controlParams[6];
-	 ch_EPSin = controlParams[7];
-	 ch_EPSest = controlParams[8];
-	 ch_EPScheck = controlParams[9];
-	 ch_EPSrel = controlParams[10];
-	 ch_INF=controlParams[11];
-	 ch_PRNT=controlParams[12];
+	 ch_EPSdif =(float) controlParams[6];
+	 ch_EPSin = (float)controlParams[7];
+	 ch_EPSest = (float)controlParams[8];
+	 ch_EPScheck =(float) controlParams[9];
+	 ch_EPSrel = (float)controlParams[10];
+	 ch_INF=(float)controlParams[11];
+	 ch_PRNT=(float)controlParams[12];
 
 	 
  }  /* read_par */
