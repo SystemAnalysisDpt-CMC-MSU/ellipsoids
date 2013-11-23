@@ -191,13 +191,6 @@ void conv_go (double* semiaxes,int num, double* vert /* for convex hull*/)
   time_t t0, t;
 #endif
 
-  //clrscr ();
-//  new_dat = strcmp (model_name, old_name);
-  if(stage == 0 || stage == 2 )
-   {mexPrintf ("Net dannyx. Osuwestvite chtenie.");
-    wait ();
-return;
-   }
 
   //ch_max_topCOUNT = ch_topCOUNT + add_top;
   if (stage == 1)
@@ -244,10 +237,10 @@ return;
 #endif
 #ifdef CH_POINTS
       //fscanf (datstream, "%d", &numnum);
-	  numnum=num;//count of points
+	  numnum=(int)num;//count of points
       coef = (double*) realloc (coef, numnum * sizeof (double));
       if (coef == NULL)
-       {mexPrintf ("Malo pamyati");
+       {mexPrintf ("Malo pamyati_key");
 	wait ();
 return;
        }

@@ -44,17 +44,19 @@ if(nPropExpected > 0)
 else
     controlParams=[32 1.e-3 1.0 0.0 1.0 0.0 .9e-5 1.e-4 1.e-5 1.e-4 1.e-5 1.e6 1];
 end
-size = numel(centerVec);
+dim = size(polyMat,2);
 indProjVec=[];
 improveDirectVec=[];
-polyMat=reshape(polyMat,1,size(polyMat,1)*size);
+polyMat=polyMat';
+polyMat=polyMat(:);
+polyMat=polyMat';
 num=numel(polyMat);
-[approxMat,approxVec,discrepVec,vertMat]=ConvexHull(size,indProjVec,improveDirectVec,num,polyMat,controlParams);
-approxMat=approxMat(1:sizeMat(1));
-approxVec=approxVec(1:sizeMat(2));
+[convexMat,convexVec,discrepVec,vertMat,sizeMat]=ConvexHull(dim,indProjVec,improveDirectVec,num,polyMat,controlParams);
+convexMat=convexMat(1:sizeMat(1));
+convexVec=convexVec(1:sizeMat(2));
 discrepVec=discrepVec(1:sizeMat(3));
 vertMat=vertMat(1:sizeMat(4));
-approxMat=reshape(approxMat,numel(approxMat)/size,size);
-approxVec=(approxVec)';
-vertMat=reshape(vertMat,numel(vertMat)/size,size);
+convexMat=reshape(convexMat,numel(convexMat)/dim,dim);
+convexVec=(convexVec)';
+vertMat=reshape(vertMat,numel(vertMat)/dim,dim);
 end
