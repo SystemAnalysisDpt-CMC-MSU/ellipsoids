@@ -8,7 +8,12 @@ classdef AMatrixUnaryOpArrayFunc<gras.mat.AMatrixOpFunc
             %
             lArray = self.lMatFunc.evaluate(timeVec);
             %
-            resArray = self.opFuncHandle(lArray);
+            if(strcmp(func2str(self.opFuncHandle),...
+                    '@(lArray,n3Dim)reshape(lArray,[newSizeVec,n3Dim])'))
+                resArray = self.opFuncHandle(lArray,length(timeVec));
+            else
+                resArray = self.opFuncHandle(lArray);
+            end;
         end
     end
     methods

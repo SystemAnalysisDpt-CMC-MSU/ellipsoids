@@ -11,7 +11,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             import gras.ellapx.lreachplain.ATightEllApxBuilder;
             import gras.ellapx.common.*;
             import gras.gen.SquareMatVector;
-            import gras.ode.MatrixODESolver;
+            import gras.ode.MatrixSysODERegInterpSolver;
             import modgen.logging.log4j.Log4jConfigurator;
             logger=Log4jConfigurator.getLogger();
             ODE_NORM_CONTROL='on';
@@ -20,11 +20,16 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 'AbsTol',self.getAbsODECalcPrecision()};
             %
             sysDim=self.getProblemDef.getDimensionality();
-            solverObj=MatrixODESolver([sysDim,sysDim],@ode45,...
-                odeArgList{:});
+%             solverObj=MatrixODESolver([sysDim,sysDim],@ode45,...
+%                 odeArgList{:});
+            
+            solverObj=MatrixSysODERegInterpSolver({[sysDim,sysDim]},...
+                @(varargin)gras.ode.ode45reg(varargin{:},...
+                odeset(odeArgList{:})),'outArgStartIndVec',[1 2]);            
             %
             nLDirs=self.getNGoodDirs;
             %
+            
             lsGoodDirMat=self.getGoodDirSet().getlsGoodDirMat;
             sTime=self.getGoodDirSet().getsTime();
             %
@@ -41,6 +46,15 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 isFirstPointToRemove=false;
             end
             QArrayList=cell(1,nLDirs);
+            interpObjList=cell(1,nLDirs);
+            
+            function varargout=fAdvRegFunc(~,varargin)
+                    nEqs=length(varargin);
+                    varargout{1}=false;
+                    for iEq=1:nEqs
+                        varargout{iEq+1} = varargin{iEq};
+                    end
+            end
             %% Calculating internal approximation
             for l=1:1:nLDirs
                 tStart=tic;
@@ -51,23 +65,27 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 fHandle=self.getEllApxMatrixDerivFunc(l);
                 initValueMat=self.getEllApxMatrixInitValue(l);
                 %
-                [~,data_Q_star]=solverObj.solve(fHandle,...
-                    solveTimeVec,initValueMat);
+                [~,data_Q_star,~,interpObj]=solverObj.solve(...
+                    {fHandle,@fAdvRegFunc},solveTimeVec,initValueMat);
+                interpObj = gras.ode.MatrixODE45InterpFunc(interpObj);
                 if isFirstPointToRemove
                     data_Q_star(:,:,1)=[];
                 end
                 %
                 QArrayList{l}=self.adjustEllApxMatrixVec(data_Q_star);
+                interpObjList{l}=interpObj;
                 logger.debug(sprintf([logStr,':done, %.3f sec. elapsed'],...
                     toc(tStart)));
             end
             %
-            aMat=pDefObj.getxtDynamics.evaluate(resTimeVec);
+            aMatInterpObj = pDefObj.getxtDynamics();
+            aMat=aMatInterpObj.evaluate(resTimeVec);
             %
             [apxSchemaName,apxSchemaDescr]=self.getApxSchemaNameAndDescr();
             apxType=self.getApxType();
             %
             goodDirSetObj=self.getGoodDirSet();
+            ltGoodDirInterpObj = goodDirSetObj.getRGoodDirCurveInterpObj();
             sTime=goodDirSetObj.getsTime();
             ltGoodDirArray=goodDirSetObj.getRGoodDirCurveSpline(...
                 ).evaluate(resTimeVec);

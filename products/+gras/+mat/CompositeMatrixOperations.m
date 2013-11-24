@@ -66,11 +66,13 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
                 obj=gras.mat.fcnlib.MatrixDotFunc(lMatFunc,rMatFunc);
             end
         end 
-        % cat
-        function obj=cat(self,lMatFunc,rMatFunc,dimCat)
-            obj=cat@gras.mat.AMatrixOperations(self,lMatFunc,rMatFunc);
+        % catDiffTimeVec
+        function obj=catDiffTimeVec(self,lMatFunc,rMatFunc,dimCat,...
+                timePartition,timePartitionRight)
+            obj=catDiffTimeVec@gras.mat.AMatrixOperations(self,lMatFunc,rMatFunc);
             if isempty(obj)
-                obj=gras.mat.fcnlib.MatrixCatFunc(lMatFunc,rMatFunc,dimCat);
+                obj=gras.mat.fcnlib.MatrixCatDiffTimeVecFunc(lMatFunc,...
+                    rMatFunc,dimCat,timePartition,timePartitionRight);
             end
         end
         % flipdim

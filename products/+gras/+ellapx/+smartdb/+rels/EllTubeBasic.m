@@ -6,6 +6,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         FCODE_A_MAT
         FCODE_SCALE_FACTOR
         FCODE_M_ARRAY
+        FCODE_TUBE_Q_ARRAY_INTERP_OBJ
+        FCODE_TUBE_A_MAT_INTERP_OBJ
+        FCODE_TUBE_GOOD_DIR_INTERP_OBJ
     end
     methods
         function fieldsList = getNoCatOrCutFieldsList(~)
@@ -203,7 +206,9 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         end
         function STubeData=fromQArraysInternal(QArrayList,aMat,...
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
-                approxSchemaName,approxSchemaDescr,calcPrecision,scaleFactorVec)
+                approxSchemaName,approxSchemaDescr,calcPrecision,...
+                scaleFactorVec,QArrayInterpObjList,aMatInterpObj,...
+                ltGoodDirInterObj)
             %
             % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $
             % $Copyright: Moscow State University,
@@ -229,6 +234,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData.aMat=repmat({aMat},nLDirs,1);
             %
             STubeData.MArray=MArrayList.';
+            %
+            STubeData.QArrayInterpObjList = QArrayInterpObjList.';
+            STubeData.aMatInterpObj = repmat({aMatInterpObj},nLDirs,1);
+            STubeData.ltGoodDirInterObj = repmat({ltGoodDirInterObj},...
+                nLDirs,1);      
             %
             STubeData.dim=repmat(size(aMat,1),nLDirs,1);
             %

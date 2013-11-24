@@ -1,9 +1,8 @@
 classdef MatrixReshapeFunc<gras.mat.AMatrixUnaryOpArrayFunc
     methods
         function self=MatrixReshapeFunc(lMatFunc,newSizeVec)
-            %
             self=self@gras.mat.AMatrixUnaryOpArrayFunc(lMatFunc,...
-                @(lArray)reshape(lArray,newSizeVec));
+                @(lArray,n3Dim)reshape(lArray,[newSizeVec n3Dim]));
             %
             self.nRows = newSizeVec(1);
             self.nCols = newSizeVec(2);
