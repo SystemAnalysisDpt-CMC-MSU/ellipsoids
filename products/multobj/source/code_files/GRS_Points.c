@@ -1,7 +1,7 @@
 /*#define CH_LP_PC   approksimaciya po MPS-fajlu */
 /*#define CH_LPM     simpleks Malkova */
-/*#define CH_POINTS*/
-#define CH_ELIPSE /*approksimaciya e'lipsoidov*/ 
+#define CH_POINTS
+/*#define CH_ELIPSE /*approksimaciya e'lipsoidov*/ 
 
 #include "StdAfx.h"
 #include <mex.h>

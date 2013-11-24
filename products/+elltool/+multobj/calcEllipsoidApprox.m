@@ -46,7 +46,7 @@ end
 size = numel(centerVec);
 indProjVec=[];
 improveDirectVec=[];
-[approxMat,approxVec,discrepVec,vertMat,sizeMat]=EllipsoidApprox(size,indProjVec,improveDirectVec,centerVec,semiaxesVec,controlParams);
+[approxMat,approxVec,discrepVec,vertMat,sizeMat]=mexellipsoidapprox(size,indProjVec,improveDirectVec,centerVec,semiaxesVec,controlParams);
 approxMat=approxMat(1:sizeMat(1));
 approxVec=approxVec(1:sizeMat(2));
 discrepVec=discrepVec(1:sizeMat(3));
