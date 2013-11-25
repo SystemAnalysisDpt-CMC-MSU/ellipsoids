@@ -109,7 +109,8 @@ classdef EllTubeTouchCurveBasic<handle
             import gras.gen.SquareMatVector;
             import modgen.common.num2cell;
             TS_CHECK_TOL=1e-14;
-            calcPrecList=num2cell(self.calcPrecision);
+            %calcPrecList=num2cell(self.calcPrecision);
+            calcPrecList=num2cell(self.absTol);
             %
             [valueFieldNameList,touchFieldNameList]=...
                 self.getPossibleNanFieldList();
@@ -146,8 +147,15 @@ classdef EllTubeTouchCurveBasic<handle
                     'contain values higher than calcPrecision']);
             end
             %% Check that lsGoodDirNorm >=calcPrecision
-            if ~(all(self.lsGoodDirNorm(self.isLsTouch)>...
-                    self.calcPrecision(self.isLsTouch))&&...
+%             if ~(all(self.lsGoodDirNorm(self.isLsTouch)>...
+%                     self.calcPrecision(self.isLsTouch))&&...
+%                     all(self.lsGoodDirNorm(~self.isLsTouch)>=0))
+%                 throwerror('wrongInput',...
+%                     ['lsGoodDirNorm is expected to ',...
+%                     'be higher than calcPrecision']);
+%             end
+             if ~(all(self.lsGoodDirNorm(self.isLsTouch)>...
+                    self.absTol(self.isLsTouch))&&...
                     all(self.lsGoodDirNorm(~self.isLsTouch)>=0))
                 throwerror('wrongInput',...
                     ['lsGoodDirNorm is expected to ',...
@@ -222,7 +230,7 @@ classdef EllTubeTouchCurveBasic<handle
                     valList=rel.(fieldName);
                     for iTuple=1:nTuples
                         nVals=length(valList{iTuple});
-                        tolVec=rel.calcPrecision{iTuple};
+                        tolVec=rel.absTol{iTuple};
                         if nVals>0
                             valSizeVec=size(valList{iTuple}{1});
                             for iVal=2:nVals
