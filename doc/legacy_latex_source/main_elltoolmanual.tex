@@ -1,0 +1,170 @@
+\documentclass{report}
+\usepackage{config}
+\oddsidemargin 0.25in
+\evensidemargin 0.25in
+\textheight 8.5in
+\textwidth 6.0in
+\parskip 0.0675in
+\parindent 0.0in
+\hfuzz=300pt
+
+\fontfamily{pcr}
+\makeatletter
+\@addtoreset{equation}{section}
+\renewcommand{\theequation}{\arabic{chapter}.\arabic{section}.\arabic{equation}}
+\makeatother
+\tolerance = 5000
+\hbadness = 5000
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{\bigskipamount}
+
+\title{
+\easyfigure[ht][0.7\textwidth]{logo.eps}{}{}
+ELLIPSOIDAL TOOLBOX%\thanks{Research supported by NSF Grant CCR-00225610.}
+\\
+%Manual DRAFT\\
+\normalsize{ver. 2.0 beta 1}
+\author{Peter Gagarinov, Alex A. Kurzhanskiy,}
+\date{2013}
+}
+%%Path to figures
+\graphicspath{{./pic/}}
+
+\renewcommand{\includegraphics}[2][]{%
+    \fbox{#2}% print file name in a small box
+}
+
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}\label{ch_intro}
+\input{chap_intro}
+
+\chapter{Ellipsoidal Calculus}\label{ch_ellcalc}
+\input{chap_ellcalc}
+
+\chapter{Reachability}\label{ch_reachability}
+\input{chap_reachability}
+
+\chapter{Installation}\label{ch_install}
+\input{chap_install}
+
+\chapter{Implementation}\label{ch_implementation}
+\todo[inline]{Merged this section with section objects}
+\input{chap_implementation}
+
+\chapter{Examples}\label{ch_examples}
+\input{chap_examples}
+
+\chapter{Summary and Outlook}\label{ch_summary}
+\input{chap_summary}
+
+\chapter*{Acknowledgement}
+\addcontentsline{toc}{chapter}{Acknowledgement}
+The authors would like to thank Alexander B. Kurzhanski,
+Manfred Morari, Johan L{\"o}fberg, Michal Kvasnica and Goran Frehse
+for their support of this work by useful advice and encouragement.
+
+
+\addcontentsline{toc}{chapter}{Bibliography}
+\begin{thebibliography}{99}
+\bibitem{TOOLBOX_HOMEPAGE}
+1
+\bibitem{KURZHANSKI_VALYI_ELLIPSOIDAL_CALCULUS_FOR_ESTINATION_AND_CONTROL}
+2
+\bibitem{KURZHANSKI_VARAIYA_ON_ELLIPSOIDAL_TECHNIQUES_FOR_REACHABILITY_ANALYSIS}
+3
+\bibitem{KURZHANSKI_VARAIYA_ON_REACHABILITY_UNDER_UNCERTAINTY}
+4
+\bibitem{KURZHANSKI_VARAIYA_REACHABILITY_ANALYSIS_FOR_UNCERTAIN_SYSTEMS}
+5
+\bibitem{KURZHANSKI_VARAIYA_ELLIPSOIDAL_TECHNIQUES_FOR_REACHABILITY_ANALISYS_OF_DISCRETE_TIME_SYSTEMS}
+6
+\bibitem{VARAIYA_REACH_SET_COMPUTATION}
+7
+\bibitem{VARAIYA_LECTURE_NOTES_ON_OPTIMIZATION}
+8
+\bibitem{VASHENTSEV_ON_INTERNAL_ELLIPSOIDAL_APPROXIMATION_FOR_PROBLEN_OF_CONTROL_AND_SYNTHESIS}
+9
+\bibitem{ROS_SABATER_THOMAS_EN_ELLIPSOIDAL_CALCULUS_BASED_ON_PROPAGATION_AND_FUSION}
+10
+\bibitem{ROBUST_ELLIPSOIDAL_CALCULUS_HOMEPAGE}
+11
+\bibitem{KVASNICA_GRIEDER_BAOTIC_MORARI_HYBRID_SYSTEMS_COMPUTATION_AND_CONTROL}
+12
+\bibitem{MULTI_PARAMETRIC_TOOLBOX_HOMEPAGE}
+13
+\bibitem{CVX_HOMEPAGE}
+14
+\bibitem{STURM_USING_SEDUMI}
+15
+\bibitem{SEDUMI_HOMEPAGE}
+16
+\bibitem{MITCHELL_TOMLIN_LEVEL_SET_METHODS_FOR_COMPUTATION_IN_HYBRID_SYSTEMS}
+17
+\bibitem{LEVEL_SET_TOOLBOX_HOMEPAGE}
+18
+\bibitem{STURSBERG_KROGH_EFFICIENT_REPRESENTATION_AND_COMPUTATION_OF_REACH_SETS_FOR_HYBRID_SYSTEMS}
+19
+\bibitem{CHECKMATE_HOMEPAGE}
+20
+\bibitem{ASARIN_BOURNEZ_DANG_MALER_APPROXIMATE_ANALYSIS_OF_PIECEWISE_LINEAR_SYSTEMS}
+21
+\bibitem{DDT_HOMEPAGE}
+22
+\bibitem{GIRARD_REACHABILITY_OF_SYSTEMS_USING_ZONOTOPES}
+23
+\bibitem{GIRARD_LE_GUERNIC_MALER_COMPUTATION_OF_REACH_SETS_OF_LINEAR_SYSTEMS}
+24
+\bibitem{MATISSE_HOMEPAGE}
+25
+\bibitem{ZONOTOPE_METHODS_HOMEPAGE}
+26
+\bibitem{MOTZKIN_RAIFFA_THOMPSON_THRALL_DOUBLE_DESCRIPTION_METHOD}
+27
+\bibitem{CDD_HOMEPAGE}
+28
+\bibitem{AVIS_BREMNER_SEIDEL_HOW_GOOD_ARE_CONVEX_HULL_ALGORITHMS}
+29
+\bibitem{LAFFERRIERE_PAPPAS_YOVINE_SYMBOLIC_REACHABILITY_COMPUTATION}
+30
+\bibitem{REQUIEM_HOMEPAGE}
+31
+\bibitem{VERES_KUNSEVICH_VALYI_HERMSMEYER_WALL_GEOMETRIC_BOUNDING_TOOLBOX}
+32
+\bibitem{GEOMETRIC_BOUNDING_TOOLBOX_HOMEPAGE}
+33
+\bibitem{KOSTOUSOVA_CONTROL_SYNTHESIS_VIA_PARALLELOTOPES}
+34
+\bibitem{MUNOZ_SUN_HOROWITZ_ALVAREZ_DENSITY_ESTIMATION_WITH_THE_CELL_MODEL}
+35
+\bibitem{BOYD_GHAOUI_FERON_BALAKRISHNAN_MATRIX_INEQUALITIES}
+36
+\bibitem{BOYD_VANDERBERGHE_CONVEX_OPTIMIZATION}
+37
+\bibitem{GANTMACHER_MATRIX_THEORY}
+38
+\bibitem{GOLUB_VAN_LOAN_MATRIX_COMPUTATIONS}
+39
+\bibitem{ROCKAFELLAR_CONVEX_ANALYSIS}
+40
+\bibitem{SDPT3_HOMEPAGE}
+41
+\bibitem{LIN_HAN_ON_DISTANCE_BETWEEN_ELLIPSOIDS}
+42
+\bibitem{CHAN_DISTANCE_ARTICLE}
+43
+\bibitem{DARYIN_KURZHANSKY_METHOD_CALC_INV_SETS_UNCERT_MIXED}
+44
+\end{thebibliography}
+%\bibliography{et}
+%\todo[inline]{Added bib file}
+\appendix
+\chapter{Function Reference}\label{appendix_a}
+\input{chap_functions}
+
+\end{document}
+
