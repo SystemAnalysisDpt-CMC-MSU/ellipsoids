@@ -36,10 +36,10 @@ int nrhs,const mxArray *prhs[])
 		num_points= mxGetScalar(prhs[3]);
 		points= mxGetPr(prhs[4]);
 		controlParams= mxGetPr(prhs[5]);
-		plhs[1] = mxCreateDoubleMatrix(1, 256, mxREAL);
-		plhs[3] = mxCreateDoubleMatrix(1, size*256, mxREAL);
-		plhs[0] = mxCreateDoubleMatrix(1, size*256, mxREAL);
-		plhs[2] = mxCreateDoubleMatrix(1, 256, mxREAL);
+		plhs[1] = mxCreateDoubleMatrix(1, num_points, mxREAL);
+		plhs[3] = mxCreateDoubleMatrix(1, size*num_points, mxREAL);
+		plhs[0] = mxCreateDoubleMatrix(1, size*num_points, mxREAL);
+		plhs[2] = mxCreateDoubleMatrix(1, num_points, mxREAL);
         Amat=mxGetPr(plhs[0]);
 		bVec=mxGetPr(plhs[1]);
         vertMat=mxGetPr(plhs[3]);

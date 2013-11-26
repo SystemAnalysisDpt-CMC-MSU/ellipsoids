@@ -4,7 +4,7 @@
 #define CH_ELIPSE /*approksimaciya e'lipsoidov*/ 
 
 #include "StdAfx.h"
-#include <mex.h>
+//#include <mex.h>
 
 
 #ifdef CH_ELIPSE
@@ -71,8 +71,7 @@ int Nfunc;    /* nomer stroki celevoj funkcii */
   while (i < imatr [0])
    {if ( ! im)
      {if (Nc != ch_N)
-       {mexPrintf ("Ne nashli stroku %8d v stolbce %8d",
-		Nfunc, Ncol);
+     {
 return (-7);
        }
       else
@@ -93,7 +92,7 @@ return (-7);
     im = imatr [++i];
    }
   if (done != ch_N)
-   {mexPrintf ("Ne vse stolbcy najdeny");
+   {
 return (-7);
    }
 return (0);
@@ -142,12 +141,12 @@ void out_write (double* Amat,double* bVec,double* discrVec,double* vertMat,doubl
   if (stage == 2)
    {mexPrintf ("Podozhdite, idet zapis'\n");
     //gotoxy (1, 1);
-    if (ch_write_dat (Amat,bVec,discrVec,vertMat, size_arr) < 0) wait();
+    if (ch_write_dat (Amat,bVec,discrVec,vertMat, size_arr) < 0) ;
    
   }
   else
    {mexPrintf ("Nechego zapisyvat' !\n");
-    wait ();
+   // wait ();
    }
  }    /* out_write */
 
@@ -199,7 +198,7 @@ void conv_go (double* semiaxes,int num, double* vert /* for convex hull*/)
     if (dat_is_read)
      {dat_is_read = 0;
 #ifdef CH_LP_PC
-      lp_initfree ();
+      lp_initfree();
       inibas = 1;
 #endif
 #ifdef CH_LPM
@@ -211,14 +210,13 @@ void conv_go (double* semiaxes,int num, double* vert /* for convex hull*/)
      {mexPrintf ("Podozhdite, idet schityvanie\n");
       //gotoxy (1, 1);
 
-	wait ();
+	//wait ();
 //return;
        
 #ifdef CH_LP_PC
       if ( ! lp_fromps (model_name, "rhs", "ran", "boun", "obj",
 		64, &Ncon, &Nvar, &Nfunc))
        {//clreol ();
-	mexPrintf ("\nOshibka pri vvode MPS");
 	wait ();
 return;
        }
@@ -250,7 +248,7 @@ return;
       axes = (double*) realloc (axes, ch_N * sizeof (double));
       if (axes == NULL)
        {mexPrintf ("Malo pamyati\n");
-	wait ();
+	//wait ();
 return;
        }
       for (i = 0; i < ch_N; i++)

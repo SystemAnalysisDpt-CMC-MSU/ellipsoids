@@ -35,10 +35,10 @@ int nrhs,const mxArray *prhs[])
 		centervec= mxGetPr(prhs[3]);
 		semiaxes= mxGetPr(prhs[4]);
 		controlParams= mxGetPr(prhs[5]);
-		plhs[1] = mxCreateDoubleMatrix(1, 1000, mxREAL);
-		plhs[3] = mxCreateDoubleMatrix(1, size*1000, mxREAL);
-		plhs[0] = mxCreateDoubleMatrix(1, size*1000, mxREAL);
-		plhs[2] = mxCreateDoubleMatrix(1, 1000, mxREAL);
+		plhs[1] = mxCreateDoubleMatrix(1, 20000, mxREAL);
+		plhs[3] = mxCreateDoubleMatrix(1, size*20000, mxREAL);
+		plhs[0] = mxCreateDoubleMatrix(1, size*20000, mxREAL);
+		plhs[2] = mxCreateDoubleMatrix(1, 20000, mxREAL);
 		Amat=mxGetPr(plhs[0]);
 		bVec=mxGetPr(plhs[1]);
 		vertMat=mxGetPr(plhs[3]);

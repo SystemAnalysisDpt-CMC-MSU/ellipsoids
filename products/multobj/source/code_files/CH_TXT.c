@@ -51,10 +51,6 @@ int ch_write_dat (double* Amat,double* bVec,double* discrVec,double* vertMat,dou
    }
   topTOTAL = ch_estCOUNT;
   VIEW (ptop, ch_first_top) topTOTAL++;
-  Amat=(double*)mxRealloc(Amat,ch_N*ch_facetCOUNT*sizeof(double));
-  vertMat=(double*)mxRealloc(vertMat,ch_N*topTOTAL*sizeof(double));
-    bVec=(double*)mxRealloc(bVec,ch_facetCOUNT*sizeof(double));
-    discrVec=(double*)mxRealloc(discrVec,ch_topCOUNT*sizeof(double));
 /* recording faces */
 
   size_arr[0]=ch_N*ch_facetCOUNT;

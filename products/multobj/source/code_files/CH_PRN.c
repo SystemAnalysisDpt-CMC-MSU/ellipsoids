@@ -61,15 +61,15 @@ char *ch_inform (IOstatus)
   /* message for number */
 int IOstatus;
  {static char *inform [2][9] = {
-   {"–…‘‘ —…",          /* -1 */
-    "‚‘… ‘„…‹€",              /* -2 */
-    "’—‘’ …„‘’€’—€",    /* -3 */
-    "‚…€ ‚“’ †…‘’‚€", /* -4 */
-    "€‹ €’",              /* -5 */
-    "†…‘’‚ … ’…‹…‘",     /* -6 */
-    "…›‚€…",               /* -7 */
-    "…’ …‡“‹’€’€",           /* -8 */
-    "β®η­®αβμ   ­¥ΰ Ά¥­αβΆ  Ά¥ΰθ¨­  ®ζ¥­®ª ®ζ¥­¥­® ―®αβΰ®¥­®"
+   {"THE PROCESS IS OVER",      /* -1 */
+    "TOP LIMIT IS ACHIEVED",    /* -2 */
+    "INSUFFICIENT PRECISION",   /* -3 */
+    "TOP INSIDE THE SET",       /* -4 */
+    "NOT ENOUGH MEMORY",        /* -5 */
+    "THE SET IS NOT BODILY",    /* -6 */
+    "INTERRUPTION",             /* -7 */
+    "NO RESULT",                /* -8 */
+    "discrepancy   facets    tops   estim all_est all_facets"
    },
    {"THE PROCESS IS OVER",      /* -1 */
     "TOP LIMIT IS ACHIEVED",    /* -2 */

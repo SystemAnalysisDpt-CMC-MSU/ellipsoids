@@ -1,4 +1,4 @@
- function [convexMat, convexVec, discrepVec,vertMat] = calcConvexHull(polyMat,nPropExpected, properties)
+ function [convexMat, convexVec, discrepVec,vertMat] = calcConvexHull(pointsMat,nPropExpected, properties)
 % 
 % CALCCONVEXHULL - builds the convex hull of given points
 % 
@@ -32,6 +32,21 @@
 %       discrepVec: double [1,nResInequalities] - vector of approximation
 %          error for  each vertex of result polytope
 %       vertMat: double [nVertices, nDims] - vertices of result polytope
+import modgen.common.throwerror
+
+if (nargin < 2)
+    throwerror('wrongInput','2 or 3 input arguments needed');
+end
+if (isa(pointsMat,'double')==0)
+    throwerror('wrongType','polyMat must be double array');
+end 
+if ((isa(nPropExpected,'numeric')==0))
+    throwerror('wrongInput','nPropExpected must be defined');
+end
+if (nargin==3)&&((isa(properties,'cell')==0))
+    throwerror('wrongType','properties mast be cell array');
+end
+
 if(nPropExpected > 0)
     [reg,isSpecVec,...
           propVal1,propVal2,propVal3,propVal4,propVal5,propVal6,propVal7...
@@ -39,24 +54,43 @@ if(nPropExpected > 0)
           modgen.common.parseparext(properties,...
           {'nAddTopElems','errorCheckMode','approxPrec','freeMemoryMode','discardIneqMode',...
           'incDim','faceDist','inApproxDist','ApproxDist','precTest','relPrec','inftyDef','isVerbose';...
-         32, 1.e-3 ,1.0 ,0.0, 1.0, 0.0, .9e-5, 1.e-4, 1.e-5, 1.e-4, 1.e-5, 1.e6,1;})
+         32, 1.e-3 ,1.0 ,0.0, 1.0, 0.0, .9e-5, 1.e-4, 1.e-5, 1.e-4, 1.e-5, 1.e6,1;});
     controlParams=[propVal1 propVal2 propVal3 propVal4 propVal5 propVal6 propVal7 propVal8 propVal9 propVal10 propVal11 propVal12 propVal13];
 else
     controlParams=[32 1.e-3 1.0 0.0 1.0 0.0 .9e-5 1.e-4 1.e-5 1.e-4 1.e-5 1.e6 1];
 end
-dim = size(polyMat,2);
+
+if ((isa(controlParams,'double')==0))
+    throwerror('wrongParams','properties must be double');
+end 
+
+dim1 = size(pointsMat,1);
+if(dim1<3)
+    throwerror('wrongSize','polyMat must contain at least three points');
+end
+nDims=ndims(pointsMat);
+if(nDims>2)||(nDims<2)
+    throwerror('wrongSize','polyMat must be 2-dimensional array');
+end
+dim2 = size(pointsMat,2);
 indProjVec=[];
 improveDirectVec=[];
-polyMat=polyMat';
-polyMat=polyMat(:);
-polyMat=polyMat';
-num=numel(polyMat);
-[convexMat,convexVec,discrepVec,vertMat,sizeMat]=mexconvehull(dim,indProjVec,improveDirectVec,num,polyMat,controlParams);
+pointsMat=pointsMat';
+pointsMat=pointsMat(:);
+pointsMat=pointsMat';
+num=numel(pointsMat);
+[convexMat,convexVec,discrepVec,vertMat,sizeMat]=elltool.multobj.mexconvexhull(dim2,indProjVec,improveDirectVec,num,pointsMat,controlParams);
 convexMat=convexMat(1:sizeMat(1));
 convexVec=convexVec(1:sizeMat(2));
 discrepVec=discrepVec(1:sizeMat(3));
 vertMat=vertMat(1:sizeMat(4));
-convexMat=reshape(convexMat,numel(convexMat)/dim,dim);
+convexMat=reshape(convexMat,numel(convexMat)/dim2,dim2);
 convexVec=(convexVec)';
-vertMat=reshape(vertMat,numel(vertMat)/dim,dim);
+vertMat=reshape(vertMat,numel(vertMat)/dim2,dim2);
+if (numel(convexMat)==0)
+    convexMat=[];
+    convexVec=[];
+    discrepVec=[];
+    vertMat = [];
+end
 end

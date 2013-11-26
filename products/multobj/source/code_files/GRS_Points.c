@@ -142,17 +142,17 @@ void out_write (double* Amat,double* bVec,double* discrVec,double* vertMat,doubl
   if (stage == 2)
    {mexPrintf ("Podozhdite, idet zapis'\n");
     //gotoxy (1, 1);
-    if (ch_write_dat (Amat,bVec,discrVec,vertMat, size_arr) < 0) wait();
+    if (ch_write_dat (Amat,bVec,discrVec,vertMat, size_arr) < 0) mexPrintf("zapis okonchena\n");
    
   }
   else
    {mexPrintf ("Nechego zapisyvat' !\n");
-    wait ();
+    //wait ();
    }
  }    /* out_write */
 
 
-void conv_go (double* semiaxes,int num, double* vert /* for convex hull*/)
+void conv_go (double* semiaxes,int num, double* coef /* for convex hull*/)
  {int i, new_dat;
   static int dat_is_read;
 #ifdef CH_LP_PC
@@ -170,7 +170,7 @@ void conv_go (double* semiaxes,int num, double* vert /* for convex hull*/)
   int j, jmax;
   double sum;
   float max;
-  static double *coef;
+  //static double *coef;
   static int numnum;
 #endif
 
@@ -211,7 +211,7 @@ void conv_go (double* semiaxes,int num, double* vert /* for convex hull*/)
      {mexPrintf ("Podozhdite, idet schityvanie\n");
       //gotoxy (1, 1);
 
-	wait ();
+	//wait ();
 //return;
        
 #ifdef CH_LP_PC
@@ -219,7 +219,7 @@ void conv_go (double* semiaxes,int num, double* vert /* for convex hull*/)
 		64, &Ncon, &Nvar, &Nfunc))
        {//clreol ();
 	mexPrintf ("\nOshibka pri vvode MPS");
-	wait ();
+	//wait ();
 return;
        }
 #endif
@@ -231,26 +231,19 @@ return;
        {//clreol ();
 	mexPrintf ("\n%s\n", lpm_inform (IOlpm));
 	mexPrintf ("Oshibka pri vvode dannyx");
-	wait ();
+	//wait ();
 return;
        }
 #endif
 #ifdef CH_POINTS
       //fscanf (datstream, "%d", &numnum);
 	  numnum=(int)num;//count of points
-      coef = (double*) realloc (coef, numnum * sizeof (double));
-      if (coef == NULL)
-       {mexPrintf ("Malo pamyati_key");
-	wait ();
-return;
-       }
-     coef=vert;// tops
 #endif
 #ifdef CH_ELIPSE
       axes = (double*) realloc (axes, ch_N * sizeof (double));
       if (axes == NULL)
        {mexPrintf ("Malo pamyati\n");
-	wait ();
+	//wait ();
 return;
        }
       for (i = 0; i < ch_N; i++)
