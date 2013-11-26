@@ -219,7 +219,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             solveTimeVecCVec=cell(1,nLDirs);
             
             
-            selfCVec(:)={self}
+            selfCVec(:)={self};
             sTimeCVec(:)={sTime};
             solverObjCVec(:)={solverObj};
             isFirstPointToRemoveCVec(:)={isFirstPointToRemove};

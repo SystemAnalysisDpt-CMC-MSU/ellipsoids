@@ -108,7 +108,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                 qArrayListArray(:,:,1)=qMat;
                 lVec = l0Vec;
                 lMat(:, 1) = lVec;
-                Q=cell(1, (length(timeVec) - 1));
                 for iTime = 1:(length(timeVec) - 1)  
                     aMat = probDynObj.getAtDynamics(). ...
                         evaluate(timeVec(iTime + isBack));
@@ -137,11 +136,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                                 ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
                         end
                     else
-                            %commented actions for catching the error
-                            %Q{iTime}=qMat;
-                            %path='C:\Users\Ivan\mimi\products\+elltool\+pcalc\';
-                            %save([path 'Q2' '.mat'],'Q');
-                            %ellipsoid(0.5 * (qMat + qMat'))
+                           
                             eEll = fMinksum([ellipsoid(0.5 * (qMat + qMat')) ...
                             ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
                             

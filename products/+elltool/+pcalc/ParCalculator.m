@@ -21,9 +21,9 @@ classdef ParCalculator
               [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',1);
               
           else
-             [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',nMaxParProcess);
-           
-         end
+            [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',nMaxParProcess);
+          
+          end
        end 
    end
 end

@@ -43,6 +43,8 @@ classdef AReach < elltool.reach.IReach
             ' shape matrix'];
         EMSG_BAD_TIME_VEC = ['Try to decrease the length of ',...
             'your time interval (timeVec, fourth parameter).'];
+        EMSG_R_FEVAL=['There is a problem with feval function'];
+        EMSG_BAD_FEVAL=['nothing for you to do'];
         FIRST_COMMON_PART_BAD_ELL_STR = 'Try to decrease ';
         SECOND_COMMON_PART_BAD_ELL_STR =...
             [' ellipsoid (linear system''s parameter): change ',...
@@ -716,6 +718,7 @@ classdef AReach < elltool.reach.IReach
                 [ellTubeRel, goodDirSetObj] = self.internalMakeEllTubeRel(...
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
                     calcPrecision, approxTypeVec);
+           
             catch meObj
                 errorStr = '';
                 errorTag = '';
@@ -737,9 +740,11 @@ classdef AReach < elltool.reach.IReach
                     errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
                     errorTag = [self.ETAG_WR_INP, ...
                         self.ETAG_R_PROB, self.ETAG_ONLY_CHECK];
+                  
                 end
-                if isempty(errorStr)
+                if (isempty(errorStr)) 
                     rethrow(meObj);
+                   
                 else
                     friendlyMeObj = throwerror(errorTag, errorStr);
                     friendlyMeObj = addCause(friendlyMeObj, meObj);
