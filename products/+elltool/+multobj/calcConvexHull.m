@@ -61,7 +61,7 @@ else
 end
 
 if ((isa(controlParams,'double')==0))
-    throwerror('wrongParams','properties must be double');
+    throwerror('wrongParamsType','properties must be double');
 end 
 
 dim1 = size(pointsMat,1);

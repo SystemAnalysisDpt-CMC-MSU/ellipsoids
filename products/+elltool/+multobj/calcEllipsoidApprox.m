@@ -46,6 +46,7 @@ if (nargin==4)&&((isa(properties,'cell')==0))
 end
 
 
+
 if(nPropExpected > 0)
     [reg,isSpecVec,...
           propVal1,propVal2,propVal3,propVal4,propVal5,propVal6,propVal7...
@@ -58,8 +59,9 @@ if(nPropExpected > 0)
 else
     controlParams=[32 1.e-3 1.0 0.0 1.0 0.0 .9e-5 1.e-4 1.e-5 1.e-4 1.e-5 1.e6 1];
 end
+
 if ((isa(controlParams,'double')==0))
-    throwerror('wrongParams','properties must be double');
+    throwerror('wrongParamsType','properties must be double');
 end
 dim1 = size(centerVec,1);
 if(dim1>1)
@@ -69,7 +71,7 @@ dim2 = size(semiaxesVec,1);
 if(dim1>1)
     throwerror('wrongSize','semiaxesVec must be vector');
 end
-if (dim1>dim2)||(dim1<dim2) 
+if (ne(size(centerVec,2) ,size(semiaxesVec,2))) 
     throwerror('wrongSizes','semiaxesVec and centerVec must be the same length');
 end
 dim = numel(centerVec);

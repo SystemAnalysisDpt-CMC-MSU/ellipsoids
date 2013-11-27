@@ -7,7 +7,8 @@ classdef ObjectApproximationTestCase < mlunitext.test_case
         end
         
         function self = testIsConvexHull(self)
-            calcConvexHull = @(x,y,z,p) elltool.multobj.calcConvexHull(x,y,z,p);
+            prec=1.e-4;
+            calcConvexHull = @(x,y,z) elltool.multobj.calcConvexHull(x,y,z);
             %2D case, convex hull contains not all points
             pointsMat = [1 1;0 2; 3 5; 1 6; 2 7; 0.5 8];
             convexMatExp = [0.8944    0.4472;...
@@ -16,9 +17,9 @@ classdef ObjectApproximationTestCase < mlunitext.test_case
             convexVecExp = zeros(1,5)';
             discrVecExp = zeros(1,5);
             vertMatExp = [3 5;0 2; 0.5 8; 1 1; 2 7];
-            [convexMat convexVec discrVec vertMat]= calcConvexHull(pointsMat,1,{'relPrec'},1.e-7);
-            mlunitext.assert(all(all(convexMatExp == convexMat))&&all(convexVecExp == convexVec)...
-                &&all(discrVecExp == discrVec)&&all(all(vertMatExp == vertMat)));
+            [convexMat convexVec discrVec vertMat]= calcConvexHull(pointsMat,1,{'relPrec',1.e-7});
+            mlunitext.assert(all(all((convexMatExp - convexMat)<prec))&&all((convexVecExp - convexVec)<prec)...
+                &&all((discrVecExp - discrVec)<prec)&&all(all((vertMatExp - vertMat)<prec)));
             
             %2D case, convex hull contains all the points
             pointsMat = [0 0;0.5 0.1; 0 2.24; 5.3 7];
@@ -27,9 +28,9 @@ classdef ObjectApproximationTestCase < mlunitext.test_case
             convexVecExp = [ -0.3533; 0; -1.6665; 0];         
             discrVecExp = zeros(1,4);
             vertMatExp = [5 7;0 0; 0 2.24; 0.5 0.1];
-            [convexMat convexVec discrVec vertMat]= calcConvexHull(pointsMat,0);
-            mlunitext.assert(all(all(convexMatExp == convexMat))&&all(convexVecExp == convexVec)...
-                &&all(discrVecExp == discrVec)&&all(all(vertMatExp == vertMat)));
+            [convexMat convexVec discrVec vertMat]= calcConvexHull(pointsMat,0,{});
+            mlunitext.assert(all(all((convexMatExp - convexMat)<prec))&&all((convexVecExp - convexVec)<prec)...
+                &&all((discrVecExp - discrVec)<prec)&&all(all((vertMatExp - vertMat)<prec)));
             
             %3D case
             pointsMat = [0 0 0; 1 0 1; 1 1 0; 2 3 6; 9 1 1];
@@ -47,28 +48,28 @@ classdef ObjectApproximationTestCase < mlunitext.test_case
             vertMatExp =  [9 1 1; 0 0 0; 2 3 6; 1 1 0; 1 0 1];
      
             
-            [convexMat convexVec discrVec vertMat] = calcConvexHull(pointsMat,1,{'relPrec'},1.e-8);
-            mlunitext.assert(all(all(convexMatExp == convexMat))&&all(convexVecExp == convexVec)...
-                &&all(discrVecExp == discrVec)&&all(all(vertMatExp == vertMat)));
+            [convexMat convexVec discrVec vertMat] = calcConvexHull(pointsMat,1,{'relPrec',1.e-8});
+            mlunitext.assert(all(all((convexMatExp - convexMat)<prec))&&all((convexVecExp - convexVec)<prec)...
+                &&all((discrVecExp - discrVec)<prec)&&all(all((vertMatExp - vertMat)<prec)));
             
             %3D case,convex hull is empty
             pointsMat = [0 0 0; 0.5 2 1; 1 4 2];
             
             [convexMat convexVec discrVec vertMat]=...
-                                      calcConvexHull(pointsMat,0);
+                                      calcConvexHull(pointsMat,0,{});
            mlunitext.assert((0==numel(convexMat))&&(0 ==numel(convexVec))...
                 &&(0 == numel(discrVec))&&(0 == numel(vertMat)));
             
           
             %wrong input
             pointsMat=[1 2 3; 2 8 0];
-            [a b d v]=calcConvexHull(pointsMat,0);
-            self.runAndCheckError('calcConvexHull(pointsMat,0)',...
+            self.runAndCheckError('calcConvexHull(pointsMat,0,{})',...
                 'wrongSize');
         end
         %
         function self = testIsEllipsoidApprox(self)
-            calcEllipsoidApprox = @(x,y,z,p) elltool.multobj.calcEllipsoidApprox(x,y,z,p);
+            prec=1.e-4;
+            calcEllipsoidApprox = @(x,y,z,c)elltool.multobj.calcEllipsoidApprox(x,y,z,c);
             %
             centerVec = [0 0];
             semiaxesVec=[0.16 0.64];
@@ -131,29 +132,26 @@ classdef ObjectApproximationTestCase < mlunitext.test_case
                            -0.1531   -0.1858;   -0.1592   -0.0627;    0.1531   -0.1858;    0.1592   -0.0627;...
                            -0.1237   -0.4060;   -0.1411   -0.3017;    0.1237   -0.4060;    0.1411   -0.3017;...
                            -0.1237    0.4060;   -0.1411    0.3017;    0.1237    0.4060;    0.1411    0.3017];
-           [approxMat approxVec discrVec vertMat]= calcEllipsoidApprox(centerVec,semiaxesVec,0);
-            mlunitext.assert(all(all(approxMatExp == approxMat))&&all(approxVecExp == approxVec)...
-                &&all(discrVecExp == discrVec)&&all(all(vertMatExp == vertMat)));
+           [approxMat approxVec discrVec vertMat]= calcEllipsoidApprox(centerVec,semiaxesVec,0,{});
+            mlunitext.assert(all(all((approxMatExp - approxMat)<prec))&&all((approxVecExp - approxVec)<prec)...
+                &&all((discrVecExp - discrVec)<prec)&&all(all((vertMatExp - vertMat)<prec)));
         
             
           
             %wrong input
             centerVec1=[0 0];
             semiaxesVec1 = [1 3 5;1 5 2];
-            [a b d v] = calcEllipsoidApprox(centerVec1,semiaxesVec1,0);
-            self.runAndCheckError('calcEllipsoidApprox(centerVec1,semiaxesVec1,0)',...
+            self.runAndCheckError('calcEllipsoidApprox(centerVec1,semiaxesVec1,0,{})',...
                 'wrongSize');
             centerVec2=[0 0];
             semiaxesVec2 = [1 3 5];   
-            [a b d v] = calcEllipsoidApprox(centerVec2,semiaxesVec2,0);
-            self.runAndCheckError('calcEllipsoidApprox(centerVec2,semiaxesVec2,0)',...
+            self.runAndCheckError('calcEllipsoidApprox(centerVec2,semiaxesVec2,0,{})',...
                 'wrongSizes');
             centerVec3=[0 0 0];
             semiaxesVec3 = [1 1 1]; 
             properties={'relPrec','1e-6'};
-            [a b d v] = calcEllipsoidApprox(centerVec3,semiaxesVec3,1,properties);
             self.runAndCheckError('calcEllipsoidApprox(centerVec3,semiaxesVec3,1,properties)',...
-                'wrongType');
+                'wrongParamsType');
         end
     end
 end
