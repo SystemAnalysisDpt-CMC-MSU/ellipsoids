@@ -18,8 +18,8 @@ int nrhs,const mxArray *prhs[])
 
 { //mex-function for ellipsoid's approx
 	int size,num_points, i;
-	double *indProjVec,*improveDirectVec,*sizeMat;
-	double*points,*controlParams,*bVec,*discrVec;
+	int *indProjVec,*improveDirectVec;
+	double *points,*controlParams,*bVec,*discrVec,*sizeMat;
 	double *Amat,*vertMat;
 
 
@@ -31,8 +31,8 @@ int nrhs,const mxArray *prhs[])
 		mexErrMsgTxt("Five input arguments are nedeed.");
 		}
 	    size = mxGetScalar(prhs[0]);
-		indProjVec=mxGetPr(prhs[1]);
-		improveDirectVec= mxGetPr(prhs[2]);
+		indProjVec=(int*)mxGetPr(prhs[1]);
+		improveDirectVec=(int *) mxGetPr(prhs[2]);
 		num_points= mxGetScalar(prhs[3]);
 		points= mxGetPr(prhs[4]);
 		controlParams= mxGetPr(prhs[5]);

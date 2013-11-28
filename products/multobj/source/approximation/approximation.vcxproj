@@ -89,6 +89,12 @@
     <ClCompile Include="..\code_files\CH_SCOMB.c" />
     <ClCompile Include="..\code_files\CH_TXT.c" />
     <ClCompile Include="..\code_files\GRS.c" />
+    <ClCompile Include="..\code_files\GRS_GNU_LP.c" />
+    <ClCompile Include="..\code_files\LPM_INIT.C" />
+    <ClCompile Include="..\code_files\LPM_LUMS.C" />
+    <ClCompile Include="..\code_files\LPM_PRIM.C" />
+    <ClCompile Include="..\code_files\LPM_PRN.C" />
+    <ClCompile Include="..\code_files\RFP.C" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\code_files\CH_MAIN.h" />

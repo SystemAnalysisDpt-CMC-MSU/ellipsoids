@@ -99,7 +99,7 @@ void   ch_move_top      (ch_facet*, ch_facet*);
 
 void   ch_reverse       (void);
 void   ch_free_mem      (void);
-int    ch_read_dat      (int,double*,double*, int**);
+int    ch_read_dat      (int,int*,int*, int**);
 int    ch_write_dat     (double*,double*,double*,double*,double*);
 int    ch_read_chs      (FILE*);
 int    ch_write_chs     (FILE*);

@@ -4,7 +4,6 @@
 #include "ch_main.h"
 #include "ch_var.def"
 #include "math.h"
-#include <mex.h>
 //static char in_name [43] ="input.chs";
 //static char out_name [40] ="output.set";
 static char *msg [2][4] = {

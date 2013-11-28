@@ -15,63 +15,69 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="stdafx.h">
+    <ClInclude Include="..\code_files\CH_MAIN.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_MAIN.h">
+    <ClInclude Include="..\code_files\StdAfx.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="..\code_files\CH_0DAT.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="approximation.cpp">
+    <ClCompile Include="..\code_files\CH_CALC.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_0DAT.c">
+    <ClCompile Include="..\code_files\CH_DAT.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_CALC.c">
+    <ClCompile Include="..\code_files\CH_EQU.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_DAT.c">
+    <ClCompile Include="..\code_files\CH_EST.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_EQU.c">
+    <ClCompile Include="..\code_files\CH_INIT.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_EST.c">
+    <ClCompile Include="..\code_files\CH_MEM.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_INIT.c">
+    <ClCompile Include="..\code_files\CH_PRIMA.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_MEM.c">
+    <ClCompile Include="..\code_files\CH_PRN.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_PRIMA.c">
+    <ClCompile Include="..\code_files\CH_READP.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_PRN.c">
+    <ClCompile Include="..\code_files\CH_SCOMB.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_READP.c">
+    <ClCompile Include="..\code_files\CH_TXT.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_SCOMB.c">
+    <ClCompile Include="..\code_files\GRS.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\CH_TXT.c">
+    <ClCompile Include="..\code_files\GRS_GNU_LP.c">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Учеба\Гагаринов_задание_2\CONVEX from_Efremov 2010\project from Roman10\ellipse\GRS.c">
+    <ClCompile Include="..\code_files\LPM_INIT.C">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="..\code_files\LPM_LUMS.C">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="..\code_files\LPM_PRIM.C">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="..\code_files\LPM_PRN.C">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="..\code_files\RFP.C">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>

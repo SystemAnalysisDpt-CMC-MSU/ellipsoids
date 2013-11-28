@@ -44,7 +44,7 @@ void ch_no_file (char *name)
  {printf("%s %s",msg [ch_LNG] [0], name);
  }    /* ch_no_file */
 
-int ch_read_dat (int size,double* indProjVec,double* improveDirectVec,int **objnums)
+int ch_read_dat (int size,int* indProjVec,int* improveDirectVec,int **objnums)
   /* reading the data describing the set */
  {int i, k, nvar, IOstatus;
   char *obj_names, c;
@@ -57,7 +57,7 @@ int ch_read_dat (int size,double* indProjVec,double* improveDirectVec,int **objn
   if (indProjVec==NULL)
   {
       IOstatus = 1;
-	  *objnums = (int*) realloc (*objnums, ch_N * sizeof (int));//indicies of project variables
+	  *objnums = (int*) realloc (*objnums, ch_N * sizeof (int));//indicies of  variables
       for (i = 1; i<=ch_N;i++)
 	      (*objnums)[i-1]=i;  
 	  ch_state=NULL;

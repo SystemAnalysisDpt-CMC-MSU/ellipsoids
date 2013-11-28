@@ -101,7 +101,7 @@ return (0);
 int objfun (float*, int*, int);
 #endif
 
-void in_read (int size,double* indProjVec,double* improveDirectVec) //read not from file now
+void in_read (int size,int* indProjVec,int* improveDirectVec) //read not from file now
  {int i;
 
   //clrscr ();
@@ -389,61 +389,4 @@ return;
   getch ();
  }    /* conv_go */
 
-//void calcEllipsoidApprox(int size,double* indProjVec,double* improveDirectVec,double* centervec, double* semiaxes,double* Amat,double* bVec,double* vertMat,double* discrVec, double* controlParams){ 
-// //main function for which mex-file will be written 
-//    read_par (controlParams);
-//    in_read (size,indProjVec, improveDirectVec);
-//    conv_go(semiaxes,0,NULL);
-//    out_write(Amat,bVec,vertMat,discrVec);
-//   }
-//
-//
-//void calcConvexHull(int size,double* indProjVec,double* improveDirectVec,int num_points,double* points,double* Amat,double* bVec,double* vertMat,double* discrVec, double* controlParams){ 
-// //main function for which mex-file will be written 
-//    
-//    read_par (controlParams);
-//	
-//    in_read (size,indProjVec, improveDirectVec);
-//    conv_go(NULL,num_points,points);
-//    out_write(Amat,bVec,vertMat,discrVec);
-//   }
-//
-//void calcPolytopeApprox(int size,double* indProjVec,double* improveDirectVec,double ** inEqPolyMat, double ** eqPolyMat,double * inEqPolyVec,double * eqPolyVec, double* Amat,double* bVec,double* vertMat,double* discrVec, double* controlParams){ 
-// //main function for which mex-file will be written 
-//    
-//    read_par (controlParams);	
-//    in_read (size,indProjVec, improveDirectVec);
-//    conv_go(NULL,0,NULL);
-//    out_write(Amat,bVec,vertMat,discrVec);
-//   }
 
-
-/*int main(void){
-//	//for compilation while there is no mex-files
-//	
-	int i;
-    float* centervec;
-	float* semiaxes;
-	int size = 2;
-	//output params
-	int j;
-	int*p=NULL;
-    int*q=NULL;
-    float** Amat=(float**)malloc(size*sizeof(float*));
-    float ** vertMat=(float**)malloc(size*sizeof(float*));
-	float* bVec=(float*)malloc(256*sizeof(float));
-	float* discrVec=(float*)malloc(256*sizeof(float));
-    float add_top=32-ch_topCOUNT%32;
-	float controlParams[] = {add_top,1.e-3,1.0,0.0,1.0,0.0,.9e-5,1.e-4,1.e-5,1.e-4,1.e-5,1.e6,1};
-	//here input data will be defined
-	centervec=(float*) malloc(2*sizeof(double));
-	semiaxes=(float*) malloc(2*sizeof(double));
-	
-	centervec[0] = 1;
-	centervec[1] = 1;
-	semiaxes[0] = 1;
-	semiaxes[1] = 1;
-	 
-    calcEllipsoidApprox(size,p,q,centervec,semiaxes, Amat, bVec,vertMat, discrVec,controlParams);
-return 0;
-}*/

@@ -1,4 +1,4 @@
-function [approxMat, approxVec, discrepVec,vertMat] = calcEllipsoidApprox(centerVec, semiaxesVec,nPropExpected, properties)
+function [approxMat, approxVec, discrepVec,vertMat] = calcEllipsoidApprox(centerVec, semiaxesVec,indVec,improveDirectVec,nPropExpected, properties)
 
 % CALCELLIPSOIDAPPROX - builds the approximation of ellipsoid by the polytope
 % 
@@ -6,6 +6,11 @@ function [approxMat, approxVec, discrepVec,vertMat] = calcEllipsoidApprox(center
 %   regular:
 %       centerVec: double [1, nDims] -  ellipsoid's center coordinates 
 %       semiaxesVec: double [1, nDims] -  values of ellipsoid's  semiaxes
+%       indVec:double [1, nElems] - indieces of variables              
+%       improveDirectVec: double [1, nElems] - the direction of improvement of  variables:  nonzero value indicates that for corresponding  variable Pareto shell will be built in specified direction
+%              for each variable : 1 -  increase, -1 - reduction, 0 - no improvement
+%       NOTE: if Pareto shell is not needed, indVec and
+%       improveDirectVec must be empty.
 %   optional:
 %       nPropExpected: double[1,1] - an expected number of properties
 % 
@@ -32,8 +37,8 @@ function [approxMat, approxVec, discrepVec,vertMat] = calcEllipsoidApprox(center
 
 import modgen.common.throwerror
 
-if (nargin < 3)
-    throwerror('wrongInput','3 or 4 input arguments needed');
+if (nargin < 5)
+    throwerror('wrongInput','5 or 6 input arguments needed');
 end
 if (isa(centerVec,'double')==0)||(isa(semiaxesVec,'double')==0)
     throwerror('wrongType','semiaxesVec and centerVec must be double arrays');
@@ -75,9 +80,7 @@ if (ne(size(centerVec,2) ,size(semiaxesVec,2)))
     throwerror('wrongSizes','semiaxesVec and centerVec must be the same length');
 end
 dim = numel(centerVec);
-indProjVec=[];
-improveDirectVec=[];
-[approxMat,approxVec,discrepVec,vertMat,sizeMat]=elltool.multobj.mexellipsoidapprox(dim,indProjVec,improveDirectVec,centerVec,semiaxesVec,controlParams);
+[approxMat,approxVec,discrepVec,vertMat,sizeMat]=elltool.multobj.mexellipsoidapprox(dim,indVec,improveDirectVec,centerVec,semiaxesVec,controlParams);
 approxMat=approxMat(1:sizeMat(1));
 approxVec=approxVec(1:sizeMat(2));
 discrepVec=discrepVec(1:sizeMat(3));

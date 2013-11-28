@@ -1,10 +1,15 @@
- function [convexMat, convexVec, discrepVec,vertMat] = calcConvexHull(pointsMat,nPropExpected, properties)
+ function [convexMat, convexVec, discrepVec,vertMat] = calcConvexHull(pointsMat,indVec,improveDirectVec,nPropExpected, properties)
 % 
 % CALCCONVEXHULL - builds the convex hull of given points
 % 
 %  Input:
 %    regular:
 %       pointsMat: double [nPoints, nDims] - array of points to build the convex hull
+%       indVec:double [1, nElems] - indieces of variables              
+%       improveDirectVec: double [1, nElems] - the direction of improvement of  variables:  nonzero value indicates that for corresponding  variable Pareto shell will be built in specified direction
+%              for each variable : 1 -  increase, -1 - reduction, 0 - no improvement
+%       NOTE: if Pareto shell is not needed, indVec and
+%       improveDirectVec must be empty.
 %    optional:
 %       nPropExpected: double[1,1] - an expected number of properties
 %     properties:
@@ -34,8 +39,8 @@
 %       vertMat: double [nVertices, nDims] - vertices of result polytope
 import modgen.common.throwerror
 
-if (nargin < 2)
-    throwerror('wrongInput','2 or 3 input arguments needed');
+if (nargin < 4)
+    throwerror('wrongInput','4 or 5 input arguments needed');
 end
 if (isa(pointsMat,'double')==0)
     throwerror('wrongType','polyMat must be double array');
@@ -79,7 +84,7 @@ pointsMat=pointsMat';
 pointsMat=pointsMat(:);
 pointsMat=pointsMat';
 num=numel(pointsMat);
-[convexMat,convexVec,discrepVec,vertMat,sizeMat]=elltool.multobj.mexconvexhull(dim2,indProjVec,improveDirectVec,num,pointsMat,controlParams);
+[convexMat,convexVec,discrepVec,vertMat,sizeMat]=elltool.multobj.mexconvexhull(dim2,indVec,improveDirectVec,num,pointsMat,controlParams);
 convexMat=convexMat(1:sizeMat(1));
 convexVec=convexVec(1:sizeMat(2));
 discrepVec=discrepVec(1:sizeMat(3));
