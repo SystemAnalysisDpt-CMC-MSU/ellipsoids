@@ -73,11 +73,22 @@ if(dim1>1)
     throwerror('wrongSize','centerVec must be vector');
 end
 dim2 = size(semiaxesVec,1);
-if(dim1>1)
+if(dim2>1)
     throwerror('wrongSize','semiaxesVec must be vector');
 end
 if (ne(size(centerVec,2) ,size(semiaxesVec,2))) 
     throwerror('wrongSizes','semiaxesVec and centerVec must be the same length');
+end
+dim3 = size(indVec,1);
+if(dim3>1)
+    throwerror('wrongSize','indVec must be vector');
+end
+dim4 = size(improveDirectVec,1);
+if(dim4>1)
+    throwerror('wrongSize','improveDirectVec must be vector');
+end
+if (ne(size(indVec,2) ,size(improveDirectVec,2))) 
+    throwerror('wrongSizes','indVec and improveDirectVec must be the same length');
 end
 dim = numel(centerVec);
 [approxMat,approxVec,discrepVec,vertMat,sizeMat]=elltool.multobj.mexellipsoidapprox(dim,indVec,improveDirectVec,centerVec,semiaxesVec,controlParams);

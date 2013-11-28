@@ -54,19 +54,24 @@ int ch_read_dat (int size,int* indProjVec,int* improveDirectVec,int **objnums)
   ch_N1=ch_N+1;
   ch_topCOUNT = 0;
   ch_estCOUNT = 0;
+  *objnums = (int*) realloc (*objnums, ch_N * sizeof (int));//indicies of  variables
   if (indProjVec==NULL)
   {
       IOstatus = 1;
-	  *objnums = (int*) realloc (*objnums, ch_N * sizeof (int));//indicies of  variables
-      for (i = 1; i<=ch_N;i++)
-	      (*objnums)[i-1]=i;  
+	  
+      (*objnums)=NULL;
 	  ch_state=NULL;
   }
   else
   {
 	  IOstatus = 4;
-      *objnums = indProjVec;//indicies of project variables
-      ch_state=indProjVec;//direction of improving
+	  
+      for (i = 0; i<ch_N;i++)
+	  {
+	      (*objnums)[i]=indProjVec[i];  
+		  
+		  ch_state=(int*)improveDirectVec;
+	  }
   }
   ch_EPS = ch_EPSdif;
   ch_width = ch_INF;

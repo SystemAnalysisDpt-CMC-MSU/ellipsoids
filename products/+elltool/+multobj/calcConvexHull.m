@@ -77,9 +77,18 @@ nDims=ndims(pointsMat);
 if(nDims>2)||(nDims<2)
     throwerror('wrongSize','polyMat must be 2-dimensional array');
 end
+dim3 = size(indVec,1);
+if(dim3>1)
+    throwerror('wrongSize','indVec must be vector');
+end
+dim4 = size(improveDirectVec,1);
+if(dim4>1)
+    throwerror('wrongSize','improveDirectVec must be vector');
+end
+if (ne(size(indVec,2) ,size(improveDirectVec,2))) 
+    throwerror('wrongSizes','indVec and improveDirectVec must be the same length');
+end
 dim2 = size(pointsMat,2);
-indProjVec=[];
-improveDirectVec=[];
 pointsMat=pointsMat';
 pointsMat=pointsMat(:);
 pointsMat=pointsMat';
