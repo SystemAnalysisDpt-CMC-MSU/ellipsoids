@@ -69,9 +69,8 @@ classdef ObjectApproximationTestCase < mlunitext.test_case
         %
         function self = testIsEllipsoidApprox(self)
             prec=1.e-4;
-            calcEllipsoidApprox = @(x,y,z,p,q,t)elltool.multobj.calcEllipsoidApprox(x,y,z,p,q,t);
+            calcEllipsoidApprox = @(x,y,z,p,q)elltool.multobj.calcEllipsoidApprox(x,y,z,p,q);
             %
-            centerVec = [0 0];
             semiaxesVec=[0.16 0.64];
             approxMatExp =  [-0.9476    0.3194;   -0.9640    0.2659;...
                 0.9476    0.3194;    0.9640    0.2659;    0.9476   -0.3194;...
@@ -132,25 +131,23 @@ classdef ObjectApproximationTestCase < mlunitext.test_case
                            -0.1531   -0.1858;   -0.1592   -0.0627;    0.1531   -0.1858;    0.1592   -0.0627;...
                            -0.1237   -0.4060;   -0.1411   -0.3017;    0.1237   -0.4060;    0.1411   -0.3017;...
                            -0.1237    0.4060;   -0.1411    0.3017;    0.1237    0.4060;    0.1411    0.3017];
-           [approxMat approxVec discrVec vertMat]= calcEllipsoidApprox(centerVec,semiaxesVec,[],[],0,{});
+           [approxMat approxVec discrVec vertMat]= calcEllipsoidApprox(semiaxesVec,[],[],0,{});
             mlunitext.assert(all(all((approxMatExp - approxMat)<prec))&&all((approxVecExp - approxVec)<prec)...
                 &&all((discrVecExp - discrVec)<prec)&&all(all((vertMatExp - vertMat)<prec)));
         
             
           
             %wrong input
-            centerVec1=[0 0];
             semiaxesVec1 = [1 3 5;1 5 2];
-            self.runAndCheckError('calcEllipsoidApprox(centerVec1,semiaxesVec1,[],[],0,{})',...
+            self.runAndCheckError('calcEllipsoidApprox(semiaxesVec1,[],[],0,{})',...
                 'wrongSize');
-            centerVec2=[0 0];
-            semiaxesVec2 = [1 3 5];   
-            self.runAndCheckError('calcEllipsoidApprox(centerVec2,semiaxesVec2,[],[],0,{})',...
+            improveDirectVec = [1 -1 0];   
+            semiaxesVec2=[1 4 9];
+            self.runAndCheckError('calcEllipsoidApprox(semiaxesVec2,[],improveDirectVec,0,{})',...
                 'wrongSizes');
-            centerVec3=[0 0 0];
             semiaxesVec3 = [1 1 1]; 
             properties={'relPrec','1e-6'};
-            self.runAndCheckError('calcEllipsoidApprox(centerVec3,semiaxesVec3,[],[],1,properties)',...
+            self.runAndCheckError('calcEllipsoidApprox(semiaxesVec3,[],[],1,properties)',...
                 'wrongParamsType');
         end
     end
