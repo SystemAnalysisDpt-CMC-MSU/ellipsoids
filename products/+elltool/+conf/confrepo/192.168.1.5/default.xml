@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<root version="4" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<version type="char" >1.4dev</version>
+	<isVerbose type="boolean" >0</isVerbose>
+	<absTol type="double" >1e-07</absTol>
+	<relTol type="double" >1e-05</relTol>
+	<nTimeGridPoints type="double" >200</nTimeGridPoints>
+	<ODESolverName type="char" >ode45</ODESolverName>
+	<isODENormControl type="char" >on</isODENormControl>
+	<isEnabledOdeSolverOptions type="boolean" >0</isEnabledOdeSolverOptions>
+	<nPlot2dPoints type="double" >200</nPlot2dPoints>
+	<nPlot3dPoints type="double" >200</nPlot3dPoints>
+	<logging type="struct" >
+		<log4jSettings type="char" >
+			log4j.rootLogger=INFO, stdout
+			log4j.logger.elltool.reach = INFO, A1
+			log4j.additivity.elltool.reach = true
+			log4j.logger.gras.ellapx = DEBUG, A1
+			log4j.additivity.gras.ellapx = true
+			log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+			log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+			log4j.appender.stdout.layout.ConversionPattern=%5p %c - %m\n
+			log4j.appender.A1=org.apache.log4j.DailyRollingFileAppender
+			#do not change - name of the main log file should have a
+			#fixed pattern so that email logger can pick it up
+			log4j.appender.A1.File=${elltool.log4j.logfile.dirwithsep}${elltool.log4j.logfile.main.name}
+			log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+			log4j.appender.A1.layout.ConversionPattern=%d %5p %c - %m%n
+			#
+			log4j.appender.A2=org.apache.log4j.DailyRollingFileAppender
+			#
+			log4j.appender.A2.File=${elltool.log4j.logfile.dirwithsep}reachcont.constrcallcount.${elltool.log4j.curProcessName}.${elltool.log4j.logfile.ext}
+			#
+			log4j.appender.A2.layout=org.apache.log4j.PatternLayout
+			log4j.appender.A2.layout.ConversionPattern=%d %5p %c - %m%n
+			#
+			log4j.additivity.elltool.ReachCont.constrCallCount=false
+			#
+			log4j.logger.elltool.ReachCont.constrCallCount=DEBUG,A2
+			</log4jSettings>
+	</logging>
+	<regTol type="double" >1e-05</regTol>
+</valueObj>
+<keyStr type="char" >default</keyStr>
+</root>
