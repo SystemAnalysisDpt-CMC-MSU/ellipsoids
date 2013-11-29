@@ -238,11 +238,11 @@ classdef SuiteOp < mlunitext.test_case
         end
         function testSplineMatrixOperations(self)
             timeVec = linspace(-5,5,10000);
-            factory = gras.interp.SplineMatrixOperations(timeVec);
+            factory = gras.mat.interp.SplineMatrixOperations(timeVec);
             self.runTestsForFactory(factory);
         end
         function testSymbMatrixOperations(self)
-            import gras.mat.symb.*
+            import gras.mat.fcnlib.*
             import gras.mat.AMatrixOperations;
             %
             aScC = {'t'};

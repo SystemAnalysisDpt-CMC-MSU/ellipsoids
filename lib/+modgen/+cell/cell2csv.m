@@ -45,7 +45,7 @@ try
                 if excelVersion > 2000
                     var = ['"' var '"'];
                 end
-                fprintf(fid,var);
+                fprintf(fid,'%s',var);
             end
             if s ~= size(cellArray,2)
                 fprintf(fid,seperator);

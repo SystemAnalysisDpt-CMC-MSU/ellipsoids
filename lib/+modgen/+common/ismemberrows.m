@@ -79,9 +79,9 @@ if nCols<2,
     if isInteger,
         % perform ismember
         if isInd,
-            [isMemberVec,indMemberVec]=ismember(inpMat1,inpMat2);
+            [isMemberVec,indMemberVec]=ismember(inpMat1,inpMat2,'legacy');
         else
-            isMemberVec=ismember(inpMat1,inpMat2);
+            isMemberVec=ismember(inpMat1,inpMat2,'legacy');
         end
     else
         isMemberVec=false(nRows1,1);
@@ -99,7 +99,7 @@ if nCols<2,
         end
         % peform ismember for non-NaNs
         if isInd,
-            [isCurMemberVec,indCurMemberVec]=ismember(inpMat1(isMat1),inpMat2(isMat2));
+            [isCurMemberVec,indCurMemberVec]=ismember(inpMat1(isMat1),inpMat2(isMat2),'legacy');
             if isNan2&&any(isCurMemberVec),
                 inpMat2=find(isMat2);
                 indCurMemberVec(isCurMemberVec)=inpMat2(indCurMemberVec(isCurMemberVec));
@@ -107,7 +107,7 @@ if nCols<2,
             isMemberVec(isMat1)=isCurMemberVec;
             indMemberVec(isMat1)=indCurMemberVec;
         else
-            isMemberVec(isMat1)=ismember(inpMat1(isMat1),inpMat2(isMat2));
+            isMemberVec(isMat1)=ismember(inpMat1(isMat1),inpMat2(isMat2),'legacy');
         end
     end
 else
@@ -299,7 +299,7 @@ else
             for iCol=1:nCurCols,
                 curInd=leftIndVec(iCol)+(0:lenVec(iCol)-1);
                 [uniqueLinInd,~,inpMat1(:,iCol)]=unique(...
-                    sub2ind(allSizeVec(curInd),auxCell{curInd}));
+                    sub2ind(allSizeVec(curInd),auxCell{curInd}),'legacy');
                 sizeVec(iCol)=length(uniqueLinInd);
             end
             allSizeVec=sizeVec;
@@ -311,9 +311,9 @@ else
         indMemberVec=nRows2*ones(nRows1,1);
     else
         if isInd,
-            [isMemberVec,indMemberVec]=ismember(inpMat1(1:nRows1),inpMat1(nRows1+1:end));
+            [isMemberVec,indMemberVec]=ismember(inpMat1(1:nRows1),inpMat1(nRows1+1:end),'legacy');
         else
-            isMemberVec=ismember(inpMat1(1:nRows1),inpMat1(nRows1+1:end));
+            isMemberVec=ismember(inpMat1(1:nRows1),inpMat1(nRows1+1:end),'legacy');
         end
     end
 end

@@ -13,7 +13,7 @@ classdef MatrixOperationsFactory<modgen.common.obj.StaticPropStorage
                 isSplineUsed=MatrixOperationsFactory.DEFAULT_IS_SPLINE_USED;
             end
             if isSplineUsed
-                obj = gras.interp.SplineMatrixOperations(timeVec);
+                obj = gras.mat.interp.SplineMatrixOperations(timeVec);
             else
                 obj = gras.mat.CompositeMatrixOperations();
             end
