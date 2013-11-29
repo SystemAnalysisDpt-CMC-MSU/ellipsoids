@@ -101,7 +101,7 @@ classdef ReachDiscrete < elltool.reach.AReach
          function  [qArrayListArray, ltGoodDirArrayMat]=fCalcTube(probDynObj,  ...
                    xDim, timeVec, ...
                   lMat,  isDisturb, isMinMax,...
-                   fMinkmp,  fMinksum, fMinkdiff, isBack, l0Vec, bpbMatCMat)
+                   fMinkmp,  fMinksum, fMinkdiff, isBack, l0Vec)
                
                 qMat = probDynObj.getX0Mat;
                 qMat = 0.5 * (qMat + qMat');
@@ -113,7 +113,8 @@ classdef ReachDiscrete < elltool.reach.AReach
                         evaluate(timeVec(iTime + isBack));
                   
                      aInvMat = inv(aMat);
-                    bpbMat=bpbMatCMat{iTime};
+                    bpbMat = probDynObj.getBPBTransDynamics(). ...
+                        evaluate(timeVec(iTime + isBack));
                     bpbMat = 0.5 * (bpbMat + (bpbMat)');
                     if isDisturb
                         gqgMat = probDynObj.getCQCTransDynamics(). ...
@@ -218,21 +219,11 @@ classdef ReachDiscrete < elltool.reach.AReach
             fMinkdiffCVec(:)={fMinkdiff};
             isBackCVec(:)={isBack};
             
-            bpbMatCMat=cell(1,length(timeVec) - 1);
-            for iTime = 1:(length(timeVec) - 1)
-                 bpbMat=probDynObj.getBPBTransDynamics(). ...
-                        evaluate(timeVec(iTime + isBack));
-                bpbMatCMat{iTime}=bpbMat;    
-                
-            end
-            
-            bpbMatCMatCVec=cell(1,nTubes);
-            bpbMatCMatCVec(:)={bpbMatCMat};
             
             [qArrayListCVec, ltGoodDirArrayCVec]=pCalc.eval(@elltool.reach.ReachDiscrete.fCalcTube, probDynObjCVec,...   
                    xDimCVec, timeVecCVec, ...
                    lMatCVec,  isDisturbCVec, isMinMaxCVec, ...
-                  fMinkmpCVec,  fMinksumCVec, fMinkdiffCVec, isBackCVec, l0CVec, bpbMatCMatCVec);
+                  fMinkmpCVec,  fMinksumCVec, fMinkdiffCVec, isBackCVec, l0CVec);
               
            for iTube=1:nTubes
                   qArrayList{iTube}(:, :, :)=cell2mat(qArrayListCVec(iTube));

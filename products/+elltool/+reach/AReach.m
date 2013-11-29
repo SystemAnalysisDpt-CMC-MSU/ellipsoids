@@ -28,6 +28,8 @@ classdef AReach < elltool.reach.IReach
         ETAG_ONLY_CHECK = ':onlyCheckIsEnabled';
         ETAG_LOW_REG_TOL = ':regTolIsTooLow';
         ETAG_BAD_CALC_PREC = ':BadCalcPrec';
+        ETAG_SHAPEMAT_CALC=':ShapeMatCalcFailure';
+        ETAG_DEGR_ESTIMATE=':degradedEstimate';
         %
         EMSG_R_PROB = 'There is a problem with regularization. ';
         EMSG_INIT_SET_PROB = ['There is a problem with initial',...
@@ -43,8 +45,8 @@ classdef AReach < elltool.reach.IReach
             ' shape matrix'];
         EMSG_BAD_TIME_VEC = ['Try to decrease the length of ',...
             'your time interval (timeVec, fourth parameter).'];
-        EMSG_R_FEVAL=['There is a problem with feval function'];
-        EMSG_BAD_FEVAL=['nothing for you to do'];
+        EMSG_SHAPEMAT_CALC=['There is a problem with ShapeMat calculation'];
+        EMSG_DEGR_ESTIMATE=['There is a problem with estimate'];
         FIRST_COMMON_PART_BAD_ELL_STR = 'Try to decrease ';
         SECOND_COMMON_PART_BAD_ELL_STR =...
             [' ellipsoid (linear system''s parameter): change ',...
@@ -531,7 +533,6 @@ classdef AReach < elltool.reach.IReach
                     qtStrCMat, qtStrCVec, x0MatArray, ...
                     x0VecMat, newTimeVec, self.relTol, ...
                     isDisturbance);
-                %[ellTubeRelVec{il0Num},goodDirSetObjCell{il0Num},probDynObjCell{il0Num}]
                 [ellTubeRel1, goodDirSetObj,  probDynObj1]= self.makeEllTubeRel(...
                     probDynObj, l0Mat, ...
                     newTimeVec, isDisturbance, self.relTol, approxType);
@@ -588,7 +589,7 @@ classdef AReach < elltool.reach.IReach
             %
             ellTubeRelList = cell(1, nGoodDirs);
             isDisturbance = self.isDisturbance(ctStrCMat, qtStrCMat);
-           pCalc=elltool.pcalc.ParCalculator();
+            pCalc=elltool.pcalc.ParCalculator();
             
             nTimeSGoodDirs=size(l0Mat,1);
             l0MatCVec=mat2cell(fliplr(l0Mat),nTimeSGoodDirs,ones(1,nGoodDirs));
@@ -740,7 +741,22 @@ classdef AReach < elltool.reach.IReach
                     errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
                     errorTag = [self.ETAG_WR_INP, ...
                         self.ETAG_R_PROB, self.ETAG_ONLY_CHECK];
-                  
+                elseif isMatch('auxdfeval:derivedTaskFailed')
+                    if (strcmp(meObj.cause{1}.identifier, 'MODGEN:COMMON:CHECKMULTVAR:wrongInput:shapeMat'))
+                      errorStr = [self.EMSG_SHAPEMAT_CALC];
+                      errorTag = [self.ETAG_WR_INP, ...
+                        self.ETAG_SHAPEMAT_CALC];
+                    elseif (strcmp (meObj.cause{1}.identifier,...
+                            'MODGEN:PCALC:AUXDFEVAL:unknownTaskError'))
+                      errorStr = [self.EMSG_DEGR_ESTIMATE];
+                      errorTag = [self.ETAG_WR_INP, ...
+                        self.ETAG_DEGR_ESTIMATE];
+                    elseif (strcmp (meObj.cause{1}.identifier,...
+                            'MODGEN:COMMON:CHECKVAR:wrongInput'))
+                        errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
+                        errorTag = [self.ETAG_WR_INP, ...
+                        self.ETAG_R_PROB, self.ETAG_ONLY_CHECK];
+                    end
                 end
                 if (isempty(errorStr)) 
                     rethrow(meObj);
