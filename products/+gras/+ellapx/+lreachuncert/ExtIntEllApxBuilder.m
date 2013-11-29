@@ -70,7 +70,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             CQCTransMat=CQCTransDynamics.evaluate(t);
             %
             [VMat,DMat]=eig(QIntMat);
-            if ~ismatposdef(QIntMat,self.calcPrecision,true)
+            if ~ismatposdef(QIntMat,self.relTol,true)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*realsqrt(DMat)*transpose(VMat);
@@ -210,14 +210,14 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 QIntArrayList,aMat,MIntArrayList,resTimeVec,ltGoodDirArray,...
                 sTime,gras.ellapx.enums.EApproxType.Internal,...
                 apxSchemaName,apxSchemaDescr,...
-                self.getCalcPrecision);
+                self.getRelTol, self.getRelTol);
             %
             self.ellTubeRel.unionWith(...
                 gras.ellapx.smartdb.rels.EllTube.fromQMArrays(...
                 QExtArrayList,aMat,MExtArrayList,resTimeVec,ltGoodDirArray,...
                 sTime,gras.ellapx.enums.EApproxType.External,...
                 apxSchemaName,apxSchemaDescr,...
-                self.getCalcPrecision));
+                self.getRelTol, self.getRelTol));
         end
     end
     methods (Access=protected)
@@ -233,13 +233,13 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     end
     methods
         function self=ExtIntEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,calcPrecision,varargin)
+                timeLimsVec,relTol,varargin)
             import gras.ellapx.lreachuncert.ExtIntEllApxBuilder;
             import modgen.common.throwerror;
             import gras.la.ismatposdef;
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...
                 goodDirSetObj,timeLimsVec,...
-                ExtIntEllApxBuilder.N_TIME_POINTS,calcPrecision);
+                ExtIntEllApxBuilder.N_TIME_POINTS,relTol);
             x0Mat = pDefObj.getX0Mat();            
             if ~ismatposdef(x0Mat, self.REG_ABS_TOL)
                 throwerror('wrongInput',...

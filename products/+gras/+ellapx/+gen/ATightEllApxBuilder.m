@@ -12,7 +12,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
         sMethodName
     end
     properties (SetAccess=private,GetAccess=protected)
-        calcPrecision
+        relTol
         absTol
     end
     properties (Constant,GetAccess=private)
@@ -63,11 +63,16 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
         end
     end
     methods
-        function calcPrecision=getCalcPrecision(self)
-            calcPrecision=self.calcPrecision;
+        function relTol=getRelTol(self)
+            relTol=self.relTol;
         end
+        
+        function calcPrecision=getCalcPrecision(self)
+            calcPrecision = self.relTol;
+        end
+        
         function self=ATightEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,nTimePoints,calcPrecision)
+                timeLimsVec,nTimePoints,relTol)
             import gras.ellapx.gen.ATightEllApxBuilder;
             import modgen.common.throwerror;
             import gras.la.ismatposdef;            
@@ -92,10 +97,10 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             nDims=pDefObj.getDimensionality;
             precisionFactor=min(2./(nDims*nDims),...
                 ATightEllApxBuilder.MAX_PRECISION_FACTOR);
-            self.odeAbsCalcPrecision=calcPrecision*precisionFactor;
-            self.odeRelCalcPrecision=calcPrecision*precisionFactor;
-            self.calcPrecision=calcPrecision;
-            self.absTol=calcPrecision*ABS_TOL_FACTOR;
+            self.odeAbsCalcPrecision=relTol*precisionFactor;
+            self.odeRelCalcPrecision=relTol*precisionFactor;
+            self.relTol=relTol;
+            self.absTol=relTol*ABS_TOL_FACTOR;
             %
             x0Mat = pDefObj.getX0Mat();            
             if ~ismatposdef(x0Mat, self.absTol)

@@ -74,7 +74,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             self.ellTubeRel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
                 QArrayList,aMat,resTimeVec,ltGoodDirArray,sTime,apxType,...
-                apxSchemaName,apxSchemaDescr,self.getCalcPrecision);
+                apxSchemaName,apxSchemaDescr,self.getRelTol, self.getRelTol);
         end
     end
     methods (Abstract,Access=protected)
@@ -88,7 +88,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     end
     methods
         function self=ATightEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,calcPrecision)
+                timeLimsVec,relTol)
             import gras.ellapx.common.*;
             import modgen.common.throwerror;
             import gras.ellapx.lreachplain.ATightEllApxBuilder;
@@ -102,7 +102,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...
                 goodDirSetObj,timeLimsVec,...
-                ATightEllApxBuilder.N_TIME_POINTS,calcPrecision);
+                ATightEllApxBuilder.N_TIME_POINTS,relTol);
         end
         function ellTubeRel=getEllTubes(self)
             import gras.gen.SquareMatVector;

@@ -118,10 +118,6 @@ classdef F<smartdb.gen.AFieldDefs
         LS_GOOD_DIR_ORIG_VEC_D='Original (not projected) good direction at time s';
         LS_GOOD_DIR_ORIG_VEC_T={'cell','double'};
         %
-%         CALC_PRECISION='calcPrecision';
-%         CALC_PRECISION_D='Calculation precision';
-%         CALC_PRECISION_T={'double'};
-        %
         ABS_TOLERANCE='absTol';
         ABS_TOLERANCE_D='Absolute tolerance';
         ABS_TOLERANCE_T={'double'};
