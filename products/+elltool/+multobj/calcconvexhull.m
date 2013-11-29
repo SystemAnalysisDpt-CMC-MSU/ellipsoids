@@ -1,4 +1,4 @@
- function [convexMat, convexVec, discrepVec,vertMat] = calcconvexhull(pointsMat,indVec,improveDirectVec,nPropExpected, properties)
+function [convexMat, convexVec, discrepVec,vertMat] = calcconvexhull(pointsMat,indVec,improveDirectVec,nPropExpected, properties)
 % 
 % CALCCONVEXHULL - builds the convex hull of given points
 % 
