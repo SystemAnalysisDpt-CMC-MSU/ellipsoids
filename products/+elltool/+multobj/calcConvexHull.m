@@ -1,4 +1,4 @@
- function [convexMat, convexVec, discrepVec,vertMat] = calcConvexHull(pointsMat,indVec,improveDirectVec,nPropExpected, properties)
+ function [convexMat, convexVec, discrepVec,vertMat] = calcconvexhull(pointsMat,indVec,improveDirectVec,nPropExpected, properties)
 % 
 % CALCCONVEXHULL - builds the convex hull of given points
 % 
@@ -24,9 +24,9 @@
 %       ApproxDist: double[1,1] - is used in the process of approximation; if  the point found as a result of calculating  the support function lies at the distance less than ApproxDist from the internal approximation then it is not expectant to be attached and so it isn't kept on memory;by default ApproxDist  = 1e-5
 %       precTest: double[1,1] - is used only when errorCheckMode = 1;  if the vertex of the convex hull should be on the face ( according to the polytope's structure), but actually lies at the distanse more than precTest from the face because of  erros, emerged by rounding during the calculations, then the process is interrupted with message "the precision s not sufficient"; by default precTest = 1e-4
 %       relPrec: double[1,1] - is used in the process of calculating  the dot product; if when finding the sum of two values, the result isn't more than the result of multiplying of one of the values and relPrec, then the sum is defined as 0;by default relPrec = 1e-5
-%       inftyDef: double[1,1] - is used as infinity; by default IinftyDef = 1e6
+%       inftyDef: double[1,1] - is used as infinity; by default inftyDef = 1e6
 %       isVerbose:double[1,1] - determins if the mode of printing the process information is on (1) or off (0 - be default)
-%               NOTE: EPSdif must be less than faceDist and precTest!
+%               NOTE: faceDist must be less than ApproxDist and precTest!
 % 
 %  Output:
 %       convexMat: double [nResInequalities,nDims] 
@@ -44,67 +44,69 @@ if (nargin < 4)
 end
 if (isa(pointsMat,'double')==0)
     throwerror('wrongType','polyMat must be double array');
-end 
+end
 if ((isa(nPropExpected,'numeric')==0))
     throwerror('wrongInput','nPropExpected must be defined');
 end
-if (nargin==3)&&((isa(properties,'cell')==0))
+if (nargin==5)&&((isa(properties,'cell')==0))
     throwerror('wrongType','properties mast be cell array');
 end
-
 if(nPropExpected > 0)
-    [reg,isSpecVec,...
-          propVal1,propVal2,propVal3,propVal4,propVal5,propVal6,propVal7...
-          propVal8,propVal9,propVal10,propVal11,propVal12,propVal13]=...
-          modgen.common.parseparext(properties,...
-          {'nAddTopElems','errorCheckMode','approxPrec','freeMemoryMode','discardIneqMode',...
-          'incDim','faceDist','inApproxDist','ApproxDist','precTest','relPrec','inftyDef','isVerbose';...
-         32, 1.e-3 ,1.0 ,0.0, 1.0, 0.0, .9e-5, 1.e-4, 1.e-5, 1.e-4, 1.e-5, 1.e6,1;});
-    controlParams=[propVal1 propVal2 propVal3 propVal4 propVal5 propVal6 propVal7 propVal8 propVal9 propVal10 propVal11 propVal12 propVal13];
+    [~,~,...
+        propVal1,propVal2,propVal3,propVal4,propVal5,propVal6,propVal7...
+        propVal8,propVal9,propVal10,propVal11,propVal12,propVal13]=...
+        modgen.common.parseparext(properties,...
+        {'nAddTopElems','errorCheckMode','approxPrec','freeMemoryMode',...
+        'discardIneqMode','incDim','faceDist','inApproxDist','ApproxDist',...
+        'precTest','relPrec','inftyDef','isVerbose';...
+        32, 1.e-3 ,1.0 ,0.0, 1.0, 0.0, .9e-5, 1.e-4, 1.e-5, 1.e-4, 1.e-5, 1.e6,0;});
+    controlParams=[propVal1 propVal2 propVal3 propVal4 propVal5 propVal6 ...
+        propVal7 propVal8 propVal9 propVal10 propVal11 propVal12 propVal13];
+    if(propVal7>propVal9)||(propVal7>propVal10)
+       throwerror('wrongParams','faceDist must be less then ApproxDist and precTest');   
+    end
 else
-    controlParams=[32 1.e-3 1.0 0.0 1.0 0.0 .9e-5 1.e-4 1.e-5 1.e-4 1.e-5 1.e6 1];
+    controlParams=[32 1.e-3 1.0 0.0 1.0 0.0 .9e-5 1.e-4 1.e-5 1.e-4 1.e-5 1.e6 0];
 end
 
 if ((isa(controlParams,'double')==0))
     throwerror('wrongParamsType','properties must be double');
-end 
+end
 
-dim1 = size(pointsMat,1);
-if(dim1<3)
+if(size(pointsMat,1)<3)
     throwerror('wrongSize','polyMat must contain at least three points');
 end
-nDims=ndims(pointsMat);
-if(nDims>2)||(nDims<2)
+
+if(ne(ndims(pointsMat),2))
     throwerror('wrongSize','polyMat must be 2-dimensional array');
 end
-dim3 = size(indVec,1);
-if(dim3>1)
+if(size(indVec,1)>1)
     throwerror('wrongSize','indVec must be vector');
 end
-dim4 = size(improveDirectVec,1);
-if(dim4>1)
+if(size(improveDirectVec,1)>1)
     throwerror('wrongSize','improveDirectVec must be vector');
 end
-if (ne(size(indVec,2) ,size(improveDirectVec,2))) 
+if (ne(size(indVec,2) ,size(improveDirectVec,2)))
     throwerror('wrongSizes','indVec and improveDirectVec must be the same length');
 end
-dim2 = size(pointsMat,2);
+nDims = size(pointsMat,2);
 pointsMat=pointsMat';
 pointsMat=pointsMat(:);
 pointsMat=pointsMat';
 num=numel(pointsMat);
-[convexMat,convexVec,discrepVec,vertMat,sizeMat]=elltool.multobj.mexconvexhull(dim2,indVec,improveDirectVec,num,pointsMat,controlParams);
-convexMat=convexMat(1:sizeMat(1));
-convexVec=convexVec(1:sizeMat(2));
-discrepVec=discrepVec(1:sizeMat(3));
-vertMat=vertMat(1:sizeMat(4));
-convexMat=reshape(convexMat,numel(convexMat)/dim2,dim2);
+[convexMat,convexVec,discrepVec,vertMat,sizeMat]=elltool.multobj.mexconvexhull(nDims,...
+    indVec,improveDirectVec,num,pointsMat,controlParams);
+convexMat=convexMat(1:min(numel(convexMat),sizeMat(1)));
+convexVec=convexVec(1:min(numel(convexVec),sizeMat(2)));
+discrepVec=discrepVec(1:min(numel(discrepVec),sizeMat(3)));
+vertMat=vertMat(1:min(numel(vertMat),sizeMat(4)));
+convexMat=reshape(convexMat,numel(convexMat)/nDims,nDims);
 convexVec=(convexVec)';
-vertMat=reshape(vertMat,numel(vertMat)/dim2,dim2);
+vertMat=reshape(vertMat,numel(vertMat)/nDims,nDims);
 if (numel(convexMat)==0)
     convexMat=[];
     convexVec=[];
     discrepVec=[];
     vertMat = [];
 end
-end
+ end

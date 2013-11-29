@@ -54,7 +54,7 @@ void wait (void)
  {////clreol ();
   //gotoxy (10, 15);
   //textcolor (12);
-  mexPrintf ("Nazhmite lyubuyu klavishu . . .\n");
+return;
   //getch ();
  }    /* wait */
 
@@ -385,8 +385,6 @@ return;
   // add_top = 32 - ch_topCOUNT % 32;
  // textcolor (12);
   while (kbhit ()) getch ();
-  mexPrintf ("Nazhmite lyubuyu klavishu . . .\n");
-  getch ();
  }    /* conv_go */
 
 

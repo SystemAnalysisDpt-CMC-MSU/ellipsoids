@@ -1,4 +1,4 @@
-function [approxMat, approxVec, discrepVec,vertMat] = calcEllipsoidApprox(semiaxesVec,indVec,improveDirectVec,nPropExpected, properties)
+function [approxMat, approxVec, discrepVec,vertMat] = calcellipsoidapprox(semiaxesVec,indVec,improveDirectVec,nPropExpected, properties)
 
 % CALCELLIPSOIDAPPROX - builds the approximation of ellipsoid with center in the origin by the polytope
 % 
@@ -21,9 +21,9 @@ function [approxMat, approxVec, discrepVec,vertMat] = calcEllipsoidApprox(semiax
 %       inApproxDist: double[1,1] - is used in the process of approximation; if  the point found as a result of calculating  the support function lies inside the current approximation at the distance more than inApproxDist, then the process is interrupted with a message "the vertex is inside the multiplicity" ; by default inApproxDist = 1e-4  
 %       ApproxDist: double[1,1] - is used in the process of approximation; if  the point found as a result of calculating  the support function lies at the distance less than ApproxDist from the internal approximation then it is not expectant to be attached and so it isn't kept on memory;by default ApproxDist  = 1e-5
 %       relPrec: double[1,1] - is used in the process of calculating  the dot product; if when finding the sum of two values, the result isn't more than the result of multiplying of one of the values and relPrec, then the sum is defined as 0;by default relPrec = 1e-5
-%       inftyDef: double[1,1] - is used as infinity; by default IinftyDef = 1e6
+%       inftyDef: double[1,1] - is used as infinity; by default inftyDef = 1e6
 %       isVerbose:double[1,1] - determins if the mode of printing the process information is on (1) or off (0 - be default)
-%             NOTE: EPSdif must be less than faceDist and precTest!
+%               NOTE: faceDist must be less than ApproxDist!
 %  Output:
 %       approxMat: double [nResInequalities,nDims] ,
 %       approxVec: double [nResInequalities,1] 
@@ -41,55 +41,58 @@ if (nargin < 4)
 end
 if (isa(semiaxesVec,'double')==0)
     throwerror('wrongType','semiaxesVec and centerVec must be double arrays');
-end 
+end
 if ((isa(nPropExpected,'numeric')==0))
     throwerror('wrongInput','nPropExpected must be defined');
 end
-if (nargin==4)&&((isa(properties,'cell')==0))
+if (nargin==5)&&((isa(properties,'cell')==0))
     throwerror('wrongType','properties mast be cell array');
 end
 
 
 
 if(nPropExpected > 0)
-    [reg,isSpecVec,...
-          propVal1,propVal2,propVal3,propVal4,propVal5,propVal6,propVal7...
-          propVal8,propVal9,propVal10,propVal11,propVal12,propVal13]=...
-          modgen.common.parseparext(properties,...
-          {'nAddTopElems','errorCheckMode','approxPrec','freeMemoryMode','discardIneqMode',...
-          'incDim','faceDist','inApproxDist','ApproxDist','precTest','relPrec','inftyDef','isVerbose';...
-         32, 1.e-3 ,1.0 ,0.0, 1.0, 0.0, .9e-5, 1.e-4, 1.e-5, 1.e-4, 1.e-5, 1.e6,1;});
-    controlParams=[propVal1 propVal2 propVal3 propVal4 propVal5 propVal6 propVal7 propVal8 propVal9 propVal10 propVal11 propVal12 propVal13];
+    [~,~,...
+        propVal1,propVal2,propVal3,propVal4,propVal5,propVal6,propVal7...
+        propVal8,propVal9,propVal10,propVal11,propVal12,propVal13]=...
+        modgen.common.parseparext(properties,...
+        {'nAddTopElems','errorCheckMode','approxPrec','freeMemoryMode',...
+        'discardIneqMode','incDim','faceDist','inApproxDist','ApproxDist',...
+        'precTest','relPrec','inftyDef','isVerbose';...
+        32, 1.e-3 ,1.0 ,0.0, 1.0, 0.0, .9e-5, 1.e-4, 1.e-5, 1.e-4, 1.e-5, 1.e6,0;});
+    controlParams=[propVal1 propVal2 propVal3 propVal4 propVal5 propVal6...
+        propVal7 propVal8 propVal9 propVal10 propVal11 propVal12 propVal13];
+    if(propVal7>propVal9)
+       throwerror('wrongParams','faceDist must be less then ApproxDist');   
+    end
 else
-    controlParams=[32 1.e-3 1.0 0.0 1.0 0.0 .9e-5 1.e-4 1.e-5 1.e-4 1.e-5 1.e6 1];
+    controlParams=[32 1.e-3 1.0 0.0 1.0 0.0 .9e-5 1.e-4 1.e-5 1.e-4 1.e-5 1.e6 0];
 end
 
 if ((isa(controlParams,'double')==0))
     throwerror('wrongParamsType','properties must be double');
 end
-dim1 = size(semiaxesVec,1);
-if(dim1>1)
+if(size(semiaxesVec,1)>1)
     throwerror('wrongSize','semiaxesVec must be vector');
 end
-dim2 = size(indVec,1);
-if(dim2>1)
+if(size(indVec,1)>1)
     throwerror('wrongSize','indVec must be vector');
 end
-dim3 = size(improveDirectVec,1);
-if(dim3>1)
+if(size(improveDirectVec,1)>1)
     throwerror('wrongSize','improveDirectVec must be vector');
 end
-if (ne(size(indVec,2) ,size(improveDirectVec,2))) 
+if (ne(size(indVec,2) ,size(improveDirectVec,2)))
     throwerror('wrongSizes','indVec and improveDirectVec must be the same length');
 end
-dim = numel(semiaxesVec);
-centerVec=zeros(1,dim);
-[approxMat,approxVec,discrepVec,vertMat,sizeMat]=elltool.multobj.mexellipsoidapprox(dim,indVec,improveDirectVec,centerVec,semiaxesVec,controlParams);
+nDims = numel(semiaxesVec);
+centerVec=zeros(1,nDims);
+[approxMat,approxVec,discrepVec,vertMat,sizeMat]=elltool.multobj.mexellipsoidapprox(nDims,...
+    indVec,improveDirectVec,centerVec,semiaxesVec,controlParams);
 approxMat=approxMat(1:sizeMat(1));
 approxVec=approxVec(1:sizeMat(2));
 discrepVec=discrepVec(1:sizeMat(3));
 vertMat=vertMat(1:sizeMat(4));
-approxMat=reshape(approxMat,numel(approxMat)/dim,dim);
+approxMat=reshape(approxMat,numel(approxMat)/nDims,nDims);
 approxVec=(approxVec)';
-vertMat=reshape(vertMat,numel(vertMat)/dim,dim);
+vertMat=reshape(vertMat,numel(vertMat)/nDims,nDims);
 end

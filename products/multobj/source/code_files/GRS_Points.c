@@ -54,7 +54,7 @@ void wait (void)
  {////clreol ();
   //gotoxy (10, 15);
   //textcolor (12);
-  mexPrintf ("Nazhmite lyubuyu klavishu . . .\n");
+  return;
   //getch ();
  }    /* wait */
 
@@ -331,7 +331,6 @@ return;
 #endif
 #ifdef CH_POINTS
     max = -ch_INF;
-	mexPrintf("1234\n");
     for (j = 0; j < numnum;)
      {sum = 0;
       for (i = 0; i < ch_N; i++) sum += c [i] * coef [j++];
@@ -382,7 +381,5 @@ return;
   // add_top = 32 - ch_topCOUNT % 32;
  // textcolor (12);
   while (kbhit ()) getch ();
-  mexPrintf ("Nazhmite lyubuyu klavishu . . .\n");
-  getch ();
  }    /* conv_go */
 
