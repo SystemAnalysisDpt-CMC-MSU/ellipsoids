@@ -1,5 +1,5 @@
 curfolder=pwd;
-dest=fileparts(which('+elltool\+multobj\s_approxModesMexcompilation.m'))
+dest=fileparts(which('+elltool\+multobj\s_approxModesMexcompilation.m'));
 path=modgen.path.rmlastnpathparts(dest,2);
  path =[path filesep 'multobj' filesep 'source' filesep 'code_files'];
  cd(path)
