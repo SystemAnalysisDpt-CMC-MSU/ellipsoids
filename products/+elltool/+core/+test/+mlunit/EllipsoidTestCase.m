@@ -776,10 +776,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             %Not empty ellipsoid
             testEllipsoid=self.ellFactoryObj.create(zeros(10,1),eye(10,10));
             isTestRes=trace(testEllipsoid)==10;
+            %isTestRes = modgen.common.absrelcompare(trace(testEllipsoid), 10);
             mlunitext.assert_equals(true, isTestRes);
             
             testEllipsoid=self.ellFactoryObj.create(-eye(3,1),[1 0 1; 0 0 0; 1 0 2 ]);
             isTestRes=trace(testEllipsoid)==3;
+            %isTestRes = modgen.common.absrelcompare(trace(testEllipsoid), 3);
             mlunitext.assert_equals(true, isTestRes);
             
             %High-dimensional ellipsoids
@@ -1404,9 +1406,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             end
             SEllVec = struct('centerVec', transposedCenterCVec, 'shapeMat', shapeMatCVec);
             ObtainedEllStruct = ellVec(1).toStruct();
-            isOk = isequal(ObtainedEllStruct, SEllVec(1));
+            %isOk = isequal(ObtainedEllStruct, SEllVec(1));
+            isOk = modgen.common.absrelcompare(ObtainedEllStruct, SEllVec(1));
             ObtainedEllStructVec = ellVec.toStruct();
-            isOk = isOk && isequal(ObtainedEllStructVec, SEllVec);
+            %isOk = isOk && isequal(ObtainedEllStructVec, SEllVec);
+            isOk = isOk && modgen.common.absrelcompare(ObtainedEllStructVec, SEllVec);
             mlunitext.assert_equals(true, isOk);
         end
     end
