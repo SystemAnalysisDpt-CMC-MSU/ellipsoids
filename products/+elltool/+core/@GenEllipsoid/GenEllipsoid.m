@@ -279,10 +279,10 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     end
                 end
                 if nCenSize~=1
-                    throwerror('wrongCenter','Center must be a vector');
+                    throwerror('wrongInput','Center must be a vector');
                 end
                 if mSize~=mCenSize
-                    throwerror('wrongDimensions',...
+                    throwerror('wrongInput',...
                         ['Dimension of center vector must ',...
                         'be the same as matrix']);
                 end

@@ -585,7 +585,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 sTime=newTimeVec(indMin);
                 %
                 function interpArray=simpleInterp(inpArray,isVector)
-                    import gras.interp.MatrixInterpolantFactory;
+                    import gras.mat.interp.MatrixInterpolantFactory;
                     if nargin<2
                         isVector=false;
                     end
@@ -840,7 +840,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         %             Mathematics and Computer Science,
         %             System Analysis Department 2013 $
         function interpEllTube = interp(self, timeVec)
-            import gras.interp.MatrixInterpolantFactory;
+            import gras.mat.interp.MatrixInterpolantFactory;
             import gras.ellapx.smartdb.rels.EllTube;
             import modgen.common.throwerror;
             %

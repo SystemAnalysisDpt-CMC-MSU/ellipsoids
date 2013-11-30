@@ -87,6 +87,8 @@ classdef EllipsoidTestCase < mlunitext.test_case
                     function checkShape()
                         isOkArr=arrayfun(@(x,y)isequal(x.getShapeMat(),...
                             y{1}),ellArr,shCArr);
+                        %isOkArr = modgen.common.absrelcompare(trace(testEllipsoid), 10, absTol, absTol, @norm);
+                       
                         mlunitext.assert(all(isOkArr(:)));
                     end
                     function checkProp()
@@ -703,33 +705,42 @@ classdef EllipsoidTestCase < mlunitext.test_case
             %Check empty ellipsoid
             self.runAndCheckError('maxeig(self.ellFactoryObj.create)','wrongInput:emptyEllipsoid');
             
+            import elltool.conf.Properties;
+            absTol = Properties.getAbsTol();
+            
             %Check degenerate matrix
             testEllipsoid1=self.ellFactoryObj.create([1; 1], zeros(2,2));
             testEllipsoid2=self.ellFactoryObj.create(zeros(2,2));
-            isTestRes=(maxeig(testEllipsoid1)==0)&&(maxeig(testEllipsoid2)==0);
+            %isTestRes=(maxeig(testEllipsoid1)==0)&&(maxeig(testEllipsoid2)==0);
+            isTestRes = modgen.common.absrelcompare(maxeig(testEllipsoid1), 0, absTol, absTol, @norm) && ...
+                        modgen.common.absrelcompare(maxeig(testEllipsoid2), 0, absTol, absTol, @norm);
             mlunitext.assert_equals(true, isTestRes);
             
             %Check on diaganal matrix
             testEllipsoid=self.ellFactoryObj.create(diag(1:0.2:5.2));
-            isTestRes=(maxeig(testEllipsoid)==5.2);
+            %isTestRes=(maxeig(testEllipsoid)==5.2);
+            isTestRes = modgen.common.absrelcompare(maxeig(testEllipsoid), 5.2, absTol, absTol, @norm);
             mlunitext.assert_equals(true, isTestRes);
             
             %Check on not diaganal matrix
             testEllipsoid=self.ellFactoryObj.create([1 1 -1; 1 4 -3; -1 -3 9]);
-            isTestRes=( (maxeig(testEllipsoid)-max(eig([1 1 -1; 1 4 -3; -1 -3 9])))<=eps );
+            
+            isTestRes=(abs(maxeig(testEllipsoid)-max(eig([1 1 -1; 1 4 -3; -1 -3 9])))<=absTol );
             mlunitext.assert_equals(true, isTestRes);
             
             %High-dimensional ellipsoids
             testEllVec = [self.ellFactoryObj.create(diag(1:12)), self.ellFactoryObj.create((0:0.1:1.4).',diag(0.1:0.1:1.5)), ...
                 self.ellFactoryObj.create(rand(20,1),diag(1:20))];
             testMaxEigVec = maxeig(testEllVec);
-            isTestRes = all( testMaxEigVec == [12 1.5 20] );
+            %isTestRes = all( testMaxEigVec == [12 1.5 20] );
+            isTestRes = all( modgen.common.absrelcompare(testMaxEigVec, [12 1.5 20], absTol, absTol, @norm));
             mlunitext.assert_equals(true, isTestRes);
             
             testEllMat= [self.ellFactoryObj.create((0:0.1:2).',diag(0:0.01:0.2)), self.ellFactoryObj.create(-10*ones(41,1),diag(20:10:420)), self.ellFactoryObj.create(rand(50,1),9*eye(50,50));
                 self.ellFactoryObj.create(5*eye(10,10)), self.ellFactoryObj.create(diag(0:0.0001:0.01)), self.ellFactoryObj.create(zeros(30,30))];
             testMaxEigMat = maxeig(testEllMat);
-            isTestMat = (testMaxEigMat == [0.2 420 9; 5 0.01 0]);
+            %isTestMat = (testMaxEigMat == [0.2 420 9; 5 0.01 0]);
+            isTestMat = modgen.common.absrelcompare(testMaxEigMat, [0.2 420 9; 5 0.01 0], absTol, absTol, @norm);
             isTestRes = all( isTestMat(:));
             mlunitext.assert_equals(true, isTestRes);
         end
@@ -738,15 +749,21 @@ classdef EllipsoidTestCase < mlunitext.test_case
             %Check empty ellipsoid
             self.runAndCheckError('mineig(self.ellFactoryObj.create)','wrongInput:emptyEllipsoid');
             
+            import elltool.conf.Properties;
+            absTol = Properties.getAbsTol();
+            
             %Check degenerate matrix
             testEllipsoid1=self.ellFactoryObj.create([-2; -2], zeros(2,2));
             testEllipsoid2=self.ellFactoryObj.create(zeros(2,2));
-            isTestRes=(mineig(testEllipsoid1)==0)&&(mineig(testEllipsoid2)==0);
+            %isTestRes=(mineig(testEllipsoid1)==0)&&(mineig(testEllipsoid2)==0);
+            isTestRes = modgen.common.absrelcompare(mineig(testEllipsoid1), 0, absTol, absTol, @norm) && ...
+                        modgen.common.absrelcompare(mineig(testEllipsoid2), 0, absTol, absTol, @norm);
             mlunitext.assert_equals(true, isTestRes);
             
             %Check on diaganal matrix
             testEllipsoid=self.ellFactoryObj.create(diag(4:-0.2:1.2));
-            isTestRes=(mineig(testEllipsoid)==1.2);
+            %isTestRes=(mineig(testEllipsoid)==1.2);
+            isTestRes = modgen.common.absrelcompare(mineig(testEllipsoid), 1.2, absTol, absTol, @norm);
             mlunitext.assert_equals(true, isTestRes);
             
             %Check on not diaganal matrix
@@ -758,13 +775,15 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllVec = [self.ellFactoryObj.create(diag(1:12)), self.ellFactoryObj.create((0:0.1:1.4).',diag(0.1:0.1:1.5)), ...
                 self.ellFactoryObj.create(rand(21,1),diag(0:20))];
             testMinEigVec = mineig(testEllVec);
-            isTestRes = all( testMinEigVec == [1 0.1 0] );
+            %isTestRes = all( testMinEigVec == [1 0.1 0] );
+            isTestRes = all( modgen.common.absrelcompare(testMinEigVec, [1 0.1 0], absTol, absTol, @norm));
             mlunitext.assert_equals(true, isTestRes);
             
             testEllMat= [self.ellFactoryObj.create((0.1:0.1:2).',diag(0.01:0.01:0.2)), self.ellFactoryObj.create(-10*ones(41,1),diag(20:10:420)), self.ellFactoryObj.create(rand(50,1),9*eye(50,50));
                 self.ellFactoryObj.create(repmat(diag(1:20),2,2)), self.ellFactoryObj.create(diag(0.0001:0.0001:0.01)), self.ellFactoryObj.create(zeros(30,30))];
             testMinEigMat = mineig(testEllMat);
-            isTestMat = (testMinEigMat == [0.01 20 9; 0 0.0001 0]);
+            %isTestMat = (testMinEigMat == [0.01 20 9; 0 0.0001 0]);
+            isTestMat = modgen.common.absrelcompare(testMinEigMat, [0.01 20 9; 0 0.0001 0], absTol, absTol, @norm);
             isTestRes = all( isTestMat(:));
             mlunitext.assert_equals(true, isTestRes);
         end
@@ -773,29 +792,34 @@ classdef EllipsoidTestCase < mlunitext.test_case
             %Empty ellipsoid
             self.runAndCheckError('trace(self.ellFactoryObj.create)','wrongInput:emptyEllipsoid');
             
+            import elltool.conf.Properties;
+            absTol = Properties.getAbsTol();
+            
             %Not empty ellipsoid
             testEllipsoid=self.ellFactoryObj.create(zeros(10,1),eye(10,10));
-            isTestRes=trace(testEllipsoid)==10;
-            %isTestRes = modgen.common.absrelcompare(trace(testEllipsoid), 10);
+            %isTestRes=trace(testEllipsoid)==10;
+            isTestRes = modgen.common.absrelcompare(trace(testEllipsoid), 10, absTol, absTol, @norm);
             mlunitext.assert_equals(true, isTestRes);
             
             testEllipsoid=self.ellFactoryObj.create(-eye(3,1),[1 0 1; 0 0 0; 1 0 2 ]);
-            isTestRes=trace(testEllipsoid)==3;
-            %isTestRes = modgen.common.absrelcompare(trace(testEllipsoid), 3);
+            %isTestRes=trace(testEllipsoid)==3;
+            isTestRes = modgen.common.absrelcompare(trace(testEllipsoid), 3, absTol, absTol, @norm);
             mlunitext.assert_equals(true, isTestRes);
             
             %High-dimensional ellipsoids
             testEllVec = [self.ellFactoryObj.create(diag(1:12)), self.ellFactoryObj.create((0:0.1:1.4).',diag(0.1:0.1:1.5)), ...
                 self.ellFactoryObj.create(rand(21,1),diag(0:20))];
             testTraceVec = trace(testEllVec);
-            isTestRes = all( testTraceVec == [78 12 210] );
+            %isTestRes = all( testTraceVec == [78 12 210] );
+            isTestRes = all (modgen.common.absrelcompare(testTraceVec, [78 12 210], absTol, absTol, @norm));
             mlunitext.assert_equals(true, isTestRes);
             
             testEllMat= [self.ellFactoryObj.create((0.1:0.1:2).',diag(0.01:0.01:0.2)), self.ellFactoryObj.create(-10*ones(41,1),diag(20:10:420)),...
                 self.ellFactoryObj.create(rand(50,1),9*eye(50,50));   self.ellFactoryObj.create(repmat(diag(1:20),2,2)),...
                 self.ellFactoryObj.create(diag(0.0001:0.0001:0.01)), self.ellFactoryObj.create(zeros(30,30))];
             testTraceMat = trace(testEllMat);
-            isTestMat = ( testTraceMat == [sum(0.01:0.01:0.2) sum(20:10:420) 9*50; 2*sum(1:20) sum(0.0001:0.0001:0.01) 0] );
+            %isTestMat = ( testTraceMat == [sum(0.01:0.01:0.2) sum(20:10:420) 9*50; 2*sum(1:20) sum(0.0001:0.0001:0.01) 0] );
+            isTestMat = modgen.common.absrelcompare(testTraceMat, [sum(0.01:0.01:0.2) sum(20:10:420) 9*50; 2*sum(1:20) sum(0.0001:0.0001:0.01) 0], absTol, absTol, @norm);
             isTestRes = all( isTestMat(:));
             mlunitext.assert_equals(true, isTestRes);
         end
@@ -808,13 +832,15 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             %Check degenerate ellipsoid
             testEllipsoid=self.ellFactoryObj.create([1 0 0;0 1 0;0 0 0]);
-            isTestRes=volume(testEllipsoid)==0;
+            %isTestRes=volume(testEllipsoid)==0;
+            isTestRes = modgen.common.absrelcompare(volume(testEllipsoid), 0, absTol, absTol, @norm);
             mlunitext.assert_equals(true, isTestRes);
             
             %Check dim=1 with two different centers
             testEllipsoid1=self.ellFactoryObj.create(2,1);
             testEllipsoid2=self.ellFactoryObj.create(1);
-            isTestRes=(volume(testEllipsoid1)==2)&&(volume(testEllipsoid2)==2);
+            %isTestRes=(volume(testEllipsoid1)==2)&&(volume(testEllipsoid2)==2);
+            isTestRes = modgen.common.absrelcompare(volume(testEllipsoid1), 2, absTol, absTol, @norm) && modgen.common.absrelcompare(volume(testEllipsoid2), 2, absTol, absTol, @norm);
             mlunitext.assert_equals(true, isTestRes);
             
             %Check dim=2 with two different centers
@@ -1406,11 +1432,9 @@ classdef EllipsoidTestCase < mlunitext.test_case
             end
             SEllVec = struct('centerVec', transposedCenterCVec, 'shapeMat', shapeMatCVec);
             ObtainedEllStruct = ellVec(1).toStruct();
-            %isOk = isequal(ObtainedEllStruct, SEllVec(1));
-            isOk = modgen.common.absrelcompare(ObtainedEllStruct, SEllVec(1));
+            isOk = isequal(ObtainedEllStruct, SEllVec(1));
             ObtainedEllStructVec = ellVec.toStruct();
-            %isOk = isOk && isequal(ObtainedEllStructVec, SEllVec);
-            isOk = isOk && modgen.common.absrelcompare(ObtainedEllStructVec, SEllVec);
+            isOk = isOk && isequal(ObtainedEllStructVec, SEllVec);
             mlunitext.assert_equals(true, isOk);
         end
     end
@@ -1427,8 +1451,12 @@ else
 end
 [testCenterVec, testShapeMat]=double(testEllipsoid);
 try
-    isTestCVec  = testCenterVec == qCenterVec;
-    isTestEyeMat = testShapeMat == qShapeMat;
+    %isTestCVec  = testCenterVec == qCenterVec;
+    %isTestEyeMat = testShapeMat == qShapeMat;
+    import elltool.conf.Properties;
+    absTol = Properties.getAbsTol();
+    isTestCVec = modgen.common.absrelcompare(testCenterVec, qCenterVec, absTol, absTol, @norm);
+    isTestEyeMat = modgen.common.absrelcompare(testShapeMat, qShapeMat, absTol, absTol, @norm);
 catch
     isTestRes = false;
 end
@@ -1446,8 +1474,12 @@ else
 end
 [testCenterVec, testShapeMat]=parameters(testEllipsoid);
 try
-    isTestCVec  = testCenterVec == qCenterVec;
-    isTestEyeMat = testShapeMat == qShapeMat;
+    %isTestCVec  = testCenterVec == qCenterVec;
+    %isTestEyeMat = testShapeMat == qShapeMat;  
+    import elltool.conf.Properties;
+    absTol = Properties.getAbsTol();
+    isTestCVec = modgen.common.absrelcompare(testCenterVec, qCenterVec, absTol, absTol, @norm);
+    isTestEyeMat = modgen.common.absrelcompare(testShapeMat, qShapeMat, absTol, absTol, @norm);
 catch
     isTestRes = false;
 end
