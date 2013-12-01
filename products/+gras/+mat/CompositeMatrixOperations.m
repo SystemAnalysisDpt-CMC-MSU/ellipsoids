@@ -91,12 +91,50 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
                     indexesList);
             end
         end
+        % subarrayInit
+        function obj=subarrayInit(self,inMatrixFunc,indexesList,valueArray)
+            obj=subarrayInit@gras.mat.AMatrixOperations(self,inMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixSubArrayInitFunc(inMatrixFunc,...
+                    indexesList,valueArray);
+            end
+        end
         % reshape
         function obj=reshape(self,inMatrixFunc,newSizeVec)
             obj=reshape@gras.mat.AMatrixOperations(self,inMatrixFunc);
             if isempty(obj)
                 obj=gras.mat.fcnlib.MatrixReshapeFunc(inMatrixFunc,...
                     newSizeVec);
+            end
+        end
+        % mulHadamard
+        function obj=mulHadamard(self,lMatrixFunc,rMatrixFunc)
+            obj=mulHadamard@gras.mat.AMatrixOperations(self,lMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixMulHadamardFunc(lMatrixFunc,...
+                    rMatrixFunc);
+            end
+        end
+        % squeeze
+        function obj=squeeze(self,lMatrixFunc,nTimePoints)
+            obj=squeeze@gras.mat.AMatrixOperations(self,lMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixSqueezeFunc(lMatrixFunc,nTimePoints);
+            end
+        end
+        % divHadamard
+        function obj=divHadamard(self,lMatrixFunc,rMatrix)
+            obj=divHadamard@gras.mat.AMatrixOperations(self,lMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixDivHadamardFunc(lMatrixFunc,rMatrix);
+            end
+        end
+        % rMultiplyByVecSpecial
+        function obj=rMultiplyByVecSpecial(self,lMatrixFunc,aArray,sizeMatrix)
+            obj=rMultiplyByVecSpecial@gras.mat.AMatrixOperations(self,lMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixRMultiplyByVecSpecialFunc(...
+                    lMatrixFunc,aArray,sizeMatrix);
             end
         end
         function obj=rMultiplyByScalar(self,lMatFunc,rScalFunc)

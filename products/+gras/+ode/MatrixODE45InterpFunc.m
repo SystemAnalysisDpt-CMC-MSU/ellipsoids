@@ -34,6 +34,10 @@ classdef MatrixODE45InterpFunc < gras.mat.IMatrixFunction
         function nRows = getNRows(self)
             nRows = self.getDimensionality();
         end
+        function nEqs = getNEquations(self)
+            nEqs=length(...
+                self.objMatrixSysReshapeOde45RegInterp.getSizeEqList());
+        end
     end
     
 end

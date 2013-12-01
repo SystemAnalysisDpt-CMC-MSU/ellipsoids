@@ -122,10 +122,30 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
         function obj=subarray(self,inMatFunc)
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
         end
+        % subarrayInit
+        function obj=subarrayInit(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
         % reshape
         function obj=reshape(self,inMatFunc)
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
-        end        
+        end 
+        % mulHadamard
+        function obj=mulHadamard(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end 
+        % squeeze
+        function obj=squeeze(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % divHadamard
+        function obj=divHadamard(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % rMultiplyByVecSpecial
+        function obj=rMultiplyByVecSpecial(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
         function obj=rMultiplyByScalar(self,lMatFunc,rScalFunc)
             if self.isMatFuncConst(lMatFunc,rScalFunc)
                 obj = self.constBinaryOperation(@times,lMatFunc,rScalFunc);

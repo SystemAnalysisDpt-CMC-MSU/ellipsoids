@@ -19,10 +19,10 @@ classdef AMatrixUnaryOpArrayFunc<gras.mat.AMatrixOpFunc
     methods
         function self=AMatrixUnaryOpArrayFunc(lMatFunc, opFuncHandle)
             %
-            modgen.common.type.simple.checkgen(lMatFunc,...
-                @(x)isa(x,'gras.mat.IMatrixFunction'));
-            modgen.common.type.simple.checkgen(opFuncHandle,...
-                @(x)isa(x,'function_handle'));
+%             modgen.common.type.simple.checkgen(lMatFunc,...
+%                 @(x)isa(x,'gras.mat.IMatrixFunction'));
+%             modgen.common.type.simple.checkgen(opFuncHandle,...
+%                 @(x)isa(x,'function_handle'));
             %
             self=self@gras.mat.AMatrixOpFunc;
             %

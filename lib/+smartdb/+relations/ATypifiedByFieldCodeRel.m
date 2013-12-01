@@ -31,12 +31,12 @@ classdef ATypifiedByFieldCodeRel<smartdb.relations.ATypifiedStaticRelation
                     ['relation loaded from mat file ',...
                     'has incorrect field descriptions']);
             end
-            fieldTypeSpecList=outObj.getFieldTypeSpecList(expFieldNameList);
-            if ~isequal(fieldTypeSpecList,expFieldTypeSpecList)
-                throwerror('badMatFile:wrongState',...
-                    ['relation loaded from mat file ',...
-                    'has incorrect field types']);
-            end                
+%             fieldTypeSpecList=outObj.getFieldTypeSpecList(expFieldNameList);
+%             if ~isequal(fieldTypeSpecList,expFieldTypeSpecList)
+%                 throwerror('badMatFile:wrongState',...
+%                     ['relation loaded from mat file ',...
+%                     'has incorrect field types']);
+%             end                
         end
     end
 	methods (Access=protected,Abstract)

@@ -163,7 +163,7 @@ classdef F<smartdb.gen.AFieldDefs
         TUBE_A_MAT_INTERP_OBJ_D='Interpolation object to the aMat'
         TUBE_A_MAT_INTERP_OBJ_T={'cell'};
         %
-        TUBE_GOOD_DIR_INTERP_OBJ='ltGoodDirInterObj';
+        TUBE_GOOD_DIR_INTERP_OBJ='ltGoodDirInterpObjList';
         TUBE_GOOD_DIR_INTERP_OBJ_D='Interpolation object to the ltGoodDirArray'
         TUBE_GOOD_DIR_INTERP_OBJ_T={'cell'};
         
