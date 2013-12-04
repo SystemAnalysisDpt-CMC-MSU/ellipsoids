@@ -28,7 +28,7 @@ int nrhs,const mxArray *prhs[])
 	}
 
 	else if (nlhs !=5) {
-		mexErrMsgTxt("Five input arguments are nedeed.");
+		mexErrMsgTxt("Five output arguments are nedeed.");
 		}
 	    size = mxGetScalar(prhs[0]);
 		indProjVec=(int*)mxGetPr(prhs[1]);
