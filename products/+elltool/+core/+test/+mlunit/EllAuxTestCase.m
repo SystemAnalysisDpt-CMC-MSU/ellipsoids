@@ -32,7 +32,9 @@ classdef EllAuxTestCase < mlunitext.test_case
             masterCheckIsPos(shRegMat);
             %
             ell=self.ellFactoryObj.create(shMat,'absTol',absTol);
-            mlunitext.assert(isequal(ell.getShapeMat(),shMat));
+                                 
+            mlunitext.assert(modgen.common.absrelcompare(ell.getShapeMat(), shMat, absTol, absTol, @norm));
+            
             %
             checkApxReg(@minksum_ia);
             checkApxReg(@minksum_ea);

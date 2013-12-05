@@ -91,6 +91,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
             self.checkIfScalar();
             shMat=self.shapeMat;
         end
+
     end
     methods (Abstract)
        [SDataArr,SFieldNiceNames,SFieldDescr]=toStruct(ellArr,isPropIncluded)

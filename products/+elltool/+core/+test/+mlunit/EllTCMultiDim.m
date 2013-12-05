@@ -573,6 +573,9 @@ function checkMaxeigAndMineig(self, isMaxeigCheck)
     testError(14);
     testError(15);
     function testCorrect(flag)
+        import elltool.conf.Properties;
+        absTol = Properties.getAbsTol();
+        
         if isMaxeigCheck
             [testEllArray ansNumArray] = self.createTypicalArray(flag);
             [testNumArray] = maxeig(testEllArray);
@@ -585,6 +588,9 @@ function checkMaxeigAndMineig(self, isMaxeigCheck)
             [testNumArray] = mineig(testEllArray);
         end
         mlunitext.assert_equals(ansNumArray, testNumArray);
+        %должно быть так, как ниже
+        %isTestRes = modgen.common.absrelcompare(ansNumArray, testNumArray, absTol, absTol, @norm);
+        %mlunitext.assert_equals(isTestRes, true);
     end
     function testError(flag)
         [testEllArray, ~, errorStr] = self.createTypicalArray(flag);

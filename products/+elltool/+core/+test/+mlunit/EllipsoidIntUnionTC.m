@@ -398,6 +398,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             end;
             resEllVec = ellintersection_ia(testEllVec);
             ansEllVec = eyeEllipsoid;
+            
             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
             
@@ -639,8 +640,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             nDim = 2;
             testEllVec = self.ellFactoryObj.create(eye(nDim));
             testHpVec = hyperplane([0, 1].', 0);
-            resEllVec = hpintersection(testEllVec, testHpVec);
-            ansEllVec = self.ellFactoryObj.create([1, 0; 0, 0]);
+            resEllVec = hpintersection(testEllVec, testHpVec)
+            ansEllVec = self.ellFactoryObj.create([1, 0; 0, 0])
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 2;

@@ -604,6 +604,8 @@ end
 function auxTestProjection(self, methodName, centVec, shapeMat, projMat, dimVec)
      import modgen.common.throwerror;
      import modgen.cell.cellstr2expression;
+     import elltool.conf.Properties;
+     absTol = Properties.getAbsTol();
      INP_OBJ_MODIF_LIST = {'projection'};
      INP_OBJ_NOT_MODIF_LIST = {'getProjection'};
      projCentVec = projMat'*centVec;
@@ -638,7 +640,7 @@ function auxTestProjection(self, methodName, centVec, shapeMat, projMat, dimVec)
         end    
         projEllArr = ellArr.(methodName)(projMat);
         compEllArr = compEllObj.repMat(dimVec);
-        testIsRight1 = isequal(compEllArr, projEllArr);
+        testIsRight1 = all(compEllArr(:).isEqual(projEllArr(:)));
         if isInpObjModif    
             %additional test for modification of input array
             testIsRight2 = all(compEllArr(:).isEqual(ellArr(:)));
@@ -647,9 +649,8 @@ function auxTestProjection(self, methodName, centVec, shapeMat, projMat, dimVec)
             testIsRight2 = all(ellCopyArr(:).isEqual(ellArr(:)));
         end
      end    
-     
-     mlunitext.assert_equals(testIsRight1, 1);
-     mlunitext.assert_equals(testIsRight2, 1);
+     mlunitext.assert_equals(1, testIsRight1);
+     mlunitext.assert_equals(1, testIsRight2);
 end 
 function [ellCVec pointsCVec] = getEllParams(self, flag)
     if(flag == 1)
@@ -724,7 +725,7 @@ function checkRes(testEllResArr,compList, operation)
             cellstr2expression({VEC_COMP_METHODS_LIST{:}, ...
             MAT_COMP_METHODS_LIST{:}}), operation);
     end
-    testIsRight = all(eqArr(:)==1);
+    testIsRight = all(eqArr(:) == 1);
     mlunitext.assert_equals(testIsRight, 1);
 end
 %
