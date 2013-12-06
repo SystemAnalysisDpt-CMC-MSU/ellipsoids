@@ -13,21 +13,24 @@ classdef ParCalculator
 %             System Analysis Department 2013 $
 %    
     methods (Static)
-      function [varargout]=eval(f, varargin)
+      function [varargout]=eval(fHandle, varargin)
             %  EVAL -  reads clusterSize from the current
             %      configuration and launches modgen.pcalc.auxdfeval
             %      with this clusterSize for  parent processes and with
             %      clusterSize=1 for child processes.
             % Input:
             %   regular:
-            %     f: function_handle[1,1]- function that is going to be
+            %     fHandle: function_handle[1,1]- function that is going to be
             %        calculated in a parallel manner.
             %   optional:
-            %     varargin: arguments for f. 
-            %     In case f takes no arguments, nothing is needed to be
+            %      inpArg1: <anyType>[] - the first input argument for fHandle.
+            %      inpArg2: <anyType>[] - the second input argument for fHandle.
+            %       ...
+            %      inpArgN: <anyType>[] - the N-th input argument for fHandle.
+            %     In case fHandle takes no arguments, nothing is needed to be
             %     passed.
             % Output:
-            %      varargout: whatever function f returns.
+            %      varargout: whatever function fHandle returns.
             %
             % $Author: Zilonova Ekaterina
             % <zilonova.e.m@gmail.com> $
@@ -40,10 +43,10 @@ classdef ParCalculator
           varargout=cell(1,nargout); 
           [taskName,SProp]=modgen.pcalc.gettaskname();
           if (SProp.isMain==false)
-              [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',1);
+              [varargout{:}]=modgen.pcalc.auxdfeval(fHandle, varargin{:},'ClusterSize',1);
               
           else
-            [varargout{:}]=modgen.pcalc.auxdfeval(f, varargin{:},'ClusterSize',nMaxParProcess);
+            [varargout{:}]=modgen.pcalc.auxdfeval(fHandle, varargin{:},'ClusterSize',nMaxParProcess);
             
          end
        end 
