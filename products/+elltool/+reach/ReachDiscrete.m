@@ -14,7 +14,7 @@ classdef ReachDiscrete < elltool.reach.AReach
     properties (Constant,GetAccess=protected)
         DISPLAY_PARAMETER_STRINGS = {'discrete-time', 'k0 = ', 'k1 = '}
         LINSYS_CLASS_STRING = 'elltool.linsys.LinSysDiscrete'
-    end
+    end  
     %
     properties (Constant, GetAccess = private)
         ETAG_SH_MAT_CALC_FAILURE = ':ShapeMatCalcFailure';
@@ -97,6 +97,67 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
     end
     %
+     methods (Static)
+         function  [qArrayListArray, ltGoodDirArrayMat]=fCalcTube(probDynObj,  ...
+                   xDim, timeVec, ...
+                  lMat,  isDisturb, isMinMax,...
+                   fMinkmp,  fMinksum, fMinkdiff, isBack, l0Vec)
+               
+                qMat = probDynObj.getX0Mat;
+                qMat = 0.5 * (qMat + qMat');
+                qArrayListArray(:,:,1)=qMat;
+                lVec = l0Vec;
+                lMat(:, 1) = lVec;
+                for iTime = 1:(length(timeVec) - 1)  
+                    aMat = probDynObj.getAtDynamics(). ...
+                        evaluate(timeVec(iTime + isBack));
+                  
+                     aInvMat = inv(aMat);
+                    bpbMat = probDynObj.getBPBTransDynamics(). ...
+                        evaluate(timeVec(iTime + isBack));
+                    bpbMat = 0.5 * (bpbMat + (bpbMat)');
+                    if isDisturb
+                        gqgMat = probDynObj.getCQCTransDynamics(). ...
+                            evaluate(timeVec(iTime + isBack));
+                         
+                    end
+                    qMat = aMat * qMat * aMat';
+                    qMat = 0.5 * (qMat + qMat');
+                    lVec = aInvMat' * lVec;
+                    lVec = lVec / norm(lVec);
+                    if isDisturb
+                        if isMinMax
+                            eEll = fMinkmp(ellipsoid(0.5 * (qMat + qMat')),...
+                                ellipsoid(0.5 * (gqgMat + gqgMat')),...
+                                ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
+                        else
+                            eEll = fMinksum([ellipsoid(0.5 * (qMat + qMat'))...
+                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
+                            eEll = fMinkdiff(eEll, ...
+                                ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
+                        end
+                    else
+                           
+                            eEll = fMinksum([ellipsoid(0.5 * (qMat + qMat')) ...
+                            ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
+                            
+                   end
+                    %
+                    if ~isempty(eEll)
+                        qMat = double(eEll);
+                    else
+                        qMat = zeros(xDim, xDim);
+                    end
+                    qMat = 0.5 * (qMat + qMat');
+                    qArrayListArray(:, :, iTime + 1) = qMat;
+                    lMat(:, iTime + 1) = aInvMat' * lMat(:, iTime);
+                end
+        
+                ltGoodDirArrayMat=lMat;
+                        
+    end
+        
+    end 
     methods (Static, Access = private)
         function [qArrayList ltGoodDirArray] = ...
                 calculateApproxShape(probDynObj, l0Mat, ...
@@ -130,55 +191,46 @@ classdef ReachDiscrete < elltool.reach.AReach
                     minkdiff_ea(aEll, bEll, lVec);
             end
             %
-            for iTube = 1:nTubes
-                qMat = probDynObj.getX0Mat;
-                qMat = 0.5 * (qMat + qMat');
-                %
-                qArrayList{iTube}(:, :, 1) = qMat;
-                lVec = l0Mat(:, iTube);
-                lMat(:, 1) = lVec;
-                for iTime = 1:(length(timeVec) - 1)
-                    aMat = probDynObj.getAtDynamics(). ...
-                        evaluate(timeVec(iTime + isBack));
-                    aInvMat = inv(aMat);
-                    bpbMat = probDynObj.getBPBTransDynamics(). ...
-                        evaluate(timeVec(iTime + isBack));
-                    bpbMat = 0.5 * (bpbMat + bpbMat');
-                    if isDisturb
-                        gqgMat = probDynObj.getCQCTransDynamics(). ...
-                            evaluate(timeVec(iTime + isBack));
-                    end
-                    qMat = aMat * qMat * aMat';
-                    qMat = 0.5 * (qMat + qMat');
-                    lVec = aInvMat' * lVec;
-                    lVec = lVec / norm(lVec);
-                    if isDisturb
-                        if isMinMax
-                            eEll = fMinkmp(ellipsoid(0.5 * (qMat + qMat')),...
-                                ellipsoid(0.5 * (gqgMat + gqgMat')),...
-                                ellipsoid(0.5 * (bpbMat + bpbMat')), lVec);
-                        else
-                            eEll = fMinksum([ellipsoid(0.5 * (qMat + qMat'))...
-                                ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
-                            eEll = fMinkdiff(eEll, ...
-                                ellipsoid(0.5 * (gqgMat + gqgMat')), lVec);
-                        end
-                    else
-                        eEll = fMinksum([ellipsoid(0.5 * (qMat + qMat')) ...
-                            ellipsoid(0.5 * (bpbMat + bpbMat'))], lVec);
-                    end
-                    %
-                    if ~isempty(eEll)
-                        qMat = double(eEll);
-                    else
-                        qMat = zeros(xDim, xDim);
-                    end
-                    qMat = 0.5 * (qMat + qMat');
-                    qArrayList{iTube}(:, :, iTime + 1) = qMat;
-                    lMat(:, iTime + 1) = aInvMat' * lMat(:, iTime);
-                end
-                ltGoodDirArray(:, iTube, :) = lMat;
+            pCalc=elltool.pcalc.ParCalculator();
+            
+            nInitialGoodDirs=size(l0Mat,1);
+            l0CVec=mat2cell(l0Mat,nInitialGoodDirs,ones(1,nTubes));
+            
+            
+            probDynObjCVec=cell(1,nTubes);
+            xDimCVec=cell(1,nTubes);
+            timeVecCVec=cell(1,nTubes);
+            isDisturbCVec=cell(1,nTubes);
+            lMatCVec=cell(1,nTubes);
+            isMinMaxCVec=cell(1,nTubes);
+            fMinkmpCVec=cell(1,nTubes);
+            fMinksumCVec=cell(1,nTubes);
+            fMinkdiffCVec=cell(1,nTubes);
+            isBackCVec=cell(1,nTubes);
+            
+            probDynObjCVec(:)={probDynObj};
+            xDimCVec(:)={xDim};
+            timeVecCVec(:)={timeVec};
+            isDisturbCVec(:)={isDisturb};
+            lMatCVec(:)={lMat};
+            isMinMaxCVec(:)={isMinMax};
+            fMinkmpCVec(:)={fMinkmp};
+            fMinksumCVec(:)={fMinksum};
+            fMinkdiffCVec(:)={fMinkdiff};
+            isBackCVec(:)={isBack};
+            
+            
+            [qArrayListCVec, ltGoodDirArrayCVec]=pCalc.eval(@elltool.reach.ReachDiscrete.fCalcTube, probDynObjCVec,...   
+                   xDimCVec, timeVecCVec, ...
+                   lMatCVec,  isDisturbCVec, isMinMaxCVec, ...
+                  fMinkmpCVec,  fMinksumCVec, fMinkdiffCVec, isBackCVec, l0CVec);
+              
+           for iTube=1:nTubes
+                  qArrayList{iTube}(:, :, :)=cell2mat(qArrayListCVec(iTube));
+                  ltGoodDirArray(:, iTube, :)=cell2mat(ltGoodDirArrayCVec(iTube));
             end
+
+            %
         end
     end
     %

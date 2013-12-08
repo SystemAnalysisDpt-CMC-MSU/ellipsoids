@@ -6,14 +6,37 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     properties (Access=private)
         ellTubeRel
     end
+    methods (Static)
+        function  [QArray]=fCalcTube(self,...
+              solverObj,...
+              lsGoodDirMat, sTime, isFirstPointToRemove,solveTimeVec,...
+               fHandle, initValueMat)
+                import modgen.logging.log4j.Log4jConfigurator;
+                logger=Log4jConfigurator.getLogger();
+                tStart=tic;
+                logStr=sprintf(...
+                    'solving ode for direction \n %s  defined at time %f',...
+                    mat2str(lsGoodDirMat.'),sTime);
+                logger.debug([logStr,'...']);
+
+                [~,data_Q_star]=solverObj.solve(fHandle,...
+                    solveTimeVec,initValueMat);
+                if isFirstPointToRemove
+                    data_Q_star(:,:,1)=[];
+                end
+                %
+                QArray=self.adjustEllApxMatrixVec(data_Q_star);
+                logger.debug(sprintf([logStr,':done, %.3f sec. elapsed'],...
+                    toc(tStart)));
+            end
+        
+    end    
     methods (Access=private)
         function build(self)
             import gras.ellapx.lreachplain.ATightEllApxBuilder;
             import gras.ellapx.common.*;
             import gras.gen.SquareMatVector;
             import gras.ode.MatrixODESolver;
-            import modgen.logging.log4j.Log4jConfigurator;
-            logger=Log4jConfigurator.getLogger();
             ODE_NORM_CONTROL='on';
             odeArgList={'NormControl',ODE_NORM_CONTROL,...
                 'RelTol',self.getRelODECalcPrecision(),...
@@ -42,25 +65,37 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             end
             QArrayList=cell(1,nLDirs);
             %% Calculating internal approximation
-            for l=1:1:nLDirs
-                tStart=tic;
-                logStr=sprintf(...
-                    'solving ode for direction \n %s  defined at time %f',...
-                    mat2str(lsGoodDirMat(:,l).'),sTime);
-                logger.debug([logStr,'...']);
-                fHandle=self.getEllApxMatrixDerivFunc(l);
-                initValueMat=self.getEllApxMatrixInitValue(l);
-                %
-                [~,data_Q_star]=solverObj.solve(fHandle,...
-                    solveTimeVec,initValueMat);
-                if isFirstPointToRemove
-                    data_Q_star(:,:,1)=[];
-                end
-                %
-                QArrayList{l}=self.adjustEllApxMatrixVec(data_Q_star);
-                logger.debug(sprintf([logStr,':done, %.3f sec. elapsed'],...
-                    toc(tStart)));
+             pCalc=elltool.pcalc.ParCalculator();
+           
+            nGoodDirs=size(lsGoodDirMat,1);
+            lsGoodDirMatCVec=mat2cell(lsGoodDirMat,nGoodDirs,ones(1,nLDirs));
+            
+            fHandleCVec=cell(1,nLDirs);
+            initValueMatCVec=cell(1,nLDirs);
+            for iDir=1:nLDirs
+             fHandleCVec{iDir}=self.getEllApxMatrixDerivFunc(iDir);
+             initValueMatCVec{iDir}=self.getEllApxMatrixInitValue(iDir);
             end
+
+            selfCVec=cell(1,nLDirs);
+            sTimeCVec=cell(1,nLDirs);
+            solverObjCVec=cell(1,nLDirs);
+            isFirstPointToRemoveCVec=cell(1,nLDirs);
+            solveTimeVecCVec=cell(1,nLDirs);
+            
+            selfCVec(:)={self};
+            sTimeCVec(:)={sTime};
+            solverObjCVec(:)={solverObj};
+            isFirstPointToRemoveCVec(:)={isFirstPointToRemove};
+            solveTimeVecCVec(:)={solveTimeVec};
+            
+            
+            [QArrayList]=pCalc.eval(@gras.ellapx.lreachplain.ATightEllApxBuilder.fCalcTube,selfCVec,...
+              solverObjCVec,...
+              lsGoodDirMatCVec, sTimeCVec, isFirstPointToRemoveCVec,solveTimeVecCVec,...
+               fHandleCVec, initValueMatCVec);
+           
+           QArrayList= transpose(QArrayList);   
             %
             aMat=pDefObj.getxtDynamics.evaluate(resTimeVec);
             %
