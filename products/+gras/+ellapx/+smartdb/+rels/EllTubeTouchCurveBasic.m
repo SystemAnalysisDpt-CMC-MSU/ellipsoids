@@ -8,7 +8,6 @@ classdef EllTubeTouchCurveBasic<handle
         FCODE_APPROX_SCHEMA_DESCR
         FCODE_APPROX_TYPE
         FCODE_TIME_VEC
-        % FCODE_CALC_PRECISION
         FCODE_ABS_TOLERANCE
         FCODE_REL_TOLERANCE
         FCODE_IND_S_TIME
@@ -109,7 +108,6 @@ classdef EllTubeTouchCurveBasic<handle
             import gras.gen.SquareMatVector;
             import modgen.common.num2cell;
             TS_CHECK_TOL=1e-14;
-            %calcPrecList=num2cell(self.calcPrecision);
             calcPrecList=num2cell(self.absTol);
             %
             [valueFieldNameList,touchFieldNameList]=...
@@ -147,13 +145,6 @@ classdef EllTubeTouchCurveBasic<handle
                     'contain values higher than calcPrecision']);
             end
             %% Check that lsGoodDirNorm >=calcPrecision
-%             if ~(all(self.lsGoodDirNorm(self.isLsTouch)>...
-%                     self.calcPrecision(self.isLsTouch))&&...
-%                     all(self.lsGoodDirNorm(~self.isLsTouch)>=0))
-%                 throwerror('wrongInput',...
-%                     ['lsGoodDirNorm is expected to ',...
-%                     'be higher than calcPrecision']);
-%             end
              if ~(all(self.lsGoodDirNorm(self.isLsTouch)>...
                     self.absTol(self.isLsTouch))&&...
                     all(self.lsGoodDirNorm(~self.isLsTouch)>=0))
@@ -230,7 +221,8 @@ classdef EllTubeTouchCurveBasic<handle
                     valList=rel.(fieldName);
                     for iTuple=1:nTuples
                         nVals=length(valList{iTuple});
-                        tolVec=rel.absTol{iTuple};
+                        tolAbsVec=rel.absTol{iTuple};
+                        tolRelVec=rel.relTol{iTuple};
                         if nVals>0
                             valSizeVec=size(valList{iTuple}{1});
                             for iVal=2:nVals
@@ -240,27 +232,28 @@ classdef EllTubeTouchCurveBasic<handle
                                     throwError('size',fieldName);
                                 end
                                 %
-                                expTol=(tolVec(1)+tolVec(iVal));
+                                expAbsTol=(tolAbsVec(1)+tolAbsVec(iVal));
+                                expRelTol=(tolRelVec(1)+tolRelVec(iVal));
                                 %
                                 isnNanArr=~isnan(valList{iTuple}{1});
                                 if any(isnNanArr)
                                     [isOk, actAbsTol, isRelTolUsed, ...
                                         actRelTol] = absrelcompare(...
                                         valList{iTuple}{1}(isnNanArr), ...
-                                        valList{iTuple}{iVal}(isnNanArr), expTol, ...
-                                        expTol, @vecArrNorm);
+                                        valList{iTuple}{iVal}(isnNanArr), expAbsTol, ...
+                                        expRelTol, @vecArrNorm);
                                     if ~isOk
                                         if ~isRelTolUsed
                                             optMsg=sprintf(...
                                                 ['absolute tolerance=%g,',...
                                                 ' expected tolerance=%g'], ...
-                                                actAbsTol, expTol);
+                                                actAbsTol, expAbsTol);
                                         else
                                             optMsg=sprintf(...
                                                 ['relative tolerance=%g,'...
                                                 ' absolute tolerance=%g,',...
                                                 ' expected tolerance=%g'], ...
-                                                actRelTol, actAbsTol, expTol);
+                                                actRelTol, actAbsTol, expRelTol);
                                         end
                                         throwError('value',fieldName,optMsg);
                                     end

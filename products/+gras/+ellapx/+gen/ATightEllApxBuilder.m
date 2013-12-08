@@ -63,20 +63,17 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
         end
     end
     methods
-        function relTol=getRelTol(self)
-            relTol=self.relTol;
-        end
         
         function calcPrecision=getCalcPrecision(self)
             calcPrecision = self.relTol;
         end
         
         function self=ATightEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,nTimePoints,relTol)
+                timeLimsVec,nTimePoints,relTol, absTol)
             import gras.ellapx.gen.ATightEllApxBuilder;
             import modgen.common.throwerror;
             import gras.la.ismatposdef;            
-            ABS_TOL_FACTOR=1e-2;%this is a temporary measure until 
+            %ABS_TOL_FACTOR=1e-2;%this is a temporary measure until 
             %we specify absTol and relTol separately
             if ~isa(pDefObj,...
                     'gras.ellapx.lreachplain.probdyn.IReachProblemDynamics')
@@ -100,7 +97,8 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             self.odeAbsCalcPrecision=relTol*precisionFactor;
             self.odeRelCalcPrecision=relTol*precisionFactor;
             self.relTol=relTol;
-            self.absTol=relTol*ABS_TOL_FACTOR;
+            %self.absTol=relTol*ABS_TOL_FACTOR;
+            self.absTol=absTol;
             %
             x0Mat = pDefObj.getX0Mat();            
             if ~ismatposdef(x0Mat, self.absTol)

@@ -3,10 +3,7 @@ classdef EllApxCollectionBuilder<gras.ellapx.gen.IEllApxBuilder
         builderList
     end
     methods
-        function relTol=getRelTol(self) 
-            relTol = 0.001;
-        end
-        
+
         function calcPrecision=getCalcPrecision(self)
             nBuilders=length(self.builderList);
             calcPrecision=-Inf;

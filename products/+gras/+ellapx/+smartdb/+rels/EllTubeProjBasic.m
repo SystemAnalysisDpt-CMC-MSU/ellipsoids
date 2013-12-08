@@ -828,7 +828,7 @@ if (mDim < 2) || (nDim > 3)
 end
 end
 %
-function checkCenterVecAndTimeVec(aMat,timeVecList,absTol)
+function checkCenterVecAndTimeVec(aMat,timeVecList,absTol, relTol)
 import modgen.common.throwerror;
 nTubes = numel(aMat);
 aMatList = aMat;
@@ -840,12 +840,12 @@ for iTube = 2:nTubes
     end
 end
 %
-% maxTol=max(calcPrecision);
-maxTol = max(absTol);
+maxRelTol = max(relTol);
+maxAbsTol = max(absTol);
 %
 for iTube = 2:nTubes
     [isEqual,~,~,~,~,reportStr]= modgen.common.absrelcompare(aMatList{1},...
-        aMatList{iTube},maxTol,maxTol,@abs);
+        aMatList{iTube},maxAbsTol,maxRelTol,@abs);
     if ~isEqual
         throwerror('wrongInput:diffCenters',...
             ['centers are different: ',reportStr]);
@@ -897,7 +897,7 @@ graphObjectName =  ['Reach Tube: by ', char(approxType(1))];
 [vMat,fMat] = calcPoints(fTri,fCalcPoints,...
     nPlotPoints,...
     timeVec,  QArray, aMat,dim,...
-    absTol);
+    absTol, relTol);
 vararginForProc = {projType(1),...
     timeVec{1}, lsGoodDirOrigVec{1}, ltGoodDirMat{1},sTime(1),...
     xTouchCurveMat{1}, xTouchOpCurveMat{1}, ltGoodDirNormVec{1},...
@@ -930,17 +930,17 @@ function [vMat,fMat] = calcPoints(fTri,fCalcPoints,...
     nPlotPoints,...
     timeVecList,...
     qArrayList, aMatList, dimVec,...
-    calcPrecisionVec, varargin)
+    calcPrecisionaVec, calcPrecisionrVec, varargin)
 %
 nDims = dimVec(1);
-checkCenterVecAndTimeVec(aMatList,timeVecList,calcPrecisionVec);
+checkCenterVecAndTimeVec(aMatList,timeVecList,calcPrecisionaVec, calcPrecisionrVec);
 [lGridMat, fMat] = gras.geom.tri.spheretriext(nDims,nPlotPoints);
 lGridMat = lGridMat';
 timeVec = timeVecList{1};
 nDir = size(lGridMat, 2);
 nTimePoints = size(timeVec, 2);
 qArr = cat(4, qArrayList{:});
-absTol = max(calcPrecisionVec);
+absTol = max(calcPrecisionaVec);
 %
 if nTimePoints == 1
     xMat = fCalcPoints(nDir,lGridMat,nDims,squeeze(qArr(:,:,1,:)),...

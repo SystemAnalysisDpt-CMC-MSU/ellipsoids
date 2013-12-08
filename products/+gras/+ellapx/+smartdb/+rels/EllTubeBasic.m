@@ -260,7 +260,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData.ltGoodDirMat=cell(nLDirs,1);
             %
             STubeData.ltGoodDirNormVec=cell(nLDirs,1);
-%             STubeData.calcPrecision=repmat(calcPrecision,nLDirs,1);
             %
             STubeData.absTol=repmat(absTol,nLDirs,1);
             %
@@ -350,13 +349,11 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 extRel.getUniqueData('fieldNameList',{'aMat'});
             QIntArrayList=intRel.applyTupleGetFunc(@(x,y)x./(y.*y),...
                 {'QArray','scaleFactor'},'UniformOutput',false);
-%             intCalcPrecVec=intRel.calcPrecision;
             intCalcPrecVec=intRel.absTol;
 
             %
             QExtArrayList=extRel.applyTupleGetFunc(@(x,y)x./(y.*y),...
                 {'QArray','scaleFactor'},'UniformOutput',false);
-%             extCalcPrecVec=extRel.calcPrecision;
             extCalcPrecVec=extRel.absTol;
 
             %
