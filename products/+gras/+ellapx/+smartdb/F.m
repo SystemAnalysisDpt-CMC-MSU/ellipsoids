@@ -157,15 +157,15 @@ classdef F<smartdb.gen.AFieldDefs
         %
         TUBE_Q_ARRAY_INTERP_OBJ='QArrayInterpObjList';
         TUBE_Q_ARRAY_INTERP_OBJ_D='Interpolation object to the matrix Q'
-        TUBE_Q_ARRAY_INTERP_OBJ_T={'cell'};
+        TUBE_Q_ARRAY_INTERP_OBJ_T={'cell','gras.interp.MatrixSysUnifiedInterpFunc'};
         %
         TUBE_A_MAT_INTERP_OBJ='aMatInterpObj';
         TUBE_A_MAT_INTERP_OBJ_D='Interpolation object to the aMat'
-        TUBE_A_MAT_INTERP_OBJ_T={'cell'};
+        TUBE_A_MAT_INTERP_OBJ_T={'cell','gras.interp.MatrixSysUnifiedInterpFunc'};
         %
         TUBE_GOOD_DIR_INTERP_OBJ='ltGoodDirInterpObjList';
         TUBE_GOOD_DIR_INTERP_OBJ_D='Interpolation object to the ltGoodDirArray'
-        TUBE_GOOD_DIR_INTERP_OBJ_T={'cell'};
+        TUBE_GOOD_DIR_INTERP_OBJ_T={'cell','gras.interp.MatrixSysUnifiedInterpFunc'};
         
     end
 end

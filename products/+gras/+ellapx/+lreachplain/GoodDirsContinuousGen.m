@@ -34,20 +34,28 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                 realsqrt(matdot(sRstInitialMat, sRstInitialMat));
             sXstNormInitial = 1;
             %
-            fRstExtDerivFunc = @(t, x) fRstExtFunc(t, x, @(u) fAtMat(u));
+            fRstExtDerivFunc = @(t, x)fRstExtFunc(t, x, @(u) fAtMat(u));
             fRstPostProcFunc = @fPostProcLeftFunc;
             %
             tStart=tic;
             %
             % calculation of X(s, t) on [t0, s]
             %
-            halfTimeVec = fliplr(STimeData.timeVec(1:STimeData.indSTime));
-            
+            halfTimeVec = STimeData.timeVec(1:STimeData.indSTime);
+            t1 = halfTimeVec(end);
+            fRstExtDerivFunc = @(t, x)fRstExtInvTimeFunc(...
+                t1 - t, x,@(u) fAtMat(u));
+                
             [timeRstVec, dataRstArray, dataXstNormArray,...
                 dataRstArrayInterpObj] = ...
                 self.calcHalfRstExtDynamics(halfTimeVec, ...
                 fRstExtDerivFunc, sRstInitialMat, sXstNormInitial, ...
-                calcPrecision, fRstPostProcFunc);
+                calcPrecision);
+    
+            %
+            fRstExtDerivFunc = @(t, x)fRstExtFunc(t, x,...
+                @(u) fAtMat(u));
+                
                 
             %
             % calculation of X(s, t) on [s, t1]
@@ -131,7 +139,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                 fSolveFunc = @(varargin)fSolver(varargin{:},...
                     odeset(odeArgList{:}));
                 solverObj = gras.ode.MatrixSysODERegInterpSolver(...
-                    {sizeSysVec},fSolveFunc,'outArgStartIndVec',[1 2]);                
+                    {sizeSysVec},fSolveFunc,'outArgStartIndVec',[1 2]);
                 [timeRstHalfVec, dataRstExtHalfArray,~,interpObj] = ...
                     solverObj.solve({fRstDerivFunc,@fAdvRegFunc},...
                     timeVec, sRstExtInitialMat);
@@ -208,4 +216,22 @@ function dxMat = fRstExtFunc(t, xMat, fAtMat)
     dxstNorm = arstNorm .* xstNorm;
     %
     dxMat = [drstMat(:); dxstNorm];
+end
+
+% invers time task
+
+function dxMat = fRstExtInvTimeFunc(t, xMat, fAtMat)
+    import gras.gen.matdot;
+    %
+    atMat = fAtMat(t);
+    rstMat = reshape(xMat(1:end-1), size(atMat));
+    xstNorm = xMat(end);
+    %
+    cachedMat = -rstMat * atMat;
+    arstNorm = matdot(rstMat, cachedMat);
+    %
+    drstMat = cachedMat - rstMat * arstNorm;
+    dxstNorm = arstNorm .* xstNorm;
+    %
+    dxMat = -[drstMat(:); dxstNorm];
 end

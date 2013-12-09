@@ -48,7 +48,7 @@ classdef SuiteRegression < mlunitext.test_case
             self.confNameList=confNameList;
         end
         function testRegression(self)
-            NOT_COMPARED_FIELD_LIST={'resDir','plotterObj','QArrayInterpObjList','ltGoodDirInterpObjList'};
+            NOT_COMPARED_FIELD_LIST={'resDir','plotterObj'};
             %
             %
             curCrm=self.crm;
@@ -94,7 +94,6 @@ classdef SuiteRegression < mlunitext.test_case
                 end
                 SExpRes=resMap.get(inpKey);
                 nCmpFields=numel(compFieldNameList);
-                % ATTENTION ! for should be from 1
                 for iField=1:nCmpFields
                     fieldName=compFieldNameList{iField};
                     expRel=SExpRes.(fieldName);
@@ -105,9 +104,9 @@ classdef SuiteRegression < mlunitext.test_case
                     %rel=smartdb.relations.DynamicRelation(rel);
                     %rel.removeFields('approxSchemaName');
                     %
-                    [isOk,reportStr]=expRel.isEqual(rel,'notComparedFieldList',...
-                        [{'QArrayInterpObjList'} {'aMatInterpObj'}...
-                        {'ltGoodDirInterpObjList'}]);
+                    
+                    % Warning ! This added on time.
+                    [isOk,reportStr]=expRel.isEqual(rel);
                     %
                     reportStr=sprintf('confName=%s\n %s',confName,...
                         reportStr);
