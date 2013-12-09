@@ -212,7 +212,9 @@ classdef ElliIntUnionTCMultiDim < mlunitext.test_case
              testError(7);       
              function testCorrect()
                 resEllArray = hpintersection(testEllArray, testHpArray);
-                testResArray = eq(resEllArray, ansEllArray);
+                resEllArray
+                ansEllArray
+                testResArray = eq(resEllArray, ansEllArray)
                 self.flexAssert(true, all(testResArray(:)));
             end
             function testError(flag)

@@ -258,7 +258,10 @@ classdef EllTCMultiDim < mlunitext.test_case
                     [testEllArray, ~, ~, ansNumArray] = self.createTypicalArray(flag);
                 end
                 [testNumArray] = trace(testEllArray);
-                mlunitext.assert_equals(ansNumArray, testNumArray);
+                import elltool.conf.Properties;
+                absTol = Properties.getAbsTol();
+                isTestRes = modgen.common.absrelcompare(ansNumArray, testNumArray, absTol, absTol, @abs);
+                mlunitext.assert_equals(true, isTestRes);
             end
             function testError(flag)
                 [testEllArray, ~, errorStr] = self.createTypicalArray(flag);
@@ -587,10 +590,8 @@ function checkMaxeigAndMineig(self, isMaxeigCheck)
             end
             [testNumArray] = mineig(testEllArray);
         end
-        mlunitext.assert_equals(ansNumArray, testNumArray);
-        %должно быть так, как ниже
-        %isTestRes = modgen.common.absrelcompare(ansNumArray, testNumArray, absTol, absTol, @norm);
-        %mlunitext.assert_equals(isTestRes, true);
+        isTestRes = modgen.common.absrelcompare(ansNumArray, testNumArray, absTol, absTol, @abs);
+        mlunitext.assert_equals(isTestRes, true);
     end
     function testError(flag)
         [testEllArray, ~, errorStr] = self.createTypicalArray(flag);
@@ -633,15 +634,13 @@ function checkEqAndNq(self, isEqCheck)
     end
     function testCheckCorrect()
         if isEqCheck
-            mlunitext.assert_equals(isAnsArray, ...
-                test1EllArray.eq(test2EllArray));
-            mlunitext.assert_equals(isAnsArray, ...
-                test2EllArray.eq(test1EllArray));
+            mlunitext.assert_equals(isAnsArray, test1EllArray.eq(test2EllArray));
+            mlunitext.assert_equals(isAnsArray, test2EllArray.eq(test1EllArray));
+            %mlunitext.assert_equals(isAnsArray, test1EllArray.isEqual(test2EllArray));
+            %mlunitext.assert_equals(isAnsArray, test2EllArray.isEqual(test1EllArray));
         else
-            mlunitext.assert_equals(isAnsArray, ...
-                test1EllArray.ne(test2EllArray));
-            mlunitext.assert_equals(isAnsArray, ...
-                test2EllArray.ne(test1EllArray));
+            mlunitext.assert_equals(isAnsArray, test1EllArray.ne(test2EllArray));
+            mlunitext.assert_equals(isAnsArray, test2EllArray.ne(test1EllArray));
         end
     end
     function testCorrect(flag)

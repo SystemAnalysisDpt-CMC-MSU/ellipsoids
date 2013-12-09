@@ -1574,7 +1574,7 @@ end
 %
 function checkEllEqual(self, testEll1Vec, testEll2Vec, isEqRight, ansStr)
 [isEq, reportStr] = isEqual(testEll1Vec, testEll2Vec);
-mlunitext.assert_equals(isEq, isEqRight);
+mlunitext.assert_equals(isEq, isEqRight, reportStr);
 isRepEq = isequal(reportStr, ansStr);
 if ~isRepEq
     isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'));
