@@ -70,7 +70,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             CQCTransMat=CQCTransDynamics.evaluate(t);
             %
             [VMat,DMat]=eig(QIntMat);
-            if ~ismatposdef(QIntMat,self.relTol,true)
+            if ~ismatposdef(QIntMat,self.absTol,true)
                 throwerror('wrongState','internal approx has degraded');
             end
             Q_star=VMat*realsqrt(DMat)*transpose(VMat);

@@ -38,7 +38,7 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 %
                 % disturbance component
                 %
-                isDisturbance = sum(abs(CQCTransMat(:))) > self.relTol;
+                isDisturbance = sum(abs(CQCTransMat(:))) > self.absTol;
                 if isDisturbance
                     piNumerator = dot(ltVec, CQCTransMat*ltVec);
                     piDenominator = dot(ltVec, QMat*ltVec);
@@ -163,7 +163,7 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             checkgen(mixingStrength,'x>=0'); %#ok
             checkgenext(['size(x1,1)==size(x1,2) && size(x1,1)==x2 && '...
                 'all(x1(:)>=0) && max(abs(sum(x1,2)-ones(x2,1)))<x3'],...
-                3,mMat,goodDirSetObj.getNGoodDirs(),relTol);
+                3,mMat,goodDirSetObj.getNGoodDirs(),absTol);
             %
             self.mixingStrength = mixingStrength; %#ok
             self.mixingProportionsMat = mMat;
