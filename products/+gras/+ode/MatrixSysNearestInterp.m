@@ -26,6 +26,23 @@ classdef MatrixSysNearestInterp < gras.mat.IMatrixSysFunction
             end
             varargout = resList;
         end
+        function nEqs = getNEquations(self)
+            nEqs=length(self.matrixArrayList);
+        end
+        function mSize = getMatrixSize(self)
+            mSize = self.matrixArrayList{1}.getMatrixSize();
+        end
+        function nRows = getNRows(self)
+            mSize = self.matrixArrayList{1}.getMatrixSize();
+            nRows = mSize(1);
+        end
+        function nCols = getNCols(self)
+            mSize = self.matrixArrayList{1}.getMatrixSize();
+            nCols = mSize(2);
+        end
+        function nDims = getDimensionality(self)
+            nDims = self.getNRows();
+        end
     end
 end
 
