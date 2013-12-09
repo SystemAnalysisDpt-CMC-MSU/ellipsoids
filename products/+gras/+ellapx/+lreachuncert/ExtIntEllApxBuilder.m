@@ -119,33 +119,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             dQExtMat=(dQExtMat+dQExtMat.')*0.5;
         end
     end
-    methods (Static) 
-        function  [QIntArray, MIntArray, QExtArray,  MExtArray]=fCalcTube(self, ...
-                sTime, lsGoodDirMat,...
-            solverObj, isFirstPointToRemove, fOdeReg, solveTimeVec,...
-                fHandle, initValueMat)
-            import modgen.logging.log4j.Log4jConfigurator;
-            logger=Log4jConfigurator.getLogger();
-             logStr=sprintf(...
-                    'solving ode for direction \n %s  defined at time %f',...  
-                    mat2str(lsGoodDirMat.'),sTime);
-                tStart=tic;
-                logger.info([logStr,'...']);
-
-                [~,QStarIntArray,QStarExtArray,MIntArray,MExtArray]=...
-                    solverObj.solve({fHandle,fOdeReg},...
-                    solveTimeVec,initValueMat,initValueMat);
-                if isFirstPointToRemove
-                    QStarIntArray(:,:,1)=[];
-                    QStarExtArray(:,:,1)=[];
-                end
-                %
-                QIntArray=self.adjustEllApxMatrixVec(QStarIntArray);
-                QExtArray=self.adjustEllApxMatrixVec(QStarExtArray);
-                logger.info(sprintf([logStr,':done, %.3f sec. elapsed'],...
-                    toc(tStart)));
-        end
-    end    
     methods (Access=private)
         function self=prepareODEData(self)
             self.ltSplineList = ...
@@ -156,11 +129,13 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             import gras.ellapx.common.*;
             import gras.gen.SquareMatVector;
             import gras.ode.MatrixSysODESolver;
+            import modgen.logging.log4j.Log4jConfigurator;
             odeArgList={'NormControl',self.ODE_NORM_CONTROL,...
                 'RelTol',self.getRelODECalcPrecision(),...
                 'AbsTol',self.getAbsODECalcPrecision()};
             %
             sysDim=self.getProblemDef.getDimensionality();
+            logger=Log4jConfigurator.getLogger();
             %
             %% Constructor solver object
             fOdeReg=@(t,QIntMat,QExtMat)calcRegEllApxMatrix(self,...
@@ -196,47 +171,30 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             MExtArrayList=cell(1,nLDirs);
             %
             %% Calculating approximations
-            
-            pCalc=elltool.pcalc.ParCalculator();
-
-            nGoodDirs=size(lsGoodDirMat,1);
-            lsGoodDirMatCVec=mat2cell(lsGoodDirMat,nGoodDirs,ones(1,nLDirs));
-            
-            fHandleCVec=cell(1,nLDirs);
-            initValueMatCVec=cell(1,nLDirs);
-            
-            for iDir=1:nLDirs
-              fHandleCVec{iDir}=self.getEllApxMatrixDerivFunc(iDir);
-              initValueMatCVec{iDir}=self.getEllApxMatrixInitValue(iDir);
+            for iDir=1:1:nLDirs
+                logStr=sprintf(...
+                    'solving ode for direction \n %s  defined at time %f',...
+                    mat2str(lsGoodDirMat(:,iDir).'),sTime);
+                tStart=tic;
+                logger.info([logStr,'...']);
+                fHandle=self.getEllApxMatrixDerivFunc(iDir);
+                initValueMat=self.getEllApxMatrixInitValue(iDir);
+                %
+                [~,QStarIntArray,QStarExtArray,MIntArray,MExtArray]=...
+                    solverObj.solve({fHandle,fOdeReg},...
+                    solveTimeVec,initValueMat,initValueMat);
+                if isFirstPointToRemove
+                    QStarIntArray(:,:,1)=[];
+                    QStarExtArray(:,:,1)=[];
+                end
+                %
+                QIntArrayList{iDir}=self.adjustEllApxMatrixVec(QStarIntArray);
+                MIntArrayList{iDir}=MIntArray;
+                QExtArrayList{iDir}=self.adjustEllApxMatrixVec(QStarExtArray);
+                MExtArrayList{iDir}=MExtArray;
+                logger.info(sprintf([logStr,':done, %.3f sec. elapsed'],...
+                    toc(tStart)));
             end
-            
-            
-            selfCVec=cell(1,nLDirs);
-            sTimeCVec=cell(1,nLDirs);
-            solverObjCVec=cell(1,nLDirs);
-            isFirstPointToRemoveCVec=cell(1,nLDirs);
-            fOdeRegCVec=cell(1,nLDirs);
-            solveTimeVecCVec=cell(1,nLDirs);
-            
-            
-            selfCVec(:)={self};
-            sTimeCVec(:)={sTime};
-            solverObjCVec(:)={solverObj};
-            isFirstPointToRemoveCVec(:)={isFirstPointToRemove};
-            fOdeRegCVec(:)={fOdeReg};
-            solveTimeVecCVec(:)={solveTimeVec};
-            
-       
-            [QIntArrayList, MIntArrayList, QExtArrayList,  MExtArrayList]=...
-                pCalc.eval(@gras.ellapx.lreachuncert.ExtIntEllApxBuilder.fCalcTube,selfCVec, ...
-                sTimeCVec, lsGoodDirMatCVec,...
-                solverObjCVec, isFirstPointToRemoveCVec, fOdeRegCVec, solveTimeVecCVec,...
-                fHandleCVec, initValueMatCVec);
-            QIntArrayList=transpose(QIntArrayList);
-            MIntArrayList=transpose(MIntArrayList);
-            QExtArrayList=transpose(QExtArrayList);
-            MExtArrayList=transpose(MExtArrayList);
-
             %
             aMat=pDefObj.getxtDynamics.evaluate(resTimeVec);
             %

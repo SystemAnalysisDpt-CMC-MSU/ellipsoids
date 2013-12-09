@@ -348,7 +348,6 @@ classdef test_case<handle
             import modgen.common.throwerror;
             %
             isNoIdentPatternSpec=false;
-            
             if ischar(expIdentifierList)
                 expIdentifierList={expIdentifierList};
             elseif isempty(expIdentifierList)

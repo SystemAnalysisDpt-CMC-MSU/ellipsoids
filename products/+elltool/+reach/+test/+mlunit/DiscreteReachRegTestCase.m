@@ -99,12 +99,12 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
                 'MAKEELLTUBEREL:wrongInput:regProblem:onlyCheckIsEnabled');
             %
             %% 2 OVERFLOW
-              self.runAndCheckError(@runBad2,...
-                 'MAKEELLTUBEREL:wrongInput:ShapeMatCalcFailure');
+            self.runAndCheckError(@runBad2,...
+                'MAKEELLTUBEREL:wrongInput:ShapeMatCalcFailure');
             %
             %% 3 DEGRADED ESTIMATE, DEGRADED INITIAL SET
-             self.runAndCheckError(@runBad3,...
-                 'MAKEELLTUBEREL:wrongInput:degradedEstimate');
+            self.runAndCheckError(@runBad3,...
+                'MAKEELLTUBEREL:wrongInput:degradedEstimate');
             %
             function runBad3()%degraded estimate
                 btDefCMat = self.btDefCMat;
