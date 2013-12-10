@@ -85,9 +85,9 @@ classdef EllipsoidTestCase < mlunitext.test_case
                     end
                     %
                     function checkShape()
-                        isOkArr=arrayfun(@(x,y)isequal(x.getShapeMat(),...
-                            y{1}),ellArr,shCArr);
-                        %isOkArr = modgen.common.absrelcompare(trace(testEllipsoid), 10, absTol, absTol, @norm);
+                        %isOkArr=arrayfun(@(x,y)isequal(x.getShapeMat(),...
+                        %    y{1}),ellArr,shCArr);
+                        isOkArr = modgen.common.absrelcompare(ellArr.getShapeMat, shCArr{1}, absTol, absTol, @abs);
                        
                         mlunitext.assert(all(isOkArr(:)));
                     end

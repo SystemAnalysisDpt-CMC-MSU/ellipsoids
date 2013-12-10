@@ -214,7 +214,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ell4 = self.ellFactoryObj.create(eye(2));
             poly4 = polytope([eye(2); -eye(2)], ones(4,1));
             ellPolyIA5 = intersection_ia(ell4,poly4);
-            mlunitext.assert(eq(ell4,ellPolyIA5));
+            mlunitext.assert(isEqual(ell4,ellPolyIA5));
+            %mlunitext.assert(eq(ell4,ellPolyIA5));
             %
             %polytope lies in ellipsoid
             ell5 = self.ellFactoryObj.create(eye(2));

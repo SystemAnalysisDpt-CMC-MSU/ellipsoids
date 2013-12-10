@@ -51,6 +51,77 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
 %             checkvar(objArr,@(x)isa(x,'elltool.core.GenEllipsoid'));
 %         end
     end
+    
+    methods (Access = protected)
+        function [isEqualArr, reportStr] = isEqualInternal(ellFirstArr,...
+                ellSecArr, isPropIncluded)
+            import modgen.struct.structcomparevec;
+            import gras.la.sqrtmpos;
+            import elltool.conf.Properties;
+            import modgen.common.throwerror;
+            %
+            nFirstElems = numel(ellFirstArr);
+            nSecElems = numel(ellSecArr);
+            if (nFirstElems == 0 && nSecElems == 0)
+                isEqualArr = true;
+                reportStr = '';
+                return;
+            elseif (nFirstElems == 0 || nSecElems == 0)
+                throwerror('wrongInput:emptyArray',...
+                    'input ellipsoidal arrays should be empty at the same time');
+            end
+            
+            %плохой способ, знаю
+            ellFirstChangedArr = ellFirstArr;
+            ellSecChangedArr = ellSecArr;
+            for i = 1 : nFirstElems
+                ellFirstChangedArr(i) = reDecomposition(ellFirstChangedArr(i));
+            end
+            for i = 1 : nSecElems
+                ellSecChangedArr(i) = reDecomposition(ellSecChangedArr(i));
+            end
+            
+            [~, absTol] = ellFirstChangedArr.getAbsTol;
+            firstSizeVec = size(ellFirstChangedArr);
+            secSizeVec = size(ellSecChangedArr);
+            isnFirstScalar=nFirstElems > 1;
+            isnSecScalar=nSecElems > 1;
+            
+            [~, tolerance] = ellFirstChangedArr.getRelTol;
+            [SEll1Array, SFieldNiceNames, ~] = ...
+                ellFirstChangedArr.toStruct(isPropIncluded);
+            SEll2Array = ellSecChangedArr.toStruct(isPropIncluded);
+            %
+            SEll1Array = arrayfun(@(SEll)ellFirstChangedArr.formCompStruct(SEll,...
+                SFieldNiceNames, absTol, isPropIncluded), SEll1Array);
+            SEll2Array = arrayfun(@(SEll)ellSecChangedArr.formCompStruct(SEll,...
+                SFieldNiceNames, absTol, isPropIncluded), SEll2Array);
+            
+            if isnFirstScalar&&isnSecScalar
+                if ~isequal(firstSizeVec, secSizeVec)
+                    throwerror('wrongSizes',...
+                        'sizes of ellipsoidal arrays do not... match');
+                end;
+                compare();
+                isEqualArr = reshape(isEqualArr, firstSizeVec);
+            elseif isnFirstScalar
+                SEll2Array=repmat(SEll2Array, firstSizeVec);
+                compare();
+                
+                isEqualArr = reshape(isEqualArr, firstSizeVec);
+            else
+                SEll1Array=repmat(SEll1Array, secSizeVec);
+                compare();
+                isEqualArr = reshape(isEqualArr, secSizeVec);
+            end
+            function compare()
+                [isEqualArr, reportStr] =...
+                    modgen.struct.structcomparevec(SEll1Array,...
+                    SEll2Array, tolerance);
+            end
+        end
+    end
+    
     methods
         function shapeMat=get.shapeMat(self)
               shapeMat=self.eigvMat*self.diagMat*transpose(self.eigvMat);
@@ -176,6 +247,74 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
 %         end
     end
     methods
+        function ellObj = reDecomposition(self)
+                ellCenterVec = self.getCenter;
+                ellDiagMat = self.getDiagMat;
+                ellWMat = self.getEigvMat;
+                %
+                absTol = self.CHECK_TOL;
+                
+                ellObj = elltool.core.GenEllipsoid();
+                
+                [mCenSize nCenSize]=size(ellCenterVec);
+                [mDSize nDSize]=size(ellDiagMat);
+                [mWSize nWSize]=size(ellWMat);
+
+                if (nDSize==1)
+                    diagVec=ellDiagMat;
+                else
+                    diagVec=diag(ellDiagMat);
+                end
+                isInfVec=diagVec==Inf;
+                [~,wRMat]=qr(ellWMat);
+%                 if all(all(abs(abs(wRMat)-eye(size(wRMat)))<absTol))
+%                     %W is orthogonal                  
+%                     diagResVec=diagVec;
+%                     eigvResMat=ellWMat;
+%                 elseif all(~isInfVec)                    
+%                     ellAuxMat=ellWMat*diag(diagVec)*ellWMat.';
+%                     [eigvResMat diagResMat]=eig(ellAuxMat);
+%                     eigvResMat=-eigvResMat;
+%                     diagResVec=diag(diagResMat);
+%                 else
+                    allInfMat=ellWMat(:,isInfVec);
+                    %L1 and L2 Basis
+                    [orthBasMat rBasMat]=qr(allInfMat);
+                    if size(rBasMat,2)==1
+                        isNeg=rBasMat(1)<0;
+                        orthBasMat(:,isNeg)=-orthBasMat(:,isNeg);
+                    else
+                        isNegVec=diag(rBasMat)<0;
+                        orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
+                    end
+                    %Find rank L1, here rankL1>0
+                    tolerance = absTol*norm(allInfMat,'fro');
+                    rankL1 = sum(abs(diag(rBasMat)) > tolerance);
+                    rankL1 = rankL1(1);%for case where rBasMat is a vector.
+                    %L1 - first rankL1 columns of orthBasMat.
+                    infIndVec=1:rankL1;
+                    finIndVec=(rankL1+1):mWSize;
+                    nonInfBasMat = orthBasMat(:,finIndVec);
+                    %Projecton of directions on L2. Is finite then is finite
+                    diagResVec=zeros(mDSize,1);
+                    if ~isempty(nonInfBasMat)
+                        projMat=nonInfBasMat.'*ellWMat;
+                        isZeroProjVec=all(abs(projMat)<absTol,1);
+                        if ~all(isZeroProjVec)
+                            diagVec(isInfVec)=0;
+                            ellAuxMat=projMat*diag(diagVec)*projMat.';
+                            [~,nonInfDMat]=eig(ellAuxMat);
+                            diagResVec(finIndVec)=diag(nonInfDMat);
+                        end
+                    end
+                    diagResVec(infIndVec)=Inf;
+                    eigvResMat=orthBasMat;
+%                 end
+                ellObj.diagMat=diag(diagResVec);
+                ellObj.eigvMat=eigvResMat;
+                ellObj.centerVec=ellCenterVec;
+        end
+        
         function ellObj = GenEllipsoid(varargin)
             import modgen.common.throwerror
             import elltool.core.GenEllipsoid;
@@ -288,17 +427,13 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 end
                 ellObj.centerVec=ellCenterVec;
             elseif nInput == 3
-                %ellCenterVec=varargin{1};
-                %ellDiagMat=varargin{2};
-                %ellWMat=varargin{3};
-                %
-                 checkmultvar(@(x,y,z) isa(x,'double') && isa(y,'double') && isa(z, 'double') &&...
+                checkmultvar(@(x,y,z) isa(x,'double') && isa(y,'double') && isa(z, 'double') &&...
                         isreal(x) && isreal(y) && isreal(z),3,regParamList{1},regParamList{2},regParamList{3}, ...
                         'errorTag','wrongInput:imagArgs',...
                         'errorMessage','centerVec and shapeMat matrix must be real.');
-                    ellCenterVec = regParamList{1};
-                    ellDiagMat = regParamList{2};
-                    ellWMat = regParamList{3};
+                ellCenterVec = regParamList{1};
+                ellDiagMat = regParamList{2};
+                ellWMat = regParamList{3};
                 %
                 [mCenSize nCenSize]=size(ellCenterVec);
                 [mDSize nDSize]=size(ellDiagMat);
@@ -501,8 +636,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 vMat = SEll.eigvMat;
                 dVec = diag(dMat);
                 if any(dVec < -absTol)
-                throwerror('wrongInput:notPosSemDef',...
-                    'input matrix is expected to be positive semi-definite');
+                    throwerror('wrongInput:notPosSemDef',...
+                        'input matrix is expected to be positive semi-definite');
                 end
                 %
                 isZeroVec = dVec <0;
