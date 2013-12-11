@@ -104,6 +104,10 @@ if(nPropExpected > 0)
             'wrongParamsType','errorMessage','properties must be double');
         controlParams(iElem)=SParams.(propList{iElem});
     end
+    checkmultvar('(x1<x2)',2,SParams.(propList{7}),...
+        SParams.(propList{9}), 'errorTag',...
+        'wrongParams','errorMessage',...
+        'faceDist must be less then ApproxDist');
 else
     controlParams=params.getValues(propList);
 end
