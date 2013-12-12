@@ -20,28 +20,20 @@ classdef ObjectApproxControlParams
             propVal=elltool.multobj.ObjectApproxControlParams.(propName);
         end
         
-        function defaultValVec=getValues(self,propList)
-            defaultValVec=zeros(1,numel(propList));
-            for iElem=1:numel(propList)
-                defaultValVec(iElem)= self.getPropValue(propList{iElem});
+        function defaultValVec=getValues(self,PROP_LIST)
+            defaultValVec=cell(1,numel(PROP_LIST));
+            for iElem=1:numel(PROP_LIST)
+                defaultValVec{iElem}= self.getPropValue(PROP_LIST{iElem});
             end
         end
-        function SParams=parseParams(self,paramsSetList,propList)
+        function SParams=parseParams(self,paramsSetList,PROP_LIST)
             import modgen.common.checkmultvar;
-            defaultValVec=self.getValues(propList);
-            fieldList=propList;
-            [~,~,...
-                valList{1},valList{2},valList{3},valList{4},valList{5},...
-                valList{6},valList{7},valList{8},valList{9},valList{10},...
-                valList{11},valList{12},valList{13}]=...
-                modgen.common.parseparext(paramsSetList,...
-                {propList{:};...
-                defaultValVec(1),defaultValVec(2),defaultValVec(3),...
-                defaultValVec(4),defaultValVec(5),defaultValVec(6),...
-                defaultValVec(7),defaultValVec(8),defaultValVec(9),...
-                defaultValVec(10),defaultValVec(11),defaultValVec(12)...
-                defaultValVec(13);});
-            
+            valList=cell(1,numel(PROP_LIST));
+            defaultValVec=self.getValues(PROP_LIST);
+            fieldList=PROP_LIST;
+            [~,~,valList{:}]=...
+                modgen.common.parseparext(paramsSetList,{PROP_LIST{:};...
+                defaultValVec{:};});
             SParamsValCMat=[fieldList;valList];
             SParams=struct(SParamsValCMat{:});
             
