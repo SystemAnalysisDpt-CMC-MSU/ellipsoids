@@ -706,6 +706,8 @@ end
 function checkRes(testEllResArr,compList, operation)
     import modgen.common.throwerror;
     import modgen.cell.cellstr2expression;
+    import elltool.conf.Properties;
+    absTol = Properties.getAbsTol();
     %
     VEC_COMP_METHODS_LIST = {'uminus', 'plus', 'minus', 'move2origin',...
         'getMove2Origin'};
@@ -714,11 +716,13 @@ function checkRes(testEllResArr,compList, operation)
     [testEllResCentersVecList, testEllResShapeMatList] = arrayfun(@(x) double(x),...
         testEllResArr, 'UniformOutput', false);
     if ismember(operation, VEC_COMP_METHODS_LIST)
-        eqArr = cellfun(@(x,y) isequal(x,y),testEllResCentersVecList,...
-            compList);
+        %eqArr = cellfun(@(x,y) isequal(x,y),testEllResCentersVecList,...
+        %    compList);
+        eqArr = cellfun(@(x,y) modgen.common.absrelcompare(x, y, absTol, absTol, @norm), testEllResCentersVecList, compList);
     elseif ismember(operation, MAT_COMP_METHODS_LIST)
-        eqArr = cellfun(@(x,y) isequal(x,y), testEllResShapeMatList,...
-            compList);
+        %eqArr = cellfun(@(x,y) isequal(x,y), testEllResShapeMatList,...
+        %    compList);
+        eqArr = cellfun(@(x,y) modgen.common.absrelcompare(x, y, absTol, absTol, @norm), testEllResShapeMatList, compList);
     else
         throwerror('wrongInput:badMethodName',...
             'Allowed method names: %s. Input name: %s',...

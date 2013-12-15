@@ -233,8 +233,7 @@ for iEll = 1:nEll
         if dMat(1, 1) == 0
             isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 1);
         elseif dMat(2, 2) == 0
-            isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 2);
-            
+            isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 2);            
         elseif max(dMat(:)) == Inf
             isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
         else
@@ -256,7 +255,7 @@ for iEll = 1:nEll
     isBoundVec = isBoundVec | isBoundEllVec;
 end
 
-mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
+mlunitext.assert_equals(ones(size(isBoundVec)), isBoundVec);
 
     function [outXData, outYData, outZData] = getData(hObj)
         objType = get(hObj, 'type');
@@ -335,13 +334,12 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
     function isBoundEllVec = checkDimInf(testEll, cellPoints)
         absTol = elltool.conf.Properties.getAbsTol();
         qCenVec = testEll.getCenter();
-        dMat = testEll.getDiagMat();
+        diagMat = testEll.getDiagMat();
         eigMat = testEll.getEigvMat();
         eigPoint = @(x) eigMat*(x-qCenVec) + qCenVec;
-        invMat = diag(1./diag(dMat));
+        invMat = diag(1./diag(diagMat)); 
         isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
-            (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints) ;
-        
+            (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints);       
     end
 end
 

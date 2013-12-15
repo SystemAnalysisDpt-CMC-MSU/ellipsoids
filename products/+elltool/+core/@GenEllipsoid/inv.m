@@ -1,4 +1,5 @@
-function ellInvObj = inv(myEllArr)
+%function ellInvObj = inv(myEllArr)
+function myEllArr = inv(myEllArr)
 % INV - create generalized ellipsoid whose matrix in pseudoinverse
 %       to the matrix of input generalized ellipsoid
 %
@@ -37,7 +38,6 @@ import elltool.conf.Properties;
 %     1,ellObj);
 % modgen.common.type.simple.checkgenext('isscalar(x1)',1,ellObj);
 elltool.core.GenEllipsoid.checkIsMe(myEllArr);
-%
 arrayfun(@(x) fSingleInv(x),myEllArr);
 %
     function fSingleInv(ellObj)
@@ -49,6 +49,9 @@ arrayfun(@(x) fSingleInv(x),myEllArr);
         diagVec(isFinNZVec)=1./diagVec(isFinNZVec);
         diagVec(isInfVec)=0;
         diagVec(isZeroVec)=Inf;
-        ellInvObj=elltool.core.GenEllipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
+        diagMat = diag(diagVec);
+        ellObj.diagMat = diagMat;
+        %ellInvObj=elltool.core.GenEllipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
+        %ellObj=elltool.core.GenEllipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
     end
 end

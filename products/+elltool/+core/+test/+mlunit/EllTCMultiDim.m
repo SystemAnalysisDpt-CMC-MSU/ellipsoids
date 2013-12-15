@@ -134,19 +134,27 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect(true, true, 16);
             testCorrect(true, false, 16);
             function testCorrect(isTwoArg, isnRankParam, flag)
+                import elltool.conf.Properties;
+                absTol = Properties.getAbsTol();
                 if isTwoArg
                     [testEllArray ansNumArray, ~] = self.createTypicalArray(flag);
                     if isnRankParam
                         testRes = dimension(testEllArray);
-                        mlunitext.assert_equals(ansNumArray, testRes);
+                        isOk = modgen.common.absrelcompare(ansNumArray(:), testRes(:), absTol, absTol, @abs);
+                        mlunitext.assert_equals(true, isOk);
+                        %mlunitext.assert_equals(ansNumArray, testRes);
                         if (flag == 16)
                            mlunitext.assert_equals(class(ansNumArray), ...
                                class(testRes)); 
                         end
                     else
                         [testDim, testRank] = dimension(testEllArray);
-                        mlunitext.assert_equals(ansNumArray, testDim);
-                        mlunitext.assert_equals(ansNumArray, testRank);
+                        isOk = modgen.common.absrelcompare(ansNumArray(:), testDim(:), absTol, absTol, @abs);
+                        mlunitext.assert_equals(true, isOk);
+                        %mlunitext.assert_equals(ansNumArray, testDim);
+                        isOk = modgen.common.absrelcompare(ansNumArray(:), testRank(:), absTol, absTol, @abs);
+                        mlunitext.assert_equals(true, isOk);
+                        %mlunitext.assert_equals(ansNumArray, testRank);
                         if (flag == 16)
                            mlunitext.assert_equals(class(ansNumArray), ...
                                class(testDim)); 
@@ -161,9 +169,15 @@ classdef EllTCMultiDim < mlunitext.test_case
                 end
             end
             function test2Correct()
+                import elltool.conf.Properties;
+                absTol = Properties.getAbsTol();
                 [testDim, testRank] = dimension(testEllArray);
-                mlunitext.assert_equals(ansDimNumArray, testDim);
-                mlunitext.assert_equals(ansRankNumArray, testRank);
+                isOk = modgen.common.absrelcompare(ansDimNumArray(:), testDim(:), absTol, absTol, @abs);
+                mlunitext.assert_equals(true, isOk);
+                isOk = modgen.common.absrelcompare(ansRankNumArray(:), testRank(:), absTol, absTol, @abs);
+                mlunitext.assert_equals(true, isOk);
+                %mlunitext.assert_equals(ansDimNumArray, testDim);
+                %mlunitext.assert_equals(ansRankNumArray, testRank);
             end
             
         end
@@ -229,8 +243,10 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect()
             mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
             function testCorrect()
+                import elltool.conf.Properties;
+                absTol = Properties.getAbsTol();
                 isTestRes = testEllArray.isEmpty();
-                mlunitext.assert_equals(isAnsArray, isTestRes);
+                mlunitext.assert_equals(isAnsArray(:), isTestRes(:));
             end
         end
         function self = testMaxEig(self)

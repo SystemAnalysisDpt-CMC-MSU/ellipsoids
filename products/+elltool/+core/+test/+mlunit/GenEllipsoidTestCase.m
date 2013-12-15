@@ -973,13 +973,12 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             end
             %
             function checkM(fMethod,ellVec,dirVec,oMat)
-                if isequal(fMethod,@minkDiffIa) || isequal(fMethod,...
-                        @minkDiffEa)
-                    isOk=isDiffCorrect(fMethod,ellVec,dirVec,oMat);
+                if isequal(fMethod,@minkDiffIa) || isequal(fMethod,@minkDiffEa)
+                    [isOk, reportStr]=isDiffCorrect(fMethod,ellVec,dirVec,oMat);
                 else
-                    isOk=isSumCorrect(fMethod,ellVec,dirVec,oMat);
+                    [isOk, reportStr]=isSumCorrect(fMethod,ellVec,dirVec,oMat);
                 end
-                mlunitext.assert(isOk);
+                mlunitext.assert(isOk, reportStr);
             end
             %
             function [isEqual,reportStr]=isSumCorrect(fMethod,ellVec,dirVec,oMat)
