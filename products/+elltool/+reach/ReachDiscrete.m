@@ -184,12 +184,12 @@ classdef ReachDiscrete < elltool.reach.AReach
     %
     methods (Access = private)
         function [ellTubeRel,goodDirSetObj] = auxMakeEllTubeRel(self, probDynObj, ...
-                l0Mat, timeLimsVec, isDisturb, calcPrecision, absTol, relTol, ...
+                l0Mat, timeLimsVec, isDisturb, absTol, relTol, ...
                 approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsDiscrete;
             goodDirSetObj = GoodDirsDiscrete(...
-                probDynObj, timeLimsVec(1), l0Mat, calcPrecision);
+                probDynObj, timeLimsVec(1), l0Mat, relTol);
             %
             approxSchemaDescr = char.empty(1,0);
             approxSchemaName = char.empty(1,0);
@@ -245,7 +245,7 @@ classdef ReachDiscrete < elltool.reach.AReach
     end
     methods (Access=protected)
         function [ellTubeRel,goodDirSetObj] = internalMakeEllTubeRel(self, probDynObj, l0Mat,...
-                timeVec, isDisturb, calcPrecision, absTol, relTol, approxTypeVec)
+                timeVec, isDisturb, absTol, relTol, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
             import modgen.common.throwerror;
@@ -254,7 +254,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             try
                 [ellTubeRel,goodDirSetObj] = self.auxMakeEllTubeRel(...
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
-                    calcPrecision, absTol, relTol, approxTypeVec);
+                    absTol, relTol, approxTypeVec);
             catch meObj
                 errorStr = '';
                 errorTag = '';

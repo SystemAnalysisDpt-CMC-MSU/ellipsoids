@@ -286,8 +286,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             aMatList=tubeRel.aMat;
             xTouchCurveMatList=curveRel.xTouchCurveMat;
             xTouchOpCurveMatList=curveRel.xTouchOpCurveMat;
-            curveCalcPrecVec=curveRel.absTol;
-            tubeCalcPrecVec=tubeRel.absTol;
+            curveCalcPrecVec=curveRel.relTol;
+            tubeCalcPrecVec=tubeRel.relTol;
             tubeScaleFactorVec=tubeRel.scaleFactor;
             curveScaleFactorVec=curveRel.scaleFactor;
             %

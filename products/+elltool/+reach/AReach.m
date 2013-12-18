@@ -116,7 +116,7 @@ classdef AReach < elltool.reach.IReach
     methods (Abstract, Access = protected)
         %
         [ellTubeRel,goodDirSetObj] = internalMakeEllTubeRel(self, probDynObj, l0Mat, ...
-            timeVec, isDisturb, calcPrecision, absTol, relTol, approxTypeVec)
+            timeVec, isDisturb, absTol, relTol, approxTypeVec)
     end
     %
     methods (Access=protected)
@@ -570,7 +570,7 @@ classdef AReach < elltool.reach.IReach
                     isDisturbance);
                 [ellTubeRelVec{il0Num},goodDirSetObjCell{il0Num},probDynObjCell{il0Num}] = self.makeEllTubeRel(...
                     probDynObj, l0Mat(:, il0Num), ...
-                    newTimeVec, isDisturbance, self.relTol, self.absTol, self.relTol, approxType);
+                    newTimeVec, isDisturbance, self.absTol, self.relTol, approxType);
                 ellTubeRelList{il0Num} = ...
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
@@ -643,7 +643,7 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function [ellTubeRel, goodDirSetObj, probDynObj] = makeEllTubeRel(self, probDynObj, l0Mat,...
-                timeVec, isDisturb, calcPrecision, absTol, relTol, approxTypeVec)
+                timeVec, isDisturb, absTol, relTol, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.gen.RegProblemDynamicsFactory;
             import modgen.common.throwerror;
@@ -653,7 +653,7 @@ classdef AReach < elltool.reach.IReach
             try
                 [ellTubeRel, goodDirSetObj] = self.internalMakeEllTubeRel(...
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
-                    calcPrecision, absTol, relTol, approxTypeVec);
+                    absTol, relTol, approxTypeVec);
             catch meObj
                 errorStr = '';
                 errorTag = '';
@@ -763,9 +763,9 @@ classdef AReach < elltool.reach.IReach
                 %
                 %temporary plug used until we replace calcPrecision with
                 %separate relTol and absTol fields in EllTube classes
-                calcPrecision=max(self.relTol,self.absTol);
+                %calcPrecision=max(self.relTol,self.absTol);
                 [self.ellTubeRel,goodDirSetObj,probDynObj] = self.makeEllTubeRel(probDynObj, l0Mat,...
-                    timeVec, isDisturbance, calcPrecision, self.absTol,...
+                    timeVec, isDisturbance, self.absTol,...
                     self.relTol, approxTypeVec);
                 self.goodDirSetList={{goodDirSetObj}};
                 self.intProbDynList={{probDynObj}};

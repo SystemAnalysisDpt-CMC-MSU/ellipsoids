@@ -96,14 +96,14 @@ classdef ReachContinuous < elltool.reach.AReach
     %
     methods (Access = private)
         function [ellTubeRel,goodDirSetObj] = auxMakeEllTubeRel(self, probDynObj, ...
-                l0Mat, timeVec, isDisturb, calcPrecision, approxTypeVec)
+                l0Mat, timeVec, isDisturb, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsContinuousFactory;
             import modgen.common.throwerror;
             %
             timeVec = [min(timeVec) max(timeVec)];
             goodDirSetObj = GoodDirsContinuousFactory.create(...
-                probDynObj, timeVec(1), l0Mat, calcPrecision);
+                probDynObj, timeVec(1), l0Mat, self.relTol);
             if isDisturb
                 extIntBuilder =...
                     gras.ellapx.lreachuncert.ExtIntEllApxBuilder(...
@@ -157,14 +157,14 @@ classdef ReachContinuous < elltool.reach.AReach
     end
     methods (Access=protected)
         function [ellTubeRel,goodDirSetObj] = internalMakeEllTubeRel(self, probDynObj, l0Mat,...
-                timeVec, isDisturb, calcPrecision, absTol, relTol, approxTypeVec)
+                timeVec, isDisturb, absTol, relTol, approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.throwerror;
             %
             try
                 [ellTubeRel,goodDirSetObj] = self.auxMakeEllTubeRel(...
                     probDynObj,  l0Mat, timeVec, isDisturb, ...
-                    calcPrecision, approxTypeVec);
+                    approxTypeVec);
                 if self.isbackward()
                     ellTubeRel=self.rotateEllTubeRel(ellTubeRel);
                 end
