@@ -189,7 +189,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsDiscrete;
             goodDirSetObj = GoodDirsDiscrete(...
-                probDynObj, timeLimsVec(1), l0Mat, relTol);
+                probDynObj, timeLimsVec(1), l0Mat, relTol, absTol);
             %
             approxSchemaDescr = char.empty(1,0);
             approxSchemaName = char.empty(1,0);

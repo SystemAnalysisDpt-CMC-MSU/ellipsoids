@@ -760,10 +760,7 @@ classdef AReach < elltool.reach.IReach
                     ptStrCMat, ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec,...
                     x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
                 approxTypeVec = [EApproxType.External, EApproxType.Internal];
-                %
-                %temporary plug used until we replace calcPrecision with
-                %separate relTol and absTol fields in EllTube classes
-                %calcPrecision=max(self.relTol,self.absTol);
+                %               
                 [self.ellTubeRel,goodDirSetObj,probDynObj] = self.makeEllTubeRel(probDynObj, l0Mat,...
                     timeVec, isDisturbance, self.absTol,...
                     self.relTol, approxTypeVec);

@@ -59,7 +59,7 @@ classdef AGoodDirs
             lsGoodDirMat = self.lsGoodDirMat;
         end
         function self = AGoodDirs(pDynObj, sTime, ...
-                lsGoodDirMat, calcPrecision)
+                lsGoodDirMat, relTol, absTol)
             import gras.ellapx.common.*;
             import gras.mat.MatrixOperationsFactory;
             import gras.mat.ConstMatrixFunctionFactory;
@@ -98,7 +98,7 @@ classdef AGoodDirs
             %
             [XstDynamics, RstDynamics, cXstNormDynamics] = ...
                 self.calcTransMatDynamics(matOpFactory, STimeData, ...
-                pDynObj.getAtDynamics(), calcPrecision);
+                pDynObj.getAtDynamics(), relTol, absTol);
             %
             self.XstNormDynamics = cXstNormDynamics;
             self.XstTransDynamics = matOpFactory.transpose(XstDynamics);
@@ -139,6 +139,6 @@ classdef AGoodDirs
     methods (Abstract, Access = protected)
         [XstDynamics, RstDynamics, cXstNormDynamics] = ...
             calcTransMatDynamics(matOpFactory, STimeData, AtDynamics, ...
-            calcPrecision)
+            relTol, absTol)
     end
 end

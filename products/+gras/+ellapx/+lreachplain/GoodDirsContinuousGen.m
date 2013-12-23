@@ -5,20 +5,20 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
     end
     methods
         function self = GoodDirsContinuousGen(pDynObj, sTime, ...
-                lsGoodDirMat, calcPrecision)
+                lsGoodDirMat, relTol, absTol)
             self=self@gras.ellapx.lreachplain.AGoodDirs(...
-                pDynObj, sTime, lsGoodDirMat, calcPrecision);
+                pDynObj, sTime, lsGoodDirMat, relTol, absTol);
         end
     end
     methods (Access = protected)
-        function odePropList=getOdePropList(self,calcPrecision)
+        function odePropList=getOdePropList(self,relTol, absTol)
             odePropList={'NormControl', self.ODE_NORM_CONTROL, ...
-                'RelTol', calcPrecision*self.CALC_PRECISION_FACTOR, ...
-                'AbsTol', calcPrecision*self.CALC_PRECISION_FACTOR};
+                'RelTol', relTol*self.CALC_PRECISION_FACTOR, ...
+                'AbsTol', absTol*self.CALC_PRECISION_FACTOR};
         end
         function [XstDynamics, RstDynamics, XstNormDynamics] = ...
                 calcTransMatDynamics(self, matOpFactory, STimeData, ...
-                AtDynamics, calcPrecision)
+                AtDynamics, relTol, absTol)
             %
             import gras.gen.matdot;
             import gras.mat.interp.MatrixInterpolantFactory;
@@ -45,7 +45,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
             [timeRstVec, dataRstArray, dataXstNormArray] = ...
                 self.calcHalfRstExtDynamics(halfTimeVec, ...
                 fRstExtDerivFunc, sRstInitialMat, sXstNormInitial, ...
-                calcPrecision, fRstPostProcFunc);
+                relTol, absTol, fRstPostProcFunc);
             %
             % calculation of X(s, t) on [s, t1]
             %
@@ -53,7 +53,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
             [timeRstRightVec, dataRstRightArray, ...
                 dataXstNormRightArray] = self.calcHalfRstExtDynamics(...
                 halfTimeVec, fRstExtDerivFunc, sRstInitialMat, ...
-                sXstNormInitial, calcPrecision);
+                sXstNormInitial, relTol, absTol);
             %
             if (length(timeRstRightVec) > 1)
                 timeRstVec = cat(2, timeRstVec, timeRstRightVec(2:end));
@@ -86,13 +86,13 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
         function [timeRstHalfVec, dataRstHalfArray, ...
                 dataXstNormHalfArray] = calcHalfRstExtDynamics(self, ...
                 timeVec, fRstDerivFunc, sRstInitialMat, ...
-                sXstNormInitial, calcPrecision, varargin)
+                sXstNormInitial, relTol, absTol, varargin)
             %
             import gras.ode.MatrixODESolver;
             %
             sRstExtInitialMat = [sRstInitialMat(:); sXstNormInitial];
             %
-            odeArgList = self.getOdePropList(calcPrecision);
+            odeArgList = self.getOdePropList(relTol, absTol);
             sizeSysVec = size(sRstExtInitialMat);
             %
             solverObj = MatrixODESolver(sizeSysVec, @ode45, ...
@@ -103,7 +103,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                 [size(sRstInitialMat), length(timeRstHalfVec)]);
             dataXstNormHalfArray = dataRstExtHalfArray(end,:);
             %
-            if nargin > 6
+            if nargin > 7
                 fRstPostProcFunc = varargin{1};
                 [timeRstHalfVec, dataRstHalfArray, ...
                     dataXstNormHalfArray] = fRstPostProcFunc(...

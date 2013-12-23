@@ -1,15 +1,15 @@
 classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
     methods
         function self = GoodDirsDiscrete(pDynObj, sTime, ...
-                lsGoodDirMat, calcPrecision)
+                lsGoodDirMat, relTol, absTol)
             self = self@gras.ellapx.lreachplain.AGoodDirs(...
-                pDynObj, sTime, lsGoodDirMat, calcPrecision);
+                pDynObj, sTime, lsGoodDirMat, relTol, absTol);
         end
     end
     methods (Access = protected)
         function [XstDynamics, RstDynamics, XstNormDynamics] = ...
                 calcTransMatDynamics(self, matOpFactory, STimeData, ...
-                AtDynamics, calcPrecision)
+                AtDynamics, relTol, absTol)
             %
             import gras.mat.interp.MatrixInterpolantFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;

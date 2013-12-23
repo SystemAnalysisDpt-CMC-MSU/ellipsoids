@@ -1,16 +1,16 @@
 classdef GoodDirsContinuousFactory<handle
     methods (Static)
         function goodDirObj = create(pDynObj, sTime, lsGoodDirMat, ...
-                calcPrecision)
+                relTol, absTol)
             import gras.ellapx.lreachplain.GoodDirsContinuousGen;
             import gras.ellapx.lreachplain.GoodDirsContinuousLTI;
             if isa(pDynObj, ...
                 'gras.ellapx.lreachplain.probdyn.AReachProblemLTIDynamics')
                 goodDirObj = GoodDirsContinuousLTI(pDynObj, sTime, ...
-                    lsGoodDirMat, calcPrecision);
+                    lsGoodDirMat, relTol, absTol);
             else
                 goodDirObj = GoodDirsContinuousGen(pDynObj, sTime, ...
-                    lsGoodDirMat, calcPrecision);
+                    lsGoodDirMat, relTol, absTol);
             end
         end
     end
