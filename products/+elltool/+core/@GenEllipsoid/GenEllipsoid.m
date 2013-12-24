@@ -80,7 +80,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             for i = 1 : nSecElems
                 ellSecChangedArr(i) = reDecomposition(ellSecChangedArr(i));
             end
-            
+                       
             [~, absTol] = ellFirstChangedArr.getAbsTol;
             firstSizeVec = size(ellFirstChangedArr);
             secSizeVec = size(ellSecChangedArr);
@@ -267,8 +267,9 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 end
                 isInfVec=diagVec==Inf;
                 [~,wRMat]=qr(ellWMat);
-%                 if all(all(abs(abs(wRMat)-eye(size(wRMat)))<absTol))
-%                     %W is orthogonal                  
+%                 %if all(all(abs(abs(wRMat)-eye(size(wRMat)))<absTol))
+%                 if norm(wRMat * wRMat' - eye(size(wRMat))) < absTol 
+%                     %W is orthogonal       
 %                     diagResVec=diagVec;
 %                     eigvResMat=ellWMat;
 %                 elseif all(~isInfVec)                    
@@ -310,7 +311,9 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     diagResVec(infIndVec)=Inf;
                     eigvResMat=orthBasMat;
 %                 end
-                ellObj.diagMat=diag(diagResVec);
+                %ellObj.diagMat=diag(diagResVec);
+                %не ясно, можно ли так делать: 
+                ellObj.diagMat=diag(sort(diagResVec));
                 ellObj.eigvMat=eigvResMat;
                 ellObj.centerVec=ellCenterVec;
         end

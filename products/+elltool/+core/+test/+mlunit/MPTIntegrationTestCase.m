@@ -265,7 +265,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             defaultPolyConst = 0.25;
             poly1 = polytope(defaultPolyMat,defaultPolyConst);
             ellEA1 = intersection_ea(ell1,poly1);
-            mlunitext.assert(eq(ell1,ellEA1));
+            %mlunitext.assert(eq(ell1,ellEA1));
+            [isOk, reportStr] = isEqual(ell1, ellEA1);
+            mlunitext.assert_equals(true, isOk, reportStr);
             %
             %If we apply same linear tranform to both ell1 and poly1, than
             %minimal volume ellipsoid shouldn't change.
@@ -276,7 +278,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly2 = polytope(defaultPolyMat/(transfMat),...
                 defaultPolyConst+(defaultPolyMat/(transfMat))*shiftVec);
             ellEA2 = intersection_ea(ell2,poly2);
-            mlunitext.assert(eq(ell2,ellEA2));
+            %mlunitext.assert(eq(ell2,ellEA2));
+            [isOk, reportStr] = isEqual(ell2, ellEA2);
+            mlunitext.assert_equals(true, isOk, reportStr);
             %
             %Checking, that amount of constraints in polytope does not
             %affect accuracy of computation of external approximation
@@ -286,7 +290,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             kVec = ones(nConstr,1);
             polyManyConstr = polytope(hMat,kVec);
             ellEAManyConstr = intersection_ea(ell1,polyManyConstr);
-            mlunitext.assert(eq(ell1,ellEAManyConstr));
+            %mlunitext.assert(eq(ell1,ellEAManyConstr));
+            [isOk, reportStr] = isEqual(ell1, ellEAManyConstr);
+            mlunitext.assert_equals(true, isOk, reportStr);
             %
             %First example, but for nDims
             nDims = 10;
@@ -296,7 +302,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             polyNConst = 1/(2*nDims);
             polyN = polytope(polyNMat,polyNConst);
             ellEAN = intersection_ea(ellN,polyN);
-            mlunitext.assert(eq(ellN,ellEAN));
+            %mlunitext.assert(eq(ellN,ellEAN));
+            [isOk, reportStr] = isEqual(ellN, ellEAN);
+            mlunitext.assert_equals(true, isOk, reportStr);
             %
             transfNMat =  [0.8913 0.1763 0.1389 0.4660 0.8318 0.1509 0.8180 0.3704 0.1730 0.2987;...
                 0.7621 0.4057 0.2028 0.4186 0.5028 0.6979 0.6602 0.7027 0.9797 0.6614;...
@@ -316,7 +324,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             polyN2 = polytope(polyNMat/(transfNMat),...
                 -(polyNConst+(polyNMat/(transfNMat))*shiftNVec));
             ellEA2 = intersection_ea(ellN2,polyN2);
-            mlunitext.assert(eq(ellN2,ellEA2));
+            %mlunitext.assert(eq(ellN2,ellEA2));
+            [isOk, reportStr] = isEqual(ellN2, ellEA2);
+            mlunitext.assert_equals(true, isOk, reportStr);
         end
         %
         %

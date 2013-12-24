@@ -51,10 +51,10 @@ end
 
 function ell = struct2Ell(SEll)
 if (isfield(SEll, 'absTol'))
-    SProp = rmfield(SEll, {'shapeMat', 'centerVec'});
+    SProp = rmfield(SEll, {'diagMat', 'eigvMat', 'centerVec'});
     propNameValueCMat = [fieldnames(SProp), struct2cell(SProp)].';
-    ell = elltool.core.GenEllipsoid(SEll.centerVec.', SEll.shapeMat, propNameValueCMat{:});
+    ell = elltool.core.GenEllipsoid(SEll.centerVec, SEll.diagMat, SEll.eigvMat, propNameValueCMat{:});
 else
-    ell = elltool.core.GenEllipsoid(SEll.centerVec.', SEll.shapeMat);
+    ell = elltool.core.GenEllipsoid(SEll.centerVec, SEll.diagMat, SEll.eigvMat);
 end
 end
