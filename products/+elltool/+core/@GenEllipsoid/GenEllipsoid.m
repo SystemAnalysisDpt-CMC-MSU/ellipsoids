@@ -346,7 +346,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                         'errorTag','wrongInput:imagArgs',...
                         'errorMessage','shapeMat matrix must be real.');
                 ellMat = regParamList{1};
-                nShDim = ndims(ellMat);
+                nShDims = ndims(ellMat);
+                
                 %    
                 [mSize nSize]=size(ellMat);
                 isPar2Vector = nSize==1;
@@ -383,6 +384,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                         'errorMessage','centerVec and shapeMat matrix must be real.');
                  ellCenterVec = regParamList{1};
                  ellMat = regParamList{2};
+                 
                  nShDims = ndims(ellMat);
                  nCentDims = ndims(ellCenterVec);
                  checkmultvar(...
@@ -396,7 +398,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                         shDimsVec(3:end), 'errorTag','wrongInput',...
                         'errorMessage',...
                         'additional dimensions must agree');
-                %
+                
                 [mCenSize nCenSize]=size(ellCenterVec);
                 [mSize nSize]=size(ellMat);
                 isPar2Vector = nSize==1;
@@ -437,6 +439,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 ellCenterVec = regParamList{1};
                 ellDiagMat = regParamList{2};
                 ellWMat = regParamList{3};
+                shMatArray = ellWMat * ellDiagMat * ellWMat';
+                nShDims = ndims(shMatArray);
                 %
                 [mCenSize nCenSize]=size(ellCenterVec);
                 [mDSize nDSize]=size(ellDiagMat);
@@ -533,7 +537,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     end
                 end
             end
-            
             ellObj.absTol = absTolVal;
             ellObj.relTol = relTolVal;
             ellObj.nPlot2dPoints = nPlot2dPointsVal;
