@@ -71,7 +71,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     'input ellipsoidal arrays should be empty at the same time');
             end
             
-            %плохой способ, знаю
+            
             ellFirstChangedArr = ellFirstArr;
             ellSecChangedArr = ellSecArr;
             for i = 1 : nFirstElems
@@ -312,7 +312,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     eigvResMat=orthBasMat;
 %                 end
                 %ellObj.diagMat=diag(diagResVec);
-                %не ясно, можно ли так делать: 
+                
                 ellObj.diagMat=diag(sort(diagResVec));
                 ellObj.eigvMat=eigvResMat;
                 ellObj.centerVec=ellCenterVec;
@@ -439,6 +439,10 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 ellCenterVec = regParamList{1};
                 ellDiagMat = regParamList{2};
                 ellWMat = regParamList{3};
+                [nSize mSize] = size(ellDiagMat);
+                if (mSize == 1)
+                    ellDiagMat = diag(ellDiagMat);
+                end
                 shMatArray = ellWMat * ellDiagMat * ellWMat';
                 nShDims = ndims(shMatArray);
                 %

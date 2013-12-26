@@ -126,10 +126,58 @@ else % multiple ellipsoids, multiple directions
     bpArr=reshape(bpArr,dirSizeVec);
 end
 %
-    function [supFun xVec] = fRhoForDir(ellObj,dirVec)
-        [cenVec ellMat]=double(ellObj);
-        absTol=ellObj.getAbsTol();
-        [supFun xVec] = gras.geom.ell.rhomat(ellMat, dirVec,absTol,...
-            cenVec);
+    function [supFun xVec] = fRhoForDir(ellObj,dirVec)        
+        import elltool.core.GenEllipsoid;
+        absTol=GenEllipsoid.getCheckTol();
+        eigvMat=ellObj.getEigvMat();
+        diagMat=ellObj.getDiagMat();
+        diagVec=diag(diagMat);
+        cenVec=ellObj.getCenter();
+        isInfVec=diagVec==Inf;
+        sDirVec = dirVec;
+        dirInfProjVec=0;
+        if ~all(~isInfVec)
+            %есть бесконечные элементы в diagMat
+            nDimSpace=length(diagVec);
+            allInfDirMat=eigvMat(:,isInfVec);
+            [orthBasMat rankInf]=ellObj.findBasRank(allInfDirMat,absTol);
+            infIndVec=1:rankInf;
+            finIndVec=(rankInf+1):nDimSpace;
+            infBasMat = orthBasMat(:,infIndVec);
+            finBasMat = orthBasMat(:,finIndVec);
+            diagVec(isInfVec)=0;
+            curEllMat=eigvMat*diag(diagVec)*eigvMat.';
+            resProjQMat=finBasMat.'*curEllMat*finBasMat;
+            ellQMat=0.5*(resProjQMat+resProjQMat.');
+            dirInfProjVec=infBasMat.'*dirVec;
+            dirVec=finBasMat.'*dirVec;
+            cenVec=finBasMat.'*cenVec;
+        else
+            %нет беск. элементов
+            nDimSpace=length(diagVec);
+            finBasMat = eye(nDimSpace);
+            ellQMat=eigvMat*diag(diagVec)*eigvMat.';
+            ellQMat=0.5*(ellQMat+ellQMat);
+        end
+        if ~all(abs(dirInfProjVec)<absTol)
+            resRho=Inf;
+            scMul = realsqrt(dirVec'*ellQMat*dirVec);
+            if scMul > 0
+                bndPFinVec = cenVec + (ellQMat*dirVec)/scMul;
+            else
+                bndPFinVec = cenVec;
+            end
+            bndPVec = finBasMat*bndPFinVec;
+            IndProjInfVec = find(abs(infBasMat*dirInfProjVec) > eps);
+            infVal = infBasMat*dirInfProjVec;
+            if numel(IndProjInfVec) > 0
+                bndPVec(IndProjInfVec) = Inf*sign(infVal(abs(infVal) > eps));
+            end
+        else
+            [cenVec ellMat]=double(ellObj);
+            absTol=ellObj.getAbsTol();
+            [supFun xVec] = gras.geom.ell.rhomat(ellMat, dirVec,absTol,...
+                    cenVec);
+        end
     end
 end

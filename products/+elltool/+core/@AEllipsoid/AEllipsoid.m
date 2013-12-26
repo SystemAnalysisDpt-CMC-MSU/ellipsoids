@@ -88,7 +88,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
             % $Copyright: Moscow State University,
             %             Faculty of Computational Mathematics and Cybernetics,
             %             Science, System Analysis Department 2012-2013 $
-            self.checkIfScalar();
+            %self.checkIfScalar();
             shMat=self.shapeMat;
         end
 

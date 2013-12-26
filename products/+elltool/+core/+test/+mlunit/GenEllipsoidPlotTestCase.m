@@ -230,24 +230,24 @@ for iEll = 1:nEll
     if nDims == 1
         isBoundEllVec = check1d(testEllVec(iEll), cellPoints);
     elseif nDims == 2
-        if dMat(1, 1) == 0
+        if max(dMat(:)) == Inf
+            isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
+        elseif dMat(1, 1) == 0
             isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 1);
         elseif dMat(2, 2) == 0
             isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 2);            
-        elseif max(dMat(:)) == Inf
-            isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
         else
             isBoundEllVec = checkNorm(testEllVec(iEll), cellPoints);
         end
     elseif nDims == 3
-        if dMat(1, 1) == 0
+        if max(dMat(:)) == Inf
+            isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
+        elseif dMat(1, 1) == 0
             isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 1);
         elseif dMat(2, 2) == 0
             isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 2);
         elseif dMat(3, 3) == 0
             isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 3);
-        elseif max(dMat(:)) == Inf
-            isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
         else
             isBoundEllVec = checkNorm(testEllVec(iEll), cellPoints);
         end
@@ -337,9 +337,17 @@ mlunitext.assert_equals(ones(size(isBoundVec)), isBoundVec);
         diagMat = testEll.getDiagMat();
         eigMat = testEll.getEigvMat();
         eigPoint = @(x) eigMat*(x-qCenVec) + qCenVec;
-        invMat = diag(1./diag(diagMat)); 
+        invMat = diag(1./diag(diagMat));
+%         isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
+%             (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints);  
         isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
-            (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints);       
+            (eigPoint(x) - qCenVec)), cellPoints);
+        for i = 1 : size(isBoundEllVec, 2)
+            if (isnan(isBoundEllVec(i)))
+                isBoundEllVec(i) = 1;
+            end
+        end
+        isBoundEllVec = arrayfun(@(x) x < 1 + absTol, isBoundEllVec);
     end
 end
 
