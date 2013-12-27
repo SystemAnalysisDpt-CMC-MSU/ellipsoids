@@ -1,0 +1,444 @@
+2013-12-11 21:23:46,636  WARN gras.ellapx.uncertcalc.log.Log4jConfigurator - Attempt to change a locked Log4j configuration
+
+  in D:\SVN_Local\EllToolBoxTrunk\lib\+modgen\+logging\+log4j\Log4jConfigurator.m at line 228
+  in D:\SVN_Local\EllToolBoxTrunk\products\+gras\+ellapx\+uncertcalc\+log\Log4jConfigurator.m at line 48
+  in D:\SVN_Local\EllToolBoxTrunk\products\+gras\+ellapx\+uncertcalc\run.m at line 47
+  in D:\SVN_Local\EllToolBoxTrunk\products\+gras\+ellapx\+uncertcalc\+test\+regr\+mlunit\SuiteRegression.m at line 77
+  in D:\SVN_Local\EllToolBoxTrunk\lib\mlunitext\+mlunitext\test_case.m at line 268
+  in D:\SVN_Local\EllToolBoxTrunk\lib\mlunitext\+mlunitext\test_suite.m at line 443
+  in D:\SVN_Local\EllToolBoxTrunk\lib\+modgen\+pcalc\auxdfeval.m at line 224
+  in D:\SVN_Local\EllToolBoxTrunk\lib\mlunitext\+mlunitext\+pcalc\auxdfeval.m at line 12
+  in D:\SVN_Local\EllToolBoxTrunk\lib\mlunitext\+mlunitext\test_suite.m at line 411
+  in D:\SVN_Local\EllToolBoxTrunk\lib\mlunitext\+mlunitext\text_test_runner.m at line 76
+  in D:\SVN_Local\EllToolBoxTrunk\products\+gras\+ellapx\+uncertcalc\+test\+regr\run_regr_tests.m at line 38
+2013-12-11 21:23:47,306  INFO gras.ellapx.uncertcalc.run - Loaded configuration for systemDefinition:    |    
+   |--- conf
+   |       |    
+   |       |--- initial_set
+   |       |       |    
+   |       |       |-- a : [0 0]
+   |       |       |       -----------
+   |       |       |-- Q : |0.01|0   |
+   |       |       |       |0   |0.01|
+   |       |       |       -----------
+   |       |       O
+   |       |    
+   |       |--- control_restriction
+   |       |       |    
+   |       |       |       -----
+   |       |       |-- Q : |1|0|
+   |       |       |       |0|1|
+   |       |       |       -----
+   |       |       |       ---
+   |       |       |-- a : |0|
+   |       |       |       |0|
+   |       |       |       ---
+   |       |       O
+   |       |    
+   |       |--- time_interval
+   |       |       |    
+   |       |       |-- t0 : 0
+   |       |       |-- t1 : 4
+   |       |       O
+   |       |    
+   |       |--- disturbance_restriction
+   |       |       |    
+   |       |       |       -----------------------------------------------
+   |       |       |-- Q : |0.0001+0.09*(sin(t))^2|0                     |
+   |       |       |       |0                     |0.0001                |
+   |       |       |       -----------------------------------------------
+   |       |       |       ----------
+   |       |       |-- a : |2*cos(t)|
+   |       |       |       |0       |
+   |       |       |       ----------
+   |       |       O
+   |       |    
+   |       |-------------- description : ' '
+   |       |---------------------- dim : 2
+   |       |                             -----------------------------
+   |       |----------------------- At : |0            |-10          |
+   |       |                             |1/(2+sin(t)) |-4/(2+sin(t))|
+   |       |                             -----------------------------
+   |       |                             ---------------------------
+   |       |----------------------- Bt : |10          |0           |
+   |       |                             |0           |1/(2+sin(t))|
+   |       |                             ---------------------------
+   |       |                             -----
+   |       |----------------------- Ct : |1|0|
+   |       |                             |0|1|
+   |       |                             -----
+   |       O
+   |    
+   |--- version
+   |       |    
+   |       |-- version : '2'
+   |       O
+   |    
+
+2013-12-11 21:23:47,384  INFO gras.ellapx.uncertcalc.run - Loaded configuration for genericProperties:    |    
+   |--- conf
+   |       |    
+   |       |--- genericProps
+   |       |       |    
+   |       |       |-- isSplineForMatrixCalcUsed : true
+   |       |       |-------------- calcPrecision : 1e-05
+   |       |       |------------- calcTimeLimVec : [0 4]
+   |       |       O
+   |       |    
+   |       |--- projectionProps
+   |       |       |    
+   |       |       |--- projSpaceSets
+   |       |       |       |    
+   |       |       |       |-- set1 : [1x1 Cell]
+   |       |       |       O
+   |       |       |    
+   |       |       |------ projSpaceSetName : 'set1'
+   |       |       |-- isDynamicProjEnabled : false
+   |       |       |--- isStaticProjEnabled : true
+   |       |       O
+   |       |    
+   |       |--- goodDirSelection
+   |       |       |    
+   |       |       |--- methodProps
+   |       |       |       |    
+   |       |       |       |--- manual
+   |       |       |       |       |    
+   |       |       |       |       |--- lsGoodDirSets
+   |       |       |       |       |       |    
+   |       |       |       |       |       |-- set1 : [1x2 Cell]
+   |       |       |       |       |       O
+   |       |       |       |       |    
+   |       |       |       |       |-- lsGoodDirSetName : 'set1'
+   |       |       |       |       O
+   |       |       |       |    
+   |       |       |       |--- auto
+   |       |       |       |       |    
+   |       |       |       |       |-- goodDirSpaceVec :[true true]
+   |       |       |       |       |-------- nGoodDirs : 1
+   |       |       |       |       O
+   |       |       |       |    
+   |       |       |       O
+   |       |       |    
+   |       |       |----- methodName : 'manual'
+   |       |       |-- selectionTime : 0
+   |       |       O
+   |       |    
+   |       |--- customResultDir
+   |       |       |    
+   |       |       |---- dirName : 'D:\SVN_Local\TTD\43ee8b4374681e22769248ceff8b411d7bb8c266'
+   |       |       |-- isEnabled : true
+   |       |       O
+   |       |    
+   |       |--- logging
+   |       |       |    
+   |       |       |-- log4jSettings : '
+                log4j.rootLogger=INFO, stdout, A1
+                #
+                log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+                log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+                #
+                log4j.appender.stdout.layout.ConversionPattern=%5p %c - %m\n
+                #
+                log4j.appender.A1=org.apache.log4j.DailyRollingFileAppender
+                #
+                #do not change - name of the main log file should have a 
+                #fixed pattern so that email logger can pick it up
+                log4j.appender.A1.File=${gras.ellapx.uncertcalc.log4j.logfile.dirwithsep}${gras.ellapx.uncertcalc.log4j.logfile.main.name}
+                #
+                log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+                log4j.appender.A1.layout.ConversionPattern=%d %5p %c - %m%n
+            '
+   |       |       O
+   |       |    
+   |       |--- plottingProps
+   |       |       |    
+   |       |       |--------------- isEnabled : false
+   |       |       |-- isGoodCurvesSeparately : true
+   |       |       |------------ viewAngleVec : [37.5 30]
+   |       |       O
+   |       |    
+   |       |--- ellipsoidalApxProps
+   |       |       |    
+   |       |       |--- internalApx
+   |       |       |       |    
+   |       |       |       |--- schemas
+   |       |       |       |       |    
+   |       |       |       |       |--- noUncertSqrtQ
+   |       |       |       |       |       |    
+   |       |       |       |       |       |--- props
+   |       |       |       |       |       |       |    
+   |       |       |       |       |       |       |-- selectionMethodForSMatrix : 'volume'
+   |       |       |       |       |       |       O
+   |       |       |       |       |       |    
+   |       |       |       |       |       |-- isEnabled : false
+   |       |       |       |       |       O
+   |       |       |       |       |    
+   |       |       |       |       |--- noUncertJustQ
+   |       |       |       |       |       |    
+   |       |       |       |       |       |--- props
+   |       |       |       |       |       |       |    
+   |       |       |       |       |       |       |-- selectionMethodForSMatrix : 'volume'
+   |       |       |       |       |       |       O
+   |       |       |       |       |       |    
+   |       |       |       |       |       |-- isEnabled : false
+   |       |       |       |       |       O
+   |       |       |       |       |    
+   |       |       |       |       O
+   |       |       |       |    
+   |       |       |       |-------- isEnabled : false
+   |       |       |       |-- dispScaleFactor : 1
+   |       |       |       O
+   |       |       |    
+   |       |       |--- externalApx
+   |       |       |       |    
+   |       |       |       |--- schemas
+   |       |       |       |       |    
+   |       |       |       |       |--- justQ
+   |       |       |       |       |       |    
+   |       |       |       |       |       |-- isEnabled : false
+   |       |       |       |       |       O
+   |       |       |       |       |    
+   |       |       |       |       O
+   |       |       |       |    
+   |       |       |       |-------- isEnabled : false
+   |       |       |       |-- dispScaleFactor : 1
+   |       |       |       O
+   |       |       |    
+   |       |       |--- extIntApx
+   |       |       |       |    
+   |       |       |       |--- schemas
+   |       |       |       |       |    
+   |       |       |       |       |--- uncert
+   |       |       |       |       |       |    
+   |       |       |       |       |       |--- props
+   |       |       |       |       |       |       |    
+   |       |       |       |       |       |       |-- selectionMethodForSMatrix : 'volume'
+   |       |       |       |       |       |       |------------- minQSqrtMatEig : 0.1
+   |       |       |       |       |       |       O
+   |       |       |       |       |       |    
+   |       |       |       |       |       |-- isEnabled : true
+   |       |       |       |       |       O
+   |       |       |       |       |    
+   |       |       |       |       O
+   |       |       |       |    
+   |       |       |       |-- isEnabled : true
+   |       |       |       O
+   |       |       |    
+   |       |       O
+   |       |    
+   |       |--- regularizationProps
+   |       |       |    
+   |       |       |---- isEnabled : false
+   |       |       |-- isJustCheck : false
+   |       |       |------- regTol : 1e-05
+   |       |       O
+   |       |    
+   |       |-- systemDefinitionConfName : 'demo3thirdTestSys'
+   |       O
+   |    
+   |--- version
+   |       |    
+   |       |-- version : '19'
+   |       O
+   |    
+
+2013-12-11 21:23:59,429  INFO gras.ellapx.uncertcalc.run - building interpolation of the problem definition, calc. precision=1.000000e-06, time elapsed =11.218 sec.
+2013-12-11 21:24:01,684  INFO gras.ellapx.lreachplain.GoodDirsContinuousGen.calcTransMatDynamics - calculating transition matrix spline at time 0, nodes = 2000, time elapsed = 1.9946 sec.
+2013-12-11 21:24:02,141  INFO gras.ellapx.uncertcalc.run - Building good directions at time 0, calc. precision=1.000000e-06, time elapsed =2.7105 sec.
+2013-12-11 21:24:05,056  INFO gras.ellapx.lreachuncert.ExtIntEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:24:08,751  INFO gras.ellapx.lreachuncert.ExtIntEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 3.700 sec. elapsed
+2013-12-11 21:24:08,752  INFO gras.ellapx.lreachuncert.ExtIntEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:24:11,785  INFO gras.ellapx.lreachuncert.ExtIntEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 3.033 sec. elapsed
+2013-12-11 21:24:19,816  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExtIntUncert}, schema={Internal,External}, #tubes=4, calc. precision=1.000000e-05: done, time elapsed =14.8864 sec.
+2013-12-11 21:24:29,598  INFO gras.ellapx.uncertcalc.run - building ellipsoidal tubes projections:5.9986
+2013-12-11 21:24:29,602  INFO gras.ellapx.uncertcalc.run - total time:43.4625
+2013-12-11 21:24:30,991 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Equal time knots count
+2013-12-11 21:24:32,296 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Equal time knots count
+2013-12-11 21:24:33,105 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Equal time knots count
+2013-12-11 21:24:34,198 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Equal time knots count
+2013-12-11 21:37:13,391  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 0, nodes = 2000, time elapsed = 0.51415 sec.
+2013-12-11 21:37:14,406 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:37:15,957 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 1.574 sec. elapsed
+2013-12-11 21:37:15,958 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:37:17,348 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 1.390 sec. elapsed
+2013-12-11 21:37:20,994  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=2, calc. precision=1.000000e-05: done, time elapsed =6.641 sec.
+2013-12-11 21:37:21,253 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:37:23,213 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 1.961 sec. elapsed
+2013-12-11 21:37:23,213 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:37:25,116 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 1.903 sec. elapsed
+2013-12-11 21:37:27,132  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=2, calc. precision=1.000000e-05: done, time elapsed =5.8875 sec.
+2013-12-11 21:37:31,341  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 0, nodes = 2000, time elapsed = 0.2741 sec.
+2013-12-11 21:37:31,572 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:37:33,004 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 1.432 sec. elapsed
+2013-12-11 21:37:35,053  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.4822 sec.
+2013-12-11 21:37:35,172 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:37:37,076 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 1.905 sec. elapsed
+2013-12-11 21:37:39,031  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.8595 sec.
+2013-12-11 21:37:40,985 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Equal time knots count
+2013-12-11 21:37:42,070  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 0, nodes = 2000, time elapsed = 0.26866 sec.
+2013-12-11 21:37:42,285 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:37:43,676 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 1.391 sec. elapsed
+2013-12-11 21:37:45,638  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.3549 sec.
+2013-12-11 21:37:45,755 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:37:47,689 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 1.935 sec. elapsed
+2013-12-11 21:37:49,605  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.8511 sec.
+2013-12-11 21:37:51,314 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Equal time knots count
+2013-12-11 21:37:52,572  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 0, nodes = 2000, time elapsed = 0.29017 sec.
+2013-12-11 21:37:52,795 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:37:54,218 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 1.423 sec. elapsed
+2013-12-11 21:37:56,143  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.3487 sec.
+2013-12-11 21:37:56,260 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:37:58,158 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 1.897 sec. elapsed
+2013-12-11 21:38:00,104  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.8451 sec.
+2013-12-11 21:38:01,835 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Equal time knots count
+2013-12-11 21:38:02,760  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 0, nodes = 2000, time elapsed = 0.26744 sec.
+2013-12-11 21:38:02,985 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:38:04,329 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 1.344 sec. elapsed
+2013-12-11 21:38:06,343  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.359 sec.
+2013-12-11 21:38:06,469 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:38:08,520 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 2.051 sec. elapsed
+2013-12-11 21:38:10,577  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =4.1094 sec.
+2013-12-11 21:38:12,294 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Equal time knots count
+2013-12-11 21:38:17,721  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 2.500000e+00, nodes = 2000, time elapsed = 0.27345 sec.
+2013-12-11 21:38:17,935 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.425601063973693 -0.904910898566517]  defined at time 2.500000...
+2013-12-11 21:38:18,894 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.425601063973693 -0.904910898566517]  defined at time 2.500000:done, 0.959 sec. elapsed
+2013-12-11 21:38:20,826  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =2.8928 sec.
+2013-12-11 21:38:20,946 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.425601063973693 -0.904910898566517]  defined at time 2.500000...
+2013-12-11 21:38:22,391 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.425601063973693 -0.904910898566517]  defined at time 2.500000:done, 1.445 sec. elapsed
+2013-12-11 21:38:24,332  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.3878 sec.
+2013-12-11 21:38:26,078 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Inequal time knots count
+2013-12-11 21:38:29,141  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 0, nodes = 2000, time elapsed = 0.27249 sec.
+2013-12-11 21:38:29,422 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:38:30,233 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 0.811 sec. elapsed
+2013-12-11 21:38:30,233 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:38:30,957 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 0.723 sec. elapsed
+2013-12-11 21:38:33,027  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=2, calc. precision=1.000000e-05: done, time elapsed =3.6053 sec.
+2013-12-11 21:38:33,148 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:38:34,127 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 0.980 sec. elapsed
+2013-12-11 21:38:34,128 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:38:35,124 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 0.996 sec. elapsed
+2013-12-11 21:38:37,189  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=2, calc. precision=1.000000e-05: done, time elapsed =4.0431 sec.
+2013-12-11 21:38:39,257  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 5, nodes = 2000, time elapsed = 0.27366 sec.
+2013-12-11 21:38:39,489 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.227162184225081 -0.804688200755287]  defined at time 5.000000...
+2013-12-11 21:38:40,490 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.227162184225081 -0.804688200755287]  defined at time 5.000000:done, 1.001 sec. elapsed
+2013-12-11 21:38:42,458  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =2.9705 sec.
+2013-12-11 21:38:43,027  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 5, nodes = 2000, time elapsed = 0.26844 sec.
+2013-12-11 21:38:43,245 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.103960536145039 -1.13581092112541]  defined at time 5.000000...
+2013-12-11 21:38:44,217 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.103960536145039 -1.13581092112541]  defined at time 5.000000:done, 0.972 sec. elapsed
+2013-12-11 21:38:46,174  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =2.9306 sec.
+2013-12-11 21:38:46,977  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 5, nodes = 2000, time elapsed = 0.27314 sec.
+2013-12-11 21:38:47,194 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.227162184225081 -0.804688200755287]  defined at time 5.000000...
+2013-12-11 21:38:47,852 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.227162184225081 -0.804688200755287]  defined at time 5.000000:done, 0.659 sec. elapsed
+2013-12-11 21:38:49,810  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =2.6169 sec.
+2013-12-11 21:38:50,368  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 5, nodes = 2000, time elapsed = 0.27253 sec.
+2013-12-11 21:38:50,588 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.103960536145039 -1.13581092112541]  defined at time 5.000000...
+2013-12-11 21:38:51,241 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.103960536145039 -1.13581092112541]  defined at time 5.000000:done, 0.653 sec. elapsed
+2013-12-11 21:38:53,207  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =2.6206 sec.
+2013-12-11 21:38:59,838  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 0, nodes = 2000, time elapsed = 0.27311 sec.
+2013-12-11 21:39:00,065 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:39:01,502 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 1.437 sec. elapsed
+2013-12-11 21:39:03,503  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.4393 sec.
+2013-12-11 21:39:03,634 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:39:05,575 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 1.941 sec. elapsed
+2013-12-11 21:39:07,532  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.8985 sec.
+2013-12-11 21:39:09,286 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Inequal time knots count
+2013-12-11 21:39:11,300  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 0, nodes = 2000, time elapsed = 0.27432 sec.
+2013-12-11 21:39:11,523 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:39:12,895 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 1.371 sec. elapsed
+2013-12-11 21:39:14,871  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.3489 sec.
+2013-12-11 21:39:15,002 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:39:16,936 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 1.934 sec. elapsed
+2013-12-11 21:39:18,895  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.8939 sec.
+2013-12-11 21:39:20,671 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Inequal time knots count
+2013-12-11 21:39:23,058  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 0, nodes = 2000, time elapsed = 0.27724 sec.
+2013-12-11 21:39:23,273 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:39:24,680 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 1.407 sec. elapsed
+2013-12-11 21:39:26,641  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.3696 sec.
+2013-12-11 21:39:26,762 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000...
+2013-12-11 21:39:28,678 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [1 0]  defined at time 0.000000:done, 1.916 sec. elapsed
+2013-12-11 21:39:30,627  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.8663 sec.
+2013-12-11 21:39:32,411 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Inequal time knots count
+2013-12-11 21:39:34,422  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 0, nodes = 2000, time elapsed = 0.27429 sec.
+2013-12-11 21:39:34,637 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:39:35,995 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 1.358 sec. elapsed
+2013-12-11 21:39:37,969  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.3336 sec.
+2013-12-11 21:39:38,103 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000...
+2013-12-11 21:39:40,050 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0 1]  defined at time 0.000000:done, 1.947 sec. elapsed
+2013-12-11 21:39:42,025  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.9231 sec.
+2013-12-11 21:39:43,822 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Inequal time knots count
+2013-12-11 21:39:50,857  INFO gras.ellapx.lreachplain.GoodDirsContinuousLTI.calcTransMatDynamics - calculating transition matrix exponent at time 2.500000e+00, nodes = 2000, time elapsed = 0.28816 sec.
+2013-12-11 21:39:51,094 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.409097269224859 -0.912490780398774]  defined at time 2.500000...
+2013-12-11 21:39:52,120 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.409097269224859 -0.912490780398774]  defined at time 2.500000:done, 1.027 sec. elapsed
+2013-12-11 21:39:54,194  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={ExternalQ}, schema={External}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.1018 sec.
+2013-12-11 21:39:54,329 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.409097269224859 -0.912490780398774]  defined at time 2.500000...
+2013-12-11 21:39:55,779 DEBUG gras.ellapx.lreachplain.ATightEllApxBuilder.build - solving ode for direction 
+ [0.409097269224859 -0.912490780398774]  defined at time 2.500000:done, 1.453 sec. elapsed
+2013-12-11 21:39:57,836  INFO gras.ellapx.gen.EllApxCollectionBuilder.getEllTubes - building approximation with types={InternalSqrtQ}, schema={Internal}, #tubes=1, calc. precision=1.000000e-05: done, time elapsed =3.5109 sec.
+2013-12-11 21:39:59,795 DEBUG gras.ellapx.smartdb.rels.EllTubeBasic.isEqualAdjustedInternal - Inequal time knots count
