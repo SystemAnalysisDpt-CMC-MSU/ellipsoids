@@ -1,31 +1,21 @@
 classdef MatrixSysUnifiedInterpFunc<gras.mat.IMatrixFunction
     properties(Access=private)
-        matrixInterpObjList
+        matrixInterpObj
     end
     
     methods
-        function self = MatrixSysUnifiedInterpFunc(interpObjList)
-            self.matrixInterpObjList = interpObjList;
+        function self = MatrixSysUnifiedInterpFunc(interpObj)
+            self.matrixInterpObj = interpObj;
         end
         %
         function varargout = evaluate(self,timeVec)
-            import modgen.common.throwerror;
-            nInterpObjs = length(self.matrixInterpObjList);
-            if(nargout > nInterpObjs)
-                throwerror('wrongOutput',['The number of output parameters must '...
-                    'be less or equal to the number of interpolation '...
-                    'objects'])
-            end;
-            resArrayList = cell(1,nargout);
-            for iInterpObj = 1:nInterpObjs
-                resArrayList{iInterpObj} =...
-                    self.matrixInterpObjList{iInterpObj}.evaluate(timeVec);
-            end
-            varargout = resArrayList;
+            resList = cell(1,nargout);
+            [resList{:}] = self.matrixInterpObj.evaluate(timeVec);
+            varargout = resList; 
         end
         %
         function mSize = getMatrixSize(self)
-            mSize = self.matrixInterpObjList{1}.getMatrixSize();
+            mSize = self.matrixInterpObj.getMatrixSize();
         end
         function nDims = getDimensionality(self)
             mSize = self.getMatrixSize();
@@ -40,11 +30,11 @@ classdef MatrixSysUnifiedInterpFunc<gras.mat.IMatrixFunction
             nRows = mSize(1);
         end
         function nEqs = getNEquations(self)
-            nEqs = self.matrixInterpObjList{1}.getNEquations();
+            nEqs = self.matrixInterpObj.getNEquations();
         end
         
-        function varargout = getInterpObj(self)
-            varargout(:) = self.matrixInterpObjList{:};
+        function interpObj = getInterpObj(self)
+            interpObj = self.matrixInterpObj;
         end
     end
     

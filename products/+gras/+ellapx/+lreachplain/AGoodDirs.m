@@ -11,7 +11,6 @@ classdef AGoodDirs
         ltGoodDirCurveSpline
         ltGoodDirOneCurveSplineList
         ltRGoodDirCurveSpline
-        ltRGoodDirCurveInterpObj
         ltRGoodDirOneCurveSplineList
         sTime
         lsGoodDirMat
@@ -32,13 +31,8 @@ classdef AGoodDirs
             ltGoodDirSplineList= ...
                 self.ltGoodDirOneCurveSplineList;
         end
-        
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function ltRGoodDirCurveSpline = getRGoodDirCurveSpline(self)
             ltRGoodDirCurveSpline = self.ltRGoodDirCurveSpline;
-        end
-        function ltRGoodDirCurveInterpObj = getRGoodDirCurveInterpObj(self)
-            ltRGoodDirCurveInterpObj = self.ltRGoodDirCurveInterpObj;
         end
         function ltRGoodDirCurveSpline = getRGoodDirOneCurveSpline(...
                 self, dirNum)
@@ -102,27 +96,14 @@ classdef AGoodDirs
             %
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            [XstDynamics, RstDynamics, cXstNormDynamics,...
-                RstInterpObj] = ...
+            [XstDynamics, RstDynamics, cXstNormDynamics] = ...
                 self.calcTransMatDynamics(matOpFactory, STimeData, ...
-                pDynObj.getAtDynamics(), calcPrecision);        
-            
+                pDynObj.getAtDynamics(), calcPrecision);
             %
             self.XstNormDynamics = cXstNormDynamics;
             self.XstTransDynamics = matOpFactory.transpose(XstDynamics);
             self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
-            compositeMatrixOperationsObj =...
-                gras.mat.CompositeMatrixOperations();
-            RstInterpObj =...
-                compositeMatrixOperationsObj.transpose(RstInterpObj);
             %
-            
-            lsGoodDirMatFunc = gras.mat.AConstMatrixFunction(lsGoodDirMat);
-            self.ltRGoodDirCurveInterpObj =...
-                compositeMatrixOperationsObj.rMultiply(RstInterpObj,...
-                lsGoodDirMatFunc);
-            
-           
             [self.ltGoodDirCurveSpline, ...
                 self.ltGoodDirOneCurveSplineList] = ...
                 buildGoodDirCurve(matOpFactory, ...
@@ -131,8 +112,6 @@ classdef AGoodDirs
                 self.ltRGoodDirOneCurveSplineList] = ...
                 buildGoodDirCurve(matOpFactory, ...
                 self.RstTransDynamics, lsGoodDirMat);
-            
-            
             function [ltCurveSpline, ltCurveSplineList] = ...
                     buildGoodDirCurve(factory, stTransDynamics, ...
                     lsGoodDirMat)

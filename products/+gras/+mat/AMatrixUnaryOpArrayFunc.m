@@ -13,6 +13,10 @@ classdef AMatrixUnaryOpArrayFunc<gras.mat.AMatrixOpFunc
                 resArray = self.opFuncHandle(lArray,length(timeVec));
             else
                 resArray = self.opFuncHandle(lArray);
+                if(strcmp(func2str(self.opFuncHandle),...
+                    '@(lArray)squeeze(lArray)'))
+                self.nCols = length(timeVec);
+                end;
             end;
         end
     end

@@ -116,10 +116,10 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
             end
         end
         % squeeze
-        function obj=squeeze(self,lMatrixFunc,nTimePoints)
+        function obj=squeeze(self,lMatrixFunc)
             obj=squeeze@gras.mat.AMatrixOperations(self,lMatrixFunc);
             if isempty(obj)
-                obj=gras.mat.fcnlib.MatrixSqueezeFunc(lMatrixFunc,nTimePoints);
+                obj=gras.mat.fcnlib.MatrixSqueezeFunc(lMatrixFunc);
             end
         end
         % divHadamard
@@ -130,11 +130,11 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
             end
         end
         % rMultiplyByVecSpecial
-        function obj=rMultiplyByVecSpecial(self,lMatrixFunc,aArray,sizeMatrix)
+        function obj=rMultiplyByVecSpecial(self,lMatrixFunc,rMatrixFunc,sizeMatrix)
             obj=rMultiplyByVecSpecial@gras.mat.AMatrixOperations(self,lMatrixFunc);
             if isempty(obj)
                 obj=gras.mat.fcnlib.MatrixRMultiplyByVecSpecialFunc(...
-                    lMatrixFunc,aArray,sizeMatrix);
+                    lMatrixFunc,rMatrixFunc,sizeMatrix);
             end
         end
         function obj=rMultiplyByScalar(self,lMatFunc,rScalFunc)
