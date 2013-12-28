@@ -97,13 +97,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             self.odeAbsCalcPrecision=relTol*precisionFactor;
             self.odeRelCalcPrecision=relTol*precisionFactor;
             self.relTol=relTol;
-%             if isempty(absTol)
-%             %self.absTol=relTol*ABS_TOL_FACTOR;
-%             self.absTol=relTol;
-%             else
             self.absTol=absTol;
-            %end
-            %
             x0Mat = pDefObj.getX0Mat();            
             if ~ismatposdef(x0Mat, self.absTol)
                 throwerror('wrongInput',...
