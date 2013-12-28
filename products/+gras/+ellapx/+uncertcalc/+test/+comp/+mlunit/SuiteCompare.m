@@ -84,7 +84,7 @@ classdef SuiteCompare < mlunitext.test_case
                 end
                 %
                 calcPrecision=crm.getParam('genericProps.calcPrecision');
-                isOk=all(runResult.ellTubeProjRel.calcPrecision<=...
+                isOk=all(runResult.ellTubeProjRel.absTol<=...
                     calcPrecision);
                 mlunitext.assert_equals(true,isOk);
                 %

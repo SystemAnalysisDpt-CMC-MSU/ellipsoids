@@ -99,7 +99,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     scaleFactorFieldList);
                 %
                 calcPrecision = crm.getParam('genericProps.calcPrecision');
-                isOk = all(SRunProp.ellTubeProjRel.calcPrecision <=...
+                isOk = all(SRunProp.ellTubeProjRel.absTol <=...
                     calcPrecision);
                 mlunitext.assert_equals(true,isOk);
                 %
