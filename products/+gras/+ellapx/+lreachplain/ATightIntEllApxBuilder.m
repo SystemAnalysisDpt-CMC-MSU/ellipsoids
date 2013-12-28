@@ -31,10 +31,10 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     end
     methods
         function self=ATightIntEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,calcPrecision,varargin)
-            %
+                timeLimsVec,relTol,absTol,varargin)
+            %            
             self=self@gras.ellapx.lreachplain.ATightEllApxBuilder(...
-                pDefObj,goodDirSetObj,timeLimsVec,calcPrecision);
+                pDefObj,goodDirSetObj,timeLimsVec,relTol,absTol);
             %
             [~,~,sMethodName] = ...
                 modgen.common.parseparext(varargin, ...

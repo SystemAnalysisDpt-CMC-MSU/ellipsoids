@@ -3,6 +3,7 @@ classdef EllApxCollectionBuilder<gras.ellapx.gen.IEllApxBuilder
         builderList
     end
     methods
+
         function calcPrecision=getCalcPrecision(self)
             nBuilders=length(self.builderList);
             calcPrecision=-Inf;

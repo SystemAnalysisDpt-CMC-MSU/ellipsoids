@@ -51,7 +51,8 @@ classdef MixTubeFortData < handle
             %
             timeVec = self.FortranData.tVec.';
             sTime = timeVec(1);
-            calcPrecision = self.FortranData.tolerance;
+            absTol = self.FortranData.tolerance;
+            relTol = self.FortranData.tolerance;
             %
             qArrayList = cell(1, self.nGoodDirs);
             aMat = zeros(self.sysDim, self.nTimePoints);
@@ -83,7 +84,7 @@ classdef MixTubeFortData < handle
                 timeVec, ltGoodDirArray, sTime, ...
                 MixedIntEllApxBuilder.APPROX_TYPE, ...
                 MixedIntEllApxBuilder.APPROX_SCHEMA_NAME, ...
-                MixedIntEllApxBuilder.APPROX_SCHEMA_DESCR, calcPrecision);
+                MixedIntEllApxBuilder.APPROX_SCHEMA_DESCR, absTol, relTol);
             %
         end
         %

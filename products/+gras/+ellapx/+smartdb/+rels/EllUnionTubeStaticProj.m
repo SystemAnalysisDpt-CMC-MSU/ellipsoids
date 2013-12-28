@@ -16,7 +16,8 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
     %   approxType:gras.ellapx.enums.EApproxType - Type of approximation
     %                 (external, internal, not defined
     %   timeVec:cell[1, m] - Time vector
-    %   calcPrecision:double[1, 1] - Calculation precision
+    %   relTol:double[1, 1] - Relative tolerance 
+    %   absTol:double[1, 1] - Absolute tolerance 
     %   indSTime:double[1, 1]  - index of sTime within timeVec
     %   ltGoodDirMat:cell[1, nElem] - Good direction curve
     %   lsGoodDirVec:cell[1, nElem] - Good direction at time s

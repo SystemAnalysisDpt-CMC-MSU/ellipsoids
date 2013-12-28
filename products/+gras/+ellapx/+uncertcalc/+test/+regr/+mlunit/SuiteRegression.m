@@ -81,7 +81,7 @@ classdef SuiteRegression < mlunitext.test_case
                 end
                 %
                 calcPrecision=curCrm.getParam('genericProps.calcPrecision');                
-                isOk=all(SRunProp.ellTubeProjRel.calcPrecision<=...
+                isOk=all(SRunProp.ellTubeProjRel.absTol<=...
                     calcPrecision);
                 mlunitext.assert_equals(true,isOk);
                 %
