@@ -32,7 +32,7 @@ classdef ATightIntEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     methods
         function self=ATightIntEllApxBuilder(pDefObj,goodDirSetObj,...
                 timeLimsVec,relTol,absTol,varargin)
-            %
+            %            
             self=self@gras.ellapx.lreachplain.ATightEllApxBuilder(...
                 pDefObj,goodDirSetObj,timeLimsVec,relTol,absTol);
             %

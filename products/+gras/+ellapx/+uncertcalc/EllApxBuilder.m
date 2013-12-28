@@ -90,7 +90,7 @@ classdef EllApxBuilder<handle
                 calcTimeLimVec,calcPrecision,fHandle,SProps)
             paramsCMat = [fieldnames(SProps),struct2cell(SProps)].';
             builderObj=fHandle(pDynObj,goodDirSetObj,calcTimeLimVec,...
-                calcPrecision,paramsCMat{:});
+                calcPrecision,calcPrecision*1e-02,paramsCMat{:});
         end
     end
     %
