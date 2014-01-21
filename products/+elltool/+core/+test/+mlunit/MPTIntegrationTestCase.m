@@ -199,98 +199,273 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 'wrongInput:class');
             
         end
-        
+        %
+        %
         function self = testIntersectionIA(self)
-            import elltool.exttbx.mpt.gen.*;
-            %
+           import elltool.exttbx.mpt.gen.*;
+            %ELLIPSOID AND POLYTOPE
             %ellipsoid lies in polytope
-            ell4 = ellipsoid(eye(2));
-            poly4 = polytope([eye(2); -eye(2)], ones(4,1));
-            ellPolyIA5 = intersection_ia(ell4,poly4);
-            mlunitext.assert(eq(ell4,ellPolyIA5));
+            my1Ell = ellipsoid(eye(2));
+            my1Poly = polytope([eye(2); -eye(2)], ones(4,1));
+            my1EllPolyIAObj = intersection_ia(my1Ell,my1Poly);
+            [isOk, reportStr] = my1Ell.isEqual(my1EllPolyIAObj);
+            mlunitext.assert(isOk, reportStr);
             %
             %polytope lies in ellipsoid
-            ell5 = ellipsoid(eye(2));
-            poly5 = polytope([eye(2); eye(2)], 1/4*ones(4,1));
-            expEll = ellipsoid([-0.362623; -0.362623],[0.375307 -0.13955;-0.13955 0.375307]);
-            ellPolyIA5 = intersection_ia(ell5,poly5);
-            mlunitext.assert(eq(expEll,ellPolyIA5));
+            my2Ell = ellipsoid(eye(2));
+            my2Poly = polytope([eye(2); eye(2)], 1/4*ones(4,1));
+            myExpectedEll = ellipsoid([-0.362623; -0.362623],[0.375307 -0.13955;-0.13955 0.375307]);
+            my2EllPolyIAObj = intersection_ia(my2Ell,my2Poly);
+            [isOk, reportStr] = myExpectedEll.isEqual(my2EllPolyIAObj);
+            mlunitext.assert(isOk, reportStr);
             %
             %test if internal approximation is really internal
-            c6Vec =  [0.8913;0.7621;0.4565;0.0185;0.8214];
-            sh6Mat = [ 1.0863 0.4281 1.0085 1.4706 0.6325;...
-                0.4281 0.5881 0.9390 1.1156 0.6908;...
-                1.0085 0.9390 2.2240 2.3271 1.7218;...
-                1.4706 1.1156 2.3271 2.9144 1.6438;...
-                0.6325 0.6908 1.7218 1.6438 1.6557];
-            ell6 = ellipsoid(c6Vec, sh6Mat);
-            poly6 = polytope(eye(5),c6Vec);
-            ellPolyIA6 = intersection_ia(ell6,poly6);
-            mlunitext.assert(doesIntersectionContain(ell6,ellPolyIA6) &&...
-                isInside(ellPolyIA6,poly6));
+            my3EllVec =  [0.8913;0.7621;0.4565;0.0185;0.8214];
+            my3EllMat = [ 1.0863 0.4281 1.0085 1.4706 0.6325;...
+                       0.4281 0.5881 0.9390 1.1156 0.6908;...
+                       1.0085 0.9390 2.2240 2.3271 1.7218;...
+                       1.4706 1.1156 2.3271 2.9144 1.6438;...
+                       0.6325 0.6908 1.7218 1.6438 1.6557];    
+            my3Ell = ellipsoid(my3EllVec, my3EllMat);
+            my3Poly = polytope(eye(5),my3EllVec);
+            my3EllPolyIAObj = intersection_ia(my3Ell,my3Poly);
+            mlunitext.assert(doesIntersectionContain(my3Ell,my3EllPolyIAObj) &&...
+                isInside(my3EllPolyIAObj,my3Poly));
             %
-            sh7Mat = [1.1954 0.3180 1.3183; 0.3180 0.2167 0.5039;...
+            my4EllMat = [1.1954 0.3180 1.3183; 0.3180 0.2167 0.5039;...
                 1.3183 0.5039 1.6320];
-            ell7 = ellipsoid(sh7Mat);
-            poly7 = polytope([1 1 1], 0.2);
-            ellPolyIA7 = intersection_ia(ell7,poly7);
-            mlunitext.assert(doesIntersectionContain(ell7,ellPolyIA7) &&...
-                isInside(ellPolyIA7,poly7));
+            my4Ell = ellipsoid(my4EllMat);
+            my4Poly = polytope([1 1 1], 0.2);
+            my4EllPolyIAObj = intersection_ia(my4Ell,my4Poly);
+            mlunitext.assert(doesIntersectionContain(my4Ell,my4EllPolyIAObj) &&...
+                isInside(my4EllPolyIAObj,my4Poly));
             %
-            %test if internal approximation is an empty ellipsoid, when
-            %ellipsoid and polytope aren't intersect
-            ell8 = ellipsoid(eye(2));
-            poly8 = polytope([1 1], -sqrt(2));
-            ellPolyIA8 = intersection_ia(ell8,poly8);
-            [~,ellPoly8Mat] = double(ellPolyIA8);
-            mlunitext.assert(all(ellPoly8Mat(:) == 0));
+            %test if internal approximation is a point, when
+            %the ellipsoid touches the polytope 
+            my5Ell = ellipsoid(eye(2));
+            my5Poly = polytope([1 1], -sqrt(2));
+            my5EllPolyIAObj = intersection_ia(my5Ell,my5Poly);
+            [~,my5EllPolyIAObjMat] = double(my5EllPolyIAObj);
+            mlunitext.assert(all(my5EllPolyIAObjMat(:) == 0));
             %
+            %test if internal approximation is an empty ellpsoid,
+            %when the polytope and the ellipsoid do not intersect
+            my6Ell = ellipsoid(eye(2));
+            my6Poly = [-1;-1]+polytope([1 1], -sqrt(2));
+            my6EllPolyIAObj = intersection_ia(my6Ell,my6Poly);
+            mlunitext.assert(isEmpty(my6EllPolyIAObj));
         end
         %
         %
-   function self = testIntersectionEA(self)
-            %Analitically proved, that minimal volume ellipsoid, covering
-            %intersection of ell1 and poly1 is ell1.
-            defaultShMat = eye(2);
-            ell1 = ellipsoid(defaultShMat);
-            defaultPolyMat = [0 1];
-            defaultPolyConst = 0.25;
-            poly1 = polytope(defaultPolyMat,defaultPolyConst);
-            ellEA1 = intersection_ea(ell1,poly1);
-            mlunitext.assert(eq(ell1,ellEA1));
+        function self = testNegativeIntersectionIA(self)
+            my1Ell = ellipsoid(zeros(2));
+            my2Ell = ellipsoid(eye(2));
+            self.runAndCheckError('my1Ell.intersection_ia(my2Ell)',...
+                'wrongInput:shapeMat');
+            my3Ell = ellipsoid([2 1; 1 0.5]);
+            self.runAndCheckError('my3Ell.intersection_ia(my2Ell)',...
+                'wrongInput:shapeMat');
+            my4Ell = ellipsoid;
+            self.runAndCheckError('my2Ell.intersection_ia(my4Ell)',...
+                'wrongSizes');
+            self.runAndCheckError('my4Ell.intersection_ia(my2Ell)',...
+                'wrongSizes');
+        end
+        
+        
+         function self = testNegativeIntersectionEA(self)
+            my1Ell = ellipsoid(eye(2));
+            my2Ell = ellipsoid;
+            self.runAndCheckError('my1Ell.intersection_ea(my2Ell)',...
+                'wrongSizes');
+            self.runAndCheckError('my2Ell.intersection_ea(my1Ell)',...
+                'wrongSizes');
+         end
+        
+        
+        function self = testIntersectionIAForEll(self)
+            %test for internal approximation of intersection
+            %of two ellipsoids
             %
-            %If we apply same linear tranform to both ell1 and poly1, than
+            %test if the second ellipsoid lies in the first
+            my11Ell = ellipsoid(eye(2));
+            my12Ell = [0.5; 0]+ellipsoid(0.2*eye(2));
+            my1EllEllIAObj = my11Ell.intersection_ia(my12Ell);
+            [isOk, reportStr] = my12Ell.isEqual(my1EllEllIAObj);
+            mlunitext.assert(isOk, reportStr);
+            %
+            %the same for nDims
+            nDims=10;
+            my2CentVec=[0.5; zeros(nDims-1, 1)];
+            my21Ell=ellipsoid(2*eye(nDims));
+            my22Ell=my2CentVec+ellipsoid(0.5*eye(nDims));
+            my2EllEllIAObj=intersection_ia(my21Ell, my22Ell);
+            [isOk, reportStr] = my22Ell.isEqual(my2EllEllIAObj);
+            mlunitext.assert(isOk, reportStr);
+            %
+            %test if internal approximation is really internal
+            my31Ell = ellipsoid([0; 1; 0], eye(3));
+            my32Ell = ellipsoid([1; 0; 0], eye(3));
+            my3EllEllIAObj = my31Ell.intersection_ia(my32Ell);
+            myEllVec = [my31Ell my32Ell];
+            mlunitext.assert(myEllVec.doesIntersectionContain(my3EllEllIAObj));
+            %
+            %test if internal approximation is a point, when
+            %the first ellipsoid touches the second
+            eps=1e-8;
+            my41Ell = ellipsoid(0.5*eye(2));
+            my42Ell = [1;1]+ellipsoid(0.5*eye(2));
+            my4EllEllIAObj = my41Ell.intersection_ia(my42Ell);
+            [~,my4EllEllIAObjMat] = double(my4EllEllIAObj);
+            mlunitext.assert(all(my4EllEllIAObjMat(:) < eps));
+            %
+            %test if internal approximation is an empty ellpsoid,
+            %when the ellipsoids do not intersect
+            my51Ell = ellipsoid(0.5*eye(2));
+            my52Ell = [2;2]+ellipsoid(0.5*eye(2));
+            my5EllEllIAObj = my51Ell.intersection_ia(my52Ell);
+            mlunitext.assert(isEmpty(my5EllEllIAObj))
+            %
+            %test when the second ellipsoid is a point
+            my61Ell = ellipsoid(eye(2));
+            my62Ell = ellipsoid(zeros(2));
+            my6EllEllIAObj = my61Ell.intersection_ia(my62Ell);
+            [~,my6EllEllIAObjMat] = double(my6EllEllIAObj);
+            mlunitext.assert(all(my6EllEllIAObjMat(:) == 0));
+            %
+            %test when a shape matrix is a multidimensional array           
+            checkIAShMatArrayEll([2,2,3]);
+            checkIAShMatArrayEll([5,5,1,3]);
+            %
+            %test for arrays of ellipsoids
+            checkIAEllArray([2,1,2]);
+            checkIAEllArray([2,3,1,5]);
+            %
+            function checkIAShMatArrayEll(dimsShMatArrayVec)
+                %checks if the intersection of multi-dimensional ellipsoid
+                %and ellipsoid is really internal
+                [myMultiDimEllArray, mCount, ~] = constructEllForTests(dimsShMatArrayVec);
+                myEll = ellipsoid(eye(mCount));
+                myMultiDimEllArrayEllIAObj = myMultiDimEllArray.intersection_ia(myEll);
+                mlunitext.assert(myEll.doesIntersectionContain(myMultiDimEllArrayEllIAObj));
+            end
+            function checkIAEllArray(dimsEllArrayVec)
+                %checks if the intersection of two arrays of ellipsoids
+                %is equal to the second array
+                [my1EllArray, my2EllArray]=construct2EllArraysForTests(dimsEllArrayVec);
+                myEllEllArrayIAObj = my1EllArray.intersection_ia(my2EllArray);
+                [isOk, reportStr] = my2EllArray.isEqual(myEllEllArrayIAObj);
+                mlunitext.assert(isOk, reportStr);
+            end
+        end
+        %
+        %
+        function self = testIntersectionIAForHyper(self)
+            %test for internal approximation of intersection
+            %of an ellipsoid and a hyperplane
+            %
+            %ellipsoid lies in halfspace
+            my1Ell = ellipsoid(eye(2));
+            my1Hyper = hyperplane([1;1], 3);
+            my1EllHyperIAObj = my1Ell.intersection_ia(my1Hyper);
+            [isOk, reportStr] = my1Ell.isEqual(my1EllHyperIAObj);
+            mlunitext.assert(isOk, reportStr)
+            %
+            %test if internal approximation is an empty ellipsoid, when
+            %ellipsoid doesn't lie in the halfspace
+            my2Ell = ellipsoid(eye(2));
+            my2Hyper = hyperplane([-1;-1], -3);
+            my2EllHyperIAObj = intersection_ia(my2Ell, my2Hyper);
+            [~,my2EllHyperIAObjMat] = double(my2EllHyperIAObj);
+            mlunitext.assert(my2EllHyperIAObjMat == [])
+            %
+            %halfspace intersects an ellpsoid
+            my3Ell = ellipsoid(eye(3));
+            my3Hyper = hyperplane([-1;1;1], 1);
+            my3EllHyperIAObj = my3Ell.intersection_ia(my3Hyper);
+            mlunitext.assert(my3Ell.doesIntersectionContain(my3EllHyperIAObj));
+            %
+            %the same for nDims
+            nDims=10;
+            my4Vec = ones(nDims, 1);
+            my4Ell = ellipsoid(2*eye(nDims));
+            my4Hyper = hyperplane(my4Vec, 1);
+            myEllHyperIAObj=intersection_ia(my4Ell, my4Hyper);
+            mlunitext.assert(my4Ell.doesIntersectionContain(myEllHyperIAObj));
+            %
+            %test when a shape matrix is a multidimensional array
+            checkIAShMatArrayEll([2,2]);
+            checkIAShMatArrayEll([2,2,1,4]); 
+            %
+            %test for an array of ellipsoids
+            checkIAEllArray([3,2]);
+            checkIAEllArray([2,1,3,2]);
+            %
+            function checkIAShMatArrayEll(dimsShMatArrayVec)
+                %checks if the intersection of multi-dimensional ellipsoid
+                %and hyperplane is really internal
+                [myMultiDimEllArray, mCount, ~] = constructEllForTests(dimsShMatArrayVec);
+                myHyper = hyperplane((-1)*ones(mCount,1), 1);
+                myMultiDimEllArrayHyperIAObj = myMultiDimEllArray.intersection_ia(myHyper);
+                mlunitext.assert(myMultiDimEllArrayHyperIAObj.isInside(myMultiDimEllArray));
+            end
+            function checkIAEllArray(dimsEllArrayVec)
+                %checks if the intersection of array of ellipsoids
+                %and hyperplane is really internal
+                myEllArray=constructEllArrayForTests(dimsEllArrayVec);
+                myHyper=hyperplane(ones([2,dimsEllArrayVec]));
+                myEllHyperArrayIAObj = myEllArray.intersection_ia(myHyper);
+                mlunitext.assert(myEllHyperArrayIAObj.isInside(myEllArray));
+            end
+        end
+        %
+        %
+        function self = testIntersectionEA(self)
+            %ELLIPSOID AND POLYTOPE
+            %analitically proved, that minimal volume ellipsoid, covering
+            %intersection of my1Ell and my1Poly is my1Ell.
+            my1Ell = ellipsoid(eye(2));
+            my1PolyMat = [0 1];
+            my1PolyConst = 0.25;
+            my1Poly = polytope(my1PolyMat,my1PolyConst);
+            my1EllPolyEAObj = intersection_ea(my1Ell,my1Poly);
+            [isOk, reportStr] = my1Ell.isEqual(my1EllPolyEAObj);
+            mlunitext.assert(isOk, reportStr);
+            %
+            %if we apply same linear tranform to both my1Ell and my1Poly, than
             %minimal volume ellipsoid shouldn't change.
-            transfMat =  [1 3; 2 2];
-            shiftVec = [1; 1];
-            transfShMat = transfMat*(transfMat)';
-            ell2 = ellipsoid(shiftVec,transfShMat);
-            poly2 = polytope(defaultPolyMat/(transfMat),...
-                defaultPolyConst+(defaultPolyMat/(transfMat))*shiftVec);
-            ellEA2 = intersection_ea(ell2,poly2);
-            mlunitext.assert(eq(ell2,ellEA2));
+            my2Mat =  [1 3; 2 2];
+            my2Vec = [1; 1];
+            my2TransfMat = my2Mat*(my2Mat)';
+            my2Ell = ellipsoid(my2Vec,my2TransfMat);
+            my2Poly = polytope(my1PolyMat/(my2Mat),...
+                my1PolyConst+(my1PolyMat/(my2Mat))*my2Vec);
+            my2EllPolyEAObj = intersection_ea(my2Ell,my2Poly);
+            [isOk, reportStr] = my2Ell.isEqual(my2EllPolyEAObj);
+            mlunitext.assert(isOk, reportStr);
             %
-            %Checking, that amount of constraints in polytope does not
+            %checking, that amount of constraints in polytope does not
             %affect accuracy of computation of external approximation
             nConstr = 100;
             angleVec = (0:2*pi/nConstr:2*pi*(1-1/nConstr))';
-            hMat = [cos(angleVec), sin(angleVec)];
-            kVec = ones(nConstr,1);
-            polyManyConstr = polytope(hMat,kVec);
-            ellEAManyConstr = intersection_ea(ell1,polyManyConstr);
-            mlunitext.assert(eq(ell1,ellEAManyConstr));
+            my3PolyMat = [cos(angleVec), sin(angleVec)];
+            my3PolyVec = ones(nConstr,1);
+            my3Poly = polytope(my3PolyMat,my3PolyVec);
+            my3EllPolyEAObj = intersection_ea(my1Ell,my3Poly);
+            [isOk, reportStr] = my1Ell.isEqual(my3EllPolyEAObj);
+            mlunitext.assert(isOk, reportStr);
             %
-            %First example, but for nDims
+            %first example, but for nDims
             nDims = 10;
-            shNMat = eye(nDims);
-            ellN = ellipsoid(shNMat);
-            polyNMat = [1, zeros(1,nDims-1)];
-            polyNConst = 1/(2*nDims);
-            polyN = polytope(polyNMat,polyNConst);
-            ellEAN = intersection_ea(ellN,polyN);
-            mlunitext.assert(eq(ellN,ellEAN));
+            my4Ell = ellipsoid(eye(nDims));
+            my4PolyMat = [1, zeros(1,nDims-1)];
+            my4PolyConst = 1/(2*nDims);
+            my4Poly = polytope(my4PolyMat,my4PolyConst);
+            my4EllPolyEAObj = intersection_ea(my4Ell,my4Poly);
+            [isOk, reportStr] = my4Ell.isEqual(my4EllPolyEAObj);
+            mlunitext.assert(isOk, reportStr);
             %
-            transfNMat =  [0.8913 0.1763 0.1389 0.4660 0.8318 0.1509 0.8180 0.3704 0.1730 0.2987;...
+            my5Mat =  [0.8913 0.1763 0.1389 0.4660 0.8318 0.1509 0.8180 0.3704 0.1730 0.2987;...
                 0.7621 0.4057 0.2028 0.4186 0.5028 0.6979 0.6602 0.7027 0.9797 0.6614;...
                 0.4565 0.9355 0.1987 0.8462 0.7095 0.3784 0.3420 0.5466 0.2714 0.2844;...
                 0.0185 0.9169 0.6038 0.5252 0.4289 0.8600 0.2897 0.4449 0.2523 0.4692;...
@@ -301,14 +476,156 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 0.9218 0.8132 0.4451 0.6813 0.3028 0.8216 0.8385 0.5226 0.8939 0.5155;...
                 0.7382 0.0099 0.9318 0.3795 0.5417 0.6449 0.5681 0.8801 0.1991 0.3340];
             %
-            shiftNVec = [1; -1; zeros(nDims-2,1)];
+            my5Vec = [1; -1; zeros(nDims-2,1)];
             %
-            transfShNMat = transfNMat*(transfNMat)';
-            ellN2 = ellipsoid(shiftNVec,transfShNMat);
-            polyN2 = polytope(polyNMat/(transfNMat),...
-                -(polyNConst+(polyNMat/(transfNMat))*shiftNVec));
-            ellEA2 = intersection_ea(ellN2,polyN2);
-            mlunitext.assert(eq(ellN2,ellEA2));
+            my5TransfMat = my5Mat*(my5Mat)';
+            my5Ell = ellipsoid(my5Vec,my5TransfMat);
+            my5Poly = polytope(my4PolyMat/(my5Mat),...
+                -(my4PolyConst+(my4PolyMat/(my5Mat))*my5Vec));
+            my5EllPolyEAObj = intersection_ea(my5Ell,my5Poly);
+            [isOk, reportStr] = my5Ell.isEqual(my5EllPolyEAObj);
+            mlunitext.assert(isOk, reportStr);
+        end
+        %
+        %
+        function self = testIntersectionEAForEll(self)
+            %test for external approximation of intersection
+            %of two ellipsoids
+            %
+            %analitically proved, that minimal volume ellipsoid, covering
+            %intersection of my11Ell and my12Ell is my11Ell.
+            my11ShMat = eye(2);
+            my12ShMat = 0.5*eye(2);
+            my11CentVec = [0;0];
+            my12CentVec = [0.5;0];
+            my11Ell = ellipsoid(my11CentVec, my11ShMat);
+            my12Ell = ellipsoid(my12CentVec, my12ShMat);
+            my1EllEllEAObj = my11Ell.intersection_ea(my12Ell);
+            [isOk, reportStr] = my12Ell.isEqual(my1EllEllEAObj);
+            mlunitext.assert(isOk, reportStr)
+            %if we apply same linear tranform to both my11Ell and my12Ell, than
+            %minimal volume ellipsoid shouldn't change.
+            my2TransfMat = [1 2; 3 3];
+            my2CentVec = [1; 2];
+            my21Ell = ellipsoid(my2CentVec, my2TransfMat*my2TransfMat');
+            my22Ell = ellipsoid(my2TransfMat*my12CentVec + my2CentVec,...
+            my2TransfMat*my12ShMat*my2TransfMat');
+            my2EllEllEAObj = my21Ell.intersection_ea(my22Ell);
+            [isOk, reportStr] = my22Ell.isEqual(my2EllEllEAObj);
+            mlunitext.assert(isOk, reportStr)
+            %for 3 dims analitically proved, that minimal volume ellipsoid,
+            %covering intersection of my31Ell and my32Ell, is my33Ell
+            my31Ell = ellipsoid(eye(3));
+            my32Ell = ellipsoid([1; 0; 0], eye(3));
+            myExpectedEll = ellipsoid([0.5; 0; 0], 0.75*eye(3));
+            my3EllEllEAObj = my31Ell.intersection_ea(my32Ell);
+            [isOk, reportStr] = myExpectedEll.isEqual(my3EllEllEAObj);
+            mlunitext.assert(isOk, reportStr)
+            %
+            %one more example for nDims
+            nDims = 3;
+            my4Mat = [1 3 1;...
+                      7 5 7;...
+                      1 3 0];
+            my4ShMat = my4Mat'*my4Mat;
+            my41Ell = ellipsoid(my4ShMat);
+            my42Ell = ellipsoid(0.5*eye(nDims));
+            my4EllEllEAObj = my41Ell.intersection_ea(my42Ell);
+            [isOk, reportStr] = my42Ell.isEqual(my4EllEllEAObj);
+            mlunitext.assert(isOk, reportStr);
+            %
+            %test if one of the ellipsoids is a point
+            my51Ell = ellipsoid(zeros(2));
+            my52Ell = ellipsoid(eye(2));
+            my5EllEllIAObj = my51Ell.intersection_ea(my52Ell);
+            [~,my5EllEllIAObjMat] = double(my5EllEllIAObj);
+            mlunitext.assert(all(my5EllEllIAObjMat(:) == 0));
+            my5EllEllIAObj = my52Ell.intersection_ea(my51Ell);
+            [~,my5EllEllIAObjMat] = double(my5EllEllIAObj);
+            mlunitext.assert(all(my5EllEllIAObjMat(:) == 0));
+            %
+            %test when a shape matrix is a multidimensional array
+            checkEAShMatArrayEll([3,3]);
+            checkEAShMatArrayEll([2,2,1,4]);
+            %
+            %test for an array of ellipsoids
+            checkEAEllArray([2,1,3]);
+            checkEAEllArray([2,3,2,5]);
+            %
+            function checkEAShMatArrayEll(dimsShMatArrayVec)
+                %checks if the intersection of multi-dimensional ellipsoid
+                %and ellipsoid is equal to the second ellipsoid
+                [myMultiDimEllArray, mCount, nDelta] = constructEllForTests(dimsShMatArrayVec);
+                myEll = [-1+nDelta; zeros(mCount-1,1)] + ellipsoid(.5*eye(mCount));
+                myMultiDimEllArrayEllEAObj = myMultiDimEllArray.intersection_ea(myEll);
+                [isOk, reportStr] = myEll.isEqual(myMultiDimEllArrayEllEAObj);
+                mlunitext.assert(isOk, reportStr);
+            end
+            function checkEAEllArray(dimsEllArrayVec)
+                %checks if the intersection of two arrays of ellipsoids
+                %is equal to the second array
+                [my1EllArray, my2EllArray]=construct2EllArraysForTests(dimsEllArrayVec);
+                myEllEllArrayEAObj = my1EllArray.intersection_ea(my2EllArray);
+                [isOk, reportStr] = my2EllArray.isEqual(myEllEllArrayEAObj);
+                mlunitext.assert(isOk, reportStr);
+            end
+            
+        end
+        %
+        %
+        function self = testIntersectionEAForHyper(self)
+            %test for external approximation of intersection
+            %of an ellipsoid and a hyperplane
+            %
+            %ellipsoid lies in halfspace
+            my1Ell = ellipsoid([-5;2;1],eye(3));
+            my1Hyper = hyperplane([1;1;0], 1);
+            my1EllHyperEAObj = my1Ell.intersection_ea(my1Hyper);
+            [isOk, reportStr] = my1Ell.isEqual(my1EllHyperEAObj);
+            mlunitext.assert(isOk, reportStr)
+            %analitically proved, that minimal volume ellipsoid, covering
+            %intersection of ell3 and hyp3 is ell3.
+            my2Ell = ellipsoid([-2;2],eye(2));
+            my2Hyper = hyperplane([1;1], 1);
+            my2EllHyperEAObj = my2Ell.intersection_ea(my2Hyper);
+            [isOk, reportStr] = my2Ell.isEqual(my2EllHyperEAObj);
+            mlunitext.assert(isOk, reportStr)
+            %
+            %the same for nDims
+            nDims=10;
+            my3Vec = ones(nDims, 1);
+            my3Ell = ellipsoid(eye(nDims));
+            my3Hyper = hyperplane(my3Vec, 1);
+            my3EllHyperEAObj = my3Ell.intersection_ea(my3Hyper);
+            [isOk, reportStr] = my3Ell.isEqual(my3EllHyperEAObj);
+            mlunitext.assert(isOk, reportStr)
+            %
+            %test when a shape matrix is a multidimensional array
+            checkEAShMatArrayEll([2,2,1]);
+            checkEAShMatArrayEll([2,2,2,3]);            %
+            %
+            %test for an array of ellipsoids
+            checkEAEllArray([2,4]);
+            checkEAEllArray([2,3,3,5]);
+            %
+            function checkEAShMatArrayEll(dimsShMatArrayVec)
+                %checks if an intersection of multi-dimensional ellipsoid
+                %and hyperplane is empty
+                [myMultiDimEllArray, mCount, ~] = constructEllForTests(dimsShMatArrayVec);
+                myHyper = hyperplane([1;zeros(mCount-1,1)], -5);
+                myMultiDimEllArrayHyperEAObj = myMultiDimEllArray.intersection_ea(myHyper);
+                mlunitext.assert(isEmpty(myMultiDimEllArrayHyperEAObj))
+            end
+            function checkEAEllArray(dimsEllArrayVec)
+                %checks if the intersection of array of ellipsoids
+                %and hyperplane is equal to the array
+                myEllArray=constructEllArrayForTests(dimsEllArrayVec);
+                myHyper=hyperplane(ones([2,dimsEllArrayVec]), 3);
+                myEllHyperArrayEAObj = myEllArray.intersection_ea(myHyper);
+                [isOk, reportStr] = myEllArray.isEqual(myEllHyperArrayEAObj);
+                mlunitext.assert(isOk, reportStr);
+            end
+
         end
         %
         %
@@ -379,7 +696,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             expPoly5 = transf2Mat*expPoly4+ transf2Vec;
             mlunitext.assert(poly5 == expPoly5);
         end
-        
+        %
+        %
         function self = testDoesContain(self)
             ellConstrMat = eye(2);
             ellShift1 = [0.05; 0];
@@ -408,6 +726,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 mlunitext.assert(all(doesContainVec == expVec));
             end
         end
+        %
         %
         function self = testToPolytope(self)
             ell1ConstrMat = [4 0; 0 9];
@@ -509,4 +828,60 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         end
         %
     end
+end
+function [myMultiDimEllArray, mCount, nDelta]=constructEllForTests(dimsShMatArrayVec)
+%constructs a multi-dimensional array of ellipsoids
+    dimsCentVecArrayVec=dimsShMatArrayVec(2:end);
+    if numel(dimsShMatArrayVec)==2
+        dimsCentVecArrayVec(2)=1;
+    end
+    myVec=dimsShMatArrayVec(3:end);
+    mCount=dimsShMatArrayVec(1);
+    nCount=prod(myVec);
+    my2Vec=[];
+    my2Vec=zeros(1,prod(dimsShMatArrayVec));
+    jElem=1;
+    for iElem=1:mCount^2:mCount^2*nCount
+        myMat=jElem*eye(mCount);
+        my2Vec(iElem:iElem+mCount^2-1)=reshape(myMat, [1, mCount^2]);
+        jElem=jElem+1;
+    end
+    shMatArray=reshape(my2Vec, dimsShMatArrayVec);
+    my3Vec=[];
+    my3Vec=zeros(1,prod(dimsCentVecArrayVec));
+    jElem=1;
+    nDelta=2/(nCount+1);
+    for iElem=1:mCount:mCount*nCount
+        my3Vec(iElem) = -1+jElem*nDelta;
+        my3Vec(iElem+1:iElem+mCount-1) = 0;
+        jElem=jElem+1;
+    end
+    centVecArray = reshape(my3Vec, dimsCentVecArrayVec);
+    myMultiDimEllArray = ellipsoid(centVecArray, shMatArray);
+end
+function myEllArray=constructEllArrayForTests(dimsEllArrayVec)
+%constructs an array of ellipsoids with dimensionality dimsVec
+    nCount = prod(dimsEllArrayVec);
+    alpha=2*pi/nCount;
+    myEllVec=[];
+    myEllVec=[cos(alpha);sin(alpha)] + ellipsoid(1.5*eye(2));
+    for iElem = 1:nCount
+        myEllVec(iElem) = [cos(iElem*alpha);sin(iElem*alpha)] + ellipsoid(1.5*eye(2));
+    end
+    myEllArray = reshape(myEllVec, dimsEllArrayVec);
+end
+function [my1EllArray, my2EllArray]=construct2EllArraysForTests(dimsEllArrayVec)
+%constructs two arrays of ellipsoids with the same dimensionality dimsVec
+    nCount = prod(dimsEllArrayVec);
+    alpha=2*pi/nCount;
+    myEllVec=[];
+    myEllVec=[cos(alpha);sin(alpha)] + ellipsoid(1.5*eye(2));
+    for iElem = 1:nCount
+        myEllVec(iElem) = [cos(iElem*alpha);sin(iElem*alpha)] + ellipsoid(1.5*eye(2));
+    end
+    my1EllArray = reshape(myEllVec, dimsEllArrayVec);
+    for iElem = 1:nCount
+        myEllVec(iElem) = [cos(iElem*alpha);sin(iElem*alpha)] + ellipsoid(eye(2));
+    end
+    my2EllArray=reshape(myEllVec, dimsEllArrayVec);
 end
