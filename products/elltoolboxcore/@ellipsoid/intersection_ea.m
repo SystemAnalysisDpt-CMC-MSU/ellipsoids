@@ -86,6 +86,7 @@ else
 end
 isEllScal = isscalar(myEllArr);
 isObjScal = isscalar(objArr);
+
 checkmultvar( 'all(size(x1)==size(x2))|| x3 || x4 ',...
         4,myEllArr,objArr,isEllScal,isObjScal,...
     'errorTag','wrongSizes',...
@@ -150,14 +151,13 @@ function outEll = l_intersection_ea(fstEll, secObj)
 
 fstEllCentVec = fstEll.centerVec;
 fstEllShMat = fstEll.shapeMat;
-if ~all(fstEllShMat(:) == 0)
-    if rank(fstEllShMat) < size(fstEllShMat, 1)
-        fstEllShMat = ...
-            ell_inv(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
-    else
-        fstEllShMat = ell_inv(fstEllShMat);
-    end
+if rank(fstEllShMat) < size(fstEllShMat, 1)
+    fstEllShMat = ...
+        ell_inv(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
+else
+    fstEllShMat = ell_inv(fstEllShMat);
 end
+
 if isa(secObj, 'hyperplane')
     [normHypVec, hypScalar] = parameters(-secObj);
     hypNormInv = 1/realsqrt(normHypVec'*normHypVec);
@@ -188,16 +188,8 @@ else
         outEll = ellipsoid;
         return;
     end
-    if all(fstEllShMat(:) == 0)
-        outEll = fstEll;
-        return;
-    end
     qSecVec = secObj.centerVec;
     seqQMat = secObj.shapeMat;
-    if all(seqQMat(:)==0)
-        outEll = secObj;
-        return;
-    end;
     if rank(seqQMat) < size(seqQMat, 1)
         seqQMat = ell_inv(ellipsoid.regularize(seqQMat,secObj.absTol));
     else
