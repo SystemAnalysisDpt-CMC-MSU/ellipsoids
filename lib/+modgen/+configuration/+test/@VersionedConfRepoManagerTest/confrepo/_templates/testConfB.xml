@@ -1,0 +1,294 @@
+<?xml version="1.0"?>
+<root version="103" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<dConf type="struct" >
+		<gen type="struct" >
+			<curRevision type="double" >19641</curRevision>
+			<nProcessors type="double" >2</nProcessors>
+			<connectors type="struct" >
+				<type idx="1" type="char" >mym</type>
+				<sourceName idx="1" type="char" >production_1_8_all</sourceName>
+				<hostName idx="1" type="char" >model4a</hostName>
+				<login idx="1" type="char" >root</login>
+				<password idx="1" type="char" >matlab4a</password>
+				<type idx="2" type="char" >mym</type>
+				<sourceName idx="2" type="char" >production_1_8_all</sourceName>
+				<hostName idx="2" type="char" >10.100.8.35</hostName>
+				<login idx="2" type="char" >root</login>
+				<password idx="2" type="char" >rico</password>
+			</connectors>
+			<configurationNames type="cell" >
+				<item type="char" >sysrep_hor_3_15_maws_80_block_useexisting</item>
+			</configurationNames>
+			<configurationXmlFiles type="cell" >
+				<item type="double" >2</item>
+			</configurationXmlFiles>
+			<configurationMajorVersion type="double" >1</configurationMajorVersion>
+			<input type="struct" >
+				<gen type="struct" >
+					<connector type="double" >2</connector>
+				</gen>
+				<realtime type="struct" >
+					<quotesFileName type="char" >quotes.mat</quotesFileName>
+					<quotesFieldNames type="cell" >
+						<item type="char" >askPrice</item>
+						<item type="char" >askSize</item>
+						<item type="char" >bidPrice</item>
+						<item type="char" >bidSize</item>
+						<item type="char" >lastPrice</item>
+						<item type="char" >lastSize</item>
+						<item type="char" >midAvgPrice</item>
+					</quotesFieldNames>
+					<tradesFileName type="char" >trades.mat</tradesFileName>
+					<instHeatRateFileName type="char" >heatrate.mat</instHeatRateFileName>
+				</realtime>
+			</input>
+			<cdefs type="struct" >
+				<gen type="struct" >
+					<instTypeName type="cell" >
+						<item type="char" >futures</item>
+						<item type="char" >call</item>
+						<item type="char" >put</item>
+					</instTypeName>
+					<instTypeCode type="cell" >
+						<item type="char" >Future</item>
+						<item type="char" >Call</item>
+						<item type="char" >Put</item>
+					</instTypeCode>
+					<somethingDummy type="cell" size="2 3">
+						<item type="char" >Future</item>
+						<item type="char" >Future2</item>
+						<item type="char" >Call</item>
+						<item type="char" >Call1</item>
+						<item type="char" >Put</item>
+						<item type="char" >3</item>
+					</somethingDummy>
+				</gen>
+			</cdefs>
+		</gen>
+		<backtest type="struct" >
+			<output type="struct" >
+				<gen type="struct" >
+					<dumpDir type="char" >.\DumpBKT\</dumpDir>
+				</gen>
+			</output>
+			<input type="struct" >
+				<gen type="struct" >
+					<dumpDir type="char" >test/DumpBKT/</dumpDir>
+				</gen>
+				<database type="struct" >
+					<sqlCaching type="struct" >
+						<cacheDir type="char" >test/DumpBKT/sql/</cacheDir>
+						<isCaching type="double" >0</isCaching>
+					</sqlCaching>
+				</database>
+			</input>
+			<gen type="struct" >
+				<isRecoveredFromDump type="double" >0</isRecoveredFromDump>
+				<scenarioName type="char" >backtest_testing</scenarioName>
+				<isSavedToDB type="double" >1</isSavedToDB>
+				<isSavedToFile type="double" >1</isSavedToFile>
+				<resPathList type="cell" >
+					<item type="char" >gen</item>
+					<item type="char" >portfolio</item>
+					<item type="char" >pair.positions</item>
+					<item type="char" >asset.positions</item>
+				</resPathList>
+				<resDir type="char" >test/../../EExplorer/Experiment_base/</resDir>
+			</gen>
+			<calc type="struct" >
+				<sharing type="struct" >
+					<isSharing type="double" >0</isSharing>
+					<sharingFolder type="char" >test/DumpBKT\share</sharingFolder>
+					<isTestMode type="double" >0</isTestMode>
+				</sharing>
+				<pairForecast type="struct" >
+					<gen type="struct" >
+						<pair type="struct" >
+							<selectedPairNames type="cell" size="0 0"/> 
+						</pair>
+					</gen>
+					<meanDec type="struct" >
+						<nLags type="double" >122</nLags>
+						<aggrSize type="double" >30</aggrSize>
+						<nPoints type="double" >10</nPoints>
+						<isUseAuxVar type="double" >0</isUseAuxVar>
+						<isUseLogitClass type="double" >1</isUseLogitClass>
+					</meanDec>
+					<methods type="struct" >
+						<transProb type="struct" >
+							<pair type="struct" >
+								<prob type="struct" >
+									<probGroup type="struct" >
+										<curMethod type="char" >transProbGroups</curMethod>
+										<methods type="struct" >
+											<transProbGroups type="struct" >
+												<param type="struct" >
+													<yearWeights type="double" >2.05 2.1 2.175 2.275 2.4</yearWeights>
+												</param>
+											</transProbGroups>
+										</methods>
+									</probGroup>
+									<retCalcScheme type="char" >full</retCalcScheme>
+									<scoreProc type="struct" >
+										<curMethod type="char" >priceCorridor</curMethod>
+										<methods type="struct" >
+											<priceCorridor type="struct" >
+												<param type="struct" >
+													<isCenterFixed type="boolean" >0</isCenterFixed>
+													<corridorMultCoeff type="double" size="28 1">3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5 3.5</corridorMultCoeff>
+												</param>
+											</priceCorridor>
+										</methods>
+									</scoreProc>
+									<regNames type="cell" >
+										<item type="char" >StrDevDown</item>
+										<item type="char" >DevDown</item>
+										<item type="char" >ModDevDown</item>
+										<item type="char" >Eq</item>
+										<item type="char" >ModDevUp</item>
+										<item type="char" >DevUp</item>
+										<item type="char" >StrDevUp</item>
+									</regNames>
+									<probMatParamPaths type="cell" >
+										<item type="char" >Data.dInput.configuration.configurationStruct.modules.generalProperties.modules.database</item>
+										<item type="char" >Data.dInput.configuration.configurationStruct.modules.generalProperties.gen.common.instMode</item>
+										<item type="char" >Data.dInput.configuration.configurationStruct.modules.forecastingProperties.modules.trendDev.methods.transProb.gen.common.className</item>
+										<item type="char" >Data.dInput.configuration.configurationStruct.modules.forecastingProperties.modules.trendDev.methods.transProb.gen.common.forecastPairMode</item>
+										<item type="char" >Data.dInput.configuration.configurationStruct.modules.forecastingProperties.modules.trendDev.methods.transProb.gen.common.outliersWindowSize</item>
+										<item type="char" >Data.dConf.gen.input.gen.typeId</item>
+										<item type="char" >Data.dConf.gen.input.gen.nHistTerms</item>
+										<item type="char" >Data.dConf.gen.input.gen.nMaxTTM</item>
+										<item type="char" >Data.dConf.gen.input.gen.nMinHistQuotes</item>
+										<item type="char" >Data.dConf.(curMode).calc.gen.nHistTerms</item>
+										<item type="char" >Data.dConf.(curMode).calc.gen.nMaxTTM</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.gen.useAllHist</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.gen.pair.typeComb</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.discrWindSize</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.isDevTruncated</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.horizonList</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.nLags</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.probPart</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.probWindowSize</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.windSizeCalc</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.maSmoothWindowSize</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.probCalcScheme</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.probGroup</item>
+										<item type="char" >Data.dConf.(curMode).calc.pairForecast.methods.transProb.pair.prob.retCalcScheme</item>
+									</probMatParamPaths>
+									<scoreStats type="struct" >
+										<pairPriceStatNames type="cell" >
+											<item type="char" >scoreSigned</item>
+											<item type="char" >profit</item>
+											<item type="char" >risk</item>
+											<item type="char" >horizon</item>
+										</pairPriceStatNames>
+										<pairPriceHorizonStatNames type="cell" >
+											<item type="char" >scoreSignedAll</item>
+											<item type="char" >profitAll</item>
+											<item type="char" >riskAll</item>
+											<item type="char" >channelWidthAll</item>
+											<item type="char" >riskMultAll</item>
+										</pairPriceHorizonStatNames>
+									</scoreStats>
+								</prob>
+							</pair>
+						</transProb>
+					</methods>
+				</pairForecast>
+				<portfolioGen type="struct" >
+					<methods type="struct" >
+						<pairSepNew type="struct" >
+							<strat type="struct" >
+								<curMethod type="char" >advanced</curMethod>
+								<methods type="struct" >
+									<advanced type="struct" >
+										<func type="char" >advancedstrat</func>
+										<param type="struct" >
+											<scoreLevel type="double" >4</scoreLevel>
+										</param>
+									</advanced>
+									<simple type="struct" >
+										<func type="char" >simplestrat</func>
+										<param type="struct" >
+											<scoreLevel type="double" >4</scoreLevel>
+											<corrLevel type="double" >0.4</corrLevel>
+										</param>
+									</simple>
+								</methods>
+							</strat>
+							<gen type="struct" >
+								<constrPairTypes type="double" size="28 1">0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0</constrPairTypes>
+								<constrPercentLimit type="double" >0.6</constrPercentLimit>
+								<maxDiffDuration type="double" size="28 1">1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1</maxDiffDuration>
+								<capitalBaseRatio type="double" >0.15</capitalBaseRatio>
+								<isInteger type="double" >1</isInteger>
+							</gen>
+						</pairSepNew>
+						<markowitz type="struct" >
+							<constr type="struct" >
+								<constrGroup type="cell" >
+									<item type="cell" >
+										<item type="char" >PJM</item>
+										<item type="char" >NYA</item>
+										<item type="char" >NEPool</item>
+									</item>
+									<item type="cell" >
+										<item type="char" >NG</item>
+									</item>
+									<item type="cell" >
+										<item type="char" >CL</item>
+										<item type="char" >HU</item>
+										<item type="char" >HO</item>
+									</item>
+								</constrGroup>
+								<constrGroupNames type="cell" >
+									<item type="char" >Electricity</item>
+									<item type="char" >Gas</item>
+									<item type="char" >Oil</item>
+								</constrGroupNames>
+								<intragroupConstr type="double" >0.45 0.15 0.15</intragroupConstr>
+								<this2FollowingConstr type="double" >0.65 0.65 0.3</this2FollowingConstr>
+								<typeCriticalLiquidity type="double" >20000 250 20000 200 200 200 200</typeCriticalLiquidity>
+								<liquidityCostExp type="double" >1</liquidityCostExp>
+								<timePeriodExp type="double" >0.5</timePeriodExp>
+								<criticalExposureTime type="double" >1</criticalExposureTime>
+								<capitalEffRatio type="double" >NaN</capitalEffRatio>
+								<cerRecalcFrequency type="double" >10</cerRecalcFrequency>
+								<spreadFraction type="double" >0.5 0.5 0.5 1 1 0.5 0.5</spreadFraction>
+							</constr>
+							<portopt type="struct" >
+								<riskAversion type="double" >40</riskAversion>
+								<stdWindowSize type="double" >35</stdWindowSize>
+								<capitalBaseMethod type="char" >byAssets</capitalBaseMethod>
+								<intportDelta type="double" >0</intportDelta>
+								<nonstatAversion type="double" >100</nonstatAversion>
+								<timeIndiffExp type="double" >0</timeIndiffExp>
+								<timeHorizons type="double" >2 3 5 8 10 15 22</timeHorizons>
+								<riskCombSelectMethod type="char" >adaptiveBasisSharpe</riskCombSelectMethod>
+								<riskAversionScnPrefix type="char" >RA=</riskAversionScnPrefix>
+								<timeIndiffExpScnPrefix type="char" >TIE=</timeIndiffExpScnPrefix>
+								<assetGroupDistrMethod type="char" >byPairs</assetGroupDistrMethod>
+							</portopt>
+						</markowitz>
+					</methods>
+				</portfolioGen>
+			</calc>
+		</backtest>
+		<realtime type="struct" >
+			<calc type="struct" >
+				<pairForecast type="struct" >
+					<meanDec type="struct" >
+						<nLags type="double" >120</nLags>
+						<aggrSize type="double" >30</aggrSize>
+						<nPoints type="double" >10</nPoints>
+						<isUseAuxVar type="double" >0</isUseAuxVar>
+						<isUseLogitClass type="double" >1</isUseLogitClass>
+					</meanDec>
+				</pairForecast>
+			</calc>
+		</realtime>
+	</dConf>
+</valueObj>
+<keyStr type="char" >testConfB</keyStr>
+</root>

@@ -1,0 +1,1 @@
+Data=modgen.common.genteststruct(0);

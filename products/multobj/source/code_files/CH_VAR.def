@@ -1,0 +1,61 @@
+/* внешние переменные модуля CONVEX */
+#ifdef CONVEX
+#define CH_EXTERN
+#define CH_INIT(val) = val
+#else
+#define CH_EXTERN extern
+#define CH_INIT(val)
+#endif
+
+/* управляющие параметры */
+CH_EXTERN int   ch_LNG      CH_INIT(0);
+CH_EXTERN int   ch_PRNT;
+CH_EXTERN int   ch_RCHECK;
+CH_EXTERN int   ch_RFREE;
+CH_EXTERN int   ch_INCHECK;
+CH_EXTERN int   ch_RHYPER;
+CH_EXTERN float ch_EPSrel;
+CH_EXTERN float ch_EPSdif;
+CH_EXTERN float ch_EPScheck;
+    /* для аппроксимации */
+CH_EXTERN float ch_EPSset;
+CH_EXTERN float ch_EPSin  ;
+CH_EXTERN float ch_EPSest ;
+CH_EXTERN float ch_INF;
+
+/* переменные связи */
+CH_EXTERN float     ch_dummy;
+CH_EXTERN float    *ch_equ  CH_INIT(&ch_dummy);
+CH_EXTERN int      *ch_state;
+CH_EXTERN double   *ch_coef;
+CH_EXTERN unsigned  ch_SIZEcfacet;
+CH_EXTERN unsigned  ch_SIZEind;
+CH_EXTERN int  ch_N;
+CH_EXTERN int  ch_N1;
+CH_EXTERN int  ch_Ncomb;
+CH_EXTERN int  ch_ex_next;
+CH_EXTERN int  ch_max_topCOUNT;
+CH_EXTERN int  ch_max_facetCOUNT CH_INIT(0);
+CH_EXTERN int  ch_facetCOUNT;
+CH_EXTERN int  ch_topCOUNT;
+CH_EXTERN int  ch_facetTOTAL;
+CH_EXTERN float     ch_EPS;
+CH_EXTERN ch_facet *ch_first_facet;
+CH_EXTERN ch_facet *ch_second_facet;
+CH_EXTERN ch_facet *ch_equ_facet;
+CH_EXTERN ch_facet *ch_emp_facet;
+CH_EXTERN ch_top   *ch_first_top;
+CH_EXTERN ch_top   *ch_conn_top;
+CH_EXTERN ch_position ch_index_position;
+    /* для аппроксимации */
+CH_EXTERN unsigned  ch_SIZEctop;
+CH_EXTERN int       ch_estCOUNT;
+CH_EXTERN int       ch_estTOTAL;
+CH_EXTERN float     ch_max_all_est;
+CH_EXTERN float     ch_width;
+CH_EXTERN ch_facet *ch_max_est_facet;
+CH_EXTERN ch_facet *ch_next_est_facet;
+
+
+#undef CH_INIT
+#undef CH_EXTERN

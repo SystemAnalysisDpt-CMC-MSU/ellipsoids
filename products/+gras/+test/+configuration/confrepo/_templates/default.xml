@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<root version="1" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<emailNotification type="struct" >
+		<isEnabled type="boolean" >0</isEnabled>
+		<distributionList type="cell" >
+			<item type="char" >ellipsoids-tests-notification@googlegroups.com</item>
+		</distributionList>
+		<smtpServer type="char" >santafe</smtpServer>
+	</emailNotification>
+	<logging type="struct" >
+		<log4jSettings type="char" >
+			log4j.rootLogger=INFO, stdout, A1
+			#
+			log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+			log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+			#
+			log4j.appender.stdout.layout.ConversionPattern=%5p %c - %m\n
+			#
+			log4j.appender.A1=org.apache.log4j.FileAppender
+			#
+			#do not change - name of the main log file should have a 
+			#fixed pattern so that email logger can pick it up
+			log4j.appender.A1.File=${gras.testrunner.log4j.logfile.dirwithsep}${gras.testrunner.log4j.logfile.main.name}
+			#
+			log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+			log4j.appender.A1.layout.ConversionPattern=%d %5p %c - %m%n
+		</log4jSettings>
+	</logging>
+	<executionControl type="struct" >
+		<nParallelProcesses type="double" >1</nParallelProcesses>
+		<parallelConfiguration type="char" >local</parallelConfiguration>        
+	</executionControl>
+</valueObj>
+<keyStr type="char" >default</keyStr>
+</root>

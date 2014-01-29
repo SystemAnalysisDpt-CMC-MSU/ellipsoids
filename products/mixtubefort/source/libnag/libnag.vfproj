@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VisualStudioProject ProjectType="typeStaticLibrary" ProjectCreator="Intel Fortran" Keyword="Static Library" Version="11.0" ProjectIdGuid="{5A5F3CBD-4ACE-4197-A655-CAF624E435ED}">
+	<Platforms>
+		<Platform Name="Win32"/></Platforms>
+	<Configurations>
+		<Configuration Name="Debug|Win32" OutputDirectory="$(SolutionDir)\build\lib" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Preprocess="preprocessYes" Interfaces="true" WarnInterfaces="true" ModulePath="$(SolutionDir)\build\mod" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug"/>
+				<Tool Name="VFLibrarianTool"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration>
+		<Configuration Name="Release|Win32" OutputDirectory="$(SolutionDir)\build\lib" ConfigurationType="typeStaticLibrary">
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Preprocess="preprocessYes" ModulePath="$(SolutionDir)\build\mod"/>
+				<Tool Name="VFLibrarianTool"/>
+				<Tool Name="VFResourceCompilerTool"/>
+				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
+				<Tool Name="VFCustomBuildTool"/>
+				<Tool Name="VFPreLinkEventTool"/>
+				<Tool Name="VFPreBuildEventTool"/>
+				<Tool Name="VFPostBuildEventTool"/></Configuration></Configurations>
+	<Files>
+		<Filter Name="Header Files" Filter="fi;fd"/>
+		<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"/>
+		<Filter Name="Source Files" Filter="f90;for;f;fpp;ftn;def;odl;idl">
+		<File RelativePath=".\c05adft.f"/>
+		<File RelativePath=".\c05azft.f"/>
+		<File RelativePath=".\d02pcft.f"/>
+		<File RelativePath=".\d02pdft.f"/>
+		<File RelativePath=".\d02pdmt.f"/>
+		<File RelativePath=".\d02pdpt.f"/>
+		<File RelativePath=".\d02pdqt.f"/>
+		<File RelativePath=".\d02pdrt.f"/>
+		<File RelativePath=".\d02pdst.f"/>
+		<File RelativePath=".\d02pdtt.f"/>
+		<File RelativePath=".\d02pdut.f"/>
+		<File RelativePath=".\d02pdvt.f"/>
+		<File RelativePath=".\d02pdwt.f"/>
+		<File RelativePath=".\d02pdxt.f"/>
+		<File RelativePath=".\d02pdyt.f"/>
+		<File RelativePath=".\d02pdzt.f"/>
+		<File RelativePath=".\d02pvft.f"/>
+		<File RelativePath=".\d02pvxt.f"/>
+		<File RelativePath=".\d02pvyt.f"/>
+		<File RelativePath=".\d02pvzt.f"/>
+		<File RelativePath=".\d02pwft.f"/>
+		<File RelativePath=".\d02pxft.f"/>
+		<File RelativePath=".\d02pxyt.f"/>
+		<File RelativePath=".\d02pxzt.f"/>
+		<File RelativePath=".\g05cayt.f"/>
+		<File RelativePath=".\g05cazt.f"/>
+		<File RelativePath=".\g05cbft.f"/>
+		<File RelativePath=".\g05fdft.f"/>
+		<File RelativePath=".\p01abft.f"/>
+		<File RelativePath=".\p01abzt.f"/>
+		<File RelativePath=".\x01aaft.f"/>
+		<File RelativePath=".\x02ajft.f"/>
+		<File RelativePath=".\x02akft.f"/>
+		<File RelativePath=".\x02amft.f"/>
+		<File RelativePath=".\x04aaft.f"/>
+		<File RelativePath=".\x04baft.f"/></Filter></Files>
+	<Globals/></VisualStudioProject>
