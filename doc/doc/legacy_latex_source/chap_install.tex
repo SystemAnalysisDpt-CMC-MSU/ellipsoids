@@ -1,0 +1,83 @@
+\section{Additional Software}
+These packages aren't included in the ET distribution.
+So, you need to download them separately.
+\subsection{CVX}
+\todo[inline]{Updated this section}
+Some methods of the {\it Ellipsoidal Toolbox}, namely,
+\begin{itemize}
+\item {\tt distance}
+\item {\tt intersect}
+\item {\tt isInside}
+\item {\tt doesContain}
+\item {\tt ellintersection\_ia}
+\item {\tt ellunion\_ea}
+\end{itemize}
+require solving semidefinite programming (SDP) problems.
+We use CVX (\cite{CVX_HOMEPAGE}) as an
+interface to an external SDP solver. CVX is a reliable toolbox
+for solving SDP problems of high dimensionality.
+CVX is implemented in Matlab, effectively turning Matlab into an
+optimization modeling language. Model specifications are constructed
+using common Matlab operations and functions, and standard
+Matlab code can be freely mixed with these specifications.
+This combination makes it simple to perform the calculations needed
+to form optimization problems, or to process the results
+obtained from their solution. CVX distribution includes two freeware
+solvers: SeDuMi(\cite{STURM_USING_SEDUMI}, \cite{SEDUMI_HOMEPAGE})
+and SDPT3(\cite{SDPT3_HOMEPAGE}). The default solver used in the toolbox is SeDuMi.
+
+\subsection{MPT}
+\todo[inline]{Added this section}
+Multi-Parametric Toolbox(\cite{MULTI_PARAMETRIC_TOOLBOX_HOMEPAGE}) - a Matlab toolbox for multi-parametric
+optimization and computational geometry. MPT is a toolbox
+that defines polytope class
+used in {\it ET}.
+We need MPT for the following methods operating with polytopes.
+\begin{itemize}
+\item {\tt distance}
+\item {\tt intersect}
+\item {\tt intersection\_ia}
+\item {\tt intersection\_ea}
+\item {\tt isInside}
+\item {\tt hyperplane2polytope}
+\item {\tt polytope2hyperplane}
+\end{itemize}
+
+
+\section{Installation and Quick Start}
+\begin{enumerate}
+\item Go to
+\newline
+{\tt \url{http://code.google.com/p/ellipsoids}}
+\newline
+and download the {\it Ellipsoidal Toolbox}.
+\item Unzip the distribution file into the directory where you would like
+the toolbox to be.
+\todo[inline]{Create a zip archive with the latest version and upload it to the project web site}
+\item Unzip CVX into cvx folder next to products folder.
+\item Unzip MPT into mpt folder next to products folder.
+\item Read the copyright notice.
+\item In MATLAB command window change the working directory to the one where
+you unzipped the toolbox and type
+\verbmcodef[Installation]{mcodesnippets/s_chapter04_section01_snippet01.m}
+\item At this point, the directory tree of the {\it Ellipsoidal Toolbox} is
+added to the MATLAB path list. In order to save the updated path list,
+in your MATLAB window menu go to {\tt File} $\rightarrow$ {\tt Set Path...} and
+click {\tt Save}.
+\item To get an idea of what the toolbox is about, type
+\verbmcodef[Basic functionality]{mcodesnippets/s_chapter04_section01_snippet02.m}
+
+This will produce a demo of basic {\it ET} functionality: how to create
+and manipulate ellipsoids.
+
+Type
+
+\verbmcodef[Plot ellypsoids and hyperplanes]{mcodesnippets/s_chapter04_section01_snippet03.m}
+to learn how to plot ellipsoids and hyperplanes in 2 and 3D.
+\newline
+For a quick tutorial on how to use the toolbox for reachability analysis
+and verification, type
+
+\verbmcodef[Tutorial for reachability analysis
+and verification]{mcodesnippets/s_chapter04_section01_snippet04.m}
+\end{enumerate}

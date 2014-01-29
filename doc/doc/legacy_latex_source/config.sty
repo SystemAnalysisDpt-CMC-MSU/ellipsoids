@@ -1,0 +1,94 @@
+\usepackage[T1]{fontenc}
+\usepackage[cp1251]{inputenc}
+\usepackage[Q=yes,pverb-linebreak=no]{examplep}
+\usepackage{latexsym}
+\usepackage{listings}
+\usepackage{graphicx}
+
+%\usepackage{xcolor}
+\usepackage{fancyvrb}
+\usepackage[courier]{altfont}
+\usepackage{hyphenat}
+\usepackage[disable]{todonotes}
+\usepackage{fancyhdr}
+\usepackage[pdftex,colorlinks=true,urlcolor=blue,pageanchor=false,plainpages=false]{hyperref}
+\usepackage{basic_config}
+
+%
+%---------------------------PAGE MARKING
+%
+\let\equation\gather \let\endequation\endgather
+%set initial parameters
+\textheight=24cm
+%width of text field
+\textwidth=16cm
+%total width of A4-format
+\oddsidemargin=21cm
+%top margin
+\topmargin=-1.5cm
+%foot skip size and head height
+\headheight=1.2cm \footskip=1.2cm
+%begin calculations
+%
+\advance\oddsidemargin by -\textwidth
+%
+\divide\oddsidemargin by 8
+%
+\evensidemargin=\oddsidemargin
+%
+\multiply\oddsidemargin by 4
+%
+\multiply\evensidemargin by 4
+%
+\advance\oddsidemargin by -1in
+%
+\advance\evensidemargin by -1in
+%
+%
+%
+%--------------------------MathWorks logo
+%
+\newcommand{\TMW}{\textsl{MathWorks }}
+%
+%--------------------------Environments for code
+%
+%--------command for Matlab code
+%
+%\definecolor{mcodecolor}{rgb}{1,0.4,0.3}
+\definecolor{mcodecolor}{rgb}{1,0.2,0.2}
+\definecolor{mcommcolor}{rgb}{0,0.6,0}
+%\newcommand{\textmcode}[1]{{\usefont{T1}{pcr}{m}{n} #1}}
+\newcommand{\textmcode}[1]{\texttt{\color{mcodecolor}{#1}}}
+%
+%----------------------------General parameters
+%
+\fvset{fontfamily=courier,numbers=left,frame=lines,commandchars=\\\{\},%
+framesep=3mm,numbersep=2mm,fontsize=\small}
+%
+%----------------------------environmet for insertion of Matlab files
+%
+%\def\ExPoint{\char37}
+%\countdef\mycount=1 \mycount=\catcode`\% \catcode`\%=\active
+%\newcommand{\verbmcodef}[2][Example]{\mycount=\catcode`\%
+%\VerbatimInput[commandchars=\\\#\#,codes={\catcode`\%=\active},defineactive=\def%{\color{mcommcolor}\ExPoint},label=#1]{#2}}
+% \catcode`\%=\mycount
+
+%
+%----------------------------environmet to insert portions of Matlab code
+%
+%\mycount=\catcode`\% \catcode`\%=\active
+%\DefineVerbatimEnvironment{verbmcode}{Verbatim}{commandchars=\\\#\#,codes={\catcode`\%=% %\active},defineactive=\def%{\color{mcommcolor}\ExPoint}}
+%\catcode`\%=\mycount
+%\def\ExPoint{\char37}
+%\count255=\catcode`\% \catcode`\%=\active
+%\VerbatimInput[defineactive=\def%{\color{mcommcolor}\ExPoint}]{ex1.m}
+%\catcode`\%=\count255
+
+
+%------------------------------reference to picture
+%
+\newcommand{\pref}[1]{pic.\ref{#1}}
+%-----------------------------Bibliography style
+%
+\bibliographystyle{plain}
+%

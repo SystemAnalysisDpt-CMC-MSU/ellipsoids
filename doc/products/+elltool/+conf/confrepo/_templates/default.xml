@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<root version="2" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<version type="char" >1.4dev</version>
+	<isVerbose type="boolean" >0</isVerbose>
+	<absTol type="double" >1e-07</absTol>
+	<relTol type="double" >1e-05</relTol>
+	<nTimeGridPoints type="double" >200</nTimeGridPoints>
+	<ODESolverName type="char" >ode45</ODESolverName>
+	<isODENormControl type="char" >on</isODENormControl>
+	<isEnabledOdeSolverOptions type="boolean" >0</isEnabledOdeSolverOptions>
+	<nPlot2dPoints type="double" >200</nPlot2dPoints>
+	<nPlot3dPoints type="double" >200</nPlot3dPoints>
+	<logging type="struct" >
+		<log4jSettings type="char" >
+			log4j.rootLogger=INFO, stdout
+			#                             
+			log4j.logger.elltool.reach = INFO, A1
+			log4j.additivity.elltool.reach = TRUE
+			log4j.logger.gras.ellapx = INFO, A1
+			log4j.additivity.gras.ellapx = TRUE
+			#
+			log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+			log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+			#
+			log4j.appender.stdout.layout.ConversionPattern=%5p %c - %m\n
+			#
+			log4j.appender.A1=org.apache.log4j.FileAppender
+			#
+			#do not change - name of the main log file should have a 
+			#fixed pattern so that email logger can pick it up
+			log4j.appender.A1.File=${elltool.log4j.logfile.dirwithsep}${elltool.log4j.logfile.main.name}
+			#
+			log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+			log4j.appender.A1.layout.ConversionPattern=%d %5p %c - %m%n
+		</log4jSettings>
+	</logging>
+</valueObj>
+<keyStr type="char" >default</keyStr>
+</root>

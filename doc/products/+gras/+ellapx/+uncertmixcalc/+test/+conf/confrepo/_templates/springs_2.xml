@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<root version="18" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<genericProps type="struct" >
+		<calcTimeLimVec type="double" >2.414735078559716e-15 3</calcTimeLimVec>
+		<calcPrecision type="double" >1e-07</calcPrecision>
+		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
+	</genericProps>
+	<projectionProps type="struct" >
+		<projSpaceSetName type="char" >set1</projSpaceSetName>
+		<projSpaceSets type="struct" >
+			<set1 type="cell" >
+				<item type="boolean" >1 1 0 0 0 0</item>
+			</set1>
+		</projSpaceSets>
+		<isDynamicProjEnabled type="boolean" >0</isDynamicProjEnabled>
+		<isStaticProjEnabled type="boolean" >1</isStaticProjEnabled>
+	</projectionProps>
+	<goodDirSelection type="struct" >
+		<methodName type="char" >manual</methodName>
+		<methodProps type="struct" >
+			<manual type="struct" >
+				<lsGoodDirSetName type="char" >set1</lsGoodDirSetName>
+				<lsGoodDirSets type="struct" >
+					<set1 type="cell" size="10 1">
+						<item type="double" >0.8336324191535841 -1.016137855343362 0.7180317084138398 -1.207027193523852 1.312543395891976 -1.484876524544544</item>
+						<item type="double" >0.4989959431193203 -1.382296526537531 0.3498630402364189 -0.8008578068728378 -0.2804883235295412 -0.4320740392036692</item>
+						<item type="double" >0.5189058558945248 0.06069622477807539 -1.91006044862896 1.164494313225619 -0.08916609545839861 0.5599009634309456</item>
+						<item type="double" >-1.146864912764622 0.109577185231242 2.055495211709214 1.155613653951163 1.92589002600658 0.1092585564663511</item>
+						<item type="double" >-0.417352798017552 0.5060934622139194 -1.037320561980508 -0.03073507858644936 -0.05752130748896946 0.9404268055540888</item>
+						<item type="double" >-1.89542307718771 -1.312463835887073 1.340329439027401 0.4185839342949233 1.57539641194674 1.831236449612915</item>
+						<item type="double" >-0.8487889475496144 -1.095188883824536 -1.7142434253384 -0.1447979225756177 2.084898443397842 1.360937865365804</item>
+						<item type="double" >0.8597928886449731 0.4101087445673162 1.964251547396482 -0.6240739761042899 -0.08228984762861133 -0.005356811520983945</item>
+						<item type="double" >-0.164356199349951 -0.812199311719369 -0.2135818180321049 0.1440277535666741 -0.1833593776480678 0.4344795807597446</item>
+						<item type="double" >0.2929546467762903 1.537734748390435 -2.31167095518785 -0.6800751039253029 -1.048998967787542 0.002466370234648102</item>
+					</set1>
+				</lsGoodDirSets>
+			</manual>
+			<auto type="struct" >
+				<nGoodDirs type="double" >1</nGoodDirs>
+				<goodDirSpaceVec type="boolean" >1 1</goodDirSpaceVec>
+			</auto>
+		</methodProps>
+		<selectionTime type="double" >2.414735078559716e-15</selectionTime>
+	</goodDirSelection>
+	<customResultDir type="struct" >
+		<isEnabled type="boolean" >0</isEnabled>
+		<dirName type="char" >C:/SVN_Local/_GrasResults</dirName>
+	</customResultDir>
+	<logging type="struct" >
+		<log4jSettings type="char" >
+                log4j.rootLogger=INFO, stdout, A1
+                #
+                log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+                log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+                #
+                log4j.appender.stdout.layout.ConversionPattern=%5p %c - %m\n
+                #
+                log4j.appender.A1=org.apache.log4j.DailyRollingFileAppender
+                #
+                #do not change - name of the main log file should have a 
+                #fixed pattern so that email logger can pick it up
+                log4j.appender.A1.File=${gras.ellapx.uncertmixcalc.log4j.logfile.dirwithsep}${gras.ellapx.uncertmixcalc.log4j.logfile.main.name}
+                #
+                log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+                log4j.appender.A1.layout.ConversionPattern=%d %5p %c - %m%n
+            </log4jSettings>
+	</logging>
+	<plottingProps type="struct" >
+		<isEnabled type="boolean" >0</isEnabled>
+		<viewAngleVec type="double" >37.5 30</viewAngleVec>
+		<isGoodCurvesSeparately type="boolean" >0</isGoodCurvesSeparately>
+	</plottingProps>
+	<ellipsoidalApxProps type="struct" >
+		<internalApx type="struct" >
+			<isEnabled type="boolean" >1</isEnabled>
+			<schemas type="struct" >
+				<noUncertSqrtQ type="struct" >
+					<isEnabled type="boolean" >0</isEnabled>
+					<props type="struct" >
+						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
+					</props>
+				</noUncertSqrtQ>
+				<noUncertJustQ type="struct" >
+					<isEnabled type="boolean" >0</isEnabled>
+					<props type="struct" >
+						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
+					</props>
+				</noUncertJustQ>
+				<uncertMixed type="struct" >
+					<isEnabled type="boolean" >1</isEnabled>
+					<props type="struct" >
+						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
+						<mixingStrength type="double" >0.5</mixingStrength>
+						<mixingProportions type="cell" size="10 1">
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+							<item type="double" >0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1</item>
+						</mixingProportions>
+					</props>
+				</uncertMixed>
+			</schemas>
+			<dispScaleFactor type="double" >1</dispScaleFactor>
+		</internalApx>
+		<externalApx type="struct" >
+			<isEnabled type="boolean" >0</isEnabled>
+			<schemas type="struct" >
+				<justQ type="struct" >
+					<isEnabled type="boolean" >0</isEnabled>
+				</justQ>
+			</schemas>
+			<dispScaleFactor type="double" >1</dispScaleFactor>
+		</externalApx>
+		<extIntApx type="struct" >
+			<isEnabled type="boolean" >0</isEnabled>
+			<schemas type="struct" >
+				<uncert type="struct" >
+					<isEnabled type="boolean" >0</isEnabled>
+					<props type="struct" >
+						<selectionMethodForSMatrix type="char" >volume</selectionMethodForSMatrix>
+						<minQSqrtMatEig type="double" >0.1</minQSqrtMatEig>
+					</props>
+				</uncert>
+			</schemas>
+		</extIntApx>
+	</ellipsoidalApxProps>
+	<regularizationProps type="struct" >
+		<isEnabled type="boolean" >0</isEnabled>
+		<isJustCheck type="boolean" >0</isJustCheck>
+		<regTol type="double" >1e-05</regTol>
+	</regularizationProps>
+	<systemDefinitionConfName type="char" >springs_2</systemDefinitionConfName>
+</valueObj>
+<keyStr type="char" >springs_2</keyStr>
+</root>

@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<root version="2" xml_tb_version="2.0" type="struct" >
+<valueObj type="struct" >
+	<dim type="cell" >
+		<item type="double" >10</item>
+	</dim>
+	<At type="cell" size="10 1">
+		<item type="char" >0.000000  0.000000  0.000000  0.000000  0.000000 -1.000000  0.000000  0.000000  0.000000  0.000000</item>
+		<item type="char" >0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 -1.000000  0.000000  0.000000  0.000000</item>
+		<item type="char" >0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 -1.000000  0.000000  0.000000</item>
+		<item type="char" >0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 -1.000000  0.000000</item>
+		<item type="char" >0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000  0.000000 -1.000000</item>
+		<item type="char" >50.000000 -25.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000</item>
+		<item type="char" >-25.000000  50.000000 -25.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000</item>
+		<item type="char" >0.000000 -25.000000  50.000000 -25.000000   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000</item>
+		<item type="char" >0.000000   0.000000 -25.000000  50.000000 -25.000000   0.000000   0.000000   0.000000   0.000000   0.000000</item>
+		<item type="char" >0.000000   0.000000   0.000000 -25.000000  25.000000   0.000000   0.000000   0.000000   0.000000   0.000000</item>
+	</At>
+	<Bt type="cell" size="10 1">
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000  0.000000 -5.000000</item>
+		<item type="char" >0.000000 -5.000000  0.000000</item>
+		<item type="char" >-5.000000  0.000000  0.000000</item>
+	</Bt>
+	<initial_set type="struct" >
+		<Q type="cell" size="10 1">
+			<item type="double" >3 0 0 0 0 0 0 0 0 0</item>
+			<item type="double" >0 3 0 0 0 0 0 0 0 0</item>
+			<item type="double" >0 0 3 0 0 0 0 0 0 0</item>
+			<item type="double" >0 0 0 3 0 0 0 0 0 0</item>
+			<item type="double" >0 0 0 0 3 0 0 0 0 0</item>
+			<item type="double" >0 0 0 0 0 3 0 0 0 0</item>
+			<item type="double" >0 0 0 0 0 0 3 0 0 0</item>
+			<item type="double" >0 0 0 0 0 0 0 3 0 0</item>
+			<item type="double" >0 0 0 0 0 0 0 0 3 0</item>
+			<item type="double" >0 0 0 0 0 0 0 0 0 3</item>
+		</Q>
+		<a type="cell" >
+			<item type="double" size="10 1">0 0 0 0 0 0 0 0 0 0</item>
+		</a>
+	</initial_set>
+	<control_restriction type="struct" >
+		<Q type="cell" size="3 1">
+			<item type="char" >2.000000 0.000000 0.000000</item>
+			<item type="char" >0.000000 2.000000 0.000000</item>
+			<item type="char" >0.000000 0.000000 2.000000</item>
+		</Q>
+		<a type="cell" size="3 1">
+			<item type="char" >0.000000</item>
+			<item type="char" >0.000000</item>
+			<item type="char" >0.000000</item>
+		</a>
+	</control_restriction>
+	<time_interval type="struct" >
+		<t0 type="cell" >
+			<item type="double" >-1.679212324745549e-15</item>
+		</t0>
+		<t1 type="cell" >
+			<item type="double" >0.8</item>
+		</t1>
+	</time_interval>
+	<description type="char" size="0 0"/> 
+	<disturbance_restriction type="struct" >
+		<Q type="cell" size="3 1">
+			<item type="char" >0.010000 0.000000 0.000000</item>
+			<item type="char" >0.000000 0.010000 0.000000</item>
+			<item type="char" >0.000000 0.000000 0.010000</item>
+		</Q>
+		<a type="cell" size="3 1">
+			<item type="char" >0.000000</item>
+			<item type="char" >0.000000</item>
+			<item type="char" >0.000000</item>
+		</a>
+	</disturbance_restriction>
+	<Ct type="cell" size="10 1">
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000 0.000000 0.000000</item>
+		<item type="char" >0.000000  0.000000 -5.000000</item>
+		<item type="char" >0.000000 -5.000000  0.000000</item>
+		<item type="char" >-5.000000  0.000000  0.000000</item>
+	</Ct>
+</valueObj>
+<keyStr type="char" >springs_3</keyStr>
+</root>
