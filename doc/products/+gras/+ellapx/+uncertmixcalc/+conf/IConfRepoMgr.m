@@ -1,2 +1,0 @@
-classdef IConfRepoMgr<handle
-end

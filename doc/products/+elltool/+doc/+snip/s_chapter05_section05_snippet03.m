@@ -1,1 +1,0 @@
-elltool.conf.Properties.setNTimeGridPoints(250);

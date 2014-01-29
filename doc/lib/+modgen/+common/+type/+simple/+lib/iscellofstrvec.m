@@ -1,3 +1,0 @@
-function isPositive=iscellofstrvec(inpArray)
-isPositive=iscellstr(inpArray)&&...
-    all(reshape(cellfun(@modgen.common.isrow,inpArray),[],1));
