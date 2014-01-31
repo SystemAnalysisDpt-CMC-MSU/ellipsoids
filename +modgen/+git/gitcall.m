@@ -7,6 +7,7 @@ if isPath,
     curDirStr=pwd();
     cd(pathStr);
 end
+gitDirStr=pwd();
 callStr=sprintf('git %s',ParamStr);
 [gitErr,gitMsg]=system(callStr);
 if isPath,
@@ -18,20 +19,26 @@ gitMsg=strread(gitMsg,'%s','delimiter','\n','whitespace','');
 % check for an error reported by the operating system
 if gitErr~=0
     % an error is reported
-    if strncmp('''git',gitMsg{1},4),
+    if isempty(gitMsg),
+        Msg(1).identifier='GIT:versioningProblem';
+        Msg(1).message=['Problem using version control system:' 10 ...
+            ' Git could not be executed! Error code is ' ...
+            num2str(gitErr) 10 ' Path is ' gitDirStr];
+    elseif strncmp('''git',gitMsg{1},4),
         Msg(1).identifier='GIT:installationProblem';
         Msg(1).message=['Problem using version control system:' 10 ...
-            ' Git could not be executed!'];
+            ' Git could not be executed!' 10 'Path is ' gitDirStr];
     else
         Msg(1).identifier='GIT:versioningProblem';
         Msg(1).message=['Problem using version control system:' 10 ...
-            modgen.string.cell2str(gitMsg,' ')];
+            modgen.string.cell2str(gitMsg,' ') 10 ' Path is ' gitDirStr];
     end
 elseif ~isempty(gitMsg)
     if strncmp('git:',gitMsg{1},4),
         Msg(1).identifier='GIT:versioningProblem';
         Msg(1).message=['Problem using version control system:' 10 ...
-            modgen.string.cell2str(gitMsg,' ')];
+            modgen.string.cell2str(gitMsg,' ') 10 ...
+            ' Path is ' gitDirStr];
     end
 end
 

@@ -6,9 +6,7 @@ classdef mock_test < mlunitext.test_case
     %
     % See also TEST_TEST_CASE.
     %
-    % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-    % Faculty of Computational Mathematics and Cybernetics, System Analysis
-    % Department, 7-October-2012, <pgagarinov@gmail.com>$
+    % $Author: Peter Gagarinov, 7-October-2012, <pgagarinov@gmail.com>$
     
     properties
         log = '';
