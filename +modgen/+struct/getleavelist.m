@@ -53,7 +53,7 @@ if nFields>0
     for iElem=indVec
         for iField=1:nFields
             SCur=SInp(iElem).(fieldNameList{iField});
-            if isstruct(SCur)
+            if isstruct(SCur)&&~isempty(fieldnames(SCur))
                 pathSpecCell{iElem,iField}=...
                     getleavelistint(SCur);
                 %
