@@ -84,7 +84,8 @@ classdef mlunit_test_disp < mlunitext.test_case
         end
         %
         function test_RelDataPlotterMoreAxes(~)
-            plObj=smartdb.disp.RelationDataPlotter;
+            plObj=smartdb.disp.RelationDataPlotter(...
+                'axesGetNewHandleFunc',@getNewHandleFunc);
             SData.firstPoint = {[2,1]};
             rel=smartdb.relations.DynamicRelation(SData);
             fGetGroupKey=...
@@ -137,6 +138,12 @@ classdef mlunit_test_disp < mlunitext.test_case
             function hVec=axesSetPropDoNothingFunc(hAxes,~)
                 hold(hAxes,'on');
                 hVec=[];
+            end
+            function hAxes=getNewHandleFunc(~,nSurfaceRows,nSurfaceColumns,indAxes,hFigureParent,~)
+                import modgen.graphics.gensubplotprop;
+                propList=gensubplotprop(nSurfaceRows,nSurfaceColumns,...
+                    indAxes,'Parent',hFigureParent);
+                hAxes=axes(propList{:});
             end
         end
         function test_RelDataPlotterAutoHoldOn(self)

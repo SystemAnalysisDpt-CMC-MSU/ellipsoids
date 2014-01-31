@@ -106,24 +106,11 @@ classdef StructDispTC < mlunitext.test_case
                     SRes.inpArgList=inpArgList;
                     SRes.resStr=resStr;
                     %
-%                     resMap.put(inpKey,SRes);
+                    %resMap.put(inpKey,SRes);
                     SExpRes=resMap.get(inpKey);
                     [isPos,reportStr]=...
                         modgen.struct.structcompare(SRes,SExpRes);
                     mlunitext.assert_equals(true,isPos,reportStr);
-                    %
-                    evalc('strucdisp(S,resFileName,inpArgList{:});');
-                    fid=fopen(resFileName,'r');
-                    try
-                        resCell=textscan(fid,'%[^\n]','delimiter','','whitespace','');
-                        resFileStr=sprintf('%s\n',resCell{1}{:});
-                    catch meObj
-                        fclose(fid);
-                        rethrow(fid);
-                    end
-                    fclose(fid);
-                    delete(resFileName);
-                    mlunitext.assert_equals(true,isequal(resFileStr,resStr));
                 end
             end
             %
