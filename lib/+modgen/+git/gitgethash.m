@@ -7,7 +7,9 @@ end
 if isempty(StMsg),
     hashStr=hashStr{:};
 else
-    if strcmp(StMsg.identifier,'GIT:versioningProblem')&&...
+    if iscell(hashStr)&&isempty(hashStr),
+        error(StMsg);
+    elseif strcmp(StMsg.identifier,'GIT:versioningProblem')&&...
             strncmp(hashStr,'fatal: Not a git repository',...
             numel('fatal: Not a git repository')),
         hashStr='unversioned';

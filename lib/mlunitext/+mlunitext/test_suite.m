@@ -19,10 +19,10 @@ classdef test_suite<handle
     %
     % $Authors: Peter Gagarinov <pgagarinov@gmail.com>
     % $Date: March-2013 $
-    % $Copyright: Moscow State University,
-    %             Faculty of Computational Mathematics
+    %
+    %
     %             and Computer Science,
-    %             System Analysis Department 2012-2013$
+    %
     %
     properties (Access=private,Hidden)
         nParallelProcesses
@@ -560,6 +560,11 @@ classdef test_suite<handle
             %
             logger.info(logMsg);
             newSuiteObj = mlunitext.test_suite(testList);
+            newSuiteObj.nParallelProcesses=self.nParallelProcesses;
+            newSuiteObj.hExecFunc=self.hExecFunc;
+            newSuiteObj.parallelConfiguration=self.parallelConfiguration;
+            newSuiteObj.parallelMode=self.parallelMode;
+            %
             function isPosVec=isMatchTest(fGetProp,testList,regExpStr)
                 isPosVec=isMatch(cellfun(fGetProp,testList,...
                     'UniformOutput',false),regExpStr);

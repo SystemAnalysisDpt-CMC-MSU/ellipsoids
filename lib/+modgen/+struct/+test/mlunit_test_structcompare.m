@@ -32,6 +32,13 @@ classdef mlunit_test_structcompare < mlunitext.test_case
             mlunitext.assert_equals(isEqual,false);
         end
         %
+        function testUpdateLeavesEmpty(~)
+            S.alpha=struct();
+            S.beta=1;
+            Res=modgen.struct.updateleaves(S,@(x,y)x);
+            mlunitext.assert(isequal(S,Res));
+        end
+        %
         function testVectorialStruct(~)
             S1=struct();
             S1(2,2).alpha=4;

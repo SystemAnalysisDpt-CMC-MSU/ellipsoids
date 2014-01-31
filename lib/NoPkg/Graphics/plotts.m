@@ -58,7 +58,8 @@ function [groupHandles,hPlotHandlesVec]=plotts(varargin)
 %               'h' - 'horizontal' - zoom in horizontal direction
 %
 %         graphTypes: cell [1,nGraphs] : ['bar',{'plot'},'stairs',
-%                                   'scatter','widthbar', 'edgebar'],
+%                                   'scatter','widthbar', 'edgebar',
+%                                   'area','image'],
 %               'scatter' method uses lineWidth to determine size of
 %               markers
 %               'widthbar' method draws bar with different width of
@@ -72,6 +73,23 @@ function [groupHandles,hPlotHandlesVec]=plotts(varargin)
 %                and yCell contains heights of bars.
 %                For right usage of this method
 %                length(xCell) should be equal length(yCell)+1.
+%         graphSpecPropList: cell [1,nGraphs] - cell array with specific
+%                properties for each graph, each cell is either empty (when
+%                there are no specific properties for a given graph) or
+%                contains scalar structure with properties, the format of
+%                the mentioned structure is individual for each type of
+%                graph
+%
+%                for 'image' graph type the format is as follows:
+%                    valueLims: double [1,2] - limits for possible values
+%                        for data, if this field is absent, then the value
+%                        for this property is derived directly from data as
+%                        its minimal and maximal values
+%                    yValue: double [1,1] - value of y coordinate for a
+%                        strip corresponding to given graph; if this field
+%                        is absent, then its value is taken to be the
+%                        number of graph within given group
+%
 %         graphPropSetFuncList: cell [1,nGraphs] - list of functions
 %                for each graph that are called after each graph is
 %                created, if the respective cell is empty (by default
@@ -92,7 +110,7 @@ function [groupHandles,hPlotHandlesVec]=plotts(varargin)
 %         scaleParam: double[1,nGroups] --- parametr for scaling
 %                    (used for 'sqrtscale' and 'logarithm' as
 %                     the point which maps to zero.)
-%         lineWidth: cell[1,nGraphs]: line widths for each graph, or
+%         lineWidth: double[1,nGraphs]: line widths for each graph, or
 %                    double[1,1] if the width is same for all graphs
 %                    for edgebar linewidth is a width of edge line.
 %         xTypes: cell [1,nGroups] :[{'dates'},'numbers','set','setdates']
@@ -199,6 +217,7 @@ graphPlotSpecs=[];
 graphRgbColors=[];
 graphZoomDirList=[];
 graphTypes=[];
+graphSpecPropList={};
 graphPropSetFuncList={};
 fontSize=8;
 fontWeight='normal';
@@ -261,9 +280,9 @@ for k=1:2:nProp-1
             groupYLabels=prop{k+1};
         case 'groupxlabels',
             groupXLabels=prop{k+1};
-        case 'groupxlocations',
+        case 'groupxaxislocations',
             groupXLocations=prop{k+1};
-        case 'groupylocations',
+        case 'groupyaxislocations',
             groupYLocations=prop{k+1};
         case 'groupxcolors',
             groupXColors=prop{k+1};
@@ -277,6 +296,8 @@ for k=1:2:nProp-1
             graphRgbColors=prop{k+1};
         case 'graphtypes',
             graphTypes=prop{k+1};
+        case 'graphspecproplist',
+            graphSpecPropList=prop{k+1};
         case 'graphpropsetfunclist',
             graphPropSetFuncList=prop{k+1};
         case 'grouptitles',
@@ -359,7 +380,7 @@ if isempty(groupMembership)
     groupMembership=ones(1,nGraphs);
 end;
 %
-nGroups=length(unique(groupMembership));
+nGroups=max(groupMembership);
 if isempty(placeMembership)
     placeMembership=1:nGroups;
 end
@@ -371,7 +392,7 @@ if isempty(groupAreaDistr)
     nRows=nPlaces;
     nCols=1;
 else
-    [nRows nCols]=size(groupAreaDistr);
+    [nRows, nCols]=size(groupAreaDistr);
     if nRows==1,
         groupAreaDistr=groupAreaDistr.';
         nRows=nCols;
@@ -403,6 +424,23 @@ if isempty(graphTypes)
     graphTypes=cell(1,nGraphs);
     graphTypes(:)={'plot'};
 end
+if isempty(graphSpecPropList),
+    graphSpecPropList=cell(1,nGraphs);
+else
+    modgen.common.checkvar(graphSpecPropList,...
+        ['iscell(x)&&isrow(x)&&numel(x)==' num2str(nGraphs)],...
+        'graphSpecPropList');
+    isnEmptyVec=~cellfun('isempty',graphSpecPropList);
+    if any(isnEmptyVec),
+        modgen.common.checkvar(...
+            graphSpecPropList(isnEmptyVec),...
+            'all(cellfun(''isclass'',x,''struct'')&cellfun(''prodofsize'',x)==1)',...
+            'graphSpecPropList');
+    end
+    if ~all(isnEmptyVec),
+        graphSpecPropList(~isnEmptyVec)={struct};
+    end
+end
 if isempty(graphPropSetFuncList),
     graphPropSetFuncList=cell(1,nGraphs);
 else
@@ -424,16 +462,16 @@ if isempty(groupXLabels)
     groupXLabels=cell(1,nGroups);
 end
 if isempty(groupXLocations)
-    groupXLocations=repmat({'bottom'},1,nGroups);
+    groupXLocations=cell(1,nGroups);
 end
 if isempty(groupYLocations)
-    groupYLocations=repmat({'left'},1,nGroups);
+    groupYLocations=cell(1,nGroups);
 end
 if isempty(groupXColors)
-    groupXColors=repmat({[0 0 0]},1,nGroups);
+    groupXColors=cell(1,nGroups);
 end
 if isempty(groupYColors)
-    groupYColors=repmat({[0 0 0]},1,nGroups);
+    groupYColors=cell(1,nGroups);
 end
 if isempty(groupTitles)
     groupTitles=cell(1,nGroups);
@@ -571,6 +609,19 @@ for iGroup=1:1:nGroups
     end
     ind=find(groupMembership==iGroup);
     nPlots=length(ind);
+    isImage=strcmpi(graphTypes(ind),'image');
+    if any(isImage),
+        if ~all(isImage),
+            modgen.common.throwerror('wrongInput',[...
+                'Graphs with type image must be all of this '...
+                'type within the single group']);
+        end
+        isImage=true;
+    else
+        isImage=false;
+    end
+    xCVec=cell(1,nPlots);
+    yCVec=cell(1,nPlots);
     %shakhov bad hack, only works for one group
     %shakhov hack, only works for one group (uLimit and if)
     % xUnited --- all sorted points at x-axis
@@ -601,8 +652,7 @@ for iGroup=1:1:nGroups
             otherwise
                 xUnitedScale=xUnited;
         end
-        
-        if dragData.isDragEnabled
+        if ~isImage&&dragData.isDragEnabled
             dragData.xData{iCell}=x;
             dragData.yData{iCell}=y;
             %
@@ -612,9 +662,19 @@ for iGroup=1:1:nGroups
             [x,indSorted]=sort(x);
             y=y(indSorted);
         end
+        if isempty(y)
+            x=NaN;
+            y=NaN;
+        end
+        if isImage,
+            xCVec{iPlot}=x;
+            yCVec{iPlot}=y;
+            continue;
+        end
         switch graphTypes{iCell}
             case {'bar','plot','stairs','scatter','area'}
                 isArea=strcmp(graphTypes{iCell},'area');
+                isBar=strcmp(graphTypes{iCell},'bar');
                 if isArea,
                     startIndVec=find(diff([false;~isnan(y(:));false])~=0);
                     if isempty(startIndVec),
@@ -655,10 +715,17 @@ for iGroup=1:1:nGroups
                         end
                         faceMat=vertcat(faceMat{:});
                     end
+                    %
                     plotHandle=patch('Faces',faceMat,'Vertices',vertexMat,...
                         'FaceVertexCData',faceVertexCDataMat,...
                         'FaceColor','flat','EdgeColor','k');
                 else
+                    if isBar,
+                        if any(diff(x)==0),
+                            [x,indLastVec]=unique(x,'last'); %#ok<ASGLU>
+                            y=y(indLastVec); %#ok<NASGU>
+                        end
+                    end
                     plotHandle=eval([graphTypes{iCell}...
                         '(groupHandles(iGroup),x,y,graphPlotSpecs{iCell});']);
                 end
@@ -672,15 +739,15 @@ for iGroup=1:1:nGroups
                 %
                 if strcmpi(graphTypes{iCell},'scatter'),
                     set(plotHandle,'SizeData',lineWidth(iCell));
-                elseif ~strcmpi(graphTypes{iCell},'bar'),
+                elseif ~isBar,
                     set(plotHandle,'lineWidth',lineWidth(iCell));
                 end
-                if ~strcmpi(graphTypes{iCell},'bar')
+                if ~isBar
                     set(plotHandle,'markerSize',markerSize(iCell),...
                         'marker',markerNameList{iCell});
                 end
                 if ~isempty(graphRgbColors)
-                    if ~(strcmpi(graphTypes{iCell},'bar')||isArea),
+                    if ~(isBar||isArea),
                         set(plotHandle,'color',graphRgbColors{iCell});
                     else
                         set(plotHandle,'FaceColor',graphRgbColors{iCell});
@@ -733,6 +800,59 @@ for iGroup=1:1:nGroups
         end
         hold(groupHandles(iGroup),'on');
     end;
+    if isImage,
+        graphPropSetFunc=uniquejoint({reshape(graphPropSetFuncList(ind),[],1)},1);
+        graphPropSetFunc=graphPropSetFunc{1};
+        if numel(graphPropSetFunc)~=1,
+            modgen.common.throwerror('wrongInput',[...
+                'Graphs with type image must have the same value of '...
+                'property graphPropSetFuncList for all graphs']);
+        end
+        xCVec=cellfun(@(x)x(:),xCVec,'UniformOutput',false);
+        yCVec=cellfun(@(y)y(:),yCVec,'UniformOutput',false);
+        [x,~,indCVec]=unique(vertcat(xCVec{:}));
+        indCVec=mat2cell(indCVec,cellfun('prodofsize',xCVec(:)),1);
+        y=nan(numel(x),nPlots);
+        for iPlot=1:nPlots,
+            y(indCVec{iPlot},iPlot)=yCVec{iPlot};
+        end
+        if any(isnan(y(:))),
+            modgen.common.throwerror('wrongInput',[...
+                'It is impossible to display graphs of image type '...
+                'for data containing NaNs']);
+        end
+        colorMapMat=colormap(groupHandles(iGroup));
+        nColors=size(colorMapMat,1);
+        colorIndMat=zeros(size(y));
+        yValVec=1:nPlots;
+        for iPlot=1:nPlots,
+            yVec=y(:,iPlot);
+            SProp=graphSpecPropList{ind(iPlot)};
+            if isfield(SProp,'valueLims'),
+                valueLims=SProp.valueLims;
+            else
+                valueLims=[min(yVec) max(yVec)];
+            end
+            if isfield(SProp,'yValue'),
+                yValVec(iPlot)=SProp.yValue;
+            end
+            colorIndMat(:,iPlot)=round(min(nColors,max(1,...
+                1+(yVec-valueLims(1))/...
+                (valueLims(end)-valueLims(1))*(nColors-1))));
+        end
+        if isempty(groupTitles{iGroup}),
+            groupTitle='';
+        else
+            groupTitle=groupTitles{iGroup};
+        end
+        hPlotHandlesVec(ind)=image('CData',colorIndMat.',...
+            'CDataMapping','direct','XData',x.','YData',yValVec,...
+            'DisplayName',groupTitle);
+        if ~isempty(graphPropSetFunc{:}),
+            feval(graphPropSetFunc{:},hPlotHandlesVec(ind(1)));
+        end
+        hold(groupHandles(iGroup),'on');
+    end
     % set limits for axes
     if ~isempty(yLim{iGroup})
         ylim(yLim{iGroup});
@@ -756,8 +876,19 @@ for iGroup=1:1:nGroups
         end
         xlim(xLim{iGroup});
     end
-    
     legList=graphLegends(ind);
+    if isImage,
+        yTickVec=get(groupHandles(iGroup),'YTick');
+        yTickLabelList=cell(numel(yTickVec),1);
+        [isLabelVec,indLabelVec]=ismember(1:nPlots,yTickVec);
+        if any(isLabelVec),
+            indLabelVec=indLabelVec(isLabelVec);
+            yTickLabelList(indLabelVec)=legList(isLabelVec);
+        end
+        set(groupHandles(iGroup),...
+            'YTickLabelMode','manual',...
+            'YTickLabel',yTickLabelList);
+    end
     isNotEmpty=true(size(legList));
     for iLeg=1:numel(legList)
         if isempty(legList{iLeg})
@@ -823,10 +954,10 @@ for iGroup=1:1:nGroups
         set(h,'YGrid','on');
     end
     set(h,...
-        'XAxisLocation',groupXLocations{iGroup},...
-        'YAxisLocation',groupYLocations{iGroup},...
-        'XColor',groupXColors{iGroup},...
-        'YColor',groupYColors{iGroup});
+        'XAxisLocation',getValue(groupXLocations{iGroup},'bottom'),...
+        'YAxisLocation',getValue(groupYLocations{iGroup},'left'),...
+        'XColor',getValue(groupXColors{iGroup},[0 0 0]),...
+        'YColor',getValue(groupYColors{iGroup},[0 0 0]));
     if any(indPlaceVec(1:iGroup-1)==iPlace),
         set(h,'Color','none');
     end
@@ -1097,5 +1228,8 @@ if ~isnan(roundXLabel)
     set(h,'xticklabel',round(x*10^roundXLabel)/10^roundXLabel);
 end
 end
-
-
+function value=getValue(value,defaultValue)
+if isempty(value),
+    value=defaultValue;
+end
+end

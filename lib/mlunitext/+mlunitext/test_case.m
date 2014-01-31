@@ -34,10 +34,10 @@ classdef test_case<handle
     %
     % $Authors: Peter Gagarinov <pgagarinov@gmail.com>
     % $Date: March-2013 $
-    % $Copyright: Moscow State University,
-    %             Faculty of Computational Mathematics
+    %
+    %
     %             and Computer Science,
-    %             System Analysis Department 2012-2013$
+    %
     %
     properties (Access=private)
         setUpParams={};
@@ -83,9 +83,7 @@ classdef test_case<handle
             %          it is displayed in the messages indicating start and
             %          end of test runs
             %
-            % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Computational Mathematics and Cybernetics, System Analysis
-            % Department, 7-October-2012, <pgagarinov@gmail.com>$
+            % $Author: Peter Gagarinov
             %
             [reg,~,self.profMode,markerStr,~,isMarkerSet]=...
                 modgen.common.parseparext(varargin,...
@@ -339,10 +337,7 @@ classdef test_case<handle
             %
             % $Authors: Peter Gagarinov <pgagarinov@gmail.com>
             % $Date: March-2013 $
-            % $Copyright: Moscow State University,
-            %             Faculty of Computational Mathematics
             %             and Computer Science,
-            %             System Analysis Department 2012-2013$
             %
             import modgen.common.checkmultvar;
             import modgen.common.throwerror;
@@ -466,9 +461,7 @@ classdef test_case<handle
             %       useMedianTime: logical [1,1] - if true, then median
             %           time of calculation is returned for all runs
             %
-            % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-            % Faculty of Computational Mathematics and Cybernetics, System Analysis
-            % Department, 7-October-2012, <pgagarinov@gmail.com>$
+            % $Author: Peter Gagarinov, 7-October-2012, <pgagarinov@gmail.com>$
             %
             [reg,~,nRuns,useMedianTime]=...
                 modgen.common.parseparext(varargin,...

@@ -6,9 +6,7 @@ classdef mock_test_failed_tear_down < mlunit_test.mock_test
     %         run(gui_test_runner,
     %             'mock_test_failed_tear_down(''test_method'')');
 
-    % $Author: Peter Gagarinov, Moscow State University by M.V. Lomonosov,
-    % Faculty of Computational Mathematics and Cybernetics, System Analysis
-    % Department, 7-October-2012, <pgagarinov@gmail.com>$
+    % $Author: Peter Gagarinov, 7-October-2012, <pgagarinov@gmail.com>$
 
     properties
     end
