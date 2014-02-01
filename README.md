@@ -15,7 +15,7 @@ or polytopes.
 
 
 
-### Contact / Support
+**Contact / Support**
 
 
 -   Found *ET* useful for something?
