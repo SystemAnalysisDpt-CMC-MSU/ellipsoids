@@ -17,8 +17,8 @@
 
 
 \title{Ellipsoidal Toolbox}
-\date{November 22, 2013}
-\release{2.0 beta 1}
+\date{January 1, 2014}
+\release{2.0}
 \author{Peter Gagarinov, Alex A. Kurzhanskiy}
 \newcommand{\sphinxlogo}{}
 \renewcommand{\releasename}{Release}
@@ -133,16 +133,16 @@ methods is the reachability analysis of the system. Reachability
 analysis is concerned with the computation of the reach set in a way
 that can effectively meet requests like the following:
 \begin{enumerate}
-\item {} 
+\item {}
 For a given target set and time, determine whether the reach set and
 the target set have nonempty intersection.
 
-\item {} 
+\item {}
 For specified reachable state and time, find a feasible initial
 condition and control that steers the system from this initial
 condition to the given reachable state in given time.
 
-\item {} 
+\item {}
 Graphically display the projection of the reach set onto any
 specified two- or three-dimensional subspace.
 
@@ -330,20 +330,20 @@ linear systems with disturbances {\hyperref[chap_intro:kur2001]{{[}KUR2001{]}}},
 for which ET calculates both open-loop and close-loop reach sets. The
 ellipsoidal calculus provides the following benefits:
 \begin{itemize}
-\item {} 
+\item {}
 The complexity of the ellipsoidal representation is quadratic in the
 dimension of the state space, and linear in the number of time steps.
 
-\item {} 
+\item {}
 It is possible to exactly represent the reach set of linear system
 through both external and internal ellipsoids.
 
-\item {} 
+\item {}
 It is possible to single out individual external and internal
 approximating ellipsoids that are optimal to some given criterion
 (e.g. trace, volume, diameter), or combination of such criteria.
 
-\item {} 
+\item {}
 We obtain simple analytical expressions for the control that steers
 the state to a desired target.
 
@@ -496,15 +496,15 @@ or, equivalently,
 \end{gather}
 The properties of the polar set are
 \begin{itemize}
-\item {} 
+\item {}
 If ${\mathcal X}$ contains the origin,
 $({\mathcal X}^\circ)^\circ = {\mathcal X}$;
 
-\item {} 
+\item {}
 If ${\mathcal X}_1\subseteq{\mathcal X}_2$,
 ${\mathcal X}_2^\circ\subseteq{\mathcal X}_1^\circ$;
 
-\item {} 
+\item {}
 For any nonsingular matrix $A\in{\bf R}^{n\times n}$,
 $(A{\mathcal X})^\circ = (A^T)^{-1}{\mathcal X}^\circ$.
 
@@ -540,16 +540,16 @@ geometric (Minkowski) difference is
 \end{gather}
 Ellipsoidal calculus concerns the following set of operations:
 \begin{itemize}
-\item {} 
+\item {}
 affine transformation of ellipsoid;
 
-\item {} 
+\item {}
 geometric sum of finite number of ellipsoids;
 
-\item {} 
+\item {}
 geometric difference of two ellipsoids;
 
-\item {} 
+\item {}
 intersection of finite number of ellipsoids.
 
 \end{itemize}
@@ -1168,12 +1168,12 @@ find its external and internal ellipsoidal approximations,
 ${\mathcal E}(q^+,Q^+)$ and ${\mathcal E}(q^-,Q^-)$. Two
 trivial situations are:
 \begin{itemize}
-\item {} 
+\item {}
 ${\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma))>0$ and
 $\langle c, q_1\rangle>0$, which implies that
 ${\mathcal E}(q_1,Q_1)\cap{\bf S}(c,\gamma)=\emptyset$;
 
-\item {} 
+\item {}
 ${\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma))>0$ and
 $\langle c, q_1\rangle<0$, so that
 ${\mathcal E}(q_1,Q_1)\subseteq{\bf S}(c,\gamma)$, and then
@@ -1478,11 +1478,11 @@ ${\mathcal X}(t, t_0, {\mathcal X}_0)$ is
 \end{gather}
 Here are two facts about forward reach sets.
 \begin{enumerate}
-\item {} 
+\item {}
 ${\mathcal X}(t, t_0, {\mathcal X}_0)$ is the same for
 open-loop and closed-loop control.
 
-\item {} 
+\item {}
 ${\mathcal X}(t, t_0, {\mathcal X}_0)$ satisfies the semigroup
 property,
 \phantomsection\label{chap_reach:equation-semigroup}\begin{gather}
@@ -1591,11 +1591,11 @@ $x(t)=f^{-1}(t, x(t+1), u, v)$.
 These two facts about the backward reach set ${\mathcal Y}$ are
 similar to those for forward reach sets.
 \begin{enumerate}
-\item {} 
+\item {}
 ${\mathcal Y}(t_1, t, {\mathcal Y}_1)$ is the same for
 open-loop and closed-loop control.
 
-\item {} 
+\item {}
 ${\mathcal Y}(t_1, t, {\mathcal Y}_1)$ satisfies the semigroup
 property,
 \phantomsection\label{chap_reach:equation-semigroup_b}\begin{gather}
@@ -2257,7 +2257,7 @@ ${\mathcal Y}(t_1, t, {\mathcal Y}_1)$ reach sets (the reach sets
 may be maxmin or minmax) in a way that can effectively meet requests
 like the following:
 \begin{enumerate}
-\item {} 
+\item {}
 For the given time interval $[t_0, t]$, determine whether the
 system can be steered into the given target set
 ${\mathcal Y}_1$. In other words, is the set
@@ -2269,7 +2269,7 @@ system is unable to reach an ‘unsafe’ target set within a given time
 interval.
 }
 
-\item {} 
+\item {}
 If the target set ${\mathcal Y}_1$ is reachable from the given
 initial condition $\{t_0, {\mathcal X}_0\}$ in the time
 interval $[t_0, t]$, find the shortest time to reach
@@ -2278,7 +2278,7 @@ ${\mathcal Y}_1$,
 \begin{split}\arg\min_{\tau}
 \{{\mathcal X}(\tau,t_0,{\mathcal X}_0)\cap{\mathcal Y}_1\neq\emptyset ~|~ t_0\leqslant\tau\leqslant t\}.\end{split}\notag
 \end{gather}
-\item {} 
+\item {}
 Given the terminal time $t_1$, target set
 ${\mathcal Y}_1$ and time $t<t_1$ find the set of states
 starting at time $t$ from which the system can reach
@@ -2286,11 +2286,11 @@ ${\mathcal Y}_1$ within time interval $[t, t_1]$. In
 other words, find
 $\bigcup_{t\leqslant\tau<t_1}{\mathcal Y}(t_1, \tau, {\mathcal Y}_1)$.
 
-\item {} 
+\item {}
 Find a closed-loop control that steers a system with disturbances to
 the given target set in given time.
 
-\item {} 
+\item {}
 Graphically display the projection of the reach set along any
 specified two- or three-dimensional subspace.
 
@@ -2894,22 +2894,22 @@ download them separately.
 \label{chap_install:cvx}
 Some methods of the \emph{Ellipsoidal Toolbox}, namely,
 \begin{itemize}
-\item {} 
+\item {}
 distance
 
-\item {} 
+\item {}
 intersect
 
-\item {} 
+\item {}
 isInside
 
-\item {} 
+\item {}
 doesContain
 
-\item {} 
+\item {}
 ellintersection\_ia
 
-\item {} 
+\item {}
 ellunion\_ea
 
 \end{itemize}
@@ -2935,25 +2935,25 @@ Matlab toolbox for multi-parametric optimization and computational
 geometry. MPT is a toolbox that defines polytope class used in \emph{ET}. We
 need MPT for the following methods operating with polytopes.
 \begin{itemize}
-\item {} 
+\item {}
 distance
 
-\item {} 
+\item {}
 intersect
 
-\item {} 
+\item {}
 intersection\_ia
 
-\item {} 
+\item {}
 intersection\_ea
 
-\item {} 
+\item {}
 isInside
 
-\item {} 
+\item {}
 hyperplane2polytope
 
-\item {} 
+\item {}
 polytope2hyperplane
 
 \end{itemize}
@@ -2961,23 +2961,23 @@ polytope2hyperplane
 
 \section{Installation and Quick Start}
 \label{chap_install:installation-and-quick-start}\begin{enumerate}
-\item {} 
+\item {}
 Go to \href{http://code.google.com/p/ellipsoids}{http://code.google.com/p/ellipsoids} and download the \emph{Ellipsoidal Toolbox}.
 
-\item {} 
+\item {}
 Unzip the distribution file into the directory where you would like
 the toolbox to be.
 
-\item {} 
+\item {}
 Unzip CVX into cvx folder next to products folder.
 
-\item {} 
+\item {}
 Unzip MPT into mpt folder next to products folder.
 
-\item {} 
+\item {}
 Read the copyright notice.
 
-\item {} 
+\item {}
 In MATLAB command window change the working directory to the one
 where you unzipped the toolbox and type
 
@@ -2987,13 +2987,13 @@ where you unzipped the toolbox and type
 \PYG{n}{s\PYGZus{}install}
 \end{Verbatim}
 \begin{enumerate}
-\item {} 
+\item {}
 At this point, the directory tree of the \emph{Ellipsoidal Toolbox} is
 added to the MATLAB path list. In order to save the updated path
 list, in your MATLAB window menu go to File $\rightarrow$ Set
 Path... and click Save.
 
-\item {} 
+\item {}
 To get an idea of what the toolbox is about, type
 
 \end{enumerate}
@@ -3041,60 +3041,60 @@ $Q\in{\bf R}^{n\times n}$ being symmetric positive semidefinite:
 For the ellipsoid class we overload the following functions and
 operators:
 \begin{itemize}
-\item {} 
+\item {}
 isEmpty(ellObj) - checks if ${\mathcal E}(q,Q)$ is an empty
 ellipsoid.
 
-\item {} 
+\item {}
 display(ellObj) - displays the details of ellipsoid
 ${\mathcal E}(q,Q)$, namely, its center $q$ and the shape
 matrix $Q$.
 
-\item {} 
+\item {}
 plot(ellObj) - plots ellipsoid ${\mathcal E}(q,Q)$ if its
 dimension is not greater than 3.
 
-\item {} 
+\item {}
 firstEllObj == secEllObj - checks if ellipsoids
 ${\mathcal E}(q_1,Q_1)$ and ${\mathcal E}(q_2,Q_2)$ are
 equal.
 
-\item {} 
+\item {}
 firstEllObj \textasciitilde{}= secEllObj - checks if ellipsoids
 ${\mathcal E}(q_1,Q_1)$ and ${\mathcal E}(q_2,Q_2)$ are
 not equal.
 
-\item {} 
+\item {}
 {[} , {]} - concatenates the ellipsoids into the horizontal array, e.g. ellVec
 = {[}firstEllObj secEllObj thirdEllObj{]}.
 
-\item {} 
+\item {}
 {[} ; {]} - concatenates the ellipsoids into the vertical array, e.g. ellMat =
 {[}firstEllObj secEllObj; thirdEllObj fourthEllObj{]} defines
 $2\times 2$ array of ellipsoids.
 
-\item {} 
+\item {}
 firstEllObj \textgreater{}= secEllObj - checks if the ellipsoid firstEllObj is
 bigger than the ellipsoid secEllObj, or equivalently
 ${\mathcal E}(0,Q_1)\subseteq{\mathcal E}(0,Q_2)$.
 
-\item {} 
+\item {}
 firstEllObj \textless{}= secEllObj - checks if
 ${\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)$.
 
-\item {} 
+\item {}
 -ellObj - defines ellipsoid ${\mathcal E}(-q,Q)$.
 
-\item {} 
+\item {}
 ellObj + bScal - defines ellipsoid ${\mathcal E}(q+b,Q)$.
 
-\item {} 
+\item {}
 ellObj - bScal - defines ellipsoid ${\mathcal E}(q-b,Q)$.
 
-\item {} 
+\item {}
 aMat * ellObj - defines ellipsoid ${\mathcal E}(q,AQA^T)$.
 
-\item {} 
+\item {}
 ellObj.inv() - inverts the shape matrix of the ellipsoid:
 ${\mathcal E}(q,Q^{-1})$.
 
@@ -3105,14 +3105,14 @@ as to a two-dimensional array of ellipsoids. For example,
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} nondegenerate ellipsoid in R\PYGZca{}2}
-\PYG{n}{firstEllObj} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{9} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5} \PYG{l+m+mi}{4}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{firstEllObj} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{9} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{5} \PYG{l+m+mi}{4}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{secEllObj} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{polar}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}\PYG{c}{\PYGZpc{} secEll is polar ellipsoid for firstEllObj}
 \PYG{c}{\PYGZpc{} thirdEllObj is generated from secEllObj by inverting its shape matrix}
-\PYG{n}{thirdEllObj} \PYG{p}{=} \PYG{n}{secEllObj}\PYG{p}{.}\PYG{n}{getInv}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{thirdEllObj} \PYG{p}{=} \PYG{n}{secEllObj}\PYG{p}{.}\PYG{n}{getInv}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} 2x2 array of ellipsoids}
-\PYG{n}{ellMat} \PYG{p}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj}\PYG{p}{;} \PYG{n}{thirdEllObj} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;} 
+\PYG{n}{ellMat} \PYG{p}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj}\PYG{p}{;} \PYG{n}{thirdEllObj} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} check if firstEllObj is bigger than each of the ellipsoids in ellMat}
-\PYG{n}{ellMat} \PYG{o}{\PYGZlt{}}\PYG{p}{=} \PYG{n}{firstEllObj}  
+\PYG{n}{ellMat} \PYG{o}{\PYGZlt{}}\PYG{p}{=} \PYG{n}{firstEllObj}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3158,7 +3158,7 @@ ellipsoid object:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} define new ellipsoid}
-\PYG{n}{fourthEllObj} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{42} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{7} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2} \PYG{l+m+mi}{4}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{7} \PYG{l+m+mi}{10} \PYG{l+m+mi}{3} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2} \PYG{l+m+mi}{3} \PYG{l+m+mi}{5} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{;} \PYG{l+m+mi}{4} \PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{fourthEllObj} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{42} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{7} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2} \PYG{l+m+mi}{4}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{7} \PYG{l+m+mi}{10} \PYG{l+m+mi}{3} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2} \PYG{l+m+mi}{3} \PYG{l+m+mi}{5} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{p}{;} \PYG{l+m+mi}{4} \PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{bufEllVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{p}{:}\PYG{p}{)} \PYG{n}{fourthEllObj}\PYG{p}{]}\PYG{p}{;}
 \PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{isdegenerate}\PYG{p}{(}\PYG{p}{)} \PYG{c}{\PYGZpc{} check if given ellipsoids are degenerate}
 
@@ -3169,7 +3169,7 @@ ellipsoid object:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{n}{bufEllVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{p}{:}\PYG{p}{)} \PYG{n}{fourthEllObj}\PYG{p}{]}\PYG{p}{;}
-\PYG{p}{[}\PYG{n}{dimVec}\PYG{p}{,} \PYG{n}{rankVec}\PYG{p}{]} \PYG{p}{=} \PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{dimension}\PYG{p}{(}\PYG{p}{)} 
+\PYG{p}{[}\PYG{n}{dimVec}\PYG{p}{,} \PYG{n}{rankVec}\PYG{p}{]} \PYG{p}{=} \PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{dimension}\PYG{p}{(}\PYG{p}{)}
 
 
 \PYG{c}{\PYGZpc{} dimVec =}
@@ -3186,7 +3186,7 @@ compute the distance between them ({\hyperref[chap_implement:stanhp]{{[}STANHP{]
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} distance between thirdEllObj and each of the ellipsoids in ellMat}
-\PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{distance}\PYG{p}{(}\PYG{n}{thirdEllObj}\PYG{p}{)} 
+\PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{distance}\PYG{p}{(}\PYG{n}{thirdEllObj}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3204,7 +3204,7 @@ for more information about these methods.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} external approximation of intersection of firstEllObj and thirdEllObj}
-\PYG{n}{externalEllObj} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{intersection\PYGZus{}ea}\PYG{p}{(}\PYG{n}{thirdEllObj}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{externalEllObj} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{intersection\PYGZus{}ea}\PYG{p}{(}\PYG{n}{thirdEllObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} internal approximation of intersection of firstEllObj and thirdEllObj}
 \PYG{n}{internalEllObj} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{intersection\PYGZus{}ia}\PYG{p}{(}\PYG{n}{thirdEllObj}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
@@ -3215,7 +3215,7 @@ whereas internalEllObj is contained in this intersection:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} array [firstEllObj secEllObj] should be treated as intersection}
-\PYG{n}{externalEllObj}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}  
+\PYG{n}{externalEllObj}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{secEllObj}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3224,7 +3224,7 @@ whereas internalEllObj is contained in this intersection:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{n}{bufEllVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{firstEllObj} \PYG{n}{thirdEllObj}\PYG{p}{]}
-\PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{n}{internalEllObj}\PYG{p}{)} 
+\PYG{n}{bufEllVec}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{n}{internalEllObj}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3240,7 +3240,7 @@ It is also possible to solve the feasibility problem, that is, to check
 if the intersection of more than two ellipsoids is empty:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}  
+\PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3297,20 +3297,20 @@ direction vector:
 \PYG{c}{\PYGZpc{} columns of matrix dirsMat are vectors in R\PYGZca{}2}
 \PYG{n}{dirsMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1} \PYG{l+m+mi}{3}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} compute external ellipsoids for the directions in dirsMat}
-\PYG{n}{externalEllVec} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{minksum\PYGZus{}ea}\PYG{p}{(}\PYG{n}{dirsMat}\PYG{p}{)} 
+\PYG{n}{externalEllVec} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{minksum\PYGZus{}ea}\PYG{p}{(}\PYG{n}{dirsMat}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} externalEllVec =}
 \PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 1x5}
 
 \PYG{c}{\PYGZpc{} compute internal ellipsoids for the directions in dirsMat}
-\PYG{n}{internalEllVec} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{minksum\PYGZus{}ia}\PYG{p}{(}\PYG{n}{dirsMat}\PYG{p}{)}  
+\PYG{n}{internalEllVec} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{minksum\PYGZus{}ia}\PYG{p}{(}\PYG{n}{dirsMat}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} internalEllVec =}
 \PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 1x5}
 
 \PYG{c}{\PYGZpc{} intersection of external ellipsoids should always contain }
 \PYG{c}{\PYGZpc{} the union of internal ellipsoids:}
-\PYG{n}{externalEllVec}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{n}{internalEllVec}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{u\PYGZsq{}}\PYG{p}{)} 
+\PYG{n}{externalEllVec}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{n}{internalEllVec}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{u\PYGZsq{}}\PYG{p}{)}
 \PYG{c}{\PYGZpc{} }
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3327,9 +3327,9 @@ ${\bf R}$, ${\bf R}^2$ and ${\bf R}^3$:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} ellipsoid defined by squeezing the ellipsoid ellMat(2, 2)}
-\PYG{n}{fourthEllObj} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{.}\PYG{n}{getShape}\PYG{p}{(}\PYG{l+m+mf}{0.4}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{fourthEllObj} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{.}\PYG{n}{getShape}\PYG{p}{(}\PYG{l+m+mf}{0.4}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} check if the geometric difference firstEllObj \PYGZhy{} fourthEllObj is nonempty}
-\PYG{n}{firstEllObj} \PYG{o}{\PYGZgt{}}\PYG{p}{=} \PYG{n}{fourthEllObj}  
+\PYG{n}{firstEllObj} \PYG{o}{\PYGZgt{}}\PYG{p}{=} \PYG{n}{fourthEllObj}
 \PYG{c}{\PYGZpc{} }
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3357,7 +3357,7 @@ direction is not bad:
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{n}{absTol} \PYG{p}{=} \PYG{n}{getAbsTol}\PYG{p}{(}\PYG{n}{firstEllObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} find out which of the directions in dirsMat are bad}
-\PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{isbaddirection}\PYG{p}{(}\PYG{n}{fourthEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{)}  
+\PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{isbaddirection}\PYG{p}{(}\PYG{n}{fourthEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3367,7 +3367,7 @@ direction is not bad:
 \PYG{c}{\PYGZpc{} two of five directions specified by dirsMat are bad,}
 \PYG{c}{\PYGZpc{} so, only three ellipsoidal approximations }
 \PYG{c}{\PYGZpc{} can be produced for this dirsMat:}
-\PYG{n}{externalEllVec} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{minkdiff\PYGZus{}ea}\PYG{p}{(}\PYG{n}{fourthEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{)} 
+\PYG{n}{externalEllVec} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{minkdiff\PYGZus{}ea}\PYG{p}{(}\PYG{n}{fourthEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} externalEllVec =}
 \PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 1x3}
@@ -3388,7 +3388,7 @@ of arbitrary dimension.
 \PYG{c}{\PYGZpc{} ellipsoidal approximations for (firstEllObj \PYGZhy{} thirdEllObj + secEllObj)}
 
 \PYG{c}{\PYGZpc{} external}
-\PYG{n}{externalEllVec} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{minkmp\PYGZus{}ea}\PYG{p}{(}\PYG{n}{thirdEllObj}\PYG{p}{,} \PYG{n}{secEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{)} 
+\PYG{n}{externalEllVec} \PYG{p}{=} \PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{minkmp\PYGZus{}ea}\PYG{p}{(}\PYG{n}{thirdEllObj}\PYG{p}{,} \PYG{n}{secEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{)}
 \PYG{c}{\PYGZpc{} externalEllVec =}
 \PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 1x5}
 
@@ -3447,36 +3447,36 @@ the same hyperplane but two different halfspaces:
 The following functions and operators are overloaded for the hyperplane
 class:
 \begin{itemize}
-\item {} 
+\item {}
 isempty(hypObj) -- checks if hypObj is an empty hyperplane.
 
-\item {} 
+\item {}
 display(hypObj) -- displays the details of hyperplane
 $H(c,\gamma)$, namely, its normal $c$ and the scalar
 $\gamma$.
 
-\item {} 
+\item {}
 plot(hypObj) -- plots hyperplane $H(c,\gamma)$ if the dimension
 of the space in which it is defined is not greater than 3.
 
-\item {} 
+\item {}
 firstHypObj == secHypObj -- checks if hyperplanes
 $H(c_1,\gamma_1)$ and $H(c_2,\gamma_2)$ are equal.
 
-\item {} 
+\item {}
 firstHypObj = secHypObj -- checks if hyperplanes
 $H(c_1,\gamma_1)$ and $H(c_2,\gamma_2)$ are not equal.
 
-\item {} 
+\item {}
 {[} , {]} -- concatenates the hyperplanes into the horizontal array, e.g. hypVec
 = {[}firstHypObj secHypObj thirdHypObj{]}.
 
-\item {} 
+\item {}
 {[} ; {]} -- concatenates the hyperplanes into the vertical array, e.g. hypMat =
 {[}firstHypObj secHypObj; thirdHypObj fourthHypObj{]} -- defines
 $2\times 2$ array of hyperplanes.
 
-\item {} 
+\item {}
 -hypObj -- defines hyperplane $H(-c,-\gamma)$, which is the same
 as $H(c,\gamma)$ but specifies different halfspace.
 
@@ -3508,8 +3508,8 @@ object:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} define two hyperplanes passing through the origin}
-\PYG{n}{secHypObj} \PYG{p}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;} 
-\PYG{n}{firstHypObj}\PYG{p}{.}\PYG{n}{isparallel}\PYG{p}{(}\PYG{n}{secHypObj}\PYG{p}{)} 
+\PYG{n}{secHypObj} \PYG{p}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{firstHypObj}\PYG{p}{.}\PYG{n}{isparallel}\PYG{p}{(}\PYG{n}{secHypObj}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3577,7 +3577,7 @@ Multi-Parametric Toolbox ({\hyperref[chap_implement:kvas2004]{{[}KVAS2004{]}}}, 
 \PYG{c}{\PYGZpc{} convert array of hyperplanes to polytope}
 \PYG{n}{firstPolObj}  \PYG{p}{=} \PYG{n}{hyperplane2polytope}\PYG{p}{(}\PYG{n}{hypVec}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} covert polytope to array of hyperplanes  }
-\PYG{n}{convertedHypVec} \PYG{p}{=} \PYG{n}{polytope2hyperplane}\PYG{p}{(}\PYG{n}{firstPolObj}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{convertedHypVec} \PYG{p}{=} \PYG{n}{polytope2hyperplane}\PYG{p}{(}\PYG{n}{firstPolObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{convertedHypVec} \PYG{o}{==} \PYG{n}{hypVec}
 
 \PYG{c}{\PYGZpc{} ans =}
@@ -3593,7 +3593,7 @@ We can compute distance from ellipsoids to hyperplanes and polytopes:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} distance from ellipsoid firstEllObj to each of the hyperplanes in hypVec}
-\PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{distance}\PYG{p}{(}\PYG{n}{hypVec}\PYG{p}{)}  
+\PYG{n}{firstEllObj}\PYG{p}{.}\PYG{n}{distance}\PYG{p}{(}\PYG{n}{hypVec}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3601,7 +3601,7 @@ We can compute distance from ellipsoids to hyperplanes and polytopes:
 
 \PYG{c}{\PYGZpc{} distance from each of the ellipsoids in ellMat to the polytope}
 \PYG{c}{\PYGZpc{} firstPolObj}
-\PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{distance}\PYG{p}{(}\PYG{n}{firstPolObj}\PYG{p}{)}  
+\PYG{n}{ellMat}\PYG{p}{.}\PYG{n}{distance}\PYG{p}{(}\PYG{n}{firstPolObj}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3675,12 +3675,12 @@ objects:
 \PYG{c}{\PYGZpc{} with the halfspace x1 \PYGZhy{} x2 \PYGZlt{}= 2:}
 
 \PYG{c}{\PYGZpc{} get external ellipsoids}
-\PYG{n}{firstExternalEllMat} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{intersection\PYGZus{}ea}\PYG{p}{(}\PYG{n}{firstHypObj}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}  
+\PYG{n}{firstExternalEllMat} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{intersection\PYGZus{}ea}\PYG{p}{(}\PYG{n}{firstHypObj}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}
 \PYG{c}{\PYGZpc{} firstExternalEllMat =}
 \PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 2x1}
 
 \PYG{c}{\PYGZpc{} get internal ellipsoids}
-\PYG{n}{firstInternalEllMat} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{intersection\PYGZus{}ia}\PYG{p}{(}\PYG{n}{firstHypObj}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}  
+\PYG{n}{firstInternalEllMat} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{intersection\PYGZus{}ia}\PYG{p}{(}\PYG{n}{firstHypObj}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}
 \PYG{c}{\PYGZpc{} firstInternalEllMat =}
 \PYG{c}{\PYGZpc{} Array of ellipsoids with dimensionality 2x1}
 
@@ -3690,9 +3690,9 @@ objects:
 
 \PYG{c}{\PYGZpc{} get external ellipsoids}
 \PYG{n}{secExternalEllMat} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{intersection\PYGZus{}ea}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{firstHypObj}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
-  
+
 \PYG{c}{\PYGZpc{} get internal ellipsoids}
-\PYG{n}{secInternalEllMat} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{intersection\PYGZus{}ia}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{firstHypObj}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{secInternalEllMat} \PYG{p}{=} \PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{intersection\PYGZus{}ia}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{n}{firstHypObj}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} compute ellipsoidal approximations of the intersection}
 \PYG{c}{\PYGZpc{} of ellipsoid firstEll and polytope firstPol:}
 
@@ -3707,13 +3707,13 @@ polytopes is contained in the intersection of given ellipsoids:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} polytope secPolObj is obtained by affine transformation of firstPolObj}
-\PYG{n}{secPolObj} \PYG{p}{=} \PYG{l+m+mf}{0.5}\PYG{o}{*}\PYG{n}{firstPolObj} \PYG{o}{+} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}  
+\PYG{n}{secPolObj} \PYG{p}{=} \PYG{l+m+mf}{0.5}\PYG{o}{*}\PYG{n}{firstPolObj} \PYG{o}{+} \PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}
 
 \PYG{c}{\PYGZpc{} check if the intersection of ellipsoids in the first column of ellMat}
 \PYG{c}{\PYGZpc{} contains the union of polytopes firstPolObj and secPolObj:}
 
 \PYG{c}{\PYGZpc{} equivalent to: doesIntersectionContain(ellMat(:, 1), firstPolObj \textbar{} secPolObj)}
-\PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{p}{[}\PYG{n}{firstPolObj} \PYG{n}{secPolObj}\PYG{p}{]}\PYG{p}{)}  
+\PYG{n}{ellMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{p}{[}\PYG{n}{firstPolObj} \PYG{n}{secPolObj}\PYG{p}{]}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3723,7 +3723,7 @@ polytopes is contained in the intersection of given ellipsoids:
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} equivalent to: doesIntersectionContain(ellMat(2, 2),...}
 \PYG{c}{\PYGZpc{}                                  firstPolObj \PYGZam{} secPolObj)}
-\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{p}{[}\PYG{n}{firstPolObj} \PYG{n}{secPolObj}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}  
+\PYG{n}{ellMat}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{.}\PYG{n}{doesIntersectionContain}\PYG{p}{(}\PYG{p}{[}\PYG{n}{firstPolObj} \PYG{n}{secPolObj}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -3779,7 +3779,7 @@ some examples of the operations with ellipsoidal tubes.
 \PYG{n}{sTime}\PYG{p}{=} \PYG{l+m+mi}{2}\PYG{p}{;}
 \PYG{k}{for} \PYG{n}{iElem} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{nPoints}
    \PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{iElem}\PYG{p}{)} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{c}{...}
-   \PYG{n}{aMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{1}\PYG{p}{\PYGZcb{}}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;} 
+   \PYG{n}{aMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{1}\PYG{p}{\PYGZcb{}}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{k}{end}
 \PYG{n}{fromEllArrayEllTube} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromEllArray}\PYG{p}{(}\PYG{c}{...}
                 \PYG{n}{ellArray}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,}\PYG{c}{...}
@@ -3800,21 +3800,21 @@ by the cut function:
 \begin{Verbatim}[commandchars=\\\{\}]
 function example
 
-   aMat = [0 1; 0 0]; bMat = eye(2);  
+   aMat = [0 1; 0 0]; bMat = eye(2);
 
    SUBounds = struct();
 
-   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
+   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};
 
-   SUBounds.shape = [9 0; 0 2]; 
+   SUBounds.shape = [9 0; 0 2];
 
    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 
    x0EllObj = ell\_unitball(2);
 
-   timeVec = [0 10]; 
+   timeVec = [0 10];
 
-   dirsMat = [1 0; 0 1]';  
+   dirsMat = [1 0; 0 1]';
 
    rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
 
@@ -3876,21 +3876,21 @@ We can compute tubes by the instant of time using methodfromEllTubes:
 \begin{Verbatim}[commandchars=\\\{\}]
 function example
 
-   aMat = [0 1; 0 0]; bMat = eye(2);  
+   aMat = [0 1; 0 0]; bMat = eye(2);
 
    SUBounds = struct();
 
-   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};  
+   SUBounds.center = \PYGZob{}'sin(t)'; 'cos(t)'\PYGZcb{};
 
-   SUBounds.shape = [9 0; 0 2]; 
+   SUBounds.shape = [9 0; 0 2];
 
    sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 
    x0EllObj = ell\_unitball(2);
 
-   timeVec = [0 10]; 
+   timeVec = [0 10];
 
-   dirsMat = [1 0; 0 1]';  
+   dirsMat = [1 0; 0 1]';
 
    rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
 
@@ -3952,15 +3952,15 @@ There is a method
 to display a content of ellipsoidal tubes.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{aMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;} \PYG{n}{bMat} \PYG{p}{=} \PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{aMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;} \PYG{n}{bMat} \PYG{p}{=} \PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{SUBounds} \PYG{p}{=} \PYG{n}{struct}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{center} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sin(t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cos(t)\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
-\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{shape} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{9} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{;} 
+\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{center} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sin(t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cos(t)\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{shape} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{9} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{;}
 \PYG{n}{sys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{x0EllObj} \PYG{p}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{timeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{10}\PYG{p}{]}\PYG{p}{;} 
+\PYG{n}{timeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{10}\PYG{p}{]}\PYG{p}{;}
 \PYG{k}{for} \PYG{n}{iElem} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{5}
-    \PYG{n}{dirInitial}\PYG{p}{=} \PYG{n+nb}{rand}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;} 
+    \PYG{n}{dirInitial}\PYG{p}{=} \PYG{n+nb}{rand}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
     \PYG{n}{dirInitial} \PYG{p}{=} \PYG{n}{dirInitial} \PYG{o}{./} \PYG{n}{norm}\PYG{p}{(}\PYG{n}{dirInitial}\PYG{p}{)}\PYG{p}{;}
     \PYG{n}{dirsMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,} \PYG{n}{iElem}\PYG{p}{)} \PYG{p}{=} \PYG{n}{dirInitial}\PYG{p}{;}
 \PYG{k}{end}
@@ -4081,10 +4081,10 @@ is done by the following sequence of commands:
 \PYG{n}{aMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;} \PYG{n}{bMat} \PYG{p}{=} \PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} matrices A and B, B is identity}
 \PYG{n}{SUBounds} \PYG{p}{=} \PYG{n}{struct}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} center of the ellipsoid depends on t}
-\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{center} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sin(t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cos(t)\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
+\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{center} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sin(t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cos(t)\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
 \PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{shape} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{9} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{;} \PYG{c}{\PYGZpc{} shape matrix of the ellipsoid is static}
 \PYG{c}{\PYGZpc{} create linear system object}
-\PYG{n}{sys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{sys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} is equal to sys = elltool.linsys.LinSysFactory.create(aMat, bMat, SUBounds)}
 \end{Verbatim}
 
@@ -4095,7 +4095,7 @@ $B$ depend on time, say $A(t)=\left[\begin{array}{cc}
 symbolic:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
-\PYG{n}{atMat} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{0\PYGZsq{}} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1 \PYGZhy{} cos(2*t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}1/t\PYGZsq{}} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{0\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}  
+\PYG{n}{atMat} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{0\PYGZsq{}} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{1 \PYGZhy{} cos(2*t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{\PYGZhy{}1/t\PYGZsq{}} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{0\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
 \PYG{n}{sys\PYGZus{}t} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysFactory}\PYG{p}{.}\PYG{n}{create}\PYG{p}{(}\PYG{n}{atMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
 
@@ -4150,7 +4150,7 @@ we use LinSysDiscrete constructor:
 \PYG{n}{adMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{0.5}\PYG{p}{]}\PYG{p}{;} \PYG{n}{bdMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} matrices A and B}
 \PYG{n}{udBoundsEllObj}  \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} control bounds: unit ball in R}
 \PYG{c}{\PYGZpc{} discrete\PYGZhy{}time system}
-\PYG{n}{dtsys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysDiscrete}\PYG{p}{(}\PYG{n}{adMat}\PYG{p}{,} \PYG{n}{bdMat}\PYG{p}{,} \PYG{n}{udBoundsEllObj}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{dtsys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysDiscrete}\PYG{p}{(}\PYG{n}{adMat}\PYG{p}{,} \PYG{n}{bdMat}\PYG{p}{,} \PYG{n}{udBoundsEllObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} is equal to dtsys = elltool.linsys.LinSysFactory.create(adMat, bdMat,...}
 \PYG{c}{\PYGZpc{}         udBoundsEllObj,...[], [], [], [], \PYGZsq{}d\PYGZsq{}); }
 \end{Verbatim}
@@ -4230,7 +4230,7 @@ polytopes:
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{n}{ellObj} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{[}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{17}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{4} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} define ellipsoid}
 \PYG{c}{\PYGZpc{} define 4 hyperplanes}
-\PYG{n}{hypVec} \PYG{p}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{2} \PYG{l+m+mi}{2} \PYG{l+m+mi}{2} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{hypVec} \PYG{p}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{1} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{;} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{2} \PYG{l+m+mi}{2} \PYG{l+m+mi}{2} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{polObj} \PYG{p}{=} \PYG{n}{hyperplane2polytope}\PYG{p}{(}\PYG{n}{hypVec}\PYG{p}{)} \PYG{o}{+} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{;} \PYG{l+m+mi}{10}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} define polytope}
 \PYG{c}{\PYGZpc{} check if ellipsoid ell intersects with external approximation:}
 \PYG{n}{cutObj}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellObj}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{e\PYGZsq{}}\PYG{p}{)}
@@ -4286,7 +4286,7 @@ improve the quality of approximation, refine function should be used:
 \PYG{c}{\PYGZpc{} snap shot of the reach set at time t = 5}
 \PYG{n}{cutObj} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{l+m+mi}{5}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} check if ellObj intersects the internal approximation}
-\PYG{n}{cutObj}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellObj}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}  
+\PYG{n}{cutObj}\PYG{p}{.}\PYG{n}{intersect}\PYG{p}{(}\PYG{n}{ellObj}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{i\PYGZsq{}}\PYG{p}{)}
 
 \PYG{c}{\PYGZpc{} ans =}
 \PYG{c}{\PYGZpc{} }
@@ -4331,9 +4331,9 @@ existing reach set, function evolve should be used:
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} reach set from time 10 to 14 with the same dynamics}
-\PYG{n}{secRsObj} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{evolve}\PYG{p}{(}\PYG{l+m+mi}{14}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{secRsObj} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{evolve}\PYG{p}{(}\PYG{l+m+mi}{14}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} reach set from time 10 to 12 with new dynamics}
-\PYG{n}{secRsObj} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{evolve}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{,} \PYG{n}{sys\PYGZus{}t}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{secRsObj} \PYG{p}{=} \PYG{n}{firstRsObj}\PYG{p}{.}\PYG{n}{evolve}\PYG{p}{(}\PYG{l+m+mi}{12}\PYG{p}{,} \PYG{n}{sys\PYGZus{}t}\PYG{p}{)}\PYG{p}{;}
 
 \PYG{c}{\PYGZpc{} not only the dynamics, but the inputs can change as well,}
 \PYG{c}{\PYGZpc{} from time 12 to 13 disturbance is added to the system:}
@@ -4354,7 +4354,7 @@ declare the time interval so that the terminating time comes first:
 \PYG{n}{tbTimeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{10} \PYG{l+m+mi}{5}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} backward time interval}
 \PYG{c}{\PYGZpc{} backward reach set}
 \PYG{n}{firstBrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{sys}\PYG{p}{,} \PYG{n}{yEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,}\PYG{c}{...}
-        \PYG{n}{tbTimeVec}\PYG{p}{)}\PYG{p}{;}  
+        \PYG{n}{tbTimeVec}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{firstBrsObj} \PYG{p}{=} \PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{refine}\PYG{p}{(}\PYG{n}{newDirsMat}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} refine the approximation}
 \PYG{c}{\PYGZpc{} further evolution in backward time from 5 to 0; }
 \PYG{n}{secBrsObj} \PYG{p}{=} \PYG{n}{firstBrsObj}\PYG{p}{.}\PYG{n}{evolve}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{)}
@@ -4367,12 +4367,12 @@ using the same functions as for continuous-time systems:
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{n}{timeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{100}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} represents 100 time steps from 1 to 100}
 \PYG{c}{\PYGZpc{} reach set for 100 time steps}
-\PYG{n}{secDtrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{dtsys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{secDtrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{dtsys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{secDtrsObj} \PYG{p}{=} \PYG{n}{secDtrsObj}\PYG{p}{.}\PYG{n}{evolve}\PYG{p}{(}\PYG{l+m+mi}{200}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} compute next 100 time steps}
 
 \PYG{n}{tbTimeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{50} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} backward time interval}
 \PYG{c}{\PYGZpc{} backward reach set}
-\PYG{n}{dtbrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{dtsys}\PYG{p}{,} \PYG{n}{yEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{tbTimeVec}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{dtbrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{dtsys}\PYG{p}{,} \PYG{n}{yEllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{tbTimeVec}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{dtbrsObj} \PYG{p}{=} \PYG{n}{dtbrsObj}\PYG{p}{.}\PYG{n}{refine}\PYG{p}{(}\PYG{n}{newDirsMat}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} refine the approximation}
 \PYG{c}{\PYGZpc{} get external approximating ellipsoids and time values}
 \PYG{p}{[}\PYG{n}{externallEllMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{]} \PYG{p}{=} \PYG{n}{dtbrsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ea}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
@@ -4407,46 +4407,46 @@ utilities:
 Here we list system parameters available from the ’default’
 configuration:
 \begin{enumerate}
-\item {} 
+\item {}
 version = ’1.4dev’ - current version of \emph{ET}.
 
-\item {} 
+\item {}
 isVerbose = false - makes all the calls to \emph{ET} routines silent, and
 no information except errors is displayed.
 
-\item {} 
+\item {}
 absTol = 1e-7 - absolute tolerance.
 
-\item {} 
+\item {}
 relTol = 1e-5 - relative tolerance.
 
-\item {} 
+\item {}
 nTimeGridPoints = 200 - density of the time grid for the continuous
 time reach set computation. This parameter directly affects the
 number of ellipsoids to be stored in the
 ReachContinuous$\backslash$ReachDiscrete object.
 
-\item {} 
+\item {}
 ODESolverName = ode45 - specifies the ODE solver for continuous time
 reach set computation.
 
-\item {} 
+\item {}
 isODENormControl = ’on’ - switches on and off the norm control in the
 ODE solver. When turned on, it slows down the computation, but
 improves the accuracy.
 
-\item {} 
+\item {}
 isEnabledOdeSolverOptions = false - when set to false, calls the ODE
 solver without any additional options like norm control. It makes the
 computation faster but less accurate. Otherwise, it is assumed to be
 true, and only in this case the previous option makes a difference.
 
-\item {} 
+\item {}
 nPlot2dPoints = 200 - the number of points used to plot a 2D
 ellipsoid. This parameter also affects the quality of 2D reach tube
 and reach set plots.
 
-\item {} 
+\item {}
 nPlot3dPoints = 200 - the number of points used to plot a 3D
 ellipsoid. This parameter also affects the quality of 3D reach set
 plots.
@@ -4484,41 +4484,41 @@ setters.
 \label{chap_implement:visualization}
 \emph{Ellipsoidal Toolbox} has several plotting routines:
 \begin{itemize}
-\item {} 
+\item {}
 ellipsoid/plot - plots one or more ellipsoids, or arrays of
 ellipsoids, defined in ${\bf R}$, ${\bf R}^2$ or
 ${\bf R}^3$.
 
-\item {} 
+\item {}
 ellipsoid/minksum - plots geometric sum of finite number of
 ellipsoids defined in ${\bf R}$, ${\bf R}^2$ or
 ${\bf R}^3$.
 
-\item {} 
+\item {}
 ellipsoid/minkdiff - plots geometric difference (if it is not an
 empty set) of two ellipsoids defined in ${\bf R}$,
 ${\bf R}^2$ or ${\bf R}^3$.
 
-\item {} 
+\item {}
 ellipsoid/minkmp - plots geometric (Minkowski) sum of the geometric
 difference of two ellipsoids and the geometric sum of $n$
 ellipsoids defined in ${\bf R}$, ${\bf R}^2$ or
 ${\bf R}^3$.
 
-\item {} 
+\item {}
 ellipsoid/minkpm - plots geometric (Minkowski) difference of the
 geometric sum of ellipsoids and a single ellipsoid defined in
 ${\bf R}$, ${\bf R}^2$ or ${\bf R}^3$.
 
-\item {} 
+\item {}
 hyperplane/plot - plots one or more hyperplanes, or arrays of
 hyperplanes, defined in ${\bf R}^2$ or ${\bf R}^3$.
 
-\item {} 
+\item {}
 reach/plot\_ea - plots external approximation of the reach set whose
 dimension is $2$ or $3$.
 
-\item {} 
+\item {}
 reach/plot\_ia - plots internal approximation of the reach set whose
 dimension is $2$ or $3$.
 
@@ -4549,7 +4549,7 @@ secEllObj = firstEllObj.getInv();
 
 \% columns of basisMat must be orthogonal
 
-basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1].'; 
+basisMat = [1 0 0 0; 0 0 1 0; 0 1 0 1].';
 
 
 
@@ -4559,7 +4559,7 @@ bufEllVec = [firstEllObj secEllObj];
 
 \% array ellVec contains projections of firstEllObj and secEllObj
 
-ellVec = bufEllVec.projection(basisMat)  
+ellVec = bufEllVec.projection(basisMat)
 
 
 
@@ -4752,7 +4752,7 @@ Spring-mass system with disturbance:
 \PYG{n}{bMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{m1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{m2}\PYG{p}{]}\PYG{p}{;}
 \PYG{n}{uBoundsEllObj} \PYG{p}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} linear system}
-\PYG{n}{lsys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{uBoundsEllObj}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{lsys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{uBoundsEllObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{timeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{4}\PYG{p}{]}\PYG{p}{;}  \PYG{c}{\PYGZpc{} time interval\PYGZpc{} initial conditions:}
 \PYG{n}{x0EllObj} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{2} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{.}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{ + ellipsoid([0.01 0 0 0; 0 0.01 0 0; 0 0 0 0;...}
 \PYG{l+s}{           0 0 0 0]);}
@@ -4760,7 +4760,7 @@ Spring-mass system with disturbance:
 \PYG{l+s}{dirsMat = [1 0 1 0; 1 \PYGZhy{}1 0 0; 0 \PYGZhy{}1 0 1; 1 1 \PYGZhy{}1 1; \PYGZhy{}1 1 1 0; \PYGZhy{}2 0 1 1].\PYGZsq{}}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} reach set}
 \PYG{n}{rsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{lsys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
-    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isRegEnabled\PYGZsq{}}\PYG{p}{,} \PYG{n}{true}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isJustCheck\PYGZsq{}}\PYG{p}{,} \PYG{n}{false}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{regTol\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{1e\PYGZhy{}3}\PYG{p}{)}\PYG{p}{;}  
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isRegEnabled\PYGZsq{}}\PYG{p}{,} \PYG{n}{true}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isJustCheck\PYGZsq{}}\PYG{p}{,} \PYG{n}{false}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{regTol\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{1e\PYGZhy{}3}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{basisMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}  \PYG{c}{\PYGZpc{} orthogonal basis of (x1, x2) subspace}
 \PYG{n}{psObj} \PYG{p}{=} \PYG{n}{rsObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} reach set projection}
 \PYG{c}{\PYGZpc{} plot projection of reach set external approximation:}
@@ -4815,10 +4815,10 @@ closed-loop reach set of the system with disturbance.
 \PYG{n}{vEllObj} \PYG{p}{=} \PYG{l+m+mf}{0.05}\PYG{o}{*}\PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} linear system with disturbance}
 \PYG{n}{lsysd} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{uBoundsEllObj}\PYG{p}{,}\PYG{c}{...}
-    \PYG{n}{gMat}\PYG{p}{,} \PYG{n}{vEllObj}\PYG{p}{)}\PYG{p}{;} 
+    \PYG{n}{gMat}\PYG{p}{,} \PYG{n}{vEllObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} reach set}
 \PYG{n}{rsdObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{lsysd}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,}\PYG{c}{...}
-    \PYG{n}{timeVec}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isRegEnabled\PYGZsq{}}\PYG{p}{,} \PYG{n}{true}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isJustCheck\PYGZsq{}}\PYG{p}{,} \PYG{n}{false}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{regTol\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{1e\PYGZhy{}1}\PYG{p}{)}\PYG{p}{;} 
+    \PYG{n}{timeVec}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isRegEnabled\PYGZsq{}}\PYG{p}{,} \PYG{n}{true}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isJustCheck\PYGZsq{}}\PYG{p}{,} \PYG{n}{false}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{regTol\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mf}{1e\PYGZhy{}1}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{psdObj} \PYG{p}{=} \PYG{n}{rsdObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} reach set projection onto (x1, x2)}
 \PYG{c}{\PYGZpc{} plot projection of reach set external approximation:}
 
@@ -4856,15 +4856,15 @@ By \emph{switched systems} we mean systems whose dynamics changes at known
 times. Consider the RLC circuit shown in \hyperref[chap_examples:rlcfig]{figure  \ref*{chap_examples:rlcfig}}. It has two
 inputs - the voltage ($v$) and current ($i$) sources. Define
 \begin{itemize}
-\item {} 
+\item {}
 $x_1$ - voltage across capacitor $C_1$, so
 $C_1\dot{x}_1$ is the corresponding current;
 
-\item {} 
+\item {}
 $x_2$ - voltage across capacitor $C_2$, so the
 corresponding current is $C_2\dot{x}_2$.
 
-\item {} 
+\item {}
 $x_3$ - current through the inductor $L$, so the voltage
 across the inductor is $L\dot{x}_3$.
 
@@ -5112,37 +5112,37 @@ $i=1,2,3,4$.
 
 Define
 \begin{itemize}
-\item {} 
+\item {}
 $v_i$ - average speed in mph, in the $i$-th cell,
 $i=1,2,3,4$;
 
-\item {} 
+\item {}
 $w_i$ - backward congestion wave propagation speed in mph, in
 the $i$-th highway cell, $i=1,2,3,4$;
 
-\item {} 
+\item {}
 $x_{Mi}$ - maximum allowed density in the $i$-th cell;
 when this velue is reached, there is a traffic jam,
 $i=1,2,3,4$;
 
-\item {} 
+\item {}
 $d_i$ - length of $i$-th cell in miles,
 $i=1,2,3,4$;
 
-\item {} 
+\item {}
 $T_s$ - sampling time in hours;
 
-\item {} 
+\item {}
 $b$ - split ratio for the off-ramp;
 
-\item {} 
+\item {}
 $u_1$ - traffic flow coming into the highway segment, in
 vehicles per hour (vph);
 
-\item {} 
+\item {}
 $u_2$ - traffic flow coming out of the highway segment (vph);
 
-\item {} 
+\item {}
 $u_3$ - on-ramp traffic flow (vph).
 
 \end{itemize}
@@ -5251,7 +5251,7 @@ system. We first define the two linear systems and the guard.
     \PYG{n}{firstUBoundsEllObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} congestion mode }
 \PYG{n}{secSys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysDiscrete}\PYG{p}{(}\PYG{n}{secAMat}\PYG{p}{,} \PYG{n}{secBMat}\PYG{p}{,}\PYG{c}{...}
- \PYG{n}{secUBoundsEllObj}\PYG{p}{,} \PYG{n}{gMat}\PYG{p}{,} \PYG{n}{vVec}\PYG{p}{)}\PYG{p}{;} 
+ \PYG{n}{secUBoundsEllObj}\PYG{p}{,} \PYG{n}{gMat}\PYG{p}{,} \PYG{n}{vVec}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} define guard:}
 \PYG{n}{grdHypObj} \PYG{p}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{n}{xM2}\PYG{p}{)}\PYG{p}{;}
 \end{Verbatim}
@@ -5269,7 +5269,7 @@ external approximation of the reach set by a single ellipsoid.
 \PYG{n}{nSteps} \PYG{p}{=} \PYG{l+m+mi}{100}\PYG{p}{;}  \PYG{c}{\PYGZpc{} number of time steps}
 
 \PYG{c}{\PYGZpc{} free\PYGZhy{}flow reach set}
-\PYG{n}{ffrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{firstSys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{n}{nSteps}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{ffrsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachDiscrete}\PYG{p}{(}\PYG{n}{firstSys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{n}{nSteps}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{externalEllMat} \PYG{p}{=} \PYG{n}{ffrsObj}\PYG{p}{.}\PYG{n}{get\PYGZus{}ea}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}  \PYG{c}{\PYGZpc{} 101x1 array of external ellipsoids}
 \end{Verbatim}
 
@@ -5279,9 +5279,9 @@ that intersect the guard.
 
 \begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
 \PYG{c}{\PYGZpc{} some of the intersections are empty}
-\PYG{n}{intersectEllVec} \PYG{p}{=} \PYG{n}{externalEllMat}\PYG{p}{.}\PYG{n}{hpintersection}\PYG{p}{(}\PYG{n}{grdHypObj}\PYG{p}{)}\PYG{p}{;}  
+\PYG{n}{intersectEllVec} \PYG{p}{=} \PYG{n}{externalEllMat}\PYG{p}{.}\PYG{n}{hpintersection}\PYG{p}{(}\PYG{n}{grdHypObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} determine nonempty intersections}
-\PYG{n}{indNonEmptyVec} \PYG{p}{=} \PYG{n+nb}{find}\PYG{p}{(}\PYG{o}{\PYGZti{}}\PYG{n}{isEmpty}\PYG{p}{(}\PYG{n}{intersectEllVec}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;} 
+\PYG{n}{indNonEmptyVec} \PYG{p}{=} \PYG{n+nb}{find}\PYG{p}{(}\PYG{o}{\PYGZti{}}\PYG{n}{isEmpty}\PYG{p}{(}\PYG{n}{intersectEllVec}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{}}
 \PYG{n}{min}\PYG{p}{(}\PYG{n}{indNonEmptyVec}\PYG{p}{)}
 
@@ -5387,13 +5387,13 @@ the guard.
 \PYG{n}{ellObjVec}\PYG{p}{(}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{fill\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{}ellObjVec.plot(\PYGZsq{}color\PYGZsq{}, [0 0 1], \PYGZsq{}fill\PYGZsq{}, 1);}
 \PYG{k}{end}
-\PYG{n}{hold} \PYG{n}{on}  
+\PYG{n}{hold} \PYG{n}{on}
 \PYG{n}{ellObj} \PYG{p}{=} \PYG{n}{x0EllObj}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{ellObj}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{c}{\PYGZpc{} ellObj.plot(\PYGZsq{}color\PYGZsq{}, [1 0 1]);}
 \PYG{n}{hold} \PYG{n}{on}
 \PYG{n}{hyp} \PYG{p}{=} \PYG{n}{hyperplane}\PYG{p}{(}\PYG{p}{[}\PYG{n}{hypVec}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;} \PYG{n}{hypVec}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{]}\PYG{p}{,} \PYG{n}{hypScal}\PYG{p}{)}\PYG{p}{;}
-\PYG{n}{hyp}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{center\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{170} \PYG{l+m+mi}{200}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}       
+\PYG{n}{hyp}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{center\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{170} \PYG{l+m+mi}{200}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{color\PYGZsq{}}\PYG{p}{,} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{,} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{relDataPlotter\PYGZsq{}}\PYG{p}{,} \PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{crsexternalEllMat} \PYG{p}{=} \PYG{n}{crsObjVec}\PYG{p}{.}\PYG{n}{get\PYGZus{}ea}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
 \PYG{n}{ellObjVec} \PYG{p}{=} \PYG{n}{crsexternalEllMat}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{83}\PYG{p}{)}\PYG{p}{.}\PYG{n}{projection}\PYG{p}{(}\PYG{n}{basisMat}\PYG{p}{)}\PYG{p}{;}
 \PYG{k}{for} \PYG{n}{iElem} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{l+m+mi}{83}
@@ -11711,187 +11711,187 @@ Fields:
 
 See the description of the following methods in {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation]{smartdb.relations.ATypifiedStaticRelation}} for smartdb.relations.ATypifiedStaticRelation:
 \begin{itemize}
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-adddata]{smartdb.relations.ATypifiedStaticRelation.addData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-adddataalongdim]{smartdb.relations.ATypifiedStaticRelation.addDataAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-addtuples]{smartdb.relations.ATypifiedStaticRelation.addTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applygetfunc]{smartdb.relations.ATypifiedStaticRelation.applyGetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applysetfunc]{smartdb.relations.ATypifiedStaticRelation.applySetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applytuplegetfunc]{smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-cleardata]{smartdb.relations.ATypifiedStaticRelation.clearData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-clone]{smartdb.relations.ATypifiedStaticRelation.clone}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-copyfrom]{smartdb.relations.ATypifiedStaticRelation.copyFrom}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-createinstance]{smartdb.relations.ATypifiedStaticRelation.createInstance}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-disponui]{smartdb.relations.ATypifiedStaticRelation.dispOnUI}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-display]{smartdb.relations.ATypifiedStaticRelation.display}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-fromstructlist]{smartdb.relations.ATypifiedStaticRelation.fromStructList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getcopy]{smartdb.relations.ATypifiedStaticRelation.getCopy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfielddescrlist]{smartdb.relations.ATypifiedStaticRelation.getFieldDescrList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldisnull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldnamelist]{smartdb.relations.ATypifiedStaticRelation.getFieldNameList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldprojection]{smartdb.relations.ATypifiedStaticRelation.getFieldProjection}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldtypelist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat]{smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull]{smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getmindimensionsize]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getmindimensionality]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionality}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getnelems]{smartdb.relations.ATypifiedStaticRelation.getNElems}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getnfields]{smartdb.relations.ATypifiedStaticRelation.getNFields}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getntuples]{smartdb.relations.ATypifiedStaticRelation.getNTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getsortindex]{smartdb.relations.ATypifiedStaticRelation.getSortIndex}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuples]{smartdb.relations.ATypifiedStaticRelation.getTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby]{smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesindexedby]{smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith]{smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquedata]{smartdb.relations.ATypifiedStaticRelation.getUniqueData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim]{smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquetuples]{smartdb.relations.ATypifiedStaticRelation.getUniqueTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-initbyemptydataset]{smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-initbynulldataset]{smartdb.relations.ATypifiedStaticRelation.initByNullDataSet}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-isfields]{smartdb.relations.ATypifiedStaticRelation.isFields}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-ismemberalongdim]{smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-ismembertuples]{smartdb.relations.ATypifiedStaticRelation.isMemberTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-isuniquekey]{smartdb.relations.ATypifiedStaticRelation.isUniqueKey}}
 
-\item {} 
+\item {}
 {\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.isequal\_}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-removeduplicatetuples]{smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-removetuples]{smartdb.relations.ATypifiedStaticRelation.removeTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-reorderdata]{smartdb.relations.ATypifiedStaticRelation.reorderData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-saveobj]{smartdb.relations.ATypifiedStaticRelation.saveObj}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-setdata]{smartdb.relations.ATypifiedStaticRelation.setData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-setfield]{smartdb.relations.ATypifiedStaticRelation.setField}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-sortby]{smartdb.relations.ATypifiedStaticRelation.sortBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-sortbyalongdim]{smartdb.relations.ATypifiedStaticRelation.sortByAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-toarray]{smartdb.relations.ATypifiedStaticRelation.toArray}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tocell]{smartdb.relations.ATypifiedStaticRelation.toCell}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tocellisnull]{smartdb.relations.ATypifiedStaticRelation.toCellIsNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-todispcell]{smartdb.relations.ATypifiedStaticRelation.toDispCell}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tomat]{smartdb.relations.ATypifiedStaticRelation.toMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-unionwith]{smartdb.relations.ATypifiedStaticRelation.unionWith}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-writetocsv]{smartdb.relations.ATypifiedStaticRelation.writeToCSV}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-writetoxls]{smartdb.relations.ATypifiedStaticRelation.writeToXLS}}
 
 \end{itemize}
@@ -12453,187 +12453,187 @@ TODO: correct description of the fields in
 
 See the description of the following methods in {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation]{smartdb.relations.ATypifiedStaticRelation}} for smartdb.relations.ATypifiedStaticRelation:
 \begin{itemize}
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-adddata]{smartdb.relations.ATypifiedStaticRelation.addData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-adddataalongdim]{smartdb.relations.ATypifiedStaticRelation.addDataAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-addtuples]{smartdb.relations.ATypifiedStaticRelation.addTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applygetfunc]{smartdb.relations.ATypifiedStaticRelation.applyGetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applysetfunc]{smartdb.relations.ATypifiedStaticRelation.applySetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applytuplegetfunc]{smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-cleardata]{smartdb.relations.ATypifiedStaticRelation.clearData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-clone]{smartdb.relations.ATypifiedStaticRelation.clone}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-copyfrom]{smartdb.relations.ATypifiedStaticRelation.copyFrom}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-createinstance]{smartdb.relations.ATypifiedStaticRelation.createInstance}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-disponui]{smartdb.relations.ATypifiedStaticRelation.dispOnUI}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-display]{smartdb.relations.ATypifiedStaticRelation.display}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-fromstructlist]{smartdb.relations.ATypifiedStaticRelation.fromStructList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getcopy]{smartdb.relations.ATypifiedStaticRelation.getCopy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfielddescrlist]{smartdb.relations.ATypifiedStaticRelation.getFieldDescrList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldisnull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldnamelist]{smartdb.relations.ATypifiedStaticRelation.getFieldNameList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldprojection]{smartdb.relations.ATypifiedStaticRelation.getFieldProjection}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldtypelist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat]{smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull]{smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getmindimensionsize]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getmindimensionality]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionality}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getnelems]{smartdb.relations.ATypifiedStaticRelation.getNElems}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getnfields]{smartdb.relations.ATypifiedStaticRelation.getNFields}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getntuples]{smartdb.relations.ATypifiedStaticRelation.getNTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getsortindex]{smartdb.relations.ATypifiedStaticRelation.getSortIndex}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuples]{smartdb.relations.ATypifiedStaticRelation.getTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby]{smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesindexedby]{smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith]{smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquedata]{smartdb.relations.ATypifiedStaticRelation.getUniqueData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim]{smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquetuples]{smartdb.relations.ATypifiedStaticRelation.getUniqueTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-initbyemptydataset]{smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-initbynulldataset]{smartdb.relations.ATypifiedStaticRelation.initByNullDataSet}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-isfields]{smartdb.relations.ATypifiedStaticRelation.isFields}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-ismemberalongdim]{smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-ismembertuples]{smartdb.relations.ATypifiedStaticRelation.isMemberTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-isuniquekey]{smartdb.relations.ATypifiedStaticRelation.isUniqueKey}}
 
-\item {} 
+\item {}
 {\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.isequal\_}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-removeduplicatetuples]{smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-removetuples]{smartdb.relations.ATypifiedStaticRelation.removeTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-reorderdata]{smartdb.relations.ATypifiedStaticRelation.reorderData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-saveobj]{smartdb.relations.ATypifiedStaticRelation.saveObj}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-setdata]{smartdb.relations.ATypifiedStaticRelation.setData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-setfield]{smartdb.relations.ATypifiedStaticRelation.setField}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-sortby]{smartdb.relations.ATypifiedStaticRelation.sortBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-sortbyalongdim]{smartdb.relations.ATypifiedStaticRelation.sortByAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-toarray]{smartdb.relations.ATypifiedStaticRelation.toArray}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tocell]{smartdb.relations.ATypifiedStaticRelation.toCell}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tocellisnull]{smartdb.relations.ATypifiedStaticRelation.toCellIsNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-todispcell]{smartdb.relations.ATypifiedStaticRelation.toDispCell}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tomat]{smartdb.relations.ATypifiedStaticRelation.toMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-unionwith]{smartdb.relations.ATypifiedStaticRelation.unionWith}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-writetocsv]{smartdb.relations.ATypifiedStaticRelation.writeToCSV}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-writetoxls]{smartdb.relations.ATypifiedStaticRelation.writeToXLS}}
 
 \end{itemize}
@@ -13040,187 +13040,187 @@ TODO: correct description of the fields in
 
 See the description of the following methods in {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation]{smartdb.relations.ATypifiedStaticRelation}} for smartdb.relations.ATypifiedStaticRelation:
 \begin{itemize}
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-adddata]{smartdb.relations.ATypifiedStaticRelation.addData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-adddataalongdim]{smartdb.relations.ATypifiedStaticRelation.addDataAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-addtuples]{smartdb.relations.ATypifiedStaticRelation.addTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applygetfunc]{smartdb.relations.ATypifiedStaticRelation.applyGetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applysetfunc]{smartdb.relations.ATypifiedStaticRelation.applySetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applytuplegetfunc]{smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-cleardata]{smartdb.relations.ATypifiedStaticRelation.clearData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-clone]{smartdb.relations.ATypifiedStaticRelation.clone}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-copyfrom]{smartdb.relations.ATypifiedStaticRelation.copyFrom}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-createinstance]{smartdb.relations.ATypifiedStaticRelation.createInstance}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-disponui]{smartdb.relations.ATypifiedStaticRelation.dispOnUI}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-display]{smartdb.relations.ATypifiedStaticRelation.display}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-fromstructlist]{smartdb.relations.ATypifiedStaticRelation.fromStructList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getcopy]{smartdb.relations.ATypifiedStaticRelation.getCopy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfielddescrlist]{smartdb.relations.ATypifiedStaticRelation.getFieldDescrList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldisnull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldnamelist]{smartdb.relations.ATypifiedStaticRelation.getFieldNameList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldprojection]{smartdb.relations.ATypifiedStaticRelation.getFieldProjection}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldtypelist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat]{smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull]{smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getmindimensionsize]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getmindimensionality]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionality}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getnelems]{smartdb.relations.ATypifiedStaticRelation.getNElems}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getnfields]{smartdb.relations.ATypifiedStaticRelation.getNFields}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getntuples]{smartdb.relations.ATypifiedStaticRelation.getNTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getsortindex]{smartdb.relations.ATypifiedStaticRelation.getSortIndex}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuples]{smartdb.relations.ATypifiedStaticRelation.getTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby]{smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesindexedby]{smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith]{smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquedata]{smartdb.relations.ATypifiedStaticRelation.getUniqueData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim]{smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquetuples]{smartdb.relations.ATypifiedStaticRelation.getUniqueTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-initbyemptydataset]{smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-initbynulldataset]{smartdb.relations.ATypifiedStaticRelation.initByNullDataSet}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-isfields]{smartdb.relations.ATypifiedStaticRelation.isFields}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-ismemberalongdim]{smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-ismembertuples]{smartdb.relations.ATypifiedStaticRelation.isMemberTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-isuniquekey]{smartdb.relations.ATypifiedStaticRelation.isUniqueKey}}
 
-\item {} 
+\item {}
 {\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.isequal\_}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-removeduplicatetuples]{smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-removetuples]{smartdb.relations.ATypifiedStaticRelation.removeTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-reorderdata]{smartdb.relations.ATypifiedStaticRelation.reorderData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-saveobj]{smartdb.relations.ATypifiedStaticRelation.saveObj}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-setdata]{smartdb.relations.ATypifiedStaticRelation.setData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-setfield]{smartdb.relations.ATypifiedStaticRelation.setField}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-sortby]{smartdb.relations.ATypifiedStaticRelation.sortBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-sortbyalongdim]{smartdb.relations.ATypifiedStaticRelation.sortByAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-toarray]{smartdb.relations.ATypifiedStaticRelation.toArray}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tocell]{smartdb.relations.ATypifiedStaticRelation.toCell}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tocellisnull]{smartdb.relations.ATypifiedStaticRelation.toCellIsNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-todispcell]{smartdb.relations.ATypifiedStaticRelation.toDispCell}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tomat]{smartdb.relations.ATypifiedStaticRelation.toMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-unionwith]{smartdb.relations.ATypifiedStaticRelation.unionWith}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-writetocsv]{smartdb.relations.ATypifiedStaticRelation.writeToCSV}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-writetoxls]{smartdb.relations.ATypifiedStaticRelation.writeToXLS}}
 
 \end{itemize}
@@ -13538,187 +13538,187 @@ Fields:
 
 See the description of the following methods in {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation]{smartdb.relations.ATypifiedStaticRelation}} for smartdb.relations.ATypifiedStaticRelation:
 \begin{itemize}
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-adddata]{smartdb.relations.ATypifiedStaticRelation.addData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-adddataalongdim]{smartdb.relations.ATypifiedStaticRelation.addDataAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-addtuples]{smartdb.relations.ATypifiedStaticRelation.addTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applygetfunc]{smartdb.relations.ATypifiedStaticRelation.applyGetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applysetfunc]{smartdb.relations.ATypifiedStaticRelation.applySetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-applytuplegetfunc]{smartdb.relations.ATypifiedStaticRelation.applyTupleGetFunc}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-cleardata]{smartdb.relations.ATypifiedStaticRelation.clearData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-clone]{smartdb.relations.ATypifiedStaticRelation.clone}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-copyfrom]{smartdb.relations.ATypifiedStaticRelation.copyFrom}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-createinstance]{smartdb.relations.ATypifiedStaticRelation.createInstance}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-disponui]{smartdb.relations.ATypifiedStaticRelation.dispOnUI}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-display]{smartdb.relations.ATypifiedStaticRelation.display}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-fromstructlist]{smartdb.relations.ATypifiedStaticRelation.fromStructList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getcopy]{smartdb.relations.ATypifiedStaticRelation.getCopy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfielddescrlist]{smartdb.relations.ATypifiedStaticRelation.getFieldDescrList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldisnull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldisvaluenull]{smartdb.relations.ATypifiedStaticRelation.getFieldIsValueNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldnamelist]{smartdb.relations.ATypifiedStaticRelation.getFieldNameList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldprojection]{smartdb.relations.ATypifiedStaticRelation.getFieldProjection}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldtypelist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldtypespeclist]{smartdb.relations.ATypifiedStaticRelation.getFieldTypeSpecList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getfieldvaluesizemat]{smartdb.relations.ATypifiedStaticRelation.getFieldValueSizeMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getisfieldvaluenull]{smartdb.relations.ATypifiedStaticRelation.getIsFieldValueNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getmindimensionsize]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionSize}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getmindimensionality]{smartdb.relations.ATypifiedStaticRelation.getMinDimensionality}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getnelems]{smartdb.relations.ATypifiedStaticRelation.getNElems}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getnfields]{smartdb.relations.ATypifiedStaticRelation.getNFields}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getntuples]{smartdb.relations.ATypifiedStaticRelation.getNTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getsortindex]{smartdb.relations.ATypifiedStaticRelation.getSortIndex}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuples]{smartdb.relations.ATypifiedStaticRelation.getTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesfilteredby]{smartdb.relations.ATypifiedStaticRelation.getTuplesFilteredBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesindexedby]{smartdb.relations.ATypifiedStaticRelation.getTuplesIndexedBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-gettuplesjoinedwith]{smartdb.relations.ATypifiedStaticRelation.getTuplesJoinedWith}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquedata]{smartdb.relations.ATypifiedStaticRelation.getUniqueData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquedataalongdim]{smartdb.relations.ATypifiedStaticRelation.getUniqueDataAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-getuniquetuples]{smartdb.relations.ATypifiedStaticRelation.getUniqueTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-initbyemptydataset]{smartdb.relations.ATypifiedStaticRelation.initByEmptyDataSet}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-initbynulldataset]{smartdb.relations.ATypifiedStaticRelation.initByNullDataSet}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-isfields]{smartdb.relations.ATypifiedStaticRelation.isFields}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-ismemberalongdim]{smartdb.relations.ATypifiedStaticRelation.isMemberAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-ismembertuples]{smartdb.relations.ATypifiedStaticRelation.isMemberTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-isuniquekey]{smartdb.relations.ATypifiedStaticRelation.isUniqueKey}}
 
-\item {} 
+\item {}
 {\color{red}\bfseries{}smartdb.relations.ATypifiedStaticRelation.isequal\_}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-removeduplicatetuples]{smartdb.relations.ATypifiedStaticRelation.removeDuplicateTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-removetuples]{smartdb.relations.ATypifiedStaticRelation.removeTuples}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-reorderdata]{smartdb.relations.ATypifiedStaticRelation.reorderData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-saveobj]{smartdb.relations.ATypifiedStaticRelation.saveObj}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-setdata]{smartdb.relations.ATypifiedStaticRelation.setData}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-setfield]{smartdb.relations.ATypifiedStaticRelation.setField}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-sortby]{smartdb.relations.ATypifiedStaticRelation.sortBy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-sortbyalongdim]{smartdb.relations.ATypifiedStaticRelation.sortByAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-toarray]{smartdb.relations.ATypifiedStaticRelation.toArray}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tocell]{smartdb.relations.ATypifiedStaticRelation.toCell}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tocellisnull]{smartdb.relations.ATypifiedStaticRelation.toCellIsNull}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-todispcell]{smartdb.relations.ATypifiedStaticRelation.toDispCell}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tomat]{smartdb.relations.ATypifiedStaticRelation.toMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-tostruct]{smartdb.relations.ATypifiedStaticRelation.toStruct}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-unionwith]{smartdb.relations.ATypifiedStaticRelation.unionWith}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-unionwithalongdim]{smartdb.relations.ATypifiedStaticRelation.unionWithAlongDim}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-writetocsv]{smartdb.relations.ATypifiedStaticRelation.writeToCSV}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:smartdb-relations-atypifiedstaticrelation-writetoxls]{smartdb.relations.ATypifiedStaticRelation.writeToXLS}}
 
 \end{itemize}
@@ -15502,121 +15502,121 @@ Example:
 
 See the description of the following methods in {\hyperref[chap_functions:elltool-reach-areach]{elltool.reach.AReach}} for elltool.reach.AReach:
 \begin{itemize}
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-cut]{elltool.reach.AReach.cut}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-dimension]{elltool.reach.AReach.dimension}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-display]{elltool.reach.AReach.display}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-evolve]{elltool.reach.AReach.evolve}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getabstol]{elltool.reach.AReach.getAbsTol}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getcopy]{elltool.reach.AReach.getCopy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-geteascalefactor]{elltool.reach.AReach.getEaScaleFactor}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getelltuberel]{elltool.reach.AReach.getEllTubeRel}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getelltubeunionrel]{elltool.reach.AReach.getEllTubeUnionRel}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getextprobdynamicslist]{elltool.reach.AReach.getExtProbDynamicsList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getgooddirsetlist]{elltool.reach.AReach.getGoodDirSetList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getiascalefactor]{elltool.reach.AReach.getIaScaleFactor}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getinitialset]{elltool.reach.AReach.getInitialSet}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getintprobdynamicslist]{elltool.reach.AReach.getIntProbDynamicsList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getnplot2dpoints]{elltool.reach.AReach.getNPlot2dPoints}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getnplot3dpoints]{elltool.reach.AReach.getNPlot3dPoints}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getntimegridpoints]{elltool.reach.AReach.getNTimeGridPoints}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getreltol]{elltool.reach.AReach.getRelTol}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getswitchtimevec]{elltool.reach.AReach.getSwitchTimeVec}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getsystemlist]{elltool.reach.AReach.getSystemList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-center]{elltool.reach.AReach.get\_center}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-directions]{elltool.reach.AReach.get\_directions}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-ea]{elltool.reach.AReach.get\_ea}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-goodcurves]{elltool.reach.AReach.get\_goodcurves}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-ia]{elltool.reach.AReach.get\_ia}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-system]{elltool.reach.AReach.get\_system}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-intersect]{elltool.reach.AReach.intersect}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-isempty]{elltool.reach.AReach.isEmpty}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-isequal]{elltool.reach.AReach.isEqual}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-isbackward]{elltool.reach.AReach.isbackward}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-iscut]{elltool.reach.AReach.iscut}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-isprojection]{elltool.reach.AReach.isprojection}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-plotbyea]{elltool.reach.AReach.plotByEa}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-plotbyia]{elltool.reach.AReach.plotByIa}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-plotea]{elltool.reach.AReach.plotEa}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-plotia]{elltool.reach.AReach.plotIa}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-projection]{elltool.reach.AReach.projection}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-refine]{elltool.reach.AReach.refine}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-repmat]{elltool.reach.AReach.repMat}}
 
 \end{itemize}
@@ -15665,121 +15665,121 @@ Example:
 
 See the description of the following methods in {\hyperref[chap_functions:elltool-reach-areach]{elltool.reach.AReach}} for elltool.reach.AReach:
 \begin{itemize}
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-cut]{elltool.reach.AReach.cut}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-dimension]{elltool.reach.AReach.dimension}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-display]{elltool.reach.AReach.display}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-evolve]{elltool.reach.AReach.evolve}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getabstol]{elltool.reach.AReach.getAbsTol}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getcopy]{elltool.reach.AReach.getCopy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-geteascalefactor]{elltool.reach.AReach.getEaScaleFactor}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getelltuberel]{elltool.reach.AReach.getEllTubeRel}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getelltubeunionrel]{elltool.reach.AReach.getEllTubeUnionRel}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getextprobdynamicslist]{elltool.reach.AReach.getExtProbDynamicsList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getgooddirsetlist]{elltool.reach.AReach.getGoodDirSetList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getiascalefactor]{elltool.reach.AReach.getIaScaleFactor}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getinitialset]{elltool.reach.AReach.getInitialSet}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getintprobdynamicslist]{elltool.reach.AReach.getIntProbDynamicsList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getnplot2dpoints]{elltool.reach.AReach.getNPlot2dPoints}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getnplot3dpoints]{elltool.reach.AReach.getNPlot3dPoints}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getntimegridpoints]{elltool.reach.AReach.getNTimeGridPoints}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getreltol]{elltool.reach.AReach.getRelTol}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getswitchtimevec]{elltool.reach.AReach.getSwitchTimeVec}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-getsystemlist]{elltool.reach.AReach.getSystemList}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-center]{elltool.reach.AReach.get\_center}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-directions]{elltool.reach.AReach.get\_directions}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-ea]{elltool.reach.AReach.get\_ea}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-goodcurves]{elltool.reach.AReach.get\_goodcurves}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-ia]{elltool.reach.AReach.get\_ia}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-get-system]{elltool.reach.AReach.get\_system}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-intersect]{elltool.reach.AReach.intersect}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-isempty]{elltool.reach.AReach.isEmpty}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-isequal]{elltool.reach.AReach.isEqual}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-isbackward]{elltool.reach.AReach.isbackward}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-iscut]{elltool.reach.AReach.iscut}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-isprojection]{elltool.reach.AReach.isprojection}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-plotbyea]{elltool.reach.AReach.plotByEa}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-plotbyia]{elltool.reach.AReach.plotByIa}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-plotea]{elltool.reach.AReach.plotEa}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-plotia]{elltool.reach.AReach.plotIa}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-projection]{elltool.reach.AReach.projection}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-refine]{elltool.reach.AReach.refine}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-reach-areach-repmat]{elltool.reach.AReach.repMat}}
 
 \end{itemize}
@@ -16369,43 +16369,43 @@ Example:
 
 See the description of the following methods in {\hyperref[chap_functions:elltool-linsys-alinsys]{elltool.linsys.ALinSys}} for elltool.linsys.ALinSys:
 \begin{itemize}
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-dimension]{elltool.linsys.ALinSys.dimension}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-display]{elltool.linsys.ALinSys.display}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getabstol]{elltool.linsys.ALinSys.getAbsTol}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getatmat]{elltool.linsys.ALinSys.getAtMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getbtmat]{elltool.linsys.ALinSys.getBtMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getcopy]{elltool.linsys.ALinSys.getCopy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getctmat]{elltool.linsys.ALinSys.getCtMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getdistboundsell]{elltool.linsys.ALinSys.getDistBoundsEll}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getuboundsell]{elltool.linsys.ALinSys.getUBoundsEll}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-hasdisturbance]{elltool.linsys.ALinSys.hasDisturbance}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-isempty]{elltool.linsys.ALinSys.isEmpty}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-isequal]{elltool.linsys.ALinSys.isEqual}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-islti]{elltool.linsys.ALinSys.isLti}}
 
 \end{itemize}
@@ -16457,43 +16457,43 @@ Example:
 
 See the description of the following methods in {\hyperref[chap_functions:elltool-linsys-alinsys]{elltool.linsys.ALinSys}} for elltool.linsys.ALinSys:
 \begin{itemize}
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-dimension]{elltool.linsys.ALinSys.dimension}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-display]{elltool.linsys.ALinSys.display}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getabstol]{elltool.linsys.ALinSys.getAbsTol}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getatmat]{elltool.linsys.ALinSys.getAtMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getbtmat]{elltool.linsys.ALinSys.getBtMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getcopy]{elltool.linsys.ALinSys.getCopy}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getctmat]{elltool.linsys.ALinSys.getCtMat}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getdistboundsell]{elltool.linsys.ALinSys.getDistBoundsEll}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-getuboundsell]{elltool.linsys.ALinSys.getUBoundsEll}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-hasdisturbance]{elltool.linsys.ALinSys.hasDisturbance}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-isempty]{elltool.linsys.ALinSys.isEmpty}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-isequal]{elltool.linsys.ALinSys.isEqual}}
 
-\item {} 
+\item {}
 {\hyperref[chap_functions:elltool-linsys-alinsys-islti]{elltool.linsys.ALinSys.isLti}}
 
 \end{itemize}
@@ -16551,87 +16551,87 @@ Examples:
 \end{Verbatim}
 
 \begin{thebibliography}{MOTZ1953}
-\bibitem[MOTZ1953]{MOTZ1953}{\phantomsection\label{chap_intro:motz1953} 
+\bibitem[MOTZ1953]{MOTZ1953}{\phantomsection\label{chap_intro:motz1953}
 T. S. Motzkin, H. Raiffa, G. L. Thompson, and R. M. Thrall. The double description method.
 In H. W. Kuhn and A. W. Tucker, editors, \emph{Conttributions to Theory of Games}, volume 2.
 Princeton University Press, 1953.
 }
-\bibitem[CDDHP]{CDDHP}{\phantomsection\label{chap_intro:cddhp} 
+\bibitem[CDDHP]{CDDHP}{\phantomsection\label{chap_intro:cddhp}
 CDD/CDD+ homepage. \href{http://www.cs.mcgill.ca/~fukuda/soft/cdd\_home/cdd.html}{http://www.cs.mcgill.ca/\textasciitilde{}fukuda/soft/cdd\_home/cdd.html}.
 }
-\bibitem[DDTHP]{DDTHP}{\phantomsection\label{chap_intro:ddthp} 
+\bibitem[DDTHP]{DDTHP}{\phantomsection\label{chap_intro:ddthp}
 $d/dt$ homepage. \href{http://www-verimag.imag.fr/~tdang/ddt.html}{http://www-verimag.imag.fr/\textasciitilde{}tdang/ddt.html}.
 }
-\bibitem[ASAR2000]{ASAR2000}{\phantomsection\label{chap_intro:asar2000} 
+\bibitem[ASAR2000]{ASAR2000}{\phantomsection\label{chap_intro:asar2000}
 E.Asarin, O.Bournez, T.Dang, and O.Maler. Approximate reachability analysis of piecewise
 linear dynamical systems. In N.Lynch and B.H.Krogh, editors, \emph{Hybrid Systems: Computation
 and Control}, volume 1790 of \emph{Lecture Notes in Computer Science}, pages 482–497. Springer, 2000.
 }
-\bibitem[AVIS1997]{AVIS1997}{\phantomsection\label{chap_intro:avis1997} 
+\bibitem[AVIS1997]{AVIS1997}{\phantomsection\label{chap_intro:avis1997}
 D. Avis, D. Bremner, and R. Seidel. How good are convex hull algorithms? \emph{Computational
 Geometry: Theory and Applications}, 7:265–301, 1997.
 }
-\bibitem[GIR2005]{GIR2005}{\phantomsection\label{chap_intro:gir2005} 
+\bibitem[GIR2005]{GIR2005}{\phantomsection\label{chap_intro:gir2005}
 A. Girard. Reachability of uncertain linear systems using zonotopes. In M. Morari, L. Thiele,
 and F. Rossi, editors, \emph{Hybrid Systems: Computation and Control}, volume 3414 of \emph{Lecture Notes
 in Computer Science}, pages 291–305. Springer, 2005.
 }
-\bibitem[GIR2006]{GIR2006}{\phantomsection\label{chap_intro:gir2006} 
+\bibitem[GIR2006]{GIR2006}{\phantomsection\label{chap_intro:gir2006}
 A.Girard, C.Le Guernic, and O.Maler. Computation of reachable sets of linear time-invariant
 systems with inputs. In J.Hespanha and A.Tiwari, editors, \emph{Hybrid Systems: Computation and
 Control}, volume 3927 of \emph{Lecture Notes in Computer Science}, pages 257–271. Springer, 2006.
 }
-\bibitem[MATHP]{MATHP}{\phantomsection\label{chap_intro:mathp} 
+\bibitem[MATHP]{MATHP}{\phantomsection\label{chap_intro:mathp}
 MATISSE homepage. \href{http://www.seas.upenn.edu/~agirard/Software/MATISSE}{http://www.seas.upenn.edu/\textasciitilde{}agirard/Software/MATISSE}.
 }
-\bibitem[ZONOHP]{ZONOHP}{\phantomsection\label{chap_intro:zonohp} 
+\bibitem[ZONOHP]{ZONOHP}{\phantomsection\label{chap_intro:zonohp}
 Zonotope methods on Wolfgang Kühn homepage. \href{http://www.decatur.de}{http://www.decatur.de}.
 }
-\bibitem[CMHP]{CMHP}{\phantomsection\label{chap_intro:cmhp} 
+\bibitem[CMHP]{CMHP}{\phantomsection\label{chap_intro:cmhp}
 CheckMate homepage. \href{http://www.ece.cmu.edu/~webk/checkmate}{http://www.ece.cmu.edu/\textasciitilde{}webk/checkmate}.
 }
-\bibitem[STUR2003]{STUR2003}{\phantomsection\label{chap_intro:stur2003} 
+\bibitem[STUR2003]{STUR2003}{\phantomsection\label{chap_intro:stur2003}
 O. Stursberg and B. H. Krogh. Efficient representation and computation of reachable sets for
 hybrid systems. In O. Maler and A. Pnueli, editors, \emph{Hybrid Systems: Computation and Control},
 volume 2623 of \emph{Lecture Notes in Computer Science}, pages 482–497. Springer, 2003.
 }
-\bibitem[MIT2000]{MIT2000}{\phantomsection\label{chap_intro:mit2000} 
+\bibitem[MIT2000]{MIT2000}{\phantomsection\label{chap_intro:mit2000}
 I. Mitchell and C. Tomlin. Level set methods for computation in hybrid systems. In N. Lynch
 and B. H. Krogh, editors, \emph{Hybrid Systems: Computation and Control}, volume 1790 of \emph{Lecture
 Notes in Computer Science}, pages 21–31. Springer, 2000.
 }
-\bibitem[LSTHP]{LSTHP}{\phantomsection\label{chap_intro:lsthp} 
+\bibitem[LSTHP]{LSTHP}{\phantomsection\label{chap_intro:lsthp}
 Level Set Toolbox homepage. \href{http://www.cs.ubc.ca/~mitchell/ToolboxLS}{http://www.cs.ubc.ca/\textasciitilde{}mitchell/ToolboxLS}.
 }
-\bibitem[REQHP]{REQHP}{\phantomsection\label{chap_intro:reqhp} 
+\bibitem[REQHP]{REQHP}{\phantomsection\label{chap_intro:reqhp}
 Requiem homepage. \href{http://www.seas.upenn.edu/~hybrid/requiem/requiem.html}{http://www.seas.upenn.edu/\textasciitilde{}hybrid/requiem/requiem.html}.
 }
-\bibitem[LAFF2001]{LAFF2001}{\phantomsection\label{chap_intro:laff2001} 
+\bibitem[LAFF2001]{LAFF2001}{\phantomsection\label{chap_intro:laff2001}
 G. Lafferriere, G. J. Pappas, and S. Yovine. Symbolic reachability computation for families of
 linear vector fields. \emph{Journal of Symbolic Computation}, 32:231–253, 2001.
 }
-\bibitem[KOST2001]{KOST2001}{\phantomsection\label{chap_intro:kost2001} 
+\bibitem[KOST2001]{KOST2001}{\phantomsection\label{chap_intro:kost2001}
 E. K. Kostousova. Control synthesis via parallelotopes: optimization and parallel computations.
 \emph{Optimization Methods and Software}, 14(4):267–310, 2001.
 }
-\bibitem[KUR2000]{KUR2000}{\phantomsection\label{chap_intro:kur2000} 
+\bibitem[KUR2000]{KUR2000}{\phantomsection\label{chap_intro:kur2000}
 A. B. Kurzhanski and P. Varaiya. On ellipsoidal techniques for reachability analysis. \emph{Optimization
 Methods and Software}, 17:177–237, 2000.
 }
-\bibitem[VAR1998]{VAR1998}{\phantomsection\label{chap_intro:var1998} 
+\bibitem[VAR1998]{VAR1998}{\phantomsection\label{chap_intro:var1998}
 P. Varaiya. Reach set computation using optimal control. Proc. of KITWorkshop on Verification
 on Hybrid Systems. Verimag, Grenoble., 1998.
 }
-\bibitem[KUR1997]{KUR1997}{\phantomsection\label{chap_intro:kur1997} 
+\bibitem[KUR1997]{KUR1997}{\phantomsection\label{chap_intro:kur1997}
 A. B. Kurzhanski and I. Vályi. \emph{Ellipsoidal Calculus for Estimation and Control}. ser. SCFA.
 Birkhäuser, 1997.
 }
-\bibitem[KUR2001]{KUR2001}{\phantomsection\label{chap_intro:kur2001} 
+\bibitem[KUR2001]{KUR2001}{\phantomsection\label{chap_intro:kur2001}
 A. B. Kurzhanski and P. Varaiya. Reachability analysis for uncertain systems - the ellipsoidal
 technique. \emph{Dynamics of Continuous, Discrete and Impulsive Systems Series B: Applications
 and Algorithms}, 9:347–367, 2001.
 }
-\bibitem[DAR2012]{DAR2012}{\phantomsection\label{chap_ellcalc:dar2012} 
+\bibitem[DAR2012]{DAR2012}{\phantomsection\label{chap_ellcalc:dar2012}
 A. N. Dariyn and A. B. Kurzhanski. Method of invariant sets for linear systems of high dimensionality
 under uncertain disturbances. \emph{Doklady Akademii Nauk}, 446(6):607–611, 2012.
 }
@@ -16639,73 +16639,73 @@ under uncertain disturbances. \emph{Doklady Akademii Nauk}, 446(6):607–611, 20
 \setcounter{enumi}{5}
 \item {} \begin{enumerate}
 \setcounter{enumi}{17}
-\item {} 
+\item {}
 Gantmacher. \emph{Matrix Theory, I-II. Chelsea}, 1960.
 
 \end{enumerate}
 
 \end{enumerate}
 }
-\bibitem[ROS2002]{ROS2002}{\phantomsection\label{chap_ellcalc:ros2002} 
+\bibitem[ROS2002]{ROS2002}{\phantomsection\label{chap_ellcalc:ros2002}
 F. Thomas L. Ros, A. Sabater. An Ellipsoidal Calculus Based on Propagation and Fusion.
 \emph{IEEE Transactions on Systems, Man and Cybernetics, Part B: Cybernetics}, 32(4), 2002.
 }
-\bibitem[VAZ1999]{VAZ1999}{\phantomsection\label{chap_ellcalc:vaz1999} 
+\bibitem[VAZ1999]{VAZ1999}{\phantomsection\label{chap_ellcalc:vaz1999}
 A. Yu. Vazhentsev. On Internal Ellipsoidal Approximations for Problems of Control and Synthesis
 with Bounded Coordinates. \emph{Izvestiya Rossiiskoi Akademii Nauk. Teoriya i Systemi Upravleniya}.,
 1999.
 }
 \bibitem[BOYD2004]{BOYD2004}{\phantomsection\label{chap_ellcalc:boyd2004} \begin{enumerate}
 \setcounter{enumi}{18}
-\item {} 
+\item {}
 Boyd and L. Vandenberghe. \emph{Convex Optimization}. Cambridge University Press, 2004.
 
 \end{enumerate}
 }
-\bibitem[VAR2007]{VAR2007}{\phantomsection\label{chap_reach:var2007} 
+\bibitem[VAR2007]{VAR2007}{\phantomsection\label{chap_reach:var2007}
 P. Varaiya A. A. Kurzhanskiy. Ellipsoidal techniques for reachability analysis of discrete-time
 linear systems. \emph{IEEE Transactions on Automatic Control}, 52(1):26–38, 2007.
 linear systems. \emph{IEEE Transactions on Automatic Control}, 52(1):26–38, 2007.
 }
-\bibitem[MPTHP]{MPTHP}{\phantomsection\label{chap_install:mpthp} 
+\bibitem[MPTHP]{MPTHP}{\phantomsection\label{chap_install:mpthp}
 Multi-Parametric Toolbox homepage. \href{http://control.ee.ethz.ch/~mpt}{http://control.ee.ethz.ch/\textasciitilde{}mpt}.
 }
-\bibitem[CVXHP]{CVXHP}{\phantomsection\label{chap_install:cvxhp} 
+\bibitem[CVXHP]{CVXHP}{\phantomsection\label{chap_install:cvxhp}
 CVX homepage. \href{http://cvxr.com/cvx}{http://cvxr.com/cvx}.
 }
-\bibitem[SDMHP]{SDMHP}{\phantomsection\label{chap_install:sdmhp} 
+\bibitem[SDMHP]{SDMHP}{\phantomsection\label{chap_install:sdmhp}
 SeDuMi homepage. \href{http://sedumi.mcmaster.ca}{http://sedumi.mcmaster.ca}.
 }
-\bibitem[STUR1999]{STUR1999}{\phantomsection\label{chap_install:stur1999} 
+\bibitem[STUR1999]{STUR1999}{\phantomsection\label{chap_install:stur1999}
 Sturm, J. F. 1999. Using SeDuMi 1.02, A MATLAB Toolbox for Optimization
 over Symmetric Cones. \emph{Optimization Methods and Software} 11-12: 625–653.
 }
-\bibitem[SDPT3HP]{SDPT3HP}{\phantomsection\label{chap_install:sdpt3hp} 
+\bibitem[SDPT3HP]{SDPT3HP}{\phantomsection\label{chap_install:sdpt3hp}
 SDPT3 homepage. \href{http://www.math.nus.edu.sg/~mattohkc/sdpt3.html}{http://www.math.nus.edu.sg/\textasciitilde{}mattohkc/sdpt3.html}.
 }
-\bibitem[STANHP]{STANHP}{\phantomsection\label{chap_implement:stanhp} 
+\bibitem[STANHP]{STANHP}{\phantomsection\label{chap_implement:stanhp}
 Stanley Chan Article Homepage. \href{http://videoprocessing.ucsd.edu/~stanleychan/publication/unpublished/Ellipse.pdf}{http://videoprocessing.ucsd.edu/\textasciitilde{}stanleychan/publication/unpublished/Ellipse.pdf}.
 }
-\bibitem[LIN2002]{LIN2002}{\phantomsection\label{chap_implement:lin2002} 
+\bibitem[LIN2002]{LIN2002}{\phantomsection\label{chap_implement:lin2002}
 Lin A., and S. Han. 2002. On the Distance Between Two Ellipsoids.
 \emph{SIAM Journal on Optimization} 13 (1): 298–308.
 }
-\bibitem[KVAS2004]{KVAS2004}{\phantomsection\label{chap_implement:kvas2004} 
+\bibitem[KVAS2004]{KVAS2004}{\phantomsection\label{chap_implement:kvas2004}
 M. Kvasnica, P. Grieder, M. Baotic, and M. Morari. Multi-Parametric Toolbox (MPT). In
 R. Alur and G. J. Pappas, editors, \emph{Hybrid Systems: Computation and Control}, volume 2993 of
 \emph{Lecture Notes in Computer Science}, pages 448–462. Springer, 2004.
 }
-\bibitem[SUN2003]{SUN2003}{\phantomsection\label{chap_examples:sun2003} 
+\bibitem[SUN2003]{SUN2003}{\phantomsection\label{chap_examples:sun2003}
 L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
 Estimation with the Cell Transmission Model. In \emph{Proceedings of the
 American Control Conference}, 3750–3755. Denver, Colorado, USA.
 }
-\bibitem[VER2001]{VER2001}{\phantomsection\label{chap_summary:ver2001} 
+\bibitem[VER2001]{VER2001}{\phantomsection\label{chap_summary:ver2001}
 Veres, S. M., A. V. Kuntsevich, I. V. Vályi, S. Hermsmeyer, and D. S.
 Wall. 2001. Geometric Bounding Toolbox for MATLAB. \emph{MATLAB/Simulink
 Connections Catalogue}.
 }
-\bibitem[GEOMHP]{GEOMHP}{\phantomsection\label{chap_summary:geomhp} 
+\bibitem[GEOMHP]{GEOMHP}{\phantomsection\label{chap_summary:geomhp}
 Geometric Bounding Toolbox Homepage. www.sysbrain.com/gbt.
 }
 \end{thebibliography}
