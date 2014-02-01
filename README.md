@@ -1,6 +1,6 @@
 ellipsoids
 ==========
-**Ellipsoidal Toolbox (ET)** is a standalone set of easy-to-use configurable *MATLAB* routines to perform 
+**Ellipsoidal Toolbox (ET)** is a standalone set of easy-to-use configurable MATLAB routines to perform 
 operations with ellipsoids and hyperplanes of arbitrary dimensions. It computes the external and internal 
 ellipsoidal approximations of geometric (Minkowski) sums and differences of ellipsoids, intersections of 
 ellipsoids and intersections of ellipsoids with halfspaces and polytopes; distances between ellipsoids, 
