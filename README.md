@@ -11,7 +11,7 @@ piecewise affine systems. Forward and backward reach sets can be also computed f
 ith disturbances. It can be verified if computed reach sets intersect with given ellipsoids, hyperplanes, 
 or polytopes. 
 
-For more information please refer to [Ellipsoidal Toolbox website](http://systemanalysisdpt-cmc-msu.github.io/ellipsoids)
+**For more information please refer to [Ellipsoidal Toolbox website](http://systemanalysisdpt-cmc-msu.github.io/ellipsoids)**
 
 
 
