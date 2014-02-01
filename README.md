@@ -16,5 +16,4 @@ For more imformation please refer to Ellipsoidal Toolbox website
 http://systemanalysisdpt-cmc-msu.github.io/ellipsoids
 
 
-Peter Gagarinov
-Alex Kurzhanskiy
+Peter Gagarinov, Alex Kurzhanskiy
