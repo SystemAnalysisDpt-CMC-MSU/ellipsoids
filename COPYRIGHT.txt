@@ -1,5 +1,6 @@
 Ellipsoidal Toolbox Copyright
 
+
 Copyright (c) 2011-2014 Moscow State University, Faculty of Computational Mathematics 
 and Computer Science, System Analysis Department. All rights reserved.
 Permission is hereby granted, without written agreement and without license or royalty
