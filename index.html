@@ -78,33 +78,27 @@ Right now there are two stable releases
 <ul>
 <hr><h4><li><a name="ver2_0" class="anchor" href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/releases/tag/v2.0">Version 2.0 (year 2014)</a></li></h4>
 A modern version for the latest versions of Matlab (recommended)
-
+<hr><h5>
+<a name="required--software" class="anchor" href="#required--software"><span class="octicon octicon-link"></span></a>Requirements</h5>
+<ul>
+<li>MATLAB 2012a (tested with 32bit version on Windows but there is no reason why versions for different architectures/operation systems shouldn't work)</li>
+<li>
+<a href="http://cvxr.com/">CVX 2.0</a> (tested with build 1010) as a more reliable toolbox for solving SDP problems of high dimensionality.  <a href="http://cvxr.com/">CVX</a> - Matlab-based convex modeling framework. CVX distribution includes two freeware solvers: SeDuMi (used by default in ET) and SDPT3.</li>
+<li>
+<a href="http://control.ee.ethz.ch/%7Empt/3/">MPT3</a> (tested with ver.3.0.12) as a toolbox that defines polytope class used in Ellipsoids toolbox.</li>
+</ul>
 <hr><h5><li><a name="ver1_1_3" class="anchor" href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/releases/tag/v1.1.3">Version 1.1.3 (year 2006)</a></li></h5>
 A legacy version for old versions of Matlab (missing a LOT of new features)
-</ul>
-<p>For installation instructions please refer to <a href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/wiki/Toolbox-installation-instructions"> ET 2.0</a> and <a href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/wiki/Toolbox-installation-instructions-%28legacy-version%29"> ET 1.1.3</a> installation instructions</p>
-
-<hr><h3>
-<a name="required--software" class="anchor" href="#required--software"><span class="octicon octicon-link"></span></a>Required software</h3>
-
-<hr><h4>
-<a name="ver2_0" class="anchor" href="#ver2_0"><span class="octicon octicon-link"></span></a>Version 2.0</h4>
-<ul>
-<li>MATLAB 2012a</li>
-<li>CVX 2.0 build 1010 or higher</li>
-<li>MPT 3.0.12</li>
-</ul>
-</li>
-<hr><h4>
-<a name="ver1_1_3" class="anchor" href="#ver1_1_3"><span class="octicon octicon-link"></span></a>Version 1.1.3 (or lower)</h4>
-
+<hr><h5>
+<a name="required--software" class="anchor" href="#required--software"><span class="octicon octicon-link"></span></a>Requirements</h5>
 <ul>
 <li>MATLAB 6.5 (or higher)</li>
-<li>YALMIP (ver. 20120926)</li>
+<li> <a href="http://control.ee.ethz.ch/%7Ejoloef/yalmip.php">YALMIP</a> - high-level MATLAB toolbox for rapid development of optimization code.</li>
+<li> <a href="http://sedumi.mcmaster.ca">SeDuMi</a> - MATLAB toolbox for solving optimization problems over symmetric cones.</li>
 </ul>
-</li>
-</ul><p><strong>ET</strong> version 1.1.3 is also distributed as part of <a href="http://control.ee.ethz.ch/%7Empt">Multi-Parametric Toolbox (MPT)</a></p>
-</p>
+<p>For installation instructions please refer to <a href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/wiki/Toolbox-installation-instructions"> ET 2.0</a> and <a href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/wiki/Toolbox-installation-instructions-%28legacy-version%29"> ET 1.1.3</a> installation instructions</p>
+<p><strong>ET</strong> version 1.1.3 is also distributed as part of <a href="http://control.ee.ethz.ch/%7Empt">Multi-Parametric Toolbox (MPT)</a></p>
+</ul>
 <hr><h3>
 <a name="contact--support" class="anchor" href="#contact--support"><span class="octicon octicon-link"></span></a>Contact / Support</h3>
 
@@ -129,11 +123,6 @@ You can also join <a href="http://groups.google.com/group/ellipsoids">ET discuss
     Number = {UCB/EECS-2006-46}
 }
 </code></pre>
-
-<hr><h3>
-<a name="contact--support" class="anchor" href="#contact--support"><span class="octicon octicon-link"></span></a>Contact / Support</h3>
-
-
 
 <h3>
 <a name="animations" class="anchor" href="#animations"><span class="octicon octicon-link"></span></a>Animations</h3>
@@ -173,30 +162,7 @@ You can also join <a href="http://groups.google.com/group/ellipsoids">ET discuss
 <td>This example is similar to the previous one, only in 3D.</td>
 </tr>
 </tbody>
-</table><hr><h3>
-<a name="third-party-software-packages-in-et" class="anchor" href="#third-party-software-packages-in-et"><span class="octicon octicon-link"></span></a>Third Party Software Packages in ET</h3>
-
-<h3>
-<a name="et-20-1" class="anchor" href="#et-20-1"><span class="octicon octicon-link"></span></a>ET 2.0</h3>
-
-<p>Starting with version 2.0 ET relies on </p>
-
-<ul>
-<li>
-<a href="http://cvxr.com/">CVX</a> as a more reliable toolbox for solving SDP problems of high dimensionality.  <a href="http://cvxr.com/">CVX</a> - Matlab-based convex modeling framework. CVX distribution includes two freeware solvers: SeDuMi (used by default in ET) and SDPT3.</li>
-<li>
-<a href="http://control.ee.ethz.ch/%7Empt/3/">MPT3</a> as a toolbox that defines polytope class used in Ellipsoids toolbox.</li>
-</ul><h3>
-<a name="et-113-1" class="anchor" href="#et-113-1"><span class="octicon octicon-link"></span></a>ET 1.1.3</h3>
-
-<p>Legacy versions of ET toolbox (1.1.3 and earlier) use YALMIP+SeDuMi toolbox combination for solving SDP problems. </p>
-
-<ul>
-<li> <a href="http://control.ee.ethz.ch/%7Ejoloef/yalmip.php">YALMIP</a> - high-level MATLAB toolbox for rapid development of optimization code.</li>
-<li> <a href="http://sedumi.mcmaster.ca">SeDuMi</a> - MATLAB toolbox for solving optimization problems over symmetric cones.</li>
-<li>
-<a href="http://control.ee.ethz.ch/%7Empt/2/">MPT2</a> as a toolbox that defines polytope class used in Ellipsoids toolbox.</li>
-</ul><p>These packages are included in the <strong>ET</strong> distribution. So, you don’t need to download them separately.</p>
+</table>
 
 <hr><h3>
 <a name="related-software" class="anchor" href="#related-software"><span class="octicon octicon-link"></span></a>Related Software</h3>
