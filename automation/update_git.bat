@@ -9,8 +9,9 @@ if "%~1"=="" (
 	exit /b 1
 )
 
-set svn_dir=%1
+set repo_dir=%1
 
-svn --trust-server-cert --non-interactive --quiet update %svn_dir%
+cd %repo_dir%
+git pull
 
 :: --non-interactive
