@@ -22,21 +22,28 @@ classdef EmailLoggerBuilder
             %
             [~,curClassName]=modgen.common.getcallernameext();
             curDirStr=fileparts(which(curClassName));
-            isSvn=modgen.subversion.issvn(curDirStr);
             urlCodeStr='';
-            if isSvn,
-                isGit=false;
-                urlCodeStr='svnURL';
-                urlStr=modgen.subversion.svngeturl(curDirStr);
-            else
-                isGit=modgen.git.isgit(curDirStr);
-                if isGit,
-                    urlCodeStr='gitURL';
-                    urlStr=modgen.git.gitgeturl(curDirStr);
+            try
+                isSvn=modgen.subversion.issvn(curDirStr);
+                if isSvn,
+                    isGit=false;
+                    urlCodeStr='svnURL';
+                    urlStr=modgen.subversion.svngeturl(curDirStr);
                 else
-                    throwerror('wrongObjState',...
-                        'Files with code should be under either SVN or Git');
+                    isGit=modgen.git.isgit(curDirStr);
+                    if isGit,
+                        urlCodeStr='gitURL';
+                        urlStr=modgen.git.gitgeturl(curDirStr);
+                    else
+                        throwerror('wrongObjState',...
+                            'Files with code should be under either SVN or Git');
+                    end
                 end
+            catch
+                isSvn=false;
+                isGit=false;
+                urlCodeStr='unknownURL';
+                urlStr='unknown';
             end
             [~,pidVal,~]=modgen.system.getpidhost();
             subjectSuffix=[',pid:',num2str(pidVal),',conf:',...
@@ -58,6 +65,8 @@ classdef EmailLoggerBuilder
                 revisionStr=modgen.subversion.getrevision('ignoreErrors',true);
             elseif isGit,
                 revisionStr=modgen.git.gitgethash(curDirStr);
+            else
+                revisionStr='unversioned';
             end
             emailLogger=modgen.logging.EmailLogger(...
                 'emailDistributionList',...
