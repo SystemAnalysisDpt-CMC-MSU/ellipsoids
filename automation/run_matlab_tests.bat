@@ -1,17 +1,17 @@
 @echo off
 setlocal
-:: Runs all Matlab unit tests for the latest SVN revision and e-mails results
+:: Runs all Matlab unit tests for the latest git revision and e-mails results
 ::
 :: Parameters:
-:: 1. svnRoot - string: SVN root directory for the project
-:: 2. matlabDir - string: Relative path to Matlab source dir within the SVN dir
-:: 3. logDir - string: Relative path to the log dir within the SVN dir
+:: 1. gitRoot - string: git root directory for the project
+:: 2. matlabDir - string: Relative path to Matlab source dir within the git dir
+:: 3. logDir - string: Relative path to the log dir within the git dir
 :: 4. matlabBin - string: Matlab program path
 :: 5. runMarker - string: Identifying string for the test
 :: 6. confName - string: Test configuration name (optional)
 ::
 :: Example:
-:: run_matlab_tests.bat C:\SVN_Local\TrunkLatest Sources\Matlab ^
+:: run_matlab_tests.bat C:\git_Local\TrunkLatest Sources\Matlab ^
 ::   Sources\scheduling\log "C:\Matlab2012a" ^
 ::   devel_iv_sd_test_trunk forecaster trunk
 
@@ -22,15 +22,15 @@ if "%~5"=="" (
 	exit /b 1
 )
 
-set svnRoot=%1
+set gitRoot=%1
 set matlabDir=%2
-set logDir=%svnRoot%\%3
+set logDir=%gitRoot%\%3
 set matlabBin=%4
 set runMarker=%5
 set confName=%6
 
 REM Matlab settings
-set mDir=%svnRoot%\%matlabDir%
+set mDir=%gitRoot%\%matlabDir%
 set deploymentDir=%mDir%
 if defined confName (
 	set mFile=elltool.test.run_tests_remotely('%runMarker%','%confName%')
@@ -38,7 +38,7 @@ if defined confName (
 	set mFile=elltool.test.run_tests_remotely('%runMarker%')
 )
 
-call %~dp0update_svn.bat %svnRoot%
+call %~dp0update_git.bat %gitRoot%
 
 if %ERRORLEVEL% NEQ 0 (
 	echo %0: update failed 1>&2
@@ -54,6 +54,6 @@ set myDate=%date:~10,4%-%date:~4,2%-%date:~7,2%
 echo %0: Launching Matlab...
 MATLAB "%matlabBin%" -sd "%mDir%" -singleCompThread ^
  -logfile %logDir%\run_tests_remotely.%runMarker%.%myDate%_%myTime%.log ^
- -wait -r "try, cd %deploymentDir%, s_install, cd %svnRoot%, %mFile%, exit, catch, exit, end"
+ -wait -r "cd %deploymentDir%, s_install, cd %gitRoot%, %mFile%"
 
 echo ==== %0: %date% %time% Done! =====
