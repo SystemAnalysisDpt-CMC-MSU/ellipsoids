@@ -1,0 +1,6 @@
+lib\+modgen\+configuration\+test\@AdaptiveConfRepoManagerTest\confrepo\*
+lib\+modgen\+configuration\+test\@ConfRepoMgrAdv\confrepo\*
+lib\+modgen\+configuration\+test\@VersionedConfRepoManagerTest\confRepoVersioned\*
+lib\+modgen\+configuration\+test\@VersionedConfRepoManagerTest\confRepoVersioned\_templates\testConfCK.xml
+lib\+modgen\+configuration\+test\@VersionedConfRepoManagerTest\confrepo\*
+lib\+modgen\+configuration\+test\confrepo\*
