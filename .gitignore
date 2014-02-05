@@ -1,14 +1,6 @@
-lib/+modgen/+configuration/+test/@AdaptiveConfRepoManagerTest/confrepo/*
-lib/+modgen/+configuration/+test/@ConfRepoMgrAdv/confrepo/*
-lib/+modgen/+configuration/+test/@VersionedConfRepoManagerTest/confRepoVersioned/*
-lib/+modgen/+configuration/+test/@VersionedConfRepoManagerTest/confRepoVersioned/_templates/testConfCK.xml
-lib/+modgen/+configuration/+test/@VersionedConfRepoManagerTest/confrepo/*
-lib/+modgen/+configuration/+test/confrepo/*
 cvx
 tbxmanager
 install/pathdef.m
 products/+elltool/+logging/Logs
 products/+elltool/+conf/confrepo
-lib/+modgen/+configuration/+test/@AdpConfRepoMgr/confrepo
-lib/+modgen/+configuration/+test/@AdaptiveConfRepoMgrNanVer/confrepo
 console.log
