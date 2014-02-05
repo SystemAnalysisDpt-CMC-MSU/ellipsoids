@@ -186,7 +186,11 @@ if ~isempty(inpProp)
     end
 end
 if ~isPropRetModeSpec
-    propRetMode='separate';
+    if isPropNameSpec,
+        propRetMode='separate';
+    else
+        propRetMode='list';
+    end
 end
 if ~isPropNameSpec&&strcmp(propRetMode,'separate')
     throwerror([upper(mfilename),':wrongInput'],...

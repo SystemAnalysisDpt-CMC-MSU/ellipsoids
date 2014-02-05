@@ -102,6 +102,15 @@ function [groupHandles,hPlotHandlesVec]=plotts(varargin)
 %         xLim: cell [1, nGroups] --- limits for x-axis.
 %         yLim: cell [1, nGroups] --- limits for y-axis.
 %              use [] to allow matlab to choose limits automatically.
+%         groupPropSetFuncList: cell [1,nGroups] - list of functions
+%                for each graph that are called after each group is
+%                created, if the respective cell is empty (by default
+%                all cells are empty), nothing is done, otherwise it is
+%                assumed that the cell contains function_handle [1,1] of a
+%                function with single input argument, namely, handle of a
+%                axes corresponding to each group and no output arguments,
+%                this function sets additional properties of the respective
+%                axes
 %
 %         scale: cell [1,nGroups]: [{'normal'},'sqrtscale','logarithm'] ---
 %                   using specific scale. 'normal' is default option.
@@ -226,6 +235,7 @@ markerSize=1;
 markerNameList='none';
 xLim=[];
 yLim=[];
+groupPropSetFuncList={};
 scale=[];
 scaleParam=[];
 isSortByXAxis=false;
@@ -288,6 +298,8 @@ for k=1:2:nProp-1
             groupXColors=prop{k+1};
         case 'groupycolors',
             groupYColors=prop{k+1};
+        case 'grouppropsetfunclist',
+            groupPropSetFuncList=prop{k+1};
         case 'figurename',
             figureName=prop{k+1};
         case 'graphplotspecs',
@@ -423,6 +435,20 @@ end
 if isempty(graphTypes)
     graphTypes=cell(1,nGraphs);
     graphTypes(:)={'plot'};
+end
+if isempty(groupPropSetFuncList),
+    groupPropSetFuncList=cell(1,nGroups);
+else
+    modgen.common.checkvar(groupPropSetFuncList,...
+        ['iscell(x)&&isrow(x)&&numel(x)==' num2str(nGroups)],...
+        'groupPropSetFuncList');
+    isnEmptyVec=~cellfun('isempty',groupPropSetFuncList);
+    if any(isnEmptyVec),
+        modgen.common.checkvar(...
+            groupPropSetFuncList(isnEmptyVec),...
+            'all(cellfun(''isclass'',x,''function_handle'')&cellfun(''prodofsize'',x)==1)',...
+            'groupPropSetFuncList');
+    end
 end
 if isempty(graphSpecPropList),
     graphSpecPropList=cell(1,nGraphs);
@@ -601,7 +627,7 @@ for iGroup=1:1:nGroups
     iPlace=indPlaceVec(iGroup);
     groupHeight=groupHeightTotal*groupAreaDistr(iPlace);
     groupPosition=[xPos(iPlace) yPos(iPlace) groupWidth groupHeight];
-    h=axes('position',groupPosition,'Parent',fHandle);
+    h=axes('position',groupPosition,'Parent',fHandle); %#ok<LAXES>
     set(h,'FontSize',fontSize);
     groupHandles(iGroup)=h;
     if dragData.isDragEnabled
@@ -729,11 +755,6 @@ for iGroup=1:1:nGroups
                     plotHandle=eval([graphTypes{iCell}...
                         '(groupHandles(iGroup),x,y,graphPlotSpecs{iCell});']);
                 end
-                legendStr=graphLegends{iCell};
-                %
-                if ~isempty(legendStr)
-                    set(plotHandle,'DisplayName',graphLegends{iCell});
-                end
                 %
                 hPlotHandlesVec(iCell)=plotHandle;
                 %
@@ -747,10 +768,12 @@ for iGroup=1:1:nGroups
                         'marker',markerNameList{iCell});
                 end
                 if ~isempty(graphRgbColors)
-                    if ~(isBar||isArea),
-                        set(plotHandle,'color',graphRgbColors{iCell});
-                    else
-                        set(plotHandle,'FaceColor',graphRgbColors{iCell});
+                    if ~isempty(graphRgbColors{iCell}),
+                        if ~(isBar||isArea),
+                            set(plotHandle,'color',graphRgbColors{iCell});
+                        else
+                            set(plotHandle,'FaceColor',graphRgbColors{iCell});
+                        end
                     end
                 end
                 if dragData.isDragEnabled
@@ -770,8 +793,7 @@ for iGroup=1:1:nGroups
                     yWidth=reshape(yWidth,[1,numel(yWidth)]);
                     areaHandle=area(xWidth,yWidth);
                     set(areaHandle,'FaceColor',graphPlotSpecs{iCell},...
-                        'lineWidth',lineWidth(iCell),...
-                        'markerSize',markerSize(iCell));
+                        'lineWidth',lineWidth(iCell));
                     hPlotHandlesVec(iCell)=areaHandle;
                 end
             case 'edgebar'
@@ -789,11 +811,15 @@ for iGroup=1:1:nGroups
                 if ~isempty(lineWidth)
                     set(areaHandle,'lineWidth',lineWidth(iCell));
                 end
-                if ~isempty(markerSize)
-                    set(areaHandle,'markerSize',markerSize(iCell));
-                end
                 set(areaHandle,'edgeColor','w');
                 hPlotHandlesVec(iCell)=areaHandle;
+        end
+        if isprop(hPlotHandlesVec(iCell),'DisplayName'),
+            legendStr=graphLegends{iCell};
+            %
+            if ~isempty(legendStr)
+                set(hPlotHandlesVec(iCell),'DisplayName',legendStr);
+            end
         end
         if ~isempty(graphPropSetFuncList{iCell}),
             feval(graphPropSetFuncList{iCell},hPlotHandlesVec(iCell));
@@ -961,13 +987,27 @@ for iGroup=1:1:nGroups
     if any(indPlaceVec(1:iGroup-1)==iPlace),
         set(h,'Color','none');
     end
-    
+    if ~isempty(groupPropSetFuncList{iGroup}),
+        feval(groupPropSetFuncList{iGroup},groupHandles(iGroup));
+    end
+end
+indEmptyGroupVec=1:nGroups;
+indEmptyGroupVec(unique(groupMembership))=[];
+if ~isempty(indEmptyGroupVec),
+    for iGroup=1:numel(indEmptyGroupVec),
+        set(groupHandles(indEmptyGroupVec(iGroup)),...
+            'XTickMode','manual','XTick',[],...
+            'XTickLabelMode','manual','XTickLabel',[]);
+    end
 end
 if ~strcmp(linkAxesSpec,'none')
-    linkaxes(groupHandles,linkAxesSpec);
+    indLinkableVec=setdiff(1:nGroups,indEmptyGroupVec);
+    linkableGroupHandles=groupHandles(indLinkableVec);
+    linkaxes(linkableGroupHandles,linkAxesSpec);
     if strcmp(linkAxesSpec,'x')
-        hAxesVec=groupHandles(strcmp(xTypes,'dates')|...
-            strcmp(xTypes,'numbers'));
+        linkableXTypes=xTypes(indLinkableVec);
+        hAxesVec=linkableGroupHandles(strcmp(linkableXTypes,'dates')|...
+            strcmp(linkableXTypes,'numbers'));
         hlink=linkprop(hAxesVec,{'XTickLabel','XTick'});
         KEY = 'graphics_linkxticklabel';
         for i=1:length(hAxesVec)

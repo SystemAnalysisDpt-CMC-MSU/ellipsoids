@@ -11,5 +11,5 @@ resList{9}=modgen.cell.test.run_tests;
 resList{10}=modgen.profiling.test.run_tests;
 resList{11}=modgen.pcalc.test.run_tests(varargin{:});
 resList{12}=modgen.microsoft.test.run_tests;
-resList{13}=modgen.graphics.test.run_tests;
+resList{13}=modgen.graphics.test.run_tests(varargin{:});
 results=[resList{:}];
