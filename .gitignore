@@ -3,5 +3,6 @@
 /install/pathdef.m
 /products/+elltool/+logging/Logs
 /products/+elltool/+conf/confrepo
+/products/+elltool/+test/+configuration/confrepo
 /console.log
 /ell_*.bat
