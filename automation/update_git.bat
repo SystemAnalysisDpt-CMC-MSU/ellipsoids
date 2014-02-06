@@ -12,7 +12,7 @@ if "%~1"=="" (
 set repo_dir=%1
 
 cd %repo_dir%
-git checkout master -f
+git clean -f -d
 git pull
 
 :: --non-interactive

@@ -52,7 +52,7 @@ if "%myTime:~0,1%" EQU " " (
 set myDate=%date:~10,4%-%date:~4,2%-%date:~7,2%
 
 echo %0: Launching Matlab...
-MATLAB "%matlabBin%" -sd "%mDir%" -singleCompThread ^
+%matlabBin%\matlab.exe -sd "%mDir%" -singleCompThread ^
  -logfile %logDir%\run_tests_remotely.%runMarker%.%myDate%_%myTime%.log ^
  -wait -r "cd %deploymentDir%, s_install, cd %gitRoot%, %mFile%"
 
