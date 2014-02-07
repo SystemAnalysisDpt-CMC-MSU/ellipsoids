@@ -1,0 +1,8 @@
++modgen/+configuration/+test/@AdaptiveConfRepoManagerTest/confrepo/*
++modgen/+configuration/+test/@ConfRepoMgrAdv/confrepo/*
++modgen/+configuration/+test/@VersionedConfRepoManagerTest/confRepoVersioned/*
++modgen/+configuration/+test/@VersionedConfRepoManagerTest/confRepoVersioned/_templates/testConfCK.xml
++modgen/+configuration/+test/@VersionedConfRepoManagerTest/confrepo/*
++modgen/+configuration/+test/confrepo/*
++modgen/+configuration/+test/@AdpConfRepoMgr/confrepo
++modgen/+configuration/+test/@AdaptiveConfRepoMgrNanVer/confrepo
