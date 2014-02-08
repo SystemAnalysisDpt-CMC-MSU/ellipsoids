@@ -5,5 +5,9 @@
 /products/+elltool/+conf/confrepo
 /products/+elltool/+test/+configuration/confrepo
 /console.log
+/automation/cron
+/automation/log
+/lib/+modgen/+configuration/+test/@ConfigurationRMTest/confrepo/
+/products/+elltool/+test/+logging/Logs/
 /ell_*.bat
 /products/+gras/+ellapx/+uncertcalc/+conf/+sysdef/+test/confrepo/_default/test2.xml
