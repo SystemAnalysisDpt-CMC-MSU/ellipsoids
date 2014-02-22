@@ -1,31 +1,30 @@
-dt = 1/24;
-N = 24 * T/4;
 
-h = figure;
+dt = 1/4;
+N = 4 * T(2)/4;
 for k = 1:N
-  plotByEa(cut(rs1, dt*(k-1)), 'fill', 0); hold on;
-  plotByIa(cut(rs1, dt*(k-1)), 'fill', 0); hold off;
-  axis([-30 30 -7 7]);
-  M(k) = getframe(h);
+  rs1.cut([0 dt*(k-1)]).plotByEa(); hold on;
+  rs1.cut([0 dt*(k-1)]).plotByIa(); hold off;
+%   axis([-20 20 -5 5]);
+  M(k) = getframe();
 end
   
 for k = (N+1):2*N
-  plotByEa(cut(rs2, dt*(k-1)), 'fill', 0); hold on;
-  plotByIa(cut(rs2, dt*(k-1)), 'fill', 0); hold off;
-  axis([-30 30 -7 7]);
-  M(k) = getframe(h);
+  rs2.cut([0 dt*(k-1)]).plotByEa(); hold on;
+  rs2.cut([0 dt*(k-1)]).plotByIa(); hold off;
+%   axis([-20 20 -5 5]);
+  M(k) = getframe();
 end
 
 for k = (2*N+1):3*N
-  plotByEa(cut(rs3, dt*(k-1)), 'fill', 0); hold on;
-  plotByIa(cut(rs3, dt*(k-1)), 'fill', 0); hold off;
-  axis([-30 30 -7 7]);
-  M(k) = getframe(h);
+  rs3.cut([0 dt*(k-1)]).plotByEa(); hold on;
+  rs3.cut([0 dt*(k-1)]).plotByIa(); hold off;
+%   axis([-20 20 -5 5]);
+  M(k) = getframe();
 end
 
 for k = (3*N+1):4*N
-  plotByEa(cut(rs4, dt*(k-1)), 'fill', 0); hold on;
-  plotByIa(cut(rs4, dt*(k-1)), 'fill', 0); hold off;
-  axis([-30 30 -7 7]);
-  M(k) = getframe(h);
+  rs4.cut([0 dt*(k-1)]).plotByEa(); hold on;
+  rs4.cut([0 dt*(k-1)]).plotByIa(); hold off;
+%   axis([-20 20 -5 5]);
+  M(k) = getframe();
 end
