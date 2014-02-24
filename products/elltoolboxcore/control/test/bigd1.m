@@ -14,19 +14,19 @@
  U.shape  = [4 -1 0; -1 1 0; 0 0 2];
  X0 = ell_unitball(10) + [4 1 0 7 -3 -2 1 2 0 0]';
 
- s = linsys(A, B, U);
+ s = elltool.linsys.LinSysContinuous(A, B, U);
 
  T = [1 5];
 
  L0 = [1 1 -1 0 1 0 0 0 -1 1; 0 1 0 1 0 -1 0 -1 0 1]';
  L0 = eye(10);
 
- rs = reach(s, X0, L0, T);
+ rs = elltool.reach.ReachContinuous(s, X0, L0, T, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
  BB = [1 0 0 0 0 0 0 0 0 0; 0 0 1 0 0 0 0 0 0 0; 0 0 0 1 0 0 0 0 0 0]';
  BB = [1 0 0 0 0 0 0 0 0 0; 0 0 1 0 0 0 0 0 0 0]';
  BB = [0 0 0 0 0 0 0 0 0 1; 0 0 1 0 0 0 0 0 0 0]';
 
- ps=projection(rs, BB);
+ ps=rs.projection(BB);
 
- plotByEa(ps); hold on; plotByIa(ps);
+ ps.plotByEa(); hold on; ps.plotByIa();
