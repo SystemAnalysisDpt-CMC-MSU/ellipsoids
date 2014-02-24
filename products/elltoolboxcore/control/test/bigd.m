@@ -13,9 +13,9 @@
  U.shape  = [4 -1 0 0 0 0; -1 2 0 0 0 0; 0 0 9 0 0 0; 0 0 0 4 0 0; 0 0 0 0 4 0; 0 0 0 0 0 4];
  X0 = ell_unitball(20) + [4 1 0 7 -3 -2 1 2 0 0 1 -1 0 0 5 0 0 0 -1 -1]';
 
- s = linsys(A, B, U);
+ s = elltool.linsys.LinSysContinuous(A, B, U);
 
- T = 5;
+ T = [0 5];
 
  L0 = [1 1 -1 0 1 0 0 0 -1 1 0 1 0 1 0 -1 0 -1 0 1]';
  L0 = [L0 [1 0 1 0 0 0 0 0 0 1 0 1 0 1 0 -1 0 -1 0 1]'];
@@ -24,7 +24,7 @@
  L0 = [L0 [-1 0 1 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 -1]'];
 % L0 = eye(20); 
 
- rs = reach(s, X0, L0, T);
+ rs = elltool.reach.ReachContinuous(s, X0, L0, T, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
  BB = zeros(20, 2);
  %BB = zeros(20, 3);
@@ -32,6 +32,6 @@
  BB(18, 2) = 1;
  %BB(13, 3) = 1;
 
- ps=projection(rs, BB);
+ ps=rs.projection(BB);
 
- plotByEa(ps); hold on; plotByIa(ps);
+ ps.plotByEa(); hold on; ps.plotByIa();
