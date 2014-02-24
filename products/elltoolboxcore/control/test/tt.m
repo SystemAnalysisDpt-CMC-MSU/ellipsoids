@@ -11,10 +11,10 @@
   %L0       = [1 1; 1 -1]';
   X0       = ell_unitball(2) + [1; -1];
 
-  sys      = linsys(A, B, P);
-  rs       = reach(sys, X0, L0, T);
+  sys      = elltool.linsys.LinSysContinuous(A, B, P);
+  rs       = elltool.reach.ReachContinuous(sys, X0, L0, T);
 
-  plotByEa(rs); hold on;
-  plotByIa(rs); hold on;
+  rs.plotByEa(); hold on;
+  rs.plotByIa(); hold on;
 
 	  
