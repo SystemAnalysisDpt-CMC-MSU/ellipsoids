@@ -12,8 +12,8 @@ clear P;
   L0       = [1 0; 0 1; 1 1; -1 1]';
   M        = 2*ell_unitball(2);
 
-  sys      = linsys(A, B, P);
-  rs       = reach(sys, M, L0, T);
+  sys      = elltool.linsys.LinSysContinuous(A, B, P);
+  rs       = elltool.reach.ReachContinuous(sys, M, L0, T, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
-  E        = get_ea(rs);
-  I        = get_ia(rs);
+  E        = rs.get_ea();
+  I        = rs.get_ia();
