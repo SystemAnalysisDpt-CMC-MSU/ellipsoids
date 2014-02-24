@@ -10,7 +10,7 @@
   L0 = [1 0 0; 0 0 1;0 1 1;1 -1 1; 1 0 1; 1 1 0]';
   X0 = ell_unitball(3);
 
-  s1 = linsys(A1, B1, U1);
-  s2 = linsys(A2, B2, U2);
-  rs1 = reach(s1, X0, L0, T);
+  s1 = elltool.linsys.LinSysContinuous(A1, B1, U1);
+  s2 = elltool.linsys.LinSysContinuous(A2, B2, U2);
+  rs1 = elltool.reach.ReachContinuous(s1, X0, L0, T, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
   rs2 = evolve(rs1, 5, s2);
