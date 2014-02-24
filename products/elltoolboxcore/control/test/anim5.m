@@ -9,27 +9,27 @@ C = 1;
   L0 = [1 0 0; 0 0 1;0 1 1;1 -1 1; 1 0 1; 1 1 0]';
   X0 = [4 -2 5]' +Properties.getAbsTol()*ell_unitball(3);
 
-  s1 = linsys(A1, B1, U1);
-  rs1 = reach(s1, X0, L0, T);
+  s1 = elltool.linsys.LinSysContinuous(A1, B1, U1);
+  rs1 = elltool.reach.ReachContinuous(s1, X0, L0, T, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
-  [xx, tt] = get_goodcurves(rs1);
+  [xx, tt] = rs1.get_goodcurves();
   xx = xx{1};
 
-  clear MM;
-  h = figure;
-  for i = 1:200
-	  cla;
-    x0  = C * xx(:, i);
-    X0  = x0 + Properties.getAbsTol()*ell_unitball(3);
-    rs1 = reach(s1, X0, L0, [tt(i) (tt(i)+3)]);
-    plotByEa(rs1, 'r'); hold on;
-    plotByIa(rs1, 'b');
-    ell_plot(x0, 'k*');
-    axis([0 20 -2 2 0 80]);
-    campos([0 -2 10]);
-    hold off;
-
-    MM(i) = getframe(h);
-  end
-
-  movie2avi(MM, 'reach_info3.avi', 'QUALITY', 100);
+%   clear MM;
+%   h = figure;
+%   for i = 1:200
+% 	  cla;
+%     x0  = C * xx(:, i);
+%     X0  = x0 + Properties.getAbsTol()*ell_unitball(3);
+%     rs1 = elltool.reach.ReachContinuous(s1, X0, L0, [tt(i) (tt(i)+3)]);
+%     rs1.plotByEa('r'); hold on;
+%     rs1.plotByIa('b');
+%     ell_plot(x0, 'k*');
+%     axis([0 20 -2 2 0 80]);
+%     campos([0 -2 10]);
+%     hold off;
+% 
+%     MM(i) = getframe(h);
+%   end
+% 
+%   movie2avi(MM, 'reach_info3.avi', 'QUALITY', 100);
