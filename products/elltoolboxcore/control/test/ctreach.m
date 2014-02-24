@@ -20,21 +20,21 @@ clear P1;
   %L0       = [1 0]';
   X0       = ell_unitball(2);
 
-  sys      = linsys(A3, B, P1);
-  sys2     = linsys(A2, B, P1);
-  sys3     = linsys(A, B, P1, B2, V);
-  o.save_all = 1;
-  rs       = reach(sys, X0, L0, T, o);
+  sys      = elltool.linsys.LinSysContinuous(A3, B, P1);
+  sys2     = elltool.linsys.LinSysContinuous(A2, B, P1);
+  sys3     = elltool.linsys.LinSysContinuous(A, B, P1, B2, V);
+  
+  rs       = elltool.reach.ReachContinuous(sys, X0, L0, T, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
-  plotByEa(rs); hold on;
+  rs.plotByEa(); hold on;
 %  plotByIa(rs); hold on;
 
-  rs = evolve(rs, 10, sys2);
+  rs = rs.evolve(10, sys2);
 
-  plotByEa(rs, 'r'); hold on;
+  rs.plotByEa('r'); hold on;
 %  plotByIa(rs, 'y'); hold on;
 	  
-  rs = evolve(rs, 15, sys3);
+  rs = rs.evolve(15, sys3);
 
-  plotByEa(rs, 'g'); hold on;
+  rs.plotByEa('g'); hold on;
 %  plotByIa(rs, 'c'); hold on;
