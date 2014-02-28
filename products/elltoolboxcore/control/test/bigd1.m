@@ -16,12 +16,12 @@
 
  s = elltool.linsys.LinSysContinuous(A, B, U);
 
- T = [1 5];
+ T = [2 5];
 
  L0 = [1 1 -1 0 1 0 0 0 -1 1; 0 1 0 1 0 -1 0 -1 0 1]';
  L0 = eye(10);
 
- rs = elltool.reach.ReachContinuous(s, X0, L0, T, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+ rs = elltool.reach.ReachContinuous(s, X0, L0, T, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
 
  BB = [1 0 0 0 0 0 0 0 0 0; 0 0 1 0 0 0 0 0 0 0; 0 0 0 1 0 0 0 0 0 0]';
  BB = [1 0 0 0 0 0 0 0 0 0; 0 0 1 0 0 0 0 0 0 0]';
