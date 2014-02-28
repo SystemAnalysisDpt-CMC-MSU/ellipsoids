@@ -48,11 +48,11 @@ A(N+1:end, 1:N) = -diag([2*o, 1]) + diag(o, 1) + diag(o, -1);
 B = [zeros(2*N-1, 1); 1];
 U = ellipsoid(1, 1);
 
-ls = linsys(sparse(A), sparse(B), U);
+ls = elltool.linsys.LinSysContinuous(A, B, U);
 
 % Reach set
 X0 = ell_unitball(n);
 L = randn(n, NL);
-reach(ls, X0, L, -10);
+elltool.reach.ReachContinuous(ls, X0, L, [-10 0],'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
 
 disp(sprintf('Passed test for N = %d: %.1f s', N, (now-time0)*86400));
