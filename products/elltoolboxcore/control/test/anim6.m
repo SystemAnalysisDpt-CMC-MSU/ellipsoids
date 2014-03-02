@@ -2,19 +2,19 @@ import elltool.conf.Properties;
 
 Properties.setNPlot2dPoints(500);
 Properties.setNTimeGridPoints(135);
-A = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
-B = {'10' '0'; '0' '1/(2 + sin(t))'};
-U.center = {'10 -t'; '1'};
-U.shape = {'4 - sin(t)' '-1'; '-1' '1 + (cos(t))^2'};
-s = elltool.linsys.LinSysContinuous(A, B, U);
+aMat = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
+bMat = {'10' '0'; '0' '1/(2 + sin(t))'};
+SUBounds.center = {'10 -t'; '1'};
+SUBounds.shape = {'4 - sin(t)' '-1'; '-1' '1 + (cos(t))^2'};
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 
-X0 = Properties.getAbsTol()*ell_unitball(2);
+x0EllObj = Properties.getAbsTol()*ell_unitball(2);
 
-T = [0 5];
+timeVec = [0 5];
 
-L0  = [1 0; 2 1; 1 1; 1 2; 0 1; -1 2; -1 1; -2 1]';
-rs = elltool.reach.ReachContinuous(s, X0, L0, T);
-[xx, tt] = rs.get_goodcurves();
+dirsMat  = [1 0; 2 1; 1 1; 1 2; 0 1; -1 2; -1 1; -2 1]';
+rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+[xx, tt] = rsObj.get_goodcurves();
 xx = xx{7};
 
 % clear MM;

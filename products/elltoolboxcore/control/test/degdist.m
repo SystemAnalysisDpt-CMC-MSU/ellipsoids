@@ -1,13 +1,13 @@
-  T  = [0 5];
+  timeVec  = [0 5];
   w  = 2;
-  A  = [0 1; -w 0];
-  B  = eye(2);
-  C  = eye(2);
-  U  = ellipsoid([0.9 0; 0 0.1]);
-  V  = ellipsoid([36 0; 0 49]);
-  s  = elltool.linsys.LinSysContinuous(A, B, U, C, V);
+  aMat  = [0 1; -w 0];
+  bMat  = eye(2);
+  cMat  = eye(2);
+  SUBounds  = ellipsoid([0.9 0; 0 0.1]);
+  SVBounds  = ellipsoid([36 0; 0 49]);
+  sys  = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds, cMat, SVBounds);
   
-  X0 = ellipsoid([10; 0], [0.5 0; 0 0.5]);
-  L0 = [1 -1; 1 1; 0 1; 1 0]';
-  L0 = [1 1; 1 -1]';
-  rs = elltool.reach.ReachContinuous(s, X0, L0, T, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+  x0EllObj = ellipsoid([10; 0], [0.5 0; 0 0.5]);
+%   dirsMat = [1 -1; 1 1; 0 1; 1 0]';
+  dirsMat = [1 1; 1 -1]';
+  rsObj = elltool.reach.ReachContinuous(s, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);

@@ -1,20 +1,20 @@
 % Continuous-time system reachability test in 3D.
 
-clear P;
-o.save_all = 1;
+% clear P;
+% o.save_all = 1;
 
-  A        = {'sin(0.3*t)' '-0.22' '0'; '0' '-1' '0'; '-0.5' '1' 'cos(0.2*t)'};
+  aMat        = {'sin(0.3*t)' '-0.22' '0'; '0' '-1' '0'; '-0.5' '1' 'cos(0.2*t)'};
   %A1       = [1 -1 0; 0 2 -1; 3 1 1];
   %A2        = [-1 0 0; 0 0 0; 0 0 0.2];
-  B        = [0 1 1; 1 1 0; 1 0 1];
-  P.center = {'sin(2*t)'; 'cos(2*t)'; '1'};
-  P.shape  = [1 0 0; 0 2 0; 0 0 2];
-  T        = [1 2];
-  L0       = [1 0 0; 0 0 1;0 1 1;1 -1 1; 1 0 1; 1 1 0]';
-  X0       = ell_unitball(3) + [1; -1; -1];
+  bMat        = [0 1 1; 1 1 0; 1 0 1];
+  SUBounds.center = {'sin(2*t)'; 'cos(2*t)'; '1'};
+  SUBounds.shape  = [1 0 0; 0 2 0; 0 0 2];
+  timeVec        = [1 2];
+  dirsMat       = [1 0 0; 0 0 1;0 1 1;1 -1 1; 1 0 1; 1 1 0]';
+  x0EllObj       = ell_unitball(3) + [1; -1; -1];
 
-  sys      = linsys(A, B, P);
-  rs       = reach(sys, X0, L0, T, o);
+  sys      = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+  rsObj       = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
-  E        = get_ea(rs);
-  I        = get_ia(rs);
+  eaEllMat        = rsObj.get_ea();
+  iaEllMat        = rsObj.get_ia();
