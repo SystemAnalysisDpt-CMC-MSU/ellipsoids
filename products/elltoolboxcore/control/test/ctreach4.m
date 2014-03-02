@@ -1,14 +1,14 @@
-  T = [0 5];
-  A = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
-  B = [0; 0; 0; 1];
+  timeVec = [0 5];
+  aMat = [0 1 0 0; -1 0 1 0; 0 0 0 1; 0 0 -1 0];
+  bMat = [0; 0; 0; 1];
 
-  X0 = ell_unitball(4) + [1; 1; 0; -1];
-  U  = ellipsoid(1);
+  x0EllObj = ell_unitball(4) + [1; 1; 0; -1];
+  SUBounds  = ellipsoid(1);
 
-  s  = elltool.linsys.LinSysContinuous(A, B, U);
+  sys  = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 
-  L  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1]';
+%   dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1]';
  % L  = [1 1 0 1; 0 -1 1 0; -1 1 1 1]';
-  L  = eye(4);
+  dirsMat  = eye(4);
 %   o.save_all = 1;
-  rs = elltool.reach.ReachContinuous(s, X0, L, T, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);

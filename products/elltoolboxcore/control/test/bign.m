@@ -32,27 +32,27 @@ test(35);
 function test40
 test(40);
 
-function test(N)
+function test(dirsNumber)
 
 time0 = now;
 
-NL = 5;     % number of directions
+dirsNumber = 5;     % number of directions
 
-n = 2*N;
+n = 2*dirsNumber;
 
 % System
-A = zeros(n, n);
-A(1:N, N+1:end) = eye(N);
-o = ones(1, N-1);
-A(N+1:end, 1:N) = -diag([2*o, 1]) + diag(o, 1) + diag(o, -1);
-B = [zeros(2*N-1, 1); 1];
-U = ellipsoid(1, 1);
+aMat = zeros(n, n);
+aMat(1:dirsNumber, dirsNumber+1:end) = eye(dirsNumber);
+o = ones(1, dirsNumber-1);
+aMat(dirsNumber+1:end, 1:dirsNumber) = -diag([2*o, 1]) + diag(o, 1) + diag(o, -1);
+bMat = [zeros(2*dirsNumber-1, 1); 1];
+SUBounds = ellipsoid(1, 1);
 
-ls = elltool.linsys.LinSysContinuous(A, B, U);
+sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 
 % Reach set
-X0 = ell_unitball(n);
-L = randn(n, NL);
-elltool.reach.ReachContinuous(ls, X0, L, [-10 0],'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
+x0EllObj = ell_unitball(n);
+dirsMat = randn(n, NL);
+elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, [-10 0],'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
 
-disp(sprintf('Passed test for N = %d: %.1f s', N, (now-time0)*86400));
+disp(sprintf('Passed test for N = %d: %.1f s', dirsNumber, (now-time0)*86400));
