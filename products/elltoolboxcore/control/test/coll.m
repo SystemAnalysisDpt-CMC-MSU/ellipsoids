@@ -39,7 +39,8 @@ clear P;
   ell_plot([t2;gc2], 'k'); hold on;
 
   t  = 0.886;
-  gc = rsObj.cut(t).get_goodcurves(); gc = gc{1};
+  gc = rsObj.cut(t).get_goodcurves(); 
+  gc = gc{1};
   ell_plot([t;gc], 'ro');
   ell_plot([0;3;1],'r*');
   ell_plot([endTime;2;0],'k*');
