@@ -25,8 +25,8 @@ firstNewEndTime  = 10;
 secondNewEndTime  = 15;
 
 dirsMat  = [1 0; 2 1; 1 1; 1 2; 0 1; -1 2; -1 1; -2 1]';
-rs1 = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
-rs2 = rs1.evolve(firstNewEndTime, secondSys);
-rs3 = rs2.evolve(secondNewEndTime, thirdSys); % problem with regularization
+firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+secondRsObj = firstRsObj.evolve(firstNewEndTime, secondSys);
+% thirdRsObj = secondRsObj.evolve(secondNewEndTime, thirdSys); % problem with regularization
 
 

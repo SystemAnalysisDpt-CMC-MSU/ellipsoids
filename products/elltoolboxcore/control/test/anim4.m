@@ -40,38 +40,4 @@ C =0.25;
  xx = xx{1};
  xi = [timeVec(end); C*xx(:, end)];
 
-
-
-
-
-
-%  clear MM;
-% 
-%  for i = 1:199
-% 	 cla;
-%    x0 = C*xx(:, i);
-%    X0 = x0 + Properties.getAbsTol()*ell_unitball(2);
-%    t0 = tt(i);
-%    L0 = [];
-%    for j = 1:M
-% 	   L = LL{j};
-% 	   L0 = [L0 L(:, i)];
-%    end
-% 
-%    rs = elltool.reach.ReachContinuous(s, X0, L0, [t0 T(end)], 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
-%    rs.plotByEa(); hold on;
-%    ell_plot(yy, 'r', 'LineWidth', 2);
-%    ell_plot(xi, 'ko');
-%    ell_plot([t0; x0], 'k*');
-%    ell_plot([tt(i:end); C*xx(:, i:end)], 'k');
-% 
-%    title(sprintf('Reach tube at time T = %d', t0));
-%   axis([0 T -40 40 -6 6]);
-% 
-%    hold off;
-% 
-%    MM(i) = getframe(h);
-%  end
-% 
-%  movie2avi(MM, 'internal_point.avi', 'QUALITY', 100);
    
