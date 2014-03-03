@@ -34,7 +34,7 @@ clear P1;
   rsObj.plotByEa('r'); hold on;
 %  plotByIa(rs, 'y'); hold on;
 	  
-  rsObj = rsObj.evolve(15, thirdSys);
-
-  rsObj.plotByEa('g'); hold on;
+%   rsObj = rsObj.evolve(15, thirdSys); %problem with regularization
+% 
+%   rsObj.plotByEa('g'); hold on;
 %  plotByIa(rs, 'c'); hold on;
