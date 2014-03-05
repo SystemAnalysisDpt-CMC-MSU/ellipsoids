@@ -43,8 +43,8 @@ n = 2*dirsNumber;
 % System
 aMat = zeros(n, n);
 aMat(1:dirsNumber, dirsNumber+1:end) = eye(dirsNumber);
-o = ones(1, dirsNumber-1);
-aMat(dirsNumber+1:end, 1:dirsNumber) = -diag([2*o, 1]) + diag(o, 1) + diag(o, -1);
+onesVec = ones(1, dirsNumber-1);
+aMat(dirsNumber+1:end, 1:dirsNumber) = -diag([2*onesVec, 1]) + diag(onesVec, 1) + diag(onesVec, -1);
 bMat = [zeros(2*dirsNumber-1, 1); 1];
 SUBounds = ellipsoid(1, 1);
 
