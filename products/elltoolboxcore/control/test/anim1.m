@@ -1,8 +1,8 @@
 import elltool.conf.Properties;
 
 Properties.setNPlot2dPoints(1000)
-aMat = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
-bMat = {'10' '0'; '0' '1/(2 + sin(t))'};
+aCMat = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
+bCMat = {'10' '0'; '0' '1/(2 + sin(t))'};
 %U = ell_unitball(2);
 SUBounds = struct();
 SUBounds.center = [0; 0];
@@ -16,7 +16,7 @@ thirdDirsMat = [0 1; 1 0].';
 phi = 0:0.1:pi;
 forthDirsMat = [cos(phi); sin(phi)];
 
-firstSys  = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
+firstSys  = elltool.linsys.LinSysContinuous(aCMat, bCMat, SUBounds);
 firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, firstDirVec, timeVec);
 secondRsObj = firstRsObj.refine(secondDirVec);
 thirdRsObj = secondRsObj.refine(thirdDirsMat);

@@ -14,7 +14,7 @@
  aMat = [0 0 1 0; 0 0 0 1; -(k1+k2)/m1 k2/m1 0 0; k2/m2 -(k1+k2)/m2 0 0];
  bMat = [0 0; 0 0; 1/m1 0; 0 1/m2];
  %B = [1 0 0 0; 0 1 0 0; 0 0 1/m1 0; 0 0 0 1/m2];
- cMat = [0 0; 0 0; 1 0; 0 1];
+%  cMat = [0 0; 0 0; 1 0; 0 1];
 
  s = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 % s = linsys(aMat, bMat, SUBounds, cMat, SVBounds);

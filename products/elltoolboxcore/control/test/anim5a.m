@@ -6,7 +6,8 @@ open(writerObj);
     x0  = C * xx(:, goodcurvesIterator);
     x0EllObj  = x0 + Properties.getAbsTol()*ell_unitball(3);
 %     x0EllObj  = x0 + 0.0001*ell_unitball(3);
-    firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, [tt(goodcurvesIterator) (tt(goodcurvesIterator)+3)],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+    firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat,...
+        [tt(goodcurvesIterator) (tt(goodcurvesIterator)+3)],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 %     projBasisMat = [1 0 0; 0 1 0].';
     firstProjObj = firstRsObj.cut(tt(goodcurvesIterator)+3); 
 %     firstProjObj = firstRsObj.projection(projBasisMat);

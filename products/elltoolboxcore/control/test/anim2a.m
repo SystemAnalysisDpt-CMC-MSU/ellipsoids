@@ -26,7 +26,7 @@ end
 %   thirdRsObj.cut([0 dt*(k)]).plotByEa('m');
 % %   thirdRsObj.cut([0 dt*(k)]).plotByIa('c');
 %   axis([0 secondNewEndTime -50 50 -10 10]);
-%   frame = getframe(gcf);
+%   videoFrameObj = getframe(gcf);
 %   writeVideo(writerObj,frame);
 %   closereq;
 % end
