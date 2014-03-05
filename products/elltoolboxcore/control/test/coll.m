@@ -30,17 +30,17 @@ clear P;
   plotByEa(brsObj, 'g'); hold on;
 
 
-  [gc1, t1] = rsObj.cut([0 0.886]).get_goodcurves();  gc1 = gc1{1};
-  [gc2, t2] = brsObj.cut([endTime 0.886]).get_goodcurves(); gc2 = gc2{28};
-  bc = brsObj.cut([endTime 0.886]).get_center();
-  gc2 = 2*bc - gc2;
+  [fgcCVec, fTime] = rsObj.cut([0 0.886]).get_goodcurves();  fgcCVec = fgcCVec{1};
+  [bgcCVec, bTime] = brsObj.cut([endTime 0.886]).get_goodcurves(); bgcCVec = bgcCVec{28};
+  bCenterVec = brsObj.cut([endTime 0.886]).get_center();
+  bgcCVec = 2*bc - bgcCVec;
 
-  ell_plot([t1;gc1], 'r'); hold on;
-  ell_plot([t2;gc2], 'k'); hold on;
+  ell_plot([fTime;fgcCVec], 'r'); hold on;
+  ell_plot([bTime;bgcCVec], 'k'); hold on;
 
   t  = 0.886;
-  gc = rsObj.cut(t).get_goodcurves(); 
-  gc = gc{1};
-  ell_plot([t;gc], 'ro');
+  fgcCVec = rsObj.cut(t).get_goodcurves(); 
+  fgcVec = fgcCVec{1};
+  ell_plot([t;fgcVec], 'ro');
   ell_plot([0;3;1],'r*');
   ell_plot([endTime;2;0],'k*');

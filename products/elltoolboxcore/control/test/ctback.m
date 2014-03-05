@@ -11,7 +11,7 @@
   mEllObj        = 2*ell_unitball(2);
 
   sys      = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  rs       = elltool.reach.ReachContinuous(sys, mEllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+  rsObj       = elltool.reach.ReachContinuous(sys, mEllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
-  eaEllMat       = rs.get_ea();
-  iaEllMat       = rs.get_ia();
+  eaEllMat       = rsObj.get_ea();
+  iaEllMat       = rsObj.get_ia();
