@@ -8,8 +8,8 @@ open(writerObj);
    x0EllObj = x0 + Properties.getAbsTol()*ell_unitball(2);
    t0 = tt(goodcurvesIterator);
    firstDirsMat = [];
-   for j = 1:approxSize
-	   secondDirsMat = LL{j};
+   for approxIterator = 1:approxSize
+	   secondDirsMat = LL{approxIterator};
 	   firstDirsMat = [firstDirsMat secondDirsMat(:, goodcurvesIterator)];
    end
    T = timeVec(end);

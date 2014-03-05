@@ -7,7 +7,7 @@ writerObj.FrameRate = 15;
 open(writerObj);
 for timeIntervalsIterator = 1:48
   firstRsObj.cut(dt*(timeIntervalsIterator)).plotByEa('b');
-%   firstRsObj.cut([0 dt*(k)]).plotByEa('y');
+%   firstRsObj.cut([0 dt*(k)]).plotByIa('y');
   axis([-20 20 -2 2 -30 30]);
   %campos([-10 -1 10]);
   campos([-20 -2 -30]);
@@ -18,7 +18,7 @@ end
 
 for timeIntervalsIterator = 49:120
   firstRsObj.cut(dt*(timeIntervalsIterator)).plotByEa('r');
-%   firstRsObj.cut([0 dt*(k)]).plotByEa('g');
+%   firstRsObj.cut([0 dt*(k)]).plotByIa('g');
   axis([-20 20 -2 2 -30 30]);
   campos([-20 -2 -30]);
   videoFrameObj = getframe(gcf);

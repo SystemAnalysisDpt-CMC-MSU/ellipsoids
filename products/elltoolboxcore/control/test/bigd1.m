@@ -1,4 +1,4 @@
- aMat = {'0' '-2' '0' '0' '0' '0' '0' '0' '0' '0'
+ aCMat = {'0' '-2' '0' '0' '0' '0' '0' '0' '0' '0'
       '2' '0'  '0' '0' '0' '0' '0' '0' '0' '0'
       '0' '0'  'cos(t)' '0' '0' '0' '0' '0' '0' '0'
       '0' '0' '0' '0' '0' '0' '1' '0' '0' '0'
@@ -14,7 +14,7 @@
  SUBounds.shape  = [4 -1 0; -1 1 0; 0 0 2];
  x0EllObj = ell_unitball(10) + [4 1 0 7 -3 -2 1 2 0 0]';
 
- sys = elltool.linsys.LinSysContinuous(A, bMat, SUBounds);
+ sys = elltool.linsys.LinSysContinuous(aCMat, bMat, SUBounds);
 
  timeVec = [2 5];
 

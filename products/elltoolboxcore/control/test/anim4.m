@@ -1,9 +1,10 @@
 import elltool.conf.Properties;
 
 C =0.25;
- aMat = [0 1; 0 0]; B = [0; 1]; 
+ aMat = [0 1; 0 0]; 
+ bMat = [0; 1]; 
  SUBounds = ellipsoid(1);
- sys = elltool.linsys.LinSysContinuous(aMat, B, SUBounds);
+ sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 
  x0EllObj = Properties.getAbsTol()*ell_unitball(2);
 
@@ -15,15 +16,15 @@ C =0.25;
 
     eaEllMat  = inv(eaEllMat');
     approxSize   = size(eaEllMat, 2);
-    N   = Properties.getNPlot2dPoints()/2;
-    phi = linspace(0, 2*pi, N);
+    dirsQuant   = Properties.getNPlot2dPoints()/2;
+    phi = linspace(0, 2*pi, dirsQuant);
     secondDirsMat   = [cos(phi); sin(phi)];
     yy  = [];
-    for i = 1:N
-      l    = secondDirsMat(:, i);
+    for dirsIterator = 1:dirsQuant
+      l    = secondDirsMat(:, dirsIterator);
       mval = 0;
-      for j = 1:approxSize
-        Q = parameters(eaEllMat(1, j));
+      for approxIterator = 1:approxSize
+        Q = parameters(eaEllMat(1, approxIterator));
         v = l' * Q * l;
         if v > mval
           mval = v;
@@ -32,7 +33,7 @@ C =0.25;
       x = l/realsqrt(mval);
       yy = [yy x];
     end
-    yy = [timeVec(end)*ones(1, N); yy];
+    yy = [timeVec(end)*ones(1, dirsQuant); yy];
 
 
  [xx, tt] = rsObj.get_goodcurves();
