@@ -14,22 +14,22 @@ import elltool.conf.Properties;
   firstSys = elltool.linsys.LinSysContinuous(firstACMat, firstBMat, firstSUBounds);
   firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
-  [xx, tt] = firstRsObj.get_goodcurves();
-  xx = xx{1};
+  [gcCVec, gcTimeVec] = firstRsObj.get_goodcurves();
+  gcVec = gcCVec{1};
 
   %%%%%%%%%%%%%%%%%%%%%%
 
   writerObj = VideoWriter('reach_info3','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
-  for goodcurvesIterator = 1:200
-    x0  = C * xx(:, goodcurvesIterator);
+  for goodcurvesIterator = 1:(size(gcVec,2)-1)
+    x0  = C * gcVec(:, goodcurvesIterator);
     x0EllObj  = x0 + Properties.getAbsTol()*ell_unitball(3);
 %     x0EllObj  = x0 + 0.0001*ell_unitball(3);
     firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat,...
-        [tt(goodcurvesIterator) (tt(goodcurvesIterator)+3)],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+        [gcTimeVec(goodcurvesIterator) (gcTimeVec(goodcurvesIterator)+3)],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 %     projBasisMat = [1 0 0; 0 1 0].';
-    firstProjObj = firstRsObj.cut(tt(goodcurvesIterator)+3); 
+    firstProjObj = firstRsObj.cut(gcTimeVec(goodcurvesIterator)+3); 
 %     firstProjObj = firstRsObj.projection(projBasisMat);
     firstProjObj.plotByEa('r'); hold on;
 %     firstRsObj.plotByIa('b'); hold on;

@@ -56,8 +56,8 @@ for timeIntervalsIterator = (timeIntervalsQuant+1):2*timeIntervalsQuant
   closereq;
 end
 
-for k = (2*N+1):3*N
-  thirdRsObj.cut([0 dt*(k)]).plotByEa('m');
+for timeIntervalsIterator = (2*timeIntervalsQuant+1):3*timeIntervalsQuant
+  thirdRsObj.cut([0 dt*(timeIntervalsIterator)]).plotByEa('m');
 %   thirdRsObj.cut([0 dt*(k)]).plotByIa('c');
   axis([0 secondNewEndTime -50 50 -10 10]);
   videoFrameObj = getframe(gcf);

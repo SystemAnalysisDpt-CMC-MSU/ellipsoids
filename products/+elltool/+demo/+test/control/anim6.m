@@ -15,21 +15,21 @@ timeVec = [0 5];
 
 dirsMat  = [1 0; 2 1; 1 1; 1 2; 0 1; -1 2; -1 1; -2 1]';
 rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec,'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
-[xx, tt] = rsObj.get_goodcurves();
-xx = xx{7};
+[gcCVec, gcTimeVec] = rsObj.get_goodcurves();
+gcVec = gcCVec{7};
 
 %%%%%%%%%%%%%%%%%
 writerObj = VideoWriter('reach_info','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
-for goodcurvesIterator = 1:Properties.getNTimeGridPoints();
-	t0 = tt(goodcurvesIterator);
-	t1 = t0 + timeVec(end);
-	x0 = xx(:, goodcurvesIterator);
+for goodcurvesIterator = 1:(size(gcVec,2)-1)
+	startTime = gcTimeVec(goodcurvesIterator);
+    endTime = startTime + timeVec(end);
+	x0 = gcVec(:, goodcurvesIterator);
 	x0EllObj = x0 + Properties.getAbsTol()*ell_unitball(2);
-	rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, [t0 t1],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+	rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, [startTime endTime],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
-	ctObj = rsObj.cut(t1);
+	ctObj = rsObj.cut(endTime);
 	ctObj.plotByEa('r'); hold on;
 % 	ct.plotByIa('b'); hold on;
 	ell_plot(x0, 'k*');
