@@ -1,4 +1,5 @@
- aCMat = {'0' '-2' '0' '0' '0' '0' '0' '0' '0' '0'
+function bigd1
+aCMat = {'0' '-2' '0' '0' '0' '0' '0' '0' '0' '0'
       '2' '0'  '0' '0' '0' '0' '0' '0' '0' '0'
       '0' '0'  'cos(t)' '0' '0' '0' '0' '0' '0' '0'
       '0' '0' '0' '0' '0' '0' '1' '0' '0' '0'
@@ -30,3 +31,6 @@
  psObj=rsObj.projection(projBasisMat);
 
  psObj.plotByEa(); hold on; psObj.plotByIa();
+
+ 
+end

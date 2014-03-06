@@ -1,3 +1,4 @@
+function mech
  k1 = 50;
  k2 = 47;
 
@@ -31,3 +32,4 @@
  ps.Obj.plotByEa(); hold on;
  psObj.plotByIa(); hold on;
 
+end

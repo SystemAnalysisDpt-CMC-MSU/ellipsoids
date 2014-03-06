@@ -1,3 +1,4 @@
+function ctreach
 % Continuous-time system reachability test.
 
 clear P1;
@@ -38,3 +39,5 @@ clear P1;
 % 
 %   rsObj.plotByEa('g'); hold on;
 %  plotByIa(rs, 'c'); hold on;
+
+end

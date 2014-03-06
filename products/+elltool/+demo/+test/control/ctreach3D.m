@@ -1,3 +1,4 @@
+function ctreach3D
 % Continuous-time system reachability test in 3D.
 
 % clear P;
@@ -18,3 +19,5 @@
 
   eaEllMat        = rsObj.get_ea();
   iaEllMat        = rsObj.get_ia();
+
+end

@@ -1,5 +1,5 @@
+function coll
 % Continuous-time system backward reachability test.
-
 clear P;
 
   aMat        = [0 1; -2 0];
@@ -33,7 +33,7 @@ clear P;
   [fgcCVec, fTime] = rsObj.cut([0 0.886]).get_goodcurves();  fgcCVec = fgcCVec{1};
   [bgcCVec, bTime] = brsObj.cut([endTime 0.886]).get_goodcurves(); bgcCVec = bgcCVec{28};
   bCenterVec = brsObj.cut([endTime 0.886]).get_center();
-  bgcCVec = 2*bc - bgcCVec;
+  bgcCVec = 2*bCenterVec - bgcCVec;
 
   ell_plot([fTime;fgcCVec], 'r'); hold on;
   ell_plot([bTime;bgcCVec], 'k'); hold on;
@@ -44,3 +44,28 @@ clear P;
   ell_plot([t;fgcVec], 'ro');
   ell_plot([0;3;1],'r*');
   ell_plot([endTime;2;0],'k*');
+  
+  
+  %%%%%%%%%%% coll1 next
+  
+   t = 0.886;
+ ctObj = rsObj.cut(t);
+ bctObj = brsObj.cut(t);
+ efEllMat = ctObj.get_ea();
+ ebEllMat = bctObj.get_ea();
+ fgcCVec = ctObj.get_goodcurves(); 
+ fgcVec = fgcCVec{1};
+%  dst = ebEllMat.distance(fgcVec);
+%  fgcId = find(dst == max(dst));
+ bgcCVec = bct.get_goodcurves(); 
+%  bgcVec = bgcCVec{fgcId};
+ bgcVec = bgcCVec{1};
+ fCenter = ctObj.get_center();
+ bCenter = bctObj.get_center();
+ bgcVec = -(bgcVec - bCenter) + bCenter;
+ ctObj.plotByEa(); hold on;
+ bctObj.plotByEa('g'); hold on;
+ ell_plot(fgcVec,'r*');
+ ell_plot(bgcVec,'k*');
+
+end

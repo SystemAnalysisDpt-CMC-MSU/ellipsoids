@@ -1,4 +1,5 @@
- firstAMat = [0 1 0 0 0; -2 0 0 0 0; 0 0 -1 0 0; 0 0 0 0 0; 0 0 0 0 1];
+function bigd
+firstAMat = [0 1 0 0 0; -2 0 0 0 0; 0 0 -1 0 0; 0 0 0 0 0; 0 0 0 0 1];
  secondAMat = [-4 0 0 0 0; 0 -3 0 0 0; 0 0 0 0 0; 0 0 0 -1 1; 0 0 0 0 -1];
  thirdAMat = [0 0 0 0 0; -1 0 0 0 0; 0 0 -2 0 0; 0 2 0 0 0; 0 0 0 0 1];
  forthAMat = [0 1 0 0 0; 0 0 1 0 0; 0 0 0 0 0; 0 0 0 0 1; 0 0 0 -1 0];
@@ -35,3 +36,6 @@
  psObj=rsObj.projection(projBasisMat);
 
  psObj.plotByEa(); hold on; psObj.plotByIa();
+ 
+ 
+end

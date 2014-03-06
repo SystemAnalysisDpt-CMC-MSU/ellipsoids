@@ -1,3 +1,4 @@
+function reachdist
   timeVec  = [0 5];
   w  = 1;
   aMat  = [0 1; -w 0];
@@ -21,3 +22,5 @@
 
   rsObj.plotByEa();
   rsObj.plotByIa();
+
+end
