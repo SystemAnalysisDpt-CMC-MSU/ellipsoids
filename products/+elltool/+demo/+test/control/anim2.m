@@ -29,9 +29,8 @@ secondNewEndTime  = 15;
 dirsMat  = [1 0; 2 1; 1 1; 1 2; 0 1; -1 2; -1 1; -2 1]';
 firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
 secondRsObj = firstRsObj.evolve(firstNewEndTime, secondSys);
-% thirdRsObj = secondRsObj.evolve(secondNewEndTime, thirdSys); % problem with regularization
-% thirdRsObj = elltool.reach.ReachContinuous(thirdSys,x0EllObj,dirsMat,...
-%             [timeVec(1) secondNewEndTime],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
+thirdRsObj = secondRsObj.evolve(secondNewEndTime, thirdSys);
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 dt = 1/24;
@@ -57,14 +56,14 @@ for timeIntervalsIterator = (timeIntervalsQuant+1):2*timeIntervalsQuant
   closereq;
 end
 
-% for k = (2*N+1):3*N
-%   thirdRsObj.cut([0 dt*(k)]).plotByEa('m');
-% %   thirdRsObj.cut([0 dt*(k)]).plotByIa('c');
-%   axis([0 secondNewEndTime -50 50 -10 10]);
-%   videoFrameObj = getframe(gcf);
-%   writeVideo(writerObj,frame);
-%   closereq;
-% end
+for k = (2*N+1):3*N
+  thirdRsObj.cut([0 dt*(k)]).plotByEa('m');
+%   thirdRsObj.cut([0 dt*(k)]).plotByIa('c');
+  axis([0 secondNewEndTime -50 50 -10 10]);
+  videoFrameObj = getframe(gcf);
+  writeVideo(writerObj,frame);
+  closereq;
+end
 close(writerObj);       
 
 end
