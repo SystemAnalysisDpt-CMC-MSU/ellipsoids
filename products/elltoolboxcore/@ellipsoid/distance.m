@@ -253,15 +253,14 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,...
 %            System Analysis Department 2012 $
 %
 %
-import modgen.common.throwerror
+import modgen.common.throwerror;
 tic;
 [ellCenterVec, ellQMat] = double(ellObj);
 if rank(ellQMat) < size(ellQMat, 2)
     ellQMat = ellipsoid.regularize(ellQMat,absTol);
 end
-ellQMat=ellQMat\eye(size(ellQMat));
 vectorVec=vectorVec-ellCenterVec;
-vectorEllVal=vectorVec'*ellQMat*vectorVec;
+vectorEllVal=realsqrt(vectorVec'*ell_inv(ellQMat)*vectorVec);
 if ( vectorEllVal < (1-absTol) )
     distEllVec=-1;
 elseif (abs(vectorEllVal-1)<absTol)
