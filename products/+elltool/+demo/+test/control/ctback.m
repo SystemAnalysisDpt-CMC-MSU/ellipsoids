@@ -1,3 +1,4 @@
+function ctback
 % Continuous-time system backward reachability test.
 
   aMat        = [0 1; 0 0];
@@ -15,3 +16,5 @@
 
   eaEllMat       = rsObj.get_ea();
   iaEllMat       = rsObj.get_ia();
+
+end

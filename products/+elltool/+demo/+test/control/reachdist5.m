@@ -1,3 +1,4 @@
+function reachdist5
   timeVec  = [1 5];
   w  = 2;
   aCMat  = {'0' '1' '0' '0' '0'
@@ -18,3 +19,5 @@
   dirsMat = [0 1 -1 0 1; 0 1 1 0 0]';
 %   o.save_all = 1;
   rsObj = elltool.reach.ReachContinuous(s, x0EllObj, dirsMat, timeVec,'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+
+end

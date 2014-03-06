@@ -1,3 +1,4 @@
+function tt
 % Continuous-time system reachability test.
 
   aCMat        = {'2' '0'; '0' 't'};
@@ -18,3 +19,4 @@
   rsObj.plotByIa(); hold on;
 
 	  
+end

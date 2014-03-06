@@ -1,4 +1,4 @@
-
+function circ1
 R = 4;
 L = 0.5;
 C = 0.1; 
@@ -25,3 +25,5 @@ firstRsObj.plotByEa(); hold on;
 firstRsObj.plotByIa(); hold on;
 secondRsObj.plotByEa('r'); hold on;
 secondRsObj.plotByIa('y'); hold on;
+
+end

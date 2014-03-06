@@ -1,4 +1,4 @@
-
+function circ
 R = 2; 
 L = 1; 
 C = 0.1; 
@@ -15,3 +15,5 @@ rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec, 'isRegEna
 
 rsObj.plotByEa(); hold on;
 rsObj.plotByIa(); hold on;
+
+end
