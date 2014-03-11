@@ -1,8 +1,7 @@
 function outEll = ellintersection_ia(inpEllArr)
 %
 % ELLINTERSECTION_IA - computes maximum volume ellipsoid that is contained  
-%                      in the intersection of given ellipsoids.
-%                      
+%                     in the intersection of given ellipsoids.                      
 %
 % Input:
 %   regular:
@@ -52,6 +51,8 @@ persistent logger;
 dimsArr = dimension(inpEllArr);
 minEllDim   = min(dimsArr(:));
 
+
+
 modgen.common.checkvar( inpEllArr , 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.');
@@ -76,6 +77,16 @@ if is2EllEqCentre(inpEllVec)
 
     firstEllShMat = firstEllObj.getShapeMat();
     secEllShMat = secEllObj.getShapeMat();
+    
+    [~,absTol] = firstEllObj.getAbsTol();
+%     if ~(gras.la.ismatposdef(firstEllShMat, absTol))
+%         throwerror('errorMessage','shapeMat matrice must not be degenerate');
+%     end;
+    import modgen.common.checkmultvar;
+    checkmultvar(@(aMat, aAbsTolVal)gras.la.ismatposdef(aMat,aAbsTolVal),...
+    2, firstEllShMat, absTol,...
+    'errorTag','wrongInput:shapeMat',...
+    'errorMessage','shapeMat matrice must not be degenerate');
 
     sqrtFirstEllShMat = ...
         gras.la.sqrtmpos(firstEllShMat,firstEllObj.getAbsTol());

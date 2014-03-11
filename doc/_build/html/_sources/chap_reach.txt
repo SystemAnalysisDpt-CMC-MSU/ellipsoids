@@ -1,4 +1,4 @@
-Reachability
+﻿Reachability
 ============
 
 Basics of Reachability Analysis
@@ -827,7 +827,7 @@ in discrete-time case, with :math:`t\leqslant\tau<t_1`, such that
 
 **Definition.** Given the terminal time :math:`t_1` and target set :math:`{\mathcal Y}_1`, the
 minmax CLBRS :math:`\underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)` of system
-([ctds2]) or [dtds2] at time :math:`t<t_1`, is the set of all states
+:eq:`ctds2` or :eq:`dtds2` at time :math:`t<t_1`, is the set of all states
 :math:`y`, for each of which there exists control
 :math:`u(\tau, y(\tau))\in{\mathcal U}(\tau)` that for every disturbance
 :math:`v(\tau)\in{\mathcal V}(\tau)` assigns terminal state
@@ -1191,7 +1191,7 @@ and the orthogonal matrix :math:`T_l(t)` is determined by the equation
    X_l^-(t)l(t)\rangle^{1/2}}(X_l^{-}(t))^{1/2}l(t).
 
 Similarly to the external case, the terms containing :math:`G(t)` and
-:math:`Q(t)` vanish from the equation ([fwdint1]) for a system without
+:math:`Q(t)` vanish from the equation :eq:`fwdint1` for a system without
 disturbance.
 
 The point where the external and internal ellipsoids touch the boundary

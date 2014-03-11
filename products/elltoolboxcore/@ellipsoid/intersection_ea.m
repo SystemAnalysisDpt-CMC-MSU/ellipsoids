@@ -1,5 +1,6 @@
 function outEllArr = intersection_ea(myEllArr, objArr)
 %
+%
 % INTERSECTION_EA - external ellipsoidal approximation of the
 %                   intersection of two ellipsoids, or ellipsoid and
 %                   halfspace, or ellipsoid and polytope.
@@ -86,7 +87,6 @@ else
 end
 isEllScal = isscalar(myEllArr);
 isObjScal = isscalar(objArr);
-
 checkmultvar( 'all(size(x1)==size(x2))|| x3 || x4 ',...
         4,myEllArr,objArr,isEllScal,isObjScal,...
     'errorTag','wrongSizes',...
@@ -151,13 +151,14 @@ function outEll = l_intersection_ea(fstEll, secObj)
 
 fstEllCentVec = fstEll.centerVec;
 fstEllShMat = fstEll.shapeMat;
-if rank(fstEllShMat) < size(fstEllShMat, 1)
-    fstEllShMat = ...
-        ell_inv(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
-else
-    fstEllShMat = ell_inv(fstEllShMat);
+if ~all(fstEllShMat(:) == 0)
+    if rank(fstEllShMat) < size(fstEllShMat, 1)
+        fstEllShMat = ...
+            ell_inv(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
+    else
+        fstEllShMat = ell_inv(fstEllShMat);
+    end
 end
-
 if isa(secObj, 'hyperplane')
     [normHypVec, hypScalar] = parameters(-secObj);
     hypNormInv = 1/realsqrt(normHypVec'*normHypVec);
@@ -188,8 +189,16 @@ else
         outEll = ellipsoid;
         return;
     end
+    if all(fstEllShMat(:) == 0)
+        outEll = fstEll;
+        return;
+    end
     qSecVec = secObj.centerVec;
     seqQMat = secObj.shapeMat;
+    if all(seqQMat(:)==0)
+        outEll = secObj;
+        return;
+    end;
     if rank(seqQMat) < size(seqQMat, 1)
         seqQMat = ell_inv(ellipsoid.regularize(seqQMat,secObj.absTol));
     else
@@ -197,8 +206,8 @@ else
     end
 end
 
-lambda = l_get_lambda(fstEllCentVec, fstEllShMat, qSecVec, ...]
-    seqQMat, isa(secObj, 'hyperplane'));
+lambda = l_get_lambda(fstEllCentVec, fstEllShMat, qSecVec, ...
+    seqQMat, isa(secObj, 'hyperplane'), fstEll.getAbsTol);
 xMat = lambda*fstEllShMat + (1 - lambda)*seqQMat;
 xMat = 0.5*(xMat + xMat');
 invXMat = ell_inv(xMat);
@@ -219,7 +228,7 @@ end
 %%%%%%%%
 
 function lambda = l_get_lambda(fstEllCentVec, fstEllShMat, qSecVec, ...
-    secQMat, isFlag)
+    secQMat, isFlag, absTol)
 %
 % L_GET_LAMBDA - find parameter value for minimal volume ellipsoid.
 %
@@ -235,10 +244,10 @@ function lambda = l_get_lambda(fstEllCentVec, fstEllShMat, qSecVec, ...
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-[lambda, fVal] = fzero(@ell_fusionlambda, 0.5, [], ...
+[lambda, ~, exitFlag] = fzero(@ell_fusionlambda, 0.5, [], ...
     fstEllCentVec, fstEllShMat, qSecVec, secQMat, size(fstEllCentVec, 1));
 
-if (lambda < 0) || (lambda > 1)
+if (lambda < absTol) || (lambda > 1 - absTol)
     if isFlag || (det(fstEllShMat) > det(secQMat))
         lambda = 1;
     else
