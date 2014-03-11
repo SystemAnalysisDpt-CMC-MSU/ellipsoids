@@ -10,13 +10,13 @@
 
   X0 = ellipsoid([1; 0.5; -0.5; 1.10; 0.55; 0], eye(6));
 
-  lsys = linsys(A, B, U, [], [], [], [], 'd');
+  lsys = elltool.linsys.LinSysDiscrete(A, B, U, [], [], [], [], 'd');
 
   L0 = [1 0 0 0 0 0; 0 1 0 0 0 0; 0 0 1 0 0 1; 0 1 0 1 1 0; 0 0 -1 1 0 1; 0 0 0 -1 1 1]';
-  rs = reach(lsys, X0, L0, N);
+  rs = elltool.reach.ReachDiscrete(lsys, X0, L0, N,'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
 
   BB = [0 0 0 0 1 0; 0 0 0 0 0 1]';
-  ps = projection(rs, BB);
+  ps = rs.projection(BB);
   
-  plotByEa(ps); hold on;
-  plotByIa(ps); hold on;
+  ps.plotByEa(); hold on;
+  ps.plotByIa(); hold on;
