@@ -132,7 +132,8 @@ end
         sqrtShArr(:,:,ellIndex) = shSqrtMat;
         absTolArr(ellIndex);
         dstMat = shSqrtMat*dirMat;
-        rotArr(:,:,ellIndex,:) = mlorthtransl(dstMat,srcMat);
+%         rotArr(:,:,ellIndex,:) = mlorthtransl(dstMat,srcMat);
+        rotArr(:,:,ellIndex,:) = mlorthtransl(srcMat,dstMat);
     end
 
     function fSingleDirection(dirIndex)
