@@ -9,8 +9,7 @@ function degdist
   sys  = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds, cMat, SVBounds);
   
   x0EllObj = ellipsoid([10; 0], [0.5 0; 0 0.5]);
-%   dirsMat = [1 -1; 1 1; 0 1; 1 0]';
-  dirsMat = [1 1; 1 -1]';
-  rsObj = elltool.reach.ReachContinuous(s, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+  dirsMat = [1 1; 1 -1].';
+  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
 end

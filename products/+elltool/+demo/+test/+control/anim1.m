@@ -34,6 +34,7 @@ writerObj = VideoWriter('anim1','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
 for timeIntervalsIterator = 1:timeIntervalsQuant
+  ellTubeObj = firstRsObj.ge
   firstRsObj.cut([0 dt*(timeIntervalsIterator)]).plotByEa(); 
 %   rs1.cut([0 dt*(k-1)]).plotByIa(); hold off;
   axis([0 timeVec(2) -40 40 -5 5]);

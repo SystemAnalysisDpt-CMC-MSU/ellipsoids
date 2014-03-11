@@ -29,7 +29,7 @@ function mech
  prohBasisMat = [1 0 0 0; 0 1 0 0]';
  psObj = rsObj.projection(prohBasisMat);
 
- ps.Obj.plotByEa(); hold on;
+ psObj.plotByEa(); hold on;
  psObj.plotByIa(); hold on;
 
 end
