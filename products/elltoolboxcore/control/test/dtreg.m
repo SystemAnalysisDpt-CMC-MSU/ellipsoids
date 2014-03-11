@@ -12,7 +12,7 @@
   L0  = [cos(phi); sin(phi)];
   
   ds = elltool.linsys.LinSysDiscrete(Ad, B, P, [], [], [], [], 'd');
-  rs = elltool.reach.ReachDiscrete(ds, X0, L0, N,'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
+  rs = elltool.reach.ReachDiscrete(ds, X0, L0, N,'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-5);
   E  = rs.get_ea();
   I  = rs.get_ia();
   
