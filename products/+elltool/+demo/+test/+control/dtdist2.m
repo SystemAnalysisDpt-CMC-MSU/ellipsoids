@@ -1,18 +1,15 @@
 function dtdist2
 dt = 0.05;
 w = 0.2;
-A=[0 1; -w 0];
-B1=[1.5 0; 0 1];
-%B1=[1;0];
-B2=[0.5 0;0 0.5];
-C=[1 0]; 
-D=0; 
-syst1=ss(A,B1,C,D); 
-syst2=ss(A,B2,C,D); 
+aMat=[0 1; -w 0];
+firstBMat=[1.5 0; 0 1];
+secondBMat=[0.5 0;0 0.5];
+cVec=[1 0]; 
+d=0; 
+syst1=ss(aMat,firstBMat,cVec,d); 
+syst2=ss(aMat,secondBMat,cVec,d); 
 systd1=c2d(syst1,dt); 
 systd2=c2d(syst2,dt); 
-sysStruct1=mpt_sys(systd1); 
-sysStruct2=mpt_sys(systd2); 
 eA = systd1.a;
 eB = systd1.b;
 eB2 = systd2.b;
@@ -24,21 +21,19 @@ U3 = ell_unitball(1);
 V = ell_unitball(2);
 o = [];
 
-s = elltool.linsys.LinSysDiscrete(eA, eB, U, eB2, V, [], [], 'd');
-%s = linsys(eA, eB, U3, [], [], [], [], 'd');
+dSys = elltool.linsys.LinSysDiscrete(eA, eB, U, eB2, V, [], [], 'd');
 
-phi = 0:0.1:pi;
-L = [cos(phi); sin(phi)];
-%L = [1 0; 0 1; 1 1; 1 -1]';
-N = [0 50];
+phiVec = 0:0.1:pi;
+dirsMat = [cos(phiVec); sin(phiVec)];
+stepsVec = [0 50];
 
-rs1 = elltool.reach.ReachDiscrete(s, X0, L, N);
+firstRsObj = elltool.reach.ReachDiscrete(dSys, X0, dirsMat, stepsVec);
 
 o.minmax = 1;
 
-rs2 = elltool.reach.ReachDiscrete(s, X0, L, N);
+secondRsObj = elltool.reach.ReachDiscrete(dSys, X0, dirsMat, stepsVec);
 
-rs1.plotByEa(); hold on;
-rs2.plotByEa('g'); hold on;
+firstRsObj.plotByEa(); hold on;
+secondRsObj.plotByEa('g'); hold on;
 
 end
