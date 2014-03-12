@@ -1,12 +1,7 @@
 function ctreach3D
 % Continuous-time system reachability test in 3D.
 
-% clear P;
-% o.save_all = 1;
-
   aCMat        = {'sin(0.3*t)' '-0.22' '0'; '0' '-1' '0'; '-0.5' '1' 'cos(0.2*t)'};
-  %A1       = [1 -1 0; 0 2 -1; 3 1 1];
-  %A2        = [-1 0 0; 0 0 0; 0 0 0.2];
   bMat        = [0 1 1; 1 1 0; 1 0 1];
   SUBounds.center = {'sin(2*t)'; 'cos(2*t)'; '1'};
   SUBounds.shape  = [1 0 0; 0 2 0; 0 0 2];
