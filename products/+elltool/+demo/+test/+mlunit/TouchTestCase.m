@@ -15,9 +15,9 @@ classdef TouchTestCase < mlunitext.test_case
 %             TmpDataManager.setRootDir(pathstrVec);
             SFileNameArray = dir(pathstrVec);
             SFileNameArray = SFileNameArray(3:end);
-            for nameIterator = 1 : size(SFileNameArray,1)
+            for iName = 1 : size(SFileNameArray,1)
                 testName = modgen.string.splitpart...
-                    (SFileNameArray(nameIterator).name, '.', 'first');
+                    (SFileNameArray(iName).name, '.', 'first');
                 eval(testName);
             end
 % % % %             anim1();
