@@ -2,7 +2,7 @@ function anim4
 
 import elltool.conf.Properties;
 
-C =0.25;
+ C =0.25;
  aMat = [0 1; 0 0]; 
  bMat = [0; 1]; 
  SUBounds = ellipsoid(1);
@@ -17,16 +17,16 @@ C =0.25;
  eaEllMat = rsObj.cut(timeVec(end)).get_ea();
 
     eaEllMat  = inv(eaEllMat');
-    approxSize   = size(eaEllMat, 2);
-    dirsQuant   = Properties.getNPlot2dPoints()/2;
-    phi = linspace(0, 2*pi, dirsQuant);
-    secondDirsMat   = [cos(phi); sin(phi)];
+    nApprox   = size(eaEllMat, 2);
+    nDirs   = Properties.getNPlot2dPoints()/2;
+    phiVec = linspace(0, 2*pi, nDirs);
+    secondDirsMat   = [cos(phiVec); sin(phiVec)];
     aprEndTime  = [];
-    for dirsIterator = 1:dirsQuant
-      dirVec    = secondDirsMat(:, dirsIterator);
+    for iDirs = 1:nDirs
+      dirVec    = secondDirsMat(:, iDirs);
       maxVal = 0;
-      for approxIterator = 1:approxSize
-        qMat = parameters(eaEllMat(1, approxIterator));
+      for iApprox = 1:nApprox
+        qMat = parameters(eaEllMat(1, iApprox));
         val = dirVec' * qMat * dirVec;
         if val > maxVal
           maxVal = val;
@@ -35,7 +35,7 @@ C =0.25;
       normDirVec = dirVec/realsqrt(maxVal);
       aprEndTime = [aprEndTime normDirVec];
     end
-    aprEndTime = [timeVec(end)*ones(1, dirsQuant); aprEndTime];
+    aprEndTime = [timeVec(end)*ones(1, nDirs); aprEndTime];
 
 
  [gcCVec, gcTimeVec] = rsObj.get_goodcurves();
@@ -49,14 +49,14 @@ C =0.25;
 writerObj.FrameRate = 15;
 open(writerObj);
 % set(gca,'nextplot','replacechildren');
- for gcIterator = 1:(size(gcVec,2)-1)
-   x0 = C*gcVec(:, gcIterator);
+ for iGc = 1:(size(gcVec,2)-1)
+   x0 = C*gcVec(:, iGc);
    x0EllObj = x0 + Properties.getAbsTol()*ell_unitball(2);
-   startTime = gcTimeVec(gcIterator);
+   startTime = gcTimeVec(iGc);
    firstDirsMat = [];
-   for approxIterator = 1:approxSize
-	   secondDirsMat = dirsCVec{approxIterator};
-	   firstDirsMat = [firstDirsMat secondDirsMat(:, gcIterator)];
+   for iApprox = 1:nApprox
+	   secondDirsMat = dirsCVec{iApprox};
+	   firstDirsMat = [firstDirsMat secondDirsMat(:, iGc)];
    end
  endTime = timeVec(end);
    RsObj = elltool.reach.ReachContinuous(sys, x0EllObj, firstDirsMat, [startTime endTime], 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
@@ -64,7 +64,7 @@ open(writerObj);
    ell_plot(aprEndTime, 'r', 'LineWidth', 2);
    ell_plot(xEnd, 'ko');
    ell_plot([startTime; x0], 'k*');
-   ell_plot([gcTimeVec(gcIterator:end); C*gcVec(:, gcIterator:end)], 'k');
+   ell_plot([gcTimeVec(iGc:end); C*gcVec(:, iGc:end)], 'k');
 
    title(sprintf('Reach tube at time T = %d', startTime));
   axis([0 timeVec(end) -40 40 -6 6]);
