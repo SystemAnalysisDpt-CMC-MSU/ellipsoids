@@ -8,10 +8,7 @@ function ctreach4
 
   sys  = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
 
-%   dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1]';
- % L  = [1 1 0 1; 0 -1 1 0; -1 1 1 1]';
-  dirsMat  = eye(4);
-%   o.save_all = 1;
+  dirsMat  = [1 1 0 1; 0 -1 1 0; -1 1 1 1; 0 0 -1 1]';
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
 end
