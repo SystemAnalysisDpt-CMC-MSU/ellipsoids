@@ -22,16 +22,15 @@ gcVec = gcCVec{7};
 writerObj = VideoWriter('reach_info','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
-for goodcurvesIterator = 1:(size(gcVec,2)-1)
-	startTime = gcTimeVec(goodcurvesIterator);
+for iGc = 1:(size(gcVec,2)-1)
+	startTime = gcTimeVec(iGc);
     endTime = startTime + timeVec(end);
-	x0 = gcVec(:, goodcurvesIterator);
+	x0 = gcVec(:, iGc);
 	x0EllObj = x0 + Properties.getAbsTol()*ell_unitball(2);
 	rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, [startTime endTime],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
 	ctObj = rsObj.cut(endTime);
 	ctObj.plotByEa('r'); hold on;
-% 	ct.plotByIa('b'); hold on;
 	ell_plot(x0, 'k*');
 	axis([-25 70 -5 14]);
     hold off;
