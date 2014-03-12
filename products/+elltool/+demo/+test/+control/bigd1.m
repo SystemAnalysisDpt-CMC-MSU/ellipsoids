@@ -19,18 +19,17 @@ aCMat = {'0' '-2' '0' '0' '0' '0' '0' '0' '0' '0'
 
  timeVec = [2 5];
 
-%  dirsMat = [1 1 -1 0 1 0 0 0 -1 1; 0 1 0 1 0 -1 0 -1 0 1]';
  dirsMat = eye(10);
 
  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
 
-%  projBasisMat = [1 0 0 0 0 0 0 0 0 0; 0 0 1 0 0 0 0 0 0 0; 0 0 0 1 0 0 0 0 0 0]';
-%  projBasisMat = [1 0 0 0 0 0 0 0 0 0; 0 0 1 0 0 0 0 0 0 0]';
  projBasisMat = [0 0 0 0 0 0 0 0 0 1; 0 0 1 0 0 0 0 0 0 0].';
 
  psObj=rsObj.projection(projBasisMat);
 
- psObj.plotByEa(); hold on; psObj.plotByIa();
+ psObj.plotByEa(); 
+ hold on; 
+ psObj.plotByIa();
 
  
 end
