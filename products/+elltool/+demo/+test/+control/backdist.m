@@ -10,7 +10,6 @@ startTime  = 5;
   
   x0EllObj = ellipsoid([10; 0], [25 0; 0 25]);
   dirsMat = [1 -1; 1 1; 0 1]';
-%  L0 = [1 1]';
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, [startTime 0], 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
   
