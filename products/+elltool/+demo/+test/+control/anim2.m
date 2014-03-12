@@ -4,21 +4,19 @@ import elltool.conf.Properties;
 
 thirdAMat = [0 1; -4 0];
 thirdBMat = [1; 0];
-thirdSUBounds = ell_unitball(1);
-thirdSys = elltool.linsys.LinSysContinuous(thirdAMat, thirdBMat, thirdSUBounds);
+SThirdUBounds = ell_unitball(1);
+thirdSys = elltool.linsys.LinSysContinuous(thirdAMat, thirdBMat, SThirdUBounds);
 
 secondACMat = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 secondBCMat = {'10' '0'; '0' '1/(2 + sin(t))'};
-secondSUBounds.center = [0; 0];
-secondSUBounds.shape = {'4 - sin(t)' '-1'; '-1' '1 + (cos(t))^2'};
-secondSys = elltool.linsys.LinSysContinuous(secondACMat, secondBCMat, secondSUBounds);
+SSecondUBounds.center = [0; 0];
+SSecondUBounds.shape = {'4 - sin(t)' '-1'; '-1' '1 + (cos(t))^2'};
+secondSys = elltool.linsys.LinSysContinuous(secondACMat, secondBCMat, SSecondUBounds);
 
 firstAMat = [0 1; -4 0];
 firstBMat = [1; 0];
-firstSUBounds = ell_unitball(1);
-% C1 = [0; 1];
-% V1 = ellipsoid(0.05);
-firstSys = elltool.linsys.LinSysContinuous(firstAMat, firstBMat, firstSUBounds);
+uBoundsEllObj = ell_unitball(1);
+firstSys = elltool.linsys.LinSysContinuous(firstAMat, firstBMat, uBoundsEllObj);
 
 x0EllObj = ell_unitball(2);
 
@@ -33,37 +31,27 @@ thirdRsObj = secondRsObj.evolve(secondNewEndTime, thirdSys);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-dt = 1/24;
-timeIntervalsQuant = 24 * 5;
+axisConfVec = [0 secondNewEndTime -50 50 -10 10];
 writerObj = VideoWriter('anim2','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
-for timeIntervalsIterator = 1:timeIntervalsQuant
-  firstRsObj.cut([0 dt*(timeIntervalsIterator)]).plotByEa('b');
-%   firstRsObj.cut([0 dt*(k)]).plotByIa('y');
-  axis([0 secondNewEndTime -50 50 -10 10]);
-  videoFrameObj = getframe(gcf);
-  writeVideo(writerObj,videoFrameObj);
-  closereq;
-end
-  
-for timeIntervalsIterator = (timeIntervalsQuant+1):2*timeIntervalsQuant
-  secondRsObj.cut([0 dt*(timeIntervalsIterator)]).plotByEa('r');
-%   secondRsObj.cut([0 dt*(k)]).plotByIa('g');
-  axis([0 secondNewEndTime -50 50 -10 10]);
-  videoFrameObj = getframe(gcf);
-  writeVideo(writerObj,videoFrameObj);
-  closereq;
-end
-
-for timeIntervalsIterator = (2*timeIntervalsQuant+1):3*timeIntervalsQuant
-  thirdRsObj.cut([0 dt*(timeIntervalsIterator)]).plotByEa('m');
-%   thirdRsObj.cut([0 dt*(k)]).plotByIa('c');
-  axis([0 secondNewEndTime -50 50 -10 10]);
-  videoFrameObj = getframe(gcf);
-  writeVideo(writerObj,frame);
-  closereq;
-end
+writerObj = getAnimation(firstRsObj,writerObj,[0 5],axisConfVec);
+writerObj = getAnimation(secondRsObj,writerObj,[5 10],axisConfVec);
+writerObj = getAnimation(thirdRsObj,writerObj,[10 15],axisConfVec);
 close(writerObj);       
 
+end
+
+function writerObj = getAnimation(rsObj,writerObj,timeVec,axisConfVec)
+  nTimeSteps = writerObj.FrameRate * (timeVec(2)-timeVec(1));
+  timeStepsVec = linspace(timeVec(1),timeVec(2),nTimeSteps);
+  timeStepsVec(1) = [];
+  nTimeSteps = nTimeSteps - 1;
+  for iTimeSteps = 1:nTimeSteps
+    rsObj.cut([0 timeStepsVec(iTimeSteps)]).plotByEa(); 
+    axis(axisConfVec);
+    videoFrameObj = getframe(gcf);
+    writeVideo(writerObj,videoFrameObj);
+    closereq;
+  end
 end
