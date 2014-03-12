@@ -13,36 +13,31 @@ function anim3
   firstSys = elltool.linsys.LinSysContinuous(firstACMat, firstBMat, firstSUBounds);
   secondSys = elltool.linsys.LinSysContinuous(secondAMat, secondBMat, secondSUBounds);
   firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
-  secondRsObj = evolve(firstRsObj, 5, secondSys);
+  secondRsObj = firstRsObj.evolve(5, secondSys);
     
   %%%%%%%%%%%%%%%%%%%%%%
-  
-  
-  dt = 1/24;
-
+axisConfVec = [-20 20 -2 2 -30 30];
+camposConfVec = [-20 -2 -30];
 writerObj = VideoWriter('switch3_a','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
-for timeIntervalsIterator = 1:48
-  firstRsObj.cut(dt*(timeIntervalsIterator)).plotByEa('b');
-%   firstRsObj.cut([0 dt*(k)]).plotByIa('y');
-  axis([-20 20 -2 2 -30 30]);
-  %campos([-10 -1 10]);
-  campos([-20 -2 -30]);
-  videoFrameObj = getframe(gcf);
-  writeVideo(writerObj,videoFrameObj);
-  closereq;
-end
-
-for timeIntervalsIterator = 49:120
-  firstRsObj.cut(dt*(timeIntervalsIterator)).plotByEa('r');
-%   firstRsObj.cut([0 dt*(k)]).plotByIa('g');
-  axis([-20 20 -2 2 -30 30]);
-  campos([-20 -2 -30]);
-  videoFrameObj = getframe(gcf);
-  writeVideo(writerObj,videoFrameObj);
-  closereq;
-end
+writerObj = getAnimation(firstRsObj,writerObj,[0 2],axisConfVec,camposConfVec);
+writerObj = getAnimation(secondRsObj,writerObj,[2 5],axisConfVec,camposConfVec);
 close(writerObj);
   
+end
+
+function writerObj = getAnimation(rsObj,writerObj,timeVec,axisConfVec,camposConfVec)
+  nTimeSteps = writerObj.FrameRate * (timeVec(2)-timeVec(1));
+  timeStepsVec = linspace(timeVec(1),timeVec(2),nTimeSteps);
+  timeStepsVec(1) = [];
+  nTimeSteps = nTimeSteps - 1;
+  for iTimeSteps = 1:nTimeSteps
+    rsObj.cut(timeStepsVec(iTimeSteps)).plotByIa('g'); 
+    axis(axisConfVec);
+    campos(camposConfVec);
+    videoFrameObj = getframe(gcf);
+    writeVideo(writerObj,videoFrameObj);
+    closereq;
+  end
 end
