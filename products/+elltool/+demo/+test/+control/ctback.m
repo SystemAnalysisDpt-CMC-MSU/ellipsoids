@@ -6,8 +6,6 @@ function ctback
   SUBounds.center = {'0'};
   SUBounds.shape  = 2;
   timeVec        = [4 2];
-%   phi      = 0:0.1:2*pi;
-%   dirsMat       = [cos(phi); sin(phi)];
   dirsMat       = [1 0; 0 1; 1 1; -1 1]';
   mEllObj        = 2*ell_unitball(2);
 
