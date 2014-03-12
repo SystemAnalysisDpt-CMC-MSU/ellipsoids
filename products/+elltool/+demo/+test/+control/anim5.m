@@ -22,17 +22,13 @@ import elltool.conf.Properties;
   writerObj = VideoWriter('reach_info3','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
-  for goodcurvesIterator = 1:(size(gcVec,2)-1)
-    x0  = C * gcVec(:, goodcurvesIterator);
+  for iGc = 1:(size(gcVec,2)-1)
+    x0  = C * gcVec(:, iGc);
     x0EllObj  = x0 + Properties.getAbsTol()*ell_unitball(3);
-%     x0EllObj  = x0 + 0.0001*ell_unitball(3);
     firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat,...
-        [gcTimeVec(goodcurvesIterator) (gcTimeVec(goodcurvesIterator)+3)],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
-%     projBasisMat = [1 0 0; 0 1 0].';
-    firstProjObj = firstRsObj.cut(gcTimeVec(goodcurvesIterator)+3); 
-%     firstProjObj = firstRsObj.projection(projBasisMat);
+        [gcTimeVec(iGc) (gcTimeVec(iGc)+3)],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+    firstProjObj = firstRsObj.cut(gcTimeVec(iGc)+3); 
     firstProjObj.plotByEa('r'); hold on;
-%     firstRsObj.plotByIa('b'); hold on;
     ell_plot(x0, 'k*');
     axis([0 20 -2 2 0 80]);
     campos([0 -2 10]);
