@@ -1,5 +1,5 @@
 function bigd
-firstAMat = [0 1 0 0 0; -2 0 0 0 0; 0 0 -1 0 0; 0 0 0 0 0; 0 0 0 0 1];
+ firstAMat = [0 1 0 0 0; -2 0 0 0 0; 0 0 -1 0 0; 0 0 0 0 0; 0 0 0 0 1];
  secondAMat = [-4 0 0 0 0; 0 -3 0 0 0; 0 0 0 0 0; 0 0 0 -1 1; 0 0 0 0 -1];
  thirdAMat = [0 0 0 0 0; -1 0 0 0 0; 0 0 -2 0 0; 0 2 0 0 0; 0 0 0 0 1];
  forthAMat = [0 1 0 0 0; 0 0 1 0 0; 0 0 0 0 0; 0 0 0 0 1; 0 0 0 -1 0];
@@ -23,19 +23,17 @@ firstAMat = [0 1 0 0 0; -2 0 0 0 0; 0 0 -1 0 0; 0 0 0 0 0; 0 0 0 0 1];
  dirsMat = [dirsMat [0 0 1 -1 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 -1]'];
  dirsMat = [dirsMat [-1 1 1 -1 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 -1]'];
  dirsMat = [dirsMat [-1 0 1 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 -1]'];
-% L0 = eye(20); 
 
  rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
  projBasisMat = zeros(20, 2);
- %BB = zeros(20, 3);
  projBasisMat(2, 1) = 1;
  projBasisMat(18, 2) = 1;
- %BB(13, 3) = 1;
 
  psObj=rsObj.projection(projBasisMat);
 
- psObj.plotByEa(); hold on; psObj.plotByIa();
+ psObj.plotByEa(); hold on; 
+ psObj.plotByIa();
  
  
 end
