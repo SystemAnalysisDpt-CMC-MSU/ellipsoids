@@ -19,7 +19,7 @@ rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec,'isRegEnab
 gcVec = gcCVec{7};
 
 %%%%%%%%%%%%%%%%%
-writerObj = VideoWriter('reach_info','MPEG-4');
+writerObj = VideoWriter('anim6','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
 for iGc = 1:(size(gcVec,2)-1)
