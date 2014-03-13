@@ -21,8 +21,7 @@ if (nRows~=nCols)
     throwerror('wrongInput:nonSquareMat',...
         'ISMATSYMM: Input matrix must be square.');
 end
-isSymm=false;
-if (all(all(qMat == transpose(qMat))))
-    isSymm=true;
-end
+absTol = elltool.conf.Properties.getAbsTol();
+qMat = qMat - transpose(qMat);
+isSymm = all(all(qMat < absTol));
 
