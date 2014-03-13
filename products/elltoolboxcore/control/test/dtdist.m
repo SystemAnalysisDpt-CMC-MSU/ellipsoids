@@ -6,20 +6,17 @@ X0 = ell_unitball(2);
 
 U = ell_unitball(2);
 V = ell_unitball(2);
-o = [];
 
-s = linsys(A, B, U, G, V, [], [], 'd');
+s = elltool.linsys.LinSysDiscrete(A, B, U, G, V, [], [], 'd');
 
 phi = 0:0.05:pi;
 L = [cos(phi); sin(phi)];
-%L = [1 0; 0 1; 1 1; 1 -1]';
 N = 10;
 
-rs1 = reach(s, X0, L, N, o);
+rs1 = elltool.reach.ReachDiscrete(s, X0, L, [0 N]);
 
-o.minmax = 1;
 
-rs2 = reach(s, X0, L, N, o);
+rs2 = reach(s, X0, L, [0 N],'isMinMax',true);
 
-plotByEa(rs1); hold on;
-plotByEa(rs2, 'g'); hold on;
+rs1.plotByEa();
+rs2.plotByEa('g');
