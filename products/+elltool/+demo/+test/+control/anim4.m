@@ -48,7 +48,6 @@ import elltool.conf.Properties;
   writerObj = VideoWriter('internal_point','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
-% set(gca,'nextplot','replacechildren');
  for iGc = 1:(size(gcVec,2)-1)
    x0 = C*gcVec(:, iGc);
    x0EllObj = x0 + Properties.getAbsTol()*ell_unitball(2);

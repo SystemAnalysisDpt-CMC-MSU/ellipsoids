@@ -19,19 +19,19 @@ function ctreach
   secondSys     = elltool.linsys.LinSysContinuous(secondACMat, firstBMat, firstSUBounds);
   thirdSys     = elltool.linsys.LinSysContinuous(firstAMat, firstBMat, firstSUBounds, secondBMat, SVBounds);
   
-  rsObj       = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+  rsObj       = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-5);
 
   rsObj.plotByEa(); hold on;
- plotByIa(rs); hold on;
+  rsObj.plotByIa(); hold on;
 
   rsObj = rsObj.evolve(10, secondSys);
 
   rsObj.plotByEa('r'); hold on;
- plotByIa(rs, 'y'); hold on;
+  rsObj.plotByIa('y'); hold on;
 	  
-  rsObj = rsObj.evolve(15, thirdSys); %problem with regularization
+  rsObj = rsObj.evolve(15, thirdSys);
 
   rsObj.plotByEa('g'); hold on;
-  plotByIa(rs, 'c'); hold on;
+  rsObj.plotByIa('c'); hold on;
 
 end

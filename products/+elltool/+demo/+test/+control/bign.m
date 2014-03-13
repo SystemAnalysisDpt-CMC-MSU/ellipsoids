@@ -5,32 +5,12 @@ import elltool.conf.Properties;
 
 Properties.setIsVerbose(false);
 Properties.setNTimeGridPoints(135);
-% profile clear
-% profile on
 
-test5
-test10
-test25
-test35
-test40
-
-% profile viewer
-
-% Separate functions for each N are needed for profiling purposes
-function test5
 test(5);
-
-function test10
 test(10);
-
-function test25
 test(25);
-
-function test35
 test(35);
 
-function test40
-test(40);
 
 function test(N)
 

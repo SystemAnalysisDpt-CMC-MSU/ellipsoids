@@ -40,7 +40,7 @@ clear P;
 
   fgcCVec = rsObj.cut(critTime).get_goodcurves(); 
   fgcVec = fgcCVec{1};
-  ell_plot([t;fgcVec], 'ro');
+  ell_plot([critTime;fgcVec], 'ro');
   ell_plot([0;3;1],'r*');
   ell_plot([endTime;2;0],'k*');
   
@@ -57,7 +57,6 @@ clear P;
  fgcId = find(dst == max(dst));
  bgcCVec = bctObj.get_goodcurves(); 
  bgcVec = bgcCVec{fgcId};
- fCenter = ctObj.get_center();
  bCenter = bctObj.get_center();
  bgcVec = -(bgcVec - bCenter) + bCenter;
  ctObj.plotByEa(); hold on;
