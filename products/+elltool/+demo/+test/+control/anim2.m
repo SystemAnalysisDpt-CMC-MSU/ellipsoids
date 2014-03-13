@@ -33,7 +33,7 @@ thirdRsObj = secondRsObj.evolve(secondNewEndTime, thirdSys);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 axisConfVec = [0 secondNewEndTime -50 50 -10 10];
 writerObj = VideoWriter('anim2','MPEG-4');
-writerObj.FrameRate = 15;
+writerObj.FrameRate = 10;
 open(writerObj);
 writerObj = getAnimation(firstRsObj,writerObj,[0 5],axisConfVec);
 writerObj = getAnimation(secondRsObj,writerObj,[5 10],axisConfVec);

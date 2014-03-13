@@ -27,7 +27,7 @@ classdef TouchTestCase < mlunitext.test_case
             end
             close all;
             cd(oldPath);
-            rmdir(tempDirName);
+            rmdir(tempDirName,'s');
             mlunitext.assert(true);
         end
         

@@ -18,7 +18,7 @@ function anim3
   %%%%%%%%%%%%%%%%%%%%%%
 axisConfVec = [-20 20 -2 2 -30 30];
 camposConfVec = [-20 -2 -30];
-writerObj = VideoWriter('switch3_a','MPEG-4');
+writerObj = VideoWriter('anim3','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
 writerObj = getAnimation(firstRsObj,writerObj,[0 2],axisConfVec,camposConfVec);

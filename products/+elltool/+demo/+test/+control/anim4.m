@@ -45,8 +45,8 @@ import elltool.conf.Properties;
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%
   
-  writerObj = VideoWriter('internal_point','MPEG-4');
-writerObj.FrameRate = 15;
+  writerObj = VideoWriter('anim4','MPEG-4');
+writerObj.FrameRate = 1;
 open(writerObj);
  for iGc = 1:(size(gcVec,2)-1)
    x0 = C*gcVec(:, iGc);

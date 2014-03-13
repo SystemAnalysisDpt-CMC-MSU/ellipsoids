@@ -19,7 +19,7 @@ import elltool.conf.Properties;
 
   %%%%%%%%%%%%%%%%%%%%%%
 
-  writerObj = VideoWriter('reach_info3','MPEG-4');
+  writerObj = VideoWriter('anim5','MPEG-4');
 writerObj.FrameRate = 15;
 open(writerObj);
   for iGc = 1:(size(gcVec,2)-1)
