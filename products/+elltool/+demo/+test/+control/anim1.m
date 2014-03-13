@@ -4,7 +4,6 @@ import elltool.conf.Properties;
 Properties.setNPlot2dPoints(1000)
 aCMat = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 bCMat = {'10' '0'; '0' '1/(2 + sin(t))'};
-%U = ell_unitball(2);
 SUBounds = struct();
 SUBounds.center = [0; 0];
 SUBounds.shape = {'4 - sin(t)' '-1'; '-1' '1 + (cos(t))^2'};
