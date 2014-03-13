@@ -12,37 +12,22 @@ classdef TouchTestCase < mlunitext.test_case
             testFileName = modgen.common.getcallername(1);
             [pathstrVec, ~, ~] = fileparts(which(testFileName));
             pathstrVec = [modgen.path.rmlastnpathparts(pathstrVec, 1),filesep,'+control'];
-%             TmpDataManager.setRootDir(pathstrVec);
+            TmpDataManager.setRootDir(pathstrVec);
+            tempDirName = TmpDataManager.getDirByCallerKey('test', 1);
+            oldPath = cd(tempDirName);
             SFileNameArray = dir(pathstrVec);
             SFileNameArray = SFileNameArray(3:end);
             for iName = 1 : size(SFileNameArray,1)
                 testName = modgen.string.splitpart...
                     (SFileNameArray(iName).name, '.', 'first');
+                disp(sprintf('Test %s started',testName));
+                time0 = now;
                 eval(testName);
+                disp(sprintf('Passed %s test: %.1f s',testName,(now-time0)*86400));
             end
-% % % %             anim1();
-% % % %             anim2();
-% % % %             anim3();
-% % % %             anim4();
-% % % %             anim5();
-% % % %             anim6();
-% % % %             backdist();
-% % % %             bigd();
-% % % %             bigd1();
-% % % %             bigd();
-% % % %             circ();
-% % % %             circ1();
-% % % %             coll();
-% % % %             ctback();
-% % % %             ctreach();
-% % % %             ctreach3D();
-% % % %             ctreach4();
-% % % % %             degdist();
-% % % %             mech();
-% % % %             reachdist();
-% % % %             reachdist5();
-% % % %             tt();
             close all;
+            cd(oldPath);
+            rmdir(tempDirName);
             mlunitext.assert(true);
         end
         
