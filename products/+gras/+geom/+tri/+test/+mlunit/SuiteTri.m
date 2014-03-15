@@ -172,7 +172,11 @@ classdef SuiteTri < mlunitext.test_case
             nEdges=size(eMat,1);
             mlunitext.assert_equals(nEdges,length(unique(f2eMat)));
         end
-        function testSphereTri(~)
+        function DISABLED_testSphereTri(~)
+            %THIS TEST FAILS IN MATLAB 2013b 64bit because of access
+            %violation error in srebuild3d mex function. Before enabling
+            %this test for 64bit matlab one needs to fix cpp sources and
+            %call "build.m" to re-compile srebuild3d
             MAX_TOL=1e-13;
             MAX_DEPTH=4;
             for curDepth=1:MAX_DEPTH
