@@ -1,4 +1,10 @@
-function anim1
+function anim1(varargin)
+
+  if nargin == 1
+    nDirs = varargin{1};
+  else
+    nDirs = 4;
+  end
 import elltool.conf.Properties;
 
 Properties.setNPlot2dPoints(1000)
@@ -13,7 +19,7 @@ timeVec  = [0 20];
 firstDirVec = [1 1].';
 secondDirVec = [-1 1].';
 thirdDirsMat = [0 1; 1 0].';
-phiVec = 0:0.1:pi;
+phiVec = linspace(0,pi,nDirs);
 forthDirsMat = [cos(phiVec); sin(phiVec)];
 
 firstSys  = elltool.linsys.LinSysContinuous(aCMat, bCMat, SUBounds);

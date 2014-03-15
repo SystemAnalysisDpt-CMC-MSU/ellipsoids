@@ -1,4 +1,4 @@
-function bigd1
+function bigd1(varargin)
 aCMat = {'0' '-2' '0' '0' '0' '0' '0' '0' '0' '0'
       '2' '0'  '0' '0' '0' '0' '0' '0' '0' '0'
       '0' '0'  'cos(t)' '0' '0' '0' '0' '0' '0' '0'
@@ -21,14 +21,14 @@ aCMat = {'0' '-2' '0' '0' '0' '0' '0' '0' '0' '0'
 
  dirsMat = eye(10);
 
- rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
+ rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec,...
+     'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
 
  projBasisMat = [0 0 0 0 0 0 0 0 0 1; 0 0 1 0 0 0 0 0 0 0].';
 
  psObj=rsObj.projection(projBasisMat);
 
  psObj.plotByEa(); 
- hold on; 
  psObj.plotByIa();
 
  

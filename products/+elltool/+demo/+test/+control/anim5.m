@@ -1,5 +1,4 @@
-function anim5
-
+function anim5(varargin)
 import elltool.conf.Properties;
 
   C = 1;
@@ -12,7 +11,8 @@ import elltool.conf.Properties;
   x0EllObj = [4 -2 5]' +Properties.getAbsTol()*ell_unitball(3);
 
   firstSys = elltool.linsys.LinSysContinuous(firstACMat, firstBMat, firstSUBounds);
-  firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+  firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat,...
+      timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
   [gcCVec, gcTimeVec] = firstRsObj.get_goodcurves();
   gcVec = gcCVec{1};
@@ -26,7 +26,8 @@ open(writerObj);
     x0  = C * gcVec(:, iGc);
     x0EllObj  = x0 + Properties.getAbsTol()*ell_unitball(3);
     firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat,...
-        [gcTimeVec(iGc) (gcTimeVec(iGc)+3)],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+        [gcTimeVec(iGc) (gcTimeVec(iGc)+3)],'isRegEnabled',true,...
+        'isJustCheck', false ,'regTol',1e-3);
     firstProjObj = firstRsObj.cut(gcTimeVec(iGc)+3); 
     firstProjObj.plotByEa('r'); hold on;
     ell_plot(x0, 'k*');

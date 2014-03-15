@@ -1,6 +1,11 @@
-function ctreach
+function ctreach(varargin)
 % Continuous-time system reachability test.
-
+  if nargin == 1
+    nDirs = varargin{1};
+  else
+    nDirs = 4;
+  end
+  
   firstAMat        = [0 1; 0 0];
   thirdAMat  = [0 1; -2 0];
   secondACMat = {'0' '1-cos(2*t)'; '-2/(0.5+t)' '0'};
@@ -12,26 +17,29 @@ function ctreach
   SVBounds = ellipsoid(1);
   import elltool.conf.Properties;
   timeVec        = [0 5];
-  dirsMat       = [1 0; 0 1; 1 1; -1 1]';
+  phiVec = linspace(0,pi,nDirs);
+  dirsMat       = [sin(phiVec);cos(phiVec)];
   x0EllObj       = ell_unitball(2);
 
-  firstSys      = elltool.linsys.LinSysContinuous(thirdAMat, firstBMat, firstSUBounds);
-  secondSys     = elltool.linsys.LinSysContinuous(secondACMat, firstBMat, firstSUBounds);
-  thirdSys     = elltool.linsys.LinSysContinuous(firstAMat, firstBMat, firstSUBounds, secondBMat, SVBounds);
+  firstSys = elltool.linsys.LinSysContinuous(thirdAMat, firstBMat, firstSUBounds);
+  secondSys = elltool.linsys.LinSysContinuous(secondACMat, firstBMat, firstSUBounds);
+  thirdSys = elltool.linsys.LinSysContinuous(firstAMat, firstBMat,...
+             firstSUBounds, secondBMat, SVBounds);
   
-  rsObj       = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-5);
+  rsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat,...
+      timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-5);
 
-  rsObj.plotByEa(); hold on;
-  rsObj.plotByIa(); hold on;
+  rsObj.plotByEa();
+  rsObj.plotByIa();
 
   rsObj = rsObj.evolve(10, secondSys);
 
-  rsObj.plotByEa('r'); hold on;
-  rsObj.plotByIa('y'); hold on;
+  rsObj.plotByEa('r');
+  rsObj.plotByIa('y');
 	  
   rsObj = rsObj.evolve(15, thirdSys);
 
-  rsObj.plotByEa('g'); hold on;
-  rsObj.plotByIa('c'); hold on;
+  rsObj.plotByEa('g');
+  rsObj.plotByIa('c');
 
 end

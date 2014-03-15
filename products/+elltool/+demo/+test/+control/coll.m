@@ -1,19 +1,25 @@
-function coll
+function coll(varargin)
 % Continuous-time system backward reachability test.
-clear P;
+  
+  if nargin == 1
+    nDirs = varargin{1};
+  else
+    nDirs = 4;
+  end
   critTime = 0.886;
   aMat        = [0 1; -2 0];
   bMat        = [0; 1];
   SUBounds.center = {'0'};
   SUBounds.shape  = 2;
   endTime        = 5;
-  phiVec      = 0:0.1:pi;
+  phiVec      = linspace(0,pi,nDirs);
   dirsMat       = [cos(phiVec); sin(phiVec)];
   x0EllObj        = 0.00001*ell_unitball(2) + [3;1];
   mEllObj         = 0.00001*ell_unitball(2) + [2;0];
 
   sys      = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-  rsObj       = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, [0 endTime],  'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
+  rsObj       = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat,...
+      [0 endTime],  'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
 
   dirsArray = rsObj.get_directions();
   nDirs = size(dirsArray, 2);
@@ -22,7 +28,8 @@ clear P;
     d  = dirsArray{i};
     bcDirsMat = [bcDirsMat d(:,end)];
   end
-  brsObj      = elltool.reach.ReachContinuous(sys, mEllObj, bcDirsMat, [endTime 0],  'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
+  brsObj      = elltool.reach.ReachContinuous(sys, mEllObj, bcDirsMat,...
+      [endTime 0],  'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
 
   plotByEa(rsObj); hold on;
   plotByEa(brsObj, 'g'); hold on;
@@ -31,7 +38,7 @@ clear P;
   [fgcCVec, fTime] = rsObj.cut([0 critTime]).get_goodcurves();  
   fgcVec = fgcCVec{1};
   [bgcCVec, bTime] = brsObj.cut([endTime critTime]).get_goodcurves(); 
-  bgcVec = bgcCVec{28};
+  bgcVec = bgcCVec{1};
   bCenterVec = brsObj.cut([endTime critTime]).get_center();
   bgcVec = 2*bCenterVec - bgcVec;
 

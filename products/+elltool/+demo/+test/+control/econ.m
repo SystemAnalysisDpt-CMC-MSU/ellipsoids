@@ -1,4 +1,4 @@
-function econ
+function econ(varargin)
   a0Mat = [0.2 0 -0.4; 0 0 -0.6; 0 0.5 -1];
   a1Mat = [0.54 0 0.4; 0.06 0 0.6; 0.6 0 1];
   aMat  = [zeros(3, 3) eye(3); a0Mat a1Mat];
