@@ -1,4 +1,4 @@
-function mech
+function mech(varargin)
  k1 = 50;
  k2 = 47;
 
@@ -18,7 +18,6 @@ function mech
  prohBasisMat = [1 0 0 0; 0 1 0 0]';
  psObj = rsObj.projection(prohBasisMat);
 
- psObj.plotByEa(); hold on;
- psObj.plotByIa(); hold on;
-
+ psObj.plotByEa();
+ psObj.plotByIa();
 end

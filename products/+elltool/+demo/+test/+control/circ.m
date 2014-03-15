@@ -1,4 +1,9 @@
-function circ
+function circ(varargin)
+  if nargin == 1
+    nDirs = varargin{1};
+  else
+    nDirs = 4;
+  end
 R = 2; 
 L = 1; 
 C = 0.1; 
@@ -8,12 +13,14 @@ SUBounds = ellipsoid(1);
 
 x0EllObj = ell_unitball(2);
 timeVec  = [0 10];
-dirsMat = [0 1; 1 1; 1 0; 1 -1]';
+phiVec = linspace(0,pi,nDirs);
+dirsMat = [sin(phiVec); cos(phiVec)];
 
 sys  = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec,...
+    'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
-rsObj.plotByEa(); hold on;
-rsObj.plotByIa(); hold on;
+rsObj.plotByEa();
+rsObj.plotByIa();
 
 end

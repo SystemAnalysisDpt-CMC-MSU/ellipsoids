@@ -1,6 +1,5 @@
-function dtreach
+function dtreach(varargin)
 % Test for discrete-time lin. system forward reachability.
-
   aMat = [0 1; -1 -0.5];
   bVec  = [0; 1];
   pEllObj  = ellipsoid(-1, 1);

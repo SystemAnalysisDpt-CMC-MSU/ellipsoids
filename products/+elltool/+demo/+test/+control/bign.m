@@ -1,6 +1,5 @@
 % A test with large state dimension  (n)
-function bign
-
+function bign(varargin)
 import elltool.conf.Properties;
 
 Properties.setIsVerbose(false);
@@ -9,7 +8,7 @@ Properties.setNTimeGridPoints(135);
 test(5);
 test(10);
 test(25);
-test(35);
+% test(35);
 
 
 function test(N)

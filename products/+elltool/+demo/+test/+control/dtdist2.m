@@ -1,5 +1,9 @@
-function dtdist2
-
+function dtdist2(varargin)
+  if nargin == 1
+    nDirs = varargin{1};
+  else
+    nDirs = 4;
+  end
 dt = 0.05;
 w = 0.2;
 aMat=[0 1; -w 0];
@@ -22,7 +26,7 @@ vEllObj = ell_unitball(2);
 
 sys = elltool.linsys.LinSysDiscrete(eAMat, eBMat, uEllObj, eB2Mat, vEllObj, [], [], 'd');
 
-phiVec = 0:0.1:pi;
+phiVec = linspace(0,pi,nDirs);
 dirsMat = [cos(phiVec); sin(phiVec)];
 nSteps = 50;
 

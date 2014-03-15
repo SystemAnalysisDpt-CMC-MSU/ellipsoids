@@ -1,7 +1,11 @@
-function anim2
-
+function anim2(varargin)
 import elltool.conf.Properties;
 
+  if nargin == 1
+    nDirs = varargin{1};
+  else
+    nDirs = 4;
+  end
 thirdAMat = [0 1; -4 0];
 thirdBMat = [1; 0];
 SThirdUBounds = ell_unitball(1);
@@ -24,8 +28,10 @@ timeVec  = [0 5];
 firstNewEndTime  = 10;
 secondNewEndTime  = 15;
 
-dirsMat  = [1 0; 2 1; 1 1; 1 2; 0 1; -1 2; -1 1; -2 1]';
-firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat, timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
+phiVec = linspace(0,pi,nDirs);
+dirsMat  = [sin(phiVec); cos(phiVec)];
+firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat,...
+    timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
 secondRsObj = firstRsObj.evolve(firstNewEndTime, secondSys);
 thirdRsObj = secondRsObj.evolve(secondNewEndTime, thirdSys);
 
