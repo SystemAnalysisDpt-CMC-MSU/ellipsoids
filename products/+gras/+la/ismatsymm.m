@@ -23,7 +23,7 @@ if (nRows~=nCols)
 end
 nVarargs = length(varargin);
 if (nVarargs >1)
-    throwerror('wrongInput',...
+    throwerror('TooManyInputs',...
         'ISMATSYMM: Too many input arguments');
 elseif (nVarargs == 1)
     absTol = varargin{1};
