@@ -332,6 +332,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             % $Date: Jan-2013 $
             %           Igor Kitsenko <kitsenko@gmail.com> $
             % $Date: May-2013 $
+            %           Peter Gagarinov <pagarinov@gmail.com> 
+            % $Date: 2013-2014 $
+            
             % $Copyright: Moscow State University,
             %             Faculty of Computational
             %             Mathematics and Computer Science,
@@ -347,7 +350,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                     'timeVec is expected to contain integer values');
                 %
                 [varargin, ~, isMinMax] =...
-                    modgen.common.parseparext(varargin, {'isMinMax'; false});
+                    modgen.common.parseparext(varargin, {'isMinMax'; false}); %#ok<*PROP>
             end
             self=self@elltool.reach.AReach(varargin{:});
             if nargin>0
