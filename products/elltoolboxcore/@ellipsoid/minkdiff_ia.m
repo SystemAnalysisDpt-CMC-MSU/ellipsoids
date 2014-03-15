@@ -87,6 +87,8 @@ if ~isbigger(fstEll, secEll)
         secStr = 'ellipsoids is empty set.';
         logger.info([fstStr secStr]);
     end
+    throwerror('noEllIntersect',...
+        'MINKDIFF_IA: geometric difference of these two ellipsoids is empty set.');
     return;
 end
 
@@ -116,6 +118,8 @@ if nDirs < 1
         logger.info('MINKDIFF_IA: cannot compute internal approximation');
         logger.info(' for any of the specified directions.');
     end
+    throwerror('noGoodDirections',...
+        'MINKDIFF_IA: cannot compute internal approximation for any of the specified directions.');
     return;
 end
 
