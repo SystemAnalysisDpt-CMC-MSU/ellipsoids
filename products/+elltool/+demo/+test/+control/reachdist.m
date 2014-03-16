@@ -1,5 +1,4 @@
 function reachdist(varargin)
-
   if nargin == 1
     nDirs = varargin{1};
   else
@@ -12,7 +11,7 @@ function reachdist(varargin)
   cVec = [0; 1];
   SUBounds.center = {'sin(t)'; 'cos(t)'};
   SUBounds.shape =  [9 0; 0 2];
-  vBoundsEllObj  = ell_unitball(1);
+  vBoundsEllObj  = 0.5*ell_unitball(1);
   sys  = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds, cVec, vBoundsEllObj);
   x0EllObj = ellipsoid([10; 0], [1 0; 0 1]);
   phiVec = linspace((5/8)*pi,(7/8)*pi,nDirs);
