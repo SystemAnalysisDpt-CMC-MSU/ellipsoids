@@ -10,7 +10,7 @@ function degdist(varargin)
   bMat  = eye(2);
   cMat  = eye(2);
   SUBounds  = ellipsoid([0.9 0; 0 0.1]);
-  SVBounds  = ellipsoid([36 0; 0 49]);
+  SVBounds  = ellipsoid([0.1 0; 0 0.3]);
   sys  = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds, cMat, SVBounds);
   
   x0EllObj = ellipsoid([10; 0], [0.5 0; 0 0.5]);
