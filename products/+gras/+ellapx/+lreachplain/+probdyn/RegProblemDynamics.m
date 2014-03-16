@@ -3,16 +3,31 @@ classdef RegProblemDynamics <...
     properties (Access = protected)
         pDynObj
         fMatPosHandle
+        fAMatRegHandle
         isJustCheck
         regTol
     end
     methods
-        function self = RegProblemDynamics(pDynObj, isJustCheck, regTol)
+        function self = RegProblemDynamics(pDynObj, isJustCheck, regTol,isRegAt)
+            if nargin<4
+                isRegAt=false;
+            end
             self.pDynObj = pDynObj;
             if isJustCheck
                 self.fMatPosHandle=@(x)gras.mat.MatrixPosCheck(x, regTol);
+                if isRegAt
+                    self.fAMatRegHandle=@(x)gras.mat.MatrixRegCheck(x,...
+                        regTol);
+                else
+                    self.fAMatRegHandle=@deal;
+                end
             else
                 self.fMatPosHandle=@(x)gras.mat.MatrixPosReg(x, regTol);
+                if isRegAt
+                    self.fAMatRegHandle=@(x)gras.mat.MatrixReg(x,regTol);
+                else
+                    self.fAMatRegHandle=@deal;
+                end
             end
             self.isJustCheck = isJustCheck;
             self.regTol = regTol;
@@ -22,7 +37,7 @@ classdef RegProblemDynamics <...
                 self.fMatPosHandle(self.pDynObj.getBPBTransDynamics());
         end
         function AtDynamics = getAtDynamics(self)
-            AtDynamics = self.pDynObj.getAtDynamics();
+            AtDynamics = self.fAMatRegHandle(self.pDynObj.getAtDynamics());
         end
         function BptDynamics = getBptDynamics(self)
             BptDynamics = self.pDynObj.getBptDynamics();

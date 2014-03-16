@@ -3,6 +3,9 @@ classdef AReach < elltool.reach.IReach
     %               $Date: March-2013 $
     %           Igor Kitsenko <kitsenko@gmail.com> $
     %               $Date: May-2013 $
+    %           Peter Gagarinov <pagarinov@gmail.com> 
+    %               $Date: 2013-2014 $
+    
     % $Copyright: Moscow State University,
     %             Faculty of Computational Mathematics
     %             and Computer Science,
@@ -1469,7 +1472,12 @@ classdef AReach < elltool.reach.IReach
                 copyReachObj.projectionBasisMat = reachObj.projectionBasisMat;
                 copyReachObj.intProbDynList=reachObj.intProbDynList;
                 copyReachObj.extProbDynList=reachObj.extProbDynList;
-                copyReachObj.goodDirSetList=reachObj.goodDirSetList;                              
+                copyReachObj.goodDirSetList=reachObj.goodDirSetList;
+                %%%
+                copyReachObj.isRegEnabled = reachObj.isRegEnabled;
+                copyReachObj.isJustCheck = reachObj.isJustCheck;
+                copyReachObj.regTol = reachObj.regTol;
+                %%%
                 %
                 curEllTubeRel=reachObj.ellTubeRel;
                 nTuples=curEllTubeRel.getNTuples();

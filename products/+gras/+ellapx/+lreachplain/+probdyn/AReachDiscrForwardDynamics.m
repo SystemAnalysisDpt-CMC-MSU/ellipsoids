@@ -1,5 +1,6 @@
 classdef AReachDiscrForwardDynamics <...
-        gras.ellapx.lreachplain.probdyn.AReachProblemDynamics
+        gras.ellapx.lreachplain.probdyn.AReachProblemDynamics&...
+        gras.ellapx.lreachplain.probdyn.IReachDiscrProblemDynamics
     properties (Access=protected)
         AtInvDynamics
     end
