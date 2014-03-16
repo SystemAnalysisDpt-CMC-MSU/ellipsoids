@@ -1,4 +1,4 @@
-function isSymm = ismatsymm(qMat)
+function isSymm = ismatsymm(qMat,varargin)
 % ISMATSYMM  checks if qMat is symmetric
 %
 % Input:
@@ -21,8 +21,15 @@ if (nRows~=nCols)
     throwerror('wrongInput:nonSquareMat',...
         'ISMATSYMM: Input matrix must be square.');
 end
-isSymm=false;
-if (all(all(qMat == transpose(qMat))))
-    isSymm=true;
+nVarargs = length(varargin);
+if (nVarargs >1)
+    throwerror('TooManyInputs',...
+        'ISMATSYMM: Too many input arguments');
+elseif (nVarargs == 1)
+    absTol = varargin{1};
+else
+    absTol = 0;
 end
+qMat = qMat - transpose(qMat);
+isSymm = all(all(qMat <= absTol));
 

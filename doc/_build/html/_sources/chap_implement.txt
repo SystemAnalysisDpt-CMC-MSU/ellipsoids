@@ -1,4 +1,4 @@
-Implementation
+﻿Implementation
 ==============
 
 Operations with ellipsoids
@@ -391,6 +391,8 @@ interface ([CVXHP]_) to the external optimization package. The
 default optimization package included in the distribution of the
 *Ellipsoidal Toolbox* is SeDuMi ([STUR1999]_, [SDMHP]_).
 
+.. _section-label:
+
 Operations with ellipsoidal tubes
 ---------------------------------
 
@@ -400,7 +402,12 @@ describe ellipsoidal tubes. The class
 gras.ellapx.smartdb.rels.EllUnionTube is used to store tubes by the
 instant of time:
 
-.. math:: {\mathcal X}_{U}[t]=\bigcup \limits_{\tau\leqslant t}{\mathcal X}[\tau],
+.. _union-label:
+
+.. math::
+   :label: ellUnion
+
+   {\mathcal X}_{U}[t]=\bigcup \limits_{\tau\leqslant t}{\mathcal X}[\tau],
 
 where :math:`{\mathcal X}[\tau]` is single ellipsoidal tube. The class
 gras.ellapx.smartdb.rels.EllTubeProj is used to describe the projection
@@ -431,6 +438,8 @@ by the cut function:
 .. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter05_section03_snippet04.m
    :language: matlab
    :linenos:
+
+.. _goto-label:
 
 We can compute the projection of the ellipsoidal
 tube onto time-dependent subspace.

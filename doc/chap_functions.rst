@@ -6762,34 +6762,58 @@ gras.ellapx.smartdb.rels.EllTube.EllTube
 
 ::
 
-	  EllTube - class which keeps ellipsoidal tubes
+	  A class which allows to work with ellipsoid tube objects.
 	 
 	  Fields:
-	    QArray:cell[1, nElem] - Array of ellipsoid matrices
-	    aMat:cell[1, nElem] - Array of ellipsoid centers
-	    scaleFactor:double[1, 1] - Tube scale factor
-	    MArray:cell[1, nElem] - Array of regularization ellipsoid matrices
-	    dim :double[1, 1] - Dimensionality
-	    sTime:double[1, 1] - Time s
-	    approxSchemaName:cell[1,] - Name
-	    approxSchemaDescr:cell[1,] - Description
-	    approxType:gras.ellapx.enums.EApproxType - Type of approximation
-	                  (external, internal, not defined)
-	    timeVec:cell[1, m] - Time vector
-	    calcPrecision:double[1, 1] - Calculation precision
-	    indSTime:double[1, 1]  - index of sTime within timeVec
-	    ltGoodDirMat:cell[1, nElem] - Good direction curve
-	    lsGoodDirVec:cell[1, nElem] - Good direction at time s
-	    ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve
-	    lsGoodDirNorm:double[1, 1] - Norm of good direction at time s
-	    xTouchCurveMat:cell[1, nElem] - Touch point curve for good
-	                                    direction
-	    xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction
-	                                      opposite to good direction
-	    xsTouchVec:cell[1, nElem]  - Touch point at time s
-	    xsTouchOpVec :cell[1, nElem] - Touch point at time s
+	    QArray: cell[1,1] of double[nDims,nDims,nTimePoints] -
+	        a 3-dimentional matrix in which each of nTimePoints slices is a 
+	        double[nDims,nDims] ellipsoid matrix at nTimePoint point of time. 
+	        Here nTimePoints is number of elements in timeVec.
+	    aMat: cell[1,nTimePoints] of double[nDims,1] - a 2-dimentional matrix 
+	        in which each of nTimePoints columns is a 
+	        double[nDims, 1] ellipsoid center. Each center is specified for 
+	        nTimePoint point of time
+	    scaleFactor: double[1, 1] - scale for the created ellipsoid tube
+	    MArray: cell[1,1] of double[nDims,nDims,nTimePoints] -
+	        a 3-dimentional matrix in which each of nTimePoints slices is 
+	        a double[nDims,nDims] regularization matrix at nTimePoint point
+	        of time.
+	    dim: double[1, 1] - the dimension of the space in which the touching
+	        curves are defined
+	    sTime: double[1, 1] - specific point of time which is best suited to
+	        describe good direction
+	    approxSchemaName: cell[1, 1] of char[1,] - name of the
+	        approximation schema
+	    approxSchemaDescr: cell[1, 1] of char[1,] - description of the
+	        approximation schema
+	    approxType: gras.ellapx.enums.EApproxType[1,1] - type of approximation
+	        (External, Internal, NotDefined)
+	    timeVec: double[1, nTimePoints] - time vector
+	    absTolerance: double[1, 1] - absolute tolerance
+	    relTolerance: double[1, 1] - relative tolerance
+	    indSTime: double[1, 1]  - index of sTime point within timeVec
+	    ltGoodDirMat: cell[1, nTimePoints] of double[nDims, 1] - matrix of 
+	        good direction vectors at any point of time from timeVec
+	    lsGoodDirVec: cell[1, 1] of double[nDims, 1] - good direction vector 
+	        at sTime point of time
+	    ltGoodDirNormVec: cell[1, 1] of double[1, nTimePoints] - norm of good 
+	        direction vector at any point of time from timeVec
+	    lsGoodDirNorm: double[1, 1] - norm of good direction vector at
+	        sTime point of time
+	    xTouchCurveMat: cell[1, nTimePoints] of double[nDims, 1] - touch
+	        point curve for good direction matrix
+	    xTouchOpCurveMat: cell[1, nTimePoints] of double[nDims, 1] - touch
+	        point curve oposite to the xTouchCurveMat touch point curve
+	    xsTouchVec: cell[1, 1] of double[nDims, 1]  - touch point at sTime
+	        point of time
+	    xsTouchOpVec: cell[1, 1] of double[nDims, 1] - a point opposite to
+	        the xsTouchVec touch point
+	    isLsTouch: logical[1, 1] - a logical variable which indicates whether
+	        a touch takes place along good direction at sTime point of time
+	    isLtTouchVec: cell[1, 1] of logical[nTimePoints, 1] - a logical
+	        vector which indicates whether a touch takes place along good
+	        direction at any point of time from timeVec
 	 
-	    TODO: correct description of the fields in gras.ellapx.smartdb.rels.EllTube
 	
 	
 
@@ -6889,7 +6913,7 @@ gras.ellapx.smartdb.rels.EllTube.cat
 	        commonTimeAbsTol: double[1,1] - absolute tolerance used
 	            for comparing values at common times, =0 by default
 	 
-	        commonTimeRelTol: double[1,1] - absolute tolerance used
+	        commonTimeRelTol: double[1,1] - relative tolerance used
 	            for comparing values at common times, =0 by default
 	 
 	  Output:
@@ -6903,32 +6927,58 @@ gras.ellapx.smartdb.rels.EllTube.cat
 gras.ellapx.smartdb.rels.EllTube.cut
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  CUT - extracts the piece of the ellipsoid tube object from given 
+	  start point of time to given end point of time.
+	  
+	  Input:
+	   regular:
+	      self.
+	      cutTimeVec: double[1, 2] / double[1, 1] - time interval to cut
+	 
+	  Output:
+	    cutEllTubeRel: gras.ellapx.smartdb.rels.EllTube[1, 1] -
+	        ellipsoid tube which is created from the original one by
+	        cutting it from given start  point of time to given end 
+	        point of time
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllTube.fromEllArray
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-	  FROMELLARRAY  - creates a relation object using an array of ellipsoids
+	  FROMELLARRAY  - creates ellipsoid tube object using an
+	  array of ellipsoids.
 	 
 	  Input:
 	    regular:
-	      qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
-	 
-	    optional:
-	     timeVec:cell[1, m] - time vector
-	     ltGoodDirArray:cell[1, nElem] - good direction at time s
-	     sTime:double[1, 1] - time s
-	     approxType:gras.ellapx.enums.EApproxType - type of approximation
-	                  (external, internal, not defined)
-	     approxSchemaName:cell[1,] - name of the schema
-	     approxSchemaDescr:cell[1,] - description of the schema
-	     calcPrecision:double[1, 1] - calculation precision
+	        qEllArray: double[nDims,nDims,nTimePoints] - array of
+	            ellipsoids. Each element from double[nDims,nDims,nTimePoints]
+	            array specifies double[nDims,nDims] ellipsoid at nTimePoint
+	            point of time. Here nTimePoints is number of elements 
+	            in timeVec.
+	        timeVec: cell[1,1] of double[1,nTimePoints] - time vector
+	        ltGoodDirArray: cell[nEllTubes,1] of double[nDim, nTimePoints] -
+	            cell of nEllTubes arrays of nTimePoints good direction 
+	            vectors at any point of time from timeVec
+	        sTime: double[1,1] - specific point of time from timeVec
+	            which is best suited to describe good direction
+	        approxType: gras.ellapx.enums.EApproxType[1,1] - type
+	            of approximation (External, Internal, NotDefined).
+	        approxSchemaName: char[1,] - name of the approximation schema
+	        approxSchemaDescr: char[1,] - description of the 
+	            approximation schema. It is possible
+	        absTol:double[1, 1] - absolute tolerance
+	        relTol:double[1, 1] - relative tolerance
 	 
 	  Output:
-	     ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
-	         object
+	    ellTubeRel: gras.ellapx.smartdb.rels.EllTube[1, 1] - constructed 
+	        ellipsoid tube object
+	 
 	
 	
 
@@ -6937,29 +6987,39 @@ gras.ellapx.smartdb.rels.EllTube.fromEllMArray
 
 ::
 
-	  FROMELLMARRAY  - creates a relation object using an array of ellipsoids.
-	                   This method uses regularizer in the form of a matrix
-	                   function.
+	  FROMELLMARRAY  - creates ellipsoid tube object using an
+	  array of ellipsoids and an array of regularisation matrices.
 	 
 	  Input:
 	    regular:
-	      qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
-	      ellMArr: double[nDim1, nDim2, ..., nDimN] - regularization ellipsoid
-	          matrices
-	 
-	    optional:
-	     timeVec:cell[1, m] - time vector
-	     ltGoodDirArray:cell[1, nElem] - good direction at time s
-	     sTime:double[1, 1] - time s
-	     approxType:gras.ellapx.enums.EApproxType - type of approximation
-	                  (external, internal, not defined)
-	     approxSchemaName:cell[1,] - name of the schema
-	     approxSchemaDescr:cell[1,] - description of the schema
-	     calcPrecision:double[1, 1] - calculation precision
+	        qEllArray: double[nDims,nDims,nTimePoints] - array of
+	            ellipsoids. Each element from double[nDims,nDims,nTimePoints]
+	            array specifies double[nDims,nDims] ellipsoid at nTimePoint
+	            point of time. Here nTimePoints is number of elements 
+	            in timeVec.
+	        ellMArr: double[nDims,nDims,nTimePoints] - an array of nTimePoints
+	            regularization matrices of double[nDims,nDims] type.
+	            Each element from double[nDims,nDims,nTimePoints] array 
+	            specifies double[nDim,nDim] regularization matrix at 
+	            nTimePoint point of time.
+	        timeVec: cell[1,1] of double[1,nTimePoints] - time vector
+	        ltGoodDirArray: cell[nEllTubes,1] of double[nDim, nTimePoints] -
+	            cell of nEllTubes arrays of nTimePoints good direction 
+	            vectors at any point of time from timeVec
+	        sTime: double[1,1] - specific point of time from timeVec
+	            which is best suited to describe good direction
+	        approxType: gras.ellapx.enums.EApproxType[1,1] - type
+	            of approximation (External, Internal, NotDefined).
+	        approxSchemaName: char[1,] - name of the approximation schema
+	        approxSchemaDescr: char[1,] - description of the 
+	            approximation schema. It is possible
+	        absTol:double[1, 1] - absolute tolerance
+	        relTol:double[1, 1] - relative tolerance
 	 
 	  Output:
-	     ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
-	           object
+	    ellTubeRel: gras.ellapx.smartdb.rels.EllTube[1, 1] - constructed
+	        ellipsoid tube object
+	 
 	
 	
 
@@ -6968,31 +7028,52 @@ gras.ellapx.smartdb.rels.EllTube.fromQArrays
 
 ::
 
-	  FROMQARRAYS  - creates a relation object using an array of ellipsoids,
-	                 described by the array of ellipsoid matrices and
-	                 array of ellipsoid centers.This method used default
-	                 scale factor.
+	  FROMQARRAYS creates nEllTubes ellipsoid tube objects using an
+	  array of ellipsoid matrices and an array of ellipsoid centers
+	  specified at any point of time from timeVec.
 	 
 	  Input:
 	    regular:
-	      QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
-	          matrices
-	      aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
-	 
-	  Optional:
-	     MArrayList:cell[1, nElem] - array of regularization ellipsoid matrices
-	     timeVec:cell[1, m] - time vector
-	     ltGoodDirArray:cell[1, nElem] - good direction at time s
-	     sTime:double[1, 1] - time s
-	     approxType:gras.ellapx.enums.EApproxType - type of approximation
-	                  (external, internal, not defined)
-	     approxSchemaName:cell[1,] - name of the schema
-	     approxSchemaDescr:cell[1,] - description of the schema
-	     calcPrecision:double[1, 1] - calculation precision
-	 
+	        QArrayList: cell[nEllTubes,1] of double[nDims,nDims,nTimePoints] -
+	            an array of nEllTubes 3-dimentional matrices in which 
+	            each of nTimePoints slices is a double[nDims,nDims] 
+	            ellipsoid matrix at nTimePoint point of time. Here 
+	            nTimePoints is number of elements in timeVec.
+	        aMat: double[nDims, nTimePoints] - a 2-dimentional matrix 
+	            in which each of nTimePoints columns is a 
+	            double[nDims, 1] ellipsoid center. Each center is specified
+	            for nTimePoint point of time
+	        timeVec: cell[1,1] of double[1,nTimePoints] - time vector
+	        ltGoodDirArray: cell[nEllTubes,1] of double[nDim, nTimePoints] -
+	            cell of nEllTubes arrays of nTimePoints good direction 
+	            vectors at any point of time from timeVec
+	        sTime: double[1,1] - specific point of time from timeVec
+	            which is best suited to describe good direction
+	        approxType: gras.ellapx.enums.EApproxType[1,1] /
+	            / gras.ellapx.enums.EApproxType[1,nEllTubes] - type
+	            of approximation (External, Internal, NotDefined). 
+	            It is possible either to specify one type of
+	            approximation for all of nEllTubes ellipsoid tubes,
+	            or specify the type of approximation for each of the
+	            nEllTubes ellipsoid tubes separately.
+	        approxSchemaName: char[1,] / cell[1,nEllTubes] of char[1,] - 
+	            name of the approximation schema. It is possible either
+	            to specify one name of the approximation schema for 
+	            all of nEllTubes ellipsoid tubes, or specify the name 
+	            of the approximation schema for each of the nEllTubes 
+	            ellipsoid tubes separately.
+	        approxSchemaDescr: char[1,] / cell[1,nEllTubes] of char[1,] - 
+	            description of the approximation schema. It is possible
+	            either to specify one description of the approximation 
+	            schema for all of nEllTubes ellipsoid tubes, or specify 
+	            the description of the approximation schema for each 
+	            of the nEllTubes ellipsoid tubes separately.
+	        absTol:double[1, 1] - absolute tolerance
+	        relTol:double[1, 1] - relative tolerance
 	  Output:
-	     ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
-	         object
+	    ellTubeRel: gras.ellapx.smartdb.rels.EllTube[1, 1] - constructed
+	        ellipsoid tube object
+	 
 	
 	
 
@@ -7001,33 +7082,57 @@ gras.ellapx.smartdb.rels.EllTube.fromQMArrays
 
 ::
 
-	  FROMQMARRAYS  - creates a relation object using an array of ellipsoids,
-	                  described by the array of ellipsoid matrices and
-	                  array of ellipsoid centers. Also this method uses
-	                  regularizer in the form of a matrix function. This method
-	                  used default scale factor.
+	  FROMQMARRAYS creates nEllTubes ellipsoid tube objects using an
+	  array of ellipsoid matrices, an array of ellipsoid centers
+	  and an array of regularization marices specified at any point
+	  of time from timeVec.
 	 
 	  Input:
 	    regular:
-	    QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
-	          matrices
-	    aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
-	    MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid  matrices of
-	          regularization
-	 
-	   optional:
-	     timeVec:cell[1, m] - time vector
-	     ltGoodDirArray:cell[1, nElem] - good direction at time s
-	     sTime:double[1, 1] - time s
-	     approxType:gras.ellapx.enums.EApproxType - type of approximation
-	                  (external, internal, not defined)
-	     approxSchemaName:cell[1,] - name of the schema
-	     approxSchemaDescr:cell[1,] - description of the schema
-	     calcPrecision:double[1, 1] - calculation precision
-	 
+	        QArrayList: cell[nEllTubes,1] of double[nDims,nDims,nTimePoints] -
+	            an array of nEllTubes 3-dimentional matrices in which 
+	            each of nTimePoints slices is a double[nDims,nDims] 
+	            ellipsoid matrix at nTimePoint point of time. Here 
+	            nTimePoints is number of elements in timeVec.
+	        MArrayList: cell[nEllTubes,1] of double[nDims,nDims,nTimePoints] -
+	            an array of nEllTubes 3-dimentional matrices in which 
+	            each of nTimePoints slices is a double[nDims,nDims] 
+	            regularization matrix at nTimePoint point of time.
+	        aMat: double[nDims, nTimePoints] - a 2-dimentional matrix 
+	            in which each of nTimePoints columns is a 
+	            double[nDims, 1] ellipsoid center. Each center is specified
+	            for nTimePoint point of time
+	        timeVec: cell[1,1] of double[1,nTimePoints] - time vector
+	        ltGoodDirArray: cell[nEllTubes,1] of double[nDim, nTimePoints] -
+	            cell of nEllTubes arrays of nTimePoints good direction 
+	            vectors at any point of time from timeVec
+	        sTime: double[1,1] - specific point of time from timeVec
+	            which is best suited to describe good direction
+	        approxType: gras.ellapx.enums.EApproxType[1,1] /
+	            / gras.ellapx.enums.EApproxType[1,nEllTubes] - type
+	            of approximation (External, Internal, NotDefined). 
+	            It is possible either to specify one type of
+	            approximation for all of nEllTubes ellipsoid tubes,
+	            or specify the type of approximation for each of the
+	            nEllTubes ellipsoid tubes separately.
+	        approxSchemaName: char[1,] / cell[1,nEllTubes] of char[1,] - 
+	            name of the approximation schema. It is possible either
+	            to specify one name of the approximation schema for 
+	            all of nEllTubes ellipsoid tubes, or specify the name 
+	            of the approximation schema for each of the nEllTubes 
+	            ellipsoid tubes separately.
+	        approxSchemaDescr: char[1,] / cell[1,nEllTubes] of char[1,] - 
+	            description of the approximation schema. It is possible
+	            either to specify one description of the approximation 
+	            schema for all of nEllTubes ellipsoid tubes, or specify 
+	            the description of the approximation schema for each 
+	            of the nEllTubes ellipsoid tubes separately.
+	        absTol:double[1, 1] - absolute tolerance
+	        relTol:double[1, 1] - relative tolerance
 	  Output:
-	     ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
-	           object
+	    ellTubeRel: gras.ellapx.smartdb.rels.EllTube[1, 1] - constructed
+	        ellipsoid tube object
+	 
 	
 	
 
@@ -7036,34 +7141,59 @@ gras.ellapx.smartdb.rels.EllTube.fromQMScaledArrays
 
 ::
 
-	  FROMQMSCALEDARRAYS  - creates a relation object using an array of ellipsoids,
-	                        described by the array of ellipsoid matrices and
-	                        array of ellipsoid centers. Also this method uses
-	                        regularizer in the form of a matrix function.
-	 
+	  FROMQMSCALEDARRAYS creates nEllTubes ellipsoid tube objects using an
+	  array of ellipsoid matrices, an array of ellipsoid centers,
+	  an array of regularization marices specified at any point
+	  of time from timeVec and a vector of scale factors
+	  specified for every created ellipsoid tube
 	 
 	  Input:
 	    regular:
-	      QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
-	          matrices
-	      aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
-	      MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid matrices
-	                of regularization
-	      scaleFactor:double[1, 1] - tube scale factor
-	 
-	   optional:
-	     timeVec:cell[1, m] - time vector
-	     ltGoodDirArray:cell[1, nElem] - good direction at time s
-	     sTime:double[1, 1] - time s
-	     approxType:gras.ellapx.enums.EApproxType - type of approximation
-	                  (external, internal, not defined)
-	     approxSchemaName:cell[1,] - name of the schema
-	     approxSchemaDescr:cell[1,] - description of the schema
-	     calcPrecision:double[1, 1] - calculation precision
+	        QArrayList: cell[nEllTubes,1] of double[nDims,nDims,nTimePoints] -
+	            an array of nEllTubes 3-dimentional matrices in which 
+	            each of nTimePoints slices is a double[nDims,nDims] 
+	            ellipsoid matrix at nTimePoint point of time. Here 
+	            nTimePoints is number of elements in timeVec.
+	        MArrayList: cell[nEllTubes,1] of double[nDims,nDims,nTimePoints] -
+	            an array of nEllTubes 3-dimentional matrices in which 
+	            each of nTimePoints slices is a double[nDims,nDims] 
+	            regularization matrix at nTimePoint point of time.
+	        aMat: double[nDims, nTimePoints] - a 2-dimentional matrix 
+	            in which each of nTimePoints columns is a 
+	            double[nDims, 1] ellipsoid center. Each center is specified
+	            for nTimePoint point of time
+	        timeVec: cell[1,1] of double[1,nTimePoints] - time vector
+	        ltGoodDirArray: cell[nEllTubes,1] of double[nDim, nTimePoints] -
+	            cell of nEllTubes arrays of nTimePoints good direction 
+	            vectors at any point of time from timeVec
+	        sTime: double[1,1] - specific point of time from timeVec
+	            which is best suited to describe good direction
+	        approxType: gras.ellapx.enums.EApproxType[1,1] /
+	            / gras.ellapx.enums.EApproxType[1,nEllTubes] - type
+	            of approximation (External, Internal, NotDefined). 
+	            It is possible either to specify one type of
+	            approximation for all of nEllTubes ellipsoid tubes,
+	            or specify the type of approximation for each of the
+	            nEllTubes ellipsoid tubes separately.
+	        approxSchemaName: char[1,] / cell[1,nEllTubes] of char[1,] - 
+	            name of the approximation schema. It is possible either
+	            to specify one name of the approximation schema for 
+	            all of nEllTubes ellipsoid tubes, or specify the name 
+	            of the approximation schema for each of the nEllTubes 
+	            ellipsoid tubes separately.
+	        approxSchemaDescr: char[1,] / cell[1,nEllTubes] of char[1,] - 
+	            description of the approximation schema. It is possible
+	            either to specify one description of the approximation 
+	            schema for all of nEllTubes ellipsoid tubes, or specify 
+	            the description of the approximation schema for each 
+	            of the nEllTubes ellipsoid tubes separately.
+	        absTol:double[1, 1] - absolute tolerance
+	        relTol:double[1, 1] - relative tolerance
+	        scaleFactor:double[1,nTubes] - vector of scale factors
 	 
 	  Output:
-	     ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
-	           object
+	    ellTubeRel: gras.ellapx.smartdb.rels.EllTube[1, 1] - constructed 
+	        ellipsoid tube object
 	
 	
 
@@ -7072,71 +7202,15 @@ gras.ellapx.smartdb.rels.EllTube.getData
 
 ::
 
-	  GETDATA - returns an indexed projection of CubeStruct object's content
-	 
+	  GETDATA - gets data from ATypifiedAdjustedRel object
 	  Input:
 	    regular:
-	        self: CubeStruct [1,1] - the object
-	 
-	    optional:
-	 
-	        subIndCVec: 
-	          Case#1: numeric[1,]/numeric[,1] 
-	    
-	          Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1] 
-	                for i=1,...,nDims 
-	        
-	            -array of indices of field value slices that are selected
-	            to be returned; if not given (default), 
-	            no indexation is performed
-	        
-	          Note!: numeric components of subIndVec are allowed to contain
-	             zeros which are be treated as they were references to null
-	             data slices
-	 
-	        dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension 
-	            numbers corresponding to subIndCVec
-	 
-	    properties:
-	 
-	        fieldNameList: char[1,]/cell[1,nFields] of char[1,]  
-	            list of field names to return
-	 
-	        structNameList: char[1,]/cell[1,nStructs] of char[1,] 
-	            list of internal structures to return (by default it
-	            is {SData, SIsNull, SIsValueNull}
-	 
-	        replaceNull: logical[1,1] if true, null values are replaced with 
-	            certain default values uniformly across all the cells, 
-	                default value is false
-	 
-	        nullReplacements: cell[1,nReplacedFields]  - list of null
-	            replacements for each of the fields
-	 
-	        nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-	           which the nulls are to be replaced with the specified values,
-	           if not specified it is assumed that all fields are to be 
-	           replaced
-	 
-	           NOTE!: all fields not listed in this parameter are replaced with 
-	           the default values
-	 
-	        checkInputs: logical[1,1] - true by default (input arguments are
-	           checked for correctness
-	 
+	        self.
+	        varargin:
 	  Output:
-	    regular:
-	      SData: struct [1,1] - structure containing values of
-	          fields at the selected slices, each field is an array
-	          containing values of the corresponding type
+	    optional:
+	        
 	 
-	      SIsNull: struct [1,1] - structure containing a nested
-	          array with is-null indicators for each CubeStruct cell content
-	 
-	      SIsValueNull: struct [1,1] - structure containing a
-	         logical array [] for each of the fields (true
-	         means that a corresponding cell doesn't not contain
-	            any value
 	
 	
 	
@@ -7146,17 +7220,20 @@ gras.ellapx.smartdb.rels.EllTube.getEllArray
 
 ::
 
-	  GETELLARRAY - returns array of matrix's ellipsoid according to
-	                approxType
+	  GETELLARRAY - returns array of ellipsoids according to
+	  approxType
 	 
 	  Input:
 	   regular:
 	      self.
-	      approxType:char[1,] - type of approximation(internal/external)
+	      approxType: cell[nEllTubes, 1] of char[1,] - type of 
+	          approximation(internal/external)
 	 
 	  Output:
-	    apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
-	             matrices
+	    apprEllMat: ellipsoid[nTimePoints, nEllTubes] - an array
+	        of all the ellipsoids from all the ellipsoid tubes that 
+	        are stored in self object
+	    timeVec: cell[1,1] of double[1,nTimePoints] - time vector
 	
 	
 	
@@ -7192,51 +7269,89 @@ gras.ellapx.smartdb.rels.EllTube.getJoinWith
 gras.ellapx.smartdb.rels.EllTube.getNoCatOrCutFieldsList
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  GETNOCATORCUTFIELDSLIST - returns a list of fields of
+	  EllTubeBasic object, which are not to be
+	  concatenated or cut.
+	 
+	  Input:
+	    regular:
+	        self.
+	  Output:
+	    fieldsList: cell[nFields, 1] of char[1, ] - list of fields 
+	        of EllTubeBasic object, which are not to be
+	        concatenated or cut
+	 
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllTube.interp
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  INTERP - interpolates ellipsoidal tube on a new time vector
+	 
+	  Input:
+	    regular:
+	        self.
+	        timeVec: double[1, nTimePoints] - sorted time vector to 
+	            interpolate on. Must begin with self.timeVec[1] and 
+	            end with self.timeVec[end]
+	 
+	  Output:
+	    interpEllTube: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - 
+	        interpolated ellipsoidal tube
+	 
+	  
 
 gras.ellapx.smartdb.rels.EllTube.isEqual
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-	  ISEQUAL - compares current relation object with other relation object and 
-	            returns true if they are equal, otherwise it returns false
-	  
-	 
-	  Usage: isEq=isEqual(self,otherObj)
+	  ISEQUAL - compares current relation object with other relation 
+	  object and returns true if they are equal, otherwise it returns
+	  false.
 	 
 	  Input:
 	    regular:
-	      self: ARelation [1,1] - current relation object
-	      otherObj: ARelation [1,1] - other relation object
+	        self.
+	        otherObj: ARelation [1,1] - other relation object
 	 
 	    properties:
-	      checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields 
-	          in compared relations must be in the same order, otherwise the 
-	          order is not  important (false by default)        
-	      checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
-	          compared relations are expected to be in the same order,
-	          otherwise the order is not important (false by default)
-	          
-	      maxTolerance: double [1,1] - maximum allowed tolerance            
-	 
+	      checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, 
+	          then fields in compared relations must be in the same 
+	          order, otherwise the order is not  important (false by 
+	          default)
+	      checkTupleOrder: logical[1,1] -  if true, then the tuples 
+	          in the compared relations are expected to be in the same 
+	          order, otherwise the order is not important (false by
+	          default)
+	      maxTolerance: double [1,1] - maximum allowed tolerance
+	      maxRelativeTolerance: double [1,1] - maximum allowed relative
+	          tolerance
 	      compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
 	          referenced from the meta data objects are also compared
-	 
-	      maxRelativeTolerance: double [1,1] - maximum allowed
-	      relative tolerance
+	      notComparedFieldList: cell[1,nFields] of char[1,] - list
+	          of fields that are not to be compared
+	      areTimeBoundsCompared: logical[1,1] - if false,
+	          ellipsoidal tubes are compared on intersection of
+	          definition domains
 	 
 	  Output:
-	    isEq: logical[1,1] - result of comparison
-	    reportStr: char[1,] - report of comparsion
+	    isOk: logical[1, 1] - logical vector elements of
+	        which take OK value if the fields in self and otherRel 
+	        are equal and otherwise it takes FALSE value
+	    reportStr: char[1, ] - a report string which contains more
+	        detailed information about inequal fields in self and 
+	        otherRel objects
 	 
-	 
-	  
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllTube.plot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -7248,9 +7363,13 @@ gras.ellapx.smartdb.rels.EllTube.plot
 	 
 	  Input:
 	    regular:
-	        self:
+	        self.
+	    optional:
 	        plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
 	            object used for displaying ellipsoidal tubes
+	  Output:
+	    plObj: smartdb.disp.RelationDataPlotter[1,1] - plotter
+	        object used for displaying ellipsoidal tubes
 	 
 	  
 
@@ -7259,97 +7378,72 @@ gras.ellapx.smartdb.rels.EllTube.project
 
 ::
 
-	  PROJECT - computes projection of the relation object onto given time
-	            dependent subspase
+	  PROJECT - projects ellipsoid tube onto subspace
+	 
 	  Input:
 	    regular:
 	        self.
-	        projType: gras.ellapx.enums.EProjType[1,1] -
-	            type of the projection, can be
-	            'Static' and 'DynamicAlongGoodCurve'
-	        projMatList: cell[1,nProj] of double[nSpDim,nDim] - list of
-	            projection matrices, not necessarily orthogonal
-	     fGetProjMat: function_handle[1,1] - function which creates
-	        vector of the projection
-	              matrices
-	         Input:
-	          regular:
-	            projMat:double[nDim, mDim] - matrix of the projection at the
-	              instant of time
-	            timeVec:double[1, nDim] - time interval
-	          optional:
-	             sTime:double[1,1] - instant of time
-	         Output:
-	            projOrthMatArray:double[1, nSpDim] - vector of the projection
-	              matrices
-	            projOrthMatTransArray:double[nSpDim, 1] - transposed vector of
-	              the projection matrices
+	        projType: gras.ellapx.enums.EProjType[1, 1] - type of
+	            projection. It can be Static or DynamicAlongGoodCurve.
+	        projMatList: double[nDims, nDims] -  subspace defined by 
+	            its basis vectors on which ellipsoid tube has to be 
+	            projected
+	        fGetProjMat: cell_fun[1, ] - function that is used to
+	            get the projection.
+	 
 	  Output:
-	     ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1]/
-	         gras.ellapx.smartdb.rels.EllTubeUnionProj[1, 1] -
-	            projected ellipsoidal tube
+	    ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] -
+	        ellipsoid tube projection
+	    indProj2OrigVec: double[1, ] - vector of indices
 	 
-	     indProj2OrigVec:cell[nDim, 1] - index of the line number from
-	              which is obtained the projection
-	 
-	  Example:
-	    function example
-	     aMat = [0 1; 0 0]; bMat = eye(2);
-	     SUBounds = struct();
-	     SUBounds.center = {'sin(t)'; 'cos(t)'};
-	     SUBounds.shape = [9 0; 0 2];
-	     sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-	     x0EllObj = ell_unitball(2);
-	     timeVec = [0 10];
-	     dirsMat = [1 0; 0 1]';
-	     rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-	     ellTubeObj = rsObj.getEllTubeRel();
-	     unionEllTube = ...
-	      gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-	     projMatList = {[1 0;0 1]};
-	     projType = gras.ellapx.enums.EProjType.Static;
-	     statEllTubeProj = unionEllTube.project(projType,projMatList,...
-	        @fGetProjMat);
-	     plObj=smartdb.disp.RelationDataPlotter();
-	     statEllTubeProj.plot(plObj);
-	  end
-	 
-	  function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-	      timeVec,varargin)
-	    nTimePoints=length(timeVec);
-	    projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-	    projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
-	   end
 	
 	
 
 gras.ellapx.smartdb.rels.EllTube.projectStatic
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  PROJECTSTATIC - computes a static projection of the relation
+	  object onto static subspaces specified by static matrices
+	 
+	  Input:
+	    regular:
+	        self.
+	        projMatList: double[nSpDims,nDims]/cell[1,nProjs] 
+	            of double[nSpDims,nDims] - list of not necessarily orthogonal 
+	            projection matrices
+	 
+	  Output:
+	    ellTubeProjRel: smartdb.relation.StaticRelation[1, 1]/
+	        smartdb.relation.DynamicRelation[1, 1]- projected relation
+	    indProj2OrigVec:cell[nDims, 1] - index of the line number from
+	        which is obtained the projection
+	 
+	
+	
 
 gras.ellapx.smartdb.rels.EllTube.projectToOrths
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-	  PROJECTTOORTHS - project elltube onto subspace defined by
-	  vectors of standart basis with indices specified in indVec
+	  PROJECTTOORTHS - projects ellipsoid tube onto subspace defined 
+	  by vectors of standart basis with indices specified in
+	  indVec.
 	 
 	  Input:
 	    regular:
-	        self: gras.ellapx.smartdb.rels.EllTube[1, 1] - elltube
-	            object
-	        indVec: double[1, nProjDims] - indices specifying a subset of
-	            standart basis
+	        self.
+	        indVec: double[1, nProjDims] - indices specifying a subset 
+	            of standart basis
 	    optional:
 	        projType: gras.ellapx.enums.EProjType[1, 1] -  type of
-	            projection
+	            projection. Default option is Static.
 	 
 	  Output:
-	    regular:
-	        ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] -
-	            elltube projection
+	    ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] -
+	        ellipsoid tube projection
 	 
 	  Example:
 	    ellTubeProjRel = ellTubeRel.projectToOrths([1,2])
@@ -7363,56 +7457,68 @@ gras.ellapx.smartdb.rels.EllTube.scale
 
 ::
 
-	  SCALE - scales relation object
+	  SCALE - calculates new value of scaleFactor for fields from
+	  fieldNameList using fCalcFactor function
 	 
-	   Input:
+	  Input:
 	    regular:
-	       self.
-	       fCalcFactor - function which calculates factor for
-	                      fields in fieldNameList
-	         Input:
-	           regular:
-	             fieldNameList: char/cell[1,] of char - a list of fields
-	                    for which factor will be calculated
-	          Output:
-	              factor:double[1, 1] - calculated factor
-	 
-	        fieldNameList:cell[1,nElem]/char[1,] - names of the fields
+	        self.
+	        fCalcFactor: function_handle[1, 1] - function which calculates
+	            scaleFactor for fields in fieldNameList
+	        fieldNameList: char[1, ]/cell[1,nFields] of char[1, ] - 
+	            a list of field or nFields fields for which scale factor 
+	            will be calculated
 	 
 	   Output:
-	        none
+	        none.
 	 
-	  Example:
-	    nPoints=5;
-	    calcPrecision=0.001;
-	    approxSchemaDescr=char.empty(1,0);
-	    approxSchemaName=char.empty(1,0);
-	    nDims=3;
-	    nTubes=1;
-	    lsGoodDirVec=[1;0;1];
-	    aMat=zeros(nDims,nPoints);
-	    timeVec=1:nPoints;
-	    sTime=nPoints;
-	    approxType=gras.ellapx.enums.EApproxType.Internal;
-	    qArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
-	    ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
-	    fromMatEllTube=...
-	          gras.ellapx.smartdb.rels.EllTube.fromQArrays(qArrayList,...
-	          aMat, timeVec,ltGoodDirArray, sTime, approxType,...
-	          approxSchemaName, approxSchemaDescr, calcPrecision);
-	    fromMatEllTube.scale(@(varargin)2,{});
 	
 	
 
 gras.ellapx.smartdb.rels.EllTube.sortDetermenistically
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  SORTDETERMENISTICALLY - sorts fields of ATypifiedAdjustedRel
+	  object using specified maximal tolerance
+	  Input:
+	    regular:
+	        self.
+	        maxTolerance: double[1, 1] - maximal tolerance that is
+	            used while sorting elements of self object.
+	  Output:
+	    none.
+	 
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllTube.thinOutTuples
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  THINOUTTUPLES - thins ellipsoid tube object using vector of
+	  indices specified by the user. The function returns new
+	  ellipsoid tube object containing only ellipsoids from the 
+	  original ellipsoid tube with indices specified in indVec.
+	 
+	  Input:
+	   regular:
+	      self.
+	      indVec: double[nIndices, 1] - indices of ellipsoids which
+	          are to be included in new ellipsoid tube object
+	 
+	  Output:
+	    thinnedEllTubeRel: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - 
+	        new ellipsoid tube object containing only ellipsoids from 
+	        self EllTube object with indices specified in indVec
+	        
+	 
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllTubeProj
 ------------------------------------
@@ -7422,43 +7528,79 @@ gras.ellapx.smartdb.rels.EllTubeProj.EllTubeProj
 
 ::
 
-	  EllTubeProj - class which keeps ellipsoidal tube's projection
-	  
-	  Fields:
-	    QArray:cell[1, nElem] - Array of ellipsoid matrices                              
-	    aMat:cell[1, nElem] - Array of ellipsoid centers                               
-	    scaleFactor:double[1, 1] - Tube scale factor                                        
-	    MArray:cell[1, nElem] - Array of regularization ellipsoid matrices                
-	    dim :double[1, 1] - Dimensionality                                          
-	    sTime:double[1, 1] - Time s                                                   
-	    approxSchemaName:cell[1,] - Name                                                      
-	    approxSchemaDescr:cell[1,] - Description                                               
-	    approxType:gras.ellapx.enums.EApproxType - Type of approximation 
-	                  (external, internal, not defined) 
-	    timeVec:cell[1, m] - Time vector                                             
-	    calcPrecision:double[1, 1] - Calculation precision                                    
-	    indSTime:double[1, 1]  - index of sTime within timeVec                             
-	    ltGoodDirMat:cell[1, nElem] - Good direction curve                                     
-	    lsGoodDirVec:cell[1, nElem] - Good direction at time s                                  
-	    ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve                              
-	    lsGoodDirNorm:double[1, 1] - Norm of good direction at time s                         
-	    xTouchCurveMat:cell[1, nElem] - Touch point curve for good 
-	                                    direction                     
-	    xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction 
-	                                      opposite to good direction
-	    xsTouchVec:cell[1, nElem]  - Touch point at time s                                    
-	    xsTouchOpVec:cell[1, nElem] - Touch point at time s  
-	    projSTimeMat: cell[1, 1] - Projection matrix at time s                                  
-	    projType:gras.ellapx.enums.EProjType - Projection type                                             
-	    ltGoodDirNormOrigVec:cell[1, 1] - Norm of the original (not 
-	                                      projected) good direction curve   
-	    lsGoodDirNormOrig:double[1, 1] - Norm of the original (not 
-	                                     projected)good direction at time s
-	    lsGoodDirOrigVec:cell[1, 1] - Original (not projected) good 
-	                                  direction at time s            
+	  A class which allows to work with projections of ellipsoid tube objects.
 	 
-	  TODO: correct description of the fields in 
-	      gras.ellapx.smartdb.rels.EllTubeProj
+	  Fields:
+	    QArray: cell[1,1] of double[nDims,nDims,nTimePoints] -
+	        a 3-dimentional matrix in which each of nTimePoints slices is a 
+	        double[nDims,nDims] projection of an ellipsoid matrix on specified 
+	        subspace at nTimePoint point of time. Here nTimePoints is number 
+	        of elements in timeVec.
+	    aMat: cell[1,nTimePoints] of double[nDims,1] - a 2-dimentional matrix 
+	        in which each of nTimePoints columns is a projection of
+	        an ellipsoid center. Each center is specified for 
+	        nTimePoint point of time
+	    scaleFactor: double[1, 1] - scale for the created ellipsoid tube
+	    MArray: cell[1,1] of double[nDims,nDims,nTimePoints] -
+	        a 3-dimentional matrix in which each of nTimePoints slices is a 
+	        double[nDims,nDims] projection of a regularization matrix on specified 
+	        subspace at nTimePoint point of time.
+	    dim: double[1, 1] - the dimension of the space on which the touching 
+	        curves are projected
+	    sTime: double[1, 1] - specific point of time which is best suited to
+	        describe good direction
+	    approxSchemaName: cell[1, 1] of char[1,] - name of the 
+	        approximation schema
+	    approxSchemaDescr: cell[1, 1] of char[1,] - description of the 
+	        approximation schema
+	    approxType: gras.ellapx.enums.EApproxType[1,1] - type of approximation 
+	        (External, Internal, NotDefined)
+	    timeVec: double[1, nTimePoints] - time vector 
+	    absTolerance: double[1, 1] - absolute tolerance
+	    relTolerance: double[1, 1] - relative tolerance
+	    indSTime: double[1, 1]  - index of sTime point within timeVec
+	    ltGoodDirMat: cell[1, nTimePoints] of double[nDims, 1] - matrix of 
+	        the projections of good direction vectors on the specified space 
+	        at any point of time from timeVec
+	    lsGoodDirVec: cell[1, 1] of double[nDims, 1] - the projection of good
+	        direction vector on the specified space at sTime point of time
+	    ltGoodDirNormVec: cell[1, 1] of double[1, nTimePoints] - norm of the 
+	        projections of good direction vectors on the specified space at 
+	        any point of time from timeVec
+	    lsGoodDirNorm: double[1, 1] - norm of the projection of good direction 
+	        vector on the specified space at sTime point of time
+	    xTouchCurveMat: cell[1, nTimePoints] of double[nDims, 1] - the projection 
+	        of touch point curve on the specified space for good direction matrix
+	    xTouchOpCurveMat: cell[1, nTimePoints] of double[nDims, 1] - the projection
+	        of touch point curve oposite to the xTouchCurveMat touch point curve
+	    xsTouchVec: cell[1, 1] of double[nDims, 1]  - the projection of touch
+	        point at sTime point of time
+	    xsTouchOpVec: cell[1, 1] of double[nDims, 1] - the projection of a 
+	        point opposite to the xsTouchVec touch point
+	    isLsTouch: logical[1, 1] - a logical variable which indicates whether 
+	        a touch takes place along good direction at sTime point of time
+	    isLsTouchVec: cell[1, 1] of logical[nTimePoints, 1] - a logical
+	        vector which indicates whether a touch takes place along good 
+	        direction at any point of time from timeVec
+	    projSMat: cell[1, 1] of double[nDims, nDims] - projection matrix at 
+	        sTime point of time
+	    projArray: cell[nTimePoints, 1] of double[nDims, nDims] - an array 
+	        of projection matrices at any point of time from timVec
+	    projType: gras.ellapx.enums.EProjType[1, 1] - type of projection 
+	        (Static, DynamicAlongGoodCurve)
+	    ltGoodDirNormOrigVec: cell[1, 1] of double[1, nTimePoints] - norm 
+	        of the original good direction vectors at any point of time from timeVec
+	    lsGoodDirNormOrig: double[1, 1] - norm of the original good direction 
+	        vector at sTime point of time
+	    ltGoodDirOrigMat: cell[1, nTimePoints] of double[nDims, 1] - matrix 
+	        of the original good direction vectors at any point of time from timeVec
+	    lsGoodDirOrigVec: cell[1, 1] of double[nDims, 1] - the original good 
+	        direction vector at sTime point of time
+	    ltGoodDirNormOrigProjVec: cell[1, 1] of double[1, nTimePoints] - norm
+	        of the projection of the original good direction curve
+	    ltGoodDirOrigProjMat: cell[1, 1] of double[nDims, nTimePoints] - the 
+	        projectition of the original good direction curve
+	 
 	
 	
 
@@ -7532,78 +7674,39 @@ See the description of the following methods in `smartdb.relations.ATypifiedStat
 gras.ellapx.smartdb.rels.EllTubeProj.cut
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  CUT - extracts the piece of the ellipsoid tube object from given 
+	  start point of time to given end point of time.
+	  
+	  Input:
+	   regular:
+	      self.
+	      cutTimeVec: double[1, 2] / double[1, 1] - time interval to cut
+	 
+	  Output:
+	    cutEllTubeRel: gras.ellapx.smartdb.rels.EllTube[1, 1] -
+	        ellipsoid tube which is created from the original one by
+	        cutting it from given start  point of time to given end 
+	        point of time
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllTubeProj.getData
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-	  GETDATA - returns an indexed projection of CubeStruct object's content
-	 
+	  GETDATA - gets data from ATypifiedAdjustedRel object
 	  Input:
 	    regular:
-	        self: CubeStruct [1,1] - the object
-	 
-	    optional:
-	 
-	        subIndCVec: 
-	          Case#1: numeric[1,]/numeric[,1] 
-	    
-	          Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1] 
-	                for i=1,...,nDims 
-	        
-	            -array of indices of field value slices that are selected
-	            to be returned; if not given (default), 
-	            no indexation is performed
-	        
-	          Note!: numeric components of subIndVec are allowed to contain
-	             zeros which are be treated as they were references to null
-	             data slices
-	 
-	        dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension 
-	            numbers corresponding to subIndCVec
-	 
-	    properties:
-	 
-	        fieldNameList: char[1,]/cell[1,nFields] of char[1,]  
-	            list of field names to return
-	 
-	        structNameList: char[1,]/cell[1,nStructs] of char[1,] 
-	            list of internal structures to return (by default it
-	            is {SData, SIsNull, SIsValueNull}
-	 
-	        replaceNull: logical[1,1] if true, null values are replaced with 
-	            certain default values uniformly across all the cells, 
-	                default value is false
-	 
-	        nullReplacements: cell[1,nReplacedFields]  - list of null
-	            replacements for each of the fields
-	 
-	        nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-	           which the nulls are to be replaced with the specified values,
-	           if not specified it is assumed that all fields are to be 
-	           replaced
-	 
-	           NOTE!: all fields not listed in this parameter are replaced with 
-	           the default values
-	 
-	        checkInputs: logical[1,1] - true by default (input arguments are
-	           checked for correctness
-	 
+	        self.
+	        varargin:
 	  Output:
-	    regular:
-	      SData: struct [1,1] - structure containing values of
-	          fields at the selected slices, each field is an array
-	          containing values of the corresponding type
+	    optional:
+	        
 	 
-	      SIsNull: struct [1,1] - structure containing a nested
-	          array with is-null indicators for each CubeStruct cell content
-	 
-	      SIsValueNull: struct [1,1] - structure containing a
-	         logical array [] for each of the fields (true
-	         means that a corresponding cell doesn't not contain
-	            any value
 	
 	
 	
@@ -7613,17 +7716,20 @@ gras.ellapx.smartdb.rels.EllTubeProj.getEllArray
 
 ::
 
-	  GETELLARRAY - returns array of matrix's ellipsoid according to
-	                approxType
+	  GETELLARRAY - returns array of ellipsoids according to
+	  approxType
 	 
 	  Input:
 	   regular:
 	      self.
-	      approxType:char[1,] - type of approximation(internal/external)
+	      approxType: cell[nEllTubes, 1] of char[1,] - type of 
+	          approximation(internal/external)
 	 
 	  Output:
-	    apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
-	             matrices
+	    apprEllMat: ellipsoid[nTimePoints, nEllTubes] - an array
+	        of all the ellipsoids from all the ellipsoid tubes that 
+	        are stored in self object
+	    timeVec: cell[1,1] of double[1,nTimePoints] - time vector
 	
 	
 	
@@ -7659,18 +7765,38 @@ gras.ellapx.smartdb.rels.EllTubeProj.getJoinWith
 gras.ellapx.smartdb.rels.EllTubeProj.getNoCatOrCutFieldsList
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  GETNOCATORCUTFIELDLIST - returns a list of fields of
+	  EllTubeProjBasic object, which are not to be
+	  concatenated or cut.
+	 
+	  Input:
+	    regular:
+	        self.
+	  Output:
+	    fieldsList: cell[nFields, 1] of char[1, ] - list of fields 
+	        of EllTubeProjBasic object, which are not to be
+	        concatenated or cut
+	 
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllTubeProj.getReachTubeNamePrefix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-	  GETREACHTUBEANEPREFIX - return prefix of the reach tube
+	  GETREACHTUBENAMEPREFIX - returns the prefix of the reach tube
 	 
 	  Input:
 	    regular:
-	       self.
+	        self.
+	  Output:
+	    namePrefix: char[1, ] - prefix of the reach tube
+	 
+	
 	
 	
 
@@ -7679,57 +7805,83 @@ gras.ellapx.smartdb.rels.EllTubeProj.getRegTubeNamePrefix
 
 ::
 
-	  GETREGTUBEANEPREFIX - return prefix of the reg tube
+	  GETREGTUBENAMEPREFIX - returns the prefix of the regular tube
 	 
 	  Input:
 	    regular:
-	       self.
+	        self.
+	  Output:
+	    namePrefix: char[1, ] - prefix of the regular tube
+	 
+	
 	
 	
 
 gras.ellapx.smartdb.rels.EllTubeProj.interp
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  INTERP - interpolates ellipsoidal tube on a new time vector
+	 
+	  Input:
+	    regular:
+	        self.
+	        timeVec: double[1, nTimePoints] - sorted time vector to 
+	            interpolate on. Must begin with self.timeVec[1] and 
+	            end with self.timeVec[end]
+	 
+	  Output:
+	    interpEllTube: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - 
+	        interpolated ellipsoidal tube
+	 
+	  
 
 gras.ellapx.smartdb.rels.EllTubeProj.isEqual
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-	  ISEQUAL - compares current relation object with other relation object and 
-	            returns true if they are equal, otherwise it returns false
-	  
-	 
-	  Usage: isEq=isEqual(self,otherObj)
+	  ISEQUAL - compares current relation object with other relation 
+	  object and returns true if they are equal, otherwise it returns
+	  false.
 	 
 	  Input:
 	    regular:
-	      self: ARelation [1,1] - current relation object
-	      otherObj: ARelation [1,1] - other relation object
+	        self.
+	        otherObj: ARelation [1,1] - other relation object
 	 
 	    properties:
-	      checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields 
-	          in compared relations must be in the same order, otherwise the 
-	          order is not  important (false by default)        
-	      checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
-	          compared relations are expected to be in the same order,
-	          otherwise the order is not important (false by default)
-	          
-	      maxTolerance: double [1,1] - maximum allowed tolerance            
-	 
+	      checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, 
+	          then fields in compared relations must be in the same 
+	          order, otherwise the order is not  important (false by 
+	          default)
+	      checkTupleOrder: logical[1,1] -  if true, then the tuples 
+	          in the compared relations are expected to be in the same 
+	          order, otherwise the order is not important (false by
+	          default)
+	      maxTolerance: double [1,1] - maximum allowed tolerance
+	      maxRelativeTolerance: double [1,1] - maximum allowed relative
+	          tolerance
 	      compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
 	          referenced from the meta data objects are also compared
-	 
-	      maxRelativeTolerance: double [1,1] - maximum allowed
-	      relative tolerance
+	      notComparedFieldList: cell[1,nFields] of char[1,] - list
+	          of fields that are not to be compared
+	      areTimeBoundsCompared: logical[1,1] - if false,
+	          ellipsoidal tubes are compared on intersection of
+	          definition domains
 	 
 	  Output:
-	    isEq: logical[1,1] - result of comparison
-	    reportStr: char[1,] - report of comparsion
+	    isOk: logical[1, 1] - logical vector elements of
+	        which take OK value if the fields in self and otherRel 
+	        are equal and otherwise it takes FALSE value
+	    reportStr: char[1, ] - a report string which contains more
+	        detailed information about inequal fields in self and 
+	        otherRel objects
 	 
-	 
-	  
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllTubeProj.plot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -7766,7 +7918,7 @@ gras.ellapx.smartdb.rels.EllTubeProj.plot
 	        fillFieldList: cell[nIsFillFields, ] of char[1, ] -
 	            list of parameters for fill function
 	        plotSpecFieldList: cell[nPlotFields, ] of char[1, ] -
-	            defaul list of parameters. If for any function in
+	            default list of parameters. If for any function in
 	            properties not specified list of parameters,
 	            this one will be used
 	 
@@ -7783,13 +7935,6 @@ gras.ellapx.smartdb.rels.EllTubeProj.plotExt
 
 	  PLOTEXT - plots external approximation of ellTube.
 	 
-	 
-	  Usage:
-	        obj.plotExt() - plots external approximation of ellTube.
-	        obj.plotExt('Property',PropValue,...) - plots external approximation
-	                                                of ellTube with setting
-	                                                properties.
-	 
 	  Input:
 	    regular:
 	        obj:  EllTubeProj: EllTubeProj object
@@ -7797,9 +7942,7 @@ gras.ellapx.smartdb.rels.EllTubeProj.plotExt
 	        relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
 	        colorSpec: char[1,1] - color specification code, can be 'r','g',
 	                     etc (any code supported by built-in Matlab function).
-	 
 	    properties:
-	 
 	        fGetColor: function_handle[1, 1] -
 	            function that specified colorVec for
 	            ellipsoidal tubes
@@ -7824,16 +7967,21 @@ gras.ellapx.smartdb.rels.EllTubeProj.plotExt
 	            properties not specified list of parameters,
 	            this one will be used
 	        'showDiscrete':logical[1,1]  -
-	            if true, approximation in 3D will be filled in every time slice
+	            if true, approximation in 3D will be filled in every 
+	            time slice
 	        'nSpacePartPoins': double[1,1] -
 	            number of points in every time slice.
 	  Output:
 	    regular:
-	        plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
-	        data plotter object.
+	        plObj: smartdb.disp.RelationDataPlotter[1,1] - returns 
+	        the relation data plotter object.
 	 
-	
-	
+	  Usage:
+	        obj.plotExt() - plots external approximation of ellTube.
+	        obj.plotExt('Property',PropValue,...) - plots external approximation
+	                                                of ellTube with setting
+	                                                properties.
+	  
 
 gras.ellapx.smartdb.rels.EllTubeProj.plotInt
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -7842,23 +7990,15 @@ gras.ellapx.smartdb.rels.EllTubeProj.plotInt
 
 	  PLOTINT - plots internal approximation of ellTube.
 	 
-	 
-	  Usage:
-	        obj.plotInt() - plots internal approximation of ellTube.
-	        obj.plotInt('Property',PropValue,...) - plots internal approximation
-	                                                of ellTube with setting
-	                                                properties.
-	 
 	  Input:
 	    regular:
 	        obj:  EllTubeProj: EllTubeProj object
 	    optional:
-	        relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
-	        colorSpec: char[1,1] - color specification code, can be 'r','g',
-	                     etc (any code supported by built-in Matlab function).
-	 
+	        relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - 
+	            relation data plotter object.
+	        colorSpec: char[1,1] - color specification code, can be 
+	            'r','g', etc (any code supported by built-in Matlab function).
 	    properties:
-	 
 	        fGetColor: function_handle[1, 1] -
 	            function that specified colorVec for
 	            ellipsoidal tubes
@@ -7883,36 +8023,109 @@ gras.ellapx.smartdb.rels.EllTubeProj.plotInt
 	            properties not specified list of parameters,
 	            this one will be used
 	        'showDiscrete':logical[1,1]  -
-	            if true, approximation in 3D will be filled in every time slice
+	            if true, approximation in 3D will be filled in every 
+	            time slice
 	        'nSpacePartPoins': double[1,1] -
 	            number of points in every time slice.
 	  Output:
 	    regular:
-	        plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
-	        data plotter object.
+	        plObj: smartdb.disp.RelationDataPlotter[1,1] - returns 
+	            the relation data plotter object.
 	 
+	  Usage:
+	        obj.plotInt() - plots internal approximation of ellTube.
+	        obj.plotInt('Property',PropValue,...) - plots internal approximation
+	                                                of ellTube with setting
+	                                                properties.
+	 
+	
 	
 	
 
 gras.ellapx.smartdb.rels.EllTubeProj.projMat2str
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  PROJMAT2STR - transforms the specified projection matrix at 
+	  sTime point of time into a string.
+	 
+	  Input:
+	    projSTimeMat: double[nDims, nDims] - projection matrix at 
+	         sTime point of time
+	  Output:
+	    projStrName: char[1,] - the projection matrix at sTime point 
+	        of time written as a string
+	 
+	
+	Help for gras.ellapx.smartdb.rels.EllTubeProj.projMat2str is inherited from superclass GRAS.ELLAPX.SMARTDB.RELS.ELLTUBETOUCHCURVEPROJBASIC
+	
+	
 
 gras.ellapx.smartdb.rels.EllTubeProj.projRow2str
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  PROJMAT2STR - transforms the specified row of the projection 
+	  matrix at sTime point of time into a string.
+	 
+	  Input:
+	    projSTimeMat: double[nDims, nDims] - projection matrix at 
+	         sTime point of time
+	  Output:
+	    projStrName: char[1,] - the specified row of the projection
+	        matrix at sTime point of time written as a string
+	 
+	
+	Help for gras.ellapx.smartdb.rels.EllTubeProj.projRow2str is inherited from superclass GRAS.ELLAPX.SMARTDB.RELS.ELLTUBETOUCHCURVEPROJBASIC
+	
+	
 
 gras.ellapx.smartdb.rels.EllTubeProj.sortDetermenistically
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  SORTDETERMENISTICALLY - sorts fields of ATypifiedAdjustedRel
+	  object using specified maximal tolerance
+	  Input:
+	    regular:
+	        self.
+	        maxTolerance: double[1, 1] - maximal tolerance that is
+	            used while sorting elements of self object.
+	  Output:
+	    none.
+	 
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllTubeProj.thinOutTuples
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  THINOUTTUPLES - thins ellipsoid tube object using vector of
+	  indices specified by the user. The function returns new
+	  ellipsoid tube object containing only ellipsoids from the 
+	  original ellipsoid tube with indices specified in indVec.
+	 
+	  Input:
+	   regular:
+	      self.
+	      indVec: double[nIndices, 1] - indices of ellipsoids which
+	          are to be included in new ellipsoid tube object
+	 
+	  Output:
+	    thinnedEllTubeRel: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - 
+	        new ellipsoid tube object containing only ellipsoids from 
+	        self EllTube object with indices specified in indVec
+	        
+	 
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTube
 -------------------------------------
@@ -7922,50 +8135,70 @@ gras.ellapx.smartdb.rels.EllUnionTube.EllUnionTube
 
 ::
 
-	  EllUionTube - class which keeps ellipsoidal tubes by the instant of
-	                time
+	  A class which allows to work with unions of ellipsoid tube objects.
 	  
 	  Fields:
-	    QArray:cell[1, nElem] - Array of ellipsoid matrices                              
-	    aMat:cell[1, nElem] - Array of ellipsoid centers                               
-	    scaleFactor:double[1, 1] - Tube scale factor                                        
-	    MArray:cell[1, nElem] - Array of regularization ellipsoid matrices                
-	    dim :double[1, 1] - Dimensionality                                          
-	    sTime:double[1, 1] - Time s                                                   
-	    approxSchemaName:cell[1,] - Name                                                      
-	    approxSchemaDescr:cell[1,] - Description                                               
-	    approxType:gras.ellapx.enums.EApproxType - Type of approximation 
-	                  (external, internal, not defined 
-	    timeVec:cell[1, m] - Time vector                                             
-	    calcPrecision:double[1, 1] - Calculation precision                                    
-	    indSTime:double[1, 1]  - index of sTime within timeVec                             
-	    ltGoodDirMat:cell[1, nElem] - Good direction curve                                     
-	    lsGoodDirVec:cell[1, nElem] - Good direction at time s                                  
-	    ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve                              
-	    lsGoodDirNorm:double[1, 1] - Norm of good direction at time s                         
-	    xTouchCurveMat:cell[1, nElem] - Touch point curve for good 
-	                                    direction                     
-	    xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction 
-	                                      opposite to good direction
-	    xsTouchVec:cell[1, nElem]  - Touch point at time s                                    
-	    xsTouchOpVec :cell[1, nElem] - Touch point at time s  
-	    ellUnionTimeDirection:gras.ellapx.enums.EEllUnionTimeDirection - 
-	                       Direction in time along which union is performed          
-	    isLsTouch:logical[1, 1] - Indicates whether a touch takes place 
-	                              along LS           
-	    isLsTouchOp:logical[1, 1] - Indicates whether a touch takes place 
-	                                along LS opposite  
-	    isLtTouchVec:cell[1, nElem] - Indicates whether a touch takes place 
-	                                  along LT         
-	    isLtTouchOpVec:cell[1, nElem] - Indicates whether a touch takes 
-	                                    place along LT opposite  
-	    timeTouchEndVec:cell[1, nElem] - Touch point curve for good 
-	                                     direction                     
-	    timeTouchOpEndVec:cell[1, nElem] - Touch point curve for good 
-	                                       direction
+	    QArray: cell[1,1] of double[nDims,nDims,nTimePoints] -
+	        a 3-dimentional matrix in which each of nTimePoints slices is a 
+	        double[nDims,nDims] ellipsoid matrix at nTimePoint point of time. 
+	        Here nTimePoints is number of elements in timeVec.
+	    aMat: cell[1,nTimePoints] of double[nDims,1] - a 2-dimentional matrix 
+	        in which each of nTimePoints columns is a 
+	        double[nDims, 1] ellipsoid center. Each center is specified for 
+	        nTimePoint point of time
+	    scaleFactor: double[1, 1] - scale for the created ellipsoid tube
+	    MArray: cell[1,1] of double[nDims,nDims,nTimePoints] -
+	        a 3-dimentional matrix in which each of nTimePoints slices is 
+	        a double[nDims,nDims] regularization matrix at nTimePoint point 
+	        of time.
+	    dim: double[1, 1] - the dimension of the space in which the touching 
+	        curves are defined
+	    sTime: double[1, 1] - specific point of time which is best suited to
+	        describe good direction
+	    approxSchemaName: cell[1, 1] of char[1,] - name of the 
+	        approximation schema
+	    approxSchemaDescr: cell[1, 1] of char[1,] - description of the 
+	        approximation schema
+	    approxType: gras.ellapx.enums.EApproxType[1,1] - type of approximation 
+	        (External, Internal, NotDefined)
+	    timeVec: double[1, nTimePoints] - time vector 
+	    calcPrecision: double[1, 1] - calculation precision
+	    indSTime: double[1, 1]  - index of sTime point within timeVec
+	    ltGoodDirMat: cell[1, nTimePoints] of double[nDims, 1] - matrix of 
+	        good direction vectors at any point of time from timeVec
+	    lsGoodDirVec: cell[1, 1] of double[nDims, 1] - good direction vector 
+	        at sTime point of time
+	    ltGoodDirNormVec: cell[1, 1] of double[1, nTimePoints] - norm of good 
+	        direction vector at any point of time from timeVec
+	    lsGoodDirNorm: double[1, 1] - norm of good direction vector at
+	        sTime point of time
+	    xTouchCurveMat: cell[1, nTimePoints] of double[nDims, 1] - touch 
+	        point curve for good direction matrix
+	    xTouchOpCurveMat: cell[1, nTimePoints] of double[nDims, 1] - touch 
+	        point curve oposite to the xTouchCurveMat touch point curve
+	    xsTouchVec: cell[1, 1] of double[nDims, 1]  - touch point at sTime
+	        point of time
+	    xsTouchOpVec: cell[1, 1] of double[nDims, 1] - a point opposite to
+	        the xsTouchVec touch point
+	    isLsTouch: logical[1, 1] - a logical variable which indicates whether
+	        a touch takes place along good direction at sTime point of time
+	    isLtTouchVec: cell[1, 1] of logical[nTimePoints, 1] - a logical
+	        vector which indicates whether a touch takes place along good 
+	        direction at any point of time from timeVec
+	    ellUnionTimeDirection: gras.ellapx.enums.EEllUnionTimeDirection[1, 1] - 
+	        direction in time along which union is performed
+	    timeTouchEndVec: cell [1, 1] of double[1, nTimePoints] - points of
+	        time when touch is occured in good direction
+	    timeTouchOpEndVec: cell [1, 1] of double[1, nTimePoints] - points of
+	        time when touch is occured in direction opposite to good direction
+	    isLsTouchOp: logical[1, 1] - a logical variable which indicates whether 
+	        a touch takes place along the direction opposite to the good direction
+	        at sTime point of time
+	    isLtTouchOpVec: cell [1, 1] of logical[nTimePoints, 1] - a logical 
+	        variable which indicates whether a touch takes place
+	        along the direction opposite to the good direction at any point
+	        of time from timeVec
 	 
-	  TODO: correct description of the fields in 
-	      gras.ellapx.smartdb.rels.EllUnionTube
 	
 	
 
@@ -8039,7 +8272,24 @@ See the description of the following methods in `smartdb.relations.ATypifiedStat
 gras.ellapx.smartdb.rels.EllUnionTube.cut
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  CUT - extracts the piece of the ellipsoid tube object from given 
+	  start point of time to given end point of time.
+	  
+	  Input:
+	   regular:
+	      self.
+	      cutTimeVec: double[1, 2] / double[1, 1] - time interval to cut
+	 
+	  Output:
+	    cutEllTubeRel: gras.ellapx.smartdb.rels.EllTube[1, 1] -
+	        ellipsoid tube which is created from the original one by
+	        cutting it from given start  point of time to given end 
+	        point of time
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8065,71 +8315,15 @@ gras.ellapx.smartdb.rels.EllUnionTube.getData
 
 ::
 
-	  GETDATA - returns an indexed projection of CubeStruct object's content
-	 
+	  GETDATA - gets data from ATypifiedAdjustedRel object
 	  Input:
 	    regular:
-	        self: CubeStruct [1,1] - the object
-	 
-	    optional:
-	 
-	        subIndCVec: 
-	          Case#1: numeric[1,]/numeric[,1] 
-	    
-	          Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1] 
-	                for i=1,...,nDims 
-	        
-	            -array of indices of field value slices that are selected
-	            to be returned; if not given (default), 
-	            no indexation is performed
-	        
-	          Note!: numeric components of subIndVec are allowed to contain
-	             zeros which are be treated as they were references to null
-	             data slices
-	 
-	        dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension 
-	            numbers corresponding to subIndCVec
-	 
-	    properties:
-	 
-	        fieldNameList: char[1,]/cell[1,nFields] of char[1,]  
-	            list of field names to return
-	 
-	        structNameList: char[1,]/cell[1,nStructs] of char[1,] 
-	            list of internal structures to return (by default it
-	            is {SData, SIsNull, SIsValueNull}
-	 
-	        replaceNull: logical[1,1] if true, null values are replaced with 
-	            certain default values uniformly across all the cells, 
-	                default value is false
-	 
-	        nullReplacements: cell[1,nReplacedFields]  - list of null
-	            replacements for each of the fields
-	 
-	        nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-	           which the nulls are to be replaced with the specified values,
-	           if not specified it is assumed that all fields are to be 
-	           replaced
-	 
-	           NOTE!: all fields not listed in this parameter are replaced with 
-	           the default values
-	 
-	        checkInputs: logical[1,1] - true by default (input arguments are
-	           checked for correctness
-	 
+	        self.
+	        varargin:
 	  Output:
-	    regular:
-	      SData: struct [1,1] - structure containing values of
-	          fields at the selected slices, each field is an array
-	          containing values of the corresponding type
+	    optional:
+	        
 	 
-	      SIsNull: struct [1,1] - structure containing a nested
-	          array with is-null indicators for each CubeStruct cell content
-	 
-	      SIsValueNull: struct [1,1] - structure containing a
-	         logical array [] for each of the fields (true
-	         means that a corresponding cell doesn't not contain
-	            any value
 	
 	
 	
@@ -8139,17 +8333,20 @@ gras.ellapx.smartdb.rels.EllUnionTube.getEllArray
 
 ::
 
-	  GETELLARRAY - returns array of matrix's ellipsoid according to
-	                approxType
+	  GETELLARRAY - returns array of ellipsoids according to
+	  approxType
 	 
 	  Input:
 	   regular:
 	      self.
-	      approxType:char[1,] - type of approximation(internal/external)
+	      approxType: cell[nEllTubes, 1] of char[1,] - type of 
+	          approximation(internal/external)
 	 
 	  Output:
-	    apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
-	             matrices
+	    apprEllMat: ellipsoid[nTimePoints, nEllTubes] - an array
+	        of all the ellipsoids from all the ellipsoid tubes that 
+	        are stored in self object
+	    timeVec: cell[1,1] of double[1,nTimePoints] - time vector
 	
 	
 	
@@ -8185,135 +8382,184 @@ gras.ellapx.smartdb.rels.EllUnionTube.getJoinWith
 gras.ellapx.smartdb.rels.EllUnionTube.getNoCatOrCutFieldsList
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  GETNOCATORCUTFIELDLIST - returns a list of fields of
+	  EllUionTube object, which are not to be
+	  concatenated or cut.
+	 
+	  Input:
+	    regular:
+	        self.
+	  Output:
+	    fieldsList: cell[nFields, 1] of char[1, ] - list of fields 
+	        of EllUionTube object, which are not to be
+	        concatenated or cut
+	 
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTube.interp
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  INTERP - interpolates ellipsoidal tube on a new time vector
+	 
+	  Input:
+	    regular:
+	        self.
+	        timeVec: double[1, nTimePoints] - sorted time vector to 
+	            interpolate on. Must begin with self.timeVec[1] and 
+	            end with self.timeVec[end]
+	 
+	  Output:
+	    interpEllTube: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - 
+	        interpolated ellipsoidal tube
+	 
+	  
 
 gras.ellapx.smartdb.rels.EllUnionTube.isEqual
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-	  ISEQUAL - compares current relation object with other relation object and 
-	            returns true if they are equal, otherwise it returns false
-	  
-	 
-	  Usage: isEq=isEqual(self,otherObj)
+	  ISEQUAL - compares current relation object with other relation 
+	  object and returns true if they are equal, otherwise it returns
+	  false.
 	 
 	  Input:
 	    regular:
-	      self: ARelation [1,1] - current relation object
-	      otherObj: ARelation [1,1] - other relation object
+	        self.
+	        otherObj: ARelation [1,1] - other relation object
 	 
 	    properties:
-	      checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields 
-	          in compared relations must be in the same order, otherwise the 
-	          order is not  important (false by default)        
-	      checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
-	          compared relations are expected to be in the same order,
-	          otherwise the order is not important (false by default)
-	          
-	      maxTolerance: double [1,1] - maximum allowed tolerance            
-	 
+	      checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, 
+	          then fields in compared relations must be in the same 
+	          order, otherwise the order is not  important (false by 
+	          default)
+	      checkTupleOrder: logical[1,1] -  if true, then the tuples 
+	          in the compared relations are expected to be in the same 
+	          order, otherwise the order is not important (false by
+	          default)
+	      maxTolerance: double [1,1] - maximum allowed tolerance
+	      maxRelativeTolerance: double [1,1] - maximum allowed relative
+	          tolerance
 	      compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
 	          referenced from the meta data objects are also compared
-	 
-	      maxRelativeTolerance: double [1,1] - maximum allowed
-	      relative tolerance
+	      notComparedFieldList: cell[1,nFields] of char[1,] - list
+	          of fields that are not to be compared
+	      areTimeBoundsCompared: logical[1,1] - if false,
+	          ellipsoidal tubes are compared on intersection of
+	          definition domains
 	 
 	  Output:
-	    isEq: logical[1,1] - result of comparison
-	    reportStr: char[1,] - report of comparsion
+	    isOk: logical[1, 1] - logical vector elements of
+	        which take OK value if the fields in self and otherRel 
+	        are equal and otherwise it takes FALSE value
+	    reportStr: char[1, ] - a report string which contains more
+	        detailed information about inequal fields in self and 
+	        otherRel objects
 	 
-	 
-	  
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTube.project
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-	  PROJECT - computes projection of the relation object onto given time
-	            dependent subspase
+	  PROJECT - projects ellipsoid tube union onto subspace
+	 
 	  Input:
 	    regular:
 	        self.
-	        projType: gras.ellapx.enums.EProjType[1,1] -
-	            type of the projection, can be
-	            'Static' and 'DynamicAlongGoodCurve'
-	        projMatList: cell[1,nProj] of double[nSpDim,nDim] - list of
-	            projection matrices, not necessarily orthogonal
-	     fGetProjMat: function_handle[1,1] - function which creates
-	        vector of the projection
-	              matrices
-	         Input:
-	          regular:
-	            projMat:double[nDim, mDim] - matrix of the projection at the
-	              instant of time
-	            timeVec:double[1, nDim] - time interval
-	          optional:
-	             sTime:double[1,1] - instant of time
-	         Output:
-	            projOrthMatArray:double[1, nSpDim] - vector of the projection
-	              matrices
-	            projOrthMatTransArray:double[nSpDim, 1] - transposed vector of
-	              the projection matrices
+	        projType: gras.ellapx.enums.EProjType[1, 1] - type of
+	            projection. It can only be Static for ellipsoid tube 
+	            unions.
+	        projMatList: double[nDims, nDims] -  subspace defined by 
+	            its basis vectors on which ellipsoid tube has to be 
+	            projected
+	        fGetProjMat: cell_fun[1, ] - function that is used to
+	            get the projection.
+	 
 	  Output:
-	     ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1]/
-	         gras.ellapx.smartdb.rels.EllTubeUnionProj[1, 1] -
-	            projected ellipsoidal tube
+	    ellTubeProjRel: gras.ellapx.smartdb.rels.EllTubeProj[1, 1] -
+	        ellipsoid tube projection
+	    indProj2OrigVec: double[1, ] - vector of indices
 	 
-	     indProj2OrigVec:cell[nDim, 1] - index of the line number from
-	              which is obtained the projection
-	 
-	  Example:
-	    function example
-	     aMat = [0 1; 0 0]; bMat = eye(2);
-	     SUBounds = struct();
-	     SUBounds.center = {'sin(t)'; 'cos(t)'};
-	     SUBounds.shape = [9 0; 0 2];
-	     sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
-	     x0EllObj = ell_unitball(2);
-	     timeVec = [0 10];
-	     dirsMat = [1 0; 0 1]';
-	     rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
-	     ellTubeObj = rsObj.getEllTubeRel();
-	     unionEllTube = ...
-	      gras.ellapx.smartdb.rels.EllUnionTube.fromEllTubes(ellTubeObj);
-	     projMatList = {[1 0;0 1]};
-	     projType = gras.ellapx.enums.EProjType.Static;
-	     statEllTubeProj = unionEllTube.project(projType,projMatList,...
-	        @fGetProjMat);
-	     plObj=smartdb.disp.RelationDataPlotter();
-	     statEllTubeProj.plot(plObj);
-	  end
-	 
-	  function [projOrthMatArray,projOrthMatTransArray]=fGetProjMat(projMat,...
-	      timeVec,varargin)
-	    nTimePoints=length(timeVec);
-	    projOrthMatArray=repmat(projMat,[1,1,nTimePoints]);
-	    projOrthMatTransArray=repmat(projMat.',[1,1,nTimePoints]);
-	   end
 	
 	
 
 gras.ellapx.smartdb.rels.EllUnionTube.projectStatic
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  PROJECTSTATIC - computes a static projection of the relation
+	  object onto static subspaces specified by static matrices
+	 
+	  Input:
+	    regular:
+	        self.
+	        projMatList: double[nSpDims,nDims]/cell[1,nProjs] 
+	            of double[nSpDims,nDims] - list of not necessarily orthogonal 
+	            projection matrices
+	 
+	  Output:
+	    ellTubeProjRel: smartdb.relation.StaticRelation[1, 1]/
+	        smartdb.relation.DynamicRelation[1, 1]- projected relation
+	    indProj2OrigVec:cell[nDims, 1] - index of the line number from
+	        which is obtained the projection
+	 
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTube.sortDetermenistically
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  SORTDETERMENISTICALLY - sorts fields of ATypifiedAdjustedRel
+	  object using specified maximal tolerance
+	  Input:
+	    regular:
+	        self.
+	        maxTolerance: double[1, 1] - maximal tolerance that is
+	            used while sorting elements of self object.
+	  Output:
+	    none.
+	 
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTube.thinOutTuples
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  THINOUTTUPLES - thins ellipsoid tube object using vector of
+	  indices specified by the user. The function returns new
+	  ellipsoid tube object containing only ellipsoids from the 
+	  original ellipsoid tube with indices specified in indVec.
+	 
+	  Input:
+	   regular:
+	      self.
+	      indVec: double[nIndices, 1] - indices of ellipsoids which
+	          are to be included in new ellipsoid tube object
+	 
+	  Output:
+	    thinnedEllTubeRel: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - 
+	        new ellipsoid tube object containing only ellipsoids from 
+	        self EllTube object with indices specified in indVec
+	        
+	 
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
 -----------------------------------------------
@@ -8323,58 +8569,93 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.EllUnionTubeStaticProj
 
 ::
 
-	  EllUnionTubeStaticProj - class which keeps projection on static plane
-	                           union of ellipsoid tubes
+	  A class which allows to work with static projections of unions of
+	  ellipsoid tube objects.
 	 
 	  Fields:
-	    QArray:cell[1, nElem] - Array of ellipsoid matrices
-	    aMat:cell[1, nElem] - Array of ellipsoid centers
-	    scaleFactor:double[1, 1] - Tube scale factor
-	    MArray:cell[1, nElem] - Array of regularization ellipsoid matrices
-	    dim :double[1, 1] - Dimensionality
-	    sTime:double[1, 1] - Time s
-	    approxSchemaName:cell[1,] - Name
-	    approxSchemaDescr:cell[1,] - Description
-	    approxType:gras.ellapx.enums.EApproxType - Type of approximation
-	                  (external, internal, not defined
-	    timeVec:cell[1, m] - Time vector
-	    calcPrecision:double[1, 1] - Calculation precision
-	    indSTime:double[1, 1]  - index of sTime within timeVec
-	    ltGoodDirMat:cell[1, nElem] - Good direction curve
-	    lsGoodDirVec:cell[1, nElem] - Good direction at time s
-	    ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve
-	    lsGoodDirNorm:double[1, 1] - Norm of good direction at time s
-	    xTouchCurveMat:cell[1, nElem] - Touch point curve for good
-	                                    direction
-	    xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction
-	                                      opposite to good direction
-	    xsTouchVec:cell[1, nElem]  - Touch point at time s
-	    xsTouchOpVec :cell[1, nElem] - Touch point at time s
-	    projSTimeMat: cell[1, 1] - Projection matrix at time s
-	    projType:gras.ellapx.enums.EProjType - Projection type
-	    ltGoodDirNormOrigVec:cell[1, 1] - Norm of the original (not
-	                                      projected) good direction curve
-	    lsGoodDirNormOrig:double[1, 1] - Norm of the original (not
-	                                     projected)good direction at time s
-	    lsGoodDirOrigVec:cell[1, 1] - Original (not projected) good
-	                                  direction at time s
-	    ellUnionTimeDirection:gras.ellapx.enums.EEllUnionTimeDirection -
-	                       Direction in time along which union is performed
-	    isLsTouch:logical[1, 1] - Indicates whether a touch takes place
-	                              along LS
-	    isLsTouchOp:logical[1, 1] - Indicates whether a touch takes place
-	                                along LS opposite
-	    isLtTouchVec:cell[1, nElem] - Indicates whether a touch takes place
-	                                  along LT
-	    isLtTouchOpVec:cell[1, nElem] - Indicates whether a touch takes
-	                                    place along LT opposite
-	    timeTouchEndVec:cell[1, nElem] - Touch point curve for good
-	                                     direction
-	    timeTouchOpEndVec:cell[1, nElem] - Touch point curve for good
-	                                       direction
+	    QArray: cell[1,1] of double[nDims,nDims,nTimePoints] -
+	        a 3-dimentional matrix in which each of nTimePoints slices is a 
+	        double[nDims,nDims] projection of an ellipsoid matrix on specified 
+	        subspace at nTimePoint point of time. Here nTimePoints is number of 
+	        elements in timeVec.
+	    aMat: cell[1,nTimePoints] of double[nDims,1] - a 2-dimentional matrix 
+	        in which each of nTimePoints columns is a projection of
+	        an ellipsoid center. Each center is specified for 
+	        nTimePoint point of time
+	    scaleFactor: double[1, 1] - scale for the created ellipsoid tube
+	    MArray: cell[1,1] of double[nDims,nDims,nTimePoints] -
+	        a 3-dimentional matrix in which each of nTimePoints slices is a 
+	        double[nDims,nDims] projection of a regularization matrix on specified 
+	        subspace at nTimePoint point of time.
+	    dim: double[1, 1] - the dimension of the space on which the touching 
+	        curves are projected
+	    sTime: double[1, 1] - specific point of time which is best suited to
+	        describe good direction
+	    approxSchemaName: cell[1, 1] of char[1,] - name of the 
+	        approximation schema
+	    approxSchemaDescr: cell[1, 1] of char[1,] - description of the 
+	        approximation schema
+	    approxType: gras.ellapx.enums.EApproxType[1,1] - type of approximation 
+	        (External, Internal, NotDefined)
+	    timeVec: double[1, nTimePoints] - time vector 
+	    absTolerance: double[1, 1] - absolute tolerance
+	    relTolerance: double[1, 1] - relative tolerance
+	    indSTime: double[1, 1]  - index of sTime point within timeVec
+	    ltGoodDirMat: cell[1, nTimePoints] of double[nDims, 1] - matrix of 
+	        the projections of good direction vectors on the specified space 
+	        at any point of time from timeVec
+	    lsGoodDirVec: cell[1, 1] of double[nDims, 1] - the projection of good
+	        direction  vector on the specified space at sTime point of time
+	    ltGoodDirNormVec: cell[1, 1] of double[1, nTimePoints] - norm of the 
+	        projections of good direction vectors on the specified space at
+	        any point of time from timeVec
+	    lsGoodDirNorm: double[1, 1] - norm of the projection of good direction 
+	        vector on the specified space at sTime point of time
+	    xTouchCurveMat: cell[1, nTimePoints] of double[nDims, 1] - the projection 
+	        of touch point curve on the specified space for good direction matrix
+	    xTouchOpCurveMat: cell[1, nTimePoints] of double[nDims, 1] - the projection
+	        of touch point curve oposite to the xTouchCurveMat touch point curve
+	    xsTouchVec: cell[1, 1] of double[nDims, 1]  - the projection of touch 
+	        point at sTime point of time
+	    xsTouchOpVec: cell[1, 1] of double[nDims, 1] - the projection of a point
+	        opposite to the xsTouchVec touch point
+	    isLsTouch: logical[1, 1] - a logical variable which indicates whether 
+	        a touch takes place along good direction at sTime point of time
+	    isLsTouchVec: cell[1, 1] of logical[nTimePoints, 1] - a logical
+	        vector which indicates whether a touch takes place along good 
+	        direction at any point of time from timeVec
+	    projSMat: cell[1, 1] of double[nDims, nDims] - projection matrix at 
+	        sTime point of time
+	    projArray: cell[nTimePoints, 1] of double[nDims, nDims] - an array 
+	        of projection matrices at any point of time from timVec
+	    projType: gras.ellapx.enums.EProjType[1, 1] - type of projection 
+	        (Static, DynamicAlongGoodCurve)
+	    ltGoodDirNormOrigVec: cell[1, 1] of double[1, nTimePoints] - norm of 
+	        the original good direction vectors at any point of time from timeVec
+	    lsGoodDirNormOrig: double[1, 1] - norm of the original good direction 
+	        vector at sTime point of time
+	    ltGoodDirOrigMat: cell[1, nTimePoints] of double[nDims, 1] - matrix 
+	        of the original good direction vectors at any point of time from timeVec
+	    lsGoodDirOrigVec: cell[1, 1] of double[nDims, 1] - the original good 
+	        direction vector at sTime point of time
+	    ltGoodDirNormOrigProjVec: cell[1, 1] of double[1, nTimePoints] - norm 
+	        of the projection of the original good direction curve
+	    ltGoodDirOrigProjMat: cell[1, 1] of double[nDims, nTimePoints] - the
+	        projectition of the original good direction curve
+	    ellUnionTimeDirection: gras.ellapx.enums.EEllUnionTimeDirection[1, 1] - 
+	        direction in time along which union is performed
+	    timeTouchEndVec: cell [1, 1] of double[1, nTimePoints] - points of
+	        time when touch is occured in good direction
+	    timeTouchOpEndVec: cell [1, 1] of double[1, nTimePoints] - points of
+	        time when touch is occured in direction opposite to good direction
+	    isLsTouchOp: logical[1, 1] - a logical variable which indicates whether
+	        a touch takes place along the direction opposite to the good direction
+	        at sTime point of time
+	    isLtTouchOpVec: cell [1, 1] of logical[nTimePoints, 1] - a logical 
+	        variable which indicates whether a touch takes place along the 
+	        direction opposite to the good direction at any point of time 
+	        from timeVec
 	 
-	    TODO: correct description of the fields in
-	      gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
 	
 	
 
@@ -8448,7 +8729,24 @@ See the description of the following methods in `smartdb.relations.ATypifiedStat
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.cut
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  CUT - extracts the piece of the ellipsoid tube object from given 
+	  start point of time to given end point of time.
+	  
+	  Input:
+	   regular:
+	      self.
+	      cutTimeVec: double[1, 2] / double[1, 1] - time interval to cut
+	 
+	  Output:
+	    cutEllTubeRel: gras.ellapx.smartdb.rels.EllTube[1, 1] -
+	        ellipsoid tube which is created from the original one by
+	        cutting it from given start  point of time to given end 
+	        point of time
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.fromEllTubes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8474,71 +8772,15 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getData
 
 ::
 
-	  GETDATA - returns an indexed projection of CubeStruct object's content
-	 
+	  GETDATA - gets data from ATypifiedAdjustedRel object
 	  Input:
 	    regular:
-	        self: CubeStruct [1,1] - the object
-	 
-	    optional:
-	 
-	        subIndCVec: 
-	          Case#1: numeric[1,]/numeric[,1] 
-	    
-	          Case#2: cell[1,nDims]/cell[nDims,1] of double [nSubElem_i,1] 
-	                for i=1,...,nDims 
-	        
-	            -array of indices of field value slices that are selected
-	            to be returned; if not given (default), 
-	            no indexation is performed
-	        
-	          Note!: numeric components of subIndVec are allowed to contain
-	             zeros which are be treated as they were references to null
-	             data slices
-	 
-	        dimVec: numeric[1,nDims]/numeric[nDims,1] - vector of dimension 
-	            numbers corresponding to subIndCVec
-	 
-	    properties:
-	 
-	        fieldNameList: char[1,]/cell[1,nFields] of char[1,]  
-	            list of field names to return
-	 
-	        structNameList: char[1,]/cell[1,nStructs] of char[1,] 
-	            list of internal structures to return (by default it
-	            is {SData, SIsNull, SIsValueNull}
-	 
-	        replaceNull: logical[1,1] if true, null values are replaced with 
-	            certain default values uniformly across all the cells, 
-	                default value is false
-	 
-	        nullReplacements: cell[1,nReplacedFields]  - list of null
-	            replacements for each of the fields
-	 
-	        nullReplacementFields: cell[1,nReplacedFields] - list of fields in
-	           which the nulls are to be replaced with the specified values,
-	           if not specified it is assumed that all fields are to be 
-	           replaced
-	 
-	           NOTE!: all fields not listed in this parameter are replaced with 
-	           the default values
-	 
-	        checkInputs: logical[1,1] - true by default (input arguments are
-	           checked for correctness
-	 
+	        self.
+	        varargin:
 	  Output:
-	    regular:
-	      SData: struct [1,1] - structure containing values of
-	          fields at the selected slices, each field is an array
-	          containing values of the corresponding type
+	    optional:
+	        
 	 
-	      SIsNull: struct [1,1] - structure containing a nested
-	          array with is-null indicators for each CubeStruct cell content
-	 
-	      SIsValueNull: struct [1,1] - structure containing a
-	         logical array [] for each of the fields (true
-	         means that a corresponding cell doesn't not contain
-	            any value
 	
 	
 	
@@ -8548,17 +8790,20 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getEllArray
 
 ::
 
-	  GETELLARRAY - returns array of matrix's ellipsoid according to
-	                approxType
+	  GETELLARRAY - returns array of ellipsoids according to
+	  approxType
 	 
 	  Input:
 	   regular:
 	      self.
-	      approxType:char[1,] - type of approximation(internal/external)
+	      approxType: cell[nEllTubes, 1] of char[1,] - type of 
+	          approximation(internal/external)
 	 
 	  Output:
-	    apprEllMat:double[nDim1,..., nDimN] - array of array of ellipsoid's
-	             matrices
+	    apprEllMat: ellipsoid[nTimePoints, nEllTubes] - an array
+	        of all the ellipsoids from all the ellipsoid tubes that 
+	        are stored in self object
+	    timeVec: cell[1,1] of double[1,nTimePoints] - time vector
 	
 	
 	
@@ -8594,18 +8839,37 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getJoinWith
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getNoCatOrCutFieldsList
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  GETNOCATORCUTFIELDLIST - returns a list of fields of
+	  EllUnionTubeStaticProj object, which are not to be
+	  concatenated or cut.
+	 
+	  Input:
+	    regular:
+	        self.
+	  Output:
+	    namePrefix: char[nFields, ] - list of fields of
+	        EllUnionTubeStaticProj object, which are not to be
+	        concatenated or cut
+	 
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getReachTubeNamePrefix
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-	  GETREACHTUBEANEPREFIX - return prefix of the reach tube
+	  GETREACHTUBENAMEPREFIX - returns the prefix of the reach tube
 	 
 	  Input:
 	    regular:
-	       self.
+	        self.
+	  Output:
+	    namePrefix: char[1, ] - prefix of the reach tube
+	 
+	
 	
 	
 
@@ -8614,57 +8878,83 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.getRegTubeNamePrefix
 
 ::
 
-	  GETREGTUBEANEPREFIX - return prefix of the reg tube
+	  GETREGTUBENAMEPREFIX - returns the prefix of the regular tube
 	 
 	  Input:
 	    regular:
-	       self.
+	        self.
+	  Output:
+	    namePrefix: char[1, ] - prefix of the regular tube
+	 
+	
 	
 	
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.interp
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  INTERP - interpolates ellipsoidal tube on a new time vector
+	 
+	  Input:
+	    regular:
+	        self.
+	        timeVec: double[1, nTimePoints] - sorted time vector to 
+	            interpolate on. Must begin with self.timeVec[1] and 
+	            end with self.timeVec[end]
+	 
+	  Output:
+	    interpEllTube: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - 
+	        interpolated ellipsoidal tube
+	 
+	  
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.isEqual
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
-	  ISEQUAL - compares current relation object with other relation object and 
-	            returns true if they are equal, otherwise it returns false
-	  
-	 
-	  Usage: isEq=isEqual(self,otherObj)
+	  ISEQUAL - compares current relation object with other relation 
+	  object and returns true if they are equal, otherwise it returns
+	  false.
 	 
 	  Input:
 	    regular:
-	      self: ARelation [1,1] - current relation object
-	      otherObj: ARelation [1,1] - other relation object
+	        self.
+	        otherObj: ARelation [1,1] - other relation object
 	 
 	    properties:
-	      checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields 
-	          in compared relations must be in the same order, otherwise the 
-	          order is not  important (false by default)        
-	      checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
-	          compared relations are expected to be in the same order,
-	          otherwise the order is not important (false by default)
-	          
-	      maxTolerance: double [1,1] - maximum allowed tolerance            
-	 
+	      checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, 
+	          then fields in compared relations must be in the same 
+	          order, otherwise the order is not  important (false by 
+	          default)
+	      checkTupleOrder: logical[1,1] -  if true, then the tuples 
+	          in the compared relations are expected to be in the same 
+	          order, otherwise the order is not important (false by
+	          default)
+	      maxTolerance: double [1,1] - maximum allowed tolerance
+	      maxRelativeTolerance: double [1,1] - maximum allowed relative
+	          tolerance
 	      compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
 	          referenced from the meta data objects are also compared
-	 
-	      maxRelativeTolerance: double [1,1] - maximum allowed
-	      relative tolerance
+	      notComparedFieldList: cell[1,nFields] of char[1,] - list
+	          of fields that are not to be compared
+	      areTimeBoundsCompared: logical[1,1] - if false,
+	          ellipsoidal tubes are compared on intersection of
+	          definition domains
 	 
 	  Output:
-	    isEq: logical[1,1] - result of comparison
-	    reportStr: char[1,] - report of comparsion
+	    isOk: logical[1, 1] - logical vector elements of
+	        which take OK value if the fields in self and otherRel 
+	        are equal and otherwise it takes FALSE value
+	    reportStr: char[1, ] - a report string which contains more
+	        detailed information about inequal fields in self and 
+	        otherRel objects
 	 
-	 
-	  
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8718,13 +9008,6 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plotExt
 
 	  PLOTEXT - plots external approximation of ellTube.
 	 
-	 
-	  Usage:
-	        obj.plotExt() - plots external approximation of ellTube.
-	        obj.plotExt('Property',PropValue,...) - plots external approximation
-	                                                of ellTube with setting
-	                                                properties.
-	 
 	  Input:
 	    regular:
 	        obj:  EllTubeProj: EllTubeProj object
@@ -8732,9 +9015,7 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plotExt
 	        relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
 	        colorSpec: char[1,1] - color specification code, can be 'r','g',
 	                     etc (any code supported by built-in Matlab function).
-	 
 	    properties:
-	 
 	        fGetColor: function_handle[1, 1] -
 	            function that specified colorVec for
 	            ellipsoidal tubes
@@ -8759,16 +9040,21 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plotExt
 	            properties not specified list of parameters,
 	            this one will be used
 	        'showDiscrete':logical[1,1]  -
-	            if true, approximation in 3D will be filled in every time slice
+	            if true, approximation in 3D will be filled in every 
+	            time slice
 	        'nSpacePartPoins': double[1,1] -
 	            number of points in every time slice.
 	  Output:
 	    regular:
-	        plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
-	        data plotter object.
+	        plObj: smartdb.disp.RelationDataPlotter[1,1] - returns 
+	        the relation data plotter object.
 	 
-	
-	
+	  Usage:
+	        obj.plotExt() - plots external approximation of ellTube.
+	        obj.plotExt('Property',PropValue,...) - plots external approximation
+	                                                of ellTube with setting
+	                                                properties.
+	  
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plotInt
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -8777,23 +9063,15 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plotInt
 
 	  PLOTINT - plots internal approximation of ellTube.
 	 
-	 
-	  Usage:
-	        obj.plotInt() - plots internal approximation of ellTube.
-	        obj.plotInt('Property',PropValue,...) - plots internal approximation
-	                                                of ellTube with setting
-	                                                properties.
-	 
 	  Input:
 	    regular:
 	        obj:  EllTubeProj: EllTubeProj object
 	    optional:
-	        relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - relation data plotter object.
-	        colorSpec: char[1,1] - color specification code, can be 'r','g',
-	                     etc (any code supported by built-in Matlab function).
-	 
+	        relDataPlotter:smartdb.disp.RelationDataPlotter[1,1] - 
+	            relation data plotter object.
+	        colorSpec: char[1,1] - color specification code, can be 
+	            'r','g', etc (any code supported by built-in Matlab function).
 	    properties:
-	 
 	        fGetColor: function_handle[1, 1] -
 	            function that specified colorVec for
 	            ellipsoidal tubes
@@ -8818,36 +9096,109 @@ gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.plotInt
 	            properties not specified list of parameters,
 	            this one will be used
 	        'showDiscrete':logical[1,1]  -
-	            if true, approximation in 3D will be filled in every time slice
+	            if true, approximation in 3D will be filled in every 
+	            time slice
 	        'nSpacePartPoins': double[1,1] -
 	            number of points in every time slice.
 	  Output:
 	    regular:
-	        plObj: smartdb.disp.RelationDataPlotter[1,1] - returns the relation
-	        data plotter object.
+	        plObj: smartdb.disp.RelationDataPlotter[1,1] - returns 
+	            the relation data plotter object.
 	 
+	  Usage:
+	        obj.plotInt() - plots internal approximation of ellTube.
+	        obj.plotInt('Property',PropValue,...) - plots internal approximation
+	                                                of ellTube with setting
+	                                                properties.
+	 
+	
 	
 	
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.projMat2str
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  PROJMAT2STR - transforms the specified projection matrix at 
+	  sTime point of time into a string.
+	 
+	  Input:
+	    projSTimeMat: double[nDims, nDims] - projection matrix at 
+	         sTime point of time
+	  Output:
+	    projStrName: char[1,] - the projection matrix at sTime point 
+	        of time written as a string
+	 
+	
+	Help for gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.projMat2str is inherited from superclass GRAS.ELLAPX.SMARTDB.RELS.ELLTUBETOUCHCURVEPROJBASIC
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.projRow2str
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  PROJMAT2STR - transforms the specified row of the projection 
+	  matrix at sTime point of time into a string.
+	 
+	  Input:
+	    projSTimeMat: double[nDims, nDims] - projection matrix at 
+	         sTime point of time
+	  Output:
+	    projStrName: char[1,] - the specified row of the projection
+	        matrix at sTime point of time written as a string
+	 
+	
+	Help for gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.projRow2str is inherited from superclass GRAS.ELLAPX.SMARTDB.RELS.ELLTUBETOUCHCURVEPROJBASIC
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.sortDetermenistically
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  SORTDETERMENISTICALLY - sorts fields of ATypifiedAdjustedRel
+	  object using specified maximal tolerance
+	  Input:
+	    regular:
+	        self.
+	        maxTolerance: double[1, 1] - maximal tolerance that is
+	            used while sorting elements of self object.
+	  Output:
+	    none.
+	 
+	
+	
+	
 
 gras.ellapx.smartdb.rels.EllUnionTubeStaticProj.thinOutTuples
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+::
 
+	  THINOUTTUPLES - thins ellipsoid tube object using vector of
+	  indices specified by the user. The function returns new
+	  ellipsoid tube object containing only ellipsoids from the 
+	  original ellipsoid tube with indices specified in indVec.
+	 
+	  Input:
+	   regular:
+	      self.
+	      indVec: double[nIndices, 1] - indices of ellipsoids which
+	          are to be included in new ellipsoid tube object
+	 
+	  Output:
+	    thinnedEllTubeRel: gras.ellapx.smartdb.rels.EllTubeBasic[1, 1] - 
+	        new ellipsoid tube object containing only ellipsoids from 
+	        self EllTube object with indices specified in indVec
+	        
+	 
+	
+	
+	
 
 elltool.reach.AReach
 --------------------

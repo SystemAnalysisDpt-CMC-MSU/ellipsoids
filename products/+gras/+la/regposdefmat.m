@@ -3,7 +3,7 @@ function regMat = regposdefmat(inpMat, regTol)
 %
 % Input:
 %   regular:
-%       inpMat: double[nDim, nDim] - square matrix
+%       inpMat: double[nDim, nDim] - square symmetric matrix
 %           that needs to be regularized.
 %       regTol: double[1, 1] - regularization tolerance, added to each
 %          eigen value of inpMat. regTol is expected to be positive

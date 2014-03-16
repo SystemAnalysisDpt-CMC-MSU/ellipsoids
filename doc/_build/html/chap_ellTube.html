@@ -1,0 +1,2066 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ellipsoid tubes, tubes by instant of time and their projections &mdash; Ellipsoidal Toolbox 2.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ellipsoidal Toolbox 2.0.1 documentation" href="index.html" />
+    <link rel="next" title="Summary and Outlook" href="chap_summary.html" />
+    <link rel="prev" title="Examples" href="chap_examples.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chap_summary.html" title="Summary and Outlook"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chap_examples.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ellipsoid-tubes-tubes-by-instant-of-time-and-their-projections">
+<h1>Ellipsoid tubes, tubes by instant of time and their projections<a class="headerlink" href="#ellipsoid-tubes-tubes-by-instant-of-time-and-their-projections" title="Permalink to this headline">¶</a></h1>
+<p><strong>Definition.</strong> For any regularization matrix <img class="math" src="_images/math/2e573bfe03a50bdd1738c6cf4dc80d417afd1c05.png" alt="M(\cdot)"/> the quadratically regularized alternated reach set of system with uncertainty is</p>
+<div class="math">
+<p><img src="_images/math/512c3855253a9608744f87b71998cc4099031188.png" alt="{\mathcal X}^{q}_{U}(t,t_0,{\mathcal X}^{0},M(\cdot)) =
+\underset{t_0\leq\tau\leq t}{\bigcup}{\mathcal X}^{q}_{U}(\tau,t_0,{\mathcal X}^{0},M   (\cdot))."/></p>
+</div><p>Note that if system doesn&#8217;t have uncertainty then <img class="math" src="_images/math/0ab9370bf1570c1658bf09d2d6ff6a8ecda75db8.png" alt="M(\cdot)=0"/>.</p>
+<p>By <img class="math" src="_images/math/06b60d0d7214d59442d08b7e393336ceb6c7f87e.png" alt="{\mathcal E}(\overline{x}(t),X_{+}(t,l))"/> and <img class="math" src="_images/math/8186d35faf6b4d13f95ad584cf4f1ac0b930749d.png" alt="{\mathcal E}(\overline{x}(t),X_{-}(t,l))"/> denote tight external and internal approximations along <img class="math" src="_images/math/28c7cde33aa87f676e28cc8f7c2c65e61783f595.png" alt="l(\cdot)"/> good direction such as <img class="math" src="_images/math/0c7534cf3930d33d9e93b380d3282a37068e1ce1.png" alt="l(t_0)=l"/>. Then the reach set by instant of time can be described as</p>
+<div class="math">
+<p><img src="_images/math/957b5c775a16f08451308745dc2dae9e86f82ee9.png" alt="{\mathcal X}^{q}_{U}[t]=\underset{\tau}{\bigcup}\underset{l}{\bigcap}\{
+{\mathcal E}(\overline{x}(\tau),X_{+}(\tau,l)) |l\in {\mathcal S}_1(0),   \tau\leq t\}\subseteq\underset{l} {\bigcap}\{{\mathcal E}^{U}_{+}[t,l])    |l\in {\mathcal S}_1(0)\},"/></p>
+</div><p>where <img class="math" src="_images/math/cca4a283614b3ed693d0ae8c1a86c2486bf69dbb.png" alt="{\mathcal E}^{U}_{+}[t,l]=\underset{\tau}{\bigcup}\{{\mathcal E}(\overline{x}(\tau),X_{+}(\tau,l))|t_0\leq\tau\leq t\}"/> is the external ellipsoidal tube by instant of time.</p>
+<p>Similar approxiamtion can be calculated with the internal ellipsoidal tube by instant of time <img class="math" src="_images/math/1798176817126eb51cd40d65d0242caea8004c97.png" alt="{\mathcal E}^{U}_{-}[t,l]=\underset{\tau}{\bigcup}\{{\mathcal E}(\overline{x}(\tau),X_{-}(\tau,l))|t_0\leq\tau\leq t\}"/>:</p>
+<div class="math">
+<p><img src="_images/math/1b65b4393db2e5450f682d2d746f10f530d5f150.png" alt="{\mathcal X}^{U}[t]\supseteq\underset{l}{\bigcup}\{{\mathcal E}^{U}_{-}[t,l]) |l\in {\mathcal S}_1(0)\}."/></p>
+</div><p>Note that in general case ellipsoidal tube <img class="math" src="_images/math/d9a7eb7a9cae035a5c7359576b38ab00c902054e.png" alt="{\mathcal E}^{U}_{+}[t,l]"/> is not tight approximation. For more information see <a class="reference internal" href="#gag2012" id="id1">[GAG2012]</a>.</p>
+<p>So, all in all, there are two types of ellipsoid tube objects that we can work with using <em>Ellipsoidal Toolbox</em>:</p>
+<ul class="simple">
+<li>ellipsoidal tubes that are described in <em>gras.ellapx.smartdb.rels.EllTube</em> class;</li>
+<li>tubes by instant of time described in <em>gras.ellapx.smartdb.rels.EllUnionTube</em> class
+(see <a class="reference internal" href="chap_implement.html#union-label"><em>formula</em></a>).</li>
+</ul>
+<p>These two type of objects can be projected on specified subspaces. The projections of ellipsoid tubes can be either static or dynamic. The are described in gras.ellapx.smartdb.rels.EllTubeProj class. As for the tubes by  instant of time, they can only be projected on static subspaces. These projections are described in gras.ellapx.smartdb.rels.EllUnionTubeStaticProj class. For more information about these types of projections and their differences and for examples see this <a class="reference internal" href="chap_implement.html#section-label"><em>link</em></a>.</p>
+<div class="section" id="ellipsoid-tubes">
+<h2>Ellipsoid tubes<a class="headerlink" href="#ellipsoid-tubes" title="Permalink to this headline">¶</a></h2>
+<p>There is a whole variety of operations upon ellipsoid tubes in <em>Ellipsoidal Toolbox</em>. We can, of course, create them. When the ellipsoid tube object is created, we can cut them, concatenate, interpolate, plot and project them and so on.</p>
+<p>The instruments to create ellipsoid tube objects are several functions:</p>
+<ul class="simple">
+<li><em>fromQArrays</em> method creates nEllTubes ellipsoid tube objects using an array of ellipsoid matrices and an array of ellipsoid centers specified at any point of time from timeVec;</li>
+<li><em>fromQMArrays</em> method acts the same way as <em>fromQArrays</em> method, except for this one requires to specify an array of regularization marices specified at any point of time from timeVec;</li>
+<li><em>fromQMScaledArrays</em> method acts the same way as <em>fromQMArrays</em> method, except for this one requires to also specify a vector of scale factors specified for every created ellipsoid tube;</li>
+<li><em>fromEllArray</em> method creates ellipsoid tube object using an array of ellipsoids;</li>
+<li><em>fromEllMArray</em> method creates ellipsoid tube object using an array of ellipsoids and an array of regularisation matrices.</li>
+</ul>
+<p>Basically we can divide these methods into two groups, based od what objects they are using to create ellipsoid tube: an array of ellipsoid matrices with an array of ellipsoid centers (by using these methods we can create an ellipsoid tube object containing several ellipsoid tubes) or an array of ellipsoids (by using these methods we can create an ellipsoid tube object containing one ellipsoid tube). To illustrate the usage of these methods we have to describe several functions, that will be used in the process. Below are their descriptions.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre></div></td><td class="code"><div class="highlight"><pre>% This function returns the values of arguments, that are the same for
+% FROMQARRAYS, FROMQMARRAYS and FROMQMSCALEDARRAYS methods of creating an 
+% ellipsoid tube object. Basically, this function creates a set of
+% arguments nessesary for creating an ellipsoid tube object containing 
+% nTubes ellipsoid tubes. Here nTubes is a random natural number in the
+% range from one to ten.
+%
+function [nTubes, nPoints, nDims, absTol, relTol, timeVec,...
+    sTime, lsGoodDirVec, ltGoodDirArray, aMat, qArrayList] = getData()
+nTubes=randi(10,1);
+nPoints=20;
+nDims=3;
+absTol=0.001;
+relTol=0.001;
+timeVec=(1/nPoints):(1/nPoints):1;
+sTime=timeVec(randi(nPoints,1));
+lsGoodDirVec=[1;0;0];
+ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+aMat=zeros(nDims,nPoints);
+qArrayList=repmat({repmat(diag([0.1 0.2 0.3]),[1,1,nPoints])},1,nTubes);
+end
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% This function returns the values of arguments, that specify the type of</span>
+<span class="c">% approximation that will be used to create an ellipsoid tube object. It</span>
+<span class="c">% will be a random type of approximation (Internal or External). These</span>
+<span class="c">% arguments can be used while creating an ellipsoid tube object containing</span>
+<span class="c">% one ellipsoid tube or several ellipsoid tubes with the same type of</span>
+<span class="c">% approximation.</span>
+<span class="c">%</span>
+<span class="k">function</span><span class="w"> </span>[approxSchemaDescr, approxSchemaName, approxType] <span class="p">=</span><span class="w"> </span><span class="nf">getSameApprox</span><span class="p">()</span><span class="w"></span>
+<span class="w">    </span><span class="n">type</span> <span class="p">=</span> <span class="n">randi</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">if</span> <span class="n">type</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="n">approxSchemaDescr</span><span class="p">=</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span>
+        <span class="n">approxSchemaName</span><span class="p">=</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span>
+        <span class="n">approxType</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">;</span>
+    <span class="k">else</span>
+        <span class="n">approxSchemaDescr</span><span class="p">=</span><span class="s">&#39;External&#39;</span><span class="p">;</span>
+        <span class="n">approxSchemaName</span><span class="p">=</span><span class="s">&#39;External&#39;</span><span class="p">;</span>
+        <span class="n">approxType</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">External</span><span class="p">;</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</td></tr></table></div>
+<p>Using the three above mentioned functions we can describe an examples of <em>fromQArrays</em>, <em>fromQMArrays</em> and <em>fromQMScaledArrays</em> methods&#8217; usage.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of creating nTubes ellipsoid tube objects using fromQArrays</span>
+<span class="c">% function with the same type of approximation.</span>
+<span class="p">[</span><span class="n">nTubes</span><span class="p">,</span> <span class="n">nPoints</span><span class="p">,</span> <span class="n">nDims</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">sTime</span><span class="p">,</span> <span class="n">lsGoodDirVec</span><span class="p">,</span> <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">qArrayList</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getData</span><span class="p">();</span>
+<span class="p">[</span><span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span> <span class="n">approxType</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getSameApprox</span><span class="p">();</span>
+<span class="n">fromMatEllTubeObj</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQArrays</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">qArrayList</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of creating nTubes ellipsoid tube objects using fromQArrays</span>
+<span class="c">% function with different types of approximation.</span>
+<span class="n">nPoints</span><span class="p">=</span><span class="mi">10</span><span class="p">;</span>
+<span class="n">absTol</span><span class="p">=</span><span class="mf">0.01</span><span class="p">;</span>
+<span class="n">relTol</span><span class="p">=</span><span class="mf">0.01</span><span class="p">;</span>
+<span class="n">approxSchemaDescr</span><span class="p">={</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span> <span class="s">&#39;External&#39;</span><span class="p">;</span> <span class="s">&#39;External&#39;</span><span class="p">};</span>
+<span class="n">approxSchemaName</span><span class="p">={</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span> <span class="s">&#39;External&#39;</span><span class="p">;</span> <span class="s">&#39;External&#39;</span><span class="p">};</span>
+<span class="n">nDims</span><span class="p">=</span><span class="mi">3</span><span class="p">;</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">3</span><span class="p">;</span>
+<span class="n">lsGoodDirVec</span><span class="p">=[</span><span class="mi">1</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">aMat</span><span class="p">=</span><span class="nb">zeros</span><span class="p">(</span><span class="n">nDims</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">timeVec</span><span class="p">=(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">sTime</span><span class="p">=</span><span class="n">timeVec</span><span class="p">(</span><span class="n">randi</span><span class="p">(</span><span class="n">nPoints</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+<span class="n">approxType</span><span class="p">=[</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">External</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">External</span><span class="p">]</span><span class="o">&#39;</span><span class="p">;</span>
+<span class="n">qArrayList</span><span class="p">=</span><span class="nb">repmat</span><span class="p">({</span><span class="nb">repmat</span><span class="p">(</span><span class="nb">diag</span><span class="p">([</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="c">...</span>
+    <span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="n">ltGoodDirArray</span><span class="p">=</span><span class="nb">repmat</span><span class="p">(</span><span class="n">lsGoodDirVec</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">,</span><span class="n">nPoints</span><span class="p">]);</span>
+<span class="n">fromMatEllTubeObj</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQArrays</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">qArrayList</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of creating nTubes ellipsoid tube objects using fromQMArrays</span>
+<span class="c">% function with the same type of approximation.</span>
+<span class="p">[</span><span class="n">nTubes</span><span class="p">,</span> <span class="n">nPoints</span><span class="p">,</span> <span class="n">nDims</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">sTime</span><span class="p">,</span> <span class="n">lsGoodDirVec</span><span class="p">,</span> <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">qArrayList</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getData</span><span class="p">();</span>
+<span class="p">[</span><span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span> <span class="n">approxType</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getSameApprox</span><span class="p">();</span>
+<span class="n">mArrayList</span><span class="p">=</span><span class="nb">repmat</span><span class="p">({</span><span class="nb">repmat</span><span class="p">(</span><span class="nb">diag</span><span class="p">([</span><span class="mf">0.1</span> <span class="mf">0.2</span> <span class="mf">0.3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="c">...</span>
+    <span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="n">fromMatMEllTubeObj</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQMArrays</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">qArrayList</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">mArrayList</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of creating nTubes ellipsoid tube objects using fromQMArrays</span>
+<span class="c">% function with different types of approximation.</span>
+<span class="n">nPoints</span><span class="p">=</span><span class="mi">10</span><span class="p">;</span>
+<span class="n">absTol</span><span class="p">=</span><span class="mf">0.01</span><span class="p">;</span>
+<span class="n">relTol</span><span class="p">=</span><span class="mf">0.01</span><span class="p">;</span>
+<span class="n">approxSchemaDescr</span><span class="p">={</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span> <span class="s">&#39;External&#39;</span><span class="p">;</span> <span class="s">&#39;External&#39;</span><span class="p">};</span>
+<span class="n">approxSchemaName</span><span class="p">={</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span> <span class="s">&#39;External&#39;</span><span class="p">;</span> <span class="s">&#39;External&#39;</span><span class="p">};</span>
+<span class="n">nDims</span><span class="p">=</span><span class="mi">3</span><span class="p">;</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">3</span><span class="p">;</span>
+<span class="n">lsGoodDirVec</span><span class="p">=[</span><span class="mi">1</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">aMat</span><span class="p">=</span><span class="nb">zeros</span><span class="p">(</span><span class="n">nDims</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">timeVec</span><span class="p">=(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">sTime</span><span class="p">=</span><span class="n">timeVec</span><span class="p">(</span><span class="n">randi</span><span class="p">(</span><span class="n">nPoints</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+<span class="n">approxType</span><span class="p">=[</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">External</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">External</span><span class="p">]</span><span class="o">&#39;</span><span class="p">;</span>
+<span class="n">mArrayList</span><span class="p">=</span><span class="nb">repmat</span><span class="p">({</span><span class="nb">repmat</span><span class="p">(</span><span class="nb">diag</span><span class="p">([</span><span class="mf">0.1</span> <span class="mf">0.2</span> <span class="mf">0.3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="c">...</span>
+    <span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="n">qArrayList</span><span class="p">=</span><span class="nb">repmat</span><span class="p">({</span><span class="nb">repmat</span><span class="p">(</span><span class="nb">diag</span><span class="p">([</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="c">...</span>
+    <span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="n">ltGoodDirArray</span><span class="p">=</span><span class="nb">repmat</span><span class="p">(</span><span class="n">lsGoodDirVec</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">,</span><span class="n">nPoints</span><span class="p">]);</span>
+<span class="n">fromMatMEllTubeObj</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQMArrays</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">qArrayList</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">mArrayList</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of creating nTubes ellipsoid tube objects using fromQMScaledArrays</span>
+<span class="c">% function with the same type of approximation.</span>
+<span class="p">[</span><span class="n">nTubes</span><span class="p">,</span> <span class="n">nPoints</span><span class="p">,</span> <span class="n">nDims</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">sTime</span><span class="p">,</span> <span class="n">lsGoodDirVec</span><span class="p">,</span> <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">qArrayList</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getData</span><span class="p">();</span>
+<span class="p">[</span><span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span> <span class="n">approxType</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getSameApprox</span><span class="p">();</span>
+<span class="n">mArrayList</span><span class="p">=</span><span class="nb">repmat</span><span class="p">({</span><span class="nb">repmat</span><span class="p">(</span><span class="nb">diag</span><span class="p">([</span><span class="mf">0.1</span> <span class="mf">0.2</span> <span class="mf">0.3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="c">...</span>
+    <span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="n">scaleFactor</span> <span class="p">=</span> <span class="nb">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="n">fromQMScaledArraysEllTubeObj</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQMScaledArrays</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">qArrayList</span><span class="p">,</span><span class="n">aMat</span><span class="p">,</span><span class="n">mArrayList</span><span class="p">,</span><span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">ltGoodDirArray</span><span class="p">,</span><span class="n">sTime</span><span class="p">,</span><span class="n">approxType</span><span class="p">,</span><span class="n">approxSchemaName</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaDescr</span><span class="p">,</span><span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">scaleFactor</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>To use <em>fromEllArray</em> and <em>fromEllMArray</em> methods we nave to describe one more auxiliary function (as these methods create an ellipsoid tube object containing only one ellipsoid tube and we can not use <em>getData</em> function, because it returns data for crating random number of ellipsoid tubes).</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19</pre></div></td><td class="code"><div class="highlight"><pre>% This function returns the values of arguments, that are needed to use
+% FROMELLARRAY and FROMELLMARRAY methods of creating an ellipsoid tube 
+% object. Basically, this function creates a set of arguments nessesary for
+% creating an ellipsoid tube object containing one ellipsoid tube.
+%
+function [nTubes, nPoints, nDims, absTol, relTol, timeVec,...
+    sTime, lsGoodDirVec, ltGoodDirArray, aMat, qArrayList] = getDataForOneTube()
+nTubes=1;
+nPoints=20;
+nDims=3;
+absTol=0.001;
+relTol=0.001;
+timeVec=(1/nPoints):(1/nPoints):1;
+sTime=timeVec(randi(nPoints,1));
+lsGoodDirVec=[1;0;0];
+ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+aMat=zeros(nDims,nPoints);
+qArrayList=repmat({repmat(diag([1 2 3]),[1,1,nPoints])},1,nTubes);
+end
+</pre></div>
+</td></tr></table></div>
+<p>Now we can write examples of these methods&#8217; usage.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of creating nTubes ellipsoid tube objects using FROMELLARRAY</span>
+<span class="c">% method.</span>
+<span class="p">[</span><span class="n">nTubes</span><span class="p">,</span> <span class="n">nPoints</span><span class="p">,</span> <span class="n">nDims</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">sTime</span><span class="p">,</span> <span class="n">lsGoodDirVec</span><span class="p">,</span> <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">qArrayList</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getDataForOneTube</span><span class="p">();</span>
+<span class="p">[</span><span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span> <span class="n">approxType</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getSameApprox</span><span class="p">();</span>
+<span class="n">ellArray</span><span class="p">(</span><span class="n">nPoints</span><span class="p">)</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">();</span>
+<span class="k">for</span> <span class="n">iElem</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">nPoints</span>
+    <span class="n">ellArray</span><span class="p">(</span><span class="n">iElem</span><span class="p">)</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="n">aMat</span><span class="p">(:,</span><span class="n">iElem</span><span class="p">),</span> <span class="n">qArrayList</span><span class="p">{</span><span class="mi">1</span><span class="p">}(:,:,</span><span class="n">iElem</span><span class="p">));</span>
+<span class="k">end</span><span class="p">;</span>
+<span class="n">fromEllArrayEllTubeObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromEllArray</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">ellArray</span><span class="p">,</span><span class="n">timeVec</span><span class="p">,</span> <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaName</span><span class="p">,</span><span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of creating nTubes ellipsoid tube objects using FROMELLMARRAY.</span>
+<span class="p">[</span><span class="n">nTubes</span><span class="p">,</span> <span class="n">nPoints</span><span class="p">,</span> <span class="n">nDims</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">sTime</span><span class="p">,</span> <span class="n">lsGoodDirVec</span><span class="p">,</span> <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">qArrayList</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getDataForOneTube</span><span class="p">();</span>
+<span class="p">[</span><span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span> <span class="n">approxType</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getSameApprox</span><span class="p">();</span>
+<span class="n">ellArray</span><span class="p">(</span><span class="n">nPoints</span><span class="p">)</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">();</span>
+<span class="k">for</span> <span class="n">iElem</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">nPoints</span>
+    <span class="n">ellArray</span><span class="p">(</span><span class="n">iElem</span><span class="p">)</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="n">aMat</span><span class="p">(:,</span><span class="n">iElem</span><span class="p">),</span> <span class="n">qArrayList</span><span class="p">{</span><span class="mi">1</span><span class="p">}(:,:,</span><span class="n">iElem</span><span class="p">));</span>
+<span class="k">end</span><span class="p">;</span>
+<span class="n">mArrayList</span><span class="p">=</span><span class="nb">repmat</span><span class="p">({</span><span class="nb">repmat</span><span class="p">(</span><span class="nb">diag</span><span class="p">([</span><span class="mf">0.1</span> <span class="mf">0.2</span> <span class="mf">0.3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="c">...</span>
+    <span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="n">fromEllArrayEllTubeObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromEllArray</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">ellArray</span><span class="p">,</span><span class="n">timeVec</span><span class="p">,</span> <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaName</span><span class="p">,</span><span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>As we can see in all these examples, we can specify how many ellipsoid tubes we want to create, which type of arrpoximation to use. Also we can create ellipsoid tube objects, which will contain several ellipsoid tubes with different types of approximation.</p>
+<p>After creation of ellipsoid tube objects we can do several operations with them. Below is the <em>getEllTube</em> function that create an ellipsoid tube object containing one or several ellipsoid tubes with specified type of approximation, on specified time vector with specified time points. This function will be used further down to illustrate other methods that we can use while working with ellipsoid tube objects.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of creating an ellipsoid tube object containing nTubes</span>
+<span class="c">% ellipsoid tubes from timeBegin to timeEnd time with specified type of</span>
+<span class="c">% approximation.</span>
+<span class="c">%</span>
+<span class="k">function</span><span class="w"> </span>ellTubeObj <span class="p">=</span><span class="w"> </span><span class="nf">getEllTube</span><span class="p">(</span>nTubes,timeBeg,timeEnd,type,nPoints<span class="p">)</span><span class="w"></span>
+<span class="n">nDims</span><span class="p">=</span><span class="mi">3</span><span class="p">;</span>
+<span class="n">absTol</span><span class="p">=</span><span class="mf">0.001</span><span class="p">;</span>
+<span class="n">relTol</span><span class="p">=</span><span class="mf">0.001</span><span class="p">;</span>
+<span class="n">timeVec</span><span class="p">=(</span><span class="n">timeBeg</span><span class="o">+</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):</span><span class="n">timeEnd</span><span class="p">;</span>
+<span class="n">sTime</span><span class="p">=</span><span class="n">timeVec</span><span class="p">(</span><span class="n">randi</span><span class="p">(</span><span class="n">nPoints</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+<span class="n">lsGoodDirVec</span><span class="p">=[</span><span class="mi">1</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">];</span>
+<span class="n">ltGoodDirArray</span><span class="p">=</span><span class="nb">repmat</span><span class="p">(</span><span class="n">lsGoodDirVec</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">,</span><span class="n">nPoints</span><span class="p">]);</span>
+<span class="n">aMat</span><span class="p">=</span><span class="nb">zeros</span><span class="p">(</span><span class="n">nDims</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">qArrayList</span><span class="p">=</span><span class="nb">repmat</span><span class="p">({</span><span class="nb">repmat</span><span class="p">(</span><span class="nb">diag</span><span class="p">([</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="k">if</span> <span class="n">type</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">approxSchemaDescr</span><span class="p">=</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span>
+    <span class="n">approxSchemaName</span><span class="p">=</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span>
+    <span class="n">approxType</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">;</span>
+<span class="k">else</span>
+    <span class="n">approxSchemaDescr</span><span class="p">=</span><span class="s">&#39;External&#39;</span><span class="p">;</span>
+    <span class="n">approxSchemaName</span><span class="p">=</span><span class="s">&#39;External&#39;</span><span class="p">;</span>
+    <span class="n">approxType</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">External</span><span class="p">;</span>
+<span class="k">end</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQArrays</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">qArrayList</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+<span class="k">end</span>
+</pre></div>
+</td></tr></table></div>
+<p>As we have created an ellipsoid tube object, we can get all the types of differet data about it. There is a set of methods that can give information about the data stored in the object and give access to it.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of GETDATA method&#39;s usage.</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">5</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">data</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getData</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of GETELLARRAY method&#39;s usage.</span>
+<span class="p">[</span><span class="n">nTubes</span><span class="p">,</span> <span class="n">nPoints</span><span class="p">,</span> <span class="n">nDims</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">sTime</span><span class="p">,</span> <span class="n">lsGoodDirVec</span><span class="p">,</span> <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">qArrayList</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getDataForOneTube</span><span class="p">();</span>
+<span class="p">[</span><span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span> <span class="n">approxType</span><span class="p">]</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getSameApprox</span><span class="p">();</span>
+<span class="n">ellArray</span><span class="p">(</span><span class="n">nPoints</span><span class="p">)</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">();</span>
+<span class="k">for</span> <span class="n">iElem</span> <span class="p">=</span> <span class="mi">1</span><span class="p">:</span><span class="n">nPoints</span>
+    <span class="n">ellArray</span><span class="p">(</span><span class="n">iElem</span><span class="p">)</span> <span class="p">=</span> <span class="n">ellipsoid</span><span class="p">(</span><span class="n">aMat</span><span class="p">(:,</span><span class="n">iElem</span><span class="p">),</span> <span class="n">qArrayList</span><span class="p">{</span><span class="mi">1</span><span class="p">}(:,:,</span><span class="n">iElem</span><span class="p">));</span>
+<span class="k">end</span><span class="p">;</span>
+<span class="n">fromEllArrayEllTubeObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromEllArray</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">ellArray</span><span class="p">,</span><span class="n">timeVec</span><span class="p">,</span> <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaName</span><span class="p">,</span><span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+<span class="n">data</span> <span class="p">=</span> <span class="n">fromEllArrayEllTubeObj</span><span class="p">.</span><span class="n">getEllArray</span><span class="p">(</span><span class="n">approxType</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">nTubes</span><span class="p">=</span><span class="mi">5</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get the list of field descriptions</span>
+<span class="c">%</span>
+<span class="n">descr</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getFieldDescrList</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get for given field a nested logical/cell array containing is-null </span>
+<span class="c">% indicators for cell content. For example, for approxSchemaName field.</span>
+<span class="c">%</span>
+<span class="n">isNull</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getFieldIsNull</span><span class="p">(</span><span class="s">&#39;approxSchemaName&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get for given field logical vector determining whether value of this </span>
+<span class="c">% field in each cell is null or not. For example, for approxSchemaName field.</span>
+<span class="c">%</span>
+<span class="n">valueIsNull</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getFieldIsValueNull</span><span class="p">(</span><span class="s">&#39;approxSchemaName&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get the list of field names</span>
+<span class="c">%</span>
+<span class="n">name</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getFieldNameList</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% project object with specified fields. For example, with fields that are</span>
+<span class="c">% not to be cut or concatenated.</span>
+<span class="c">%</span>
+<span class="n">nameList</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getNoCatOrCutFieldsList</span><span class="p">();</span>
+<span class="n">proj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getFieldProjection</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get the list of field types</span>
+<span class="c">%</span>
+<span class="n">type</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getFieldTypeList</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get the list of field type specifications. Field type specification is a </span>
+<span class="c">% sequence of type names corresponding to field value types starting with </span>
+<span class="c">% the top level and going down into the nested content of a field (for a </span>
+<span class="c">% field having a complex type).</span>
+<span class="c">%</span>
+<span class="n">typeSpec</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getFieldTypeSpecList</span><span class="p">();</span>
+<span class="c">% or</span>
+<span class="n">typeSpec</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getFieldTypeSpecList</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get a matrix composed from the size vectorsfor the specified fields</span>
+<span class="c">%</span>
+<span class="n">valueSizeMat</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getFieldValueSizeMat</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get a vector indicating whether a particular field is composed of null </span>
+<span class="c">% values completely</span>
+<span class="c">%</span>
+<span class="n">valueNull</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getIsFieldValueNull</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get a size vector for the specified dimensions. If no dimensions are </span>
+<span class="c">% specified, a size vector for all dimensions up to minimum dimension is </span>
+<span class="c">% returned</span>
+<span class="n">minDimensionSize</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getMinDimensionSize</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a minimum dimensionality for a given object</span>
+<span class="c">%</span>
+<span class="n">minDimensionality</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getMinDimensionality</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a number of elements in a given object</span>
+<span class="c">%</span>
+<span class="n">nElems</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getNElems</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a number of fields in a given object</span>
+<span class="c">%</span>
+<span class="n">nFiedls</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getNFields</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a number of tuples in a given object</span>
+<span class="c">%</span>
+<span class="n">nTuples</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getNTuples</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get sort index for all tuples of given relation with respect to some of </span>
+<span class="c">% its fields</span>
+<span class="c">%</span>
+<span class="n">sortIndex</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getSortIndex</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">% also we can specify the direction of sorting (&#39;asc&#39; or &#39;desc&#39;)</span>
+<span class="n">sortIndex</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getSortIndex</span><span class="p">(</span><span class="n">nameList</span><span class="p">,</span><span class="s">&#39;Direction&#39;</span><span class="p">,</span><span class="s">&#39;asc&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get tuples with given indices from given relation</span>
+<span class="c">%</span>
+<span class="n">tuples</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getTuples</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]);</span>
+<span class="c">%</span>
+<span class="c">% get tuples from given relation such that afixed index field contains </span>
+<span class="c">% values from a given set of value</span>
+<span class="c">%</span>
+<span class="n">filteredTuples</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getTuplesFilteredBy</span><span class="p">(</span><span class="s">&#39;sTime&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get internal representation for a set of unique tuples for given relation</span>
+<span class="c">%</span>
+<span class="n">uniqueData</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getUniqueData</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a relation containing the unique tuples from the original relation</span>
+<span class="c">%</span>
+<span class="n">uniqueTuples</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getUniqueTuples</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<p>Also we can copy the object, clear all the data, save it in a file:</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">nTubes</span><span class="p">=</span><span class="mi">5</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get a copy of the object</span>
+<span class="c">%</span>
+<span class="n">ellCopy</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">getCopy</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% delete all the data from the object</span>
+<span class="c">%</span>
+<span class="n">ellTubeObj</span><span class="p">.</span><span class="n">clearData</span><span class="p">();</span>
+<span class="n">ellTubeObj</span> <span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% create a copy of a specified object via calling a copy constructor for </span>
+<span class="c">% the object class</span>
+<span class="c">%</span>
+<span class="n">cloneObj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% remove all duplicate tuples from the relation</span>
+<span class="c">%</span>
+<span class="n">noDuplicate</span> <span class="p">=</span> <span class="n">cloneObj</span><span class="p">.</span><span class="n">removeDuplicateTuples</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% write a content of relation into Excel spreadsheet file</span>
+<span class="c">%</span>
+<span class="n">ellTubeObj</span><span class="p">.</span><span class="n">writeToCSV</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% write a content of relation into Excel spreadsheet file</span>
+<span class="c">%</span>
+<span class="n">fileName</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">writeToXLS</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% display a content of the given relation as a data grid UI component</span>
+<span class="c">%</span>
+<span class="n">ellTubeObj</span><span class="p">.</span><span class="n">dispOnUI</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% put some textual information about object in screen</span>
+<span class="c">%</span>
+<span class="n">ellTubeObj</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<p>As we have created the object, we can work with it. Below is the example of concatenating ellipsoid tube objects. We can concatenate objects containing one or several ellipsoid tubes with the same type of approximation.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of concatenating ellipsoid tube objects containing random </span>
+<span class="c">% number of ellipsoid tubes (from one to ten tubes).</span>
+<span class="c">%</span>
+<span class="n">nTubes</span> <span class="p">=</span> <span class="n">randi</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">timeBeg1</span> <span class="p">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd1</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">firstEllTubeObj</span> <span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg1</span><span class="p">,</span><span class="n">timeEnd1</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">timeBeg2</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">timeEnd2</span> <span class="p">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="n">secondEllTubeObj</span> <span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg2</span><span class="p">,</span><span class="n">timeEnd2</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% Concatenating firstEllTube and secondEllTube on [timeBeg1, timeEnd2]</span>
+<span class="c">% vector of time.</span>
+<span class="c">%</span>
+<span class="n">resEllTubeObj</span> <span class="p">=</span> <span class="n">firstEllTubeObj</span><span class="p">.</span><span class="nb">cat</span><span class="p">(</span><span class="n">secondEllTubeObj</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% Concatenating the same firstEllTube and secondEllTube on [timeBeg1,timeEnd2]</span>
+<span class="c">% vector of time, but the sTime and values of properties corresponding to </span>
+<span class="c">% sTime are taken from secondEllTube.</span>
+<span class="c">%</span>
+<span class="n">resEllTubeObj</span> <span class="p">=</span> <span class="n">firstEllTubeObj</span><span class="p">.</span><span class="nb">cat</span><span class="p">(</span><span class="n">secondEllTubeObj</span><span class="p">,</span><span class="s">&#39;isReplacedByNew&#39;</span><span class="p">,</span><span class="n">true</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% Concatenating the same firstEllTube and secondEllTube on [timeBeg1,timeEnd2]</span>
+<span class="c">% vector of time, but the sTime and values of properties corresponding to </span>
+<span class="c">% sTime are taken from firstEllTube.</span>
+<span class="c">%</span>
+<span class="n">resEllTubeObj</span> <span class="p">=</span> <span class="n">firstEllTubeObj</span><span class="p">.</span><span class="nb">cat</span><span class="p">(</span><span class="n">secondEllTubeObj</span><span class="p">,</span><span class="s">&#39;isReplacedByNew&#39;</span><span class="p">,</span><span class="n">false</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% Note that we cannot concatenate ellipsoid tubes with  overlapping time</span>
+<span class="c">% limits.</span>
+<span class="c">%</span>
+</pre></div>
+</td></tr></table></div>
+<p>As we can concatenate ellipsoid tubes, it is logical to be possible to cut ellipsoid tubes, leaving only part of it at specified vector of time or point of time. Below are the exmples:</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of usage of CUT function from EllTubeBasic class. In</span>
+<span class="c">% this example an ellipsoid tube object is created, using TimeVec time</span>
+<span class="c">% vector. Then it is cut using cutTimeVec time vector.</span>
+<span class="c">%</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">timeVec</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">timeVec</span><span class="p">{</span><span class="mi">1</span><span class="p">,:};</span>
+<span class="n">cutTimeVec</span> <span class="p">=</span> <span class="p">[</span><span class="n">timeVec</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="n">timeVec</span><span class="p">(</span><span class="mi">7</span><span class="p">)];</span>
+<span class="n">cutVecEllTubeObj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="n">cutTimeVec</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of usage of CUT function from EllTubeBasic class. In</span>
+<span class="c">% this example an ellipsoid tube object is created, using TimeVec time</span>
+<span class="c">% vector. Then it is cut using cutTimePoint point</span>
+<span class="c">% of time.</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">timeVec</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">timeVec</span><span class="p">{</span><span class="mi">1</span><span class="p">,:};</span>
+<span class="n">cutTimePoint</span> <span class="p">=</span> <span class="n">timeVec</span><span class="p">(</span><span class="n">randi</span><span class="p">(</span><span class="nb">size</span><span class="p">(</span><span class="n">timeVec</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span><span class="mi">1</span><span class="p">));</span>
+<span class="n">cutPointEllTubeObj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">cut</span><span class="p">(</span><span class="n">cutTimePoint</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>After cutting, we can interpolate the resulting tube, using new time vector. Take notice that we have to make sure that the first and the last elements in old and new vectors of time are the same.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of usage of INTERP function. In this example an ellipsoid tube</span>
+<span class="c">% object is created, using oldTimeVec time vector. Then it is interpolated </span>
+<span class="c">% on newTimeVec time vector.</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">newNPoints</span><span class="p">=</span><span class="mi">50</span><span class="p">;</span>
+<span class="n">newTimeVec</span> <span class="p">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):(</span><span class="mi">1</span><span class="o">/</span><span class="n">newNPoints</span><span class="p">):</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">interpEllTubeObj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">interp</span><span class="p">(</span><span class="n">newTimeVec</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>After that we can thin out the new ellipsoid tube, removing ellipsoids at sertain points of time.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of usage of THINOUTTUPLES method. In this example an ellipsoid</span>
+<span class="c">% tube object is created, using TimeVec time vector. Then it is thinned out</span>
+<span class="c">% using indVec vector of random indices of elements from timeVec.</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">newnPoints</span><span class="p">=</span><span class="mi">50</span><span class="p">;</span>
+<span class="n">newTimeVec</span> <span class="p">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):(</span><span class="mi">1</span><span class="o">/</span><span class="n">newnPoints</span><span class="p">):</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">interpEllTubeObj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">interp</span><span class="p">(</span><span class="n">newTimeVec</span><span class="p">);</span>
+<span class="n">indVec</span> <span class="p">=</span> <span class="n">randi</span><span class="p">(</span><span class="n">nPoints</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">);</span>
+<span class="n">thinOutEllTubeObj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">thinOutTuples</span><span class="p">(</span><span class="n">indVec</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>Then we can also calculate new scale factor for specified fields:</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of using SCALE method to calculate and set new</span>
+<span class="c">% scaleFactor for fields in ellipsoid tube object.</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">newnPoints</span><span class="p">=</span><span class="mi">50</span><span class="p">;</span>
+<span class="n">newTimeVec</span> <span class="p">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):(</span><span class="mi">1</span><span class="o">/</span><span class="n">newnPoints</span><span class="p">):</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">interpEllTubeObj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">interp</span><span class="p">(</span><span class="n">newTimeVec</span><span class="p">);</span>
+<span class="n">ellTubeObj</span><span class="p">.</span><span class="n">scale</span><span class="p">(@(</span><span class="n">varargin</span><span class="p">)</span><span class="mi">2</span><span class="p">,{});</span>
+</pre></div>
+</td></tr></table></div>
+<p>Also we can compare objects using method <em>isEqual</em>.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example ISEQUAL function usage. In it two ellipsoid tube objects are</span>
+<span class="c">% created and compared. This is the example of the siplest usage of this</span>
+<span class="c">% function with the minimum of input arguments. These ellipsoid tubes are</span>
+<span class="c">% not equal because of different lsGoodDirVec vectors.</span>
+<span class="n">nPoints</span><span class="p">=</span><span class="mi">10</span><span class="p">;</span>
+<span class="n">absTol</span><span class="p">=</span><span class="mf">0.01</span><span class="p">;</span>
+<span class="n">relTol</span><span class="p">=</span><span class="mf">0.01</span><span class="p">;</span>
+<span class="n">approxSchemaDescr</span><span class="p">=</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span>
+<span class="n">approxSchemaName</span><span class="p">=</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span>
+<span class="n">nDims</span><span class="p">=</span><span class="mi">3</span><span class="p">;</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">lsGoodDirVec</span><span class="p">=[</span><span class="mi">1</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">aMat</span><span class="p">=</span><span class="nb">zeros</span><span class="p">(</span><span class="n">nDims</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">timeVec</span><span class="p">=(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">sTime</span><span class="p">=</span><span class="n">timeVec</span><span class="p">(</span><span class="n">randi</span><span class="p">(</span><span class="n">nPoints</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+<span class="n">approxType</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">;</span>
+<span class="n">qArrayList</span><span class="p">=</span><span class="nb">repmat</span><span class="p">({</span><span class="nb">repmat</span><span class="p">(</span><span class="nb">diag</span><span class="p">([</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="c">...</span>
+    <span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="n">ltGoodDirArray</span><span class="p">=</span><span class="nb">repmat</span><span class="p">(</span><span class="n">lsGoodDirVec</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">,</span><span class="n">nPoints</span><span class="p">]);</span>
+<span class="n">firstEllTubeObj</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQArrays</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">qArrayList</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+<span class="n">lsGoodDirVec</span><span class="p">=[</span><span class="mi">1</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">0</span><span class="p">];</span>
+<span class="n">ltGoodDirArray</span><span class="p">=</span><span class="nb">repmat</span><span class="p">(</span><span class="n">lsGoodDirVec</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">,</span><span class="n">nPoints</span><span class="p">]);</span>
+<span class="n">secondEllTubeObj</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQArrays</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">qArrayList</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+<span class="n">firstEllTubeObj</span><span class="p">.</span><span class="n">isEqual</span><span class="p">(</span><span class="n">secondEllTubeObj</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example ISEQUAL function usage. In it two ellipsoid tube objects are</span>
+<span class="c">% created and compared. These ellipsoid tubes are equal.</span>
+<span class="n">nPoints</span><span class="p">=</span><span class="mi">10</span><span class="p">;</span>
+<span class="n">absTol</span><span class="p">=</span><span class="mf">0.01</span><span class="p">;</span>
+<span class="n">relTol</span><span class="p">=</span><span class="mf">0.01</span><span class="p">;</span>
+<span class="n">approxSchemaDescr</span><span class="p">=</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span>
+<span class="n">approxSchemaName</span><span class="p">=</span><span class="s">&#39;Internal&#39;</span><span class="p">;</span>
+<span class="n">nDims</span><span class="p">=</span><span class="mi">3</span><span class="p">;</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">lsGoodDirVec</span><span class="p">=[</span><span class="mi">1</span><span class="p">;</span><span class="mi">0</span><span class="p">;</span><span class="mi">1</span><span class="p">];</span>
+<span class="n">aMat</span><span class="p">=</span><span class="nb">zeros</span><span class="p">(</span><span class="n">nDims</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">timeVec</span><span class="p">=(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):(</span><span class="mi">1</span><span class="o">/</span><span class="n">nPoints</span><span class="p">):</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">sTime</span><span class="p">=</span><span class="n">timeVec</span><span class="p">(</span><span class="n">randi</span><span class="p">(</span><span class="n">nPoints</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+<span class="n">approxType</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EApproxType</span><span class="p">.</span><span class="n">Internal</span><span class="p">;</span>
+<span class="n">qArrayList</span><span class="p">=</span><span class="nb">repmat</span><span class="p">({</span><span class="nb">repmat</span><span class="p">(</span><span class="nb">diag</span><span class="p">([</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">]),[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">nPoints</span><span class="p">])},</span><span class="c">...</span>
+    <span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">);</span>
+<span class="n">ltGoodDirArray</span><span class="p">=</span><span class="nb">repmat</span><span class="p">(</span><span class="n">lsGoodDirVec</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="n">nTubes</span><span class="p">,</span><span class="n">nPoints</span><span class="p">]);</span>
+<span class="n">firstEllTubeObj</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQArrays</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">qArrayList</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+<span class="n">secondEllTubeObj</span><span class="p">=</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllTube</span><span class="p">.</span><span class="n">fromQArrays</span><span class="p">(</span><span class="c">...</span>
+    <span class="n">qArrayList</span><span class="p">,</span> <span class="n">aMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">ltGoodDirArray</span><span class="p">,</span> <span class="n">sTime</span><span class="p">,</span> <span class="n">approxType</span><span class="p">,</span> <span class="n">approxSchemaName</span><span class="p">,</span><span class="c">...</span>
+    <span class="n">approxSchemaDescr</span><span class="p">,</span> <span class="n">absTol</span><span class="p">,</span> <span class="n">relTol</span><span class="p">);</span>
+<span class="n">firstEllTubeObj</span><span class="p">.</span><span class="n">isEqual</span><span class="p">(</span><span class="n">secondEllTubeObj</span><span class="p">,</span><span class="s">&#39;checkFieldOrder&#39;</span><span class="p">,</span><span class="n">false</span><span class="p">,</span><span class="c">...</span>
+    <span class="s">&#39;checkTupleOrder&#39;</span><span class="p">,</span><span class="n">false</span><span class="p">,</span><span class="s">&#39;maxTolerance&#39;</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">,</span><span class="c">...</span>
+    <span class="s">&#39;maxRelativeTolerance&#39;</span><span class="p">,</span><span class="mf">0.0001</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>At last there are several methods for projecting ellipsoid tubes on the specified spaces. The first method projects the ellipsoid tube on specified space creating the specified type of projection.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of calculating ellipsoid tube object projection using PROJECT</span>
+<span class="c">% method.</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">projType</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EProjType</span><span class="p">.</span><span class="n">Static</span><span class="p">;</span>
+<span class="n">projMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span><span class="o">&#39;</span><span class="p">;</span>
+<span class="n">p</span> <span class="p">=</span> <span class="p">@</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">fGetProjMat</span><span class="p">;</span>
+<span class="p">[</span><span class="n">ellTubeProjObj</span><span class="p">,</span><span class="n">indProj2OrigVec</span><span class="p">]</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">project</span><span class="p">(</span><span class="n">projType</span><span class="p">,</span><span class="c">...</span>
+    <span class="p">{</span><span class="n">projMat</span><span class="p">},</span><span class="n">p</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>The second method projects the ellipsoid tube onto subspace defined by vectors of standart basis with indices specified in indVec.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% Examples of calculating ellipsoid tube object projection to basic orths </span>
+<span class="c">% using PROJECTTOORTHS function. This is an example of projectToOrths usage </span>
+<span class="c">% with one input variable. The default value of projection type is used.</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">ellTubeProjObj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">projectToOrths</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% Examples of calculating an ellipsoid tube object projection to basic orths </span>
+<span class="c">% using PROJECTTOORTHS function. This is an example of projectToOrths usage </span>
+<span class="c">% with specified projection type.</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">projType</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EProjType</span><span class="p">.</span><span class="n">DynamicAlongGoodCurve</span><span class="p">;</span>
+<span class="n">ellTubeProjObj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">projectToOrths</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">projType</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>Also there is a method for calculating only static projections.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% Examples of calculating ellipsoid tube object static projection using </span>
+<span class="c">% PROJECTSTATIC function.</span>
+<span class="n">nTubes</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">nPoints</span> <span class="p">=</span> <span class="mi">20</span><span class="p">;</span>
+<span class="n">timeBeg</span><span class="p">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="n">timeEnd</span><span class="p">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="n">type</span> <span class="p">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="n">ellTubeObj</span><span class="p">=</span><span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getEllTube</span><span class="p">(</span><span class="n">nTubes</span><span class="p">,</span><span class="n">timeBeg</span><span class="p">,</span><span class="n">timeEnd</span><span class="p">,</span><span class="n">type</span><span class="p">,</span><span class="n">nPoints</span><span class="p">);</span>
+<span class="n">projMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">]</span><span class="o">&#39;</span><span class="p">;</span>
+<span class="n">ellTubeProjObj</span> <span class="p">=</span> <span class="n">ellTubeObj</span><span class="p">.</span><span class="n">projectStatic</span><span class="p">(</span><span class="n">projMat</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>For creating the projection matrix a special function is used in all of these examples.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre>function [projOrthMatArray,projOrthMatTransArray]=...
+    fGetProjMat(projMat,timeVec,varargin)
+    nPoints=length(timeVec);
+    projOrthMatArray=repmat(projMat,[1,1,nPoints]);
+    projOrthMatTransArray=repmat(projMat.&#39;,[1,1,nPoints]);
+end
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="tubes-by-instant-of-time">
+<h2>Tubes by instant of time<a class="headerlink" href="#tubes-by-instant-of-time" title="Permalink to this headline">¶</a></h2>
+<p>As with ellipsoid tube objects, there are several methods that we can use while working with tubes by instant of time. First of all we can create tubes by instant of time using <em>fromEllTubes</em> method:</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of creating EllUnionTube object using FROMELLTUBES method.</span>
+<span class="n">aMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">1</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">];</span>
+<span class="n">bMat</span> <span class="p">=</span> <span class="nb">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">SUBounds</span> <span class="p">=</span> <span class="n">struct</span><span class="p">();</span>
+<span class="n">SUBounds</span><span class="p">.</span><span class="n">center</span> <span class="p">=</span> <span class="p">{</span><span class="s">&#39;sin(t)&#39;</span><span class="p">;</span> <span class="s">&#39;cos(t)&#39;</span><span class="p">};</span>
+<span class="n">SUBounds</span><span class="p">.</span><span class="n">shape</span> <span class="p">=</span> <span class="p">[</span><span class="mi">9</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">2</span><span class="p">];</span>
+<span class="n">sys</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">linsys</span><span class="p">.</span><span class="n">LinSysContinuous</span><span class="p">(</span><span class="n">aMat</span><span class="p">,</span> <span class="n">bMat</span><span class="p">,</span> <span class="n">SUBounds</span><span class="p">);</span>
+<span class="n">x0EllObj</span> <span class="p">=</span> <span class="n">ell_unitball</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">timeVec</span> <span class="p">=</span> <span class="p">[</span><span class="mi">0</span> <span class="mi">10</span><span class="p">];</span>
+<span class="n">dirsMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">]</span><span class="o">&#39;</span><span class="p">;</span>
+<span class="n">rsObj</span> <span class="p">=</span> <span class="n">elltool</span><span class="p">.</span><span class="n">reach</span><span class="p">.</span><span class="n">ReachContinuous</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="n">x0EllObj</span><span class="p">,</span> <span class="n">dirsMat</span><span class="p">,</span> <span class="n">timeVec</span><span class="p">);</span>
+<span class="n">ellTubeObj</span> <span class="p">=</span> <span class="n">rsObj</span><span class="p">.</span><span class="n">getEllTubeRel</span><span class="p">();</span>
+<span class="n">unionEllTubeObj</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">rels</span><span class="p">.</span><span class="n">EllUnionTube</span><span class="p">.</span><span class="n">fromEllTubes</span><span class="p">(</span><span class="n">ellTubeObj</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>From here on we will use the <em>getUnion</em> function so we can get a tube by instant of time and work with it further on. As we have created a tubes by instant of time object, we can get all the types of differet data about it. There is a set of methods that can give information about the data stored in the object and give access to it.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of GETDATA method&#39;s usage.</span>
+<span class="n">ellUnionObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getUnion</span><span class="p">();</span>
+<span class="n">data</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getData</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of GETELLARRAY method&#39;s usage.</span>
+<span class="n">ellUnionObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getUnion</span><span class="p">();</span>
+<span class="n">approxType</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">approxType</span><span class="p">;</span>
+<span class="n">data</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getEllArray</span><span class="p">(</span><span class="n">approxType</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellUnionObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getUnion</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get the list of field descriptions</span>
+<span class="c">%</span>
+<span class="n">descr</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getFieldDescrList</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get for given field a nested logical/cell array containing is-null </span>
+<span class="c">% indicators for cell content. For example, for approxSchemaName field.</span>
+<span class="c">%</span>
+<span class="n">isNull</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getFieldIsNull</span><span class="p">(</span><span class="s">&#39;approxSchemaName&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get for given field logical vector determining whether value of this </span>
+<span class="c">% field in each cell is null or not. For example, for approxSchemaName field.</span>
+<span class="c">%</span>
+<span class="n">valueIsNull</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getFieldIsValueNull</span><span class="p">(</span><span class="s">&#39;approxSchemaName&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get the list of field names</span>
+<span class="c">%</span>
+<span class="n">name</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getFieldNameList</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% project object with specified fields. For example, with fields that are</span>
+<span class="c">% not to be cut or concatenated.</span>
+<span class="c">%</span>
+<span class="n">nameList</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getNoCatOrCutFieldsList</span><span class="p">();</span>
+<span class="n">proj</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getFieldProjection</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get the list of field types</span>
+<span class="c">%</span>
+<span class="n">type</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getFieldTypeList</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get the list of field type specifications. Field type specification is a </span>
+<span class="c">% sequence of type names corresponding to field value types starting with </span>
+<span class="c">% the top level and going down into the nested content of a field (for a </span>
+<span class="c">% field having a complex type).</span>
+<span class="c">%</span>
+<span class="n">typeSpec</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getFieldTypeSpecList</span><span class="p">();</span>
+<span class="c">% or</span>
+<span class="n">typeSpec</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getFieldTypeSpecList</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get a matrix composed from the size vectorsfor the specified fields</span>
+<span class="c">%</span>
+<span class="n">valueSizeMat</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getFieldValueSizeMat</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get a vector indicating whether a particular field is composed of null </span>
+<span class="c">% values completely</span>
+<span class="c">%</span>
+<span class="n">valueNull</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getIsFieldValueNull</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get a size vector for the specified dimensions. If no dimensions are </span>
+<span class="c">% specified, a size vector for all dimensions up to minimum dimension is </span>
+<span class="c">% returned</span>
+<span class="n">minDimensionSize</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getMinDimensionSize</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a minimum dimensionality for a given object</span>
+<span class="c">%</span>
+<span class="n">minDimensionality</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getMinDimensionality</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a number of elements in a given object</span>
+<span class="c">%</span>
+<span class="n">nElems</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getNElems</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a number of fields in a given object</span>
+<span class="c">%</span>
+<span class="n">nFiedls</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getNFields</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a number of tuples in a given object</span>
+<span class="c">%</span>
+<span class="n">nTuples</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getNTuples</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get sort index for all tuples of given relation with respect to some of </span>
+<span class="c">% its fields</span>
+<span class="c">%</span>
+<span class="n">sortIndex</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getSortIndex</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">% also we can specify the direction of sorting (&#39;asc&#39; or &#39;desc&#39;)</span>
+<span class="n">sortIndex</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getSortIndex</span><span class="p">(</span><span class="n">nameList</span><span class="p">,</span><span class="s">&#39;Direction&#39;</span><span class="p">,</span><span class="s">&#39;asc&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get tuples with given indices from given relation</span>
+<span class="c">%</span>
+<span class="n">tuples</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getTuples</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]);</span>
+<span class="c">%</span>
+<span class="c">% get tuples from given relation such that afixed index field contains </span>
+<span class="c">% values from a given set of value</span>
+<span class="c">%</span>
+<span class="n">filteredTuples</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getTuplesFilteredBy</span><span class="p">(</span><span class="s">&#39;sTime&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get internal representation for a set of unique tuples for given relation</span>
+<span class="c">%</span>
+<span class="n">uniqueData</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getUniqueData</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a relation containing the unique tuples from the original relation</span>
+<span class="c">%</span>
+<span class="n">uniqueTuples</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getUniqueTuples</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<p>Also we can copy the object, clear all the data, save it in a file.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellUnionObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getUnion</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a copy of the object</span>
+<span class="c">%</span>
+<span class="n">ellCopy</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">getCopy</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% delete all the data from the object</span>
+<span class="c">%</span>
+<span class="n">ellUnionObj</span><span class="p">.</span><span class="n">clearData</span><span class="p">();</span>
+<span class="n">ellUnionObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getUnion</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% create a copy of a specified object via calling a copy constructor for </span>
+<span class="c">% the object class</span>
+<span class="c">%</span>
+<span class="n">cloneObj</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% remove all duplicate tuples from the relation</span>
+<span class="c">%</span>
+<span class="n">noDuplicate</span> <span class="p">=</span> <span class="n">cloneObj</span><span class="p">.</span><span class="n">removeDuplicateTuples</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% write a content of relation into Excel spreadsheet file</span>
+<span class="c">%</span>
+<span class="n">ellUnionObj</span><span class="p">.</span><span class="n">writeToCSV</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% write a content of relation into Excel spreadsheet file</span>
+<span class="c">%</span>
+<span class="n">fileName</span> <span class="p">=</span> <span class="n">ellUnionObj</span><span class="p">.</span><span class="n">writeToXLS</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% display a content of the given relation as a data grid UI component</span>
+<span class="c">%</span>
+<span class="n">ellUnionObj</span><span class="p">.</span><span class="n">dispOnUI</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% put some textual information about object in screen</span>
+<span class="c">%</span>
+<span class="n">ellUnionObj</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<p>Also we can compare tubes by instant of time using <em>isEqual</em> method.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of ISEQUAL method usage. The compared ellTubeUnions are not</span>
+<span class="c">% equal because one has external approximation, and the other has internal</span>
+<span class="c">% approximation.</span>
+<span class="n">firstUnionObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getUnionExt</span><span class="p">();</span>
+<span class="n">secondUnionObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getUnionInt</span><span class="p">();</span>
+<span class="n">res</span> <span class="p">=</span> <span class="n">firstUnionObj</span><span class="p">.</span><span class="n">isEqual</span><span class="p">(</span><span class="n">secondUnionObj</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>At last, as it has already been said tubes by instant of time can be projected only on static subspaces. It can be done in two ways.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8
+9</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of calculating EllTubeUnion object&#39;s projection using PROJECT</span>
+<span class="c">% method. For EllTubeUnion objects the type of projection can only be Static.</span>
+<span class="n">unionEllTubeObj</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getUnion</span><span class="p">();</span>
+<span class="n">projType</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">enums</span><span class="p">.</span><span class="n">EProjType</span><span class="p">.</span><span class="n">Static</span><span class="p">;</span>
+<span class="n">projMat</span> <span class="p">=</span> <span class="p">[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span> <span class="mi">0</span> <span class="mi">1</span><span class="p">]</span><span class="o">&#39;</span><span class="p">;</span>
+<span class="n">p</span> <span class="p">=</span> <span class="p">@</span><span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">fGetProjMat</span><span class="p">;</span>
+<span class="p">[</span><span class="n">ellTubeProjObj</span><span class="p">,</span><span class="n">indProj2OrigVec</span><span class="p">]</span> <span class="p">=</span> <span class="n">unionEllTubeObj</span><span class="p">.</span><span class="n">project</span><span class="p">(</span><span class="n">projType</span><span class="p">,</span><span class="c">...</span>
+    <span class="p">{</span><span class="n">projMat</span><span class="p">},</span><span class="n">p</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% Example of PROJECTSTATIC function usage for creating a projection of</span>
+<span class="c">% EllTubeUnion object.</span>
+<span class="n">unionEllTubeObj</span> <span class="p">=</span> <span class="c">...</span>
+    <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getUnion</span><span class="p">();</span>
+<span class="n">projMatList</span> <span class="p">=</span> <span class="p">{[</span><span class="mi">1</span> <span class="mi">0</span><span class="p">;</span><span class="mi">0</span> <span class="mi">1</span><span class="p">]};</span>
+<span class="n">statEllTubeProjObj</span> <span class="p">=</span> <span class="n">unionEllTubeObj</span><span class="p">.</span><span class="n">projectStatic</span><span class="p">(</span><span class="n">projMatList</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>As for ellipsoid tube projections, a special function is used to create the projection matrix for tubes by instant of time:</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6</pre></div></td><td class="code"><div class="highlight"><pre>function [projOrthMatArray,projOrthMatTransArray]=...
+    fGetProjMat(projMat,timeVec,varargin)
+    nPoints=length(timeVec);
+    projOrthMatArray=repmat(projMat,[1,1,nPoints]);
+    projOrthMatTransArray=repmat(projMat.&#39;,[1,1,nPoints]);
+end
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="projections-of-ellipsoid-tubes-and-tubes-by-instant-of-time">
+<h2>Projections of ellipsoid tubes and tubes by instant of time<a class="headerlink" href="#projections-of-ellipsoid-tubes-and-tubes-by-instant-of-time" title="Permalink to this headline">¶</a></h2>
+<p>As it has already been said we can create either static or dynamic projections for ellipsoid tubes and only static projections for tubes by instant of time. There are several methods in <em>Ellipsoidal Toolbox</em> for that. Most of them has already been described:</p>
+<ul class="simple">
+<li><em>project</em>, <em>projectStatic</em> and <em>projectToOrths</em> for ellipsoid tubes;</li>
+<li><em>project</em> and <em>projectStatic</em> for tubes by instant of time.</li>
+</ul>
+<p>It should be mentioned that from here on all the examples are written for ellipsoid tube projections, but their usage is the same for the projections of tubes by instant of time. We wiil use <em>getProj</em> function to create ellipsoid tube projection that we will work with.</p>
+<p>As with ellipsoid tubes and tubes by instant of time we can get all the types of differet data about projections. There is a set of methods that can give information about the data stored in the object and give access to it.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of GETDATA method&#39;s usage.</span>
+<span class="n">ellTubeProjObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getProj</span><span class="p">();</span>
+<span class="n">data</span> <span class="p">=</span> <span class="n">ellTubeProjObj</span><span class="p">.</span><span class="n">getData</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of GETELLARRAY method&#39;s usage.</span>
+<span class="n">ellProjObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getProj</span><span class="p">();</span>
+<span class="n">approxType</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">approxType</span><span class="p">;</span>
+<span class="n">data</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getEllArray</span><span class="p">(</span><span class="n">approxType</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellProjObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getProj</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get the list of field descriptions</span>
+<span class="c">%</span>
+<span class="n">descr</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getFieldDescrList</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get for given field a nested logical/cell array containing is-null </span>
+<span class="c">% indicators for cell content. For example, for approxSchemaName field.</span>
+<span class="c">%</span>
+<span class="n">isNull</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getFieldIsNull</span><span class="p">(</span><span class="s">&#39;approxSchemaName&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get for given field logical vector determining whether value of this </span>
+<span class="c">% field in each cell is null or not. For example, for approxSchemaName field.</span>
+<span class="c">%</span>
+<span class="n">valueIsNull</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getFieldIsValueNull</span><span class="p">(</span><span class="s">&#39;approxSchemaName&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get the list of field names</span>
+<span class="c">%</span>
+<span class="n">name</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getFieldNameList</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% project object with specified fields. For example, with fields that are</span>
+<span class="c">% not to be cut or concatenated.</span>
+<span class="c">%</span>
+<span class="n">nameList</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getNoCatOrCutFieldsList</span><span class="p">();</span>
+<span class="n">proj</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getFieldProjection</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get the list of field types</span>
+<span class="c">%</span>
+<span class="n">type</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getFieldTypeList</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get the list of field type specifications. Field type specification is a </span>
+<span class="c">% sequence of type names corresponding to field value types starting with </span>
+<span class="c">% the top level and going down into the nested content of a field (for a </span>
+<span class="c">% field having a complex type).</span>
+<span class="c">%</span>
+<span class="n">typeSpec</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getFieldTypeSpecList</span><span class="p">();</span>
+<span class="c">% or</span>
+<span class="n">typeSpec</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getFieldTypeSpecList</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get a matrix composed from the size vectorsfor the specified fields</span>
+<span class="c">%</span>
+<span class="n">valueSizeMat</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getFieldValueSizeMat</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get a vector indicating whether a particular field is composed of null </span>
+<span class="c">% values completely</span>
+<span class="c">%</span>
+<span class="n">valueNull</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getIsFieldValueNull</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get a size vector for the specified dimensions. If no dimensions are </span>
+<span class="c">% specified, a size vector for all dimensions up to minimum dimension is </span>
+<span class="c">% returned</span>
+<span class="n">minDimensionSize</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getMinDimensionSize</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a minimum dimensionality for a given object</span>
+<span class="c">%</span>
+<span class="n">minDimensionality</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getMinDimensionality</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a number of elements in a given object</span>
+<span class="c">%</span>
+<span class="n">nElems</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getNElems</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a number of fields in a given object</span>
+<span class="c">%</span>
+<span class="n">nFiedls</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getNFields</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a number of tuples in a given object</span>
+<span class="c">%</span>
+<span class="n">nTuples</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getNTuples</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get sort index for all tuples of given relation with respect to some of </span>
+<span class="c">% its fields</span>
+<span class="c">%</span>
+<span class="n">sortIndex</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getSortIndex</span><span class="p">(</span><span class="n">nameList</span><span class="p">);</span>
+<span class="c">% also we can specify the direction of sorting (&#39;asc&#39; or &#39;desc&#39;)</span>
+<span class="n">sortIndex</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getSortIndex</span><span class="p">(</span><span class="n">nameList</span><span class="p">,</span><span class="s">&#39;Direction&#39;</span><span class="p">,</span><span class="s">&#39;asc&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get tuples with given indices from given relation</span>
+<span class="c">%</span>
+<span class="n">tuples</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getTuples</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get tuples from given relation such that afixed index field contains </span>
+<span class="c">% values from a given set of value</span>
+<span class="c">%</span>
+<span class="n">filteredTuples</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getTuplesFilteredBy</span><span class="p">(</span><span class="s">&#39;sTime&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% get internal representation for a set of unique tuples for given relation</span>
+<span class="c">%</span>
+<span class="n">uniqueData</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getUniqueData</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a relation containing the unique tuples from the original relation</span>
+<span class="c">%</span>
+<span class="n">uniqueTuples</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getUniqueTuples</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<p>Also we can copy the object, clear all the data, save it in a file.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35</pre></div></td><td class="code"><div class="highlight"><pre><span class="n">ellProjObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getProj</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% get a copy of the object</span>
+<span class="c">%</span>
+<span class="n">ellCopy</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">getCopy</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% delete all the data from the object</span>
+<span class="c">%</span>
+<span class="n">ellProjObj</span><span class="p">.</span><span class="n">clearData</span><span class="p">();</span>
+<span class="n">ellProjObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getProj</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% create a copy of a specified object via calling a copy constructor for </span>
+<span class="c">% the object class</span>
+<span class="c">%</span>
+<span class="n">cloneObj</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% remove all duplicate tuples from the relation</span>
+<span class="c">%</span>
+<span class="n">noDuplicate</span> <span class="p">=</span> <span class="n">cloneObj</span><span class="p">.</span><span class="n">removeDuplicateTuples</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% write a content of relation into Excel spreadsheet file</span>
+<span class="c">%</span>
+<span class="n">ellProjObj</span><span class="p">.</span><span class="n">writeToCSV</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% write a content of relation into Excel spreadsheet file</span>
+<span class="c">%</span>
+<span class="n">fileName</span> <span class="p">=</span> <span class="n">ellProjObj</span><span class="p">.</span><span class="n">writeToXLS</span><span class="p">(</span><span class="s">&#39;path&#39;</span><span class="p">);</span>
+<span class="c">%</span>
+<span class="c">% display a content of the given relation as a data grid UI component</span>
+<span class="c">%</span>
+<span class="n">ellProjObj</span><span class="p">.</span><span class="n">dispOnUI</span><span class="p">();</span>
+<span class="c">%</span>
+<span class="c">% put some textual information about object in screen</span>
+<span class="c">%</span>
+<span class="n">ellProjObj</span><span class="p">.</span><span class="n">display</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<p>Also we can compare ellipsoid tube projections using <em>isEqual</em> method.</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of ISEQUAL method usage. The compared ellTubeProjections are </span>
+<span class="c">% equal.</span>
+<span class="n">firstProjObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getProj</span><span class="p">();</span>
+<span class="n">secondProjObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getProj</span><span class="p">();</span>
+<span class="n">res</span> <span class="p">=</span> <span class="n">firstProjObj</span><span class="p">.</span><span class="n">isEqual</span><span class="p">(</span><span class="n">secondProjObj</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<p>And finally we can plot out results using one of three methods: <em>plot</em>, <em>plotExt</em> (for external approximation) or <em>plotInt</em> (for internal approximation).</p>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of calculating ellipsoid tube object projection using PROJECT</span>
+<span class="c">% function.</span>
+<span class="n">ellProjObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getProj</span><span class="p">();</span>
+<span class="n">plObj</span><span class="p">=</span><span class="n">smartdb</span><span class="p">.</span><span class="nb">disp</span><span class="p">.</span><span class="n">RelationDataPlotter</span><span class="p">();</span>
+<span class="n">ellProjObj</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">plObj</span><span class="p">);</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of plotting the projection of the ellipsoid tube internal approximation</span>
+<span class="c">% object using PLOTINT method.</span>
+<span class="n">ellProjObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getProj</span><span class="p">();</span>
+<span class="n">ellProjObj</span><span class="p">.</span><span class="n">plotInt</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<div class="highlight-matlab"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">% An example of plotting the projection of the ellipsoid tube external approximation</span>
+<span class="c">% object using PLOTEXT method.</span>
+<span class="n">ellProjObj</span> <span class="p">=</span> <span class="n">gras</span><span class="p">.</span><span class="n">ellapx</span><span class="p">.</span><span class="n">smartdb</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">examples</span><span class="p">.</span><span class="n">getProj</span><span class="p">();</span>
+<span class="n">ellProjObj</span><span class="p">.</span><span class="n">plotExt</span><span class="p">();</span>
+</pre></div>
+</td></tr></table></div>
+<p>All the three methods have several properties connected to the properties of the image, for example: transparency, color, line width and so on.</p>
+<p>To read more about the differences of these projections <a class="reference internal" href="chap_implement.html#goto-label"><em>goto</em></a>. Also there you can find some illustrations for both ellTube projections and ellUnionTube projections.</p>
+<table class="docutils citation" frame="void" id="gag2012" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[GAG2012]</a></td><td>Gagarinov P.V. 2012. Computation of Alternated Reachability Tubes for Linear Control Systems under Uncertainty. <em>Moscow University Computational Mathematics and Cybernetics</em>, 2012, Vol. 36, No. 4, pp. 169–177.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="main_manual.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ellipsoid tubes, tubes by instant of time and their projections</a><ul>
+<li><a class="reference internal" href="#ellipsoid-tubes">Ellipsoid tubes</a></li>
+<li><a class="reference internal" href="#tubes-by-instant-of-time">Tubes by instant of time</a></li>
+<li><a class="reference internal" href="#projections-of-ellipsoid-tubes-and-tubes-by-instant-of-time">Projections of ellipsoid tubes and tubes by instant of time</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chap_examples.html"
+                        title="previous chapter">Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chap_summary.html"
+                        title="next chapter">Summary and Outlook</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chap_ellTube.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chap_summary.html" title="Summary and Outlook"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chap_examples.html" title="Examples"
+             >previous</a> |</li>
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2013 Moscow State University, Faculty of Computational Mathematics and Computer Science, System Analysis Department, 2004-2011 The Regents of the University of California.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

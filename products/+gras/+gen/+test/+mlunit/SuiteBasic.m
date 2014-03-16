@@ -140,7 +140,9 @@ classdef SuiteBasic < mlunitext.test_case
                 end
             end
         end
-        function testMinAdv(self)
+        function DISABLE_testMinAdv(~)
+            %THIS TEST IS DISABLED because of abnsence of cpp sources and 
+            %64 bit version for minadv mex. 
             check([1 1],[2 2]);
             check([2 1],[1 2]);
             check([2 2],[1 1]);

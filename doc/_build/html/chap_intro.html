@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Introduction &mdash; Ellipsoidal Toolbox 2.0 beta 1 documentation</title>
+    <title>Introduction &mdash; Ellipsoidal Toolbox 2.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '2.0 beta 1',
+        VERSION:     '2.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Ellipsoidal Toolbox 2.0 beta 1 documentation" href="index.html" />
+    <link rel="top" title="Ellipsoidal Toolbox 2.0.1 documentation" href="index.html" />
     <link rel="next" title="Ellipsoidal Calculus" href="chap_ellcalc.html" />
     <link rel="prev" title="Welcome to Ellipsoidal Toolbox documentation!" href="main_manual.html" /> 
   </head>
@@ -40,7 +40,7 @@
         <li class="right" >
           <a href="main_manual.html" title="Welcome to Ellipsoidal Toolbox documentation!"
              accesskey="P">previous</a> |</li>
-        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0 beta 1 documentation</a> &raquo;</li> 
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -81,37 +81,37 @@ consists in finding the vertices of the resulting polytope and
 calculating their convex hull. MPT’s convex hull algorithm is based on
 the Double Description method <a class="reference internal" href="#motz1953" id="id3">[MOTZ1953]</a> and implemented in
 the CDD/CDD+ package <a class="reference internal" href="#cddhp" id="id4">[CDDHP]</a>. Its complexity is
-<img class="math" src="_images/math/caaa846680256b3e4de4329214b92089a991575e.png" alt="V^n"/>, where <img class="math" src="_images/math/12d58aa29201da09d8e620f8698e3a37547f6b4a.png" alt="V"/> is the number of vertices and <img class="math" src="_images/math/174fadd07fd54c9afe288e96558c92e0c1da733a.png" alt="n"/> is
+<img class="math" src="_images/math/5cf1ead08d0d7fda7f71d5e6228edcbc9f7b2e4c.png" alt="V^n"/>, where <img class="math" src="_images/math/c99df7a209495334da442b1ec998abaabfa320d8.png" alt="V"/> is the number of vertices and <img class="math" src="_images/math/413f8a8e40062a9090d9d50b88bc7b551b314c26.png" alt="n"/> is
 the state space dimension. Hence the use of MPT is practicable for low
 dimensional systems. But even in low dimensional systems the number of
 vertices in the reach set polytope can grow very large with the number
 of time steps. For example, consider the system,</p>
 <div class="math">
-<p><img src="_images/math/ce6ffae71fc494ec16e8a9400906866c5af9675c.png" alt="x_{k+1} = Ax_k + u_k ,"/></p>
-</div><p>with <img class="math" src="_images/math/712b52507a9e73c07bd4062d1237e3e926943c37.png" alt="A=\left[\begin{array}{cc}\cos 1 &amp; -\sin 1\\ \sin 1 &amp; \cos 1\end{array}\right]"/>,
-<img class="math" src="_images/math/399e7e6b2d4ab6e364b21b1a5a2d80429e86b99b.png" alt="\ u_k \in \{u\in {\bf R}^2 ~|~ \|u\|_{\infty}\leqslant1\}"/>,
-and <img class="math" src="_images/math/72b06396899d2700288898e0a58a1e1181f89181.png" alt="x_0 \in \{x\in {\bf R}^2 ~|~ \|x\|_{\infty}\leqslant1\}"/>.</p>
+<p><img src="_images/math/475800963f211b68178d44849f87661603b95a78.png" alt="x_{k+1} = Ax_k + u_k ,"/></p>
+</div><p>with <img class="math" src="_images/math/723a7f8cb2ace0920d908d01c86420373b48e8ca.png" alt="A=\left[\begin{array}{cc}\cos 1 &amp; -\sin 1\\ \sin 1 &amp; \cos 1\end{array}\right]"/>,
+<img class="math" src="_images/math/750490dafc28eb1175e6bf5f15083953bafabf1d.png" alt="\ u_k \in \{u\in {\bf R}^2 ~|~ \|u\|_{\infty}\leqslant1\}"/>,
+and <img class="math" src="_images/math/ae1be594cdd66a2ccb79190913273784e5c201b6.png" alt="x_0 \in \{x\in {\bf R}^2 ~|~ \|x\|_{\infty}\leqslant1\}"/>.</p>
 <p>Starting with a rectangular initial set, the number of vertices of the
-reach set polytope is <img class="math" src="_images/math/28f038a50595c2d43efef1ac831e39fb8de80f7e.png" alt="4k + 4"/> at the <img class="math" src="_images/math/8c325612684d41304b9751c175df7bcc0f61f64f.png" alt="k"/>th step.</p>
-<p>In <img class="math" src="_images/math/7c4a429318eb6ae5aedb23191989a7056c11a038.png" alt="d/dt"/> <a class="reference internal" href="#ddthp" id="id5">[DDTHP]</a>, the reach set is approximated by
+reach set polytope is <img class="math" src="_images/math/f22656e16328ce7f7b5af269ab2256888d2354be.png" alt="4k + 4"/> at the <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/>th step.</p>
+<p>In <img class="math" src="_images/math/91fe3e396a3aba8f5ff5f521d0b3f4008b4e0966.png" alt="d/dt"/> <a class="reference internal" href="#ddthp" id="id5">[DDTHP]</a>, the reach set is approximated by
 unions of rectangular polytopes <a class="reference internal" href="#asar2000" id="id6">[ASAR2000]</a>.</p>
 <div class="figure align-center" id="ddtfig" style="width: 50%">
 <img alt="approximation" src="_images/chapter01_ddt.png" />
-<p class="caption">Figure 1: Reach set approximation by union of rectangles. Source: adapted from <a class="reference internal" href="#asar2000" id="id7">[ASAR2000]</a>.</p>
+<p class="caption">Figure 34: Reach set approximation by union of rectangles. Source: adapted from <a class="reference internal" href="#asar2000" id="id7">[ASAR2000]</a>.</p>
 </div>
 <p>The algorithm works as follows. First, given the set of initial
 conditions defined as a polytope, the evolution in time of the
-polytope’s extreme points is computed (<a class="pageref" href="#ddtfig">figure  1</a> (a)).</p>
-<p><img class="math" src="_images/math/3a9244e14a9f38c4e175b060ad99919192e413da.png" alt="R(t_1)"/> in <a class="pageref" href="#ddtfig">figure  1</a> (a) is the reach set of the system at
-time <img class="math" src="_images/math/8b91b7245b0dd42b4f5585b97e323a8cfaa064a8.png" alt="t_1"/>, and <img class="math" src="_images/math/f3b77bcc82b17c583ed6df127d3266460c8d0f43.png" alt="R[t_0, t_1]"/> is the set of all points that
-can be reached during <img class="math" src="_images/math/7ce192d3edb697d7c00614a371eff1a9152c42a3.png" alt="[t_0, t_1]"/>. Second, the algorithm computes
+polytope’s extreme points is computed (<a href="#ddtfig">figure  34</a> (a)).</p>
+<p><img class="math" src="_images/math/088e22e395ff0b8f6cde149172e52590852bcebf.png" alt="R(t_1)"/> in <a href="#ddtfig">figure  34</a> (a) is the reach set of the system at
+time <img class="math" src="_images/math/44780f0598b4d22c6888cfca27deb04115f7fa88.png" alt="t_1"/>, and <img class="math" src="_images/math/1a3e51473c097540a265ee70575abb8038230e74.png" alt="R[t_0, t_1]"/> is the set of all points that
+can be reached during <img class="math" src="_images/math/85674382bfceecdd6e6d6bdfbc6cff246ef47ef9.png" alt="[t_0, t_1]"/>. Second, the algorithm computes
 the convex hull of vertices of both, the initial polytope and
-<img class="math" src="_images/math/3a9244e14a9f38c4e175b060ad99919192e413da.png" alt="R(t_1)"/> (<a class="pageref" href="#ddtfig">figure  1</a> (b)). The resulting polytope is then
-bloated to include all the reachable states in <img class="math" src="_images/math/43c0b696c09d8fcf7de773f68ada5fca52545b1f.png" alt="[t_0,t_1]"/> (<a class="pageref" href="#ddtfig">figure  1</a> (c)).
+<img class="math" src="_images/math/088e22e395ff0b8f6cde149172e52590852bcebf.png" alt="R(t_1)"/> (<a href="#ddtfig">figure  34</a> (b)). The resulting polytope is then
+bloated to include all the reachable states in <img class="math" src="_images/math/3ad5575eeecc18f7013d14bb6ac8e07d4a611af3.png" alt="[t_0,t_1]"/> (<a href="#ddtfig">figure  34</a> (c)).
 Finally, this overapproximating polytope is in its turn
-overapproximated by the union of rectangles (<a class="pageref" href="#ddtfig">figure  1</a> (d)). The
-same procedure is repeated for the next time interval <img class="math" src="_images/math/cf22ccb564d6f9393afb0a4bd5c1bd489bd28626.png" alt="[t_1,t_2]"/>,
-and the union of both rectangular approximations is taken (<a class="pageref" href="#ddtfig">figure  1</a> (e,f)),
+overapproximated by the union of rectangles (<a href="#ddtfig">figure  34</a> (d)). The
+same procedure is repeated for the next time interval <img class="math" src="_images/math/d82d790d123640183a6478ccd2fca6d3dbbb5cc0.png" alt="[t_1,t_2]"/>,
+and the union of both rectangular approximations is taken (<a href="#ddtfig">figure  34</a> (e,f)),
 and so on. Rectangular polytopes are easy to represent
 and the number of facets grows linearly with dimension, but a large
 number of rectangles must be used to assure the approximation is not
@@ -128,21 +128,21 @@ dimensions.</p>
 uses a special class of polytopes (see <a class="reference internal" href="#zonohp" id="id12">[ZONOHP]</a>)
 of the form,</p>
 <div class="math">
-<p><img src="_images/math/e18445de298a486382153595e8dda5384999c8b9.png" alt="Z=\{x \in {\bf R}^n ~|~
+<p><img src="_images/math/079103ca2d8d2b4f2f1a11895f4e0777515a4655.png" alt="Z=\{x \in {\bf R}^n ~|~
 x=c+\sum_{i=1}^p\alpha_ig_i,~ -1\leqslant\alpha_i\leqslant1\},"/></p>
-</div><p>wherein <img class="math" src="_images/math/3372c1cb6d68cf97c2d231acc0b47b95a9ed04cc.png" alt="c"/> and <img class="math" src="_images/math/49a91640f7ee9cb58b93648678c9d3aabae2330c.png" alt="g_1, ..., g_p"/> are vectors in
-<img class="math" src="_images/math/9d5b8bcc7aa4f27bc64d1e1817aa4f42c44cffcb.png" alt="{\bf R}^n"/>. Thus, a zonotope <img class="math" src="_images/math/3ead47fb9fb4a4c273feee398f72ff2a09702b84.png" alt="Z"/> is represented by its
-center <img class="math" src="_images/math/3372c1cb6d68cf97c2d231acc0b47b95a9ed04cc.png" alt="c"/> and ‘generator’ vectors <img class="math" src="_images/math/49a91640f7ee9cb58b93648678c9d3aabae2330c.png" alt="g_1, ..., g_p"/>. The
-value <img class="math" src="_images/math/87939d678ccd1097ef46bd50da281e73bd531811.png" alt="p/n"/> is called the order of the zonotope. The main benefit
+</div><p>wherein <img class="math" src="_images/math/65868d23a5bfe5b3b2d819386b19c14fa36af134.png" alt="c"/> and <img class="math" src="_images/math/5a5dba513d884860270a37e8a093a04413a047c1.png" alt="g_1, ..., g_p"/> are vectors in
+<img class="math" src="_images/math/e1ece5563e1c134d935af18b692ffc3fde4f2fd6.png" alt="{\bf R}^n"/>. Thus, a zonotope <img class="math" src="_images/math/c4563e7ecec2336a3934447a6c10ef8519b0b452.png" alt="Z"/> is represented by its
+center <img class="math" src="_images/math/65868d23a5bfe5b3b2d819386b19c14fa36af134.png" alt="c"/> and ‘generator’ vectors <img class="math" src="_images/math/5a5dba513d884860270a37e8a093a04413a047c1.png" alt="g_1, ..., g_p"/>. The
+value <img class="math" src="_images/math/7e48764f6022209e2a9d41cdb3350b01bd3e1283.png" alt="p/n"/> is called the order of the zonotope. The main benefit
 of zonotopes over general polytopes is that a symmetric polytope can be
 represented more compactly than a general polytope. The geometric sum of
 two zonotopes is a zonotope:</p>
 <div class="math">
-<p><img src="_images/math/cba637903bd5dcc4222a25e52741e6c439d3ebeb.png" alt="Z(c_1, G_1)\oplus Z(c_2, G_2) = Z(c_1+c_2, [G_1 ~ G_2]),"/></p>
-</div><p>wherein <img class="math" src="_images/math/8db8d2c3b6325306a87e8a10b0e5358afb2f23eb.png" alt="G_1"/> and <img class="math" src="_images/math/4a742fa7110e3779fe13d9b3014b0e2ad6606c84.png" alt="G_2"/> are matrices whose columns are
-generator vectors, and <img class="math" src="_images/math/cc97b1305f6fb943238db2dee972b4e9f2c612e4.png" alt="[G_1 ~ G_2]"/> is their concatenation. Thus,
+<p><img src="_images/math/8b15416140d9a6317080962cc6f3e97cb091c2f9.png" alt="Z(c_1, G_1)\oplus Z(c_2, G_2) = Z(c_1+c_2, [G_1 ~ G_2]),"/></p>
+</div><p>wherein <img class="math" src="_images/math/7fb876996f317119f4a67c585344c9d153432a9b.png" alt="G_1"/> and <img class="math" src="_images/math/576bb52be38d16b35d99d553a68e3632c764b41f.png" alt="G_2"/> are matrices whose columns are
+generator vectors, and <img class="math" src="_images/math/d465e46fed499e62fd8331e3c6c2d9ba9fc46aa2.png" alt="[G_1 ~ G_2]"/> is their concatenation. Thus,
 in the reach set computation, the order of the zonotope increases by
-<img class="math" src="_images/math/87939d678ccd1097ef46bd50da281e73bd531811.png" alt="p/n"/> with every time step. This difficulty can be averted by
+<img class="math" src="_images/math/7e48764f6022209e2a9d41cdb3350b01bd3e1283.png" alt="p/n"/> with every time step. This difficulty can be averted by
 limiting the number of generator vectors, and overapproximating
 zonotopes whose number of generator vectors exceeds the limit by lower
 order zonotopes. The benefits of the compact zonotype representation,
@@ -179,28 +179,28 @@ impractical for systems of dimension higher than three.</p>
 linear system, the set of initial conditions and control bounds,
 symbolically computes the exact reach set, using the experimental
 quantifier elimination package. Quantifier elimination is the removal of
-all quantifiers (the universal quantifier <img class="math" src="_images/math/536ba5a392431e74fec5a8db2257504c85fcc206.png" alt="\forall"/> and the
-existential quantifier <img class="math" src="_images/math/4ecf8666cca5f1d089b9c656be83f9e09d0abd5c.png" alt="\exists"/>) from a quantified system. Each
+all quantifiers (the universal quantifier <img class="math" src="_images/math/f9c9bedb8f4996f937e5accd1b8c65158eead225.png" alt="\forall"/> and the
+existential quantifier <img class="math" src="_images/math/aef07bc4ffa497327bb3d282cd8b9fd21a4be2fc.png" alt="\exists"/>) from a quantified system. Each
 quantified formula is substituted with quantifier-free expression with
-operations <img class="math" src="_images/math/77cf26be132ef93923e082ee4153b2cb0ef44a50.png" alt="+"/>, <img class="math" src="_images/math/bac4dbe1c696d11e8dc43dd7f613199b2120daa1.png" alt="\times"/>, <img class="math" src="_images/math/d5eb8726a34932d28103ce7ce17456421222603f.png" alt="="/> and <img class="math" src="_images/math/262a080d0d87e973b817945967a512346d8bfc49.png" alt="&lt;"/>. For
+operations <img class="math" src="_images/math/3e41c598147b003fe1c720cafa073d83ccdd84bd.png" alt="+"/>, <img class="math" src="_images/math/c69691d64985442217922c8d34e835a9dea60178.png" alt="\times"/>, <img class="math" src="_images/math/eceeddfc4750d4fd271778cbd91090d6476c4a04.png" alt="="/> and <img class="math" src="_images/math/c1063a458139235d94b43817ed8d89dab9f9f811.png" alt="&lt;"/>. For
 example, consider the discrete-time system</p>
 <div class="math">
-<p><img src="_images/math/926952b76879859f61ea04a4f8e240d3f8278f3e.png" alt="x_{k+1} = Ax_k + Bu_k"/></p>
-</div><p>with <img class="math" src="_images/math/8e777662831f19d4544cf2ce4610a179e3404fec.png" alt="A=\left[\begin{array}{cc}0 &amp; 1\\0 &amp; 0\end{array}\right]"/>
-and <img class="math" src="_images/math/0f2352bc1fed2c49a6284a9c47e14ec945308707.png" alt="B=\left[\begin{array}{c}0\\1\end{array}\right]"/>.</p>
-<p>For initial conditions <img class="math" src="_images/math/71c4f3355b97203be1739b4d5f948313d280d3ba.png" alt="x_0\in\{x\in {\bf R}^2 ~|~ \|x\|_{\infty} \leqslant1\}"/> and
-controls <img class="math" src="_images/math/9b9988a4879048e3095278449aed753504099b84.png" alt="u_k\in\{u\in {\bf R} ~|~ -1\leqslant u\leqslant1\}"/>, the
-reach set for <img class="math" src="_images/math/9742e5e7c4cd77e2c1bad64165c68c3abb4c90c2.png" alt="k\geqslant0"/> is given by the quantified formula</p>
+<p><img src="_images/math/0e8bce0949a2fbbe0993fbff7d4b895350df342c.png" alt="x_{k+1} = Ax_k + Bu_k"/></p>
+</div><p>with <img class="math" src="_images/math/eeef52417b85996d354fb4e6654848ebfb513fad.png" alt="A=\left[\begin{array}{cc}0 &amp; 1\\0 &amp; 0\end{array}\right]"/>
+and <img class="math" src="_images/math/8d047e64eceb1d63ca54023f66232e5861ca1d65.png" alt="B=\left[\begin{array}{c}0\\1\end{array}\right]"/>.</p>
+<p>For initial conditions <img class="math" src="_images/math/531dda07a2dabeeaa9be97a75a5bb2c34c7058cb.png" alt="x_0\in\{x\in {\bf R}^2 ~|~ \|x\|_{\infty} \leqslant1\}"/> and
+controls <img class="math" src="_images/math/4ae17ef1aa815763c1305aaa3aa46398363f4933.png" alt="u_k\in\{u\in {\bf R} ~|~ -1\leqslant u\leqslant1\}"/>, the
+reach set for <img class="math" src="_images/math/dbe643040d34260bc1e3129b8853db23abe5e3b5.png" alt="k\geqslant0"/> is given by the quantified formula</p>
 <div class="math">
-<p><img src="_images/math/af24b4257394a743dab72223af20554984cffa99.png" alt="\{ x\in{\bf R}^2 ~|~ \exists x_0, ~~ \exists k\geqslant0, ~~
+<p><img src="_images/math/e2e51eb287a8f16ad4eb5aa87458072eeb94ac60.png" alt="\{ x\in{\bf R}^2 ~|~ \exists x_0, ~~ \exists k\geqslant0, ~~
 \exists u_i, ~ 0\leqslant i\leqslant k: ~~
 x = A^kx_0+\sum_{i=0}^{k-1}A^{k-i-1}Bu_i \},"/></p>
 </div><p>which is equivalent to the quantifier-free expression</p>
 <div class="math">
-<p><img src="_images/math/4c811609ca6c0ed326b6e5e54d5dbd2a6e360e87.png" alt="-1\leqslant[1 ~~ 0]x\leqslant1 ~ \wedge ~ -1\leqslant[0 ~~ 1]x\leqslant1."/></p>
+<p><img src="_images/math/cc0c6c57f34e206e04e9293909fcf1290c78df3f.png" alt="-1\leqslant[1 ~~ 0]x\leqslant1 ~ \wedge ~ -1\leqslant[0 ~~ 1]x\leqslant1."/></p>
 </div><p>It is proved in <a class="reference internal" href="#laff2001" id="id19">[LAFF2001]</a> that for
-continuous-time systems, <img class="math" src="_images/math/c609adabab2b99c660ee04eb21bf0cef10f5b06d.png" alt="\dot{x}(t) = Ax(t) + Bu(t)"/>, if
-<img class="math" src="_images/math/019e9892786e493964e145e7c5cf7b700314e53b.png" alt="A"/> is constant and nilpotent or is diagonalizable with rational
+continuous-time systems, <img class="math" src="_images/math/922627e82772d0c59364db1fa301dc616d34af3b.png" alt="\dot{x}(t) = Ax(t) + Bu(t)"/>, if
+<img class="math" src="_images/math/0acafa529182e79b4f56165ec677554fba7fcf98.png" alt="A"/> is constant and nilpotent or is diagonalizable with rational
 real or purely imaginary eigenvalues, and with suitable restrictions on
 the control and initial conditions, the quantifier elimination package
 returns a quantifier free formula describing the reach set. Quantifier
@@ -267,7 +267,7 @@ Princeton University Press, 1953.</td></tr>
 <table class="docutils citation" frame="void" id="ddthp" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[DDTHP]</a></td><td><img class="math" src="_images/math/7c4a429318eb6ae5aedb23191989a7056c11a038.png" alt="d/dt"/> homepage. <a class="reference external" href="http://www-verimag.imag.fr/~tdang/ddt.html">http://www-verimag.imag.fr/~tdang/ddt.html</a>.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id5">[DDTHP]</a></td><td><img class="math" src="_images/math/91fe3e396a3aba8f5ff5f521d0b3f4008b4e0966.png" alt="d/dt"/> homepage. <a class="reference external" href="http://www-verimag.imag.fr/~tdang/ddt.html">http://www-verimag.imag.fr/~tdang/ddt.html</a>.</td></tr>
 </tbody>
 </table>
 <table class="docutils citation" frame="void" id="asar2000" rules="none">
@@ -438,12 +438,12 @@ and Algorithms</em>, 9:347–367, 2001.</td></tr>
         <li class="right" >
           <a href="main_manual.html" title="Welcome to Ellipsoidal Toolbox documentation!"
              >previous</a> |</li>
-        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0 beta 1 documentation</a> &raquo;</li> 
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0.1 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2011-2013 Moscow State University, Faculty of Computational Mathematics and Computer Science, System Analysis Department, 2004-2011 The Regents of the University of California.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2b2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
     </div>
   </body>
 </html>
