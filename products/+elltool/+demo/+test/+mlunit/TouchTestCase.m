@@ -20,7 +20,7 @@ classdef TouchTestCase < mlunitext.test_case
             pathstrVec = [pathstrVec,filesep,'+control'];
             SFileNameArray = dir(pathstrVec);
             SFileNameArray = SFileNameArray(3:end);
-            for iName = 20 : size(SFileNameArray,1)
+            for iName = 1 : size(SFileNameArray,1)
                 testName = modgen.string.splitpart...
                     (SFileNameArray(iName).name, '.', 'first');
                 testName = strcat('elltool.demo.test.control.',testName);
