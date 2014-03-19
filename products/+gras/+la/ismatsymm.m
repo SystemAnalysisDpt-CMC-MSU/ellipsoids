@@ -10,9 +10,10 @@ function isSymm = ismatsymm(qMat,varargin)
 % 
 %
 % $Author: Rustam Guliev  <glvrst@gmail.com> $	$Date: 2012-16-11$
+% $Author: Peter Gagarinov <pgagarinov@gmail.com> $ $Date: 2014-03-19$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%            System Analysis Department 2012-2014 $
 %
 
 import modgen.common.throwerror;
@@ -30,6 +31,4 @@ elseif (nVarargs == 1)
 else
     absTol = 0;
 end
-qMat = qMat - transpose(qMat);
-isSymm = all(all(qMat <= absTol));
-
+isSymm=modgen.common.absrelcompare(qMat,transpose(qMat),absTol,[],@abs);

@@ -174,6 +174,10 @@ classdef BasicTestCase < mlunitext.test_case
             
             self.runAndCheckError('gras.la.ismatsymm(eye(5,7))',...
                 'wrongInput:nonSquareMat');
+            %
+            testAMat=diag([Inf -Inf 1 2 0]);
+            mlunitext.assert(ismatsymm(testAMat));
+            %
         end
         %
         function testIsMatPosSimple(~)
