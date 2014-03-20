@@ -87,20 +87,20 @@
 %  isbaddirection     - Checks if ellipsoidal approximation of geometric difference
 %                       of two ellipsoids in the given direction can be computed.
 %  doesIntersectionContain           - Checks if the union or intersection of 
-%                       ellipsoids or polytopes lies inside the intersection 
+%                       ellipsoids or polyhedrons lies inside the intersection 
 %                       of given ellipsoids.
 %  isinternal         - Checks if given vector belongs to the union or intersection
 %                       of given ellipsoids.
 %  distance           - Computes the distance from ellipsoid to given point,
-%                       ellipsoid, hyperplane or polytope.
+%                       ellipsoid, hyperplane or Polyhedron.
 %  intersect          - Checks if the union or intersection of ellipsoids intersects
-%                       with given ellipsoid, hyperplane, or polytope.
+%                       with given ellipsoid, hyperplane, or Polyhedron.
 %  intersection_ea    - Computes the minimal volume ellipsoid containing intersection
 %                       of two ellipsoids, ellipsoid and halfspace, or ellipsoid
-%                       and polytope.
+%                       and Polyhedron.
 %  intersection_ia    - Computes the maximal ellipsoid contained inside the
 %                       intersection of two ellipsoids, ellipsoid and halfspace
-%                       or ellipsoid and polytope.
+%                       or ellipsoid and Polyhedron.
 %  ellintersection_ia - Computes maximum volume ellipsoid that is contained
 %                       in the intersection of given ellipsoids (can be more than 2).
 %  ellunion_ea        - Computes minimum volume ellipsoid that contains

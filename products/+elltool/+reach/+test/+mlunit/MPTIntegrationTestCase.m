@@ -12,8 +12,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         function self = testIntersect(self)
             %intersection with polytope
             myReachObj = self.getReach();
-            polyVec = [polytope([0 -1],-1.7),...
-                polytope([0 -1],-1),polytope([0 -1],0)];
+            polyVec = [Polyhedron([0 -1],-1.7),...
+                Polyhedron([0 -1],-1),Polyhedron([0 -1],0)];
             isTestExtResVec = [false, true,true];
             isTestIntResVec = [false, false,true];
             %

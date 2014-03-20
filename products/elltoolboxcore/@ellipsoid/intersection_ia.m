@@ -3,7 +3,7 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 % INTERSECTION_IA - internal ellipsoidal approximation of the
 %                   intersection of ellipsoid and ellipsoid,
 %                   or ellipsoid and halfspace, or ellipsoid
-%                   and polytope.
+%                   and Polyhedron.
 %
 %   outEllArr = INTERSECTION_IA(myEllArr, objArr) - Given two
 %       ellipsoidal matrixes of equal sizes, myEllArr and
@@ -20,10 +20,10 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %       then this hyperplane defines halfspace
 %                  <v, x> <= c.
 %   outEllArr = INTERSECTION_IA(myEllArr, objArr) - Given matrix of
-%       ellipsoids  myEllArr and matrix of polytopes objArr = polyArr
+%       ellipsoids  myEllArr and matrix of Polyhedrons objArr = polyArr
 %       whose sizes match, computes the internal ellipsoidal
 %       approximations of intersections of ellipsoids myEllArr
-%       and polytopes polyArr.
+%       and Polyhedrons polyArr.
 %
 %   The method used to compute the minimal volume overapproximating
 %   ellipsoid is described in "Ellipsoidal Calculus Based on
@@ -33,7 +33,7 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
 %
 %   The method used to compute maximum volume ellipsoid inscribed in 
-%   intersection of ellipsoid and polytope, is modified version of 
+%   intersection of ellipsoid and Polyhedron, is modified version of 
 %   algorithm of finding maximum volume ellipsoid inscribed in intersection 
 %   of ellipsoids discribed in Stephen Boyd and Lieven Vandenberghe "Convex
 %   Optimization". It works properly for nondegenerate ellipsoid, but for
@@ -46,8 +46,8 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
 %           of ellipsoids.
 %       objArr: ellipsoid / hyperplane /
-%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
-%           ellipsoids or hyperplanes or polytopes of the same sizes.
+%           / Polyhedron [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
+%           ellipsoids or hyperplanes or Polyhedrons of the same sizes.
 %
 % Output:
 %    outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of internal
@@ -80,11 +80,11 @@ import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 ellipsoid.checkIsMe(myEllArr,'first');
 modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
-    isa(x, 'hyperplane') || isa(x, 'polytope'),...
+    isa(x, 'hyperplane') || isa(x, 'Polyhedron'),...
     'errorTag','wrongInput', 'errorMessage',...
-    'second input argument must be ellipsoid,hyperplane or polytope.');
+    'second input argument must be ellipsoid,hyperplane or Polyhedron.');
 
-isPoly = isa(objArr, 'polytope');
+isPoly = isa(objArr, 'Polyhedron');
 
 nDimsArr  = dimension(myEllArr);
 if isPoly
@@ -235,12 +235,12 @@ end
 function outEll = l_polyintersect(ell, poly)
 %
 % L_POLYINTERSECT - computes internal ellipsoidal approximation of
-%                   intersection of single ellipsoid with single polytope.
+%                   intersection of single ellipsoid with single Polyhedron.
 %
 % Input:
 %   regular:
 %       myEllMat: ellipsod [1, 1] - matrix of ellipsoids.
-%       polyt: polytope [1, 1] - polytope.
+%       polyt: Polyhedron [1, 1] - Polyhedron.
 %
 % Output:
 %    outEll: ellipsod [1, 1] - internal approximating ellipsoid.
@@ -295,22 +295,22 @@ else
 end
 end
 function E = getInnerEllipsoid(Pset,E,Options)
-%GETINNERELLIPSOID Computes the largest ellipsoid inscribed in a polytope
+%GETINNERELLIPSOID Computes the largest ellipsoid inscribed in a Polyhedron
 %
 % E = getInnerEllipsoid(Pset,x0,E,Options)
 %
 % ---------------------------------------------------------------------------
 % DESCRIPTION
 % ---------------------------------------------------------------------------
-% This function computes the largest ellipsoid inscribed in a polytope. 
+% This function computes the largest ellipsoid inscribed in a Polyhedron. 
 % It is also possible to pass an ellipsoid (x-x0) E (x - x0) <= rho and 
 % to compute the maximum rho such that the scaled ellipsoid is still contained
-% in the polytope.
+% in the Polyhedron.
 %
 % ---------------------------------------------------------------------------
 % INPUT
 % ---------------------------------------------------------------------------  
-%   Pset    -   Polytope object constraining the ellipsoid
+%   Pset    -   Polyhedron object constraining the ellipsoid
 %   E,x0    -   Optional: input ellipsoid with center x0, i.e.
 %                           (x-x0) E^(-1) (x - x0) <= rho 
 %               given as an ELLIPSOID object

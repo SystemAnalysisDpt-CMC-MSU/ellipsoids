@@ -22,7 +22,7 @@ function E = ell_enclose(V)
 % ---------
 %
 %    ELLIPSOID/ISINTERNAL, ELLUNION_EA;
-%    POLYTOPE/getOutterEllipsoid.
+%    Polyhedron/getOutterEllipsoid.
 %
 
 %

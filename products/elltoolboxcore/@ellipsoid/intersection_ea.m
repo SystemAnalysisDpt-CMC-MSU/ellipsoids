@@ -3,7 +3,7 @@ function outEllArr = intersection_ea(myEllArr, objArr)
 %
 % INTERSECTION_EA - external ellipsoidal approximation of the
 %                   intersection of two ellipsoids, or ellipsoid and
-%                   halfspace, or ellipsoid and polytope.
+%                   halfspace, or ellipsoid and Polyhedron.
 %
 %   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given two ellipsoidal
 %       matrixes of equal sizes, myEllArr and objArr = ellArr, or,
@@ -19,10 +19,10 @@ function outEllArr = intersection_ea(myEllArr, objArr)
 %       then this hyperplane defines halfspace
 %               <v, x> <= c.
 %   outEllArr = INTERSECTION_EA(myEllArr, objArr) Given matrix of
-%       ellipsoids myEllArr and matrix of polytopes objArr = polyArr
+%       ellipsoids myEllArr and matrix of Polyhedrons objArr = polyArr
 %       whose sizes match, computes the external ellipsoidal
 %       approximations of intersections of ellipsoids myEllMat and
-%       polytopes polyArr.
+%       Polyhedrons polyArr.
 %
 %   The method used to compute the minimal volume overapproximating
 %   ellipsoid is described in "Ellipsoidal Calculus Based on
@@ -31,7 +31,7 @@ function outEllArr = intersection_ea(myEllArr, objArr)
 %   Vol.32, No.4, pp.430-442, 2002. For more information, visit
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
 %   
-%   For polytopes this method won't give the minimal volume 
+%   For Polyhedrons this method won't give the minimal volume 
 %   overapproximating ellipsoid, but just some overapproximating ellipsoid.
 %
 % Input:
@@ -39,8 +39,8 @@ function outEllArr = intersection_ea(myEllArr, objArr)
 %       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
 %           of ellipsoids.
 %       objArr: ellipsoid / hyperplane /
-%           / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
-%           ellipsoids or hyperplanes or polytopes of the same sizes.
+%           / Polyhedron [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
+%           ellipsoids or hyperplanes or Polyhedrons of the same sizes.
 %
 % Example:
 %   firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
@@ -69,11 +69,11 @@ import modgen.common.checkmultvar;
 
 ellipsoid.checkIsMe(myEllArr,'first');
 modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
-    isa(x, 'hyperplane') || isa(x, 'polytope'),...
+    isa(x, 'hyperplane') || isa(x, 'Polyhedron'),...
     'errorTag','wrongInput', 'errorMessage',...
-    'second input argument must be ellipsoid,hyperplane or polytope.');
+    'second input argument must be ellipsoid,hyperplane or Polyhedron.');
 
-isPoly = isa(objArr, 'polytope');
+isPoly = isa(objArr, 'Polyhedron');
 
 nDimsArr  = dimension(myEllArr);
 if isPoly
@@ -244,7 +244,8 @@ function lambda = l_get_lambda(fstEllCentVec, fstEllShMat, qSecVec, ...
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-[lambda, ~, exitFlag] = fzero(@ell_fusionlambda, 0.5, [], ...
+warnState=warning('off','MATLAB:singularMatrix');
+[lambda, ~, ~] = fzero(@ell_fusionlambda, 0.5, [], ...
     fstEllCentVec, fstEllShMat, qSecVec, secQMat, size(fstEllCentVec, 1));
 
 if (lambda < absTol) || (lambda > 1 - absTol)
@@ -254,9 +255,8 @@ if (lambda < absTol) || (lambda > 1 - absTol)
         lambda = 0;
     end
 end
-
+warning(warnState);
 end
-
 
 
 
@@ -266,12 +266,12 @@ end
 function outEll = l_polyintersect(myEll, polyt)
 %
 % L_POLYINTERSECT - computes external ellipsoidal approximation of
-%                   intersection of single ellipsoid with single polytope.
+%                   intersection of single ellipsoid with single Polyhedron.
 %
 % Input:
 %   regular:
 %       myEllMat: ellipsod [1, 1] - matrix of ellipsoids.
-%       polyt: polytope [1, 1] - polytope.
+%       polyt: Polyhedron [1, 1] - Polyhedron.
 %
 % Output:
 %    outEll: ellipsod [1, 1] - external approximating ellipsoid.
@@ -280,7 +280,7 @@ function outEll = l_polyintersect(myEll, polyt)
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
 outEll = myEll;
-hyp = polytope2hyperplane(polyt);
+hyp = Polyhedron2hyperplane(polyt);
 nDimsHyp  = size(hyp, 2);
 
 if doesIntersectionContain(myEll, polyt)

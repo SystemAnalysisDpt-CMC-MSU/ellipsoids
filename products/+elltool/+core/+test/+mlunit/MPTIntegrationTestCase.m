@@ -37,13 +37,13 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 absTol);
             %test if distance(ellArr,poly) works properly, when ellArr -
             %more than two-dimensional ellipsoidal array and poly - single
-            %polytope
+            %Polyhedron
             distTestArr = zeros(size(ellArr));
             myTestDist(ellArr,testPoly2DVec(4), distTestArr, absTol);
             %
             %no test for dimension mismatch with different dimension of
-            %polytopes, becuse polytope class forbid to create vector of
-            %polytopes with different dimensions
+            %Polyhedrons, becuse Polyhedron class forbid to create vector of
+            %Polyhedrons with different dimensions
             self.runAndCheckError('distance(ellArr, testPoly2DVec(1:2))',...
                 'wrongInput');
             self.runAndCheckError(strcat('distance([testEll60D, ',...
@@ -126,14 +126,14 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             polyK3DVec = 0.1 * ones(6,1);
             polyK15DVec = (1/sqrt(nDims))*ones(nDims*2,1);
             %
-            poly1 = polytope(polyConstrMat,polyK1Vec);
-            poly2 = polytope(polyConstrMat,polyK2Vec);
-            poly3 = polytope(polyConstrMat,polyK3Vec);
-            poly4 = polytope(polyConstrMat,polyK4Vec);
-            poly5 = polytope(polyConstrMat,polyK5Vec);
-            poly6 = polytope(polyConstrMat,polyK6Vec);
-            poly3D = polytope(polyConstr3DMat,polyK3DVec);
-            poly14D = polytope(polyConstr15DMat,polyK15DVec);
+            poly1 = Polyhedron(polyConstrMat,polyK1Vec);
+            poly2 = Polyhedron(polyConstrMat,polyK2Vec);
+            poly3 = Polyhedron(polyConstrMat,polyK3Vec);
+            poly4 = Polyhedron(polyConstrMat,polyK4Vec);
+            poly5 = Polyhedron(polyConstrMat,polyK5Vec);
+            poly6 = Polyhedron(polyConstrMat,polyK6Vec);
+            poly3D = Polyhedron(polyConstr3DMat,polyK3DVec);
+            poly14D = Polyhedron(polyConstr15DMat,polyK15DVec);
             %
             isExpVec = [1, 0, 1, 1, 1, 0, 1, 0, -1, 0, 1, 0];
             
@@ -175,7 +175,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             nDims2 = 9;
             ell9D = ellipsoid(eye(nDims2));
-            poly9D = polytope([eye(nDims2); -eye(nDims2)],ones(2*nDims2,1)/...
+            poly9D = Polyhedron([eye(nDims2); -eye(nDims2)],ones(2*nDims2,1)/...
                 sqrt(nDims2));
             self.myTestIsCII(ell9D, poly9D, 'u',isExpVec(7),true,'low')
             self.myTestIsCII(ell14D, poly14D, 'u',isExpVec(7),true,'high')
@@ -184,7 +184,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         function self = testPoly2HypAndHyp2Poly(self)
             polyConstMat = [-1 2 3; 3 4 2; 0 1 2];
             polyKVec = [1; 2; 3];
-            testPoly = polytope(polyConstMat,polyKVec);
+            testPoly = Polyhedron(polyConstMat,polyKVec);
             testHyp = hyperplane(polyConstMat',polyKVec');
             hyp = polytope2hyperplane(testPoly);
             mlunitext.assert(eq(testHyp,hyp));
@@ -203,17 +203,17 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         %
         function self = testIntersectionIA(self)
            import elltool.exttbx.mpt.gen.*;
-            %ELLIPSOID AND POLYTOPE
-            %ellipsoid lies in polytope
+            %ELLIPSOID AND Polyhedron
+            %ellipsoid lies in Polyhedron
             my1Ell = ellipsoid(eye(2));
-            my1Poly = polytope([eye(2); -eye(2)], ones(4,1));
+            my1Poly = Polyhedron([eye(2); -eye(2)], ones(4,1));
             my1EllPolyIAObj = intersection_ia(my1Ell,my1Poly);
             [isOk, reportStr] = my1Ell.isEqual(my1EllPolyIAObj);
             mlunitext.assert(isOk, reportStr);
             %
-            %polytope lies in ellipsoid
+            %Polyhedron lies in ellipsoid
             my2Ell = ellipsoid(eye(2));
-            my2Poly = polytope([eye(2); eye(2)], 1/4*ones(4,1));
+            my2Poly = Polyhedron([eye(2); eye(2)], 1/4*ones(4,1));
             myExpectedEll = ellipsoid([-0.362623; -0.362623],[0.375307 -0.13955;-0.13955 0.375307]);
             my2EllPolyIAObj = intersection_ia(my2Ell,my2Poly);
             [isOk, reportStr] = myExpectedEll.isEqual(my2EllPolyIAObj);
@@ -227,7 +227,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                        1.4706 1.1156 2.3271 2.9144 1.6438;...
                        0.6325 0.6908 1.7218 1.6438 1.6557];    
             my3Ell = ellipsoid(my3EllVec, my3EllMat);
-            my3Poly = polytope(eye(5),my3EllVec);
+            my3Poly = Polyhedron(eye(5),my3EllVec);
             my3EllPolyIAObj = intersection_ia(my3Ell,my3Poly);
             mlunitext.assert(doesIntersectionContain(my3Ell,my3EllPolyIAObj) &&...
                 isInside(my3EllPolyIAObj,my3Poly));
@@ -235,23 +235,23 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             my4EllMat = [1.1954 0.3180 1.3183; 0.3180 0.2167 0.5039;...
                 1.3183 0.5039 1.6320];
             my4Ell = ellipsoid(my4EllMat);
-            my4Poly = polytope([1 1 1], 0.2);
+            my4Poly = Polyhedron([1 1 1], 0.2);
             my4EllPolyIAObj = intersection_ia(my4Ell,my4Poly);
             mlunitext.assert(doesIntersectionContain(my4Ell,my4EllPolyIAObj) &&...
                 isInside(my4EllPolyIAObj,my4Poly));
             %
             %test if internal approximation is a point, when
-            %the ellipsoid touches the polytope 
+            %the ellipsoid touches the Polyhedron 
             my5Ell = ellipsoid(eye(2));
-            my5Poly = polytope([1 1], -sqrt(2));
+            my5Poly = Polyhedron([1 1], -sqrt(2));
             my5EllPolyIAObj = intersection_ia(my5Ell,my5Poly);
             [~,my5EllPolyIAObjMat] = double(my5EllPolyIAObj);
             mlunitext.assert(all(my5EllPolyIAObjMat(:) == 0));
             %
             %test if internal approximation is an empty ellpsoid,
-            %when the polytope and the ellipsoid do not intersect
+            %when the Polyhedron and the ellipsoid do not intersect
             my6Ell = ellipsoid(eye(2));
-            my6Poly = [-1;-1]+polytope([1 1], -sqrt(2));
+            my6Poly = [-1;-1]+Polyhedron([1 1], -sqrt(2));
             my6EllPolyIAObj = intersection_ia(my6Ell,my6Poly);
             mlunitext.assert(isEmpty(my6EllPolyIAObj));
         end
@@ -421,13 +421,13 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         %
         %
         function self = testIntersectionEA(self)
-            %ELLIPSOID AND POLYTOPE
+            %ELLIPSOID AND Polyhedron
             %analitically proved, that minimal volume ellipsoid, covering
             %intersection of my1Ell and my1Poly is my1Ell.
             my1Ell = ellipsoid(eye(2));
             my1PolyMat = [0 1];
             my1PolyConst = 0.25;
-            my1Poly = polytope(my1PolyMat,my1PolyConst);
+            my1Poly = Polyhedron(my1PolyMat,my1PolyConst);
             my1EllPolyEAObj = intersection_ea(my1Ell,my1Poly);
             [isOk, reportStr] = my1Ell.isEqual(my1EllPolyEAObj);
             mlunitext.assert(isOk, reportStr);
@@ -438,19 +438,19 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             my2Vec = [1; 1];
             my2TransfMat = my2Mat*(my2Mat)';
             my2Ell = ellipsoid(my2Vec,my2TransfMat);
-            my2Poly = polytope(my1PolyMat/(my2Mat),...
+            my2Poly = Polyhedron(my1PolyMat/(my2Mat),...
                 my1PolyConst+(my1PolyMat/(my2Mat))*my2Vec);
             my2EllPolyEAObj = intersection_ea(my2Ell,my2Poly);
             [isOk, reportStr] = my2Ell.isEqual(my2EllPolyEAObj);
             mlunitext.assert(isOk, reportStr);
             %
-            %checking, that amount of constraints in polytope does not
+            %checking, that amount of constraints in Polyhedron does not
             %affect accuracy of computation of external approximation
             nConstr = 100;
             angleVec = (0:2*pi/nConstr:2*pi*(1-1/nConstr))';
             my3PolyMat = [cos(angleVec), sin(angleVec)];
             my3PolyVec = ones(nConstr,1);
-            my3Poly = polytope(my3PolyMat,my3PolyVec);
+            my3Poly = Polyhedron(my3PolyMat,my3PolyVec);
             my3EllPolyEAObj = intersection_ea(my1Ell,my3Poly);
             [isOk, reportStr] = my1Ell.isEqual(my3EllPolyEAObj);
             mlunitext.assert(isOk, reportStr);
@@ -460,7 +460,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             my4Ell = ellipsoid(eye(nDims));
             my4PolyMat = [1, zeros(1,nDims-1)];
             my4PolyConst = 1/(2*nDims);
-            my4Poly = polytope(my4PolyMat,my4PolyConst);
+            my4Poly = Polyhedron(my4PolyMat,my4PolyConst);
             my4EllPolyEAObj = intersection_ea(my4Ell,my4Poly);
             [isOk, reportStr] = my4Ell.isEqual(my4EllPolyEAObj);
             mlunitext.assert(isOk, reportStr);
@@ -480,7 +480,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             my5TransfMat = my5Mat*(my5Mat)';
             my5Ell = ellipsoid(my5Vec,my5TransfMat);
-            my5Poly = polytope(my4PolyMat/(my5Mat),...
+            my5Poly = Polyhedron(my4PolyMat/(my5Mat),...
                 -(my4PolyConst+(my4PolyMat/(my5Mat))*my5Vec));
             my5EllPolyEAObj = intersection_ea(my5Ell,my5Poly);
             [isOk, reportStr] = my5Ell.isEqual(my5EllPolyEAObj);
@@ -631,8 +631,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         %
         function self = testIsInside(self)
             ellVec = ellipsoid.fromRepMat(eye(2),[1,3]);
-            polyVec = [polytope([1,0],1), polytope([0, 1],2),...
-                polytope([1 0],0)];
+            polyVec = reshape([Polyhedron([1,0],1), Polyhedron([0, 1],2),...
+                Polyhedron([1 0],0)],1,[]);
             isExpRes = true;
             isExpRes1Vec = [true, true, false];
             isExpRes2Vec = [false, false, false];
@@ -652,7 +652,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         end
         %
         %
-        function self = testTri2Polytope(self)
+        function self = testTri2polytope(self)
             tri2poly = @(x,y) elltool.exttbx.mpt.gen.tri2polytope(x,y);
             % 3D Case
             vMat = [1 0 0; 0 1 0; 0 0 1; -1 0 0; 0 -1 0; 0 0 -1];
@@ -661,7 +661,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             expPoly1NormMat = [1 1 1; -1 1 1; -1 -1 1; 1 -1 1; 1 1 -1;...
                 -1 1 -1; -1 -1 -1; 1 -1 -1];
             expPoly1ConstVec = ones(8,1);
-            expPoly1 = polytope(expPoly1NormMat,expPoly1ConstVec);
+            expPoly1 = Polyhedron(expPoly1NormMat,expPoly1ConstVec);
             mlunitext.assert(poly1 == expPoly1);
             %
             transfMat = [1 2 3; 4 1 1; 0 -2 3];
@@ -677,7 +677,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly3 = tri2poly(v3Mat, f3Mat);
             expPoly3NormMat = [1 1 1; -eye(3)];
             expPoly3ConstVec = [1; zeros(3,1)];
-            expPoly3 = polytope(expPoly3NormMat,expPoly3ConstVec);
+            expPoly3 = Polyhedron(expPoly3NormMat,expPoly3ConstVec);
             mlunitext.assert(poly3 == expPoly3);
             %
             % 2D Case
@@ -686,7 +686,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly4 = tri2poly(v4Mat,f4Mat);
             expPoly4NormMat = [0 -1; 1 -1; 3 1; -5 4; -1 0];
             expPoly4ConstVec = [0; 2; 18; 4; 0];
-            expPoly4 = polytope(expPoly4NormMat,expPoly4ConstVec);
+            expPoly4 = Polyhedron(expPoly4NormMat,expPoly4ConstVec);
             mlunitext.assert(poly4 == expPoly4);
             %
             transf2Mat = [1 2; 3 4];
@@ -710,8 +710,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             polyK1Vec = [0; 0.1; 0.1; 0.1];
             polyK2Vec = [0.5; 0.05; sqrt(3)/2; 0];
             %
-            poly1 = polytope(polyConstrMat,polyK1Vec);
-            poly2 = polytope(polyConstrMat,polyK2Vec);
+            poly1 = Polyhedron(polyConstrMat,polyK1Vec);
+            poly2 = Polyhedron(polyConstrMat,polyK2Vec);
             %
             exp1Const = 0;
             exp1Vec = [1, 1];
@@ -720,7 +720,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             myTestDoesContain(ell2,poly2,exp1Const);
             myTestDoesContain(ell1,[poly1,poly2],exp1Vec);
             myTestDoesContain([ell1,ell2],poly1,exp2Vec);
-            myTestDoesContain([ell1,ell2],[poly1,poly2],exp3Vec);
+            myTestDoesContain([ell1,ell2],reshape([poly1,poly2],1,[]),exp3Vec);
             function myTestDoesContain(ellVec,polyVec,expVec)
                 doesContainVec = doesContain(ellVec,polyVec);
                 mlunitext.assert(all(doesContainVec == expVec));
@@ -728,7 +728,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         end
         %
         %
-        function self = testToPolytope(self)
+        function self = testToPolyhedron(self)
             ell1ConstrMat = [4 0; 0 9];
             ell2ConstrMat = eye(2);
             ell3ConstrMat = eye(3);
@@ -790,22 +790,24 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             testEll2DVec(2) = ellipsoid([1.25 0.75; 0.75 1.25]);
             testEll2DVec(1) = ellipsoid(eye(2));
             %
-            testPoly2DVec = [polytope([-1 0; 1 0; 0 1; 0 -1],[-3; 4; 1; 1]),...
-                polytope([1 0; -1 0; 0 1; 0 -1], [2.5; -1.5; -1.5; 100]),...
-                polytope([1 -1; -1 1; -1 0; 0 1], [-2; 2.5; 2; 2]),...
-                polytope([1 0; -1 0; 0 1; 0 -1], [1; 0; 1; 0])];
+            testPoly2DVec = reshape([Polyhedron([-1 0; 1 0; 0 1; 0 -1],[-3; 4; 1; 1]),...
+                Polyhedron([1 0; -1 0; 0 1; 0 -1], [2.5; -1.5; -1.5; 100]),...
+                Polyhedron([1 -1; -1 1; -1 0; 0 1], [-2; 2.5; 2; 2]),...
+                Polyhedron([1 0; -1 0; 0 1; 0 -1], [1; 0; 1; 0])],1,[]);
             testEll60D = ellipsoid(eye(60));
             h60D = [eye(60); -eye(60)];
             h60D(121,:) = [-1 1 zeros(1,58)];
             k60D = [4; 0; ones(58,1); 0; 4; ones(58,1); -4];
-            testPoly60D = polytope(h60D,k60D);
+            testPoly60D = Polyhedron(h60D,k60D);
             ellArr = ellipsoid.fromRepMat(eye(2),[2,2,2]);
         end
         %
         function isBound = isBoundary(ellShiftVec,ellConstrMat,poly)
             import modgen.common.absrelcompare;
-            polyhedron = toPolyhedron(poly);
-            pointsArray=polyhedron.V;
+            if isa(poly,'ellipsoid')
+                poly = poly.toPolytope();
+            end
+            pointsArray=poly.V;
             nPoints = size(pointsArray,1);
             isBound = true;
             nDims = size(pointsArray,2);

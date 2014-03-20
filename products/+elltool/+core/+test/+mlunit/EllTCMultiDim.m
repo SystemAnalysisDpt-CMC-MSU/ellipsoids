@@ -74,11 +74,11 @@ classdef EllTCMultiDim < mlunitext.test_case
             checkMultyInput(testEllArray,testHpArray,false);
             checkCommonErrors('testHpArray');
             %
-            % Test ellipsoid-polytope distance 
+            % Test ellipsoid-Polyhedron distance 
             % Create data.
             hMat=-eye(2);
             kVec=[-2 1]';
-            testPolObj=polytope(hMat,kVec);
+            testPolObj=Polyhedron(hMat,kVec);
             %
             checkMultyInput(testEllArray,testPolObj,false);
             %

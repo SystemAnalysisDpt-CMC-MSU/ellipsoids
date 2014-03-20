@@ -1,14 +1,14 @@
 function P = hyperplane2polytope(HA)
 %
 % HYPERPLANE2POLYTOPE - converts array of hyperplanes
-%                       into polytope
+%                       into Polyhedron
 %
 %
 % Description:
 % ------------
 %
 %    P = HYPERPLANE2POLYTOPE(HA)  Given array of hyperplane objects HA, 
-%                                 returns polytope object according to the
+%                                 returns Polyhedron object according to the
 %                                 rule: if h is hyperplane from HA, with
 %                                 constant c and normal n, then P will have
 %                                 constraint: <x,n> <= c.
@@ -18,13 +18,13 @@ function P = hyperplane2polytope(HA)
 % Output:
 % -------
 %
-%    P - polytope.
+%    P - Polyhedron.
 %
 %
 % See also:
 % ---------
 %
-%    HYPERPLANE/HYPERPLANE, POLYTOPE/POLYTOPE,
+%    HYPERPLANE/HYPERPLANE, Polyhedron/Polyhedron,
 %    POLYTOPE2HYPERPLANE.
 %
 
@@ -33,6 +33,7 @@ function P = hyperplane2polytope(HA)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
+%    Peter Gagarinov <pgagarinov@gmail.com>
 %
   
   import modgen.common.throwerror;
@@ -60,6 +61,6 @@ function P = hyperplane2polytope(HA)
     end
   end
 
-  P = polytope(A, b);
+  P = Polyhedron(A, b);
 
 end

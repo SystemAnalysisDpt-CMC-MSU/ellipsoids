@@ -1,5 +1,5 @@
 function poly = toPolytope(varargin)
-% TOPOLYTOPE - for ellipsoid ell makes polytope object represanting the
+% TOPolyhedron - for ellipsoid ell makes Polyhedron object represanting the
 %              boundary of ell
 %
 % Input:
@@ -8,13 +8,13 @@ function poly = toPolytope(varargin)
 %   optional:
 %       nPoints: double[1,1] - number of boundary points.
 %                Actually number of points in resulting
-%                polytope will be ecual to lowest
+%                Polyhedron will be ecual to lowest
 %                number of points of icosaeder, that greater
 %                than nPoints.
 %
 % Output:
 %   regular:
-%       poly: polytope[1,1] - polytop in 3D or 2D.
+%       poly: Polyhedron[1,1] - polytop in 3D or 2D.
 %
 % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $
 % $Date: <april> $

@@ -1,6 +1,6 @@
 function HA = polytope2hyperplane(P)
 %
-% POLYTOPE2HYPERPLANE - converts given polytope object into
+% POLYTOPE2HYPERPLANE - converts given Polyhedron object into
 %                       the array of hyperplanes.
 %                       
 %
@@ -8,7 +8,7 @@ function HA = polytope2hyperplane(P)
 % Description:
 % ------------
 %
-%    HA = POLYTOPE2HYPERPLANE(P)  Given polytope object P,
+%    HA = POLYTOPE2HYPERPLANE(P)  Given Polyhedron object P,
 %              returns array of hyperplane objects HA.
 %              Requires Multi-Parametric Toolbox.
 %
@@ -22,7 +22,7 @@ function HA = polytope2hyperplane(P)
 % See also:
 % ---------
 %
-%    POLYTOPE/POLYTOPE, HYPERPLANE/HYPERPLANE,
+%    Polyhedron/Polyhedron, HYPERPLANE/HYPERPLANE,
 %    HYPERPLANE2POLYTOPE.
 %
 
@@ -31,17 +31,19 @@ function HA = polytope2hyperplane(P)
 % -------
 %
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
+%    Peter Gagarinov<pgagarinov@gmail.com>
 
   import elltool.conf.Properties;
   import modgen.common.throwerror;
 
-  if ~(isa(P, 'polytope'))
-    throwerror('wrongInput:class','input argument must be single polytope.');
+  if ~(isa(P, 'Polyhedron'))
+    throwerror('wrongInput:class','input argument must be single Polyhedron.');
   end
-  
+  %
   P      = P(1, 1);
-  [A, b] = double(P);
+  H=P.H;
+  A = H(:, 1:end-1);
+  b = H(:, end);
   HA     = hyperplane(A', b');
 
 end

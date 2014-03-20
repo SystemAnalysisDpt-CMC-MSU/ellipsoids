@@ -41,7 +41,7 @@ import modgen.common.type.simple.lib.*;
 import modgen.common.throwerror;
 %
 isChar=ischar(typeSpec);
-if isChar&&~eval(typeSpec)||~isChar&&~feval(typeSpec,x)
+if isChar&&~eval(typeSpec)||~isChar&&~builtin('feval',typeSpec,x)
     %
     if ischar(typeSpec)
         checkName=typeSpec;

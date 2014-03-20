@@ -1,27 +1,27 @@
 function doesContain = doesContainPoly(ellArr,poly,varargin)
-% DOESELLCONTAINPOLY -- privat function, used by doesContain and
+% DOESELLCONTAINPOLY -- private function, used by doesContain and
 %   doesIntersection contain, to check, if intersection of ellipsids in
-%   ellArr contains polytope poly.
+%   ellArr contains Polyhedron poly.
 %   
-%   To ensure, if polytope belongs to 
+%   To ensure, if Polyhedron belongs to 
 %   intersection of ellipsoids we can either check if the vertices of this 
-%   polytope belong to every ellipsoid in the intersection, or, if polytope
+%   Polyhedron belong to every ellipsoid in the intersection, or, if Polyhedron
 %   and ellipsoid are not degenerate, check, find intenal point of intP
-%   intersectionthen of ellipsoid with the polytope(if it does not exist,
-%   then polytope does not belong to intersection), change coordinates
+%   intersectionthen of ellipsoid with the Polyhedron(if it does not exist,
+%   then Polyhedron does not belong to intersection), change coordinates
 %   newX = oldX - intP
 %   and then check if polar of ellipsoids in new coordinates belogs to
-%   polar of polytope.
+%   polar of Polyhedron.
 %
 % Input:
 %   regular:
 %       ellArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - first
 %           array of ellipsoids.
-%       poly: polytope[1,1] - single polytope
+%       poly: Polyhedron[1,1] - single Polyhedron
 %
 %    properties:
 %       computeMode: char[1,] - 'highDimFast' or 'lowDimFast'. Determines, 
-%           which way function is computed, when secObjArr is polytope. If 
+%           which way function is computed, when secObjArr is Polyhedron. If 
 %           secObjArr is ellipsoid computeMode is ignored. 'highDimFast' 
 %           works  faster for  high dimensions, 'lowDimFast' for low. If
 %           this property is omitted if dimension of ellipsoids is greater
@@ -47,8 +47,8 @@ else
 end
 
 isAnyEllDeg = any(isdegenerate(ellArr(:)));
-isPolyDeg = ~isfulldim(poly);
-isBnd = isbounded(poly);
+isPolyDeg = ~any(poly.isFullDim());
+isBnd = all(poly.isBounded());
 if ~isBnd || (isAnyEllDeg && isPolyDeg)
     doesContain = false;
 else
@@ -62,7 +62,8 @@ end
 end
 
 function doesContain = doesContainLowDim(ellArr,poly)
-xVec = extreme(poly);
+poly=poly.computeVRep();
+xVec = poly.V;
 doesContain = min(isinternal(ellArr, xVec', 'i'));
 end
 

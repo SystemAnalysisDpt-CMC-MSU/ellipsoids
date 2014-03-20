@@ -1,5 +1,5 @@
 function poly = tri2polytope(vMat,fMat)
-% TRI2POLYTOPE -- makes polytope object represanting the
+% TRI2POLYTOPE -- makes Polyhedron object represanting the
 %                 triangulation of convex nondegenerate
 %                 object in 3D or 2D.
 %
@@ -13,7 +13,7 @@ function poly = tri2polytope(vMat,fMat)
 %
 % Output:
 %       regular:
-%           poly: polytope[1,1] in 3D
+%           poly: Polyhedron[1,1] in 3D
 %
 % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $
 % $Date: <april> $
@@ -68,7 +68,7 @@ for iFaces = 1:nFaces
     %
 end
 %
-poly = polytope(normMat',constVec');
+poly = Polyhedron(normMat',constVec');
 
 
 function num = getNumNotIn(numVec)

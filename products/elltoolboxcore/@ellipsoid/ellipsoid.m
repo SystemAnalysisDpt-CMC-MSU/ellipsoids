@@ -312,7 +312,7 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
         [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
         [bpMat, fVec] = getGridByFactor(ellObj,factorVec)
         checkDoesContainArgs(ell,poly)
-        doesContain = doesContainPoly(ellArr,polytope,varagin)
+        doesContain = doesContainPoly(ellArr,polyhedronObj,varagin)
     end
     methods (Static)
         checkIsMe(someObj,varargin)

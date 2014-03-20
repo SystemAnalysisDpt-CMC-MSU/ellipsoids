@@ -1,18 +1,18 @@
 function res = isInside(ellArr, objArr)
 % ISINSIDE - checks if given ellipsoid(or array of
 %            ellipsoids) lies inside given object(or array
-%            of objects): ellipsoid or polytope.
+%            of objects): ellipsoid or Polyhedron.
 %
 % Input:
 %   regular:
 %       ellArr: ellipsoid[nDims1,nDims2,...,nDimsN] - array
 %               of ellipsoids of the same dimension.
 %       objArr: ellipsoid/
-%               polytope[nDims1,nDims2,...,nDimsN] of
+%               Polyhedron[nDims1,nDims2,...,nDimsN] of
 %               objects of the same dimension. If
 %               ellArr and objArr both non-scalar, than
 %               size of ellArr must be the same as size of
-%               objArr. Note that polytopes could be
+%               objArr. Note that Polyhedrons could be
 %               combined only in vector of size [1,N].
 % Output:
 %   regular:
@@ -44,14 +44,20 @@ import modgen.common.throwerror;
 %
 %Checking arguments
 ellipsoid.checkIsMe(ellArr,'first');
-checkvar(objArr,@(x) isa(x,'polytope') || isa(x,'ellipsoid'),...
+checkvar(objArr,@(x) isa(x,'Polyhedron') || isa(x,'ellipsoid'),...
     'wrongInput','errorMessage',...
-    'second argument must be vector of ellipsoids or polytopes.');
+    'second argument must be vector of ellipsoids or Polyhedrons.');
 nDimsArr  = dimension(ellArr);
 [~,nCols] = size(objArr);
 nPolyDimsArr = zeros(1, nCols);
-for iCols = 1:nCols
-    nPolyDimsArr(iCols) = dimension(objArr(iCols));
+if isa(objArr,'Polyhedron')
+    for iCols = 1:nCols
+        nPolyDimsArr(iCols) = objArr(iCols).Dim;
+    end
+else
+    for iCols = 1:nCols
+        nPolyDimsArr(iCols) = dimension(objArr(iCols));
+    end    
 end
 isEllScal = isscalar(ellArr);
 isPolyScal = isscalar(objArr);
@@ -85,9 +91,9 @@ end
         if isEll
             res = doesContain(objArr(polyIndex),ellArr(ellIndex));
         else
-            [constrMat constrValVec] = double(objArr(polyIndex));
-            suppFuncVec =rho(ellArr(ellIndex),constrMat');
-            res = all(suppFuncVec' <= constrValVec+absTol);
+            hMat=objArr(polyIndex).H;
+            suppFuncVec =rho(ellArr(ellIndex),hMat(:,1:end-1).');
+            res = all(suppFuncVec' <= hMat(:,end)+absTol);
         end
     end
 end
