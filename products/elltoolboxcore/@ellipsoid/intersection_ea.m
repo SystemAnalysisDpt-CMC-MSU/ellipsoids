@@ -80,7 +80,7 @@ if isPoly
     [nRows nCols] = size(objArr);
     nObjDimsArr = zeros(nRows,nCols);
     for iCols = 1:nCols
-        nObjDimsArr(iCols) = dimension(objArr(iCols));
+        nObjDimsArr(iCols) = objArr(iCols).Dim;
     end
 else
     nObjDimsArr = dimension(objArr);
@@ -280,7 +280,7 @@ function outEll = l_polyintersect(myEll, polyt)
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
 outEll = myEll;
-hyp = Polyhedron2hyperplane(polyt);
+hyp = polytope2hyperplane(polyt);
 nDimsHyp  = size(hyp, 2);
 
 if doesIntersectionContain(myEll, polyt)

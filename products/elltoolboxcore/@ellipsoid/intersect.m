@@ -178,7 +178,7 @@ else
     nDimsArr = zeros(size(objArr));
     [~, nCols] = size(objArr);
     for iCols = 1:nCols
-        nDimsArr(iCols) = dimension(objArr(iCols));
+        nDimsArr(iCols) = objArr(iCols).Dim;
     end
     fCheckDims(dimension(myEllArr),nDimsArr);
    
@@ -400,7 +400,10 @@ function [res, status] = lqcqp2(myEllArr, polyt)
 import modgen.common.throwerror;
 import elltool.conf.Properties;
 status = 1;
-[aMat, bVec] = double(polyt);
+hMat = polyt.H;
+aMat=hMat(:,1:end-1);
+bVec=hMat(:,end);
+%
 nNumel = numel(myEllArr);
 
 absTolArr = getAbsTol(myEllArr);

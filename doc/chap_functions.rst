@@ -149,20 +149,20 @@ ellipsoid.contents
 	   isbaddirection     - Checks if ellipsoidal approximation of geometric difference
 	                        of two ellipsoids in the given direction can be computed.
 	   doesIntersectionContain           - Checks if the union or intersection of 
-	                        ellipsoids or polytopes lies inside the intersection 
+	                        ellipsoids or polyhedrons lies inside the intersection 
 	                        of given ellipsoids.
 	   isinternal         - Checks if given vector belongs to the union or intersection
 	                        of given ellipsoids.
 	   distance           - Computes the distance from ellipsoid to given point,
-	                        ellipsoid, hyperplane or polytope.
+	                        ellipsoid, hyperplane or Polyhedron.
 	   intersect          - Checks if the union or intersection of ellipsoids intersects
-	                        with given ellipsoid, hyperplane, or polytope.
+	                        with given ellipsoid, hyperplane, or Polyhedron.
 	   intersection_ea    - Computes the minimal volume ellipsoid containing intersection
 	                        of two ellipsoids, ellipsoid and halfspace, or ellipsoid
-	                        and polytope.
+	                        and Polyhedron.
 	   intersection_ia    - Computes the maximal ellipsoid contained inside the
 	                        intersection of two ellipsoids, ellipsoid and halfspace
-	                        or ellipsoid and polytope.
+	                        or ellipsoid and Polyhedron.
 	   ellintersection_ia - Computes maximum volume ellipsoid that is contained
 	                        in the intersection of given ellipsoids (can be more than 2).
 	   ellunion_ea        - Computes minimum volume ellipsoid that contains
@@ -278,15 +278,15 @@ ellipsoid.distance
 
 	  DISTANCE - computes distance between the given ellipsoid (or array of 
 	             ellipsoids) to the specified object (or arrays of objects):
-	             vector, ellipsoid, hyperplane or polytope.
+	             vector, ellipsoid, hyperplane or Polyhedron.
 	             
 	  Input:
 	    regular:
 	        ellObjArr: ellipsoid [nDims1, nDims2,..., nDimsN] -  array of  
 	           ellipsoids of the same dimension.
-	        objArray: double / ellipsoid / hyperplane / polytope [nDims1, 
+	        objArray: double / ellipsoid / hyperplane / Polyhedron [nDims1, 
 	            nDims2,..., nDimsN] - array of vectors or ellipsoids or
-	            hyperplanes or polytopes. If number of elements in objArray
+	            hyperplanes or polyhedrons. If number of elements in objArray
 	            is more than 1, then it must be equal to the number of elements 
 	            in ellObjArr.
 	 
@@ -310,7 +310,7 @@ ellipsoid.distance
 	    optional:
 	        statusArray: double [nDims1, nDims2,..., nDimsN] - array of time of 
 	            computation of ellipsoids-vectors or ellipsoids-ellipsoids
-	            distances, or status of cvx solver for ellipsoids-polytopes
+	            distances, or status of cvx solver for ellipsoids-polyhedrons
 	            distances.
 	 
 	  Literature:
@@ -339,23 +339,23 @@ ellipsoid.doesContain
 ::
 
 	  DOESCONTAIN - checks if one ellipsoid contains the other ellipsoid or
-	                polytope. The condition for E1 = firstEllArr to contain
+	                Polyhedron. The condition for E1 = firstEllArr to contain
 	                E2 = secondEllArr is
 	                min(rho(l | E1) - rho(l | E2)) > 0, subject to <l, l> = 1.
-	                How checked if ellipsoid contains polytope is explained in 
+	                How checked if ellipsoid contains Polyhedron is explained in 
 	                doesContainPoly.
 	  Input:
 	    regular:
 	        firstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - first
 	            array of ellipsoids.
 	        secondObjArr: ellipsoid [nDims1,nDims2,...,nDimsN]/
-	            polytope[nDims1,nDims2,...,nDimsN]/[1,1] - array of the same
-	            size as firstEllArr or single ellipsoid or polytope.
+	            Polyhedron[nDims1,nDims2,...,nDimsN]/[1,1] - array of the same
+	            size as firstEllArr or single ellipsoid or Polyhedron.
 	 
 	     properties:
 	        mode: char[1, 1] - 'u' or 'i', go to description.
 	        computeMode: char[1,] - 'highDimFast' or 'lowDimFast'. Determines, 
-	            which way function is computed, when secObjArr is polytope. If 
+	            which way function is computed, when secObjArr is Polyhedron. If 
 	            secObjArr is ellipsoid computeMode is ignored. 'highDimFast' 
 	            works  faster for  high dimensions, 'lowDimFast' for low. If
 	            this property is omitted if dimension of ellipsoids is greater
@@ -386,7 +386,7 @@ ellipsoid.doesIntersectionContain
 
 	  DOESINTERSECTIONCONTAIN - checks if the intersection of ellipsoids 
 	                            contains the union or intersection of given 
-	                            ellipsoids or polytopes.
+	                            ellipsoids or polyhedrons.
 	 
 	    res = DOESINTERSECTIONCONTAIN(fstEllArr, secEllArr, mode) 
 	        Checks if the union
@@ -397,11 +397,11 @@ ellipsoid.doesIntersectionContain
 	        ellipsoids in secEllArr. mode = 'i' - intersection.
 	    res = DOESINTERSECTIONCONTAIN(fstEllArr, secPolyArr, mode) 
 	         Checks if the union
-	        (mode = 'u') or intersection (mode = 'i')  of polytopes in
+	        (mode = 'u') or intersection (mode = 'i')  of polyhedrons in
 	        secPolyArr lies inside the intersection of ellipsoids in
-	        fstEllArr. Ellipsoids in fstEllArr and polytopes in secPolyArr
+	        fstEllArr. Ellipsoids in fstEllArr and polyhedrons in secPolyArr
 	        must be of the same dimension. mode = 'u' (default) - union of
-	        polytopes in secPolyMat. mode = 'i' - intersection.
+	        polyhedrons in secPolyMat. mode = 'i' - intersection.
 	 
 	    To check if the union of ellipsoids secEllArr belongs to the
 	    intersection of ellipsoids fstEllArr, it is enough to check that
@@ -429,11 +429,11 @@ ellipsoid.doesIntersectionContain
 	    and maximizes function J. If J(y) <= 1, then ellipsoid E(q, Q)
 	    contains the given intersection, otherwise, it does not.
 	 
-	    The intersection of polytopes is a polytope, which is computed
+	    The intersection of polyhedrons is a Polyhedron, which is computed
 	    by the standard routine of MPT. How checked if intersection of  
-	    ellipsoids contains polytope is explained in doesContainPoly.
+	    ellipsoids contains Polyhedron is explained in doesContainPoly.
 	 
-	    Checking if the union of polytopes belongs to the intersection
+	    Checking if the union of polyhedrons belongs to the intersection
 	    of ellipsoids is the same as checking if its convex hull belongs
 	    to this intersection.
 	 
@@ -442,8 +442,8 @@ ellipsoid.doesIntersectionContain
 	        fstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
 	            of the same size.
 	        secEllArr: ellipsoid /
-	            polytope [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
-	            polytopes of the same sizes.
+	            Polyhedron [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
+	            polyhedrons of the same sizes.
 	 
 	            note: if mode == 'i', then fstEllArr, secEllVec should be
 	                array.
@@ -451,7 +451,7 @@ ellipsoid.doesIntersectionContain
 	    properties:
 	        mode: char[1, 1] - 'u' or 'i', go to description.
 	        computeMode: char[1,] - 'highDimFast' or 'lowDimFast'. Determines, 
-	            which way function is computed, when secObjArr is polytope. If 
+	            which way function is computed, when secObjArr is Polyhedron. If 
 	            secObjArr is ellipsoid computeMode is ignored. 'highDimFast' 
 	            works  faster for  high dimensions, 'lowDimFast' for low. If
 	            this property is omitted if dimension of ellipsoids is greater
@@ -1312,14 +1312,14 @@ ellipsoid.intersect
 ::
 
 	  INTERSECT - checks if the union or intersection of ellipsoids intersects
-	              given ellipsoid, hyperplane or polytope.
+	              given ellipsoid, hyperplane or Polyhedron.
 	 
 	    resArr = INTERSECT(myEllArr, objArr, mode) - Checks if the union
 	        (mode = 'u') or intersection (mode = 'i') of ellipsoids
 	        in myEllArr intersects with objects in objArr.
 	        objArr can be array of ellipsoids, array of hyperplanes,
-	        or array of polytopes.
-	        Ellipsoids, hyperplanes or polytopes in objMat must have
+	        or array of polyhedrons.
+	        Ellipsoids, hyperplanes or polyhedrons in objMat must have
 	        the same dimension as ellipsoids in myEllArr.
 	        mode = 'u' (default) - union of ellipsoids in myEllArr.
 	        mode = 'i' - intersection.
@@ -1363,7 +1363,7 @@ ellipsoid.intersect
 	    with constraints (1)-(n), plus
 	                      <v, x> - c = 0.
 	 
-	    Checking the intersection of ellipsoids with polytope
+	    Checking the intersection of ellipsoids with Polyhedron
 	    objArr = P(A, b) reduces to checking if there any x, satisfying
 	    constraints (1)-(n) and 
 	                         Ax <= b.
@@ -1373,8 +1373,8 @@ ellipsoid.intersect
 	        myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of 
 	             ellipsoids.
 	        objArr: ellipsoid / hyperplane /
-	            / polytope [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
-	            hyperplanes or polytopes of the same sizes.
+	            / Polyhedron [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
+	            hyperplanes or polyhedrons of the same sizes.
 	 
 	    optional:
 	        mode: char[1, 1] - 'u' or 'i', go to description.
@@ -1422,7 +1422,7 @@ ellipsoid.intersection_ea
 
 	  INTERSECTION_EA - external ellipsoidal approximation of the
 	                    intersection of two ellipsoids, or ellipsoid and
-	                    halfspace, or ellipsoid and polytope.
+	                    halfspace, or ellipsoid and Polyhedron.
 	 
 	    outEllArr = INTERSECTION_EA(myEllArr, objArr) Given two ellipsoidal
 	        matrixes of equal sizes, myEllArr and objArr = ellArr, or,
@@ -1438,10 +1438,10 @@ ellipsoid.intersection_ea
 	        then this hyperplane defines halfspace
 	                <v, x> <= c.
 	    outEllArr = INTERSECTION_EA(myEllArr, objArr) Given matrix of
-	        ellipsoids myEllArr and matrix of polytopes objArr = polyArr
+	        ellipsoids myEllArr and matrix of polyhedrons objArr = polyArr
 	        whose sizes match, computes the external ellipsoidal
 	        approximations of intersections of ellipsoids myEllMat and
-	        polytopes polyArr.
+	        polyhedrons polyArr.
 	 
 	    The method used to compute the minimal volume overapproximating
 	    ellipsoid is described in "Ellipsoidal Calculus Based on
@@ -1450,7 +1450,7 @@ ellipsoid.intersection_ea
 	    Vol.32, No.4, pp.430-442, 2002. For more information, visit
 	    http://www-iri.upc.es/people/ros/ellipsoids.html
 	    
-	    For polytopes this method won't give the minimal volume 
+	    For polyhedrons this method won't give the minimal volume 
 	    overapproximating ellipsoid, but just some overapproximating ellipsoid.
 	 
 	  Input:
@@ -1458,8 +1458,8 @@ ellipsoid.intersection_ea
 	        myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
 	            of ellipsoids.
 	        objArr: ellipsoid / hyperplane /
-	            / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
-	            ellipsoids or hyperplanes or polytopes of the same sizes.
+	            / Polyhedron [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
+	            ellipsoids or hyperplanes or polyhedrons of the same sizes.
 	 
 	  Example:
 	    firstEllObj = ellipsoid([-2; -1], [4 -1; -1 1]);
@@ -1482,7 +1482,7 @@ ellipsoid.intersection_ia
 	  INTERSECTION_IA - internal ellipsoidal approximation of the
 	                    intersection of ellipsoid and ellipsoid,
 	                    or ellipsoid and halfspace, or ellipsoid
-	                    and polytope.
+	                    and Polyhedron.
 	 
 	    outEllArr = INTERSECTION_IA(myEllArr, objArr) - Given two
 	        ellipsoidal matrixes of equal sizes, myEllArr and
@@ -1499,10 +1499,10 @@ ellipsoid.intersection_ia
 	        then this hyperplane defines halfspace
 	                   <v, x> <= c.
 	    outEllArr = INTERSECTION_IA(myEllArr, objArr) - Given matrix of
-	        ellipsoids  myEllArr and matrix of polytopes objArr = polyArr
+	        ellipsoids  myEllArr and matrix of polyhedrons objArr = polyArr
 	        whose sizes match, computes the internal ellipsoidal
 	        approximations of intersections of ellipsoids myEllArr
-	        and polytopes polyArr.
+	        and polyhedrons polyArr.
 	 
 	    The method used to compute the minimal volume overapproximating
 	    ellipsoid is described in "Ellipsoidal Calculus Based on
@@ -1512,7 +1512,7 @@ ellipsoid.intersection_ia
 	    http://www-iri.upc.es/people/ros/ellipsoids.html
 	 
 	    The method used to compute maximum volume ellipsoid inscribed in 
-	    intersection of ellipsoid and polytope, is modified version of 
+	    intersection of ellipsoid and Polyhedron, is modified version of 
 	    algorithm of finding maximum volume ellipsoid inscribed in intersection 
 	    of ellipsoids discribed in Stephen Boyd and Lieven Vandenberghe "Convex
 	    Optimization". It works properly for nondegenerate ellipsoid, but for
@@ -1525,8 +1525,8 @@ ellipsoid.intersection_ia
 	        myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN]/[1,1] - array
 	            of ellipsoids.
 	        objArr: ellipsoid / hyperplane /
-	            / polytope [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
-	            ellipsoids or hyperplanes or polytopes of the same sizes.
+	            / Polyhedron [nDims1,nDims2,...,nDimsN]/[1,1]  - array of
+	            ellipsoids or hyperplanes or polyhedrons of the same sizes.
 	 
 	  Output:
 	     outEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of internal
@@ -1647,18 +1647,18 @@ ellipsoid.isInside
 
 	  ISINSIDE - checks if given ellipsoid(or array of
 	             ellipsoids) lies inside given object(or array
-	             of objects): ellipsoid or polytope.
+	             of objects): ellipsoid or Polyhedron.
 	 
 	  Input:
 	    regular:
 	        ellArr: ellipsoid[nDims1,nDims2,...,nDimsN] - array
 	                of ellipsoids of the same dimension.
 	        objArr: ellipsoid/
-	                polytope[nDims1,nDims2,...,nDimsN] of
+	                Polyhedron[nDims1,nDims2,...,nDimsN] of
 	                objects of the same dimension. If
 	                ellArr and objArr both non-scalar, than
 	                size of ellArr must be the same as size of
-	                objArr. Note that polytopes could be
+	                objArr. Note that polyhedrons could be
 	                combined only in vector of size [1,N].
 	  Output:
 	    regular:
@@ -3071,7 +3071,7 @@ ellipsoid.toPolytope
 
 ::
 
-	  TOPOLYTOPE - for ellipsoid ell makes polytope object represanting the
+	  TOPOLYTOPE - for ellipsoid ell makes Polyhedron object represanting the
 	               boundary of ell
 	 
 	  Input:
@@ -3080,13 +3080,13 @@ ellipsoid.toPolytope
 	    optional:
 	        nPoints: double[1,1] - number of boundary points.
 	                 Actually number of points in resulting
-	                 polytope will be ecual to lowest
+	                 Polyhedron will be ecual to lowest
 	                 number of points of icosaeder, that greater
 	                 than nPoints.
 	 
 	  Output:
 	    regular:
-	        poly: polytope[1,1] - polytop in 3D or 2D.
+	        poly: Polyhedron[1,1] - polytop in 3D or 2D.
 	 
 	  
 

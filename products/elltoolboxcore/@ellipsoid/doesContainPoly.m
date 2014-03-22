@@ -48,7 +48,7 @@ end
 
 isAnyEllDeg = any(isdegenerate(ellArr(:)));
 isPolyDeg = ~any(poly.isFullDim());
-isBnd = all(poly.isBounded());
+isBnd = any(poly.isBounded());
 if ~isBnd || (isAnyEllDeg && isPolyDeg)
     doesContain = false;
 else
@@ -62,9 +62,9 @@ end
 end
 
 function doesContain = doesContainLowDim(ellArr,poly)
-poly=poly.computeVRep();
+poly.computeVRep();
 xVec = poly.V;
-doesContain = min(isinternal(ellArr, xVec', 'i'));
+doesContain = all(isinternal(ellArr, xVec', 'i'));
 end
 
 function doesContain = doesContainHighDim(ellArr,poly)
@@ -73,22 +73,25 @@ if ~isFeasible
     doesContain = false;
     return;
 end
-[constrMat, constrConstVec] = double(poly);
+constrMat=poly.H(:,1:end-1);
+constrConstVec=poly.H(:,end);
 [nConstr,nDims] = size(constrMat);
 newConstrConstVec = constrConstVec - constrMat*internalPoint;
 newConstrMat = zeros(nConstr,nDims);
 for iConstr = 1:nConstr
     newConstrMat(iConstr,:) = constrMat(iConstr,:)/newConstrConstVec(iConstr);
 end
-[normalsMat constVec] = findNormAndConst(newConstrMat);
+[normalsMat,constVec] = findNormAndConst(newConstrMat);
 [~,absTol] = ellArr.getAbsTol;
 isInsideArr = arrayfun(@(x) isEllPolInPolyPol(x,normalsMat, constVec,...
     internalPoint,absTol),ellArr);
 doesContain = all(isInsideArr(:));
 end
 %
-function [isFeasible internalPoint] = findInternal(ellArr,poly)
-[constrMat, constrConstVec] = double(poly);
+function [isFeasible,internalPoint] = findInternal(ellArr,poly)
+constrMat=poly.H(:,1:end-1);
+constrConstVec=poly.H(:,end);
+%
 [nConstraints,nDims] = size(constrMat);
 basisMat = [eye(nDims); -eye(nDims)];
 maxVecsMat = zeros(nDims);
@@ -115,7 +118,7 @@ if strcmp(cvx_status,'Failed')
     throwerror('cvxError','Cvx failed');
 end;
 if strcmp(cvx_status,'Inaccurate/Solved')
-    if ~isinternal(ellArr,internalPoint,'i') || ~isinside(poly,internalPoint)
+    if ~isinternal(ellArr,internalPoint,'i') || ~poly.isInside(internalPoint)
         throwerror('cvxError','internal point found incorrectly');
     end
 end

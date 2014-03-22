@@ -91,7 +91,7 @@ if isPoly
     [~,nCols] = size(objArr);
     nObjDimsArr = zeros(1, nCols);
     for iCols = 1:nCols
-        nObjDimsArr(iCols) = dimension(objArr(iCols));
+        nObjDimsArr(iCols) = objArr(iCols).Dim;
     end
 else
     nObjDimsArr = dimension(objArr);
@@ -259,11 +259,11 @@ if doesIntersectionContain(ell, poly)
 elseif ~intersect(ell,poly)
     outEll = ellipsoid();
 else
-    [ellVec ellMat] = double(ell);
+    [ellVec,ellMat] = double(ell);
     [n,~] = size(ellMat);
-    polyDouble = double(poly);
-    polyMat = polyDouble(:,1:end-1);
-    polyVec = polyDouble(:,end);
+    hMat = poly.H;
+    polyMat = hMat(:,1:end-1);
+    polyVec = hMat(:,end);
     polyCSize = size(polyMat,1);
     if size(ellMat,2) > rank(ellMat)
         ellMat = ellipsoid.regularize(ellMat,getAbsTol(ell));

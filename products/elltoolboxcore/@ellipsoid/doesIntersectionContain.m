@@ -142,10 +142,10 @@ if isa(secObjArr,'Polyhedron')
     isBndVec = false(1,nCols);
     isPolyDegVec = false(1,nCols);
     for iCols = 1:nCols
-        isBndVec(iCols) = isbounded(polyVec(iCols));
-        isPolyDegVec(iCols) = ~isfulldim(polyVec(iCols));
+        isBndVec(iCols) = polyVec(iCols).isBounded();
+        isPolyDegVec(iCols) = ~any(polyVec(iCols).isFullDim());
     end;
-    isEmpty = isempty(double(polyVec(1)));
+    isEmpty = polyVec(1).isEmptySet();
     
     if isEmpty
         res = -1;
@@ -154,8 +154,12 @@ if isa(secObjArr,'Polyhedron')
     else
         isInsideVec = false(1,nCols);
         for iCols = 1:nCols
+            try
             isInsideVec(iCols) = doesContainPoly(fstEllArr,...
                 polyVec(iCols),varargin);
+            catch
+                keyboard;
+            end
         end
         res = all(isInsideVec);
     end
