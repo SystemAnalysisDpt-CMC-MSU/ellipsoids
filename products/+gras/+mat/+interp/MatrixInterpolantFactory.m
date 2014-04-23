@@ -4,6 +4,9 @@ classdef MatrixInterpolantFactory
             import modgen.common.type.simple.checkgen;
             import modgen.common.throwerror;
             checkgen(type,'isstring(x)');
+            if any(cellfun(@(x)any(isnan(x(:))),varargin))
+                throwerror('wrongInput','inputs cannot contain NaN values');
+            end
             switch lower(type)
                 case 'linear',
                     obj=gras.mat.interp.MatrixLinearInterp(varargin{:});
