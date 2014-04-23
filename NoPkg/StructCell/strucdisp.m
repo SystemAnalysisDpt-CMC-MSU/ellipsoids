@@ -225,7 +225,7 @@ end
                 for iFieldElement = 1 : length(Field)
                     line = sprintf('%s   |--- %s(%g)', ...
                         strIndent, fieldName, iFieldElement);
-                    lines = recFieldPrint(field(iFieldElement), indent + 1);
+                    lines = recFieldPrint(Field(iFieldElement), indent + 1);
                     listStr = [listStr; {line}; lines; ...
                         {[strIndent '   |       O']}];
                     if iFieldElement ~= length(Field)

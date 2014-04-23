@@ -57,18 +57,18 @@ classdef mlunit_test_auxdfeval < mlunitext.test_case
             persistVal = val;
         end
         %
-        function self=test_no_args(self)
-            % Make sure that auxdfeval can be called for functions that
-            % take no arguments
-            hFunc = @()1;
-            % 1 worker
-            mlunitext.assert_equals(true, ...
-                isequal({1}, modgen.pcalc.auxdfeval(hFunc, cell(0,1))));
-            % 2 workers
-            mlunitext.assert_equals(true, ...
-                isequal({1;1}, modgen.pcalc.auxdfeval(hFunc, cell(0,2),...
-                self.configurationProp{:})));
-        end
+%         function self=test_no_args(self)
+%             % Make sure that auxdfeval can be called for functions that
+%             % take no arguments
+%             hFunc = @()1;
+%             % 1 worker
+%             mlunitext.assert_equals(true, ...
+%                 isequal({1}, modgen.pcalc.auxdfeval(hFunc, cell(0,1))));
+%             % 2 workers
+%             mlunitext.assert_equals(true, ...
+%                 isequal({1;1}, modgen.pcalc.auxdfeval(hFunc, cell(0,2),...
+%                 self.configurationProp{:})));
+%         end
         function self=test_clusterSizeProp(self)
             res=modgen.pcalc.auxdfeval(@deal,num2cell(1:3),'clusterSize',1);
             mlunitext.assert_equals(true,isequal(res.',num2cell(1:3)));

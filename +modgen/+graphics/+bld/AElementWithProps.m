@@ -1,12 +1,10 @@
 classdef AElementWithProps<handle
-    properties (GetAccess=private,Constant)
-        PUBLIC_PROP_WITH_SETTER_LIST={'hFigure'};
+    properties (GetAccess=protected,Constant,Abstract)
+        REGULAR_PROP_NAME_LIST
     end
     
-    methods
-        function self=AElementWithProps(varargin)
-            self.setPropList(varargin{:});
-        end
+    methods (Access=protected,Abstract)
+        setRegularProps(self,varargin)
     end
     
     methods (Sealed)
@@ -14,43 +12,14 @@ classdef AElementWithProps<handle
             metaClassObj=metaclass(self);
             SPropsVec=metaClassObj.PropertyList;
             propNameList={SPropsVec.Name};
-            isPropVec=strcmp({SPropsVec.SetAccess},'public');
+            isPropVec=strcmp({SPropsVec.GetAccess},'public');
             if any(isPropVec),
-                isnSetterVec=~ismember(propNameList(isPropVec),...
-                    self.PUBLIC_PROP_WITH_SETTER_LIST);
-                if any(isnSetterVec),
-                    isPropVec(isnSetterVec)=...
-                        cellfun('isempty',...
-                        {SPropsVec(isnSetterVec).SetMethod});
-                end
+                isPropVec(isPropVec)=~ismember(propNameList(isPropVec),...
+                    self.REGULAR_PROP_NAME_LIST);
             end
             propNameList(~isPropVec)=[];
         end
-        
-        function setPropList(self,varargin)
-            if ~isempty(varargin),
-                if mod(numel(varargin),2),
-                    modgen.common.throwerror('wrongInput',...
-                        'Incorrect propList');
-                end
-                propNameList=varargin(1:2:end-1);
-                propValList=varargin(2:2:end);
-                nProps=numel(propNameList);
-                allPropNameList=self.getPropNameList();
-                [isPropVec,indPropVec]=ismember(lower(propNameList),...
-                    lower(allPropNameList));
-                if ~all(isPropVec),
-                    modgen.common.throwerror('wrongInput',...
-                        'These properties can not be set: %s',...
-                        cell2sepstr([],propNameList(~isPropVec),', '));
-                end
-                propNameList=allPropNameList(indPropVec);
-                for iProp=1:nProps,
-                    self.(propNameList{iProp})=propValList{iProp};
-                end
-            end
-        end
-        
+
         function propList=getPropList(self)
             propNameList=self.getPropNameList();
             nProps=numel(propNameList);
@@ -59,6 +28,43 @@ classdef AElementWithProps<handle
                 propValList{iProp}=self.(propNameList{iProp});
             end
             propList=reshape([propNameList;propValList],1,[]);
+        end
+    end
+    
+    methods (Access=protected,Sealed)
+        function [reg,prop]=parseRegAndPropList(self,varargin)
+            nReg=numel(self.REGULAR_PROP_NAME_LIST);
+            [reg,~,prop]=modgen.common.parseparext(...
+                varargin,self.getPropNameList(),[nReg nReg+1],...
+                'propRetMode','list');
+            if numel(reg)>nReg,
+                obj=reg{end};
+                reg(end)=[];
+                if ~isa(obj,class(self)),
+                    modgen.common.throwerror('wrongInput',...
+                        'Incorrect class of object containing properties: %s',...
+                        class(obj));
+                end
+                allPropList=obj.getPropList();
+                if numel(prop)>0,
+                    [isPropVec,indPropVec]=ismember(...
+                        lower(prop(1:2:end-1)),lower(allPropList(1:2:end-1)));
+                    if any(isPropVec),
+                        indPropVec=indPropVec(isPropVec);
+                        allPropList(2*indPropVec)=...
+                            prop(2*find(isPropVec));
+                    end
+                end
+                prop=allPropList;
+            else
+                allPropNameList=self.getPropNameList();
+                propNameList=prop(1:2:end-1);
+                propValList=prop(2:2:end);
+                [~,indPropVec]=ismember(lower(propNameList),...
+                    lower(allPropNameList));
+                propNameList=allPropNameList(indPropVec);
+                prop=reshape([propNameList;propValList],1,[]);
+            end
         end
     end
 end

@@ -1,5 +1,10 @@
 classdef Figure<modgen.graphics.bld.AElementWithProps
-    properties
+    properties (GetAccess=protected,Constant)
+        REGULAR_PROP_NAME_LIST={'groupPlaceCVec'};
+    end
+    
+    properties (GetAccess=public,SetAccess=protected)
+        groupPlaceCVec=cell(1,0);
         displayLegend=false;
         linkAxes='x';
         figureName='';
@@ -7,25 +12,30 @@ classdef Figure<modgen.graphics.bld.AElementWithProps
         synchroDates=true;
         xGrid=true;
         yGrid=true;
-        hFigure=NaN;
         fontSize=8;
         fontWeight='normal';
     end
     
-    properties (GetAccess=public,SetAccess=protected)
-        groupPlaceCVec=cell(1,0);
-    end
-    
     methods
         function self=Figure(varargin)
-            [reg,~,prop]=modgen.common.parseparext(...
-                varargin,self.getPropNameList(),...
-                'propRetMode','list');
-            self.resetGroupPlaces(reg{:});
-            self.setPropList(prop{:});
+            if nargin>0,
+                [reg,prop]=self.parseRegAndPropList(varargin{:});
+                self.setRegularProps(reg{:});
+                for iProp=1:2:numel(prop)-1,
+                    self.(prop{iProp})=prop{iProp+1};
+                end
+            end
         end
         
-        function resetGroupPlaces(self,varargin)
+        function graphCVec=getGraphObjList(self)
+            graphCVec=cellfun(@(x)x.getGraphObjList(),...
+                self.groupPlaceCVec,'UniformOutput',false);
+            graphCVec=horzcat(graphCVec{:});
+        end
+    end
+    
+    methods (Access=protected)
+        function setRegularProps(self,varargin)
             reg=modgen.common.parseparext(...
                 varargin,{},[1 1],0,...
                 'regCheckList',{'numel(x)==length(x)&&iscell(x)&&~isempty(x)'});
@@ -34,34 +44,6 @@ classdef Figure<modgen.graphics.bld.AElementWithProps
                 'all(cellfun(''prodofsize'',x)==1&'...
                 'cellfun(@(y)isa(y,''modgen.graphics.bld.GroupPlace''),x))']);
             self.groupPlaceCVec=reg;
-        end
-
-        function set.hFigure(self,hFigureVal)
-            if ~isnan(self.hFigure),
-                modgen.common.throwerror('wrongObjState',...
-                    'It is allowed to set handle just once');
-            end
-            isnWrong=numel(hFigureVal)==1&&ishandle(hFigureVal);
-            if isnWrong,
-                isnWrong=strcmp(get(hFigureVal,'Type'),'figure');
-            end
-            if ~isnWrong,
-                modgen.common.throwerror('wrongInput',...
-                    'value of handle is wrong');
-            end
-            self.hFigure=hFigureVal;
-        end
-        
-        function graphCVec=getGraphObjList(self)
-            graphCVec=cellfun(@(x)x.getGraphObjList(),...
-                self.groupPlaceCVec,'UniformOutput',false);
-            graphCVec=horzcat(graphCVec{:});
-        end
-        
-        function groupCVec=getGraphGroupObjList(self)
-            groupCVec=cellfun(@(x)x.getGraphGroupObjList(),...
-                self.groupPlaceCVec,'UniformOutput',false);
-            groupCVec=horzcat(groupCVec{:});
         end
     end
 end
