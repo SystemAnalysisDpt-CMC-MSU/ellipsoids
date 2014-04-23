@@ -2,15 +2,15 @@ function [distValArray, statusArray] = distance(ellObjArr, objArr, isFlagOn)
 %
 % DISTANCE - computes distance between the given ellipsoid (or array of 
 %            ellipsoids) to the specified object (or arrays of objects):
-%            vector, ellipsoid, hyperplane or Polyhedron.
+%            vector, ellipsoid, hyperplane or polytope.
 %            
 % Input:
 %   regular:
 %       ellObjArr: ellipsoid [nDims1, nDims2,..., nDimsN] -  array of  
 %          ellipsoids of the same dimension.
-%       objArray: double / ellipsoid / hyperplane / Polyhedron [nDims1, 
+%       objArray: double / ellipsoid / hyperplane / polytope [nDims1, 
 %           nDims2,..., nDimsN] - array of vectors or ellipsoids or
-%           hyperplanes or Polyhedrons. If number of elements in objArray
+%           hyperplanes or polytopes. If number of elements in objArray
 %           is more than 1, then it must be equal to the number of elements 
 %           in ellObjArr.
 %
@@ -34,7 +34,7 @@ function [distValArray, statusArray] = distance(ellObjArr, objArr, isFlagOn)
 %   optional:
 %       statusArray: double [nDims1, nDims2,..., nDimsN] - array of time of 
 %           computation of ellipsoids-vectors or ellipsoids-ellipsoids
-%           distances, or status of cvx solver for ellipsoids-Polyhedrons
+%           distances, or status of cvx solver for ellipsoids-polytopes
 %           distances.
 %
 % Literature:
@@ -86,11 +86,11 @@ elseif isa(objArr, 'ellipsoid')
 elseif isa(objArr, 'hyperplane')
     [distValArray, statusArray] = computeEllHpDist(ellObjArr, objArr,...
         isFlagOn);
-elseif isa(objArr, 'Polyhedron')
+elseif isa(objArr, 'polytope')
     [distValArray, statusArray] = computeEllPolytDist(ellObjArr, objArr,isFlagOn);
 else
     throwerror('wrongInput',strcat('second argument must be array of vectors, ',...
-        'ellipsoids, hyperplanes or Polyhedrons.'));
+        'ellipsoids, hyperplanes or polytopes.'));
 end
 end
 
@@ -253,14 +253,15 @@ function [ distEllVec timeOfComputation ] = computeEllVecDistance(ellObj,...
 %            System Analysis Department 2012 $
 %
 %
-import modgen.common.throwerror;
+import modgen.common.throwerror
 tic;
 [ellCenterVec, ellQMat] = double(ellObj);
 if rank(ellQMat) < size(ellQMat, 2)
     ellQMat = ellipsoid.regularize(ellQMat,absTol);
 end
+ellQMat=ell_inv(ellQMat);
 vectorVec=vectorVec-ellCenterVec;
-vectorEllVal=realsqrt(vectorVec'*ell_inv(ellQMat)*vectorVec);
+vectorEllVal=realsqrt(vectorVec'*ellQMat*vectorVec);
 if ( vectorEllVal < (1-absTol) )
     distEllVec=-1;
 elseif (abs(vectorEllVal-1)<absTol)
@@ -322,8 +323,8 @@ else
     % A(y-x)+lambda Ax=0 => y=(1+lambda) x =>
     % 1+lambda=1/(y'Ay)^(1/2) => find lambda and
     % find (y-x)'A(y-x).
-    distPlus=(realsqrt(vectorEllVal)+1);
-    distMinus=abs(realsqrt(vectorEllVal)-1);
+    distPlus=(vectorEllVal+1);
+    distMinus=abs(vectorEllVal-1);
     distEllVec=min(distPlus, distMinus);
 end
 timeOfComputation=toc;
@@ -605,9 +606,7 @@ end
 function [ distVal, cvxStat] = findEllPolDist(ellObj,polObj,isFlagOn)
 absTol=ellObj.getAbsTol();
 [qPar, QPar] = parameters(ellObj);
-hMat=polObj.H;
-aMat=hMat(:,1:end-1);
-bVec=hMat(:,end);
+[aMat, bVec] = double(polObj);
 if size(QPar, 2) > rank(QPar)
     QPar = ellipsoid.regularize(QPar,absTol);
 end
@@ -642,7 +641,7 @@ function [distEllPolArray, statusArray] = computeEllPolytDist(ellObjArray, polOb
 %
 %   COMPUTEELLPOLYTDIST - compute distance between arrays of ellipsoids and
 %   polytop.
-%   Distance between ellipsoid E and Polyhedron X is the optimal value
+%   Distance between ellipsoid E and polytope X is the optimal value
 %   of the following problem:
 %                               min |x - y|
 %                  subject to:  x belongs to E, y belongs to X.
@@ -661,23 +660,23 @@ nPolObj=prod(polArrSizeVec);
 if (nEllObj > 1) && (nPolObj > 1) && (~(nEllObj==nPolObj)||...
         ~(length(ellArrSizeVec)==length(polArrSizeVec))||...
         ~all(ellArrSizeVec==polArrSizeVec))
-    throwerror('wrongInput','sizes of ellipsoidal and Polyhedron arrays do not match.');
+    throwerror('wrongInput','sizes of ellipsoidal and polytope arrays do not match.');
 end
 
 dimEllArray=dimension(ellObjArray);
 dimPolArray=zeros(size(polObj));
-for iPolyhedrons = 1:size(dimPolArray,2)
-	dimPolArray(iPolyhedrons) = polObj(iPolyhedrons).Dim;
+for iPolytopes = 1:size(dimPolArray,2)
+	dimPolArray(iPolytopes) = dimension(polObj(iPolytopes));
 end
 
 if ~all(dimEllArray(1)==dimEllArray(:))
     throwerror('wrongInput','ellipsoids must be of the same dimension.');
 end
 if ~all(dimPolArray(1)==dimPolArray(:))
-    throwerror('wrongInput','Polyhedrons must be of the same dimension.');
+    throwerror('wrongInput','polytopes must be of the same dimension.');
 end
 if ~(dimPolArray(1) == dimEllArray(1))
-	 throwerror('wrongInput','Polyhedrons and ellips must be of the same dimension.');
+	 throwerror('wrongInput','polytopes and ellips must be of the same dimension.');
 end
 
 if Properties.getIsVerbose()
@@ -685,10 +684,10 @@ if Properties.getIsVerbose()
         logger=Log4jConfigurator.getLogger();
     end
     if (nEllObj > 1) || (nPolObj > 1)
-        logger.info(sprintf('Computing %d ellipsoid-to-Polyhedron distances...', ...
+        logger.info(sprintf('Computing %d ellipsoid-to-polytope distances...', ...
             max([nEllObj nPolObj])));
     else
-        logger.info('Computing ellipsoid-to-Polyhedron distance...');
+        logger.info('Computing ellipsoid-to-polytope distance...');
     end
     logger.info('Invoking CVX...');
 end
