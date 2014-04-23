@@ -14,13 +14,13 @@ function results = run_discr_tests(varargin)
 %
 % Example:
 %
-%   elltool.reach.test.run_most_discr_tests('demo3firstTest',...
+%   elltool.reach.test.run_discr_tests('demo3firstTest',...
 %       'elltool.reach.test.mlunit.ContinuousReachTestCase','testCut')
 %
-%   elltool.reach.test.run_most_discr_tests('.*',...
+%   elltool.reach.test.run_discr_tests('.*',...
 %       'elltool.reach.test.mlunit.ContinuousReachTestCase','testCut')
 %
-%   elltool.reach.test.run_most_discr_tests('_IsBackTrueIsEvolveFalse',...
+%   elltool.reach.test.run_discr_tests('_IsBackTrueIsEvolveFalse',...
 %       '.*','testCut')
 %
 % $Authors: Peter Gagarinov <pgagarinov@gmail.com>
@@ -28,7 +28,7 @@ function results = run_discr_tests(varargin)
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics
 %             and Computer Science,
-%             System Analysis Department 2012-2013$
+%             System Analysis Department 2012-2014$
 %
 import elltool.reach.ReachFactory;
 runner = mlunitext.text_test_runner(1, 1);

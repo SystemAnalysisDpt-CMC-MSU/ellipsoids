@@ -17,8 +17,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             isTestExtResVec = [false, true,true];
             isTestIntResVec = [false, false,true];
             %
-            myTestIntesect(myReachObj,polyVec,'e',isTestExtResVec);
-            myTestIntesect(myReachObj,polyVec,'i',isTestIntResVec);
+            myTestIntesect(myReachObj,polyVec.','e',isTestExtResVec);
+            myTestIntesect(myReachObj,polyVec.','i',isTestIntResVec);
             %
             function myTestIntesect(objVec, polyVec, letter,isTestInterVec)
                    isInterVec = intersect(objVec,polyVec,letter);

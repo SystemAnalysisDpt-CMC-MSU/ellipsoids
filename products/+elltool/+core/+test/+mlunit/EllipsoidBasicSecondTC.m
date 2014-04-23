@@ -21,11 +21,12 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         end
         
         function self = testGetBoundaryByFactor(self)
-          [testEllCVec testNumPointsCVec]  = getEllParams(1);         
-          [bpCMat fCMat] = cellfun(@(x, y)getBoundaryByFactor(x, y),testEllCVec,...
+          [testEllCVec, testNumPointsCVec]  = getEllParams(1);         
+          [bpCMat, fCMat] = cellfun(@(x, y)getBoundaryByFactor(x, y),testEllCVec,...
               testNumPointsCVec, 'UniformOutput', false);
-          testNumRightPointsCVec = {1200, 1200, 1200, 1200};
-          [bpRightCMat fRightCMat] = cellfun(@(x, y)getBoundary(x, y),...
+          testNumRightPointsCVec = cellfun(@(x,y)x.getNPlot2dPoints()*y,...
+              testEllCVec, testNumPointsCVec,'UniformOutput',false);
+          [bpRightCMat, fRightCMat] = cellfun(@(x, y)getBoundary(x, y),...
               testEllCVec, testNumRightPointsCVec, 'UniformOutput', false);
           isOk = compareCells(bpCMat, fCMat, bpRightCMat, fRightCMat);
           mlunitext.assert(isOk);
@@ -599,7 +600,7 @@ function isFlag = compareCells(bpCMat, fCMat, bpRightCMat, fRightCMat)
 end
 
 
-function [ellCVec pointsCVec] = getEllParams(flag)
+function [ellCVec, pointsCVec] = getEllParams(flag)
     if(flag == 1)
         test1Ell = ellipsoid(eye(2));
         test2Ell = ellipsoid([1; 0], [1 0; 0 1]);
