@@ -24,10 +24,10 @@ classdef MatrixRegCheck < gras.mat.IMatrixFunction
         end
         function resArray=evaluate(self, timeVec)
             resArray = self.matFunc.evaluate(timeVec);
-            resArray = gras.gen.SquareMatVector.evalMFunc(...
+            isNotDegArray = gras.gen.SquareMatVector.evalMFunc(...
                 @(x) gras.la.ismatnotdeg(x, self.regTol), resArray,...
                 'UniformOutput', true, 'keepSize', true);
-
+            modgen.common.type.simple.checkgen(isNotDegArray, 'all(x(:))');
         end
     end
 end

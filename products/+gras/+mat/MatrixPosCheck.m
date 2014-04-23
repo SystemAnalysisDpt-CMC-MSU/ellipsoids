@@ -26,7 +26,7 @@ classdef MatrixPosCheck < gras.mat.IMatrixFunction
             resArray = self.matFunc.evaluate(timeVec);
             isPosDefArray = gras.gen.SquareMatVector.evalMFunc(...
                 @(x) gras.la.ismatposdef(x, self.regTol), resArray);
-            modgen.common.type.simple.checkgen(isPosDefArray, 'all(x)');
+            modgen.common.type.simple.checkgen(isPosDefArray, 'all(x(:))');
         end
     end
 end
