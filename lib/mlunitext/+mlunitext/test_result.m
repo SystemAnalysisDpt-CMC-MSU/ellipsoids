@@ -41,6 +41,14 @@ classdef test_result<handle
         end
     end
     methods
+        function set.errors(self,value)
+            import modgen.common.throwerror;
+            if ~isempty(value)&&(size(value,2)~=2)
+                throwerror('wrongState',...
+                    'error list is expected to be a vector-column');
+            end
+            self.errors=value;
+        end
         function isOk=isPassed(self)
             [nErrors,nFails]=self.getErrorFailCount();
             isOk=(nErrors==0)&&(nFails==0);
@@ -228,8 +236,7 @@ classdef test_result<handle
                 errorMsg = sprintf('%s\n\n', errorMsg);
             end;
             last = size(self.errors, 1);
-            self.errors{last + 1, 1} = testName.str();
-            self.errors{last + 1, 2} = errorMsg;
+            self.errors(last + 1,:) = {testName.str(),errorMsg};
         end
         
         function add_failure(self, testName, meObj)

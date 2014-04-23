@@ -1,5 +1,10 @@
 classdef GraphGroup<modgen.graphics.bld.AElementWithProps
-    properties
+    properties (GetAccess=protected,Constant)
+        REGULAR_PROP_NAME_LIST={'graphCVec'};
+    end
+    
+    properties (GetAccess=public,SetAccess=protected)
+        graphCVec=cell(1,0);
         legendLocation='NorthEast';
         groupXLabel='';
         groupYLabel='';
@@ -18,22 +23,26 @@ classdef GraphGroup<modgen.graphics.bld.AElementWithProps
         yLabelRotation=90;
         xLabelRotation=0;
         propSetFunc=@(hAxes)[];
-        hAxes=NaN;
-    end
-    properties (GetAccess=public,SetAccess=protected)
-        graphCVec=cell(1,0);
     end
     
     methods
         function self=GraphGroup(varargin)
-            [reg,~,prop]=modgen.common.parseparext(...
-                varargin,self.getPropNameList(),...
-                'propRetMode','list');
-            self.resetGraphs(reg{:});
-            self.setPropList(prop{:});
+            if nargin>0,
+                [reg,prop]=self.parseRegAndPropList(varargin{:});
+                self.setRegularProps(reg{:});
+                for iProp=1:2:numel(prop)-1,
+                    self.(prop{iProp})=prop{iProp+1};
+                end
+            end
         end
- 
-        function resetGraphs(self,varargin)
+        
+        function graphCVec=getGraphObjList(self)
+            graphCVec=self.graphCVec();
+        end
+    end
+    
+    methods (Access=protected)
+         function setRegularProps(self,varargin)
             reg=modgen.common.parseparext(...
                 varargin,{},[1 1],0,...
                 'regCheckList',{'numel(x)==length(x)&&iscell(x)'});
@@ -42,26 +51,6 @@ classdef GraphGroup<modgen.graphics.bld.AElementWithProps
                 'all(cellfun(''prodofsize'',x)==1&'...
                 'cellfun(@(y)isa(y,''modgen.graphics.bld.Graph''),x))']);
             self.graphCVec=reg;
-        end
-        
-        function set.hAxes(self,hAxesVal)
-            if ~isnan(self.hAxes),
-                modgen.common.throwerror('wrongObjState',...
-                    'It is allowed to set handle just once');
-            end
-            isnWrong=numel(hAxesVal)==1&&ishandle(hAxesVal);
-            if isnWrong,
-                isnWrong=strcmp(get(hAxesVal,'Type'),'axes');
-            end
-            if ~isnWrong,
-                modgen.common.throwerror('wrongInput',...
-                    'value of handle is wrong');
-            end
-            self.hAxes=hAxesVal;
-        end
-        
-        function graphCVec=getGraphObjList(self)
-            graphCVec=self.graphCVec();
         end
     end
 end

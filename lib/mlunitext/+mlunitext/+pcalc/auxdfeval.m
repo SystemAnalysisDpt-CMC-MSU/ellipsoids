@@ -6,6 +6,4 @@ function varargout=auxdfeval(varargin)
 %
 % $Author: Peter Gagarinov, 7-October-2012, <pgagarinov@gmail.com>$
 
-reg = modgen.common.parseparams(varargin,{'startupFilePath'});
-[varargout{1:nargout}] = modgen.pcalc.auxdfeval(reg{:}, ...
-    'startupFilePath',fileparts(mfilename('fullpath')));
+[varargout{1:nargout}] = modgen.pcalc.auxdfeval(varargin{:});

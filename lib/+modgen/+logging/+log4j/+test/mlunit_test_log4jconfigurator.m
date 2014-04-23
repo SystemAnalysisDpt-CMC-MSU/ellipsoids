@@ -19,8 +19,8 @@ classdef mlunit_test_log4jconfigurator < mlunitext.test_case
             % This test changes Log4j configuration. We'll run it in a
             % separate process, so that the changes do not affect the
             % current process.
-            mlunitext.pcalc.auxdfeval(@self.aux_test_configuration_persistence,...
-                 cell(0,1), 'alwaysFork', true, self.configurationProp{:});
+            mlunitext.pcalc.auxdfeval(@(x)self.aux_test_configuration_persistence,...
+                 cell(1,1), 'alwaysFork', true, self.configurationProp{:});
         end
         %
         function self=test_getLogger(self)

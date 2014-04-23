@@ -30,10 +30,10 @@ classdef AHashMap<handle
             isHashedKeys=self.isHashedKeys;
         end
         function self=AHashMap(varargin)
-            % ADISKBASEDHASHMAP 
+            % ADISKBASEDHASHMAP
             %
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-05-23 $ 
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-05-23 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2012 $
@@ -43,7 +43,7 @@ classdef AHashMap<handle
             import modgen.containers.DiskBasedHashMap;
             import modgen.system.ExistanceChecker;
             %
-            [~,prop]=parseparams(varargin);     
+            [~,prop]=parseparams(varargin);
             nProp=length(prop);
             isStorageBranchKeySkipped=false;
             for k=1:2:nProp-1
@@ -59,7 +59,7 @@ classdef AHashMap<handle
                     case 'ignorebrokenstoredvalues',
                         self.isBrokenStoredValuesIgnored=true;
                     case 'storageformat'
-                        self.storageFormat=prop{k+1};                        
+                        self.storageFormat=prop{k+1};
                     case 'usehashedpath',
                         self.isHashedPath=prop{k+1};
                     case 'usehashedkeys',
@@ -81,7 +81,7 @@ classdef AHashMap<handle
             end
             %
             if ~ExistanceChecker.isVar('storageLocation')
-                metaClass=metaclass(self);                                
+                metaClass=metaclass(self);
                 storageLocation=fileparts(which(metaClass.Name));
             end
             %
@@ -96,7 +96,6 @@ classdef AHashMap<handle
             if ~strcmpi(self.storageFormat,'none')
                 if ~ExistanceChecker.isDir(self.storageLocation)
                     %check that a directory if exists, containts only mat files
-                    
                     mkdir(self.storageLocation);
                 else
                     self.checkStorageDir(self.storageLocation);
@@ -105,24 +104,31 @@ classdef AHashMap<handle
             %
         end
         %
-        function fullFileName=getFileNameByKey(self,keyStr)
-            % GETFILENAMEBYKEY returns a full file name by key 
+        function fullFileName=getFileNameByKey(self,keyStr,varargin)
+            % GETFILENAMEBYKEY returns a full file name by key
             %
-            % Usage: self.getFileNameByKey(keyList) 
+            % Usage: self.getFileNameByKey(keyList)
             %
             % Input:
             %   regular:
             %       keyStr: char[1,] - key
-            %       
+            %   properties:
+            %       checkForPresence: logical[1,1] - if true (default), the
+            %           presence of the specified key is checked. If the
+            %           key is not present an exception is thrown
+            %
             % Output:
-            %   regular:
-            %       fullFileName: char[1,] - full file name
-            %          corresponding to a specified key
+            %   fullFileName: char[1,] - full file name
+            %       corresponding to a specified key
             %
             %
             import modgen.common.throwerror;
+            import modgen.common.parseparext;
+            [~,~,isPresenceChecked]=parseparext(varargin,...
+                {'checkForPresence';true;'islogical(x)&&isscalar(x)'},0);
             fullFileName=self.genfullfilename(keyStr);
-            if ~self.isKey(keyStr)&&self.isMissingKeyBlamed
+            if isPresenceChecked&&...
+                    (~self.isKey(keyStr)&&self.isMissingKeyBlamed)
                 throwerror('noRecord',...
                     ['The specified key %s is not present ',...
                     'in this container, dirName: %s'],keyStr,...
@@ -133,13 +139,13 @@ classdef AHashMap<handle
         function [isKeyVec,fullFileNameCVec]=isKey(self,keyList)
             % ISKEY checks if the specified keys are registered
             %
-            % Usage: self.isKey(keyList) 
+            % Usage: self.isKey(keyList)
             %
             % Input:
             %   regular:
             %       keyList: cell[1,nKeys] - cell array of character key
             %          values
-            %       
+            %
             % Output:
             %   regular:
             %       isKeyVec: logical[1,nKeys] - 'is key' indicator array
@@ -174,7 +180,7 @@ classdef AHashMap<handle
             % GETSTORAGELOCATION returns a storage location for the object
             % in question
             %
-            % Usage: self.getStorageLocation() 
+            % Usage: self.getStorageLocation()
             %
             % Input:
             %   regular:
@@ -199,10 +205,10 @@ classdef AHashMap<handle
             %          values
             %       valueObjList: any[1,nKeys] - cell array of objects of
             %          any type
-            %       
+            %
             % Output:
-            %   regular:
             %   
+            %
             
             if ~iscell(valueObjList)
                 valueObjList={valueObjList};
@@ -235,25 +241,25 @@ classdef AHashMap<handle
             %          values
             %
             %   properties:
-            %       uniformOutput: logical[1,1] 
+            %       uniformOutput: logical[1,1]
             %          true means that the
             %             result for multiple key values is returned in an array
             %              of objects. If the returned objects do not support
-            %              concatenation in arrays, an exception is thrown. 
+            %              concatenation in arrays, an exception is thrown.
             %          false enables place each of the objects in a
             %             separate cell
-            %       
+            %
             % Output:
             %   regular:
             %       valueObjList: any[1,nKeys] - cell array/array of objects of
             %          any type
             %   optional:
-            %       arg1: any[1,nKeys] any additional output arguments returned 
-            %           by an overriden getOne method 
+            %       arg1: any[1,nKeys] any additional output arguments returned
+            %           by an overriden getOne method
             %           ...
             %       argN: any[1,nKeys] any additional output arguments
-            %          returned by an overriden getOne method 
-            %   
+            %          returned by an overriden getOne method
+            %
             %
             isUniformOutput=true;
             [~,prop]=parseparams(varargin);
@@ -287,11 +293,11 @@ classdef AHashMap<handle
             % Input:
             %   regular:
             %       self: DiskBasedHashMap[1,1] - the object itself
-            % Output:  
+            % Output:
             %   keyList: cell[1,nKeys] - cell array of character key
             %       values
             %
-            %            
+            %
             SFileProp=dir([self.storageLocation,filesep,['*.',self.fileExtension]]);
             isDirVec=[SFileProp.isdir];
             fileNameList={SFileProp(~isDirVec).name};
@@ -331,11 +337,11 @@ classdef AHashMap<handle
             %   regular:
             %       self: DiskBasedHashMap[1,1] - the object itself
             %
-            % 
+            %
             storageLocation=self.getStorageLocation();
             delete([storageLocation,filesep,['*.',self.fileExtension]]);
         end
-        %    
+        %
     end
     methods (Access=protected)
         function [isPositive,keyStr]=checkKey(self,fileName)
@@ -343,7 +349,7 @@ classdef AHashMap<handle
             isPositive=ExistanceChecker.isFile(fileName);
             if isPositive
                 warnState=warning('off','MATLAB:load:variableNotFound');
-                try 
+                try
                     S=self.loadKeyFunc(fileName);
                 catch meObj
                     meObj=meObj.addCause(MException('AHashMap:unknownFailure',...
@@ -381,7 +387,7 @@ classdef AHashMap<handle
             if ~modgen.common.isrow(keyStr)
                 error([upper(mfilename),':wrongInput'],...
                     'keyStr is expected to be a row-string');
-            end            
+            end
             fullFileName=[self.storageLocation,filesep,...
                 self.genfilename(keyStr),['.',self.fileExtension]];
         end
@@ -396,7 +402,8 @@ classdef AHashMap<handle
                 end
                 %
                 if self.isPutErrorIgnored
-                    warning([upper(mfilename),':saveFailure'],'cannot save the key value: %s',...
+                    warning([upper(mfilename),':saveFailure'],...
+                        'cannot save the key value: %s',...
                         meObj.message);
                     return;
                 else
@@ -414,7 +421,7 @@ classdef AHashMap<handle
             end
             valueObj=getfield(self.loadValueFunc(fullFileNameCVec{1}),...
                 'valueObj');
-        end        
+        end
         function isPositive=isStorageDir(self,dirName)
             SFileList=dir(dirName);
             isDirVec=[SFileList.isdir];
@@ -422,7 +429,7 @@ classdef AHashMap<handle
                 [self.IGNORE_EXTENSIONS,self.ALLOWED_EXTENSIONS]);
             isPositive=all(isDirVec|isIgnoredOrAllowedExtVec|...
                 ~self.isStorageContentChecked);
-        end        
+        end
         function checkStorageDir(self,dirName)
             import modgen.containers.DiskBasedHashMap;
             if ~self.isStorageDir(dirName)
@@ -438,7 +445,7 @@ classdef AHashMap<handle
             regExpStr=[regExpStr{:}];
             regExpStr=['\.(',regExpStr(1:end-1),')$'];
             isPositiveVec=cellfun(@(x)~isempty(x),regexp(fileNameList,regExpStr));
-        end        
+        end
     end
     methods (Access=protected)
         function fileName=genfilename(self,inpStr)
@@ -446,12 +453,12 @@ classdef AHashMap<handle
             if self.isHashedKeys
                 inpStr=hash(inpStr);
             end
-
+            
             if ~isempty(inpStr)
                 nChars=length(inpStr);
                 nBlocks=fix(nChars/namelengthmax);
                 blockSizeVec=[repmat(namelengthmax,1,nBlocks),rem(nChars,namelengthmax)];
-                inpCutStrCVec=mat2cell(inpStr,1,blockSizeVec);    
+                inpCutStrCVec=mat2cell(inpStr,1,blockSizeVec);
                 %
                 inpCutStrCVec=cellfun(@genvarname,inpCutStrCVec,'UniformOutput',false);
                 fileName=[inpCutStrCVec{:}];
@@ -459,7 +466,7 @@ classdef AHashMap<handle
                 fileName=inpStr;
             end
             %
-        end            
+        end
     end
     
 end

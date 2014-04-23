@@ -108,18 +108,19 @@ classdef BasicTC<mlunitext.test_case
                 hParentVec=getParentVec(hGraphVec);
                 [~,indMemb1Vec]=ismember(hParentVec,hAxesVec);
                 %
-                FigureBuilder.createFigure(figureObj);
-                hFig2=figureObj.hFigure;
+                handleMap=FigureBuilder.createFigure(figureObj);
+                hFig2=handleMap.getValue(figureObj);
                 mlunitext.assert_not_equals(true,isnan(hFig2));
-                groupCVec=figureObj.getGraphGroupObjList();
-                hAxes2Vec=cellfun(@(x)x.hAxes,groupCVec);
+                groupCVec=handleMap.getKeysForType(...
+                        'modgen.graphics.bld.GraphGroup');
+                hAxes2Vec=cellfun(@(x)handleMap.getValue(x),groupCVec);
                 mlunitext.assert_not_equals(true,any(isnan(hAxes2Vec)));
                 hParentVec=getParentVec(hAxes2Vec);
                 mlunitext.assert_equals(true,all(hParentVec==hFig2));
                 graphCVec=cellfun(@(x)x.graphCVec,groupCVec,...
                     'UniformOutput',false);
                 graphCVec=horzcat(graphCVec{:});
-                hGraph2Vec=cellfun(@(x)x.hPlot,graphCVec);
+                hGraph2Vec=cellfun(@(x)handleMap.getValue(x),graphCVec);
                 mlunitext.assert_not_equals(true,any(isnan(hGraph2Vec)));
                 hParentVec=getParentVec(hGraph2Vec);
                 [~,indMemb2Vec]=ismember(hParentVec,hAxes2Vec);
@@ -159,10 +160,11 @@ classdef BasicTC<mlunitext.test_case
             placeObj=GroupPlace({group0Obj,group1Obj,...
                 group2Obj,group3Obj});
             figureObj=Figure({placeObj});
-            FigureBuilder.createFigure(figureObj);
-            mlunitext.assert(~isnan(figureObj.hFigure));
-            self.checkPlotting(figureObj.hFigure,'1');
-            close(figureObj.hFigure);
+            handleMap=FigureBuilder.createFigure(figureObj);
+            hFigure=handleMap.getValue(figureObj);
+            mlunitext.assert(~isnan(hFigure));
+            self.checkPlotting(hFigure,'1');
+            close(hFigure);
         end
     end
     methods (Access=protected)

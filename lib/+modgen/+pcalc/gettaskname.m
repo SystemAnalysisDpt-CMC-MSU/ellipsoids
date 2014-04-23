@@ -19,20 +19,25 @@ function [taskName,SProp]=gettaskname()
 %            System Analysis Department 2011 $
 %
 %
-curTaskObj=getCurrentTask();
-isMain=isempty(curTaskObj);
-taskId=get(curTaskObj,'ID');
-if isMain
-    taskName='master';
+
+if ~isempty(which('modgen.pcalcalt.gettaskname'))
+    [taskName,SProp]=modgen.pcalcalt.gettaskname();
 else
-    %on windows the task name has a form Job#/Task#, while on
-    %Linux - Task#. We need a unification so we remove the Job#
-    %part
-    curTaskName=['task',num2str(taskId)];
+    curTaskObj=getCurrentTask();
+    isMain=isempty(curTaskObj);
+    taskId=get(curTaskObj,'ID');
+    if isMain
+        taskName='master';
+    else
+        %on windows the task name has a form Job#/Task#, while on
+        %Linux - Task#. We need a unification so we remove the Job#
+        %part
+        curTaskName=['task',num2str(taskId)];
+        %
+        taskName=['child','.',curTaskName];
+    end
     %
-    taskName=['child','.',curTaskName];
+    SProp.isMain=isMain;
+    SProp.taskId=taskId;
+    SProp.taskName=taskName;
 end
-%
-SProp.isMain=isMain;
-SProp.taskId=taskId;
-SProp.taskName=taskName;
