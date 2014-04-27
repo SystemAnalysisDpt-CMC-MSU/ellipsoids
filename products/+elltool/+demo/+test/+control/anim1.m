@@ -49,6 +49,8 @@ function writerObj = getAnimation(rsObj,writerObj,timeVec,axisConfVec)
   for iTimeSteps = 1:nTimeSteps
     rsObj.cut([0 timeStepsVec(iTimeSteps)]).plotByEa(); 
     axis(axisConfVec);
+    set(gcf,'WindowStyle','normal');
+    set(gcf,'units','normalized','outerposition',[0 0 1 1]);
     videoFrameObj = getframe(gcf);
     writeVideo(writerObj,videoFrameObj);
     closereq;
