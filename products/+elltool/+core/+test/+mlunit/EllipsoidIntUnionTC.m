@@ -140,6 +140,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             mlunitext.assert_equals(false, isEq);
             ansStr = ...
                 '\(1).Q-->.*\(1.010000e\-05).*tolerance.\(1.000000e\-05)';
+            ansAltStr=...
+                '\(1).Q-->.*\(1.00999.*e\-05).*tolerance.\(1.000000.*e\-05)';
             checkRep();
             %            
             test1Mat = eye(2);
@@ -159,12 +161,15 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             mlunitext.assert_equals(false, isEq);
             mlunitext.assert_equals(false, isEq);
             ansStr = ...
-                '\(1).Q-->.*\(1.000000e\-05).*tolerance.\(1.000000e\-05)';
+                '\(1).Q-->.*\(1.000000.*e\-05).*tolerance.\(1.000000.*e\-05)';
+            ansAltStr=ansStr;
+            %
             checkRep();
             function checkRep()
                 isRepEq = isequal(reportStr, ansStr);
                 if ~isRepEq
-                    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'));
+                    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'))||...
+                        ~isempty(regexp(reportStr, ansAltStr, 'once'));
                 end
                 mlunitext.assert_equals(isRepEq, true);
             end

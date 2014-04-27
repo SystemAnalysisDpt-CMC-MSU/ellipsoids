@@ -2,21 +2,20 @@ classdef TouchTestCase < mlunitext.test_case
     properties (Access=private)
         nDirs
     end
-    
     methods
         function self = TouchTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
         function self = testControl(self)
             import modgen.io.TmpDataManager;
-%             import elltool.demo.test.control.*;
-            
+            nDirs=self.nDirs;
             testFileName = modgen.common.getcallername(1);
             [pathstrVec, ~, ~] = fileparts(which(testFileName));
             pathstrVec = modgen.path.rmlastnpathparts(pathstrVec, 1);
             TmpDataManager.setRootDir(pathstrVec);
-            tempDirName = TmpDataManager.getDirByCallerKey('test', 1);
+            tempDirName=TmpDataManager.getDirByCallerKey('test', 1);
             oldPath = cd(tempDirName);
+            cleanupObj=onCleanup(@()myClear(tempDirName,oldPath));
             pathstrVec = [pathstrVec,filesep,'+control'];
             SFileNameArray = dir(pathstrVec);
             SFileNameArray = SFileNameArray(3:end);
@@ -27,17 +26,18 @@ classdef TouchTestCase < mlunitext.test_case
                 disp(sprintf('Test %s started',testName));
                 fTest = str2func(testName);
                 time0 = now;
-                fTest(self.nDirs);
+                fTest(nDirs);
                 disp(sprintf('Passed %s test: %.1f s',testName,(now-time0)*86400));
             end
-            close all;
-            cd(oldPath);
-            rmdir(tempDirName,'s');
+            function myClear(tmpDir,oldDir)
+                close all;
+                cd(oldDir);
+                rmdir(tmpDir,'s');
+            end
         end
-        
         function self = set_up_param(self, nDirs)
             self.nDirs = nDirs;
+            close all;
         end
-        
     end
 end

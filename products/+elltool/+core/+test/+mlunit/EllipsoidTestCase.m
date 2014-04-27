@@ -894,33 +894,35 @@ classdef EllipsoidTestCase < mlunitext.test_case
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
+                '\(1).Q-->.*\(2.31662.*).*tolerance.\(1.00000.*e\-05)');
             
             [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(2);
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
+                '\(1).Q-->.*\(2.31662.*).*tolerance.\(1.00000.*e\-05)');
             
-            [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(3);
+            [testEllHighDim1, testEllHighDim2] = createTypicalHighDimEll(3);
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
+                '\(1).Q-->.*\(2.31662.*).*tolerance.\(1.00000.*e\-05)');
             
             
             checkEllEqual(testEllipsoid1, testEllipsoid1, true, '');
             
             checkEllEqual(testEllipsoid2, testEllipsoid1, false, ...
-                '\(1).q-->.*\(1.000000e\+00).*tolerance.\(1.000000e\-05)');
+                '\(1).q-->.*\(1.*).*tolerance.\(1.00000.*e\-05)');
             
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-                '\(1).Q-->.*\(4.142136e\-01).*tolerance.\(1.000000e\-05)');
+                '\(1).Q-->.*\(4.14213.*e\-01).*tolerance.\(1.00000.*e\-05)',...
+                '\(1).Q-->.*\(0.414213.*).*tolerance.\(1.00000.*e\-05)');
             
             
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-                '\(1).Q-->.*\(4.142136e\-01).*tolerance.\(1.000000e\-05)');
+                '\(1).Q-->.*\(4.14213.*e\-01).*tolerance.\(1.00000.*e\-05)',...
+                '\(1).Q-->.*\(0.414213.*).*tolerance.\(1.00000.*e\-05)');
             
             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
@@ -1522,12 +1524,16 @@ switch flag
 end
 end
 %
-function checkEllEqual(testEll1Vec, testEll2Vec, isEqRight, ansStr)
+function checkEllEqual(testEll1Vec, testEll2Vec, isEqRight, ansStr,ansAltStr)
+if nargin<5
+    ansAltStr=ansStr;
+end
 [isEq, reportStr] = isEqual(testEll1Vec, testEll2Vec);
 mlunitext.assert_equals(isEq, isEqRight);
 isRepEq = isequal(reportStr, ansStr);
 if ~isRepEq
-    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'));
+    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'))||...
+        ~isempty(regexp(reportStr, ansAltStr, 'once'));
 end
 mlunitext.assert_equals(isRepEq, true);
 end

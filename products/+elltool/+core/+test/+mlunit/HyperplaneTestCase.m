@@ -1,11 +1,11 @@
 classdef HyperplaneTestCase < mlunitext.test_case
-%$Author: <Zakharov Eugene>  <justenterrr@gmail.com> $    
-%$Date: 2012-10-31 $
-%$Copyright: Moscow State University,
-%            Faculty of Computational Mathematics 
-%            and Computer Science,
-%            System Analysis Department <2012> $
-%
+    %$Author: <Zakharov Eugene>  <justenterrr@gmail.com> $
+    %$Date: 2012-10-31 $
+    %$Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics
+    %            and Computer Science,
+    %            System Analysis Department <2012> $
+    %
     properties (Access=private)
         testDataRootDir
     end
@@ -15,14 +15,14 @@ classdef HyperplaneTestCase < mlunitext.test_case
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
-                filesep,shortClassName];     
+                filesep,shortClassName];
         end
         function tear_down(~)
             close all;
         end
-        function self = testHyperplaneAndDouble(self)  
+        function self = testHyperplaneAndDouble(self)
             %method double is implicitly tested in every comparison between
-            %hyperplanes contents and normals and constants, from which it 
+            %hyperplanes contents and normals and constants, from which it
             %was constructed(in function isNormalAndConstantRight)
             %
             SInpData = self.auxReadFile(self);
@@ -82,7 +82,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             %
             %mutliple constantants and single vector
             testNormalVec = [3; 4; 43; 1];
-            testConst = [2,3,4,5,6,7];            
+            testConst = [2,3,4,5,6,7];
             nConst=length(testConst);
             testingHyraplaneVec = hyperplane(testNormalVec, testConst);
             mlunitext.assert_equals(nConst,size(testingHyraplaneVec,2))
@@ -168,15 +168,17 @@ classdef HyperplaneTestCase < mlunitext.test_case
             testHypHighDimFst = hyperplane([1:1:75]', 1);
             testHypHighDimSec = hyperplane([1:1:75]', 2);
             checkHypEqual(testHypHighDimFst, testHypHighDimSec, false, ...
-                '\(1).shift-->.*\(2.640278e\-03).*tolerance.\(1.000000e\-05)');
+                '\(1).shift-->.*\(2.64027.*e\-03).*tolerance.\(1.00000.*e\-05)',...
+                '\(1).shift-->.*\(0.00264027.*).*tolerance.\(1.00000.*e\-05)');
             %
             testFstHyp = hyperplane([1; 0], 0);
             testSecHyp = hyperplane([1; 0], 0);
             testThrHyp = hyperplane([2; 1], 0);
-            str = '\(1).shift-->.*\(2.640278e\-03).*tolerance.\(1.000000e\-05)\n\(3).normal-->.*\(4.472136e\-01).*tolerance.\(1.000000e\-05)';
+            str = '\(1).shift-->.*\(2.64027.*e\-03).*tolerance.\(1.00000.*e\-05)\n\(3).normal-->.*\(4.47213.*e\-01).*tolerance.\(1.00000.*e\-05)';
+            altStr = '\(1).shift-->.*\(0.0026402.*).*tolerance.\(1.00000.*e\-05)\n\(3).normal-->.*\(0.447213.*).*tolerance.\(1.00000.*e\-05)';
             checkHypEqual([testHypHighDimFst testFstHyp testFstHyp], ...
                 [testHypHighDimSec testSecHyp testThrHyp], ...
-                [false true false], str);
+                [false true false], str,altStr);
         end
         %
         function self = testIsEmpty(self)
@@ -226,30 +228,30 @@ classdef HyperplaneTestCase < mlunitext.test_case
             evalc('display(testHyperplaneVec);');
         end
         %
-%         function self = testPlot(self)
-%             SInpData =  self.auxReadFile(self);
-%             testHplane3D1Vec = SInpData.testHplane3D1Vec;
-%             testHplane3D2Vec = SInpData.testHplane3D2Vec;
-%             testHplane2DVec = SInpData.testHplane2DVec;
-%             STestOptions = SInpData.STestOptions;
-%             %
-%             pHandle = plot(testHplane3D1Vec);
-%             close(pHandle);
-%             pHandle = plot(testHplane2DVec);
-%             close(pHandle);
-%             pHandle = plot(testHplane3D1Vec,STestOptions);
-%             close(pHandle);
-%             pHandle = plot(testHplane3D1Vec,'g',testHplane3D2Vec,'r');
-%             close(pHandle);            
-%         end
-%         function testPlotSimple(~)
-%             HA = hyperplane([1 0; 1 -2]'', [4 -2]);
-%             o.width = 2; o.size = [3 6.6]; o.center = [0 -2; 0 0];
-%             hFig=figure();
-%             h=plot(HA, 'r', o); hold off;
-%             close(hFig);
-%         end
-        %    
+        %         function self = testPlot(self)
+        %             SInpData =  self.auxReadFile(self);
+        %             testHplane3D1Vec = SInpData.testHplane3D1Vec;
+        %             testHplane3D2Vec = SInpData.testHplane3D2Vec;
+        %             testHplane2DVec = SInpData.testHplane2DVec;
+        %             STestOptions = SInpData.STestOptions;
+        %             %
+        %             pHandle = plot(testHplane3D1Vec);
+        %             close(pHandle);
+        %             pHandle = plot(testHplane2DVec);
+        %             close(pHandle);
+        %             pHandle = plot(testHplane3D1Vec,STestOptions);
+        %             close(pHandle);
+        %             pHandle = plot(testHplane3D1Vec,'g',testHplane3D2Vec,'r');
+        %             close(pHandle);
+        %         end
+        %         function testPlotSimple(~)
+        %             HA = hyperplane([1 0; 1 -2]'', [4 -2]);
+        %             o.width = 2; o.size = [3 6.6]; o.center = [0 -2; 0 0];
+        %             hFig=figure();
+        %             h=plot(HA, 'r', o); hold off;
+        %             close(hFig);
+        %         end
+        %
         function self = testWrongInput(self)
             SInpData =  self.auxReadFile(self);
             testConstant = SInpData.testConstant;
@@ -266,20 +268,20 @@ classdef HyperplaneTestCase < mlunitext.test_case
         end
         %
         function self = testGetAbsTol(self)
-           normVec = ones(3,1);
-           const = 0;
-           testAbsTol = 1;
-           args = {normVec,const, 'absTol',testAbsTol};
-           %              
-           hplaneArr = [hyperplane(args{:}),hyperplane(args{:});...
-                           hyperplane(args{:}),hyperplane(args{:})];
-           hplaneArr(:,:,2) = [hyperplane(args{:}),hyperplane(args{:});...
-                           hyperplane(args{:}),hyperplane(args{:})];
-           sizeArr = size(hplaneArr);
+            normVec = ones(3,1);
+            const = 0;
+            testAbsTol = 1;
+            args = {normVec,const, 'absTol',testAbsTol};
+            %
+            hplaneArr = [hyperplane(args{:}),hyperplane(args{:});...
+                hyperplane(args{:}),hyperplane(args{:})];
+            hplaneArr(:,:,2) = [hyperplane(args{:}),hyperplane(args{:});...
+                hyperplane(args{:}),hyperplane(args{:})];
+            sizeArr = size(hplaneArr);
             testAbsTolArr = repmat(testAbsTol,sizeArr);
             %
             isOkArr = (testAbsTolArr == hplaneArr.getAbsTol());
-            %  
+            %
             isOk = all(isOkArr(:));
             mlunitext.assert(isOk);
         end
@@ -301,7 +303,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             isOk = isEqual(ObtainedHpStruct, SHpVec(1));
             ObtainedHpStructVec = hpVec.toStruct();
             isOk = isOk && all(arrayfun(@isEqual, ObtainedHpStructVec, SHpVec));
-               
+            
             mlunitext.assert_equals(true, isOk);
             
             function isEq = isEqual(SHp1, SHp2)
@@ -334,7 +336,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
     end
     %
     methods(Static, Access = private)
-         function res = isNormalAndConstantRight(testNormal, testConstant, testingHyraplane)
+        function res = isNormalAndConstantRight(testNormal, testConstant, testingHyraplane)
             [resultNormal, resultConstant] = double(testingHyraplane);
             %
             testNormSizeVec = size(testNormal);
@@ -349,24 +351,29 @@ classdef HyperplaneTestCase < mlunitext.test_case
             else
                 res = false;
             end
-         end
-         
-         function SInpData = auxReadFile(self)
+        end
+        
+        function SInpData = auxReadFile(self)
             methodName=modgen.common.getcallernameext(2);
             inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
             %
             SInpData = load(inpFileName);
-         end
-
+        end
+        
     end
 end
 
-function checkHypEqual(testFstHypArr, testSecHypArr, isEqualArr, ansStr)
-    [isEqArr, reportStr] = isEqual(testFstHypArr, testSecHypArr);
-    mlunitext.assert_equals(isEqArr, isEqualArr);
-    isRepEq = isequal(reportStr, ansStr);
-    if ~isRepEq
-        isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'));
-    end
-    mlunitext.assert_equals(isRepEq, true);
+function checkHypEqual(testFstHypArr, testSecHypArr, isEqualArr, ansStr,...
+    ansAltStr)
+if nargin<5
+    ansAltStr=ansStr;
+end
+[isEqArr, reportStr] = isEqual(testFstHypArr, testSecHypArr);
+mlunitext.assert_equals(isEqArr, isEqualArr);
+isRepEq = isequal(reportStr, ansStr);
+if ~isRepEq
+    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'))||...
+        ~isempty(regexp(reportStr, ansAltStr, 'once'));
+end
+mlunitext.assert_equals(isRepEq, true);
 end
