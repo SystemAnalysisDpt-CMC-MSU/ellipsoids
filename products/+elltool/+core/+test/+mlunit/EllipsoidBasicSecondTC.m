@@ -1,9 +1,9 @@
 classdef EllipsoidBasicSecondTC < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
-    end    
+    end
     methods
-        function self = testGetBoundary(self)            
+        function self = testGetBoundary(self)
             [testEllCVec testNumPointsCVec]  = getEllParams(1);
             [bpCMat fCMat] = cellfun(@(x,y)getBoundary(x,y),testEllCVec,...
                 testNumPointsCVec, 'UniformOutput', false);
@@ -21,15 +21,15 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         end
         
         function self = testGetBoundaryByFactor(self)
-          [testEllCVec, testNumPointsCVec]  = getEllParams(1);         
-          [bpCMat, fCMat] = cellfun(@(x, y)getBoundaryByFactor(x, y),testEllCVec,...
-              testNumPointsCVec, 'UniformOutput', false);
-          testNumRightPointsCVec = cellfun(@(x,y)x.getNPlot2dPoints()*y,...
-              testEllCVec, testNumPointsCVec,'UniformOutput',false);
-          [bpRightCMat, fRightCMat] = cellfun(@(x, y)getBoundary(x, y),...
-              testEllCVec, testNumRightPointsCVec, 'UniformOutput', false);
-          isOk = compareCells(bpCMat, fCMat, bpRightCMat, fRightCMat);
-          mlunitext.assert(isOk);
+            [testEllCVec, testNumPointsCVec]  = getEllParams(1);
+            [bpCMat, fCMat] = cellfun(@(x, y)getBoundaryByFactor(x, y),testEllCVec,...
+                testNumPointsCVec, 'UniformOutput', false);
+            testNumRightPointsCVec = cellfun(@(x,y)x.getNPlot2dPoints()*y,...
+                testEllCVec, testNumPointsCVec,'UniformOutput',false);
+            [bpRightCMat, fRightCMat] = cellfun(@(x, y)getBoundary(x, y),...
+                testEllCVec, testNumRightPointsCVec, 'UniformOutput', false);
+            isOk = compareCells(bpCMat, fCMat, bpRightCMat, fRightCMat);
+            mlunitext.assert(isOk);
             
         end
         
@@ -49,7 +49,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             
             [supRightCVec lGridRightCMat] = cellfun(@(x, y)rhofun(x, y),...
                 testEllCVec, bpRightMatCArr, 'UniformOutput', false);
-             
+            
             isOk = isequal([bpMatCArr fMatCArr supCVec lGridCMat],...
                 [bpRightMatCArr fRightMatCArr supRightCVec lGridRightCMat]);
             mlunitext.assert(isOk);
@@ -68,18 +68,17 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             
             [bpMatCArr fMatCArr supCVec lGridCMat] = cellfun(@(x, y)getRhoBoundaryByFactor(x, y),...
                 testEllCVec, testNumPointsCVec, 'UniformOutput', false);
+            testNumRightPointsCVec = cellfun(@(x,y)x.getNPlot2dPoints()*y,...
+                testEllCVec, testNumPointsCVec,'UniformOutput',false);
             
-            testNumRightPointsCVec = {2000, 4000, 7000, 1000};
-            
-            [bpRightMatCArr fRightMatCArr, supRightCVec, lGridRightCMat] = ...
+            [bpRightMatCArr,fRightMatCArr,supRightCVec, lGridRightCMat] = ...
                 cellfun(@(x, y)getRhoBoundary(x, y), testEllCVec, testNumRightPointsCVec,...
                 'UniformOutput', false);
             isOk = isequal([bpMatCArr fMatCArr supCVec lGridCMat],...
                 [bpRightMatCArr fRightMatCArr, supRightCVec, lGridRightCMat]);
-            mlunitext.assert(isOk);   
-            
+            mlunitext.assert(isOk);
         end
-        
+        %
         function self = testNegBoundary(self)
             checkDim(self);
             checkScal(self);
@@ -527,10 +526,10 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             %
             ellArr = ellObj.repMat([2,2,3,4,5]);
             evalc('display(ellArr)');
-        end   
+        end
         function self = testProjection(self)
             projMat = [1 0 0;0 1 0]';
-            centVec = [-2; -1; 4]; 
+            centVec = [-2; -1; 4];
             shapeMat = [4 -1 0; -1 1 0; 0 0 9];
             auxTestProjection('projection',centVec, shapeMat, projMat);
             %
@@ -553,7 +552,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             operationCheckEqFunc(testEllArr, compList, 'getShape', testMat);
             %
             emptyTest('getShape',[0,0,2,0],testMat);
-        end 
+        end
         function self = testGetInv(self)
             ellMat = [2 0;0 2];
             testEll = ellipsoid(ellMat);
@@ -563,7 +562,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             operationCheckEqFunc(testEllArr,compList,'getInv');
             %
             emptyTest('getInv',[0,0,2,0]);
-        end    
+        end
         function self = testGetMove2Origin(self)
             ellMat = eye(2);
             ellVec = [2;2];
@@ -573,7 +572,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             operationCheckEqFunc(testEllArr,compList,'getMove2Origin');
             %
             emptyTest('getMove2Origin',[0,0,2,0]);
-        end    
+        end
         function self = testGetProjection(self)
             projMat = [1 0 0; 0 0 1]';
             centVec = [2; 4; 3];
@@ -583,156 +582,156 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             %
             dimVec = [0,0,2,0];
             auxTestProjection('getProjection',centVec, shapeMat, projMat, dimVec);
-        end    
+        end
     end
 end
 %
 
 function isFlag = compareCells(bpCMat, fCMat, bpRightCMat, fRightCMat)
-    ABSTOL = 1.0e-12;
-    [isEqual1,~,~,~,~] = modgen.common.absrelcompare(cell2mat(bpRightCMat),...
-        cell2mat(bpCMat),ABSTOL,ABSTOL,@norm);
-    [isEqual2,~,~,~,~] = modgen.common.absrelcompare(cell2mat(fCMat),...
-        cell2mat(fRightCMat),ABSTOL,ABSTOL,@norm);
-    isFlag = isEqual1 && isEqual2;
-   
-    
+ABSTOL = 1.0e-12;
+[isEqual1,~,~,~,~] = modgen.common.absrelcompare(cell2mat(bpRightCMat),...
+    cell2mat(bpCMat),ABSTOL,ABSTOL,@norm);
+[isEqual2,~,~,~,~] = modgen.common.absrelcompare(cell2mat(fCMat),...
+    cell2mat(fRightCMat),ABSTOL,ABSTOL,@norm);
+isFlag = isEqual1 && isEqual2;
+
+
 end
 
 
 function [ellCVec, pointsCVec] = getEllParams(flag)
-    if(flag == 1)
-        test1Ell = ellipsoid(eye(2));
-        test2Ell = ellipsoid([1; 0], [1 0; 0 1]);
-        test3Ell = ellipsoid([0; 0], [0 0; 0 0]);
-        test4Ell = ellipsoid([2; 1], [4 0; 0 4]);
-        pointsCVec = {6 6 6 6};
-    else
-        test1Ell = ellipsoid(eye(2));
-        test2Ell = ellipsoid([1; 3], [3 1; 1 1]);
-        test3Ell = ellipsoid([2; 1], [4 -1; -1 1]);
-        test4Ell = ellipsoid(eye(3));
-        pointsCVec = {10 20 35 [5, 5]};
-    end
-    ellCVec = {test1Ell, test2Ell, test3Ell, test4Ell};
+if(flag == 1)
+    test1Ell = ellipsoid(eye(2));
+    test2Ell = ellipsoid([1; 0], [1 0; 0 1]);
+    test3Ell = ellipsoid([0; 0], [0 0; 0 0]);
+    test4Ell = ellipsoid([2; 1], [4 0; 0 4]);
+    pointsCVec = {6 6 6 6};
+else
+    test1Ell = ellipsoid(eye(2));
+    test2Ell = ellipsoid([1; 3], [3 1; 1 1]);
+    test3Ell = ellipsoid([2; 1], [4 -1; -1 1]);
+    test4Ell = ellipsoid(eye(3));
+    pointsCVec = {10 20 35 [5, 5]};
 end
-            
+ellCVec = {test1Ell, test2Ell, test3Ell, test4Ell};
+end
+
 
 function operationCheckEqFunc(testEllArr, compList, operation,...
     argument)
-    OBJ_MODIFICATING_METHODS_LIST = {'inv', 'move2origin',...
-        'shape'};
-    isObjModifMethod = ismember(operation, OBJ_MODIFICATING_METHODS_LIST);
-    if ~isObjModifMethod
-        testCopyEllArr = testEllArr.getCopy();
-    end    
-    if nargin < 4
-        testEllResArr = testEllArr.(operation);
-    else
-        testEllResArr = testEllArr.(operation)(argument);
-    end
-    checkRes(testEllResArr,compList, operation);
-    if isObjModifMethod
-        %test for methods which modify the input array
-        checkRes(testEllArr,compList, operation);
-    else
-        %test for absence of input array's modification 
-        isNotModif = all(testCopyEllArr(:).isEqual(testEllArr(:)));
-        mlunitext.assert_equals(isNotModif, 1);
-    end    
+OBJ_MODIFICATING_METHODS_LIST = {'inv', 'move2origin',...
+    'shape'};
+isObjModifMethod = ismember(operation, OBJ_MODIFICATING_METHODS_LIST);
+if ~isObjModifMethod
+    testCopyEllArr = testEllArr.getCopy();
+end
+if nargin < 4
+    testEllResArr = testEllArr.(operation);
+else
+    testEllResArr = testEllArr.(operation)(argument);
+end
+checkRes(testEllResArr,compList, operation);
+if isObjModifMethod
+    %test for methods which modify the input array
+    checkRes(testEllArr,compList, operation);
+else
+    %test for absence of input array's modification
+    isNotModif = all(testCopyEllArr(:).isEqual(testEllArr(:)));
+    mlunitext.assert_equals(isNotModif, 1);
+end
 end
 function checkRes(testEllResArr,compList, operation)
-    import modgen.common.throwerror;
-    import modgen.cell.cellstr2expression;
-    %
-    VEC_COMP_METHODS_LIST = {'uminus', 'plus', 'minus', 'move2origin',...
-        'getMove2Origin'};
-    MAT_COMP_METHODS_LIST = {'inv', 'shape','getInv','getShape'};
-    %
-    [testEllResCentersVecList, testEllResShapeMatList] = arrayfun(@(x) double(x),...
-        testEllResArr, 'UniformOutput', false);
-    if ismember(operation, VEC_COMP_METHODS_LIST)
-        eqArr = cellfun(@(x,y) isequal(x,y),testEllResCentersVecList,...
-            compList);
-    elseif ismember(operation, MAT_COMP_METHODS_LIST)
-        eqArr = cellfun(@(x,y) isequal(x,y), testEllResShapeMatList,...
-            compList);
-    else
-        throwerror('wrongInput:badMethodName',...
-            'Allowed method names: %s. Input name: %s',...
-            cellstr2expression({VEC_COMP_METHODS_LIST{:}, ...
-            MAT_COMP_METHODS_LIST{:}}), operation);
-    end
-    testIsRight = all(eqArr(:)==1);
-    mlunitext.assert_equals(testIsRight, 1);
+import modgen.common.throwerror;
+import modgen.cell.cellstr2expression;
+%
+VEC_COMP_METHODS_LIST = {'uminus', 'plus', 'minus', 'move2origin',...
+    'getMove2Origin'};
+MAT_COMP_METHODS_LIST = {'inv', 'shape','getInv','getShape'};
+%
+[testEllResCentersVecList, testEllResShapeMatList] = arrayfun(@(x) double(x),...
+    testEllResArr, 'UniformOutput', false);
+if ismember(operation, VEC_COMP_METHODS_LIST)
+    eqArr = cellfun(@(x,y) isequal(x,y),testEllResCentersVecList,...
+        compList);
+elseif ismember(operation, MAT_COMP_METHODS_LIST)
+    eqArr = cellfun(@(x,y) isequal(x,y), testEllResShapeMatList,...
+        compList);
+else
+    throwerror('wrongInput:badMethodName',...
+        'Allowed method names: %s. Input name: %s',...
+        cellstr2expression({VEC_COMP_METHODS_LIST{:}, ...
+        MAT_COMP_METHODS_LIST{:}}), operation);
+end
+testIsRight = all(eqArr(:)==1);
+mlunitext.assert_equals(testIsRight, 1);
 end
 %
 function checkRhoSize(supArr,bpArr,dirArr,arrSizeVec)
-    isRhoOk=all(size(supArr)==arrSizeVec);
-    isBPOk=all(size(bpArr)==size(dirArr));
-    mlunitext.assert_equals(true,isRhoOk && isBPOk);
+isRhoOk=all(size(supArr)==arrSizeVec);
+isBPOk=all(size(bpArr)==size(dirArr));
+mlunitext.assert_equals(true,isRhoOk && isBPOk);
 end
 function checkRhoRes(supArr,bpArr)
-    isRhoOk=all(supArr(:)==5);
-    isBPOk=all(bpArr(1,:)==5) && all(bpArr(2,:)==0);
-    mlunitext.assert_equals(true,isRhoOk && isBPOk);
+isRhoOk=all(supArr(:)==5);
+isBPOk=all(bpArr(1,:)==5) && all(bpArr(2,:)==0);
+mlunitext.assert_equals(true,isRhoOk && isBPOk);
 end
 function emptyTest(methodName, sizeVec, argument)
-    testEllArr = ellipsoid.empty(sizeVec);
-    checkCenterVecList = repmat({},sizeVec);
-    if nargin < 3
-        operationCheckEqFunc(testEllArr, checkCenterVecList, methodName);
-    else
-        operationCheckEqFunc(testEllArr, checkCenterVecList, methodName,...
-            argument);
-    end    
+testEllArr = ellipsoid.empty(sizeVec);
+checkCenterVecList = repmat({},sizeVec);
+if nargin < 3
+    operationCheckEqFunc(testEllArr, checkCenterVecList, methodName);
+else
+    operationCheckEqFunc(testEllArr, checkCenterVecList, methodName,...
+        argument);
+end
 end
 function auxTestProjection(methodName, centVec, shapeMat, projMat, dimVec)
-     import modgen.common.throwerror;
-     import modgen.cell.cellstr2expression;
-     INP_OBJ_MODIF_LIST = {'projection'};
-     INP_OBJ_NOT_MODIF_LIST = {'getProjection'};
-     projCentVec = projMat'*centVec;
-     projShapeMat = projMat'*shapeMat*projMat;
-     ellObj = ellipsoid(centVec, shapeMat);
-     compEllObj = ellipsoid(projCentVec, projShapeMat);
-     if ismember(methodName, INP_OBJ_MODIF_LIST)
-         isInpObjModif = true;
-     elseif ismember(methodName, INP_OBJ_NOT_MODIF_LIST)
-         ellCopyObj = ellObj.getCopy();
-         isInpObjModif = false;
-     else
-         throwerror('wrongInput:badMethodName',...
-             'Allowed method names: %s. Input name: %s',...
-             cellstr2expression({INP_OBJ_MODIF_LIST{:}, ...
-             INP_OBJ_NOT_MODIF_LIST{:}}), methodName);
-     end
-     if nargin < 5
-        projEllObj = ellObj.(methodName)(projMat); 
-        testIsRight1 = isequal(compEllObj, projEllObj);
-        if isInpObjModif    
-            %additional test for modification of input object
-            testIsRight2 = compEllObj.isEqual(ellObj);
-        else
-            %additional test for absence of input object's modification
-            testIsRight2 = ellCopyObj.isEqual(ellObj);
-        end    
-     else
-        ellArr = ellObj.repMat(dimVec);
-        if ~isInpObjModif
-            ellCopyArr = ellCopyObj.repMat(dimVec);
-        end    
-        projEllArr = ellArr.(methodName)(projMat);
-        compEllArr = compEllObj.repMat(dimVec);
-        testIsRight1 = isequal(compEllArr, projEllArr);
-        if isInpObjModif    
-            %additional test for modification of input array
-            testIsRight2 = all(compEllArr(:).isEqual(ellArr(:)));
-        else
-            %additional test for absence of input array's modification
-            testIsRight2 = all(ellCopyArr(:).isEqual(ellArr(:)));
-        end
-     end    
-     mlunitext.assert_equals(testIsRight1, 1);
-     mlunitext.assert_equals(testIsRight2, 1);
+import modgen.common.throwerror;
+import modgen.cell.cellstr2expression;
+INP_OBJ_MODIF_LIST = {'projection'};
+INP_OBJ_NOT_MODIF_LIST = {'getProjection'};
+projCentVec = projMat'*centVec;
+projShapeMat = projMat'*shapeMat*projMat;
+ellObj = ellipsoid(centVec, shapeMat);
+compEllObj = ellipsoid(projCentVec, projShapeMat);
+if ismember(methodName, INP_OBJ_MODIF_LIST)
+    isInpObjModif = true;
+elseif ismember(methodName, INP_OBJ_NOT_MODIF_LIST)
+    ellCopyObj = ellObj.getCopy();
+    isInpObjModif = false;
+else
+    throwerror('wrongInput:badMethodName',...
+        'Allowed method names: %s. Input name: %s',...
+        cellstr2expression({INP_OBJ_MODIF_LIST{:}, ...
+        INP_OBJ_NOT_MODIF_LIST{:}}), methodName);
+end
+if nargin < 5
+    projEllObj = ellObj.(methodName)(projMat);
+    testIsRight1 = isequal(compEllObj, projEllObj);
+    if isInpObjModif
+        %additional test for modification of input object
+        testIsRight2 = compEllObj.isEqual(ellObj);
+    else
+        %additional test for absence of input object's modification
+        testIsRight2 = ellCopyObj.isEqual(ellObj);
+    end
+else
+    ellArr = ellObj.repMat(dimVec);
+    if ~isInpObjModif
+        ellCopyArr = ellCopyObj.repMat(dimVec);
+    end
+    projEllArr = ellArr.(methodName)(projMat);
+    compEllArr = compEllObj.repMat(dimVec);
+    testIsRight1 = isequal(compEllArr, projEllArr);
+    if isInpObjModif
+        %additional test for modification of input array
+        testIsRight2 = all(compEllArr(:).isEqual(ellArr(:)));
+    else
+        %additional test for absence of input array's modification
+        testIsRight2 = all(ellCopyArr(:).isEqual(ellArr(:)));
+    end
+end
+mlunitext.assert_equals(testIsRight1, 1);
+mlunitext.assert_equals(testIsRight2, 1);
 end
