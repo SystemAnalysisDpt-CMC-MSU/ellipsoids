@@ -23,9 +23,16 @@ function [taskName,SProp]=gettaskname()
 if ~isempty(which('modgen.pcalcalt.gettaskname'))
     [taskName,SProp]=modgen.pcalcalt.gettaskname();
 else
-    curTaskObj=getCurrentTask();
-    isMain=isempty(curTaskObj);
-    taskId=get(curTaskObj,'ID');
+    isParToolboxInstalled=~isempty(which('getCurrentTask'));
+    %
+    if isParToolboxInstalled
+        curTaskObj=getCurrentTask();
+        isMain=isempty(curTaskObj);
+        taskId=get(curTaskObj,'ID');
+    else
+        isMain=true;
+        taskId='';
+    end
     if isMain
         taskName='master';
     else
