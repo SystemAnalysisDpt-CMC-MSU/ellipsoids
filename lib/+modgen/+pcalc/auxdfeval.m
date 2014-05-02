@@ -83,11 +83,7 @@ else
     %
     dfevalArgList={};
     nProp=length(prop);
-    if isParToolboxInstalled
-        clusterSize=Inf;
-    else
-        clusterSize=1;
-    end
+    clusterSize=Inf;
     for k=1:2:nProp-1
         switch lower(prop{k})
             case 'startupfilepath',
@@ -143,6 +139,19 @@ else
     end
     if isParToolboxInstalled
         dfevalArgList=[dfevalArgList,{'configuration',confName}];
+    else
+        if isFork
+            modgen.common.throwwarn('wrongInput',...
+                ['isFork=true is ignored when Parallel Toolbox ',...
+                'is not installed']);
+            isFork=false;
+        end
+        if clusterSize>1
+            modgen.common.throwwarn('wrongInput',...
+                ['clusterSize>1 is ignored when Parallel Toolbox ',...
+                'is not installed']);
+        end
+        clusterSize=1;
     end
     nOut=nargout;
     nTasks=size(reg{1},2);
