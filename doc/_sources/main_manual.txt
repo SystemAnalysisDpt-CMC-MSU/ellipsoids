@@ -15,6 +15,7 @@ Welcome to Ellipsoidal Toolbox documentation!
    chap_install
    chap_implement
    chap_examples
+   chap_ellTube
    chap_summary
    chap_acknowledge
    chap_functions		
