@@ -1,0 +1,201 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ellipsoid tubes, tubes by instant of time and their projections &mdash; Ellipsoidal Toolbox 2.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Ellipsoidal Toolbox 2.0.1 documentation" href="index.html" />
+    <link rel="next" title="Summary and Outlook" href="chap_summary.html" />
+    <link rel="prev" title="Examples" href="chap_examples.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="chap_summary.html" title="Summary and Outlook"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="chap_examples.html" title="Examples"
+             accesskey="P">previous</a> |</li>
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="ellipsoid-tubes-tubes-by-instant-of-time-and-their-projections">
+<h1>Ellipsoid tubes, tubes by instant of time and their projections<a class="headerlink" href="#ellipsoid-tubes-tubes-by-instant-of-time-and-their-projections" title="Permalink to this headline">¶</a></h1>
+<p><strong>Definition.</strong> For any regularization matrix <span class="math">M(\cdot)</span> the quadratically regularized alternated reach set of system with uncertainty is</p>
+<div class="math">
+<p><span class="math">{\mathcal X}^{q}_{U}(t,t_0,{\mathcal X}^{0},M(\cdot)) =
+\underset{t_0\leq\tau\leq t}{\bigcup}{\mathcal X}^{q}_{U}(\tau,t_0,{\mathcal X}^{0},M   (\cdot)).</span></p>
+</div><p>Note that if system doesn&#8217;t have uncertainty then <span class="math">M(\cdot)=0</span>.</p>
+<p>By <span class="math">{\mathcal E}(\overline{x}(t),X_{+}(t,l))</span> and <span class="math">{\mathcal E}(\overline{x}(t),X_{-}(t,l))</span> denote tight external and internal approximations along <span class="math">l(\cdot)</span> good direction such as <span class="math">l(t_0)=l</span>. Then the reach set by instant of time can be described as</p>
+<div class="math">
+<p><span class="math">{\mathcal X}^{q}_{U}[t]=\underset{\tau}{\bigcup}\underset{l}{\bigcap}\{
+{\mathcal E}(\overline{x}(\tau),X_{+}(\tau,l)) |l\in {\mathcal S}_1(0),   \tau\leq t\}\subseteq\underset{l} {\bigcap}\{{\mathcal E}^{U}_{+}[t,l])    |l\in {\mathcal S}_1(0)\},</span></p>
+</div><p>where <span class="math">{\mathcal E}^{U}_{+}[t,l]=\underset{\tau}{\bigcup}\{{\mathcal E}(\overline{x}(\tau),X_{+}(\tau,l))|t_0\leq\tau\leq t\}</span> is the external ellipsoidal tube by instant of time.</p>
+<p>Similar approxiamtion can be calculated with the internal ellipsoidal tube by instant of time <span class="math">{\mathcal E}^{U}_{-}[t,l]=\underset{\tau}{\bigcup}\{{\mathcal E}(\overline{x}(\tau),X_{-}(\tau,l))|t_0\leq\tau\leq t\}</span>:</p>
+<div class="math">
+<p><span class="math">{\mathcal X}^{U}[t]\supseteq\underset{l}{\bigcup}\{{\mathcal E}^{U}_{-}[t,l]) |l\in {\mathcal S}_1(0)\}.</span></p>
+</div><p>Note that in general case ellipsoidal tube <span class="math">{\mathcal E}^{U}_{+}[t,l]</span> is not tight approximation. For more information see <a class="reference internal" href="#gag2012" id="id1">[GAG2012]</a>.</p>
+<p>So, all in all, there are two types of ellipsoid tube objects that we can work with using <em>Ellipsoidal Toolbox</em>:</p>
+<ul class="simple">
+<li>ellipsoidal tubes that are described in <em>gras.ellapx.smartdb.rels.EllTube</em> class;</li>
+<li>tubes by instant of time described in <em>gras.ellapx.smartdb.rels.EllUnionTube</em> class
+(see <a class="reference internal" href="chap_implement.html#union-label"><em>formula</em></a>).</li>
+</ul>
+<p>These two type of objects can be projected on specified subspaces. The projections of ellipsoid tubes can be either static or dynamic. The are described in gras.ellapx.smartdb.rels.EllTubeProj class. As for the tubes by  instant of time, they can only be projected on static subspaces. These projections are described in gras.ellapx.smartdb.rels.EllUnionTubeStaticProj class. For more information about these types of projections and their differences and for examples see this <a class="reference internal" href="chap_implement.html#section-label"><em>link</em></a>.</p>
+<div class="section" id="ellipsoid-tubes">
+<h2>Ellipsoid tubes<a class="headerlink" href="#ellipsoid-tubes" title="Permalink to this headline">¶</a></h2>
+<p>There is a whole variety of operations upon ellipsoid tubes in <em>Ellipsoidal Toolbox</em>. We can, of course, create them. When the ellipsoid tube object is created, we can cut them, concatenate, interpolate, plot and project them and so on.</p>
+<p>The instruments to create ellipsoid tube objects are several functions:</p>
+<ul class="simple">
+<li><em>fromQArrays</em> method creates nEllTubes ellipsoid tube objects using an array of ellipsoid matrices and an array of ellipsoid centers specified at any point of time from timeVec;</li>
+<li><em>fromQMArrays</em> method acts the same way as <em>fromQArrays</em> method, except for this one requires to specify an array of regularization marices specified at any point of time from timeVec;</li>
+<li><em>fromQMScaledArrays</em> method acts the same way as <em>fromQMArrays</em> method, except for this one requires to also specify a vector of scale factors specified for every created ellipsoid tube;</li>
+<li><em>fromEllArray</em> method creates ellipsoid tube object using an array of ellipsoids;</li>
+<li><em>fromEllMArray</em> method creates ellipsoid tube object using an array of ellipsoids and an array of regularisation matrices.</li>
+</ul>
+<p>Basically we can divide these methods into two groups, based od what objects they are using to create ellipsoid tube: an array of ellipsoid matrices with an array of ellipsoid centers (by using these methods we can create an ellipsoid tube object containing several ellipsoid tubes) or an array of ellipsoids (by using these methods we can create an ellipsoid tube object containing one ellipsoid tube). To illustrate the usage of these methods we have to describe several functions, that will be used in the process. Below are their descriptions.</p>
+<p>Using the three above mentioned functions we can describe an examples of <em>fromQArrays</em>, <em>fromQMArrays</em> and <em>fromQMScaledArrays</em> methods&#8217; usage.</p>
+<p>To use <em>fromEllArray</em> and <em>fromEllMArray</em> methods we nave to describe one more auxiliary function (as these methods create an ellipsoid tube object containing only one ellipsoid tube and we can not use <em>getData</em> function, because it returns data for crating random number of ellipsoid tubes).</p>
+<p>Now we can write examples of these methods&#8217; usage.</p>
+<p>As we can see in all these examples, we can specify how many ellipsoid tubes we want to create, which type of arrpoximation to use. Also we can create ellipsoid tube objects, which will contain several ellipsoid tubes with different types of approximation.</p>
+<p>After creation of ellipsoid tube objects we can do several operations with them. Below is the <em>getEllTube</em> function that create an ellipsoid tube object containing one or several ellipsoid tubes with specified type of approximation, on specified time vector with specified time points. This function will be used further down to illustrate other methods that we can use while working with ellipsoid tube objects.</p>
+<p>As we have created an ellipsoid tube object, we can get all the types of differet data about it. There is a set of methods that can give information about the data stored in the object and give access to it.</p>
+<p>Also we can copy the object, clear all the data, save it in a file:</p>
+<p>As we have created the object, we can work with it. Below is the example of concatenating ellipsoid tube objects. We can concatenate objects containing one or several ellipsoid tubes with the same type of approximation.</p>
+<p>As we can concatenate ellipsoid tubes, it is logical to be possible to cut ellipsoid tubes, leaving only part of it at specified vector of time or point of time. Below are the exmples:</p>
+<p>After cutting, we can interpolate the resulting tube, using new time vector. Take notice that we have to make sure that the first and the last elements in old and new vectors of time are the same.</p>
+<p>After that we can thin out the new ellipsoid tube, removing ellipsoids at sertain points of time.</p>
+<p>Then we can also calculate new scale factor for specified fields:</p>
+<p>Also we can compare objects using method <em>isEqual</em>.</p>
+<p>At last there are several methods for projecting ellipsoid tubes on the specified spaces. The first method projects the ellipsoid tube on specified space creating the specified type of projection.</p>
+<p>The second method projects the ellipsoid tube onto subspace defined by vectors of standart basis with indices specified in indVec.</p>
+<p>Also there is a method for calculating only static projections.</p>
+<p>For creating the projection matrix a special function is used in all of these examples.</p>
+</div>
+<div class="section" id="tubes-by-instant-of-time">
+<h2>Tubes by instant of time<a class="headerlink" href="#tubes-by-instant-of-time" title="Permalink to this headline">¶</a></h2>
+<p>As with ellipsoid tube objects, there are several methods that we can use while working with tubes by instant of time. First of all we can create tubes by instant of time using <em>fromEllTubes</em> method:</p>
+<p>From here on we will use the <em>getUnion</em> function so we can get a tube by instant of time and work with it further on. As we have created a tubes by instant of time object, we can get all the types of differet data about it. There is a set of methods that can give information about the data stored in the object and give access to it.</p>
+<p>Also we can copy the object, clear all the data, save it in a file.</p>
+<p>Also we can compare tubes by instant of time using <em>isEqual</em> method.</p>
+<p>At last, as it has already been said tubes by instant of time can be projected only on static subspaces. It can be done in two ways.</p>
+<p>As for ellipsoid tube projections, a special function is used to create the projection matrix for tubes by instant of time:</p>
+</div>
+<div class="section" id="projections-of-ellipsoid-tubes-and-tubes-by-instant-of-time">
+<h2>Projections of ellipsoid tubes and tubes by instant of time<a class="headerlink" href="#projections-of-ellipsoid-tubes-and-tubes-by-instant-of-time" title="Permalink to this headline">¶</a></h2>
+<p>As it has already been said we can create either static or dynamic projections for ellipsoid tubes and only static projections for tubes by instant of time. There are several methods in <em>Ellipsoidal Toolbox</em> for that. Most of them has already been described:</p>
+<ul class="simple">
+<li><em>project</em>, <em>projectStatic</em> and <em>projectToOrths</em> for ellipsoid tubes;</li>
+<li><em>project</em> and <em>projectStatic</em> for tubes by instant of time.</li>
+</ul>
+<p>It should be mentioned that from here on all the examples are written for ellipsoid tube projections, but their usage is the same for the projections of tubes by instant of time. We wiil use <em>getProj</em> function to create ellipsoid tube projection that we will work with.</p>
+<p>As with ellipsoid tubes and tubes by instant of time we can get all the types of differet data about projections. There is a set of methods that can give information about the data stored in the object and give access to it.</p>
+<p>Also we can copy the object, clear all the data, save it in a file.</p>
+<p>Also we can compare ellipsoid tube projections using <em>isEqual</em> method.</p>
+<p>And finally we can plot out results using one of three methods: <em>plot</em>, <em>plotExt</em> (for external approximation) or <em>plotInt</em> (for internal approximation).</p>
+<p>All the three methods have several properties connected to the properties of the image, for example: transparency, color, line width and so on.</p>
+<p>To read more about the differences of these projections <a class="reference internal" href="chap_implement.html#goto-label"><em>goto</em></a>. Also there you can find some illustrations for both ellTube projections and ellUnionTube projections.</p>
+<table class="docutils citation" frame="void" id="gag2012" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[GAG2012]</a></td><td>Gagarinov P.V. 2012. Computation of Alternated Reachability Tubes for Linear Control Systems under Uncertainty. <em>Moscow University Computational Mathematics and Cybernetics</em>, 2012, Vol. 36, No. 4, pp. 169–177.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="main_manual.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Ellipsoid tubes, tubes by instant of time and their projections</a><ul>
+<li><a class="reference internal" href="#ellipsoid-tubes">Ellipsoid tubes</a></li>
+<li><a class="reference internal" href="#tubes-by-instant-of-time">Tubes by instant of time</a></li>
+<li><a class="reference internal" href="#projections-of-ellipsoid-tubes-and-tubes-by-instant-of-time">Projections of ellipsoid tubes and tubes by instant of time</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="chap_examples.html"
+                        title="previous chapter">Examples</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="chap_summary.html"
+                        title="next chapter">Summary and Outlook</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/chap_ellTube.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="chap_summary.html" title="Summary and Outlook"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="chap_examples.html" title="Examples"
+             >previous</a> |</li>
+        <li><a href="main_manual.html">Ellipsoidal Toolbox 2.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2013 Moscow State University, Faculty of Computational Mathematics and Computer Science, System Analysis Department, 2004-2011 The Regents of the University of California.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

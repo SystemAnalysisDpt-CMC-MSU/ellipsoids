@@ -59,6 +59,12 @@ Right now there are two stable releases
 <hr><h4><li><a name="ver2_0_1" class="anchor" href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/releases/tag/v2.0.1">Version 2.0.1 (May 2014)</a></li></h4>
 A modern version compatible with <strong>Matlab 2013b 64bit</strong> (recommended)
 <hr><h5>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h5>
+<ul>
+<li>Follow <a href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/wiki/Toolbox-2.0.1-installation-for-end-users"><strong> ET 2.0.1 installation instructions</strong></a></li>
+</ul>
+
+<hr><h5>
 <a name="required--software" class="anchor" href="#required--software"><span class="octicon octicon-link"></span></a>Requirements</h5>
 <ul>
 <li><strong>MATLAB 2013b 64 or 32 bit</strong></li>
@@ -66,6 +72,10 @@ A modern version compatible with <strong>Matlab 2013b 64bit</strong> (recommende
 <a href="http://cvxr.com/">CVX 2.1</a> (tested with build 1074) as a more reliable toolbox for solving SDP problems of high dimensionality.  <a href="http://cvxr.com/">CVX</a> - Matlab-based convex modeling framework. CVX distribution includes two freeware solvers: SeDuMi (used by default in ET) and SDPT3.</li>
 <li>
 <a href="http://control.ee.ethz.ch/%7Empt/3/">MPT3</a> (tested with ver.3.0.17) as a toolbox that defines polytope class used in Ellipsoids toolbox.</li>
+<li>
+<a>Matlab Optimization Toolbox</a> This toolbox is used by MPT (see below) for solving the quadratic programming problems.</li>
+<li>
+<a>Matlab Curve Fitting Toolbox</a></li>
 </ul>
 
 
@@ -79,9 +89,23 @@ A version compatible with <strong>Matlab 2012a 32bit</strong>
 <a href="http://cvxr.com/">CVX 2.0</a> (tested with build 1010) </li>
 <li>
 <a href="http://control.ee.ethz.ch/%7Empt/3/">MPT3</a> (tested with ver.3.0.12)</li>
+<li>
+<a>Matlab Optimization Toolbox</a> This toolbox is used by MPT (see below) for solving the quadratic programming problems.</li>
+<li>
+<a>Matlab Curve Fitting Toolbox</a></li>
+<li>
+<a>Parallel Computing Toolbox</a></li>
 </ul>
 <hr><h5><li><a name="ver1_1_3" class="anchor" href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/releases/tag/v1.1.3">Version 1.1.3 (year 2006)</a></li></h5>
 A legacy version for old versions of Matlab (missing a LOT of new features)
+
+<hr><h5>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h5>
+<ul>
+<li>Follow <a href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/wiki/Toolbox-installation-instructions-%28legacy-version%29"><strong> ET 1.1.3 installation instructions</strong></a></li>
+</ul>
+
+
 <hr><h5>
 <a name="required--software" class="anchor" href="#required--software"><span class="octicon octicon-link"></span></a>Requirements</h5>
 <ul>
@@ -89,7 +113,6 @@ A legacy version for old versions of Matlab (missing a LOT of new features)
 <li> <a href="http://control.ee.ethz.ch/%7Ejoloef/yalmip.php">YALMIP</a> - high-level MATLAB toolbox for rapid development of optimization code.</li>
 <li> <a href="http://sedumi.mcmaster.ca">SeDuMi</a> - MATLAB toolbox for solving optimization problems over symmetric cones.</li>
 </ul>
-<strong><p>For installation instructions please refer to <a href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/wiki/Toolbox-2.0.1-installation-for-end-users"> ET 2.0.1</a> and <a href="https://github.com/SystemAnalysisDpt-CMC-MSU/ellipsoids/wiki/Toolbox-installation-instructions-%28legacy-version%29"> ET 1.1.3</a> installation instructions</p></strong>
 <p><strong>ET</strong> version 1.1.3 is also distributed as part of <a href="http://control.ee.ethz.ch/%7Empt">Multi-Parametric Toolbox (MPT)</a></p>
 </ul>
 <hr><h3>
@@ -104,18 +127,7 @@ Please, contact <a href="https://github.com/pgagarinov">Peter Gagarinov</a>, <a 
 You can also join <a href="http://groups.google.com/group/ellipsoids">ET discussion group</a> and <a href="http://groups.google.com/group/ellipsoids-tests-notification">ET unit testing notification group</a>. 
 
 
-</ul><p>In case you use <em>ET</em> in your research, we would greatly appreciate if you added the corresponding reference to your publications:</p>
-
-<pre><code>@techreport{Kurzhanskiy:EECS-2006-46,
-    Author = {Kurzhanskiy, A. A. and Varaiya, P.},
-    Title = {Ellipsoidal Toolbox},
-    Institution = {EECS Department, University of California, Berkeley},
-    Year = {2006},
-    Month = {May},
-    URL = {http://code.google.com/p/ellipsoids},
-    Number = {UCB/EECS-2006-46}
-}
-</code></pre>
+</ul><p><strong>In case you use <em>ET</em> in your research, we would greatly appreciate if you added a reference to this projectyour publications.<strong></p>
 
 <h3>
 <a name="animations" class="anchor" href="#animations"><span class="octicon octicon-link"></span></a>Animations</h3>
