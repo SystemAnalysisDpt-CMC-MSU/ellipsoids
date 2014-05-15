@@ -54,140 +54,140 @@
 <div class="section" id="basic-notions">
 <h2>Basic Notions<a class="headerlink" href="#basic-notions" title="Permalink to this headline">¶</a></h2>
 <p>We start with basic definitions.</p>
-<p><strong>Definition.</strong> Ellipsoid <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> in
-<img class="math" src="_images/math/e1ece5563e1c134d935af18b692ffc3fde4f2fd6.png" alt="{\bf R}^n"/> with center <img class="math" src="_images/math/23f1b45408e5b4130c0f940fcbfcec54492cbdcd.png" alt="q"/> and shape matrix <img class="math" src="_images/math/7b1816c51f7d31275cd3ad400208fb7b3ce136a0.png" alt="Q"/> is
+<p><strong>Definition.</strong> Ellipsoid <span class="math">{\mathcal E}(q,Q)</span> in
+<span class="math">{\bf R}^n</span> with center <span class="math">q</span> and shape matrix <span class="math">Q</span> is
 the set</p>
 <div class="math" id="equation-ellipsoid">
-<p><span class="eqno">(1)</span><img src="_images/math/1105a32f08d1f916be0da0438afad21219106973.png" alt="{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~ \langle (x-q), Q^{-1}(x-q)\rangle\leqslant1 \},"/></p>
-</div><p>wherein <img class="math" src="_images/math/7b1816c51f7d31275cd3ad400208fb7b3ce136a0.png" alt="Q"/> is positive definite (<img class="math" src="_images/math/0660437dc2b00edb9279020d05994777ac52066c.png" alt="Q=Q^T"/> and
-<img class="math" src="_images/math/c724c3bb169cc8ca98a06b43453d68859ef975fe.png" alt="\langle x, Qx\rangle&gt;0"/> for all nonzero <img class="math" src="_images/math/1877db47ab2d3b518dfb41417f2d46e2d748a6a1.png" alt="x\in{\bf R}^n"/>).
-Here <img class="math" src="_images/math/1e09648610740b58687711f87c0e4ca1ecebb234.png" alt="\langle\cdot,\cdot\rangle"/> denotes inner
+<p><span class="eqno">(1)</span><span class="math">{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~ \langle (x-q), Q^{-1}(x-q)\rangle\leqslant1 \},</span></p>
+</div><p>wherein <span class="math">Q</span> is positive definite (<span class="math">Q=Q^T</span> and
+<span class="math">\langle x, Qx\rangle&gt;0</span> for all nonzero <span class="math">x\in{\bf R}^n</span>).
+Here <span class="math">\langle\cdot,\cdot\rangle</span> denotes inner
 product.</p>
 <p><strong>Definition.</strong> The support function of a set
-<img class="math" src="_images/math/fcd2f0ccef3f6590558baa7fa3c51bd253d19ae9.png" alt="{\mathcal X}\subseteq{\bf R}^n"/> is</p>
+<span class="math">{\mathcal X}\subseteq{\bf R}^n</span> is</p>
 <div class="math">
-<p><img src="_images/math/287b14d87c1aad87dd41e543239d690686e714b7.png" alt="\rho(l~|~{\mathcal X}) = \sup_{x\in{\mathcal X}} \langle l,x\rangle."/></p>
+<p><span class="math">\rho(l~|~{\mathcal X}) = \sup_{x\in{\mathcal X}} \langle l,x\rangle.</span></p>
 </div><p>In particular, the support function of the ellipsoid <a href="#equation-ellipsoid">(1)</a> is</p>
 <div class="math" id="equation-ellsupp">
-<p><span class="eqno">(2)</span><img src="_images/math/294e92e961f85bc66a6c5b2d8bbe81e4c9eebf36.png" alt="\rho(l~|~{\mathcal E}(q,Q)) = \langle l, q\rangle + \langle l, Ql\rangle^{1/2}."/></p>
-</div><p>Although in <a href="#equation-ellipsoid">(1)</a> <img class="math" src="_images/math/7b1816c51f7d31275cd3ad400208fb7b3ce136a0.png" alt="Q"/> is assumed to be positive definite,
-in practice we may deal with situations when <img class="math" src="_images/math/7b1816c51f7d31275cd3ad400208fb7b3ce136a0.png" alt="Q"/> is singular, that
+<p><span class="eqno">(2)</span><span class="math">\rho(l~|~{\mathcal E}(q,Q)) = \langle l, q\rangle + \langle l, Ql\rangle^{1/2}.</span></p>
+</div><p>Although in <a href="#equation-ellipsoid">(1)</a> <span class="math">Q</span> is assumed to be positive definite,
+in practice we may deal with situations when <span class="math">Q</span> is singular, that
 is, with degenerate ellipsoids flat in those directions for which the
 corresponding eigenvalues are zero. Therefore, it is useful to give an
 alternative definition of an ellipsoid using the expression <a href="#equation-ellsupp">(2)</a>.</p>
-<p><strong>Definition.</strong> Ellipsoid <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> in <img class="math" src="_images/math/e1ece5563e1c134d935af18b692ffc3fde4f2fd6.png" alt="{\bf R}^n"/> with center
-<img class="math" src="_images/math/23f1b45408e5b4130c0f940fcbfcec54492cbdcd.png" alt="q"/> and shape matrix <img class="math" src="_images/math/7b1816c51f7d31275cd3ad400208fb7b3ce136a0.png" alt="Q"/> is the set</p>
+<p><strong>Definition.</strong> Ellipsoid <span class="math">{\mathcal E}(q,Q)</span> in <span class="math">{\bf R}^n</span> with center
+<span class="math">q</span> and shape matrix <span class="math">Q</span> is the set</p>
 <div class="math" id="equation-ellipsoid2">
-<p><span class="eqno">(3)</span><img src="_images/math/b59a4c2c954fa8e54bd59ffec6dcd84c226d9356.png" alt="{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~
+<p><span class="eqno">(3)</span><span class="math">{\mathcal E}(q,Q) = \{ x \in {\bf R}^n ~|~
 \langle l,x\rangle\leqslant\langle l,q\rangle + \langle l,Ql\rangle^{1/2}
-\mbox{ for all } l\in{\bf R}^n \},"/></p>
-</div><p>wherein matrix <img class="math" src="_images/math/7b1816c51f7d31275cd3ad400208fb7b3ce136a0.png" alt="Q"/> is positive semidefinite (<img class="math" src="_images/math/0660437dc2b00edb9279020d05994777ac52066c.png" alt="Q=Q^T"/> and
-<img class="math" src="_images/math/78f09b21b6c7df2aeb5db1519ad53e4dbe3626ba.png" alt="\langle x, Qx\rangle\geqslant0"/> for all <img class="math" src="_images/math/1877db47ab2d3b518dfb41417f2d46e2d748a6a1.png" alt="x\in{\bf R}^n"/>).
-The volume of ellipsoid <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> is</p>
+\mbox{ for all } l\in{\bf R}^n \},</span></p>
+</div><p>wherein matrix <span class="math">Q</span> is positive semidefinite (<span class="math">Q=Q^T</span> and
+<span class="math">\langle x, Qx\rangle\geqslant0</span> for all <span class="math">x\in{\bf R}^n</span>).
+The volume of ellipsoid <span class="math">{\mathcal E}(q,Q)</span> is</p>
 <div class="math" id="equation-ellvolume">
-<p><span class="eqno">(4)</span><img src="_images/math/78fe7beac543ec8adeef38d58f5f2d54e52ae933.png" alt="{\bf Vol}(E(q,Q)) = {\bf Vol}_{\langle x,x\rangle\leqslant1}\sqrt{\det Q},"/></p>
-</div><p>where <img class="math" src="_images/math/3752868835e324244fcc86371ef996846e6078d1.png" alt="{\bf Vol}_{\langle x,x\rangle\leqslant1}"/> is the volume of
-the unit ball in <img class="math" src="_images/math/e1ece5563e1c134d935af18b692ffc3fde4f2fd6.png" alt="{\bf R}^n"/>:</p>
+<p><span class="eqno">(4)</span><span class="math">{\bf Vol}(E(q,Q)) = {\bf Vol}_{\langle x,x\rangle\leqslant1}\sqrt{\det Q},</span></p>
+</div><p>where <span class="math">{\bf Vol}_{\langle x,x\rangle\leqslant1}</span> is the volume of
+the unit ball in <span class="math">{\bf R}^n</span>:</p>
 <div class="math" id="equation-ellunitball">
-<p><span class="eqno">(5)</span><img src="_images/math/8f16b4ef90c4c5513b137ff1efefcc895ed8bb5d.png" alt="{\bf Vol}_{\langle x,x\rangle\leqslant1} = \left\{\begin{array}{ll}
+<p><span class="eqno">(5)</span><span class="math">{\bf Vol}_{\langle x,x\rangle\leqslant1} = \left\{\begin{array}{ll}
 \frac{\pi^{n/2}}{(n/2)!}, &amp;
 \mbox{ for even } n,\\
 \frac{2^n\pi^{(n-1)/2}\left((n-1)/2\right)!}{n!}, &amp;
-\mbox{ for odd } n. \end{array}\right."/></p>
-</div><p>The distance from <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> to the fixed point <img class="math" src="_images/math/7dd2a5ea01fbd72ad2a58dd1f3d6ecbfde6208a1.png" alt="a"/>
+\mbox{ for odd } n. \end{array}\right.</span></p>
+</div><p>The distance from <span class="math">{\mathcal E}(q,Q)</span> to the fixed point <span class="math">a</span>
 is</p>
 <div class="math" id="equation-dist_point">
-<p><span class="eqno">(6)</span><img src="_images/math/55e8156da78ea312035f842922a5ba454894bbb7.png" alt="{\bf dist}({\mathcal E}(q,Q),a) = \max_{\langle l,l\rangle=1}\left(\langle l,a\rangle -
+<p><span class="eqno">(6)</span><span class="math">{\bf dist}({\mathcal E}(q,Q),a) = \max_{\langle l,l\rangle=1}\left(\langle l,a\rangle -
 \rho(l ~|~ {\mathcal E}(q,Q)) \right) =
 \max_{\langle l,l\rangle=1}\left(\langle l,a\rangle - \langle l,q\rangle -
-\langle l,Ql\rangle^{1/2}\right)."/></p>
-</div><p>If <img class="math" src="_images/math/6e7dfc50d9a13cca5e88654650fc1afe9ac50afa.png" alt="{\bf dist}({\mathcal E}(q,Q),a) &gt; 0"/>, <img class="math" src="_images/math/7dd2a5ea01fbd72ad2a58dd1f3d6ecbfde6208a1.png" alt="a"/> lies outside
-<img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/>; if
-<img class="math" src="_images/math/91eb5708506bdd439aa7764b1839db88f812b729.png" alt="{\bf dist}({\mathcal E}(q,Q),a) = 0"/>, <img class="math" src="_images/math/7dd2a5ea01fbd72ad2a58dd1f3d6ecbfde6208a1.png" alt="a"/> is a boundary
-point of <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/>; if
-<img class="math" src="_images/math/3a99c5b746491d43e09f2c3ef18f2263e7e6ee7c.png" alt="{\bf dist}({\mathcal E}(q,Q),a) &lt; 0"/>, <img class="math" src="_images/math/7dd2a5ea01fbd72ad2a58dd1f3d6ecbfde6208a1.png" alt="a"/> is an internal
-point of <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/>.</p>
-<p>Given two ellipsoids, <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/> and
-<img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/>, the distance between them is</p>
+\langle l,Ql\rangle^{1/2}\right).</span></p>
+</div><p>If <span class="math">{\bf dist}({\mathcal E}(q,Q),a) &gt; 0</span>, <span class="math">a</span> lies outside
+<span class="math">{\mathcal E}(q,Q)</span>; if
+<span class="math">{\bf dist}({\mathcal E}(q,Q),a) = 0</span>, <span class="math">a</span> is a boundary
+point of <span class="math">{\mathcal E}(q,Q)</span>; if
+<span class="math">{\bf dist}({\mathcal E}(q,Q),a) &lt; 0</span>, <span class="math">a</span> is an internal
+point of <span class="math">{\mathcal E}(q,Q)</span>.</p>
+<p>Given two ellipsoids, <span class="math">{\mathcal E}(q_1,Q_1)</span> and
+<span class="math">{\mathcal E}(q_2,Q_2)</span>, the distance between them is</p>
 <div class="math" id="equation-dist_ell">
-<p><span class="eqno">(7)</span><img src="_images/math/e0e514457927e1cbb2a1172a7b3bdc6e8ec4143f.png" alt="\begin{aligned}
+<p><span class="eqno">(7)</span><span class="math">\begin{aligned}
 {\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) &amp; = \max_{\langle l,l\rangle=1}
 \left(-\rho(-l ~|~ {\mathcal E}(q_1,Q_1)) - \rho(l ~|~ {\mathcal E}(q_2,Q_2))\right) \\
 &amp; = \max_{\langle l,l\rangle=1}\left(\langle l,q_1\rangle -
 \langle l,Q_1l\rangle^{1/2} - \langle l,q_2\rangle -
 \langle l,Q_2l\rangle^{1/2}\right).
-\end{aligned}"/></p>
-</div><p>If <img class="math" src="_images/math/1ff5476e26194f2ac04b0a00f4e8a469df4d8add.png" alt="{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) &gt; 0"/>,
+\end{aligned}</span></p>
+</div><p>If <span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) &gt; 0</span>,
 the ellipsoids have no common points; if
-<img class="math" src="_images/math/5103f22d79ee5a53c7c31258094eb229f7779783.png" alt="{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) = 0"/>, the
+<span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) = 0</span>, the
 ellipsoids have one common point - they touch; if
-<img class="math" src="_images/math/4ea55b39a68608681a51df9e3e7a3861f5be1a8a.png" alt="{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) &lt; 0"/>, the
+<span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) &lt; 0</span>, the
 ellipsoids intersect.</p>
-<p>Finding <img class="math" src="_images/math/9f7f645e8c5afdb60b00700c84c08fc7ffd8c021.png" alt="{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))"/>
+<p>Finding <span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))</span>
 using QCQP is</p>
 <div class="math">
-<p><img src="_images/math/0b0e21dfbac78ba6b5fa6f018c3d9228a0836431.png" alt="d({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) = \min \langle (x-y), (x-y)\rangle"/></p>
+<p><span class="math">d({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) = \min \langle (x-y), (x-y)\rangle</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/18b8cc9e7e478943b6ff0da78f5d894efe05ea39.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 \langle (q_1-x), Q_1^{-1}(q_1-x)\rangle &amp; \leqslant&amp; 1,\\
-\langle (q_2-x), Q_2^{-1}(q_2-y)\rangle &amp; \leqslant&amp; 1,\end{aligned}"/></p>
+\langle (q_2-x), Q_2^{-1}(q_2-y)\rangle &amp; \leqslant&amp; 1,\end{aligned}</span></p>
 </div><p>where</p>
 <div class="math">
-<p><img src="_images/math/a1272a3ca03a0bb624f743844ea84f8deb8793f2.png" alt="d({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))=\left\{\begin{array}{ll}
+<p><span class="math">d({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))=\left\{\begin{array}{ll}
 {\bf dist}^2({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2)) &amp;
 \mbox{ if } {\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))&gt;0, \\
-0 &amp; \mbox{ otherwise}. \end{array}\right."/></p>
-</div><p>Checking if <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> nondegenerate ellipsoids
-<img class="math" src="_images/math/2bd136064685123d91fbd0e5b0beddde7bb17326.png" alt="{\mathcal E}(q_1,Q_1),\cdots,{\mathcal E}(q_k,Q_k)"/> have nonempty
+0 &amp; \mbox{ otherwise}. \end{array}\right.</span></p>
+</div><p>Checking if <span class="math">k</span> nondegenerate ellipsoids
+<span class="math">{\mathcal E}(q_1,Q_1),\cdots,{\mathcal E}(q_k,Q_k)</span> have nonempty
 intersection, can be cast as a quadratically constrained quadratic
 programming (QCQP) problem:</p>
 <div class="math">
-<p><img src="_images/math/8dea39799de59a255ee23c02896e1ba3e7d290fc.png" alt="\min 0"/></p>
+<p><span class="math">\min 0</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/ac3811059f560a33b556305d17e1a641bb8ddd35.png" alt="\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leqslant0, ~~~ i=1,\cdots,k."/></p>
+<p><span class="math">\langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leqslant0, ~~~ i=1,\cdots,k.</span></p>
 </div><p>If this problem is feasible, the intersection is nonempty.</p>
-<p><strong>Definition.</strong> Given compact convex set <img class="math" src="_images/math/fcd2f0ccef3f6590558baa7fa3c51bd253d19ae9.png" alt="{\mathcal X}\subseteq{\bf R}^n"/>, its polar
-set, denoted <img class="math" src="_images/math/45951a7529764afec419aea355bf59a2c7d932b3.png" alt="{\mathcal X}^\circ"/>, is</p>
+<p><strong>Definition.</strong> Given compact convex set <span class="math">{\mathcal X}\subseteq{\bf R}^n</span>, its polar
+set, denoted <span class="math">{\mathcal X}^\circ</span>, is</p>
 <div class="math">
-<p><img src="_images/math/a69ee8022a0772f471abda434796f50f07a80ebe.png" alt="{\mathcal X}^\circ = \{x\in{\bf R}^n ~|~ \langle x,y\rangle\leqslant1, ~ y\in{\mathcal X}\},"/></p>
+<p><span class="math">{\mathcal X}^\circ = \{x\in{\bf R}^n ~|~ \langle x,y\rangle\leqslant1, ~ y\in{\mathcal X}\},</span></p>
 </div><p>or, equivalently,</p>
 <div class="math">
-<p><img src="_images/math/40121a69ac61a1630879777b8b2afd06ace53dd2.png" alt="{\mathcal X}^\circ = \{l\in{\bf R}^n ~|~ \rho(l ~|~ {\mathcal X})\leqslant1\}."/></p>
+<p><span class="math">{\mathcal X}^\circ = \{l\in{\bf R}^n ~|~ \rho(l ~|~ {\mathcal X})\leqslant1\}.</span></p>
 </div><p>The properties of the polar set are</p>
 <ul class="simple">
-<li>If <img class="math" src="_images/math/130861ff00baf7dd6c37f033a43f9e9795a4201f.png" alt="{\mathcal X}"/> contains the origin,
-<img class="math" src="_images/math/982e4209b62a6f62936612eebb5d183005ad2ae0.png" alt="({\mathcal X}^\circ)^\circ = {\mathcal X}"/>;</li>
-<li>If <img class="math" src="_images/math/4c4e7b6907a9071322b7d3b259893e2dc6d4338b.png" alt="{\mathcal X}_1\subseteq{\mathcal X}_2"/>,
-<img class="math" src="_images/math/e0940707f77994a98cc754eb72a30c509492847a.png" alt="{\mathcal X}_2^\circ\subseteq{\mathcal X}_1^\circ"/>;</li>
-<li>For any nonsingular matrix <img class="math" src="_images/math/c13832e000729421d93073205072531572c8afe9.png" alt="A\in{\bf R}^{n\times n}"/>,
-<img class="math" src="_images/math/c8b06c4bec90ec0a459eef9a1e1035c064029b20.png" alt="(A{\mathcal X})^\circ = (A^T)^{-1}{\mathcal X}^\circ"/>.</li>
+<li>If <span class="math">{\mathcal X}</span> contains the origin,
+<span class="math">({\mathcal X}^\circ)^\circ = {\mathcal X}</span>;</li>
+<li>If <span class="math">{\mathcal X}_1\subseteq{\mathcal X}_2</span>,
+<span class="math">{\mathcal X}_2^\circ\subseteq{\mathcal X}_1^\circ</span>;</li>
+<li>For any nonsingular matrix <span class="math">A\in{\bf R}^{n\times n}</span>,
+<span class="math">(A{\mathcal X})^\circ = (A^T)^{-1}{\mathcal X}^\circ</span>.</li>
 </ul>
-<p>If a nondegenerate ellipsoid <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> contains the
+<p>If a nondegenerate ellipsoid <span class="math">{\mathcal E}(q,Q)</span> contains the
 origin, its polar set is also an ellipsoid:</p>
 <div class="math">
-<p><img src="_images/math/d31f4ff2781a781f1c661c277d71647dba6c7c07.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 {\mathcal E}^\circ(q,Q) &amp; = \{l\in{\bf R}^n ~|~ \langle l,q\rangle +
 \langle l,Ql\rangle^{1/2}\leqslant1 \}\\
 &amp; = \{l\in{\bf R}^n ~|~ \langle l,(Q-qq^T)^{-1}l\rangle +
 2\langle l,q\rangle\leqslant1 \}\\
 &amp; = \{l\in{\bf R}^n ~|~ \langle(l+(Q-qq^T)^{-1}q),
-(Q-qq^T)(l+(Q-qq^T)^{-1}q)\rangle\leqslant1+\langle q,(Q-qq^T)^{-1}q\rangle \}.\end{aligned}"/></p>
+(Q-qq^T)(l+(Q-qq^T)^{-1}q)\rangle\leqslant1+\langle q,(Q-qq^T)^{-1}q\rangle \}.\end{aligned}</span></p>
 </div><p>The special case is</p>
 <div class="math">
-<p><img src="_images/math/fe49e6f5d2763a785b1288ba6c5e865c2cee511b.png" alt="{\mathcal E}^\circ(0,Q) = {\mathcal E}(0,Q^{-1})."/></p>
-</div><p><strong>Definition.</strong> Given <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> compact sets
-<img class="math" src="_images/math/44990b4b2da26b458e73703b0429d1840bf9cd92.png" alt="{\mathcal X}_1, \cdots, {\mathcal X}_k\subseteq{\bf R}^n"/>, their
+<p><span class="math">{\mathcal E}^\circ(0,Q) = {\mathcal E}(0,Q^{-1}).</span></p>
+</div><p><strong>Definition.</strong> Given <span class="math">k</span> compact sets
+<span class="math">{\mathcal X}_1, \cdots, {\mathcal X}_k\subseteq{\bf R}^n</span>, their
 geometric (Minkowski) sum is</p>
 <div class="math" id="equation-minksum">
-<p><span class="eqno">(8)</span><img src="_images/math/cee8db14ff018c1f747a30552ff70ad8a15eb866.png" alt="{\mathcal X}_1\oplus\cdots\oplus{\mathcal X}_k=\bigcup_{x_1\in{\mathcal X}_1}\cdots\bigcup_{x_k\in{\mathcal X}_k}
-\{x_1 + \cdots + x_k\} ."/></p>
+<p><span class="eqno">(8)</span><span class="math">{\mathcal X}_1\oplus\cdots\oplus{\mathcal X}_k=\bigcup_{x_1\in{\mathcal X}_1}\cdots\bigcup_{x_k\in{\mathcal X}_k}
+\{x_1 + \cdots + x_k\} .</span></p>
 </div><p><strong>Definition.</strong> Given two compact sets
-<img class="math" src="_images/math/dcaa1593207c64d5833d15668034789d6f9c5c4a.png" alt="{\mathcal X}_1, {\mathcal X}_2 \subseteq{\bf R}^n"/>, their
+<span class="math">{\mathcal X}_1, {\mathcal X}_2 \subseteq{\bf R}^n</span>, their
 geometric (Minkowski) difference is</p>
 <div class="math" id="equation-minkdiff">
-<p><span class="eqno">(9)</span><img src="_images/math/1993cdbfbbd190bff51cf38f744841e503b79e54.png" alt="{\mathcal X}_1\dot{-}{\mathcal X}_2 = \{x\in{\bf R}^n ~|~ x + {\mathcal X}_2 \subseteq {\mathcal X}_1 \}."/></p>
+<p><span class="eqno">(9)</span><span class="math">{\mathcal X}_1\dot{-}{\mathcal X}_2 = \{x\in{\bf R}^n ~|~ x + {\mathcal X}_2 \subseteq {\mathcal X}_1 \}.</span></p>
 </div><p>Ellipsoidal calculus concerns the following set of operations:</p>
 <ul class="simple">
 <li>affine transformation of ellipsoid;</li>
@@ -203,385 +203,385 @@ internal ellipsoidal approximations.</p>
 <p>Additional operations implemented in the <em>Ellipsoidal Toolbox</em> include
 external and internal approximations of intersections of ellipsoids with
 hyperplanes, halfspaces and polytopes.</p>
-<p><strong>Definition.</strong> Hyperplane <img class="math" src="_images/math/a8ccfc826288cb180dd6b82fe5641d1e17995bc5.png" alt="H(c,\gamma)"/> in
-<img class="math" src="_images/math/e1ece5563e1c134d935af18b692ffc3fde4f2fd6.png" alt="{\bf R}^n"/> is the set</p>
+<p><strong>Definition.</strong> Hyperplane <span class="math">H(c,\gamma)</span> in
+<span class="math">{\bf R}^n</span> is the set</p>
 <div class="math" id="equation-hyperplane">
-<p><span class="eqno">(10)</span><img src="_images/math/c640b358538c4fb324413910ec70b8fa56681de1.png" alt="H = \{x\in{\bf R}^n ~|~ \langle c, x\rangle = \gamma\}"/></p>
-</div><p>with <img class="math" src="_images/math/96ccbdd6b341ce487449f6c2964a7973b51094b6.png" alt="c\in{\bf R}^n"/> and <img class="math" src="_images/math/57f847fa6e01f2399fa757049bacd21d860fd553.png" alt="\gamma\in{\bf R}"/> fixed.
-The distance from ellipsoid <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> to
-hyperplane <img class="math" src="_images/math/a8ccfc826288cb180dd6b82fe5641d1e17995bc5.png" alt="H(c,\gamma)"/> is</p>
+<p><span class="eqno">(10)</span><span class="math">H = \{x\in{\bf R}^n ~|~ \langle c, x\rangle = \gamma\}</span></p>
+</div><p>with <span class="math">c\in{\bf R}^n</span> and <span class="math">\gamma\in{\bf R}</span> fixed.
+The distance from ellipsoid <span class="math">{\mathcal E}(q,Q)</span> to
+hyperplane <span class="math">H(c,\gamma)</span> is</p>
 <div class="math" id="equation-dist_hp">
-<p><span class="eqno">(11)</span><img src="_images/math/bf20edda6959eb5cb689bed5a49178cbc34891e6.png" alt="{\bf dist}({\mathcal E}(q,Q),H(c,\gamma)) =
+<p><span class="eqno">(11)</span><span class="math">{\bf dist}({\mathcal E}(q,Q),H(c,\gamma)) =
 \frac{\left|\gamma-\langle c,q\rangle\right| -
-\langle c,Qc\rangle^{1/2}}{\langle c,c\rangle^{1/2}}."/></p>
-</div><p>If <img class="math" src="_images/math/8236e97f6b8323341e5d8e5d70ca062268d0449b.png" alt="{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))&gt;0"/>, the ellipsoid
+\langle c,Qc\rangle^{1/2}}{\langle c,c\rangle^{1/2}}.</span></p>
+</div><p>If <span class="math">{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))&gt;0</span>, the ellipsoid
 and the hyperplane do not intersect; if
-<img class="math" src="_images/math/73cb45e076173b9e05998e6db64816bac2eb92b2.png" alt="{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))=0"/>, the hyperplane is a
+<span class="math">{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))=0</span>, the hyperplane is a
 supporting hyperplane for the ellipsoid; if
-<img class="math" src="_images/math/9c12c73c947d04884a142b271bf163be7fcd9aad.png" alt="{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))&lt;0"/>, the ellipsoid
+<span class="math">{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))&lt;0</span>, the ellipsoid
 intersects the hyperplane. The intersection of an ellipsoid with a
 hyperplane is always an ellipsoid and can be computed directly.</p>
-<p>Checking if the intersection of <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> nondegenerate ellipsoids
-<img class="math" src="_images/math/a2b4b8ac12b5e0bbb03e8f723fd8b5eb925c5bac.png" alt="E(q_1,Q_1),\cdots,{\mathcal E}(q_k,Q_k)"/> intersects hyperplane
-<img class="math" src="_images/math/a8ccfc826288cb180dd6b82fe5641d1e17995bc5.png" alt="H(c,\gamma)"/>, is equivalent to the feasibility check of the QCQP
+<p>Checking if the intersection of <span class="math">k</span> nondegenerate ellipsoids
+<span class="math">E(q_1,Q_1),\cdots,{\mathcal E}(q_k,Q_k)</span> intersects hyperplane
+<span class="math">H(c,\gamma)</span>, is equivalent to the feasibility check of the QCQP
 problem:</p>
 <div class="math">
-<p><img src="_images/math/8dea39799de59a255ee23c02896e1ba3e7d290fc.png" alt="\min 0"/></p>
+<p><span class="math">\min 0</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/7cbff2362a66989ba7dfa7f3edbbfbb56e83fe3e.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 \langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leqslant0, &amp; &amp; i=1,\cdots,k,\\
-\langle c, x\rangle - \gamma = 0. &amp; &amp;\end{aligned}"/></p>
+\langle c, x\rangle - \gamma = 0. &amp; &amp;\end{aligned}</span></p>
 </div><p>A hyperplane defines two (closed) <em>halfspaces</em>:</p>
 <div class="math" id="equation-halfspace1">
-<p><span class="eqno">(12)</span><img src="_images/math/cfcf4601472cf410ba7939c1b527468ca8129d3a.png" alt="{\bf S}_1 = \{x\in{\bf R}^n ~|~ \langle c, x\rangle \leqslant\gamma\}"/></p>
+<p><span class="eqno">(12)</span><span class="math">{\bf S}_1 = \{x\in{\bf R}^n ~|~ \langle c, x\rangle \leqslant\gamma\}</span></p>
 </div><p>and</p>
 <div class="math" id="equation-halfspace2">
-<p><span class="eqno">(13)</span><img src="_images/math/7cd0932d2fce97b1ea61b54f9868e7bd06bd3df7.png" alt="{\bf S}_2 = \{x\in{\bf R}^n ~|~ \langle c, x\rangle \geqslant\gamma\}."/></p>
+<p><span class="eqno">(13)</span><span class="math">{\bf S}_2 = \{x\in{\bf R}^n ~|~ \langle c, x\rangle \geqslant\gamma\}.</span></p>
 </div><p>To avoid confusion, however, we shall further assume that a hyperplane
-<img class="math" src="_images/math/a8ccfc826288cb180dd6b82fe5641d1e17995bc5.png" alt="H(c,\gamma)"/> specifies the halfspace in the sense <a href="#equation-halfspace1">(12)</a>.
+<span class="math">H(c,\gamma)</span> specifies the halfspace in the sense <a href="#equation-halfspace1">(12)</a>.
 In order to refer to the other halfspace, the same hyperplane should be
-defined as <img class="math" src="_images/math/4be558bcd2105996f20789c263e00c388c9a5719.png" alt="H(-c,-\gamma)"/>.</p>
+defined as <span class="math">H(-c,-\gamma)</span>.</p>
 <p>The idea behind the calculation of intersection of an ellipsoid with a
 halfspace is to treat the halfspace as an unbounded ellipsoid, that is,
 as the ellipsoid with the shape matrix all but one of whose eigenvalues
-are <img class="math" src="_images/math/91de26172b6cdc7da38314176fcc8023e48525e8.png" alt="\infty"/>.</p>
-<p><strong>Definition.</strong> Polytope <img class="math" src="_images/math/6a798b09b2064430073c019ecd65e7f6d3370b6a.png" alt="P(C,g)"/> is the
+are <span class="math">\infty</span>.</p>
+<p><strong>Definition.</strong> Polytope <span class="math">P(C,g)</span> is the
 intersection of a finite number of closed halfspaces:</p>
 <div class="math" id="equation-polytope">
-<p><span class="eqno">(14)</span><img src="_images/math/9b5c3ff587378e3b45f47300bce758384b90d059.png" alt="P = \{x\in{\bf R}^n ~|~ Cx\leqslant g\},"/></p>
-</div><p>wherein <img class="math" src="_images/math/86f818df7e2b254fc720568f339a1b81c7113d58.png" alt="C=[c_1 ~ \cdots ~ c_m]^T\in{\bf R}^{m\times n}"/> and
-<img class="math" src="_images/math/01ca0cd9a8e1fd971cd2fff653566c7037f50d69.png" alt="g=[\gamma_1 ~ \cdots ~ \gamma_m]^T\in{\bf R}^m"/>.
+<p><span class="eqno">(14)</span><span class="math">P = \{x\in{\bf R}^n ~|~ Cx\leqslant g\},</span></p>
+</div><p>wherein <span class="math">C=[c_1 ~ \cdots ~ c_m]^T\in{\bf R}^{m\times n}</span> and
+<span class="math">g=[\gamma_1 ~ \cdots ~ \gamma_m]^T\in{\bf R}^m</span>.
 The distance
-from ellipsoid <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> to the polytope <img class="math" src="_images/math/6a798b09b2064430073c019ecd65e7f6d3370b6a.png" alt="P(C,g)"/>
+from ellipsoid <span class="math">{\mathcal E}(q,Q)</span> to the polytope <span class="math">P(C,g)</span>
 is</p>
 <div class="math" id="equation-dist_poly">
-<p><span class="eqno">(15)</span><img src="_images/math/e1b824e99f4f415338d92d3f1caa2cb845aa0688.png" alt="{\bf dist}({\mathcal E}(q,Q),P(C,g))=\min_{y\in P(C,g)}{\bf dist}({\mathcal E}(q,Q),y),"/></p>
-</div><p>where <img class="math" src="_images/math/5e1b0f6dafe16da12c908c528399a2566ad9dd15.png" alt="{\bf dist}({\mathcal E}(q,Q),y)"/> comes from
+<p><span class="eqno">(15)</span><span class="math">{\bf dist}({\mathcal E}(q,Q),P(C,g))=\min_{y\in P(C,g)}{\bf dist}({\mathcal E}(q,Q),y),</span></p>
+</div><p>where <span class="math">{\bf dist}({\mathcal E}(q,Q),y)</span> comes from
 ([dist:sub:<cite>p</cite>oint]). If
-<img class="math" src="_images/math/301a6270ecc76d03a6e2a4d4d25a35c4f85e3714.png" alt="{\bf dist}({\mathcal E}(q,Q),P(C,g))&gt;0"/>, the ellipsoid and the
+<span class="math">{\bf dist}({\mathcal E}(q,Q),P(C,g))&gt;0</span>, the ellipsoid and the
 polytope do not intersect; if
-<img class="math" src="_images/math/ace2c816715a8fb00463a886336bd5b624fbad79.png" alt="{\bf dist}({\mathcal E}(q,Q),P(C,g))=0"/>, the ellipsoid touches
-the polytope; if <img class="math" src="_images/math/117590df398ae0dc9d9e5a48784444a4515c5cce.png" alt="{\bf dist}({\mathcal E}(q,Q),P(C,g))&lt;0"/>, the
+<span class="math">{\bf dist}({\mathcal E}(q,Q),P(C,g))=0</span>, the ellipsoid touches
+the polytope; if <span class="math">{\bf dist}({\mathcal E}(q,Q),P(C,g))&lt;0</span>, the
 ellipsoid intersects the polytope.</p>
-<p>Checking if the intersection of <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> nondegenerate ellipsoids
-<img class="math" src="_images/math/a2b4b8ac12b5e0bbb03e8f723fd8b5eb925c5bac.png" alt="E(q_1,Q_1),\cdots,{\mathcal E}(q_k,Q_k)"/> intersects polytope
-<img class="math" src="_images/math/6a798b09b2064430073c019ecd65e7f6d3370b6a.png" alt="P(C,g)"/> is equivalent to the feasibility check of the QCQP
+<p>Checking if the intersection of <span class="math">k</span> nondegenerate ellipsoids
+<span class="math">E(q_1,Q_1),\cdots,{\mathcal E}(q_k,Q_k)</span> intersects polytope
+<span class="math">P(C,g)</span> is equivalent to the feasibility check of the QCQP
 problem:</p>
 <div class="math">
-<p><img src="_images/math/8dea39799de59a255ee23c02896e1ba3e7d290fc.png" alt="\min 0"/></p>
+<p><span class="math">\min 0</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/376a75821c09232781a91caa13bd33dce59675ad.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 \langle (x-q_i),Q_i^{-1}(x-q_i)\rangle - 1 \leqslant0, &amp; &amp; i=1,\cdots,k,\\
-\langle c_j, x\rangle - \gamma_j \leqslant0, &amp; &amp; j=1,\cdots,m.\end{aligned}"/></p>
+\langle c_j, x\rangle - \gamma_j \leqslant0, &amp; &amp; j=1,\cdots,m.\end{aligned}</span></p>
 </div></div>
 <div class="section" id="operations-with-ellipsoids">
 <h2>Operations with Ellipsoids<a class="headerlink" href="#operations-with-ellipsoids" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="affine-transformation">
 <h3>Affine Transformation<a class="headerlink" href="#affine-transformation" title="Permalink to this headline">¶</a></h3>
 <p>The simplest operation with ellipsoids is an affine transformation. Let
-ellipsoid <img class="math" src="_images/math/a297b4b492076049486813278292dbe69e19c043.png" alt="{\mathcal E}(q,Q)\subseteq{\bf R}^n"/>, matrix
-<img class="math" src="_images/math/76e1de6d02e41303b5dfb9f70459c076d6348ab3.png" alt="A\in{\bf R}^{m\times n}"/> and vector <img class="math" src="_images/math/8a88762b07502c7e120cd65858dbab822ba5f003.png" alt="b\in{\bf R}^m"/>. Then</p>
+ellipsoid <span class="math">{\mathcal E}(q,Q)\subseteq{\bf R}^n</span>, matrix
+<span class="math">A\in{\bf R}^{m\times n}</span> and vector <span class="math">b\in{\bf R}^m</span>. Then</p>
 <div class="math" id="equation-affinetrans">
-<p><span class="eqno">(16)</span><img src="_images/math/ec640aa8c887b6e698d85892eed87ca1b0518605.png" alt="A{\mathcal E}(q,Q) + b = {\mathcal E}(Aq+b, AQA^T) ."/></p>
+<p><span class="eqno">(16)</span><span class="math">A{\mathcal E}(q,Q) + b = {\mathcal E}(Aq+b, AQA^T) .</span></p>
 </div><p>Thus, ellipsoids are preserved under affine transformation. If the rows
-of <img class="math" src="_images/math/0acafa529182e79b4f56165ec677554fba7fcf98.png" alt="A"/> are linearly independent (which implies
-<img class="math" src="_images/math/abc34092fae8ac29c4898ef60aa3d796dd2ba0e4.png" alt="m\leqslant n"/>), and <img class="math" src="_images/math/bfedd297ccad8f6f651a318a560a8dd7e79553a9.png" alt="b=0"/>, the affine transformation is
+of <span class="math">A</span> are linearly independent (which implies
+<span class="math">m\leqslant n</span>), and <span class="math">b=0</span>, the affine transformation is
 called <em>projection</em>.</p>
 </div>
 <div class="section" id="geometric-sum">
 <h3>Geometric Sum<a class="headerlink" href="#geometric-sum" title="Permalink to this headline">¶</a></h3>
 <p>Consider the geometric sum <a href="#equation-minksum">(8)</a> in which
-<img class="math" src="_images/math/59b3caf29e86ec876c6d82a6dc7d90d37d650fbf.png" alt="{\mathcal X}_1,\cdots"/>,<img class="math" src="_images/math/ee6919f9a7b60c297143dabe511723e5fb075f3f.png" alt="{\mathcal X}_k"/> are nondegenerate
-ellipsoids <img class="math" src="_images/math/af4b611ad9cc0f34fa15dff0684e0a85251129ab.png" alt="{\mathcal E}(q_1,Q_1),\cdots"/>,
-<img class="math" src="_images/math/034bef2e947d49cb3764c3b8c8719d80be4881f4.png" alt="{\mathcal E}(q_k,Q_k)\subseteq{\bf R}^n"/>. The resulting set is
+<span class="math">{\mathcal X}_1,\cdots</span>,<span class="math">{\mathcal X}_k</span> are nondegenerate
+ellipsoids <span class="math">{\mathcal E}(q_1,Q_1),\cdots</span>,
+<span class="math">{\mathcal E}(q_k,Q_k)\subseteq{\bf R}^n</span>. The resulting set is
 not generally an ellipsoid. However, it can be tightly approximated by
 the parametrized families of external and internal ellipsoids.</p>
-<p>Let parameter <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/> be some nonzero vector in <img class="math" src="_images/math/e1ece5563e1c134d935af18b692ffc3fde4f2fd6.png" alt="{\bf R}^n"/>.
-Then the external approximation <img class="math" src="_images/math/556bd66f8e65d6499eebc23c897386ea93e7a589.png" alt="{\mathcal E}(q,Q_l^+)"/> and the
-internal approximation <img class="math" src="_images/math/4fdb756fc6e0afb8c20736ffe0a46cd711829418.png" alt="{\mathcal E}(q,Q_l^-)"/> of the sum
-<img class="math" src="_images/math/492d135423e70fecca35ff0cf8840a1d3b85118a.png" alt="{\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k)"/> are
-<em>tight</em> along direction <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/>, i.e.,</p>
+<p>Let parameter <span class="math">l</span> be some nonzero vector in <span class="math">{\bf R}^n</span>.
+Then the external approximation <span class="math">{\mathcal E}(q,Q_l^+)</span> and the
+internal approximation <span class="math">{\mathcal E}(q,Q_l^-)</span> of the sum
+<span class="math">{\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k)</span> are
+<em>tight</em> along direction <span class="math">l</span>, i.e.,</p>
 <div class="math">
-<p><img src="_images/math/8e4af63b2654386bb3eb47d7b0fb050daebd34e8.png" alt="{\mathcal E}(q,Q_l^-)\subseteq{\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k)
-\subseteq{\mathcal E}(q,Q_l^+)"/></p>
+<p><span class="math">{\mathcal E}(q,Q_l^-)\subseteq{\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k)
+\subseteq{\mathcal E}(q,Q_l^+)</span></p>
 </div><p>and</p>
 <div class="math">
-<p><img src="_images/math/ee8964fbd98ec378c2b852439061f5d7f269135f.png" alt="\rho(\pm l ~|~ {\mathcal E}(q,Q_l^-)) =
+<p><span class="math">\rho(\pm l ~|~ {\mathcal E}(q,Q_l^-)) =
 \rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k)) =
-\rho(\pm l ~|~ {\mathcal E}(q,Q_l^+))."/></p>
-</div><p>Here the center <img class="math" src="_images/math/23f1b45408e5b4130c0f940fcbfcec54492cbdcd.png" alt="q"/> is</p>
+\rho(\pm l ~|~ {\mathcal E}(q,Q_l^+)).</span></p>
+</div><p>Here the center <span class="math">q</span> is</p>
 <div class="math" id="equation-minksum_c">
-<p><span class="eqno">(17)</span><img src="_images/math/1167f71241cc7e8dd58a479499d8757da42f0e91.png" alt="q = q_1 + \cdots + q_k ,"/></p>
-</div><p>the shape matrix of the external ellipsoid <img class="math" src="_images/math/37c829775c73110eb670404022a2b55ed000ea6b.png" alt="Q_l^+"/> is</p>
+<p><span class="eqno">(17)</span><span class="math">q = q_1 + \cdots + q_k ,</span></p>
+</div><p>the shape matrix of the external ellipsoid <span class="math">Q_l^+</span> is</p>
 <div class="math" id="equation-minksum_ea">
-<p><span class="eqno">(18)</span><img src="_images/math/f7c8bf7003926208bf1b337d32c681669377aed5.png" alt="Q_l^+ = \left(\langle l,Q_1l\rangle^{1/2} + \cdots
+<p><span class="eqno">(18)</span><span class="math">Q_l^+ = \left(\langle l,Q_1l\rangle^{1/2} + \cdots
 + \langle l,Q_kl\rangle^{1/2}\right)
 \left(\frac{1}{\langle l,Q_1l\rangle^{1/2}}Q_1 + \cdots +
-\frac{1}{\langle l,Q_kl\rangle^{1/2}}Q_k\right),"/></p>
-</div><p>and the shape matrix of the internal ellipsoid <img class="math" src="_images/math/02024f9df5ef2f2be7cf1968bf74b7bae3f405c6.png" alt="Q_l^-"/> is</p>
+\frac{1}{\langle l,Q_kl\rangle^{1/2}}Q_k\right),</span></p>
+</div><p>and the shape matrix of the internal ellipsoid <span class="math">Q_l^-</span> is</p>
 <div class="math" id="equation-minksum_ia">
-<p><span class="eqno">(19)</span><img src="_images/math/6045ba07bc79dcd9fb906b1c0fd3301f906c3fa3.png" alt="Q_l^- = \left(Q_1^{1/2} + S_2Q_2^{1/2} + \cdots + S_kQ_k^{1/2}\right)^T
-\left(Q_1^{1/2} + S_2Q_2^{1/2} + \cdots + S_kQ_k^{1/2}\right),"/></p>
-</div><p>with matrices <img class="math" src="_images/math/3f1a4e430c239029fe31b52c95bb3278d0bc3d49.png" alt="S_i"/>, <img class="math" src="_images/math/0e9e3da9d41bd82937972dabff58228ae0be6445.png" alt="i=2,\cdots,k"/>, being orthogonal
-(<img class="math" src="_images/math/ae52758575fc12c2eb8a54d682b3528be7ae62ba.png" alt="S_iS_i^T=I"/>) and such that vectors
-<img class="math" src="_images/math/1b97b764da1290c1c0a80d5603f54330a3903be8.png" alt="Q_1^{1/2}l, S_2Q_2^{1/2}l, \cdots, S_kQ_k^{1/2}l"/> are parallel.</p>
-<p>Varying vector <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/> we get exact external and internal
+<p><span class="eqno">(19)</span><span class="math">Q_l^- = \left(Q_1^{1/2} + S_2Q_2^{1/2} + \cdots + S_kQ_k^{1/2}\right)^T
+\left(Q_1^{1/2} + S_2Q_2^{1/2} + \cdots + S_kQ_k^{1/2}\right),</span></p>
+</div><p>with matrices <span class="math">S_i</span>, <span class="math">i=2,\cdots,k</span>, being orthogonal
+(<span class="math">S_iS_i^T=I</span>) and such that vectors
+<span class="math">Q_1^{1/2}l, S_2Q_2^{1/2}l, \cdots, S_kQ_k^{1/2}l</span> are parallel.</p>
+<p>Varying vector <span class="math">l</span> we get exact external and internal
 approximations,</p>
 <div class="math">
-<p><img src="_images/math/c1ae447015217a1788af8a010d0976c71a672cf5.png" alt="\bigcup_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^-) =
+<p><span class="math">\bigcup_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^-) =
 {\mathcal E}(q_1,Q_1)\oplus\cdots\oplus{\mathcal E}(q_k,Q_k) =
-\bigcap_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^+) ."/></p>
+\bigcap_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^+) .</span></p>
 </div><p>For proofs of formulas given in this section, see <a class="reference internal" href="chap_intro.html#kur1997" id="id1">[KUR1997]</a>, <a class="reference internal" href="chap_intro.html#kur2000" id="id2">[KUR2000]</a>.</p>
 <p>One last comment is about how to find orthogonal matrices
-<img class="math" src="_images/math/0ae496a5c004e33e2c05625e159c4312f565244b.png" alt="S_2,\cdots,S_k"/> that align vectors
-<img class="math" src="_images/math/39c0182ffd4c6d196fe8dc6cac2bcc54535c14df.png" alt="Q_2^{1/2}l, \cdots, Q_k^{1/2}l"/> with <img class="math" src="_images/math/65070e2defb21dee86a64e8004eddc59902b7287.png" alt="Q_1^{1/2}l"/>. Let
-<img class="math" src="_images/math/26bed463602b7b5764b5bdb149c6f77b40c998c3.png" alt="v_1"/> and <img class="math" src="_images/math/90f92bbe75a1f67cf7e5561af6a3eaa44e938f49.png" alt="v_2"/> be some unit vectors in <img class="math" src="_images/math/e1ece5563e1c134d935af18b692ffc3fde4f2fd6.png" alt="{\bf R}^n"/>.
-We have to find matrix <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> such that
-<img class="math" src="_images/math/b2760be2d44775828f21e389d7cfe3bd34e8d632.png" alt="Sv_2\uparrow\uparrow v_1"/>.
+<span class="math">S_2,\cdots,S_k</span> that align vectors
+<span class="math">Q_2^{1/2}l, \cdots, Q_k^{1/2}l</span> with <span class="math">Q_1^{1/2}l</span>. Let
+<span class="math">v_1</span> and <span class="math">v_2</span> be some unit vectors in <span class="math">{\bf R}^n</span>.
+We have to find matrix <span class="math">S</span> such that
+<span class="math">Sv_2\uparrow\uparrow v_1</span>.
 We suggest explicit formulas for the
 calculation of this matrix <a class="reference internal" href="#dar2012" id="id3">[DAR2012]</a>:</p>
 <div class="math" id="equation-valign1">
-<p><span class="eqno">(20)</span><img src="_images/math/ad1036b6cd67b2eb25bbec7501bfdf2d7d0628c3.png" alt="T = I + Q_1(S - I)Q_1^T,"/></p>
+<p><span class="eqno">(20)</span><span class="math">T = I + Q_1(S - I)Q_1^T,</span></p>
 </div><div class="math" id="equation-valign2">
-<p><span class="eqno">(21)</span><img src="_images/math/8e10fc6179b2dffd1f2eac6f9fcf21b7f2a8d788.png" alt="S = \begin{pmatrix}
+<p><span class="eqno">(21)</span><span class="math">S = \begin{pmatrix}
      c &amp; s\\
      -s &amp; c
-    \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}"/></p>
+    \end{pmatrix},\quad c = \langle\hat{v_1},\ \hat{v_2}\rangle,\ \quad s = \sqrt{1 - c^2},\ \quad \hat{v_i} = \dfrac{v_i}{\|v_i\|}</span></p>
 </div><div class="math" id="equation-valign3">
-<p><span class="eqno">(22)</span><img src="_images/math/0bd74016464a77c91c06d08c1a038bd6d7e46208.png" alt="Q_1 = [q_1 \, q_2]\in \mathbb{R}^{n\times2},\ \quad q_1 = \hat{v_1},\ \quad q_2 = \begin{cases}
+<p><span class="eqno">(22)</span><span class="math">Q_1 = [q_1 \, q_2]\in \mathbb{R}^{n\times2},\ \quad q_1 = \hat{v_1},\ \quad q_2 = \begin{cases}
 s^{-1}(\hat{v_2} - c\hat{v_1}),&amp; s\ne 0\\
 0,&amp; s = 0.
-\end{cases}"/></p>
+\end{cases}</span></p>
 </div></div>
 <div class="section" id="geometric-difference">
 <h3>Geometric Difference<a class="headerlink" href="#geometric-difference" title="Permalink to this headline">¶</a></h3>
 <p>Consider the geometric difference <a href="#equation-minkdiff">(9)</a> in which the sets
-<img class="math" src="_images/math/853515def1716674a4c944fe864e4549e181c85e.png" alt="{\mathcal X}_1"/> and <img class="math" src="_images/math/6b3f1274f4eab419b46e18d82168006f6a18e3dc.png" alt="{\mathcal X}_2"/> are nondegenerate
-ellipsoids <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/> and
-<img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/>. We say that ellipsoid
-<img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/> is <em>bigger</em> than ellipsoid
-<img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/> if</p>
+<span class="math">{\mathcal X}_1</span> and <span class="math">{\mathcal X}_2</span> are nondegenerate
+ellipsoids <span class="math">{\mathcal E}(q_1,Q_1)</span> and
+<span class="math">{\mathcal E}(q_2,Q_2)</span>. We say that ellipsoid
+<span class="math">{\mathcal E}(q_1,Q_1)</span> is <em>bigger</em> than ellipsoid
+<span class="math">{\mathcal E}(q_2,Q_2)</span> if</p>
 <div class="math">
-<p><img src="_images/math/3211f0d460f628a205bb2c5c030b827f75777ff5.png" alt="{\mathcal E}(0,Q_2) \subseteq {\mathcal E}(0,Q_1)."/></p>
+<p><span class="math">{\mathcal E}(0,Q_2) \subseteq {\mathcal E}(0,Q_1).</span></p>
 </div><p>If this condition is not fulfilled, the geometric difference
-<img class="math" src="_images/math/66825ba9aa60efb701173375923391658f9e5250.png" alt="{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)"/> is an empty
+<span class="math">{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)</span> is an empty
 set:</p>
 <div class="math">
-<p><img src="_images/math/5ae04fb5797b8bfda2868afe2b05b4ae73efab73.png" alt="{\mathcal E}(0,Q_2) \not\subseteq {\mathcal E}(0,Q_1) ~~~ \Rightarrow ~~~
-{\mathcal E}(q_1,Q_1) \dot{-}{\mathcal E}(q_2,Q_2) = \emptyset."/></p>
-</div><p>If <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/> is bigger than
-<img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/> and <img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/> is
-bigger than <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/>, in other words, if
-<img class="math" src="_images/math/df46f6c25ee94d98f9b5b38aa2bb11bebf94c710.png" alt="Q_1=Q_2"/>,</p>
+<p><span class="math">{\mathcal E}(0,Q_2) \not\subseteq {\mathcal E}(0,Q_1) ~~~ \Rightarrow ~~~
+{\mathcal E}(q_1,Q_1) \dot{-}{\mathcal E}(q_2,Q_2) = \emptyset.</span></p>
+</div><p>If <span class="math">{\mathcal E}(q_1,Q_1)</span> is bigger than
+<span class="math">{\mathcal E}(q_2,Q_2)</span> and <span class="math">{\mathcal E}(q_2,Q_2)</span> is
+bigger than <span class="math">{\mathcal E}(q_1,Q_1)</span>, in other words, if
+<span class="math">Q_1=Q_2</span>,</p>
 <div class="math">
-<p><img src="_images/math/5d7ff77e5c369c148cf61301f74bd85ecece4fbe.png" alt="{\mathcal E}(q_1,Q_1) \dot{-}{\mathcal E}(q_2,Q_2) = \{q_1-q_2\} ~~~ \mbox{and} ~~~
-{\mathcal E}(q_2,Q_2) \dot{-}{\mathcal E}(q_1,Q_1) = \{q_2-q_1\}."/></p>
-</div><p>To check if ellipsoid <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/> is bigger than
-ellipsoid <img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/>, we perform simultaneous
-diagonalization of matrices <img class="math" src="_images/math/19a1de5cbb69a1661b424bd7e4ded7ab06e5962c.png" alt="Q_1"/> and <img class="math" src="_images/math/0eacc439950241c4631c006603dace97c71ddf04.png" alt="Q_2"/>, that is, we
-find matrix <img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/> such that</p>
+<p><span class="math">{\mathcal E}(q_1,Q_1) \dot{-}{\mathcal E}(q_2,Q_2) = \{q_1-q_2\} ~~~ \mbox{and} ~~~
+{\mathcal E}(q_2,Q_2) \dot{-}{\mathcal E}(q_1,Q_1) = \{q_2-q_1\}.</span></p>
+</div><p>To check if ellipsoid <span class="math">{\mathcal E}(q_1,Q_1)</span> is bigger than
+ellipsoid <span class="math">{\mathcal E}(q_2,Q_2)</span>, we perform simultaneous
+diagonalization of matrices <span class="math">Q_1</span> and <span class="math">Q_2</span>, that is, we
+find matrix <span class="math">T</span> such that</p>
 <div class="math">
-<p><img src="_images/math/520a02519dbbedcf3f82e378afd33b58f0f0de5f.png" alt="TQ_1T^T = I ~~~ \mbox{and} ~~~ TQ_2T^T=D,"/></p>
-</div><p>where <img class="math" src="_images/math/9dfa31437b58c0473299320aa638151cd88cf61b.png" alt="D"/> is some diagonal matrix. Simultaneous diagonalization
-of <img class="math" src="_images/math/19a1de5cbb69a1661b424bd7e4ded7ab06e5962c.png" alt="Q_1"/> and <img class="math" src="_images/math/0eacc439950241c4631c006603dace97c71ddf04.png" alt="Q_2"/> is possible because both are symmetric
+<p><span class="math">TQ_1T^T = I ~~~ \mbox{and} ~~~ TQ_2T^T=D,</span></p>
+</div><p>where <span class="math">D</span> is some diagonal matrix. Simultaneous diagonalization
+of <span class="math">Q_1</span> and <span class="math">Q_2</span> is possible because both are symmetric
 positive definite (see <a class="reference internal" href="#gant1960" id="id4">[GANT1960]</a>). To find such matrix
-<img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/>, we first do the SVD of <img class="math" src="_images/math/19a1de5cbb69a1661b424bd7e4ded7ab06e5962c.png" alt="Q_1"/>:</p>
+<span class="math">T</span>, we first do the SVD of <span class="math">Q_1</span>:</p>
 <div class="math" id="equation-simdiag1">
-<p><span class="eqno">(23)</span><img src="_images/math/8a846daf2fb7cc80e11d210a83b250001c79ee11.png" alt="Q_1 = U_1\Sigma_1V_1^T ."/></p>
+<p><span class="eqno">(23)</span><span class="math">Q_1 = U_1\Sigma_1V_1^T .</span></p>
 </div><p>Then the SVD of matrix
-<img class="math" src="_images/math/5971310b2d465a06162fd9f58edbbb31d5a700d9.png" alt="\Sigma_1^{-1/2}U_1^TQ_2U_1\Sigma_1^{-1/2}"/>:</p>
+<span class="math">\Sigma_1^{-1/2}U_1^TQ_2U_1\Sigma_1^{-1/2}</span>:</p>
 <div class="math" id="equation-simdiag2">
-<p><span class="eqno">(24)</span><img src="_images/math/c839f3f6aa3ab8040fd7e666f53b93f370b19899.png" alt="\Sigma_1^{-1/2}U_1^TQ_2U_1\Sigma_1^{-1/2} = U_2\Sigma_2V_2^T."/></p>
-</div><p>Now, <img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/> is defined as</p>
+<p><span class="eqno">(24)</span><span class="math">\Sigma_1^{-1/2}U_1^TQ_2U_1\Sigma_1^{-1/2} = U_2\Sigma_2V_2^T.</span></p>
+</div><p>Now, <span class="math">T</span> is defined as</p>
 <div class="math" id="equation-simdiag3">
-<p><span class="eqno">(25)</span><img src="_images/math/7e4408df1fcb0c257a9281543937a076faf87b21.png" alt="T = U_2^T \Sigma_1^{-1/2}U_1^T."/></p>
-</div><p>If the biggest diagonal element (eigenvalue) of matrix <img class="math" src="_images/math/35c551fb43e529691973bb3c543c665328378241.png" alt="D=TQ_2T^T"/>
-is less than or equal to <img class="math" src="_images/math/123e375e88da91240024aaf085abee194c4a2d06.png" alt="1"/>,
-<img class="math" src="_images/math/e30a04da6f369ae2157711a1d706a40c13262f70.png" alt="{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)"/>.</p>
-<p>Once it is established that ellipsoid <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/> is
-bigger than ellipsoid <img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/>, we know that their
+<p><span class="eqno">(25)</span><span class="math">T = U_2^T \Sigma_1^{-1/2}U_1^T.</span></p>
+</div><p>If the biggest diagonal element (eigenvalue) of matrix <span class="math">D=TQ_2T^T</span>
+is less than or equal to <span class="math">1</span>,
+<span class="math">{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)</span>.</p>
+<p>Once it is established that ellipsoid <span class="math">{\mathcal E}(q_1,Q_1)</span> is
+bigger than ellipsoid <span class="math">{\mathcal E}(q_2,Q_2)</span>, we know that their
 geometric difference
-<img class="math" src="_images/math/66825ba9aa60efb701173375923391658f9e5250.png" alt="{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)"/> is a nonempty
+<span class="math">{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)</span> is a nonempty
 convex compact set. Although it is not generally an ellipsoid, we can
 find tight external and internal approximations of this set parametrized
-by vector <img class="math" src="_images/math/86c01e1de856b6d6856aff8c321b1011a753e4b4.png" alt="l\in{\bf R}^n"/>. Unlike geometric sum, however,
+by vector <span class="math">l\in{\bf R}^n</span>. Unlike geometric sum, however,
 ellipsoidal approximations for the geometric difference do not exist for
-every direction <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/>. Vectors for which the approximations do not
+every direction <span class="math">l</span>. Vectors for which the approximations do not
 exist are called <em>bad directions</em>.</p>
-<p>Given two ellipsoids <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/> and
-<img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/> with
-<img class="math" src="_images/math/e30a04da6f369ae2157711a1d706a40c13262f70.png" alt="{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)"/>, <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/> is a
+<p>Given two ellipsoids <span class="math">{\mathcal E}(q_1,Q_1)</span> and
+<span class="math">{\mathcal E}(q_2,Q_2)</span> with
+<span class="math">{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)</span>, <span class="math">l</span> is a
 bad direction if</p>
 <div class="math">
-<p><img src="_images/math/be90d92357b4be263b4c856fd3e1b3790c4b891c.png" alt="\frac{\langle l,Q_1l\rangle^{1/2}}{\langle l,Q_2l\rangle^{1/2}}&gt;r,"/></p>
-</div><p>in which <img class="math" src="_images/math/2ede365ad144ab396916ec60458da03860803078.png" alt="r"/> is a minimal root of the equation</p>
+<p><span class="math">\frac{\langle l,Q_1l\rangle^{1/2}}{\langle l,Q_2l\rangle^{1/2}}&gt;r,</span></p>
+</div><p>in which <span class="math">r</span> is a minimal root of the equation</p>
 <div class="math">
-<p><img src="_images/math/68929119a2976e831576e85c0ef6d80e0a8a28da.png" alt="{\bf det}(Q_1-rQ_2) = 0."/></p>
-</div><p>To find <img class="math" src="_images/math/2ede365ad144ab396916ec60458da03860803078.png" alt="r"/>, compute matrix <img class="math" src="_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/> by <a href="#equation-simdiag1">(23)</a>-<a href="#equation-simdiag3">(25)</a>
+<p><span class="math">{\bf det}(Q_1-rQ_2) = 0.</span></p>
+</div><p>To find <span class="math">r</span>, compute matrix <span class="math">T</span> by <a href="#equation-simdiag1">(23)</a>-<a href="#equation-simdiag3">(25)</a>
 and define</p>
 <div class="math">
-<p><img src="_images/math/5eb2e07472ef8a0fb9a042a6f584aabc9c37fc4a.png" alt="r = \frac{1}{\max({\bf diag}(TQ_2T^T))}."/></p>
-</div><p>If <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/> is <em>not</em> a bad direction, we can find tight external and
-internal ellipsoidal approximations <img class="math" src="_images/math/29bf999b6e9c2b5afb879018212142b9726ea7d3.png" alt="{\mathcal E}(q,Q^+_l)"/> and
-<img class="math" src="_images/math/fe17af10ac96e36544e7a9544b3c86bded22eb23.png" alt="{\mathcal E}(q,Q^-_l)"/> such that</p>
+<p><span class="math">r = \frac{1}{\max({\bf diag}(TQ_2T^T))}.</span></p>
+</div><p>If <span class="math">l</span> is <em>not</em> a bad direction, we can find tight external and
+internal ellipsoidal approximations <span class="math">{\mathcal E}(q,Q^+_l)</span> and
+<span class="math">{\mathcal E}(q,Q^-_l)</span> such that</p>
 <div class="math">
-<p><img src="_images/math/d201b481df185bd8f9903c7a97ee3bfbb4089fb6.png" alt="{\mathcal E}(q,Q^-_l)\subseteq{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q,Q^+_l)"/></p>
+<p><span class="math">{\mathcal E}(q,Q^-_l)\subseteq{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q,Q^+_l)</span></p>
 </div><p>and</p>
 <div class="math">
-<p><img src="_images/math/bdb880f612dbda6449541f96db81901a773e839b.png" alt="\rho(\pm l ~|~ {\mathcal E}(q,Q_l^-)) =
+<p><span class="math">\rho(\pm l ~|~ {\mathcal E}(q,Q_l^-)) =
 \rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)) =
-\rho(\pm l ~|~ {\mathcal E}(q,Q_l^+))."/></p>
-</div><p>The center <img class="math" src="_images/math/23f1b45408e5b4130c0f940fcbfcec54492cbdcd.png" alt="q"/> is</p>
+\rho(\pm l ~|~ {\mathcal E}(q,Q_l^+)).</span></p>
+</div><p>The center <span class="math">q</span> is</p>
 <div class="math" id="equation-minkdiff_c">
-<p><span class="eqno">(26)</span><img src="_images/math/a4a59c981141d3b58febd0384f069f95d61fd9de.png" alt="q = q_1 - q_2;"/></p>
-</div><p>the shape matrix of the internal ellipsoid <img class="math" src="_images/math/6e0f7e12260002b0f54c66d3ed3ffe8bf55b701d.png" alt="Q^-_l"/> is</p>
+<p><span class="eqno">(26)</span><span class="math">q = q_1 - q_2;</span></p>
+</div><p>the shape matrix of the internal ellipsoid <span class="math">Q^-_l</span> is</p>
 <div class="math">
-<p><img src="_images/math/f1dbb521e10ca8882a3833b0ffe88e660d0697ad.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 &amp;&amp; P = \frac{\sqrt{\langle l, Q_1 l\rangle}}{\sqrt{\langle l, Q_2 \rangle}};\nonumber\\
 &amp;&amp; Q^-_l = \left(1 - \dfrac{1}{P}\right)Q_1 + \left(1 - P\right)Q_2.
-\label{minkdiff_ia}\end{aligned}"/></p>
-</div><p>and the shape matrix of the external ellipsoid <img class="math" src="_images/math/62ef52fe35490b5521023ec17fcd949451b73690.png" alt="Q^+_l"/> is</p>
+\label{minkdiff_ia}\end{aligned}</span></p>
+</div><p>and the shape matrix of the external ellipsoid <span class="math">Q^+_l</span> is</p>
 <div class="math" id="equation-minkdiff_ea">
-<p><span class="eqno">(27)</span><img src="_images/math/43a61cab3b71adefb9775acafd05a7733803ba8c.png" alt="Q^+_l = \left(Q_1^{1/2} - SQ_2^{1/2}\right)^T
-\left(Q_1^{1/2} - SQ_2^{1/2}\right)."/></p>
-</div><p>Here <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> is an orthogonal matrix such that vectors
-<img class="math" src="_images/math/65070e2defb21dee86a64e8004eddc59902b7287.png" alt="Q_1^{1/2}l"/> and <img class="math" src="_images/math/867f1f63c0cc0653879d05607cdb75d1746868f3.png" alt="SQ_2^{1/2}l"/> are parallel. <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> is
-found from <a href="#equation-valign1">(20)</a>-<a href="#equation-valign3">(22)</a>, with <img class="math" src="_images/math/e2f1435d97cc0b8f2e952d3157e754dcce01900b.png" alt="v_1=Q_2^{1/2}l"/> and
-<img class="math" src="_images/math/e449606b39263dcf842d82c0cb1e10c409b7e02e.png" alt="v_2=Q_1^{1/2}l"/>.</p>
-<p>Running <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/> over all unit directions that are not bad, we get</p>
+<p><span class="eqno">(27)</span><span class="math">Q^+_l = \left(Q_1^{1/2} - SQ_2^{1/2}\right)^T
+\left(Q_1^{1/2} - SQ_2^{1/2}\right).</span></p>
+</div><p>Here <span class="math">S</span> is an orthogonal matrix such that vectors
+<span class="math">Q_1^{1/2}l</span> and <span class="math">SQ_2^{1/2}l</span> are parallel. <span class="math">S</span> is
+found from <a href="#equation-valign1">(20)</a>-<a href="#equation-valign3">(22)</a>, with <span class="math">v_1=Q_2^{1/2}l</span> and
+<span class="math">v_2=Q_1^{1/2}l</span>.</p>
+<p>Running <span class="math">l</span> over all unit directions that are not bad, we get</p>
 <div class="math">
-<p><img src="_images/math/d57a653513143506d24d5287f79ee308a8f428f3.png" alt="\bigcup_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^-) =
+<p><span class="math">\bigcup_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^-) =
 {\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2) =
-\bigcap_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^+) ."/></p>
+\bigcap_{\langle l,l\rangle=1} {\mathcal E}(q,Q_l^+) .</span></p>
 </div><p>For proofs of formulas given in this section, see <a class="reference internal" href="chap_intro.html#kur1997" id="id5">[KUR1997]</a>.</p>
 </div>
 <div class="section" id="geometric-difference-sum">
 <span id="diff-sum-label"></span><h3>Geometric Difference-Sum<a class="headerlink" href="#geometric-difference-sum" title="Permalink to this headline">¶</a></h3>
-<p>Given ellipsoids <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/>,
-<img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/> and <img class="math" src="_images/math/729827294b68c2cc5d7dd2d378bd1c936b17a94c.png" alt="{\mathcal E}(q_3,Q_3)"/>, it is
+<p>Given ellipsoids <span class="math">{\mathcal E}(q_1,Q_1)</span>,
+<span class="math">{\mathcal E}(q_2,Q_2)</span> and <span class="math">{\mathcal E}(q_3,Q_3)</span>, it is
 possible to compute families of external and internal approximating
 ellipsoids for</p>
 <div class="math" id="equation-minkmp">
-<p><span class="eqno">(28)</span><img src="_images/math/c99c6b877f2065704f1ef02b15803f4d39077b07.png" alt="{\mathcal E}(q_1,Q_1) \dot{-} {\mathcal E}(q_2,Q_2) \oplus {\mathcal E}(q_3,Q_3)"/></p>
-</div><p>parametrized by direction <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/>, if this set is nonempty
-(<img class="math" src="_images/math/e30a04da6f369ae2157711a1d706a40c13262f70.png" alt="{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)"/>).</p>
+<p><span class="eqno">(28)</span><span class="math">{\mathcal E}(q_1,Q_1) \dot{-} {\mathcal E}(q_2,Q_2) \oplus {\mathcal E}(q_3,Q_3)</span></p>
+</div><p>parametrized by direction <span class="math">l</span>, if this set is nonempty
+(<span class="math">{\mathcal E}(0,Q_2)\subseteq{\mathcal E}(0,Q_1)</span>).</p>
 <p>First, using the result of the previous section, for any direction
-<img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/> that is not bad, we obtain tight external
-<img class="math" src="_images/math/59a6fbf503c45ba00b0da778f8f4e72ba9363bc5.png" alt="{\mathcal E}(q_1-q_2, Q_l^{0+})"/> and internal
-<img class="math" src="_images/math/600a49a6eef49cbccc111e78af2d5d67c9b62f01.png" alt="{\mathcal E}(q_1-q_2, Q_l^{0-})"/> approximations of the set
-<img class="math" src="_images/math/66825ba9aa60efb701173375923391658f9e5250.png" alt="{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)"/>.</p>
+<span class="math">l</span> that is not bad, we obtain tight external
+<span class="math">{\mathcal E}(q_1-q_2, Q_l^{0+})</span> and internal
+<span class="math">{\mathcal E}(q_1-q_2, Q_l^{0-})</span> approximations of the set
+<span class="math">{\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)</span>.</p>
 <p>The second and last step is, using the result of section 2.2.2, to find
 tight external ellipsoidal approximation
-<img class="math" src="_images/math/3af6eeef45010b44250edc3134bde66118912010.png" alt="{\mathcal E}(q_1-q_2+q_3,Q_l^+)"/> of the sum
-<img class="math" src="_images/math/ab1610c5e58a1dc947d3424069831075ab1e4d37.png" alt="{\mathcal E}(q_1-q_2,Q_l^{0+})\oplus{\mathcal E}(q_3,Q_3)"/>, and
+<span class="math">{\mathcal E}(q_1-q_2+q_3,Q_l^+)</span> of the sum
+<span class="math">{\mathcal E}(q_1-q_2,Q_l^{0+})\oplus{\mathcal E}(q_3,Q_3)</span>, and
 tight internal ellipsoidal approximation
-<img class="math" src="_images/math/0f88a8206078e56d5deb65d62e94cdc9c756fad5.png" alt="{\mathcal E}(q_1-q_2+q_3,Q_l^-)"/> for the sum
-<img class="math" src="_images/math/624a9586a1da36ba02391d594f15638182aa2178.png" alt="{\mathcal E}(q_1-q_2,Q_l^{0-})\oplus{\mathcal E}(q_3,Q_3)"/>.</p>
+<span class="math">{\mathcal E}(q_1-q_2+q_3,Q_l^-)</span> for the sum
+<span class="math">{\mathcal E}(q_1-q_2,Q_l^{0-})\oplus{\mathcal E}(q_3,Q_3)</span>.</p>
 <p>As a result, we get</p>
 <div class="math">
-<p><img src="_images/math/76f561e9d43e971888e885684d44075a226dfcf0.png" alt="{\mathcal E}(q_1-q_2+q_3,Q_l^-) \subseteq
+<p><span class="math">{\mathcal E}(q_1-q_2+q_3,Q_l^-) \subseteq
 {\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)\oplus{\mathcal E}(q_3,Q_3) \subseteq
-{\mathcal E}(q_1-q_2+q_3,Q_l^+)"/></p>
+{\mathcal E}(q_1-q_2+q_3,Q_l^+)</span></p>
 </div><p>and</p>
 <div class="math">
-<p><img src="_images/math/bd2bfcabe275a7b813f2cb951c4d2b16b9058a8f.png" alt="\rho(\pm l ~|~{\mathcal E}(q_1-q_2+q_3,Q_l^-)) =
+<p><span class="math">\rho(\pm l ~|~{\mathcal E}(q_1-q_2+q_3,Q_l^-)) =
 \rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)\oplus{\mathcal E}(q_3,Q_3)) =
-\rho(\pm l ~|~ {\mathcal E}(q_1-q_2+q_3,Q_l^+))."/></p>
-</div><p>Running <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/> over all unit vectors that are not bad, this
+\rho(\pm l ~|~ {\mathcal E}(q_1-q_2+q_3,Q_l^+)).</span></p>
+</div><p>Running <span class="math">l</span> over all unit vectors that are not bad, this
 translates to</p>
 <div class="math">
-<p><img src="_images/math/810cb0b691e201014bded121f72f17418bcbcae5.png" alt="\bigcup_{\langle l,l\rangle=1} {\mathcal E}(q_1-q_2+q_3,Q_l^-) =
+<p><span class="math">\bigcup_{\langle l,l\rangle=1} {\mathcal E}(q_1-q_2+q_3,Q_l^-) =
 {\mathcal E}(q_1,Q_1)\dot{-}{\mathcal E}(q_2,Q_2)\oplus{\mathcal E}(q_3,Q_3) =
-\bigcap_{\langle l,l\rangle=1} {\mathcal E}(q_1-q_2+q_3,Q_l^+) ."/></p>
+\bigcap_{\langle l,l\rangle=1} {\mathcal E}(q_1-q_2+q_3,Q_l^+) .</span></p>
 </div></div>
 <div class="section" id="geometric-sum-difference">
 <span id="sum-diff-label"></span><h3>Geometric Sum-Difference<a class="headerlink" href="#geometric-sum-difference" title="Permalink to this headline">¶</a></h3>
-<p>Given ellipsoids <img class="math" src="_images/math/88b8f5ab6d7ad283c95a5907717bb0d7d1d28fed.png" alt="{\mathcal E}(q_1,Q1)"/>,
-<img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/> and <img class="math" src="_images/math/729827294b68c2cc5d7dd2d378bd1c936b17a94c.png" alt="{\mathcal E}(q_3,Q_3)"/>, it is
+<p>Given ellipsoids <span class="math">{\mathcal E}(q_1,Q1)</span>,
+<span class="math">{\mathcal E}(q_2,Q_2)</span> and <span class="math">{\mathcal E}(q_3,Q_3)</span>, it is
 possible to compute families of external and internal approximating
 ellipsoids for</p>
 <div class="math" id="equation-minkpm">
-<p><span class="eqno">(29)</span><img src="_images/math/b3ce35f34e609d9315eb4ae398632b798af09f01.png" alt="{\mathcal E}(q_1,Q_1) \oplus {\mathcal E}(q_2,Q_2) \dot{-} {\mathcal E}(q_3,Q_3)"/></p>
-</div><p>parametrized by direction <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/>, if this set is nonempty
-(<img class="math" src="_images/math/5ac98e0d2170328a2162aac6e9a05cd404797725.png" alt="{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_1)\oplus{\mathcal E}(0,Q_2)"/>).</p>
+<p><span class="eqno">(29)</span><span class="math">{\mathcal E}(q_1,Q_1) \oplus {\mathcal E}(q_2,Q_2) \dot{-} {\mathcal E}(q_3,Q_3)</span></p>
+</div><p>parametrized by direction <span class="math">l</span>, if this set is nonempty
+(<span class="math">{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_1)\oplus{\mathcal E}(0,Q_2)</span>).</p>
 <p>First, using the result of section 2.2.2, we obtain tight external
-<img class="math" src="_images/math/c02bc0105f774aae346e690757cc7a26ce59d8e8.png" alt="{\mathcal E}(q_1+q_2,Q_l^{0+})"/> and internal
-<img class="math" src="_images/math/2341f64b6ee2e36154a7181220f38788cf696f72.png" alt="{\mathcal E}(q_1+q_2,Q_l^{0-})"/> ellipsoidal approximations of the
-set <img class="math" src="_images/math/eab8ea57252be7a4535863612a3d659e51aed1ea.png" alt="{\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)"/>. In order
+<span class="math">{\mathcal E}(q_1+q_2,Q_l^{0+})</span> and internal
+<span class="math">{\mathcal E}(q_1+q_2,Q_l^{0-})</span> ellipsoidal approximations of the
+set <span class="math">{\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)</span>. In order
 for the set <a href="#equation-minkpm">(29)</a> to be nonempty, inclusion
-<img class="math" src="_images/math/115d0c8d79504f6c87d4450c9a4ee1a547975603.png" alt="{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_l^{0+})"/> must be
-true for any <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/>. Note, however, that even if <a href="#equation-minkpm">(29)</a> is
+<span class="math">{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_l^{0+})</span> must be
+true for any <span class="math">l</span>. Note, however, that even if <a href="#equation-minkpm">(29)</a> is
 nonempty, it may be that
-<img class="math" src="_images/math/ced01a0be1703356a1c304b9dcd6602659f98bcc.png" alt="{\mathcal E}(0,Q_3)\not\subseteq{\mathcal E}(0,Q_l^{0-})"/>, then
+<span class="math">{\mathcal E}(0,Q_3)\not\subseteq{\mathcal E}(0,Q_l^{0-})</span>, then
 internal approximation for this direction does not exist.</p>
 <p>Assuming that <a href="#equation-minkpm">(29)</a> is nonempty and
-<img class="math" src="_images/math/9e9eb20479917bf156e6ece3444e9e10808cd746.png" alt="{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_l^{0-})"/>, the second
+<span class="math">{\mathcal E}(0,Q_3)\subseteq{\mathcal E}(0,Q_l^{0-})</span>, the second
 step would be, using the results of section 2.2.3, to compute tight
 external ellipsoidal approximation
-<img class="math" src="_images/math/b4ab2d37cd71c2085dfdd815abc50b58c1af60a9.png" alt="{\mathcal E}(q_1+q_2-q_3,Q_l^+)"/> of the difference
-<img class="math" src="_images/math/9d730139aba40f16a2ae87cd422a82961adc37a3.png" alt="{\mathcal E}(q_1+q_2,Q_l^{0+})\dot{-}{\mathcal E}(q_3,Q_3)"/>,
-which exists only if <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/> is not bad, and tight internal
-ellipsoidal approximation <img class="math" src="_images/math/e783d1697adba4dd60784843a496f52cfac4c8a5.png" alt="{\mathcal E}(q_1+q_2-q_3,Q_l^-)"/> of the
+<span class="math">{\mathcal E}(q_1+q_2-q_3,Q_l^+)</span> of the difference
+<span class="math">{\mathcal E}(q_1+q_2,Q_l^{0+})\dot{-}{\mathcal E}(q_3,Q_3)</span>,
+which exists only if <span class="math">l</span> is not bad, and tight internal
+ellipsoidal approximation <span class="math">{\mathcal E}(q_1+q_2-q_3,Q_l^-)</span> of the
 difference
-<img class="math" src="_images/math/aaf86412a4593316afc3d7e7204cb0b7d597e937.png" alt="{\mathcal E}(q_1+q_2,Q_l^{0-})\dot{-}{\mathcal E}(q_3,Q_3)"/>,
-which exists only if <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/> is not bad for this difference.</p>
-<p>If approximation <img class="math" src="_images/math/b4ab2d37cd71c2085dfdd815abc50b58c1af60a9.png" alt="{\mathcal E}(q_1+q_2-q_3,Q_l^+)"/> exists, then</p>
+<span class="math">{\mathcal E}(q_1+q_2,Q_l^{0-})\dot{-}{\mathcal E}(q_3,Q_3)</span>,
+which exists only if <span class="math">l</span> is not bad for this difference.</p>
+<p>If approximation <span class="math">{\mathcal E}(q_1+q_2-q_3,Q_l^+)</span> exists, then</p>
 <div class="math">
-<p><img src="_images/math/ae98709edcd46ff450b349547e2ce6a1355a0ec6.png" alt="{\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3) \subseteq
-{\mathcal E}(q_1+q_2-q_3,Q_l^+)"/></p>
+<p><span class="math">{\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3) \subseteq
+{\mathcal E}(q_1+q_2-q_3,Q_l^+)</span></p>
 </div><p>and</p>
 <div class="math">
-<p><img src="_images/math/0e1f25bf6102e4ec989ea15d9ce977507cd4714a.png" alt="\rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3)) =
-\rho(\pm l ~|~ {\mathcal E}(q_1+q_2-q_3,Q_l^+))."/></p>
-</div><p>If approximation <img class="math" src="_images/math/e783d1697adba4dd60784843a496f52cfac4c8a5.png" alt="{\mathcal E}(q_1+q_2-q_3,Q_l^-)"/> exists, then</p>
+<p><span class="math">\rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3)) =
+\rho(\pm l ~|~ {\mathcal E}(q_1+q_2-q_3,Q_l^+)).</span></p>
+</div><p>If approximation <span class="math">{\mathcal E}(q_1+q_2-q_3,Q_l^-)</span> exists, then</p>
 <div class="math">
-<p><img src="_images/math/1fe3a39a0b2e0bf8aac190ba136a46b01a8a9221.png" alt="{\mathcal E}(q_1+q_2-q_3,Q_l^-) \subseteq
-{\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3)"/></p>
+<p><span class="math">{\mathcal E}(q_1+q_2-q_3,Q_l^-) \subseteq
+{\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3)</span></p>
 </div><p>and</p>
 <div class="math">
-<p><img src="_images/math/83244c50e28b40c854a5815beefa6c4a2dfa5bf6.png" alt="\rho(\pm l ~|~{\mathcal E}(q_1+q_2-q_3,Q_l^-)) =
-\rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3)) ."/></p>
-</div><p>For any fixed direction <img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/> it may be the case that neither
+<p><span class="math">\rho(\pm l ~|~{\mathcal E}(q_1+q_2-q_3,Q_l^-)) =
+\rho(\pm l ~|~ {\mathcal E}(q_1,Q_1)\oplus{\mathcal E}(q_2,Q_2)\dot{-}{\mathcal E}(q_3,Q_3)) .</span></p>
+</div><p>For any fixed direction <span class="math">l</span> it may be the case that neither
 external nor internal tight ellipsoidal approximations exist.</p>
 </div>
 <div class="section" id="intersection-of-ellipsoid-and-hyperplane">
 <h3>Intersection of Ellipsoid and Hyperplane<a class="headerlink" href="#intersection-of-ellipsoid-and-hyperplane" title="Permalink to this headline">¶</a></h3>
-<p>Let nondegenerate ellipsoid <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> and hyperplane
-<img class="math" src="_images/math/a8ccfc826288cb180dd6b82fe5641d1e17995bc5.png" alt="H(c,\gamma)"/> be such that
-<img class="math" src="_images/math/9c12c73c947d04884a142b271bf163be7fcd9aad.png" alt="{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))&lt;0"/>. In other words,</p>
+<p>Let nondegenerate ellipsoid <span class="math">{\mathcal E}(q,Q)</span> and hyperplane
+<span class="math">H(c,\gamma)</span> be such that
+<span class="math">{\bf dist}({\mathcal E}(q,Q),H(c,\gamma))&lt;0</span>. In other words,</p>
 <div class="math">
-<p><img src="_images/math/109a3eee108f08a6e24c71fbc15488ceeb815850.png" alt="{\mathcal E}_H(w,W) = {\mathcal E}(q,Q)\cap H(c,\gamma) \neq \emptyset ."/></p>
+<p><span class="math">{\mathcal E}_H(w,W) = {\mathcal E}(q,Q)\cap H(c,\gamma) \neq \emptyset .</span></p>
 </div><p>The intersection of ellipsoid with hyperplane, if nonempty, is always
 an ellipsoid. Here we show how to find it.</p>
-<p>First of all, we transform the hyperplane <img class="math" src="_images/math/a8ccfc826288cb180dd6b82fe5641d1e17995bc5.png" alt="H(c,\gamma)"/> into
-<img class="math" src="_images/math/ae2329fc5b2fffd5e099ee1533b1b8095cd2f6eb.png" alt="H([1~0~\cdots~0]^T, 0)"/> by the affine transformation</p>
+<p>First of all, we transform the hyperplane <span class="math">H(c,\gamma)</span> into
+<span class="math">H([1~0~\cdots~0]^T, 0)</span> by the affine transformation</p>
 <div class="math">
-<p><img src="_images/math/1060de0ffaf5eda187e34ce693a0a5ea2db50f91.png" alt="y = Sx - \frac{\gamma}{\langle c,c\rangle^{1/2}}Sc,"/></p>
-</div><p>where <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> is an orthogonal matrix found by <a href="#equation-valign1">(20)</a>-<a href="#equation-valign3">(22)</a>
-with <img class="math" src="_images/math/4beeb7ab5d5994930dec1da11b923028d8bdaa99.png" alt="v_1=c"/> and <img class="math" src="_images/math/cd79adafa969dbc6073abfe662255885da4e26f5.png" alt="v_2=[1~0~\cdots~0]^T"/>. The ellipsoid in
-the new coordinates becomes <img class="math" src="_images/math/21ab0350e27672ec2b27273aa2beaa21366fb67d.png" alt="{\mathcal E}(q',Q')"/> with</p>
+<p><span class="math">y = Sx - \frac{\gamma}{\langle c,c\rangle^{1/2}}Sc,</span></p>
+</div><p>where <span class="math">S</span> is an orthogonal matrix found by <a href="#equation-valign1">(20)</a>-<a href="#equation-valign3">(22)</a>
+with <span class="math">v_1=c</span> and <span class="math">v_2=[1~0~\cdots~0]^T</span>. The ellipsoid in
+the new coordinates becomes <span class="math">{\mathcal E}(q',Q')</span> with</p>
 <div class="math">
-<p><img src="_images/math/62374b2eb8080f766f37ccb17ff027f4a6f24d48.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 q' &amp; = q-\frac{\gamma}{\langle c,c\rangle^{1/2}}Sc, \\
-Q' &amp; = SQS^T.\end{aligned}"/></p>
-</div><p>Define matrix <img class="math" src="_images/math/a1a83016edd5e862d6d16fcd37ee66908d6621b7.png" alt="M=Q'^{-1}"/>; <img class="math" src="_images/math/2c755f416e40efd9d06ec33c6eb041116e3a3ff1.png" alt="m_{11}"/> is its element in
-position <img class="math" src="_images/math/2224c3a72eca6eaa7870c5e092348222014bb153.png" alt="(1,1)"/>, <img class="math" src="_images/math/c8f694e5827548999fd1c38a3e0d38d1743b994f.png" alt="\bar{m}"/> is the first column of <img class="math" src="_images/math/2de38926392ba23abeac75effc66c37a5f5be5fd.png" alt="M"/>
-without the first element, and <img class="math" src="_images/math/1325767a854dfd2a501e82ac62e5d62488f4cc74.png" alt="\bar{M}"/> is the submatrix of
-<img class="math" src="_images/math/2de38926392ba23abeac75effc66c37a5f5be5fd.png" alt="M"/> obtained by stripping <img class="math" src="_images/math/2de38926392ba23abeac75effc66c37a5f5be5fd.png" alt="M"/> of its first row and first
+Q' &amp; = SQS^T.\end{aligned}</span></p>
+</div><p>Define matrix <span class="math">M=Q'^{-1}</span>; <span class="math">m_{11}</span> is its element in
+position <span class="math">(1,1)</span>, <span class="math">\bar{m}</span> is the first column of <span class="math">M</span>
+without the first element, and <span class="math">\bar{M}</span> is the submatrix of
+<span class="math">M</span> obtained by stripping <span class="math">M</span> of its first row and first
 column:</p>
 <div class="math">
-<p><img src="_images/math/981e90dfe6eae9e2420bffe5b152be7e7bde3173.png" alt="M = \left[\begin{array}{c|cl}
+<p><span class="math">M = \left[\begin{array}{c|cl}
 m_{11} &amp; &amp; \bar{m}^T\\
  &amp; \\
 \hline
  &amp; \\
-\bar{m} &amp; &amp; \bar{M}\end{array}\right]."/></p>
+\bar{m} &amp; &amp; \bar{M}\end{array}\right].</span></p>
 </div><p>The ellipsoid resulting from the intersection is
-<img class="math" src="_images/math/da4e49f9befd1f120cc8dc4adbac090c563e7031.png" alt="{\mathcal E}_H(w',W')"/> with</p>
+<span class="math">{\mathcal E}_H(w',W')</span> with</p>
 <div class="math">
-<p><img src="_images/math/139c7174816a0c690a86fb833d28f0c0c73e3ea5.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 w' &amp; = q' + q_1'\left[\begin{array}{c}
 -1\\
 \bar{M}^{-1}\bar{m}\end{array}\right],\\
@@ -591,79 +591,79 @@ W' &amp; = \left(1-q_1'^2(m_{11}-
  &amp; \\
 \hline
  &amp; \\
-{\bf 0} &amp; &amp; \bar{M}^{-1}\end{array}\right],\end{aligned}"/></p>
-</div><p>in which <img class="math" src="_images/math/20f7cdcb9bac1b62159732381999f825baf679e8.png" alt="q_1'"/> represents the first element of vector <img class="math" src="_images/math/9849cb4e998bf90d819ab1701298eabf1cbae3df.png" alt="q'"/>.</p>
+{\bf 0} &amp; &amp; \bar{M}^{-1}\end{array}\right],\end{aligned}</span></p>
+</div><p>in which <span class="math">q_1'</span> represents the first element of vector <span class="math">q'</span>.</p>
 <p>Finally, it remains to do the inverse transform of the coordinates to
-obtain ellipsoid <img class="math" src="_images/math/9f64784dfadca48b3a0bacba7838aed0f9dcabf6.png" alt="{\mathcal E}_H(w,W)"/>:</p>
+obtain ellipsoid <span class="math">{\mathcal E}_H(w,W)</span>:</p>
 <div class="math">
-<p><img src="_images/math/10c27682cc4fe3d8a20d23f01a1e42082c0706d0.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 w &amp; = S^Tw' + \frac{\gamma}{\langle c,c\rangle^{1/2}}c, \\
-W &amp; = S^TW'S.\end{aligned}"/></p>
+W &amp; = S^TW'S.\end{aligned}</span></p>
 </div></div>
 <div class="section" id="intersection-of-ellipsoid-and-ellipsoid">
 <h3>Intersection of Ellipsoid and Ellipsoid<a class="headerlink" href="#intersection-of-ellipsoid-and-ellipsoid" title="Permalink to this headline">¶</a></h3>
-<p>Given two nondegenerate ellipsoids <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/> and
-<img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/>,
-<img class="math" src="_images/math/1025d21f4eafed7016e7225337e90b2deef8e97b.png" alt="{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))&lt;0"/>
+<p>Given two nondegenerate ellipsoids <span class="math">{\mathcal E}(q_1,Q_1)</span> and
+<span class="math">{\mathcal E}(q_2,Q_2)</span>,
+<span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),{\mathcal E}(q_2,Q_2))&lt;0</span>
 implies that</p>
 <div class="math">
-<p><img src="_images/math/9e952b750eb806142f123ced8adc43d6f2451a17.png" alt="{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)\neq\emptyset ."/></p>
+<p><span class="math">{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)\neq\emptyset .</span></p>
 </div><p>This intersection can be approximated by ellipsoids from the outside
-and from the inside. Trivially, both <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/> and
-<img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/> are external approximations of this
+and from the inside. Trivially, both <span class="math">{\mathcal E}(q_1,Q_1)</span> and
+<span class="math">{\mathcal E}(q_2,Q_2)</span> are external approximations of this
 intersection. Here, however, we show how to find the external
 ellipsoidal approximation of minimal volume.</p>
 <p>Define matrices</p>
 <div class="math">
-<p><img src="_images/math/029d5ea652aaf757d489c3bd6e54681466f646d9.png" alt="W_1 = Q_1^{-1}, ~~~~ W_2 = Q_2^{-1} .\label{wmatrices}"/></p>
+<p><span class="math">W_1 = Q_1^{-1}, ~~~~ W_2 = Q_2^{-1} .\label{wmatrices}</span></p>
 </div><p>Minimal volume external ellipsoidal approximation
-<img class="math" src="_images/math/8d116bad281fd2c9a8692c7561f32e0b10a2ffd2.png" alt="{\mathcal E}(q+,Q^+)"/> of the intersection
-<img class="math" src="_images/math/174f3aecc67e47f6c6a182cf4f8707b06dca848b.png" alt="{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)"/> is determined
+<span class="math">{\mathcal E}(q+,Q^+)</span> of the intersection
+<span class="math">{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)</span> is determined
 from the set of equations:</p>
 <div class="math" id="equation-fusion1">
-<p><span class="eqno">(30)</span><img src="_images/math/357b41d0064ab303ce70c0859591934e768f89e9.png" alt="Q^+  = \alpha X^{-1}, \\"/></p>
+<p><span class="eqno">(30)</span><span class="math">Q^+  = \alpha X^{-1}, \\</span></p>
 </div><div class="math" id="equation-fusion2">
-<p><span class="eqno">(31)</span><img src="_images/math/9cf07707f7df32a67b493097e344a6c717949a48.png" alt="X  =  \pi W_1 + (1-\pi)W_2,\\"/></p>
+<p><span class="eqno">(31)</span><span class="math">X  =  \pi W_1 + (1-\pi)W_2,\\</span></p>
 </div><div class="math" id="equation-fusion3">
-<p><span class="eqno">(32)</span><img src="_images/math/570bfa568a0c73f3e238a132b67f1344cbc9dd16.png" alt="\alpha  =  1-\pi(1-\pi)\langle(q_2-q_1), W_2X^{-1}W_1(q_2-q_1)\rangle, \\"/></p>
+<p><span class="eqno">(32)</span><span class="math">\alpha  =  1-\pi(1-\pi)\langle(q_2-q_1), W_2X^{-1}W_1(q_2-q_1)\rangle, \\</span></p>
 </div><div class="math" id="equation-fusion4">
-<p><span class="eqno">(33)</span><img src="_images/math/e51701e079720be1ccbb4a657ce9098ebb14df8b.png" alt="q^+  = X^{-1}(\pi W_1q_1 + (1-\pi)W_2q_2), \\"/></p>
+<p><span class="eqno">(33)</span><span class="math">q^+  = X^{-1}(\pi W_1q_1 + (1-\pi)W_2q_2), \\</span></p>
 </div><div class="math" id="equation-fusion5">
-<p><span class="eqno">(34)</span><img src="_images/math/398b21e7c43a78c24f2571c62fedf4cbd6db7e55.png" alt="0 &amp;=  \alpha({\bf det}(X))^2{\bf trace}(X^{-1}(W_1-W_2)) - {}\\
+<p><span class="eqno">(34)</span><span class="math">0 &amp;=  \alpha({\bf det}(X))^2{\bf trace}(X^{-1}(W_1-W_2)) - {}\\
   &amp;- n({\bf det}(X))^2 (2\langle q^+,W_1q_1-W_2q_2\rangle + \langle q^+,(W_2-W_1)q^+\rangle - {}\\
-  &amp;- \langle q_1,W_1q_1\rangle + \langle q_2,W_2q_2\rangle),"/></p>
-</div><p>with <img class="math" src="_images/math/f6b1400a5974e3d3695e068296807aef84aa22cb.png" alt="0\leqslant\pi\leqslant1"/>. We substitute <img class="math" src="_images/math/f026aecf11ec7f6141ab863f260d395f94b10f51.png" alt="X"/>,
-<img class="math" src="_images/math/ad59b6e24a4a00ac621801f8d7513d68be654ab5.png" alt="\alpha"/>, <img class="math" src="_images/math/990a03f830fbfed8b316e9ddd88262b20c2a47a9.png" alt="q^+"/> defined in <a href="#equation-fusion2">(31)</a>-<a href="#equation-fusion4">(33)</a> into
-<a href="#equation-fusion5">(34)</a> and get a polynomial of degree <img class="math" src="_images/math/b60db2fb95259ea0fb2b6e6d69616602b979e639.png" alt="2n-1"/> with respect to
-<img class="math" src="_images/math/c1bd4cb4e3647c6b2356b7ccf2f52aeffedd1b61.png" alt="\pi"/>, which has only one root in the interval <img class="math" src="_images/math/ac2b83372f7b9e806a2486507ed051a8f0cab795.png" alt="[0,1]"/>,
-<img class="math" src="_images/math/c0ec782917c16614c1e51e159b0c7aeddbc2173a.png" alt="\pi_0"/>. Then, substituting <img class="math" src="_images/math/4acce9a9b17ed3f162f8fad609b4f455d036cd30.png" alt="\pi=\pi_0"/> into
-<a href="#equation-fusion1">(30)</a>-<a href="#equation-fusion4">(33)</a>, we obtain <img class="math" src="_images/math/990a03f830fbfed8b316e9ddd88262b20c2a47a9.png" alt="q^+"/> and <img class="math" src="_images/math/8ac2eaaeee3680f161e55aaa91a9ed5399a32fc5.png" alt="Q^+"/>. Special
-cases are <img class="math" src="_images/math/68fcbf2170b8d45058f0ed4d54c3d37e68b62020.png" alt="\pi_0=1"/>, whence
-<img class="math" src="_images/math/062eb4d68b9e7e177847f19bebfe665399ae7e4f.png" alt="{\mathcal E}(q^+,Q^+)={\mathcal E}(q_1,Q_1)"/>, and
-<img class="math" src="_images/math/f9a7c7a385f297c87bd09173daca3c38c3964065.png" alt="\pi_0=0"/>, whence
-<img class="math" src="_images/math/aff1f37d80a85075336db4b0bd48fe65c92389bf.png" alt="{\mathcal E}(q^+,Q^+)={\mathcal E}(q_2,Q_2)"/>. These situations
+  &amp;- \langle q_1,W_1q_1\rangle + \langle q_2,W_2q_2\rangle),</span></p>
+</div><p>with <span class="math">0\leqslant\pi\leqslant1</span>. We substitute <span class="math">X</span>,
+<span class="math">\alpha</span>, <span class="math">q^+</span> defined in <a href="#equation-fusion2">(31)</a>-<a href="#equation-fusion4">(33)</a> into
+<a href="#equation-fusion5">(34)</a> and get a polynomial of degree <span class="math">2n-1</span> with respect to
+<span class="math">\pi</span>, which has only one root in the interval <span class="math">[0,1]</span>,
+<span class="math">\pi_0</span>. Then, substituting <span class="math">\pi=\pi_0</span> into
+<a href="#equation-fusion1">(30)</a>-<a href="#equation-fusion4">(33)</a>, we obtain <span class="math">q^+</span> and <span class="math">Q^+</span>. Special
+cases are <span class="math">\pi_0=1</span>, whence
+<span class="math">{\mathcal E}(q^+,Q^+)={\mathcal E}(q_1,Q_1)</span>, and
+<span class="math">\pi_0=0</span>, whence
+<span class="math">{\mathcal E}(q^+,Q^+)={\mathcal E}(q_2,Q_2)</span>. These situations
 may occur if, for example, one ellipsoid is contained in the other:</p>
 <div class="math">
-<p><img src="_images/math/f3cdb1e8131b4e3de532b5478bacc6ca38bea8e9.png" alt="{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) &amp; \Rightarrow \pi_0 = 1,\\
-{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) &amp; \Rightarrow \pi_0 = 0."/></p>
+<p><span class="math">{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) &amp; \Rightarrow \pi_0 = 1,\\
+{\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) &amp; \Rightarrow \pi_0 = 0.</span></p>
 </div><p>The proof that the system of equations <a href="#equation-fusion1">(30)</a>-<a href="#equation-fusion5">(34)</a> correctly
 defines the minimal volume external ellipsoidal approximationi of the
-intersection <img class="math" src="_images/math/174f3aecc67e47f6c6a182cf4f8707b06dca848b.png" alt="{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)"/> is
+intersection <span class="math">{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)</span> is
 given in <a class="reference internal" href="#ros2002" id="id6">[ROS2002]</a>.</p>
 <p>To find the internal approximating ellipsoid
-<img class="math" src="_images/math/be65ecc9958630893eaa1d967422669b75241c9c.png" alt="{\mathcal E}(q^-,Q^-)\subseteq{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)"/>,
+<span class="math">{\mathcal E}(q^-,Q^-)\subseteq{\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)</span>,
 define</p>
 <div class="math" id="equation-beta1">
-<p><span class="eqno">(35)</span><img src="_images/math/accbb314e11e13937385a22415861edd3c53514d.png" alt="\beta_1 = \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle,"/></p>
+<p><span class="eqno">(35)</span><span class="math">\beta_1 = \min_{\langle x,W_2x\rangle=1}\langle x,W_1x\rangle,</span></p>
 </div><div class="math" id="equation-beta2">
-<p><span class="eqno">(36)</span><img src="_images/math/743876c5387c924b114837bee0507d50c66b260c.png" alt="\beta_2 = \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle,"/></p>
+<p><span class="eqno">(36)</span><span class="math">\beta_2 = \min_{\langle x,W_1x\rangle=1}\langle x,W_2x\rangle,</span></p>
 </div><p>Notice that <a href="#equation-beta1">(35)</a> and <a href="#equation-beta2">(36)</a> are QCQP problems. Parameters
-<img class="math" src="_images/math/85f75b55a5aec0d92fdacc5e2c14fb8f557150de.png" alt="\beta_1"/> and <img class="math" src="_images/math/fa363d674f37983943b5bf917b5c46baa6d1b900.png" alt="\beta_2"/> are invariant with respect to affine
+<span class="math">\beta_1</span> and <span class="math">\beta_2</span> are invariant with respect to affine
 coordinate transformation and describe the position of ellipsoids
-<img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/>, <img class="math" src="_images/math/7c03b9994bef648279d675ca186661da592fd155.png" alt="{\mathcal E}(q_2,Q_2)"/> with
+<span class="math">{\mathcal E}(q_1,Q_1)</span>, <span class="math">{\mathcal E}(q_2,Q_2)</span> with
 respect to each other:</p>
 <div class="math">
-<p><img src="_images/math/64f6354c39a5410cb5c7c41b6a19b39cccb4c0ca.png" alt="\beta_1\geqslant1,~\beta_2\geqslant1 &amp; \Rightarrow
+<p><span class="math">\beta_1\geqslant1,~\beta_2\geqslant1 &amp; \Rightarrow
 {\bf int}({\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2))=\emptyset, \\
 
 \beta_1\geqslant1,~\beta_2\leqslant1 &amp; \Rightarrow {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2), \\
@@ -675,44 +675,44 @@ respect to each other:</p>
 
 &amp;\mbox{and} ~ {\mathcal E}(q_1,Q_1)\not\subseteq{\mathcal E}(q_2,Q_2) \\
 
-&amp;\mbox{and} ~ {\mathcal E}(q_2,Q_2)\not\subseteq{\mathcal E}(q_1,Q_1)."/></p>
+&amp;\mbox{and} ~ {\mathcal E}(q_2,Q_2)\not\subseteq{\mathcal E}(q_1,Q_1).</span></p>
 </div><p>Define parametrized family of internal ellipsoids
-<img class="math" src="_images/math/1239589f1345ebff4b42418cdc805046a99cdc99.png" alt="{\mathcal E}(q^-_{\theta_1\theta_2},Q^-_{\theta_1\theta_2})"/> with</p>
+<span class="math">{\mathcal E}(q^-_{\theta_1\theta_2},Q^-_{\theta_1\theta_2})</span> with</p>
 <div class="math" id="equation-paramell1">
-<p><span class="eqno">(37)</span><img src="_images/math/bda02e3bfe3daef86d1b384d850455c20b4fbce1.png" alt="q^-_{\theta_1\theta_2}  =  (\theta_1W_1 +
-\theta_2W_2)^{-1}(\theta_1W_1q_1 + \theta_2W_2q_2),\\"/></p>
+<p><span class="eqno">(37)</span><span class="math">q^-_{\theta_1\theta_2}  =  (\theta_1W_1 +
+\theta_2W_2)^{-1}(\theta_1W_1q_1 + \theta_2W_2q_2),\\</span></p>
 </div><div class="math" id="equation-paramell2">
-<p><span class="eqno">(38)</span><img src="_images/math/1f38197f10fa977da58eb6ea3636f7d3dca9fbf4.png" alt="Q^-_{\theta_1\theta_2} =  (1 - \theta_1\langle q_1,W_1q_1\rangle -
+<p><span class="eqno">(38)</span><span class="math">Q^-_{\theta_1\theta_2} =  (1 - \theta_1\langle q_1,W_1q_1\rangle -
 \theta_2\langle q_2,W_2q_2\rangle +
 \langle q^-_{\theta_1\theta_2},(Q^-)^{-1}q^-_{\theta_1\theta_2}\rangle)
-(\theta_1W_1 + \theta_2W_2)^{-1} ."/></p>
+(\theta_1W_1 + \theta_2W_2)^{-1} .</span></p>
 </div><p>The best internal ellipsoid
-<img class="math" src="_images/math/52113dc4e8b4ac42a0f5fdb61f8db71c814cb94a.png" alt="{\mathcal E}(q^-_{\hat{\theta}_1\hat{\theta}_2},Q^-_{\hat{\theta}_1\hat{\theta}_2})"/>
+<span class="math">{\mathcal E}(q^-_{\hat{\theta}_1\hat{\theta}_2},Q^-_{\hat{\theta}_1\hat{\theta}_2})</span>
 in the class <a href="#equation-paramell1">(37)</a>-<a href="#equation-paramell2">(38)</a>, namely, such that</p>
 <div class="math">
-<p><img src="_images/math/876cb2c2b5f0ac2fa05d381227f3fd89ccc1b289.png" alt="{\mathcal E}(q^-_{{\theta}_1{\theta}_2},Q^-_{{\theta}_1{\theta}_2})\subseteq
+<p><span class="math">{\mathcal E}(q^-_{{\theta}_1{\theta}_2},Q^-_{{\theta}_1{\theta}_2})\subseteq
 {\mathcal E}(q^-_{\hat{\theta}_1\hat{\theta}_2},Q^-_{\hat{\theta}_1\hat{\theta}_2})
-\subseteq {\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)"/></p>
-</div><p>for all <img class="math" src="_images/math/b597b25aa5f7047029febf18178105d26f130210.png" alt="0\leqslant\theta_1,\theta_2\leqslant1"/>, is specified by
+\subseteq {\mathcal E}(q_1,Q_1)\cap{\mathcal E}(q_2,Q_2)</span></p>
+</div><p>for all <span class="math">0\leqslant\theta_1,\theta_2\leqslant1</span>, is specified by
 the parameters</p>
 <div class="math" id="equation-thetapar">
-<p><span class="eqno">(39)</span><img src="_images/math/45212e8106022a380917f8ade9931e24f925f761.png" alt="\hat{\theta}_1 = \frac{1-\hat{\beta}_2}{1-\hat{\beta}_1\hat{\beta}_2}, ~~~~
-\hat{\theta}_2 = \frac{1-\hat{\beta}_1}{1-\hat{\beta}_1\hat{\beta}_2},"/></p>
+<p><span class="eqno">(39)</span><span class="math">\hat{\theta}_1 = \frac{1-\hat{\beta}_2}{1-\hat{\beta}_1\hat{\beta}_2}, ~~~~
+\hat{\theta}_2 = \frac{1-\hat{\beta}_1}{1-\hat{\beta}_1\hat{\beta}_2},</span></p>
 </div><p>with</p>
 <div class="math">
-<p><img src="_images/math/f26d7d6668bf3da165062b44263d2b49360da180.png" alt="\hat{\beta}_1=\min(1,\beta_1), ~~~~ \hat{\beta}_2=\min(1,\beta_2)."/></p>
+<p><span class="math">\hat{\beta}_1=\min(1,\beta_1), ~~~~ \hat{\beta}_2=\min(1,\beta_2).</span></p>
 </div><p>It is the ellipsoid that we look for:
-<img class="math" src="_images/math/f8c23fd750549f2fd6581d258519b77f9580d9fa.png" alt="{\mathcal E}(q^-,Q^-)={\mathcal E}(q^-_{\hat{\theta}_1\hat{\theta}_2},Q^-_{\hat{\theta}_1\hat{\theta}_2})"/>.
+<span class="math">{\mathcal E}(q^-,Q^-)={\mathcal E}(q^-_{\hat{\theta}_1\hat{\theta}_2},Q^-_{\hat{\theta}_1\hat{\theta}_2})</span>.
 Two special cases are</p>
 <div class="math">
-<p><img src="_images/math/f7758f9fd6da84c0316903bab5af8e580aed2113.png" alt="\hat{\theta}_1=1, ~ \hat{\theta}_2=0 ~~~ \Rightarrow ~~~
+<p><span class="math">\hat{\theta}_1=1, ~ \hat{\theta}_2=0 ~~~ \Rightarrow ~~~
 {\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2) ~~~ \Rightarrow ~~~
-{\mathcal E}(q^-,Q^-)={\mathcal E}(q_1,Q_1),"/></p>
+{\mathcal E}(q^-,Q^-)={\mathcal E}(q_1,Q_1),</span></p>
 </div><p>and</p>
 <div class="math">
-<p><img src="_images/math/78570ac279262b3d8170c11c31b9092ae789edf9.png" alt="\hat{\theta}_1=0, ~ \hat{\theta}_2=1 ~~~ \Rightarrow ~~~
+<p><span class="math">\hat{\theta}_1=0, ~ \hat{\theta}_2=1 ~~~ \Rightarrow ~~~
 {\mathcal E}(q_2,Q_2)\subseteq{\mathcal E}(q_1,Q_1) ~~~ \Rightarrow ~~~
-{\mathcal E}(q^-,Q^-)={\mathcal E}(q_2,Q_2)."/></p>
+{\mathcal E}(q^-,Q^-)={\mathcal E}(q_2,Q_2).</span></p>
 </div><p>The method of finding the internal ellipsoidal approximation of the
 intersection of two ellipsoids is described in <a class="reference internal" href="#vaz1999" id="id7">[VAZ1999]</a>.</p>
 </div>
@@ -720,98 +720,98 @@ intersection of two ellipsoids is described in <a class="reference internal" hre
 <h3>Intersection of Ellipsoid and Halfspace<a class="headerlink" href="#intersection-of-ellipsoid-and-halfspace" title="Permalink to this headline">¶</a></h3>
 <p>Finding the intersection of ellipsoid and halfspace can be reduced to
 finding the intersection of two ellipsoids, one of which is unbounded.
-Let <img class="math" src="_images/math/1de5034d4c6f3bda7f6ef4bf9d1f8525de7b3d46.png" alt="{\mathcal E}(q_1,Q_1)"/> be a nondegenerate ellipsoid and let
-<img class="math" src="_images/math/a8ccfc826288cb180dd6b82fe5641d1e17995bc5.png" alt="H(c,\gamma)"/> define the halfspace</p>
+Let <span class="math">{\mathcal E}(q_1,Q_1)</span> be a nondegenerate ellipsoid and let
+<span class="math">H(c,\gamma)</span> define the halfspace</p>
 <div class="math">
-<p><img src="_images/math/613c4fa860806b7da4883a1a2bf8daa9c945393f.png" alt="{\bf S}(c,\gamma) = \{x\in{\bf R}^n ~|~ \langle c,x\rangle\leqslant\gamma\}."/></p>
+<p><span class="math">{\bf S}(c,\gamma) = \{x\in{\bf R}^n ~|~ \langle c,x\rangle\leqslant\gamma\}.</span></p>
 </div><p>We have to determine if the intersection
-<img class="math" src="_images/math/e9c771fe53852b868ee50069a3218f10bcfad8ab.png" alt="{\mathcal E}(q_1,Q_1)\cap{\bf S}(c,\gamma)"/> is empty, and if not,
+<span class="math">{\mathcal E}(q_1,Q_1)\cap{\bf S}(c,\gamma)</span> is empty, and if not,
 find its external and internal ellipsoidal approximations,
-<img class="math" src="_images/math/d5641e2dce15358259a8a844d399c1c5fedc982c.png" alt="{\mathcal E}(q^+,Q^+)"/> and <img class="math" src="_images/math/c6117274906631a9a45aa033bcd5cf2806a689d1.png" alt="{\mathcal E}(q^-,Q^-)"/>. Two
+<span class="math">{\mathcal E}(q^+,Q^+)</span> and <span class="math">{\mathcal E}(q^-,Q^-)</span>. Two
 trivial situations are:</p>
 <ul class="simple">
-<li><img class="math" src="_images/math/5b351b7bdddfb1b9a6d531ecf2839ebbab1b0983.png" alt="{\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma))&gt;0"/> and
-<img class="math" src="_images/math/6e7fb166eaa75af79ff4b6963b8a4a48322cc5bd.png" alt="\langle c, q_1\rangle&gt;0"/>, which implies that
-<img class="math" src="_images/math/7538e7ba23a99496f843fb955a401cf5b24b3fdc.png" alt="{\mathcal E}(q_1,Q_1)\cap{\bf S}(c,\gamma)=\emptyset"/>;</li>
-<li><img class="math" src="_images/math/5b351b7bdddfb1b9a6d531ecf2839ebbab1b0983.png" alt="{\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma))&gt;0"/> and
-<img class="math" src="_images/math/a130f8baeb477f96cfab40c36da4ca8be432fd37.png" alt="\langle c, q_1\rangle&lt;0"/>, so that
-<img class="math" src="_images/math/2f387a082a75c3233ae98a9c03c6785dcbb4adeb.png" alt="{\mathcal E}(q_1,Q_1)\subseteq{\bf S}(c,\gamma)"/>, and then
-<img class="math" src="_images/math/b0f88e2ca863bd7bdf37d16370064f0d97c5269e.png" alt="{\mathcal E}(q^+,Q^+)={\mathcal E}(q^-,Q^-)={\mathcal E}(q_1,Q_1)"/>.</li>
+<li><span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma))&gt;0</span> and
+<span class="math">\langle c, q_1\rangle&gt;0</span>, which implies that
+<span class="math">{\mathcal E}(q_1,Q_1)\cap{\bf S}(c,\gamma)=\emptyset</span>;</li>
+<li><span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma))&gt;0</span> and
+<span class="math">\langle c, q_1\rangle&lt;0</span>, so that
+<span class="math">{\mathcal E}(q_1,Q_1)\subseteq{\bf S}(c,\gamma)</span>, and then
+<span class="math">{\mathcal E}(q^+,Q^+)={\mathcal E}(q^-,Q^-)={\mathcal E}(q_1,Q_1)</span>.</li>
 </ul>
-<p>In case <img class="math" src="_images/math/661ee0512e34c8ad118c22696f6c69d6973c20b1.png" alt="{\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma)&lt;0"/>, i.e. the
+<p>In case <span class="math">{\bf dist}({\mathcal E}(q_1,Q_1),H(c,\gamma)&lt;0</span>, i.e. the
 ellipsoid intersects the hyperplane,</p>
 <div class="math">
-<p><img src="_images/math/52db00a2e188c06e68ceb37c6c82fa2984671702.png" alt="{\mathcal E}(q_1,Q_1)\cap{\bf S}(c,\gamma) =
-{\mathcal E}(q_1,Q_1)\cap\{x ~|~ \langle (x-q_2),W_2(x-q_2)\rangle\leqslant1\},"/></p>
+<p><span class="math">{\mathcal E}(q_1,Q_1)\cap{\bf S}(c,\gamma) =
+{\mathcal E}(q_1,Q_1)\cap\{x ~|~ \langle (x-q_2),W_2(x-q_2)\rangle\leqslant1\},</span></p>
 </div><p>with</p>
 <div class="math" id="equation-hsell1">
-<p><span class="eqno">(40)</span><img src="_images/math/dc32cafd08aef2f4d28ec4ffe405db6d6c8c0429.png" alt="q_2  =  (\gamma + 2\sqrt{\overline{\lambda}})c,\\"/></p>
+<p><span class="eqno">(40)</span><span class="math">q_2  =  (\gamma + 2\sqrt{\overline{\lambda}})c,\\</span></p>
 </div><div class="math" id="equation-hsell2">
-<p><span class="eqno">(41)</span><img src="_images/math/1cec244a29e9526a78f670f61ba9604869cb5049.png" alt="W_2  =  \frac{1}{4\overline{\lambda}}cc^T,"/></p>
-</div><p><img class="math" src="_images/math/55850eba294c2eefb5bd69c24b40b7673aaa54ec.png" alt="\overline{\lambda}"/> being the biggest eigenvalue of matrix
-<img class="math" src="_images/math/19a1de5cbb69a1661b424bd7e4ded7ab06e5962c.png" alt="Q_1"/>. After defining <img class="math" src="_images/math/18b19ee21cc183503d1b64debd5820d3b9cd49f7.png" alt="W_1=Q_1^{-1}"/>, we obtain
-<img class="math" src="_images/math/d5641e2dce15358259a8a844d399c1c5fedc982c.png" alt="{\mathcal E}(q^+,Q^+)"/> from equations <a href="#equation-fusion1">(30)</a>-<a href="#equation-fusion5">(34)</a>, and
-<img class="math" src="_images/math/c6117274906631a9a45aa033bcd5cf2806a689d1.png" alt="{\mathcal E}(q^-,Q^-)"/> from <a href="#equation-paramell1">(37)</a>-<a href="#equation-paramell2">(38)</a>,
+<p><span class="eqno">(41)</span><span class="math">W_2  =  \frac{1}{4\overline{\lambda}}cc^T,</span></p>
+</div><p><span class="math">\overline{\lambda}</span> being the biggest eigenvalue of matrix
+<span class="math">Q_1</span>. After defining <span class="math">W_1=Q_1^{-1}</span>, we obtain
+<span class="math">{\mathcal E}(q^+,Q^+)</span> from equations <a href="#equation-fusion1">(30)</a>-<a href="#equation-fusion5">(34)</a>, and
+<span class="math">{\mathcal E}(q^-,Q^-)</span> from <a href="#equation-paramell1">(37)</a>-<a href="#equation-paramell2">(38)</a>,
 <a href="#equation-thetapar">(39)</a>.</p>
-<p><strong>Remark.</strong> Notice that matrix <img class="math" src="_images/math/1ac114629b2a0e770eecb142720458726946b28d.png" alt="W_2"/> has rank <img class="math" src="_images/math/123e375e88da91240024aaf085abee194c4a2d06.png" alt="1"/>, which
-makes it singular for <img class="math" src="_images/math/a253c4f9bf8f5b4c7aceff5e784e522742301851.png" alt="n&gt;1"/>. Nevertheless, expressions
+<p><strong>Remark.</strong> Notice that matrix <span class="math">W_2</span> has rank <span class="math">1</span>, which
+makes it singular for <span class="math">n&gt;1</span>. Nevertheless, expressions
 <a href="#equation-fusion1">(30)</a>-<a href="#equation-fusion2">(31)</a>, <a href="#equation-paramell1">(37)</a>-<a href="#equation-paramell2">(38)</a> make sense because
-<img class="math" src="_images/math/531c588186c326b338c6c85df80864194d71b976.png" alt="W_1"/> is nonsingular, <img class="math" src="_images/math/45e8502c1651fe12a4545721bf0276d36ef09dd7.png" alt="\pi_0\neq0"/> and
-<img class="math" src="_images/math/eebc01af7566f3daa51e2d44dbbaf1949c3f3659.png" alt="\hat{\theta}_1\neq0"/>.</p>
-<p>To find the ellipsoidal approximations <img class="math" src="_images/math/d5641e2dce15358259a8a844d399c1c5fedc982c.png" alt="{\mathcal E}(q^+,Q^+)"/> and
-<img class="math" src="_images/math/c6117274906631a9a45aa033bcd5cf2806a689d1.png" alt="{\mathcal E}(q^-,Q^-)"/> of the intersection of ellipsoid
-<img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> and polytope <img class="math" src="_images/math/6a798b09b2064430073c019ecd65e7f6d3370b6a.png" alt="P(C,g)"/>,
-<img class="math" src="_images/math/1c09ec33b678b62daec3692de9f1136da0a54313.png" alt="C\in{\bf R}^{m\times n}"/>, <img class="math" src="_images/math/8a88762b07502c7e120cd65858dbab822ba5f003.png" alt="b\in{\bf R}^m"/>, such that</p>
+<span class="math">W_1</span> is nonsingular, <span class="math">\pi_0\neq0</span> and
+<span class="math">\hat{\theta}_1\neq0</span>.</p>
+<p>To find the ellipsoidal approximations <span class="math">{\mathcal E}(q^+,Q^+)</span> and
+<span class="math">{\mathcal E}(q^-,Q^-)</span> of the intersection of ellipsoid
+<span class="math">{\mathcal E}(q,Q)</span> and polytope <span class="math">P(C,g)</span>,
+<span class="math">C\in{\bf R}^{m\times n}</span>, <span class="math">b\in{\bf R}^m</span>, such that</p>
 <div class="math">
-<p><img src="_images/math/9c945e1b07ba29b8de2eb8025d8eccd6007cce96.png" alt="{\mathcal E}(q^-,Q^-)\subseteq{\mathcal E}(q,Q)\cap P(C,g)\subseteq{\mathcal E}(q^+,Q^+),"/></p>
+<p><span class="math">{\mathcal E}(q^-,Q^-)\subseteq{\mathcal E}(q,Q)\cap P(C,g)\subseteq{\mathcal E}(q^+,Q^+),</span></p>
 </div><p>we first compute</p>
 <div class="math">
-<p><img src="_images/math/73882a53bda7c78346c6dc56351011ba157ae549.png" alt="{\mathcal E}(q^-_1,Q^-_1)\subseteq{\mathcal E}(q,Q)\cap{\bf S}(c_1,\gamma_1)\subseteq
-{\mathcal E}(q^+_1,Q^+_1),"/></p>
-</div><p>wherein <img class="math" src="_images/math/571fd529d105d6f919e141f9321183a1562fce0b.png" alt="{\bf S}(c_1,\gamma_1)"/> is the halfspace defined by the
-first row of matrix <img class="math" src="_images/math/2bcc65482aa8e15cd4c9e9f2542451fb4e971a91.png" alt="C"/>, <img class="math" src="_images/math/3b3656365ff2748ee55de15a942b63693cb47dae.png" alt="c_1"/>, and the first element of
-vector <img class="math" src="_images/math/67f4714f065d485540ad40829e0717bf75e9dd85.png" alt="g"/>, <img class="math" src="_images/math/b38c2cdea76ba81b8b11a0512c928936814d7067.png" alt="\gamma_1"/>. Then, one by one, we get</p>
+<p><span class="math">{\mathcal E}(q^-_1,Q^-_1)\subseteq{\mathcal E}(q,Q)\cap{\bf S}(c_1,\gamma_1)\subseteq
+{\mathcal E}(q^+_1,Q^+_1),</span></p>
+</div><p>wherein <span class="math">{\bf S}(c_1,\gamma_1)</span> is the halfspace defined by the
+first row of matrix <span class="math">C</span>, <span class="math">c_1</span>, and the first element of
+vector <span class="math">g</span>, <span class="math">\gamma_1</span>. Then, one by one, we get</p>
 <div class="math">
-<p><img src="_images/math/b8750bbfbcd23db6601c02e449b43041cb7ca9cd.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 &amp; &amp; {\mathcal E}(q^-_2,Q^-_2)\subseteq{\mathcal E}(q^-_1,Q^-_1)\cap{\bf S}(c_2,\gamma_2), ~~~
 {\mathcal E}(q^+_1,Q^+_1)\cap{\bf S}(c_2,\gamma_2)\subseteq{\mathcal E}(q^+_2,Q^+_2), \\
 &amp; &amp; {\mathcal E}(q^-_3,Q^-_3)\subseteq{\mathcal E}(q^-_2,Q^-_2)\cap{\bf S}(c_3,\gamma_3), ~~~
 {\mathcal E}(q^+_2,Q^+_2)\cap{\bf S}(c_3,\gamma_3)\subseteq{\mathcal E}(q^+_3,Q^+_3), \\
 &amp; &amp; \cdots \\
 &amp; &amp; {\mathcal E}(q^-_m,Q^-_m)\subseteq{\mathcal E}(q^-_{m-1},Q^-_{m-1})\cap{\bf S}(c_m,\gamma_m), ~~~
-{\mathcal E}(q^+_{m-1},Q^+_{m-1})\cap{\bf S}(c_m,\gamma_m)\subseteq{\mathcal E}(q^+_m,Q^+_m), \\\end{aligned}"/></p>
+{\mathcal E}(q^+_{m-1},Q^+_{m-1})\cap{\bf S}(c_m,\gamma_m)\subseteq{\mathcal E}(q^+_m,Q^+_m), \\\end{aligned}</span></p>
 </div><p>The resulting ellipsoidal approximations are</p>
 <div class="math">
-<p><img src="_images/math/3dbdf3c5a2451ea42981f8ba062f727b901f8514.png" alt="{\mathcal E}(q^+,Q^+)={\mathcal E}(q^+_m,Q^+_m), ~~~~ {\mathcal E}(q^-,Q^-)={\mathcal E}(q^-_m,Q^-_m) ."/></p>
+<p><span class="math">{\mathcal E}(q^+,Q^+)={\mathcal E}(q^+_m,Q^+_m), ~~~~ {\mathcal E}(q^-,Q^-)={\mathcal E}(q^-_m,Q^-_m) .</span></p>
 </div></div>
 <div class="section" id="checking-if-one-ellipsoid-contains-another">
 <h3>Checking if one ellipsoid contains another<a class="headerlink" href="#checking-if-one-ellipsoid-contains-another" title="Permalink to this headline">¶</a></h3>
-<p>Theorem of alternatives, also known as <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/>-procedure <a class="reference internal" href="#boyd2004" id="id8">[BOYD2004]</a>,
+<p>Theorem of alternatives, also known as <span class="math">S</span>-procedure <a class="reference internal" href="#boyd2004" id="id8">[BOYD2004]</a>,
 states that the implication</p>
 <div class="math">
-<p><img src="_images/math/89939102b32402f30a64beacf51731ea22f573e1.png" alt="\langle x, A_1x\rangle + 2\langle b_1,x\rangle + c_1 \leqslant0
+<p><span class="math">\langle x, A_1x\rangle + 2\langle b_1,x\rangle + c_1 \leqslant0
 ~~ \Rightarrow ~~
-\langle x, A_2x\rangle + 2\langle b_2,x\rangle + c_2 \leqslant0,"/></p>
-</div><p>where <img class="math" src="_images/math/926ad365269e1f815f8b0dba75f4f01cd5225afa.png" alt="A_i\in{\bf R}^{n\times n}"/> are symmetric matrices,
-<img class="math" src="_images/math/fa418ccc81e764da7dceac5e64b943c32a9bc6a8.png" alt="b_i\in{\bf R}^n"/>, <img class="math" src="_images/math/37f17faf93c85c8526fc82bb98094039cfc12237.png" alt="c_i\in{\bf R}"/>, <img class="math" src="_images/math/ef3c8e5d0b695b80c117b2a48c1e7f17a28114ef.png" alt="i=1,2"/>, holds if
-and only if there exists <img class="math" src="_images/math/6845722d4c37f389b6d12bbf248492f0f4f64058.png" alt="\lambda&gt;0"/> such that</p>
+\langle x, A_2x\rangle + 2\langle b_2,x\rangle + c_2 \leqslant0,</span></p>
+</div><p>where <span class="math">A_i\in{\bf R}^{n\times n}</span> are symmetric matrices,
+<span class="math">b_i\in{\bf R}^n</span>, <span class="math">c_i\in{\bf R}</span>, <span class="math">i=1,2</span>, holds if
+and only if there exists <span class="math">\lambda&gt;0</span> such that</p>
 <div class="math">
-<p><img src="_images/math/bad3773668070eab0a4ef0bf7572ed7f7635efb3.png" alt="\left[\begin{array}{cc}
+<p><span class="math">\left[\begin{array}{cc}
 A_2 &amp; b_2\\
 b_2^T &amp; c_2\end{array}\right]
 \preceq
 \lambda\left[\begin{array}{cc}
 A_1 &amp; b_1\\
-b_1^T &amp; c_1\end{array}\right]."/></p>
-</div><p>By <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/>-procedure,
-<img class="math" src="_images/math/f70e669ed2f0ea5d59633a83eefed76cbfb8f944.png" alt="{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2)"/> (both
+b_1^T &amp; c_1\end{array}\right].</span></p>
+</div><p>By <span class="math">S</span>-procedure,
+<span class="math">{\mathcal E}(q_1,Q_1)\subseteq{\mathcal E}(q_2,Q_2)</span> (both
 ellipsoids are assumed to be nondegenerate) if and only if the following
 SDP problem is feasible:</p>
 <div class="math">
-<p><img src="_images/math/8dea39799de59a255ee23c02896e1ba3e7d290fc.png" alt="\min 0"/></p>
+<p><span class="math">\min 0</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/57166a2606512f8eaddb8414e9f6327cae1c6e12.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 \lambda &amp; &gt;  0, \\
 \left[\begin{array}{cc}
 Q_2^{-1} &amp; -Q_2^{-1}q_2\\
@@ -819,134 +819,134 @@ Q_2^{-1} &amp; -Q_2^{-1}q_2\\
 &amp; \preceq
 \lambda \left[\begin{array}{cc}
 Q_1^{-1} &amp; -Q_1^{-1}q_1\\
-(-Q_1^{-1}q_1)^T &amp; q_1^TQ_1^{-1}q_1-1\end{array}\right]\end{aligned}"/></p>
-</div><p>where <img class="math" src="_images/math/03cd7367d7c693a8d08108d78107f2746c1c80b5.png" alt="\lambda\in{\bf R}"/> is the variable.</p>
+(-Q_1^{-1}q_1)^T &amp; q_1^TQ_1^{-1}q_1-1\end{array}\right]\end{aligned}</span></p>
+</div><p>where <span class="math">\lambda\in{\bf R}</span> is the variable.</p>
 </div>
 <div class="section" id="minimum-volume-ellipsoids">
 <h3>Minimum Volume Ellipsoids<a class="headerlink" href="#minimum-volume-ellipsoids" title="Permalink to this headline">¶</a></h3>
-<p>The minimum volume ellipsoid that contains set <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> is called
-<em>Löwner-John ellipsoid</em> of the set <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/>. To characterize it we
-rewrite general ellipsoid <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> as</p>
+<p>The minimum volume ellipsoid that contains set <span class="math">S</span> is called
+<em>Löwner-John ellipsoid</em> of the set <span class="math">S</span>. To characterize it we
+rewrite general ellipsoid <span class="math">{\mathcal E}(q,Q)</span> as</p>
 <div class="math">
-<p><img src="_images/math/52afb6404f51fcccc8c83eaa5e465f8fd94be5c4.png" alt="{\mathcal E}(q,Q) = \{x ~|~ \langle (Ax + b), (Ax + b)\rangle \},"/></p>
+<p><span class="math">{\mathcal E}(q,Q) = \{x ~|~ \langle (Ax + b), (Ax + b)\rangle \},</span></p>
 </div><p>where</p>
 <div class="math">
-<p><img src="_images/math/8a0a325319c51b35cb7dcaeacc37e139ae57e9bf.png" alt="A = Q^{-1/2} ~~~ \mbox{ and } ~~~ b = -Aq ."/></p>
-</div><p>For positive definite matrix <img class="math" src="_images/math/0acafa529182e79b4f56165ec677554fba7fcf98.png" alt="A"/>, the volume of
-<img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> is proportional to <img class="math" src="_images/math/5128557de50b94b7627eaed12229b720a492a26f.png" alt="\det A^{-1}"/>. So,
-finding the minimum volume ellipsoid containing <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> can be
+<p><span class="math">A = Q^{-1/2} ~~~ \mbox{ and } ~~~ b = -Aq .</span></p>
+</div><p>For positive definite matrix <span class="math">A</span>, the volume of
+<span class="math">{\mathcal E}(q,Q)</span> is proportional to <span class="math">\det A^{-1}</span>. So,
+finding the minimum volume ellipsoid containing <span class="math">S</span> can be
 expressed as semidefinite programming (SDP) problem</p>
 <div class="math">
-<p><img src="_images/math/7e152dd033cca454970b84433e0d9c01fe9a808c.png" alt="\min \log \det A^{-1}"/></p>
+<p><span class="math">\min \log \det A^{-1}</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/71ed5e92a2a8fa859fa8e36ddd9a0b3f794fe771.png" alt="\sup_{v\in S} \langle (Av + b), (Av + b)\rangle \leqslant1,"/></p>
-</div><p>where the variables are <img class="math" src="_images/math/c13832e000729421d93073205072531572c8afe9.png" alt="A\in{\bf R}^{n\times n}"/> and
-<img class="math" src="_images/math/578c4280301f26fc627c7d5974e58a01e2fd7fd4.png" alt="b\in{\bf R}^n"/>, and there is an implicit constraint
-<img class="math" src="_images/math/438ce90e5a103178101c21b7d7f00fc1aba0a995.png" alt="A\succ 0"/> (<img class="math" src="_images/math/0acafa529182e79b4f56165ec677554fba7fcf98.png" alt="A"/> is positive definite). The objective and
-constraint functions are both convex in <img class="math" src="_images/math/0acafa529182e79b4f56165ec677554fba7fcf98.png" alt="A"/> and <img class="math" src="_images/math/5e87bf41a96deddf6cb485ff530f153f2590e9cc.png" alt="b"/>, so this
+<p><span class="math">\sup_{v\in S} \langle (Av + b), (Av + b)\rangle \leqslant1,</span></p>
+</div><p>where the variables are <span class="math">A\in{\bf R}^{n\times n}</span> and
+<span class="math">b\in{\bf R}^n</span>, and there is an implicit constraint
+<span class="math">A\succ 0</span> (<span class="math">A</span> is positive definite). The objective and
+constraint functions are both convex in <span class="math">A</span> and <span class="math">b</span>, so this
 problem is convex. Evaluating the constraint function, however, requires
 solving a convex maximization problem, and is tractable only in certain
 special cases.</p>
-<p>For a finite set <img class="math" src="_images/math/48150eaf4521d6de23f09d9fdfafabfb66fe0bbe.png" alt="S=\{x_1,\cdots,x_m\}\subset{\bf R}^n"/>, an
-ellipsoid covers <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> if and only if it covers its convex hull. So,
-finding the minimum volume ellipsoid covering <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> is the same as
+<p>For a finite set <span class="math">S=\{x_1,\cdots,x_m\}\subset{\bf R}^n</span>, an
+ellipsoid covers <span class="math">S</span> if and only if it covers its convex hull. So,
+finding the minimum volume ellipsoid covering <span class="math">S</span> is the same as
 finding the minimum volume ellipsoid containing the polytope
-<img class="math" src="_images/math/7a9f529039be7a8f3f51dd48d2513d62ed479d05.png" alt="{\bf conv}\{x_1,\cdots,x_m\}"/>. The SDP problem is</p>
+<span class="math">{\bf conv}\{x_1,\cdots,x_m\}</span>. The SDP problem is</p>
 <div class="math">
-<p><img src="_images/math/7e152dd033cca454970b84433e0d9c01fe9a808c.png" alt="\min \log \det A^{-1}"/></p>
+<p><span class="math">\min \log \det A^{-1}</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/c223e8bcb3fe17c73aad0c3560ad4a4e14300ab8.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 A &amp; \succ  0, \\
-\langle (Ax_i + b), (Ax_i + b)\rangle &amp; \leqslant 1, ~~~ i=1..m.\end{aligned}"/></p>
+\langle (Ax_i + b), (Ax_i + b)\rangle &amp; \leqslant 1, ~~~ i=1..m.\end{aligned}</span></p>
 </div><p>We can find the minimum volume ellipsoid containing the union of
-ellipsoids <img class="math" src="_images/math/b03785b7adea0b58ad13ce73b1b94785f1597b17.png" alt="\bigcup_{i=1}^m{\mathcal E}(q_i,Q_i)"/>. Using the fact
-that for <img class="math" src="_images/math/5d80af0f40d40e110161271e3c3bcf66f7e1d5f1.png" alt="i=1..m"/>
-<img class="math" src="_images/math/eb8b4f85a7529eab1e7fbe827eed14dc22101634.png" alt="{\mathcal E}(q_i,Q_i)\subseteq{\mathcal E}(q,Q)"/> if and only if
-there exists <img class="math" src="_images/math/7d72a5d0f43da45d3d7a997a9971becc5f8832c8.png" alt="\lambda_i&gt;0"/> such that</p>
+ellipsoids <span class="math">\bigcup_{i=1}^m{\mathcal E}(q_i,Q_i)</span>. Using the fact
+that for <span class="math">i=1..m</span>
+<span class="math">{\mathcal E}(q_i,Q_i)\subseteq{\mathcal E}(q,Q)</span> if and only if
+there exists <span class="math">\lambda_i&gt;0</span> such that</p>
 <div class="math">
-<p><img src="_images/math/22e24c1e3cbef4e8501089bc30d0ab22023c9095.png" alt="\left[\begin{array}{cc}
+<p><span class="math">\left[\begin{array}{cc}
 A^2 - \lambda_i Q_i^{-1} &amp; Ab + \lambda_i Q_i^{-1}q_i\\
 (Ab + \lambda_i Q_i^{-1}q_i)^T &amp; b^Tb-1 - \lambda_i (q_i^TQ_i^{-1}q_i-1) \end{array}
-\right] \preceq 0 ."/></p>
-</div><p>Changing variable <img class="math" src="_images/math/5b0b925041c58cdf636af004b385c819c1265ffb.png" alt="\tilde{b}=Ab"/>, we get convex SDP in the
-variables <img class="math" src="_images/math/0acafa529182e79b4f56165ec677554fba7fcf98.png" alt="A"/>, <img class="math" src="_images/math/224a0e6726f9a095de75f741f67faeab81eecc45.png" alt="\tilde{b}"/>, and
-<img class="math" src="_images/math/26c6267ca1f8f11edfbe7ae9e769986f15c0e814.png" alt="\lambda_1,\cdots,\lambda_m"/>:</p>
+\right] \preceq 0 .</span></p>
+</div><p>Changing variable <span class="math">\tilde{b}=Ab</span>, we get convex SDP in the
+variables <span class="math">A</span>, <span class="math">\tilde{b}</span>, and
+<span class="math">\lambda_1,\cdots,\lambda_m</span>:</p>
 <div class="math">
-<p><img src="_images/math/7e152dd033cca454970b84433e0d9c01fe9a808c.png" alt="\min \log \det A^{-1}"/></p>
+<p><span class="math">\min \log \det A^{-1}</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/8b3eccef8d2149a781cb3c3453ef67dccefc923f.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 \lambda_i &amp; &gt; 0,\\
 \left[\begin{array}{ccc}
 A^2-\lambda_iQ_i^{-1} &amp; \tilde{b}+\lambda_iQ_i^{-1}q_i &amp; 0 \\
 (\tilde{b}+\lambda_iQ_i^{-1}q_i)^T &amp; -1-\lambda_i(q_i^TQ_i^{-1}q_i-1) &amp; \tilde{b}^T \\
-0 &amp; \tilde{b} &amp; -A^2\end{array}\right] &amp; \preceq 0, ~~~ i=1..m.\end{aligned}"/></p>
-</div><p>After <img class="math" src="_images/math/0acafa529182e79b4f56165ec677554fba7fcf98.png" alt="A"/> and <img class="math" src="_images/math/5e87bf41a96deddf6cb485ff530f153f2590e9cc.png" alt="b"/> are found,</p>
+0 &amp; \tilde{b} &amp; -A^2\end{array}\right] &amp; \preceq 0, ~~~ i=1..m.\end{aligned}</span></p>
+</div><p>After <span class="math">A</span> and <span class="math">b</span> are found,</p>
 <div class="math">
-<p><img src="_images/math/a4c2e273281eb69c508308bbf87bd960818cd23b.png" alt="q=-A^{-1}b ~~~ \mbox{ and } ~~~ Q=(A^TA)^{-1}."/></p>
+<p><span class="math">q=-A^{-1}b ~~~ \mbox{ and } ~~~ Q=(A^TA)^{-1}.</span></p>
 </div><p>The results on the minimum volume ellipsoids are explained and proven in
 <a class="reference internal" href="#boyd2004" id="id9">[BOYD2004]</a>.</p>
 </div>
 <div class="section" id="maximum-volume-ellipsoids">
 <h3>Maximum Volume Ellipsoids<a class="headerlink" href="#maximum-volume-ellipsoids" title="Permalink to this headline">¶</a></h3>
 <p>Consider a problem of finding the maximum volume ellipsoid that lies
-inside a bounded convex set <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> with nonempty interior. To
+inside a bounded convex set <span class="math">S</span> with nonempty interior. To
 formulate this problem we rewrite general ellipsoid
-<img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> as</p>
+<span class="math">{\mathcal E}(q,Q)</span> as</p>
 <div class="math">
-<p><img src="_images/math/7871e3c7af9cdbebe7f21603bcd4ee10fd9bef1d.png" alt="{\mathcal E}(q,Q) = \{Bx + q ~|~ \langle x,x\rangle\leqslant1\},"/></p>
-</div><p>where <img class="math" src="_images/math/f2382c13034d040bec2aa908ebfe63b1c713e2e9.png" alt="B=Q^{1/2}"/>, so the volume of <img class="math" src="_images/math/86a01c7a751f2a781e9911f4c77c750f24a671e6.png" alt="{\mathcal E}(q,Q)"/> is
-proportional to <img class="math" src="_images/math/1a335e497da96f4178e6f70126984defe24e99e8.png" alt="\det B"/>.</p>
-<p>The maximum volume ellipsoid that lies inside <img class="math" src="_images/math/11a85f3c69ae6702cb1d99d3de451913b8f84c04.png" alt="S"/> can be found by
+<p><span class="math">{\mathcal E}(q,Q) = \{Bx + q ~|~ \langle x,x\rangle\leqslant1\},</span></p>
+</div><p>where <span class="math">B=Q^{1/2}</span>, so the volume of <span class="math">{\mathcal E}(q,Q)</span> is
+proportional to <span class="math">\det B</span>.</p>
+<p>The maximum volume ellipsoid that lies inside <span class="math">S</span> can be found by
 solving the following SDP problem:</p>
 <div class="math">
-<p><img src="_images/math/173c33829a50340096f19450e673605acc3a12ea.png" alt="\max \log \det B"/></p>
+<p><span class="math">\max \log \det B</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/37ab3ea30ca9dff1d78b060e63faf3d5e594e1cb.png" alt="\sup_{\langle v,v\rangle\leqslant1} I_S(Bv+q)\leqslant0 ,"/></p>
-</div><p>in the variables <img class="math" src="_images/math/4ebf8f87c6586a63f98550f04140687a3871d4bb.png" alt="B\in{\bf R}^{n\times n}"/> - symmetric matrix,
-and <img class="math" src="_images/math/bc268c6c9b845f28350ebb76180e9bbf577dc873.png" alt="q\in{\bf R}^n"/>, with implicit constraint <img class="math" src="_images/math/8f06177e74766bd978cfffdd5ecb924ff48fb286.png" alt="B\succ 0"/>,
-where <img class="math" src="_images/math/490869164bfa99fd2c6c98dba18813b012cfb78d.png" alt="I_S"/> is the indicator function:</p>
+<p><span class="math">\sup_{\langle v,v\rangle\leqslant1} I_S(Bv+q)\leqslant0 ,</span></p>
+</div><p>in the variables <span class="math">B\in{\bf R}^{n\times n}</span> - symmetric matrix,
+and <span class="math">q\in{\bf R}^n</span>, with implicit constraint <span class="math">B\succ 0</span>,
+where <span class="math">I_S</span> is the indicator function:</p>
 <div class="math">
-<p><img src="_images/math/32521f51f3a81fae4f4069fd5c080734c99de7f8.png" alt="I_S(x) = \left\{\begin{array}{ll}
+<p><span class="math">I_S(x) = \left\{\begin{array}{ll}
 0, &amp; \mbox{ if } x\in S,\\
-\infty, &amp; \mbox{ otherwise.}\end{array}\right."/></p>
-</div><p>In case of polytope, <img class="math" src="_images/math/0445478058d4ea48e46870613f196979c07b3f5f.png" alt="S=P(C,g)"/> with <img class="math" src="_images/math/6a798b09b2064430073c019ecd65e7f6d3370b6a.png" alt="P(C,g)"/> defined in
+\infty, &amp; \mbox{ otherwise.}\end{array}\right.</span></p>
+</div><p>In case of polytope, <span class="math">S=P(C,g)</span> with <span class="math">P(C,g)</span> defined in
 <a href="#equation-polytope">(14)</a>, the SDP has the form</p>
 <div class="math">
-<p><img src="_images/math/58371e8bc27bf53a69b86c5c8079ba6bfd61f601.png" alt="\min \log \det B^{-1}"/></p>
+<p><span class="math">\min \log \det B^{-1}</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/7c9961c13b87f069ffe63ebfd344778123d444c1.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 B &amp; \succ 0,\\
 \langle c_i, Bc_i\rangle + \langle c_i, q\rangle &amp; \leqslant \gamma_i,
-~~~ i=1..m.\end{aligned}"/></p>
+~~~ i=1..m.\end{aligned}</span></p>
 </div><p>We can find the maximum volume ellipsoid that lies inside the
 intersection of given ellipsoids
-<img class="math" src="_images/math/9af8c98c16cbb90c3144cc3daa019d1946b0b762.png" alt="\bigcap_{i=1}^m{\mathcal E}(q_i,Q_i)"/>. Using the fact that for
-<img class="math" src="_images/math/5d80af0f40d40e110161271e3c3bcf66f7e1d5f1.png" alt="i=1..m"/> <img class="math" src="_images/math/efe446a4c65561d60e6405f24890aa5cddda99cb.png" alt="{\mathcal E}(q,Q)\subseteq{\mathcal E}(q_i,Q_i)"/>
-if and only if there exists <img class="math" src="_images/math/7d72a5d0f43da45d3d7a997a9971becc5f8832c8.png" alt="\lambda_i&gt;0"/> such that</p>
+<span class="math">\bigcap_{i=1}^m{\mathcal E}(q_i,Q_i)</span>. Using the fact that for
+<span class="math">i=1..m</span> <span class="math">{\mathcal E}(q,Q)\subseteq{\mathcal E}(q_i,Q_i)</span>
+if and only if there exists <span class="math">\lambda_i&gt;0</span> such that</p>
 <div class="math">
-<p><img src="_images/math/a9c4516e2736162b6a267628d74c85f4f38974f4.png" alt="\left[\begin{array}{cc}
+<p><span class="math">\left[\begin{array}{cc}
 -\lambda_i - q^TQ_i^{-1}q + 2q_i^TQ_i^{-1}q - q_i^TQ_i^{-1}q_i + 1 &amp; (Q_i^{-1}q-Q_i^{-1}q_i)^TB\\
-B(Q_i^{-1}q-Q_i^{-1}q_i) &amp; \lambda_iI-BQ_i^{-1}B\end{array}\right] \succeq 0."/></p>
+B(Q_i^{-1}q-Q_i^{-1}q_i) &amp; \lambda_iI-BQ_i^{-1}B\end{array}\right] \succeq 0.</span></p>
 </div><p>To find the maximum volume ellipsoid, we solve convex SDP in variables
-<img class="math" src="_images/math/83956e92fcc80dee17fce864543216939a3c9da7.png" alt="B"/>, <img class="math" src="_images/math/23f1b45408e5b4130c0f940fcbfcec54492cbdcd.png" alt="q"/>, and <img class="math" src="_images/math/26c6267ca1f8f11edfbe7ae9e769986f15c0e814.png" alt="\lambda_1,\cdots,\lambda_m"/>:</p>
+<span class="math">B</span>, <span class="math">q</span>, and <span class="math">\lambda_1,\cdots,\lambda_m</span>:</p>
 <div class="math">
-<p><img src="_images/math/58371e8bc27bf53a69b86c5c8079ba6bfd61f601.png" alt="\min \log \det B^{-1}"/></p>
+<p><span class="math">\min \log \det B^{-1}</span></p>
 </div><p>subject to:</p>
 <div class="math">
-<p><img src="_images/math/7b628a9fa6973eb94d1f9730b9ccf6d67d5d38f5.png" alt="\begin{aligned}
+<p><span class="math">\begin{aligned}
 \lambda_i &amp; &gt;  0, \\
 \left[\begin{array}{ccc}
 1-\lambda_i &amp; 0 &amp; (q - q_i)^T\\
 0 &amp; \lambda_iI &amp; B\\
-q - q_i &amp; B &amp; Q_i\end{array}\right] &amp; \succeq  0, ~~~ i=1..m.\end{aligned}"/></p>
-</div><p>After <img class="math" src="_images/math/83956e92fcc80dee17fce864543216939a3c9da7.png" alt="B"/> and <img class="math" src="_images/math/23f1b45408e5b4130c0f940fcbfcec54492cbdcd.png" alt="q"/> are found,</p>
+q - q_i &amp; B &amp; Q_i\end{array}\right] &amp; \succeq  0, ~~~ i=1..m.\end{aligned}</span></p>
+</div><p>After <span class="math">B</span> and <span class="math">q</span> are found,</p>
 <div class="math">
-<p><img src="_images/math/75af7f60774ea89d37145413f34343efe03a4cff.png" alt="Q = B^TB."/></p>
+<p><span class="math">Q = B^TB.</span></p>
 </div><p>The results on the maximum volume ellipsoids are explained and proven in
 <a class="reference internal" href="#boyd2004" id="id10">[BOYD2004]</a>.</p>
 <h2>References</h2><table class="docutils citation" frame="void" id="dar2012" rules="none">
@@ -1069,7 +1069,7 @@ with Bounded Coordinates. <em>Izvestiya Rossiiskoi Akademii Nauk. Teoriya i Syst
     </div>
     <div class="footer">
         &copy; Copyright 2011-2013 Moscow State University, Faculty of Computational Mathematics and Computer Science, System Analysis Department, 2004-2011 The Regents of the University of California.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
 </html>
