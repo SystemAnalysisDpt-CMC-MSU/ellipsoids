@@ -17,7 +17,7 @@
 
 
 \title{Ellipsoidal Toolbox}
-\date{May 15, 2014}
+\date{May 17, 2014}
 \release{2.0.1}
 \author{Peter Gagarinov, Alex A. Kurzhanskiy}
 \newcommand{\sphinxlogo}{}
@@ -5398,54 +5398,923 @@ The instruments to create ellipsoid tube objects are several functions:
 
 Basically we can divide these methods into two groups, based od what objects they are using to create ellipsoid tube: an array of ellipsoid matrices with an array of ellipsoid centers (by using these methods we can create an ellipsoid tube object containing several ellipsoid tubes) or an array of ellipsoids (by using these methods we can create an ellipsoid tube object containing one ellipsoid tube). To illustrate the usage of these methods we have to describe several functions, that will be used in the process. Below are their descriptions.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYGZpc{} This function returns the values of arguments, that are the same for
+\PYGZpc{} FROMQARRAYS, FROMQMARRAYS and FROMQMSCALEDARRAYS methods of creating an 
+\PYGZpc{} ellipsoid tube object. Basically, this function creates a set of
+\PYGZpc{} arguments nessesary for creating an ellipsoid tube object containing 
+\PYGZpc{} nTubes ellipsoid tubes. Here nTubes is a random natural number in the
+\PYGZpc{} range from one to ten.
+\PYGZpc{}
+function [nTubes, nPoints, nDims, absTol, relTol, timeVec,...
+    sTime, lsGoodDirVec, ltGoodDirArray, aMat, qArrayList] = getData()
+nTubes=randi(10,1);
+nPoints=20;
+nDims=3;
+absTol=0.001;
+relTol=0.001;
+timeVec=(1/nPoints):(1/nPoints):1;
+sTime=timeVec(randi(nPoints,1));
+lsGoodDirVec=[1;0;0];
+ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+aMat=zeros(nDims,nPoints);
+qArrayList=repmat(\PYGZob{}repmat(diag([0.1 0.2 0.3]),[1,1,nPoints])\PYGZcb{},1,nTubes);
+end
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} This function returns the values of arguments, that specify the type of}
+\PYG{c}{\PYGZpc{} approximation that will be used to create an ellipsoid tube object. It}
+\PYG{c}{\PYGZpc{} will be a random type of approximation (Internal or External). These}
+\PYG{c}{\PYGZpc{} arguments can be used while creating an ellipsoid tube object containing}
+\PYG{c}{\PYGZpc{} one ellipsoid tube or several ellipsoid tubes with the same type of}
+\PYG{c}{\PYGZpc{} approximation.}
+\PYG{c}{\PYGZpc{}}
+\PYG{k}{function}\PYG{+w}{ }[approxSchemaDescr, approxSchemaName, approxType] \PYG{p}{=}\PYG{+w}{ }\PYG{n+nf}{getSameApprox}\PYG{p}{(}\PYG{p}{)}
+\PYG{+w}{    }\PYG{n}{type} \PYG{p}{=} \PYG{n}{randi}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+    \PYG{k}{if} \PYG{n}{type} \PYG{o}{==} \PYG{l+m+mi}{1}
+        \PYG{n}{approxSchemaDescr}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;}
+        \PYG{n}{approxSchemaName}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;}
+        \PYG{n}{approxType}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{;}
+    \PYG{k}{else}
+        \PYG{n}{approxSchemaDescr}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{;}
+        \PYG{n}{approxSchemaName}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{;}
+        \PYG{n}{approxType}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{External}\PYG{p}{;}
+    \PYG{k}{end}
+\PYG{k}{end}
+\end{Verbatim}
+
 Using the three above mentioned functions we can describe an examples of \emph{fromQArrays}, \emph{fromQMArrays} and \emph{fromQMScaledArrays} methods' usage.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of creating nTubes ellipsoid tube objects using fromQArrays}
+\PYG{c}{\PYGZpc{} function with the same type of approximation.}
+\PYG{p}{[}\PYG{n}{nTubes}\PYG{p}{,} \PYG{n}{nPoints}\PYG{p}{,} \PYG{n}{nDims}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{lsGoodDirVec}\PYG{p}{,} \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{[}\PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getSameApprox}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{fromMatEllTubeObj}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQArrays}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{qArrayList}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of creating nTubes ellipsoid tube objects using fromQArrays}
+\PYG{c}{\PYGZpc{} function with different types of approximation.}
+\PYG{n}{nPoints}\PYG{p}{=}\PYG{l+m+mi}{10}\PYG{p}{;}
+\PYG{n}{absTol}\PYG{p}{=}\PYG{l+m+mf}{0.01}\PYG{p}{;}
+\PYG{n}{relTol}\PYG{p}{=}\PYG{l+m+mf}{0.01}\PYG{p}{;}
+\PYG{n}{approxSchemaDescr}\PYG{p}{=}\PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{n}{approxSchemaName}\PYG{p}{=}\PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{n}{nDims}\PYG{p}{=}\PYG{l+m+mi}{3}\PYG{p}{;}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{3}\PYG{p}{;}
+\PYG{n}{lsGoodDirVec}\PYG{p}{=}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{aMat}\PYG{p}{=}\PYG{n+nb}{zeros}\PYG{p}{(}\PYG{n}{nDims}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{timeVec}\PYG{p}{=}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{sTime}\PYG{p}{=}\PYG{n}{timeVec}\PYG{p}{(}\PYG{n}{randi}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{approxType}\PYG{p}{=}\PYG{p}{[}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{External}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{External}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{qArrayList}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n+nb}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{2} \PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ltGoodDirArray}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n}{lsGoodDirVec}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{fromMatEllTubeObj}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQArrays}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{qArrayList}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of creating nTubes ellipsoid tube objects using fromQMArrays}
+\PYG{c}{\PYGZpc{} function with the same type of approximation.}
+\PYG{p}{[}\PYG{n}{nTubes}\PYG{p}{,} \PYG{n}{nPoints}\PYG{p}{,} \PYG{n}{nDims}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{lsGoodDirVec}\PYG{p}{,} \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{[}\PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getSameApprox}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{mArrayList}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n+nb}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.1} \PYG{l+m+mf}{0.2} \PYG{l+m+mf}{0.3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{fromMatMEllTubeObj}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQMArrays}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{qArrayList}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{mArrayList}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of creating nTubes ellipsoid tube objects using fromQMArrays}
+\PYG{c}{\PYGZpc{} function with different types of approximation.}
+\PYG{n}{nPoints}\PYG{p}{=}\PYG{l+m+mi}{10}\PYG{p}{;}
+\PYG{n}{absTol}\PYG{p}{=}\PYG{l+m+mf}{0.01}\PYG{p}{;}
+\PYG{n}{relTol}\PYG{p}{=}\PYG{l+m+mf}{0.01}\PYG{p}{;}
+\PYG{n}{approxSchemaDescr}\PYG{p}{=}\PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{n}{approxSchemaName}\PYG{p}{=}\PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{n}{nDims}\PYG{p}{=}\PYG{l+m+mi}{3}\PYG{p}{;}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{3}\PYG{p}{;}
+\PYG{n}{lsGoodDirVec}\PYG{p}{=}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{aMat}\PYG{p}{=}\PYG{n+nb}{zeros}\PYG{p}{(}\PYG{n}{nDims}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{timeVec}\PYG{p}{=}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{sTime}\PYG{p}{=}\PYG{n}{timeVec}\PYG{p}{(}\PYG{n}{randi}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{approxType}\PYG{p}{=}\PYG{p}{[}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{External}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{External}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{mArrayList}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n+nb}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.1} \PYG{l+m+mf}{0.2} \PYG{l+m+mf}{0.3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{qArrayList}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n+nb}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{2} \PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ltGoodDirArray}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n}{lsGoodDirVec}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{fromMatMEllTubeObj}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQMArrays}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{qArrayList}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{mArrayList}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of creating nTubes ellipsoid tube objects using fromQMScaledArrays}
+\PYG{c}{\PYGZpc{} function with the same type of approximation.}
+\PYG{p}{[}\PYG{n}{nTubes}\PYG{p}{,} \PYG{n}{nPoints}\PYG{p}{,} \PYG{n}{nDims}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{lsGoodDirVec}\PYG{p}{,} \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{[}\PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getSameApprox}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{mArrayList}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n+nb}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.1} \PYG{l+m+mf}{0.2} \PYG{l+m+mf}{0.3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{scaleFactor} \PYG{p}{=} \PYG{n+nb}{ones}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{fromQMScaledArraysEllTubeObj} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQMScaledArrays}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{qArrayList}\PYG{p}{,}\PYG{n}{aMat}\PYG{p}{,}\PYG{n}{mArrayList}\PYG{p}{,}\PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{ltGoodDirArray}\PYG{p}{,}\PYG{n}{sTime}\PYG{p}{,}\PYG{n}{approxType}\PYG{p}{,}\PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{,}\PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{scaleFactor}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
 
 To use \emph{fromEllArray} and \emph{fromEllMArray} methods we nave to describe one more auxiliary function (as these methods create an ellipsoid tube object containing only one ellipsoid tube and we can not use \emph{getData} function, because it returns data for crating random number of ellipsoid tubes).
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYGZpc{} This function returns the values of arguments, that are needed to use
+\PYGZpc{} FROMELLARRAY and FROMELLMARRAY methods of creating an ellipsoid tube 
+\PYGZpc{} object. Basically, this function creates a set of arguments nessesary for
+\PYGZpc{} creating an ellipsoid tube object containing one ellipsoid tube.
+\PYGZpc{}
+function [nTubes, nPoints, nDims, absTol, relTol, timeVec,...
+    sTime, lsGoodDirVec, ltGoodDirArray, aMat, qArrayList] = getDataForOneTube()
+nTubes=1;
+nPoints=20;
+nDims=3;
+absTol=0.001;
+relTol=0.001;
+timeVec=(1/nPoints):(1/nPoints):1;
+sTime=timeVec(randi(nPoints,1));
+lsGoodDirVec=[1;0;0];
+ltGoodDirArray=repmat(lsGoodDirVec,[1,nTubes,nPoints]);
+aMat=zeros(nDims,nPoints);
+qArrayList=repmat(\PYGZob{}repmat(diag([1 2 3]),[1,1,nPoints])\PYGZcb{},1,nTubes);
+end
+\end{Verbatim}
+
 Now we can write examples of these methods' usage.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of creating nTubes ellipsoid tube objects using FROMELLARRAY}
+\PYG{c}{\PYGZpc{} method.}
+\PYG{p}{[}\PYG{n}{nTubes}\PYG{p}{,} \PYG{n}{nPoints}\PYG{p}{,} \PYG{n}{nDims}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{lsGoodDirVec}\PYG{p}{,} \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getDataForOneTube}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{[}\PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getSameApprox}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{)} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{for} \PYG{n}{iElem} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{nPoints}
+    \PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{iElem}\PYG{p}{)} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{1}\PYG{p}{\PYGZcb{}}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{end}\PYG{p}{;}
+\PYG{n}{fromEllArrayEllTubeObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromEllArray}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{ellArray}\PYG{p}{,}\PYG{n}{timeVec}\PYG{p}{,} \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of creating nTubes ellipsoid tube objects using FROMELLMARRAY.}
+\PYG{p}{[}\PYG{n}{nTubes}\PYG{p}{,} \PYG{n}{nPoints}\PYG{p}{,} \PYG{n}{nDims}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{lsGoodDirVec}\PYG{p}{,} \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getDataForOneTube}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{[}\PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getSameApprox}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{)} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{for} \PYG{n}{iElem} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{nPoints}
+    \PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{iElem}\PYG{p}{)} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{1}\PYG{p}{\PYGZcb{}}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{end}\PYG{p}{;}
+\PYG{n}{mArrayList}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n+nb}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mf}{0.1} \PYG{l+m+mf}{0.2} \PYG{l+m+mf}{0.3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{fromEllArrayEllTubeObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromEllArray}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{ellArray}\PYG{p}{,}\PYG{n}{timeVec}\PYG{p}{,} \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
 
 As we can see in all these examples, we can specify how many ellipsoid tubes we want to create, which type of arrpoximation to use. Also we can create ellipsoid tube objects, which will contain several ellipsoid tubes with different types of approximation.
 
 After creation of ellipsoid tube objects we can do several operations with them. Below is the \emph{getEllTube} function that create an ellipsoid tube object containing one or several ellipsoid tubes with specified type of approximation, on specified time vector with specified time points. This function will be used further down to illustrate other methods that we can use while working with ellipsoid tube objects.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of creating an ellipsoid tube object containing nTubes}
+\PYG{c}{\PYGZpc{} ellipsoid tubes from timeBegin to timeEnd time with specified type of}
+\PYG{c}{\PYGZpc{} approximation.}
+\PYG{c}{\PYGZpc{}}
+\PYG{k}{function}\PYG{+w}{ }ellTubeObj \PYG{p}{=}\PYG{+w}{ }\PYG{n+nf}{getEllTube}\PYG{p}{(}nTubes,timeBeg,timeEnd,type,nPoints\PYG{p}{)}
+\PYG{n}{nDims}\PYG{p}{=}\PYG{l+m+mi}{3}\PYG{p}{;}
+\PYG{n}{absTol}\PYG{p}{=}\PYG{l+m+mf}{0.001}\PYG{p}{;}
+\PYG{n}{relTol}\PYG{p}{=}\PYG{l+m+mf}{0.001}\PYG{p}{;}
+\PYG{n}{timeVec}\PYG{p}{=}\PYG{p}{(}\PYG{n}{timeBeg}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{n}{timeEnd}\PYG{p}{;}
+\PYG{n}{sTime}\PYG{p}{=}\PYG{n}{timeVec}\PYG{p}{(}\PYG{n}{randi}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{lsGoodDirVec}\PYG{p}{=}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{ltGoodDirArray}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n}{lsGoodDirVec}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{aMat}\PYG{p}{=}\PYG{n+nb}{zeros}\PYG{p}{(}\PYG{n}{nDims}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{qArrayList}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n+nb}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{2} \PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{if} \PYG{n}{type} \PYG{o}{==} \PYG{l+m+mi}{1}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;}
+    \PYG{n}{approxSchemaName}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;}
+    \PYG{n}{approxType}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{;}
+\PYG{k}{else}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{;}
+    \PYG{n}{approxSchemaName}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{External\PYGZsq{}}\PYG{p}{;}
+    \PYG{n}{approxType}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{External}\PYG{p}{;}
+\PYG{k}{end}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQArrays}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{qArrayList}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{end}
+\end{Verbatim}
+
 As we have created an ellipsoid tube object, we can get all the types of differet data about it. There is a set of methods that can give information about the data stored in the object and give access to it.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of GETDATA method\PYGZsq{}s usage.}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{5}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{100}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{2}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{data} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of GETELLARRAY method\PYGZsq{}s usage.}
+\PYG{p}{[}\PYG{n}{nTubes}\PYG{p}{,} \PYG{n}{nPoints}\PYG{p}{,} \PYG{n}{nDims}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{lsGoodDirVec}\PYG{p}{,} \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getDataForOneTube}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{p}{[}\PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{]} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getSameApprox}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{)} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{for} \PYG{n}{iElem} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{:}\PYG{n}{nPoints}
+    \PYG{n}{ellArray}\PYG{p}{(}\PYG{n}{iElem}\PYG{p}{)} \PYG{p}{=} \PYG{n}{ellipsoid}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{,} \PYG{n}{qArrayList}\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{1}\PYG{p}{\PYGZcb{}}\PYG{p}{(}\PYG{p}{:}\PYG{p}{,}\PYG{p}{:}\PYG{p}{,}\PYG{n}{iElem}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{end}\PYG{p}{;}
+\PYG{n}{fromEllArrayEllTubeObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromEllArray}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{ellArray}\PYG{p}{,}\PYG{n}{timeVec}\PYG{p}{,} \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{data} \PYG{p}{=} \PYG{n}{fromEllArrayEllTubeObj}\PYG{p}{.}\PYG{n}{getEllArray}\PYG{p}{(}\PYG{n}{approxType}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{5}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{100}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{2}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field descriptions}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{descr} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getFieldDescrList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get for given field a nested logical/cell array containing is\PYGZhy{}null }
+\PYG{c}{\PYGZpc{} indicators for cell content. For example, for approxSchemaName field.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{isNull} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getFieldIsNull}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{approxSchemaName\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get for given field logical vector determining whether value of this }
+\PYG{c}{\PYGZpc{} field in each cell is null or not. For example, for approxSchemaName field.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{valueIsNull} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getFieldIsValueNull}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{approxSchemaName\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field names}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{name} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getFieldNameList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} project object with specified fields. For example, with fields that are}
+\PYG{c}{\PYGZpc{} not to be cut or concatenated.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nameList} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getNoCatOrCutFieldsList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{proj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getFieldProjection}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field types}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{type} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getFieldTypeList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field type specifications. Field type specification is a }
+\PYG{c}{\PYGZpc{} sequence of type names corresponding to field value types starting with }
+\PYG{c}{\PYGZpc{} the top level and going down into the nested content of a field (for a }
+\PYG{c}{\PYGZpc{} field having a complex type).}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{typeSpec} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getFieldTypeSpecList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} or}
+\PYG{n}{typeSpec} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getFieldTypeSpecList}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a matrix composed from the size vectorsfor the specified fields}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{valueSizeMat} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getFieldValueSizeMat}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a vector indicating whether a particular field is composed of null }
+\PYG{c}{\PYGZpc{} values completely}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{valueNull} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getIsFieldValueNull}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a size vector for the specified dimensions. If no dimensions are }
+\PYG{c}{\PYGZpc{} specified, a size vector for all dimensions up to minimum dimension is }
+\PYG{c}{\PYGZpc{} returned}
+\PYG{n}{minDimensionSize} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getMinDimensionSize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a minimum dimensionality for a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{minDimensionality} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getMinDimensionality}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a number of elements in a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nElems} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getNElems}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a number of fields in a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nFiedls} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getNFields}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a number of tuples in a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nTuples} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getNTuples}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get sort index for all tuples of given relation with respect to some of }
+\PYG{c}{\PYGZpc{} its fields}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{sortIndex} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getSortIndex}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} also we can specify the direction of sorting (\PYGZsq{}asc\PYGZsq{} or \PYGZsq{}desc\PYGZsq{})}
+\PYG{n}{sortIndex} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getSortIndex}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Direction\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{asc\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get tuples with given indices from given relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{tuples} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getTuples}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get tuples from given relation such that afixed index field contains }
+\PYG{c}{\PYGZpc{} values from a given set of value}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{filteredTuples} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getTuplesFilteredBy}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sTime\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get internal representation for a set of unique tuples for given relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{uniqueData} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getUniqueData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a relation containing the unique tuples from the original relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{uniqueTuples} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getUniqueTuples}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
 
 Also we can copy the object, clear all the data, save it in a file:
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{5}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{100}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{2}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a copy of the object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellCopy} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{getCopy}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} delete all the data from the object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{clearData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellTubeObj} \PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} create a copy of a specified object via calling a copy constructor for }
+\PYG{c}{\PYGZpc{} the object class}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{cloneObj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{clone}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} remove all duplicate tuples from the relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{noDuplicate} \PYG{p}{=} \PYG{n}{cloneObj}\PYG{p}{.}\PYG{n}{removeDuplicateTuples}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} write a content of relation into Excel spreadsheet file}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{writeToCSV}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{path\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} write a content of relation into Excel spreadsheet file}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{fileName} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{writeToXLS}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{path\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} display a content of the given relation as a data grid UI component}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{dispOnUI}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} put some textual information about object in screen}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{display}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 As we have created the object, we can work with it. Below is the example of concatenating ellipsoid tube objects. We can concatenate objects containing one or several ellipsoid tubes with the same type of approximation.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of concatenating ellipsoid tube objects containing random }
+\PYG{c}{\PYGZpc{} number of ellipsoid tubes (from one to ten tubes).}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nTubes} \PYG{p}{=} \PYG{n}{randi}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{timeBeg1} \PYG{p}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd1} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{firstEllTubeObj} \PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg1}\PYG{p}{,}\PYG{n}{timeEnd1}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{timeBeg2} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{timeEnd2} \PYG{p}{=} \PYG{l+m+mi}{2}\PYG{p}{;}
+\PYG{n}{secondEllTubeObj} \PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg2}\PYG{p}{,}\PYG{n}{timeEnd2}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} Concatenating firstEllTube and secondEllTube on [timeBeg1, timeEnd2]}
+\PYG{c}{\PYGZpc{} vector of time.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{resEllTubeObj} \PYG{p}{=} \PYG{n}{firstEllTubeObj}\PYG{p}{.}\PYG{n+nb}{cat}\PYG{p}{(}\PYG{n}{secondEllTubeObj}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} Concatenating the same firstEllTube and secondEllTube on [timeBeg1,timeEnd2]}
+\PYG{c}{\PYGZpc{} vector of time, but the sTime and values of properties corresponding to }
+\PYG{c}{\PYGZpc{} sTime are taken from secondEllTube.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{resEllTubeObj} \PYG{p}{=} \PYG{n}{firstEllTubeObj}\PYG{p}{.}\PYG{n+nb}{cat}\PYG{p}{(}\PYG{n}{secondEllTubeObj}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isReplacedByNew\PYGZsq{}}\PYG{p}{,}\PYG{n}{true}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} Concatenating the same firstEllTube and secondEllTube on [timeBeg1,timeEnd2]}
+\PYG{c}{\PYGZpc{} vector of time, but the sTime and values of properties corresponding to }
+\PYG{c}{\PYGZpc{} sTime are taken from firstEllTube.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{resEllTubeObj} \PYG{p}{=} \PYG{n}{firstEllTubeObj}\PYG{p}{.}\PYG{n+nb}{cat}\PYG{p}{(}\PYG{n}{secondEllTubeObj}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{isReplacedByNew\PYGZsq{}}\PYG{p}{,}\PYG{n}{false}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} Note that we cannot concatenate ellipsoid tubes with  overlapping time}
+\PYG{c}{\PYGZpc{} limits.}
+\PYG{c}{\PYGZpc{}}
+\end{Verbatim}
 
 As we can concatenate ellipsoid tubes, it is logical to be possible to cut ellipsoid tubes, leaving only part of it at specified vector of time or point of time. Below are the exmples:
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of usage of CUT function from EllTubeBasic class. In}
+\PYG{c}{\PYGZpc{} this example an ellipsoid tube object is created, using TimeVec time}
+\PYG{c}{\PYGZpc{} vector. Then it is cut using cutTimeVec time vector.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{timeVec} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{timeVec}\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{p}{:}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{n}{cutTimeVec} \PYG{p}{=} \PYG{p}{[}\PYG{n}{timeVec}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)} \PYG{n}{timeVec}\PYG{p}{(}\PYG{l+m+mi}{7}\PYG{p}{)}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{cutVecEllTubeObj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{n}{cutTimeVec}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of usage of CUT function from EllTubeBasic class. In}
+\PYG{c}{\PYGZpc{} this example an ellipsoid tube object is created, using TimeVec time}
+\PYG{c}{\PYGZpc{} vector. Then it is cut using cutTimePoint point}
+\PYG{c}{\PYGZpc{} of time.}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{timeVec} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{timeVec}\PYG{p}{\PYGZob{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{p}{:}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{n}{cutTimePoint} \PYG{p}{=} \PYG{n}{timeVec}\PYG{p}{(}\PYG{n}{randi}\PYG{p}{(}\PYG{n+nb}{size}\PYG{p}{(}\PYG{n}{timeVec}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{cutPointEllTubeObj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{cut}\PYG{p}{(}\PYG{n}{cutTimePoint}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 After cutting, we can interpolate the resulting tube, using new time vector. Take notice that we have to make sure that the first and the last elements in old and new vectors of time are the same.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of usage of INTERP function. In this example an ellipsoid tube}
+\PYG{c}{\PYGZpc{} object is created, using oldTimeVec time vector. Then it is interpolated }
+\PYG{c}{\PYGZpc{} on newTimeVec time vector.}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{newNPoints}\PYG{p}{=}\PYG{l+m+mi}{50}\PYG{p}{;}
+\PYG{n}{newTimeVec} \PYG{p}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{newNPoints}\PYG{p}{)}\PYG{p}{:}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{interpEllTubeObj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{interp}\PYG{p}{(}\PYG{n}{newTimeVec}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
 
 After that we can thin out the new ellipsoid tube, removing ellipsoids at sertain points of time.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of usage of THINOUTTUPLES method. In this example an ellipsoid}
+\PYG{c}{\PYGZpc{} tube object is created, using TimeVec time vector. Then it is thinned out}
+\PYG{c}{\PYGZpc{} using indVec vector of random indices of elements from timeVec.}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{newnPoints}\PYG{p}{=}\PYG{l+m+mi}{50}\PYG{p}{;}
+\PYG{n}{newTimeVec} \PYG{p}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{newnPoints}\PYG{p}{)}\PYG{p}{:}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{interpEllTubeObj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{interp}\PYG{p}{(}\PYG{n}{newTimeVec}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{indVec} \PYG{p}{=} \PYG{n}{randi}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{thinOutEllTubeObj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{thinOutTuples}\PYG{p}{(}\PYG{n}{indVec}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 Then we can also calculate new scale factor for specified fields:
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of using SCALE method to calculate and set new}
+\PYG{c}{\PYGZpc{} scaleFactor for fields in ellipsoid tube object.}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{newnPoints}\PYG{p}{=}\PYG{l+m+mi}{50}\PYG{p}{;}
+\PYG{n}{newTimeVec} \PYG{p}{=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{newnPoints}\PYG{p}{)}\PYG{p}{:}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{interpEllTubeObj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{interp}\PYG{p}{(}\PYG{n}{newTimeVec}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{scale}\PYG{p}{(}\PYG{p}{@}\PYG{p}{(}\PYG{n}{varargin}\PYG{p}{)}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{p}{\PYGZob{}}\PYG{p}{\PYGZcb{}}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
 
 Also we can compare objects using method \emph{isEqual}.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example ISEQUAL function usage. In it two ellipsoid tube objects are}
+\PYG{c}{\PYGZpc{} created and compared. This is the example of the siplest usage of this}
+\PYG{c}{\PYGZpc{} function with the minimum of input arguments. These ellipsoid tubes are}
+\PYG{c}{\PYGZpc{} not equal because of different lsGoodDirVec vectors.}
+\PYG{n}{nPoints}\PYG{p}{=}\PYG{l+m+mi}{10}\PYG{p}{;}
+\PYG{n}{absTol}\PYG{p}{=}\PYG{l+m+mf}{0.01}\PYG{p}{;}
+\PYG{n}{relTol}\PYG{p}{=}\PYG{l+m+mf}{0.01}\PYG{p}{;}
+\PYG{n}{approxSchemaDescr}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{approxSchemaName}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{nDims}\PYG{p}{=}\PYG{l+m+mi}{3}\PYG{p}{;}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{lsGoodDirVec}\PYG{p}{=}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{aMat}\PYG{p}{=}\PYG{n+nb}{zeros}\PYG{p}{(}\PYG{n}{nDims}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{timeVec}\PYG{p}{=}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{sTime}\PYG{p}{=}\PYG{n}{timeVec}\PYG{p}{(}\PYG{n}{randi}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{approxType}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{;}
+\PYG{n}{qArrayList}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n+nb}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{2} \PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ltGoodDirArray}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n}{lsGoodDirVec}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{firstEllTubeObj}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQArrays}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{qArrayList}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{lsGoodDirVec}\PYG{p}{=}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{ltGoodDirArray}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n}{lsGoodDirVec}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{secondEllTubeObj}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQArrays}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{qArrayList}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{firstEllTubeObj}\PYG{p}{.}\PYG{n}{isEqual}\PYG{p}{(}\PYG{n}{secondEllTubeObj}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example ISEQUAL function usage. In it two ellipsoid tube objects are}
+\PYG{c}{\PYGZpc{} created and compared. These ellipsoid tubes are equal.}
+\PYG{n}{nPoints}\PYG{p}{=}\PYG{l+m+mi}{10}\PYG{p}{;}
+\PYG{n}{absTol}\PYG{p}{=}\PYG{l+m+mf}{0.01}\PYG{p}{;}
+\PYG{n}{relTol}\PYG{p}{=}\PYG{l+m+mf}{0.01}\PYG{p}{;}
+\PYG{n}{approxSchemaDescr}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{approxSchemaName}\PYG{p}{=}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Internal\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{nDims}\PYG{p}{=}\PYG{l+m+mi}{3}\PYG{p}{;}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{lsGoodDirVec}\PYG{p}{=}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{;}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{aMat}\PYG{p}{=}\PYG{n+nb}{zeros}\PYG{p}{(}\PYG{n}{nDims}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{timeVec}\PYG{p}{=}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{:}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{sTime}\PYG{p}{=}\PYG{n}{timeVec}\PYG{p}{(}\PYG{n}{randi}\PYG{p}{(}\PYG{n}{nPoints}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{approxType}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EApproxType}\PYG{p}{.}\PYG{n}{Internal}\PYG{p}{;}
+\PYG{n}{qArrayList}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{p}{\PYGZob{}}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n+nb}{diag}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{2} \PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ltGoodDirArray}\PYG{p}{=}\PYG{n+nb}{repmat}\PYG{p}{(}\PYG{n}{lsGoodDirVec}\PYG{p}{,}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{firstEllTubeObj}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQArrays}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{qArrayList}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{secondEllTubeObj}\PYG{p}{=}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllTube}\PYG{p}{.}\PYG{n}{fromQArrays}\PYG{p}{(}\PYG{c}{...}
+    \PYG{n}{qArrayList}\PYG{p}{,} \PYG{n}{aMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{ltGoodDirArray}\PYG{p}{,} \PYG{n}{sTime}\PYG{p}{,} \PYG{n}{approxType}\PYG{p}{,} \PYG{n}{approxSchemaName}\PYG{p}{,}\PYG{c}{...}
+    \PYG{n}{approxSchemaDescr}\PYG{p}{,} \PYG{n}{absTol}\PYG{p}{,} \PYG{n}{relTol}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{firstEllTubeObj}\PYG{p}{.}\PYG{n}{isEqual}\PYG{p}{(}\PYG{n}{secondEllTubeObj}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{checkFieldOrder\PYGZsq{}}\PYG{p}{,}\PYG{n}{false}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{checkTupleOrder\PYGZsq{}}\PYG{p}{,}\PYG{n}{false}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{maxTolerance\PYGZsq{}}\PYG{p}{,}\PYG{l+m+mf}{0.0001}\PYG{p}{,}\PYG{c}{...}
+    \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{maxRelativeTolerance\PYGZsq{}}\PYG{p}{,}\PYG{l+m+mf}{0.0001}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 At last there are several methods for projecting ellipsoid tubes on the specified spaces. The first method projects the ellipsoid tube on specified space creating the specified type of projection.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of calculating ellipsoid tube object projection using PROJECT}
+\PYG{c}{\PYGZpc{} method.}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{projType} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EProjType}\PYG{p}{.}\PYG{n}{Static}\PYG{p}{;}
+\PYG{n}{projMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{p} \PYG{p}{=} \PYG{p}{@}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{fGetProjMat}\PYG{p}{;}
+\PYG{p}{[}\PYG{n}{ellTubeProjObj}\PYG{p}{,}\PYG{n}{indProj2OrigVec}\PYG{p}{]} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{project}\PYG{p}{(}\PYG{n}{projType}\PYG{p}{,}\PYG{c}{...}
+    \PYG{p}{\PYGZob{}}\PYG{n}{projMat}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{n}{p}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
 
 The second method projects the ellipsoid tube onto subspace defined by vectors of standart basis with indices specified in indVec.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} Examples of calculating ellipsoid tube object projection to basic orths }
+\PYG{c}{\PYGZpc{} using PROJECTTOORTHS function. This is an example of projectToOrths usage }
+\PYG{c}{\PYGZpc{} with one input variable. The default value of projection type is used.}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellTubeProjObj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{projectToOrths}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} Examples of calculating an ellipsoid tube object projection to basic orths }
+\PYG{c}{\PYGZpc{} using PROJECTTOORTHS function. This is an example of projectToOrths usage }
+\PYG{c}{\PYGZpc{} with specified projection type.}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{projType} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EProjType}\PYG{p}{.}\PYG{n}{DynamicAlongGoodCurve}\PYG{p}{;}
+\PYG{n}{ellTubeProjObj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{projectToOrths}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{,} \PYG{n}{projType}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 Also there is a method for calculating only static projections.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} Examples of calculating ellipsoid tube object static projection using }
+\PYG{c}{\PYGZpc{} PROJECTSTATIC function.}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{projMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{ellTubeProjObj} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{projectStatic}\PYG{p}{(}\PYG{n}{projMat}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 For creating the projection matrix a special function is used in all of these examples.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+function [projOrthMatArray,projOrthMatTransArray]=...
+    fGetProjMat(projMat,timeVec,varargin)
+    nPoints=length(timeVec);
+    projOrthMatArray=repmat(projMat,[1,1,nPoints]);
+    projOrthMatTransArray=repmat(projMat.\PYGZsq{},[1,1,nPoints]);
+end
+\end{Verbatim}
 
 
 \section{Tubes by instant of time}
 \label{chap_ellTube:tubes-by-instant-of-time}
 As with ellipsoid tube objects, there are several methods that we can use while working with tubes by instant of time. First of all we can create tubes by instant of time using \emph{fromEllTubes} method:
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of creating EllUnionTube object using FROMELLTUBES method.}
+\PYG{n}{aMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{bMat} \PYG{p}{=} \PYG{n+nb}{eye}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{SUBounds} \PYG{p}{=} \PYG{n}{struct}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{center} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sin(t)\PYGZsq{}}\PYG{p}{;} \PYG{l+s}{\PYGZsq{}}\PYG{l+s}{cos(t)\PYGZsq{}}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{n}{SUBounds}\PYG{p}{.}\PYG{n}{shape} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{9} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{2}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{sys} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{linsys}\PYG{p}{.}\PYG{n}{LinSysContinuous}\PYG{p}{(}\PYG{n}{aMat}\PYG{p}{,} \PYG{n}{bMat}\PYG{p}{,} \PYG{n}{SUBounds}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{x0EllObj} \PYG{p}{=} \PYG{n}{ell\PYGZus{}unitball}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{timeVec} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{0} \PYG{l+m+mi}{10}\PYG{p}{]}\PYG{p}{;}
+\PYG{n}{dirsMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{rsObj} \PYG{p}{=} \PYG{n}{elltool}\PYG{p}{.}\PYG{n}{reach}\PYG{p}{.}\PYG{n}{ReachContinuous}\PYG{p}{(}\PYG{n}{sys}\PYG{p}{,} \PYG{n}{x0EllObj}\PYG{p}{,} \PYG{n}{dirsMat}\PYG{p}{,} \PYG{n}{timeVec}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellTubeObj} \PYG{p}{=} \PYG{n}{rsObj}\PYG{p}{.}\PYG{n}{getEllTubeRel}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{unionEllTubeObj} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{rels}\PYG{p}{.}\PYG{n}{EllUnionTube}\PYG{p}{.}\PYG{n}{fromEllTubes}\PYG{p}{(}\PYG{n}{ellTubeObj}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 From here on we will use the \emph{getUnion} function so we can get a tube by instant of time and work with it further on. As we have created a tubes by instant of time object, we can get all the types of differet data about it. There is a set of methods that can give information about the data stored in the object and give access to it.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of GETDATA method\PYGZsq{}s usage.}
+\PYG{n}{ellUnionObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getUnion}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{data} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of GETELLARRAY method\PYGZsq{}s usage.}
+\PYG{n}{ellUnionObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getUnion}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{approxType} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{approxType}\PYG{p}{;}
+\PYG{n}{data} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getEllArray}\PYG{p}{(}\PYG{n}{approxType}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{n}{ellUnionObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getUnion}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field descriptions}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{descr} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getFieldDescrList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get for given field a nested logical/cell array containing is\PYGZhy{}null }
+\PYG{c}{\PYGZpc{} indicators for cell content. For example, for approxSchemaName field.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{isNull} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getFieldIsNull}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{approxSchemaName\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get for given field logical vector determining whether value of this }
+\PYG{c}{\PYGZpc{} field in each cell is null or not. For example, for approxSchemaName field.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{valueIsNull} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getFieldIsValueNull}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{approxSchemaName\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field names}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{name} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getFieldNameList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} project object with specified fields. For example, with fields that are}
+\PYG{c}{\PYGZpc{} not to be cut or concatenated.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nameList} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getNoCatOrCutFieldsList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{proj} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getFieldProjection}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field types}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{type} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getFieldTypeList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field type specifications. Field type specification is a }
+\PYG{c}{\PYGZpc{} sequence of type names corresponding to field value types starting with }
+\PYG{c}{\PYGZpc{} the top level and going down into the nested content of a field (for a }
+\PYG{c}{\PYGZpc{} field having a complex type).}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{typeSpec} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getFieldTypeSpecList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} or}
+\PYG{n}{typeSpec} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getFieldTypeSpecList}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a matrix composed from the size vectorsfor the specified fields}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{valueSizeMat} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getFieldValueSizeMat}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a vector indicating whether a particular field is composed of null }
+\PYG{c}{\PYGZpc{} values completely}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{valueNull} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getIsFieldValueNull}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a size vector for the specified dimensions. If no dimensions are }
+\PYG{c}{\PYGZpc{} specified, a size vector for all dimensions up to minimum dimension is }
+\PYG{c}{\PYGZpc{} returned}
+\PYG{n}{minDimensionSize} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getMinDimensionSize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a minimum dimensionality for a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{minDimensionality} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getMinDimensionality}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a number of elements in a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nElems} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getNElems}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a number of fields in a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nFiedls} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getNFields}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a number of tuples in a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nTuples} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getNTuples}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get sort index for all tuples of given relation with respect to some of }
+\PYG{c}{\PYGZpc{} its fields}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{sortIndex} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getSortIndex}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} also we can specify the direction of sorting (\PYGZsq{}asc\PYGZsq{} or \PYGZsq{}desc\PYGZsq{})}
+\PYG{n}{sortIndex} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getSortIndex}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Direction\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{asc\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get tuples with given indices from given relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{tuples} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getTuples}\PYG{p}{(}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get tuples from given relation such that afixed index field contains }
+\PYG{c}{\PYGZpc{} values from a given set of value}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{filteredTuples} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getTuplesFilteredBy}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sTime\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get internal representation for a set of unique tuples for given relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{uniqueData} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getUniqueData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a relation containing the unique tuples from the original relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{uniqueTuples} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getUniqueTuples}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
 
 Also we can copy the object, clear all the data, save it in a file.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{n}{ellUnionObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getUnion}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a copy of the object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellCopy} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{getCopy}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} delete all the data from the object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{clearData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellUnionObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getUnion}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} create a copy of a specified object via calling a copy constructor for }
+\PYG{c}{\PYGZpc{} the object class}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{cloneObj} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{clone}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} remove all duplicate tuples from the relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{noDuplicate} \PYG{p}{=} \PYG{n}{cloneObj}\PYG{p}{.}\PYG{n}{removeDuplicateTuples}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} write a content of relation into Excel spreadsheet file}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{writeToCSV}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{path\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} write a content of relation into Excel spreadsheet file}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{fileName} \PYG{p}{=} \PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{writeToXLS}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{path\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} display a content of the given relation as a data grid UI component}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{dispOnUI}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} put some textual information about object in screen}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellUnionObj}\PYG{p}{.}\PYG{n}{display}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 Also we can compare tubes by instant of time using \emph{isEqual} method.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of ISEQUAL method usage. The compared ellTubeUnions are not}
+\PYG{c}{\PYGZpc{} equal because one has external approximation, and the other has internal}
+\PYG{c}{\PYGZpc{} approximation.}
+\PYG{n}{firstUnionObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getUnionExt}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{secondUnionObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getUnionInt}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{res} \PYG{p}{=} \PYG{n}{firstUnionObj}\PYG{p}{.}\PYG{n}{isEqual}\PYG{p}{(}\PYG{n}{secondUnionObj}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
 
 At last, as it has already been said tubes by instant of time can be projected only on static subspaces. It can be done in two ways.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of calculating EllTubeUnion object\PYGZsq{}s projection using PROJECT}
+\PYG{c}{\PYGZpc{} method. For EllTubeUnion objects the type of projection can only be Static.}
+\PYG{n}{unionEllTubeObj} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getUnion}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{projType} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EProjType}\PYG{p}{.}\PYG{n}{Static}\PYG{p}{;}
+\PYG{n}{projMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{p} \PYG{p}{=} \PYG{p}{@}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{fGetProjMat}\PYG{p}{;}
+\PYG{p}{[}\PYG{n}{ellTubeProjObj}\PYG{p}{,}\PYG{n}{indProj2OrigVec}\PYG{p}{]} \PYG{p}{=} \PYG{n}{unionEllTubeObj}\PYG{p}{.}\PYG{n}{project}\PYG{p}{(}\PYG{n}{projType}\PYG{p}{,}\PYG{c}{...}
+    \PYG{p}{\PYGZob{}}\PYG{n}{projMat}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{n}{p}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} Example of PROJECTSTATIC function usage for creating a projection of}
+\PYG{c}{\PYGZpc{} EllTubeUnion object.}
+\PYG{n}{unionEllTubeObj} \PYG{p}{=} \PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getUnion}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{projMatList} \PYG{p}{=} \PYG{p}{\PYGZob{}}\PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;}\PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{p}{\PYGZcb{}}\PYG{p}{;}
+\PYG{n}{statEllTubeProjObj} \PYG{p}{=} \PYG{n}{unionEllTubeObj}\PYG{p}{.}\PYG{n}{projectStatic}\PYG{p}{(}\PYG{n}{projMatList}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 As for ellipsoid tube projections, a special function is used to create the projection matrix for tubes by instant of time:
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+function [projOrthMatArray,projOrthMatTransArray]=...
+    fGetProjMat(projMat,timeVec,varargin)
+    nPoints=length(timeVec);
+    projOrthMatArray=repmat(projMat,[1,1,nPoints]);
+    projOrthMatTransArray=repmat(projMat.\PYGZsq{},[1,1,nPoints]);
+end
+\end{Verbatim}
 
 
 \section{Projections of ellipsoid tubes and tubes by instant of time}
@@ -5462,13 +6331,206 @@ As it has already been said we can create either static or dynamic projections f
 
 It should be mentioned that from here on all the examples are written for ellipsoid tube projections, but their usage is the same for the projections of tubes by instant of time. We wiil use \emph{getProj} function to create ellipsoid tube projection that we will work with.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{k}{function}\PYG{+w}{ }ellTubeProjObj \PYG{p}{=}\PYG{+w}{ }\PYG{n+nf}{getProj}\PYG{p}{(}\PYG{p}{)}
+\PYG{n}{nTubes}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{nPoints} \PYG{p}{=} \PYG{l+m+mi}{20}\PYG{p}{;}
+\PYG{n}{timeBeg}\PYG{p}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{n}{timeEnd}\PYG{p}{=}\PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{type} \PYG{p}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+\PYG{n}{ellTubeObj}\PYG{p}{=}\PYG{c}{...}
+    \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getEllTube}\PYG{p}{(}\PYG{n}{nTubes}\PYG{p}{,}\PYG{n}{timeBeg}\PYG{p}{,}\PYG{n}{timeEnd}\PYG{p}{,}\PYG{n}{type}\PYG{p}{,}\PYG{n}{nPoints}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{projType} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{enums}\PYG{p}{.}\PYG{n}{EProjType}\PYG{p}{.}\PYG{n}{Static}\PYG{p}{;}
+\PYG{n}{projMat} \PYG{p}{=} \PYG{p}{[}\PYG{l+m+mi}{1} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{1}\PYG{p}{;} \PYG{l+m+mi}{0} \PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{\PYGZsq{}}\PYG{p}{;}
+\PYG{n}{p} \PYG{p}{=} \PYG{p}{@}\PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{fGetProjMat}\PYG{p}{;}
+\PYG{p}{[}\PYG{n}{ellTubeProjObj}\PYG{p}{,}\PYG{n}{indProj2OrigVec}\PYG{p}{]} \PYG{p}{=} \PYG{n}{ellTubeObj}\PYG{p}{.}\PYG{n}{project}\PYG{p}{(}\PYG{n}{projType}\PYG{p}{,}\PYG{c}{...}
+    \PYG{p}{\PYGZob{}}\PYG{n}{projMat}\PYG{p}{\PYGZcb{}}\PYG{p}{,}\PYG{n}{p}\PYG{p}{)}\PYG{p}{;}
+\PYG{k}{end}
+\end{Verbatim}
+
 As with ellipsoid tubes and tubes by instant of time we can get all the types of differet data about projections. There is a set of methods that can give information about the data stored in the object and give access to it.
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of GETDATA method\PYGZsq{}s usage.}
+\PYG{n}{ellTubeProjObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getProj}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{data} \PYG{p}{=} \PYG{n}{ellTubeProjObj}\PYG{p}{.}\PYG{n}{getData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of GETELLARRAY method\PYGZsq{}s usage.}
+\PYG{n}{ellProjObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getProj}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{approxType} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{approxType}\PYG{p}{;}
+\PYG{n}{data} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getEllArray}\PYG{p}{(}\PYG{n}{approxType}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{n}{ellProjObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getProj}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field descriptions}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{descr} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getFieldDescrList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get for given field a nested logical/cell array containing is\PYGZhy{}null }
+\PYG{c}{\PYGZpc{} indicators for cell content. For example, for approxSchemaName field.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{isNull} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getFieldIsNull}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{approxSchemaName\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get for given field logical vector determining whether value of this }
+\PYG{c}{\PYGZpc{} field in each cell is null or not. For example, for approxSchemaName field.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{valueIsNull} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getFieldIsValueNull}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{approxSchemaName\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field names}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{name} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getFieldNameList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} project object with specified fields. For example, with fields that are}
+\PYG{c}{\PYGZpc{} not to be cut or concatenated.}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nameList} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getNoCatOrCutFieldsList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{proj} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getFieldProjection}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field types}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{type} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getFieldTypeList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get the list of field type specifications. Field type specification is a }
+\PYG{c}{\PYGZpc{} sequence of type names corresponding to field value types starting with }
+\PYG{c}{\PYGZpc{} the top level and going down into the nested content of a field (for a }
+\PYG{c}{\PYGZpc{} field having a complex type).}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{typeSpec} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getFieldTypeSpecList}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} or}
+\PYG{n}{typeSpec} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getFieldTypeSpecList}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a matrix composed from the size vectorsfor the specified fields}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{valueSizeMat} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getFieldValueSizeMat}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a vector indicating whether a particular field is composed of null }
+\PYG{c}{\PYGZpc{} values completely}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{valueNull} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getIsFieldValueNull}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a size vector for the specified dimensions. If no dimensions are }
+\PYG{c}{\PYGZpc{} specified, a size vector for all dimensions up to minimum dimension is }
+\PYG{c}{\PYGZpc{} returned}
+\PYG{n}{minDimensionSize} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getMinDimensionSize}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a minimum dimensionality for a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{minDimensionality} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getMinDimensionality}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a number of elements in a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nElems} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getNElems}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a number of fields in a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nFiedls} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getNFields}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a number of tuples in a given object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{nTuples} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getNTuples}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get sort index for all tuples of given relation with respect to some of }
+\PYG{c}{\PYGZpc{} its fields}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{sortIndex} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getSortIndex}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{} also we can specify the direction of sorting (\PYGZsq{}asc\PYGZsq{} or \PYGZsq{}desc\PYGZsq{})}
+\PYG{n}{sortIndex} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getSortIndex}\PYG{p}{(}\PYG{n}{nameList}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{Direction\PYGZsq{}}\PYG{p}{,}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{asc\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get tuples with given indices from given relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{tuples} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getTuples}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get tuples from given relation such that afixed index field contains }
+\PYG{c}{\PYGZpc{} values from a given set of value}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{filteredTuples} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getTuplesFilteredBy}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{sTime\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get internal representation for a set of unique tuples for given relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{uniqueData} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getUniqueData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a relation containing the unique tuples from the original relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{uniqueTuples} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getUniqueTuples}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
 
 Also we can copy the object, clear all the data, save it in a file.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{n}{ellProjObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getProj}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} get a copy of the object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellCopy} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{getCopy}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} delete all the data from the object}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{clearData}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellProjObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getProj}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} create a copy of a specified object via calling a copy constructor for }
+\PYG{c}{\PYGZpc{} the object class}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{cloneObj} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{clone}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} remove all duplicate tuples from the relation}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{noDuplicate} \PYG{p}{=} \PYG{n}{cloneObj}\PYG{p}{.}\PYG{n}{removeDuplicateTuples}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} write a content of relation into Excel spreadsheet file}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{writeToCSV}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{path\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} write a content of relation into Excel spreadsheet file}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{fileName} \PYG{p}{=} \PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{writeToXLS}\PYG{p}{(}\PYG{l+s}{\PYGZsq{}}\PYG{l+s}{path\PYGZsq{}}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} display a content of the given relation as a data grid UI component}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{dispOnUI}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{c}{\PYGZpc{}}
+\PYG{c}{\PYGZpc{} put some textual information about object in screen}
+\PYG{c}{\PYGZpc{}}
+\PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{display}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 Also we can compare ellipsoid tube projections using \emph{isEqual} method.
 
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of ISEQUAL method usage. The compared ellTubeProjections are }
+\PYG{c}{\PYGZpc{} equal.}
+\PYG{n}{firstProjObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getProj}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{secondProjObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getProj}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{res} \PYG{p}{=} \PYG{n}{firstProjObj}\PYG{p}{.}\PYG{n}{isEqual}\PYG{p}{(}\PYG{n}{secondProjObj}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
 And finally we can plot out results using one of three methods: \emph{plot}, \emph{plotExt} (for external approximation) or \emph{plotInt} (for internal approximation).
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of calculating ellipsoid tube object projection using PROJECT}
+\PYG{c}{\PYGZpc{} function.}
+\PYG{n}{ellProjObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getProj}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{plObj}\PYG{p}{=}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n+nb}{disp}\PYG{p}{.}\PYG{n}{RelationDataPlotter}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{plObj}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of plotting the projection of the ellipsoid tube internal approximation}
+\PYG{c}{\PYGZpc{} object using PLOTINT method.}
+\PYG{n}{ellProjObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getProj}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{plotInt}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},numbers=left,firstnumber=1,stepnumber=1]
+\PYG{c}{\PYGZpc{} An example of plotting the projection of the ellipsoid tube external approximation}
+\PYG{c}{\PYGZpc{} object using PLOTEXT method.}
+\PYG{n}{ellProjObj} \PYG{p}{=} \PYG{n}{gras}\PYG{p}{.}\PYG{n}{ellapx}\PYG{p}{.}\PYG{n}{smartdb}\PYG{p}{.}\PYG{n}{test}\PYG{p}{.}\PYG{n}{examples}\PYG{p}{.}\PYG{n}{getProj}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\PYG{n}{ellProjObj}\PYG{p}{.}\PYG{n}{plotExt}\PYG{p}{(}\PYG{p}{)}\PYG{p}{;}
+\end{Verbatim}
 
 All the three methods have several properties connected to the properties of the image, for example: transparency, color, line width and so on.
 

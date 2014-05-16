@@ -49,7 +49,7 @@ master_doc = 'main_manual'
 
 # General information about the project.
 project = u'Ellipsoidal Toolbox'
-copyright = '2011-2013 Moscow State University, Faculty of Computational Mathematics and Computer Science, System Analysis Department, 2004-2011 The Regents of the University of California'
+copyright = '2011-2014 Moscow State University, Faculty of Computational Mathematics and Computer Science, System Analysis Department, 2004-2011 The Regents of the University of California'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -235,7 +235,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('main_manual', 'elltool_manual', u'elltool_manual Documentation',
-     [u'Lukashevichus K.'], 1)
+     [u'Gagarinov P.'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -249,7 +249,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('main_manual', 'elltool_manual', u'elltool_manual Documentation',
-   u'Lukashevichus K.', 'elltool_manual', 'One line description of project.',
+   u'Gagarinov P.', 'elltool_manual', 'One line description of project.',
    'Miscellaneous'),
 ]
 
