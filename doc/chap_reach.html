@@ -57,129 +57,129 @@
 <h3>Systems without disturbances<a class="headerlink" href="#systems-without-disturbances" title="Permalink to this headline">¶</a></h3>
 <p>Consider a general continuous-time</p>
 <div class="math" id="equation-ctds1">
-<p><span class="eqno">(1)</span><span class="math">\dot{x}(t) = f(t, x, u),</span></p>
+<p><span class="eqno">(1)</span><img src="_images/math/66b81934299f1cbdd37475d8403da0e552a03974.png" alt="\dot{x}(t) = f(t, x, u),"/></p>
 </div><p>or discrete-time dynamical system</p>
 <div class="math" id="equation-dtds1">
-<p><span class="eqno">(2)</span><span class="math">x(t+1) = f(t, x, u),</span></p>
-</div><p>wherein <span class="math">t</span> is time <a class="footnote-reference" href="#id11" id="id1">[1]</a>, <span class="math">x\in{\bf R}^n</span> is the state,
-<span class="math">u\in{\bf R}^m</span> is the control, and <span class="math">f</span> is a measurable
-vector function taking values in <span class="math">{\bf R}^n</span>. <a class="footnote-reference" href="#id12" id="id2">[2]</a> The control
-values <span class="math">u(t, x(t))</span> are restricted to a closed compact control set
-<span class="math">{\mathcal U}(t)\subset{\bf R}^m</span>. An <em>open-loop</em> control does not
-depend on the state, <span class="math">u=u(t)</span>; for a <em>closed-loop</em> control,
-<span class="math">u=u(t, x(t))</span>.</p>
-<p><strong>Definition.</strong> The (forward) reach set <span class="math">{\mathcal X}(t, t_0, x_0)</span> at time
-<span class="math">t&gt;t_0</span> from the initial position <span class="math">(t_0, x_0)</span> is the set of
-all states <span class="math">x(t)</span> reachable at time <span class="math">t</span> by system <a href="#equation-ctds1">(1)</a>,
-or <a href="#equation-dtds1">(2)</a>, with <span class="math">x(t_0)=x_0</span> through all possible controls
-<span class="math">u(\tau, x(\tau))\in{\mathcal U}(\tau)</span>,
-<span class="math">t_0\leqslant\tau&lt; t</span>. For a given set of initial states
-<span class="math">{\mathcal X}_0</span>, the reach set
-<span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0)</span> is</p>
+<p><span class="eqno">(2)</span><img src="_images/math/a4bd656629103104c328ffe273c9d82cff6d9d4d.png" alt="x(t+1) = f(t, x, u),"/></p>
+</div><p>wherein <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/> is time <a class="footnote-reference" href="#id11" id="id1">[1]</a>, <img class="math" src="_images/math/1877db47ab2d3b518dfb41417f2d46e2d748a6a1.png" alt="x\in{\bf R}^n"/> is the state,
+<img class="math" src="_images/math/c58a71cb24aee0af2fe74d3a2de7f016bce262df.png" alt="u\in{\bf R}^m"/> is the control, and <img class="math" src="_images/math/0001d02b63ede2fe3219e05a7cd09c82ae6298b6.png" alt="f"/> is a measurable
+vector function taking values in <img class="math" src="_images/math/e1ece5563e1c134d935af18b692ffc3fde4f2fd6.png" alt="{\bf R}^n"/>. <a class="footnote-reference" href="#id12" id="id2">[2]</a> The control
+values <img class="math" src="_images/math/c7d573ea5dd64e6a9005c1402b46d8c8b5b0acdb.png" alt="u(t, x(t))"/> are restricted to a closed compact control set
+<img class="math" src="_images/math/96376b2482a3b39e982e29efc588d0c1a150d46b.png" alt="{\mathcal U}(t)\subset{\bf R}^m"/>. An <em>open-loop</em> control does not
+depend on the state, <img class="math" src="_images/math/62d6a20085627d0a6f00e17df842262055c0aa24.png" alt="u=u(t)"/>; for a <em>closed-loop</em> control,
+<img class="math" src="_images/math/da7b1f74c9ae9180d468eada40a97f84d4ba7d5b.png" alt="u=u(t, x(t))"/>.</p>
+<p><strong>Definition.</strong> The (forward) reach set <img class="math" src="_images/math/ee54e416ace7cbeb9c4623f1311f59b9f2ee1e78.png" alt="{\mathcal X}(t, t_0, x_0)"/> at time
+<img class="math" src="_images/math/47a0f66af5c0a8153f3cc31637d82d745a941545.png" alt="t&gt;t_0"/> from the initial position <img class="math" src="_images/math/3da684c1b3e8bedfaf58039eefbc60210ee192c5.png" alt="(t_0, x_0)"/> is the set of
+all states <img class="math" src="_images/math/9b5babd4eddd2d7d7c87ad736865a588c2d4d9f8.png" alt="x(t)"/> reachable at time <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/> by system <a href="#equation-ctds1">(1)</a>,
+or <a href="#equation-dtds1">(2)</a>, with <img class="math" src="_images/math/bc27d5a9ac17ef8c0e41db4b17b611a625669152.png" alt="x(t_0)=x_0"/> through all possible controls
+<img class="math" src="_images/math/f1108a777b9c9e5400c7561dca28e08dbb907633.png" alt="u(\tau, x(\tau))\in{\mathcal U}(\tau)"/>,
+<img class="math" src="_images/math/1a20ede2a2dca098b7ddb2bcf0d64eaf789fe4ef.png" alt="t_0\leqslant\tau&lt; t"/>. For a given set of initial states
+<img class="math" src="_images/math/1eae27d722cf74685b3dab099d6e0089009498ce.png" alt="{\mathcal X}_0"/>, the reach set
+<img class="math" src="_images/math/811bdf7f2cb9ca774c4c8d632bfedbf768d28f91.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0)"/> is</p>
 <div class="math" id="equation-def_olrs">
-<p><span class="eqno">(3)</span><span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0) = \bigcup_{x_0\in{\mathcal X}_0}{\mathcal X}(t, t_0, x_0).</span></p>
+<p><span class="eqno">(3)</span><img src="_images/math/d4d533da39bf6992607ba5416930c7d6a2bb5a66.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0) = \bigcup_{x_0\in{\mathcal X}_0}{\mathcal X}(t, t_0, x_0)."/></p>
 </div><p>Here are two facts about forward reach sets.</p>
 <ol class="arabic">
-<li><p class="first"><span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0)</span> is the same for
+<li><p class="first"><img class="math" src="_images/math/811bdf7f2cb9ca774c4c8d632bfedbf768d28f91.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0)"/> is the same for
 open-loop and closed-loop control.</p>
 </li>
-<li><p class="first"><span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0)</span> satisfies the semigroup
+<li><p class="first"><img class="math" src="_images/math/811bdf7f2cb9ca774c4c8d632bfedbf768d28f91.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0)"/> satisfies the semigroup
 property,</p>
 <div class="math" id="equation-semigroup">
-<p><span class="eqno">(4)</span><span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0) = {\mathcal X}(t, \tau, {\mathcal X}(\tau, t_0, {\mathcal X}_0)), \;\;\;
-t_0\leqslant\tau&lt; t.</span></p>
+<p><span class="eqno">(4)</span><img src="_images/math/c49b37e25a9c556303eea0f3f38627a8e1e3dee7.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0) = {\mathcal X}(t, \tau, {\mathcal X}(\tau, t_0, {\mathcal X}_0)), \;\;\;
+t_0\leqslant\tau&lt; t."/></p>
 </div></li>
 </ol>
 <p>For linear systems</p>
 <div class="math" id="equation-linearrhs">
-<p><span class="eqno">(5)</span><span class="math">f(t, x, u) = A(t)x(t) + B(t)u,</span></p>
-</div><p>with matrices <span class="math">A(t)</span> in <span class="math">{\bf R}^{n\times n}</span> and
-<span class="math">B(t)</span> in <span class="math">{\bf R}^{m\times n}</span>. For continuous-time linear
+<p><span class="eqno">(5)</span><img src="_images/math/1b4ceadab1c25095e9e066b78434eacc1a162c0f.png" alt="f(t, x, u) = A(t)x(t) + B(t)u,"/></p>
+</div><p>with matrices <img class="math" src="_images/math/a79ae2055fb6a0774c0140d85756c9fc47af6e2a.png" alt="A(t)"/> in <img class="math" src="_images/math/42c9c2a5bc3075244d212ae9545395031527d802.png" alt="{\bf R}^{n\times n}"/> and
+<img class="math" src="_images/math/9862381d627031d0a2e12c24690593e755041368.png" alt="B(t)"/> in <img class="math" src="_images/math/e766db8cf5dc81aab9fe5a4e494c344ccdf8f0e2.png" alt="{\bf R}^{m\times n}"/>. For continuous-time linear
 system the state transition matrix is</p>
 <div class="math">
-<p><span class="math">\dot{\Phi}(t, t_0) = A(t)\Phi(t, t_0), \Phi(t, t) = I,</span></p>
-</div><p>which for constant <span class="math">A(t)\equiv A</span> simplifies as</p>
+<p><img src="_images/math/1b5a7fbfea588eb5fbb5f4ee4ae37be55548cee3.png" alt="\dot{\Phi}(t, t_0) = A(t)\Phi(t, t_0), \Phi(t, t) = I,"/></p>
+</div><p>which for constant <img class="math" src="_images/math/6cdd3fa953a5903c857cc2cf91708b936a83b753.png" alt="A(t)\equiv A"/> simplifies as</p>
 <div class="math">
-<p><span class="math">\Phi(t, t_0) = e^{A(t-t_0)} .</span></p>
+<p><img src="_images/math/b13a2af07e8de9844a51f66cc09822345854054e.png" alt="\Phi(t, t_0) = e^{A(t-t_0)} ."/></p>
 </div><p>For discrete-time linear system the state transition matrix is</p>
 <div class="math">
-<p><span class="math">\Phi(t+1, t_0) = A(t)\Phi(t, t_0), \Phi(t, t) = I,</span></p>
-</div><p>which for constant <span class="math">A(t)\equiv A</span> simplifies as</p>
+<p><img src="_images/math/5cbd0df918094f708ebf1df754c42f50e9496d15.png" alt="\Phi(t+1, t_0) = A(t)\Phi(t, t_0), \Phi(t, t) = I,"/></p>
+</div><p>which for constant <img class="math" src="_images/math/6cdd3fa953a5903c857cc2cf91708b936a83b753.png" alt="A(t)\equiv A"/> simplifies as</p>
 <div class="math">
-<p><span class="math">\Phi(t, t_0) = A^{t-t_0} .</span></p>
+<p><img src="_images/math/9dc83915e86cef95b6ad0a904055b458c9315889.png" alt="\Phi(t, t_0) = A^{t-t_0} ."/></p>
 </div><p>If the state transition matrix is invertible,
-<span class="math">\Phi^{-1}(t, t_0) = \Phi(t_0, t)</span>. The transition matrix is
+<img class="math" src="_images/math/393f7ac127951f2fb3d7c267e50ddae42d27a07f.png" alt="\Phi^{-1}(t, t_0) = \Phi(t_0, t)"/>. The transition matrix is
 always invertible for continuous-time and for sampled discrete-time
-systems. However, if for some <span class="math">\tau</span>, <span class="math">t_0\leqslant\tau&lt;t</span>,
-<span class="math">A(\tau)</span> is degenerate (singular),
-<span class="math">\Phi(t, t_0)=\prod_{\tau=t_0}^{t-1}A(\tau)</span>, is also degenerate
+systems. However, if for some <img class="math" src="_images/math/d9e99c35d3632bb156b7aca0e93cd78a148a10e8.png" alt="\tau"/>, <img class="math" src="_images/math/318499371b02e60472b58864afad183a0d3ff13c.png" alt="t_0\leqslant\tau&lt;t"/>,
+<img class="math" src="_images/math/ddba4a1a29baa7f6921759e588bc53b2d18b6392.png" alt="A(\tau)"/> is degenerate (singular),
+<img class="math" src="_images/math/bb59ee19bd7b6e1621c2d2f798d512cbb84fa3dc.png" alt="\Phi(t, t_0)=\prod_{\tau=t_0}^{t-1}A(\tau)"/>, is also degenerate
 and cannot be inverted.</p>
 <p>Following Cauchy’s formula, the reach set
-<span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0)</span> for a linear system can be
+<img class="math" src="_images/math/811bdf7f2cb9ca774c4c8d632bfedbf768d28f91.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0)"/> for a linear system can be
 expressed as</p>
 <div class="math" id="equation-ctlsrs">
-<p><span class="eqno">(6)</span><span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0) =
-\Phi(t, t_0){\mathcal X}_0 \oplus \int_{t_0}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau</span></p>
+<p><span class="eqno">(6)</span><img src="_images/math/d1cc6249f0b4841e7ab726fd50d214123556c028.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0) =
+\Phi(t, t_0){\mathcal X}_0 \oplus \int_{t_0}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau"/></p>
 </div><p>in continuous-time, and as</p>
 <div class="math" id="equation-dtlsrs">
-<p><span class="eqno">(7)</span><span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0) =
-\Phi(t, t_0){\mathcal X}_0 \oplus \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)</span></p>
+<p><span class="eqno">(7)</span><img src="_images/math/2761894730898386aea3af3751bac2f8a3d2faf6.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0) =
+\Phi(t, t_0){\mathcal X}_0 \oplus \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)"/></p>
 </div><p>in discrete-time case.</p>
-<p>The operation ‘<span class="math">\oplus</span>’ is the <em>geometric sum</em>, also known as
+<p>The operation ‘<img class="math" src="_images/math/734c2e0e77e6a202ef3fe4bd5c5a63e8484b5c80.png" alt="\oplus"/>’ is the <em>geometric sum</em>, also known as
 <em>Minkowski sum</em>. <a class="footnote-reference" href="#id13" id="id3">[3]</a> The geometric sum and linear (or affine)
 transformations preserve compactness and convexity. Hence, if the
-initial set <span class="math">{\mathcal X}_0</span> and the control sets
-<span class="math">{\mathcal U}(\tau)</span>, <span class="math">t_0\leqslant\tau&lt;t</span>, are compact and
+initial set <img class="math" src="_images/math/1eae27d722cf74685b3dab099d6e0089009498ce.png" alt="{\mathcal X}_0"/> and the control sets
+<img class="math" src="_images/math/d5025379a275c633646266889a3f8afb66824361.png" alt="{\mathcal U}(\tau)"/>, <img class="math" src="_images/math/318499371b02e60472b58864afad183a0d3ff13c.png" alt="t_0\leqslant\tau&lt;t"/>, are compact and
 convex, so is the reach set
-<span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0)</span>.</p>
-<p><strong>Definition.</strong> The backward reach set <span class="math">{\mathcal Y}(t_1, t, y_1)</span> for the target
-position <span class="math">(t_1, y_1)</span> is the set of all states <span class="math">y(t)</span> for
+<img class="math" src="_images/math/811bdf7f2cb9ca774c4c8d632bfedbf768d28f91.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0)"/>.</p>
+<p><strong>Definition.</strong> The backward reach set <img class="math" src="_images/math/96cab774fe1612c76917d11801b1f0dd916279c1.png" alt="{\mathcal Y}(t_1, t, y_1)"/> for the target
+position <img class="math" src="_images/math/3616a3c9ec7e214078b34757d721209a120667ce.png" alt="(t_1, y_1)"/> is the set of all states <img class="math" src="_images/math/6ef4611104bb98b4035f37ce6bbafb0ec7a38a60.png" alt="y(t)"/> for
 which there exists some control
-<span class="math">u(\tau, x(\tau))\in{\mathcal U}(\tau)</span>,
-<span class="math">t\leqslant\tau&lt;t_1</span>, that steers system <a href="#equation-ctds1">(1)</a>, or <a href="#equation-dtds1">(2)</a> to
-the state <span class="math">y_1</span> at time <span class="math">t_1</span>. For the target set
-<span class="math">{\mathcal Y}_1</span> at time <span class="math">t_1</span>, the backward reach set
-<span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1)</span> is</p>
+<img class="math" src="_images/math/f1108a777b9c9e5400c7561dca28e08dbb907633.png" alt="u(\tau, x(\tau))\in{\mathcal U}(\tau)"/>,
+<img class="math" src="_images/math/42a4765aa2413005dad1bd4ef454ddb42b4277c9.png" alt="t\leqslant\tau&lt;t_1"/>, that steers system <a href="#equation-ctds1">(1)</a>, or <a href="#equation-dtds1">(2)</a> to
+the state <img class="math" src="_images/math/f30c7e391f4cef1d7b14050b5916c857c0979cb5.png" alt="y_1"/> at time <img class="math" src="_images/math/44780f0598b4d22c6888cfca27deb04115f7fa88.png" alt="t_1"/>. For the target set
+<img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/> at time <img class="math" src="_images/math/44780f0598b4d22c6888cfca27deb04115f7fa88.png" alt="t_1"/>, the backward reach set
+<img class="math" src="_images/math/5391e6459f27f329a5ba5ceac7e280b33da970ce.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1)"/> is</p>
 <div class="math" id="equation-def_olbrs">
-<p><span class="eqno">(8)</span><span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1) = \bigcup_{y_1\in{\mathcal Y}_1}{\mathcal Y}(t_1, t, y_1).</span></p>
+<p><span class="eqno">(8)</span><img src="_images/math/8e9dc7ddc2269ac78a3c3c8d6b2168cff366c628.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1) = \bigcup_{y_1\in{\mathcal Y}_1}{\mathcal Y}(t_1, t, y_1)."/></p>
 </div><p>The backward reach set
-<span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1)</span> is the largest <em>weakly
-invariant</em> set with respect to the target set <span class="math">{\mathcal Y}_1</span> and
-time values <span class="math">t</span> and <span class="math">t_1</span>. <a class="footnote-reference" href="#id14" id="id4">[4]</a></p>
+<img class="math" src="_images/math/5391e6459f27f329a5ba5ceac7e280b33da970ce.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1)"/> is the largest <em>weakly
+invariant</em> set with respect to the target set <img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/> and
+time values <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/> and <img class="math" src="_images/math/44780f0598b4d22c6888cfca27deb04115f7fa88.png" alt="t_1"/>. <a class="footnote-reference" href="#id14" id="id4">[4]</a></p>
 <p><strong>Remark.</strong> Backward reach set can be computed for continuous-time
-system only if the solution of <a href="#equation-ctds1">(1)</a> exists for <span class="math">t&lt;t_1</span>; and
+system only if the solution of <a href="#equation-ctds1">(1)</a> exists for <img class="math" src="_images/math/f172d25be351c54495d737f93750ec5e72cbddda.png" alt="t&lt;t_1"/>; and
 for discrete-time system only if the right hand side of <a href="#equation-dtds1">(2)</a> is
 invertible <a class="footnote-reference" href="#id15" id="id5">[5]</a>.</p>
-<p>These two facts about the backward reach set <span class="math">{\mathcal Y}</span> are
+<p>These two facts about the backward reach set <img class="math" src="_images/math/973d4563ee9daf9f62b0ca03e04eb7b2b1aecf1b.png" alt="{\mathcal Y}"/> are
 similar to those for forward reach sets.</p>
 <ol class="arabic">
-<li><p class="first"><span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1)</span> is the same for
+<li><p class="first"><img class="math" src="_images/math/5391e6459f27f329a5ba5ceac7e280b33da970ce.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1)"/> is the same for
 open-loop and closed-loop control.</p>
 </li>
-<li><p class="first"><span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1)</span> satisfies the semigroup
+<li><p class="first"><img class="math" src="_images/math/5391e6459f27f329a5ba5ceac7e280b33da970ce.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1)"/> satisfies the semigroup
 property,</p>
 <div class="math" id="equation-semigroup_b">
-<p><span class="eqno">(9)</span><span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1) = {\mathcal Y}(\tau, t, {\mathcal Y}(t_1, \tau, {\mathcal Y}_1)), \;\;\;
-t\leqslant\tau&lt; t_1.</span></p>
+<p><span class="eqno">(9)</span><img src="_images/math/a8ee47c5197dd9b368741926bfe77b334797bb12.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1) = {\mathcal Y}(\tau, t, {\mathcal Y}(t_1, \tau, {\mathcal Y}_1)), \;\;\;
+t\leqslant\tau&lt; t_1."/></p>
 </div></li>
 </ol>
 <p>For the linear system <a href="#equation-linearrhs">(5)</a> the backward reach set can be
 expressed as</p>
 <div class="math" id="equation-ctlsbrs">
-<p><span class="eqno">(10)</span><span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1) =
-\Phi(t, t_1){\mathcal Y}_1 \oplus \int_{t_1}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau</span></p>
+<p><span class="eqno">(10)</span><img src="_images/math/9d66df1d4acf0d60fcbbd4f60885ae9198a9bcc8.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1) =
+\Phi(t, t_1){\mathcal Y}_1 \oplus \int_{t_1}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau"/></p>
 </div><p>in the continuous-time case, and as</p>
 <div class="math" id="equation-dtlsbrs">
-<p><span class="eqno">(11)</span><span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1) =
-\Phi(t, t_1){\mathcal Y}_1 \oplus \sum_{\tau =t}^{t_1-1}-\Phi(t, \tau)B(\tau){\mathcal U}(\tau)</span></p>
+<p><span class="eqno">(11)</span><img src="_images/math/f463d7e73fc36a82096f2915be16c53efcf4fdc9.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1) =
+\Phi(t, t_1){\mathcal Y}_1 \oplus \sum_{\tau =t}^{t_1-1}-\Phi(t, \tau)B(\tau){\mathcal U}(\tau)"/></p>
 </div><p>in discrete-time case. The last formula makes sense only for
 discrete-time linear systems with invertible state transition matrix.
 Degenerate discrete-time linear systems have unbounded backward reach
 sets and such sets cannot be computed with available software tools.</p>
 <p>Just as in the case of forward reach set, the backward reach set of a
-linear system <span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1)</span> is compact
-and convex if the target set <span class="math">{\mathcal Y}_1</span> and the control sets
-<span class="math">{\mathcal U}(\tau)</span>, <span class="math">t\leqslant\tau&lt;t_1</span>, are compact and
+linear system <img class="math" src="_images/math/5391e6459f27f329a5ba5ceac7e280b33da970ce.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1)"/> is compact
+and convex if the target set <img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/> and the control sets
+<img class="math" src="_images/math/d5025379a275c633646266889a3f8afb66824361.png" alt="{\mathcal U}(\tau)"/>, <img class="math" src="_images/math/42a4765aa2413005dad1bd4ef454ddb42b4277c9.png" alt="t\leqslant\tau&lt;t_1"/>, are compact and
 convex.</p>
 <p><strong>Remark.</strong> In the computer science literature the reach set is said to
 be the result of operator <em>post</em>, and the backward reach set is the
@@ -190,547 +190,547 @@ set is also called the <em>solvability set</em>.</p>
 <h3>Systems with disturbances<a class="headerlink" href="#systems-with-disturbances" title="Permalink to this headline">¶</a></h3>
 <p>Consider the continuous-time dynamical system with disturbance</p>
 <div class="math" id="equation-ctds2">
-<p><span class="eqno">(12)</span><span class="math">\dot{x}(t) = f(t, x, u, v),</span></p>
+<p><span class="eqno">(12)</span><img src="_images/math/f7fb7eab5fe7466405132da850abb1d9a50c9e93.png" alt="\dot{x}(t) = f(t, x, u, v),"/></p>
 </div><p>or the discrete-time dynamical system with disturbance</p>
 <div class="math" id="equation-dtds2">
-<p><span class="eqno">(13)</span><span class="math">x(t+1) = f(t, x, u, v),</span></p>
-</div><p>in which we also have the disturbance input <span class="math">v\in{\bf R}^d</span> with
-values <span class="math">v(t)</span> restricted to a closed compact set
-<span class="math">{\mathcal V}(t)\subset{\bf R}^d</span>.</p>
+<p><span class="eqno">(13)</span><img src="_images/math/3947c2f339e38adf1766f21784911c1a2cf1888a.png" alt="x(t+1) = f(t, x, u, v),"/></p>
+</div><p>in which we also have the disturbance input <img class="math" src="_images/math/02790a9b69a54b12748a6ddb0282f6319086c5d8.png" alt="v\in{\bf R}^d"/> with
+values <img class="math" src="_images/math/8f786c22ff6d536a732133b2128a712eb1a50a83.png" alt="v(t)"/> restricted to a closed compact set
+<img class="math" src="_images/math/e32841eb191771bc9d8e13e899f3e18b76728b22.png" alt="{\mathcal V}(t)\subset{\bf R}^d"/>.</p>
 <p>In the presence of disturbances the open-loop reach set (OLRS) is
 different from the closed-loop reach set (CLRS).</p>
-<p>Given the initial time <span class="math">t_0</span>, the set of initial states
-<span class="math">{\mathcal X}_0</span>, and terminal time <span class="math">t</span>, there are two types
+<p>Given the initial time <img class="math" src="_images/math/fb761c2e199ad45ccf14767f48b88169479d840f.png" alt="t_0"/>, the set of initial states
+<img class="math" src="_images/math/1eae27d722cf74685b3dab099d6e0089009498ce.png" alt="{\mathcal X}_0"/>, and terminal time <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>, there are two types
 of OLRS.</p>
 <p><strong>Definition.</strong> The maxmin open-loop reach set
-<span class="math">\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)</span> is the set
-of all states <span class="math">x</span>, such that for any disturbance
-<span class="math">v(\tau)\in{\mathcal V}(\tau)</span>, there exist an initial state
-<span class="math">x_0\in{\mathcal X}_0</span> and a control
-<span class="math">u(\tau)\in{\mathcal U}(\tau)</span>, <span class="math">t_0\leqslant\tau&lt;t</span>, that
-steers system <a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> from <span class="math">x(t_0)=x_0</span> to
-<span class="math">x(t)=x</span>.</p>
+<img class="math" src="_images/math/fda74d4838a0c4c1e817fc25157f1c3fe2311db9.png" alt="\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)"/> is the set
+of all states <img class="math" src="_images/math/188c175aac0a8a9c22499336711b5d7256407254.png" alt="x"/>, such that for any disturbance
+<img class="math" src="_images/math/c1aa4494d5b8320290e79840475da74b8e3b93ef.png" alt="v(\tau)\in{\mathcal V}(\tau)"/>, there exist an initial state
+<img class="math" src="_images/math/bce48b4aef0e0fa79362511d875f013203570971.png" alt="x_0\in{\mathcal X}_0"/> and a control
+<img class="math" src="_images/math/92a65e24f2e97e53d3368a49ecf3db303566d594.png" alt="u(\tau)\in{\mathcal U}(\tau)"/>, <img class="math" src="_images/math/318499371b02e60472b58864afad183a0d3ff13c.png" alt="t_0\leqslant\tau&lt;t"/>, that
+steers system <a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> from <img class="math" src="_images/math/bc27d5a9ac17ef8c0e41db4b17b611a625669152.png" alt="x(t_0)=x_0"/> to
+<img class="math" src="_images/math/f0a326e5bb3a2e449a02d455a1417349b6959384.png" alt="x(t)=x"/>.</p>
 <p><strong>Definition.</strong> The minmax open-loop reach set
-<span class="math">\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)</span> is the set
-of all states <span class="math">x</span>, such that there exists a control
-<span class="math">u(\tau)\in{\mathcal U}(\tau)</span> that for all disturbances
-<span class="math">v(\tau)\in{\mathcal V}(\tau)</span>, <span class="math">t_0\leqslant\tau&lt;t</span>,
-assigns an initial state <span class="math">x_0\in{\mathcal X}_0</span> and steers system
-<a href="#equation-ctds2">(12)</a>, or <a href="#equation-dtds2">(13)</a>, from <span class="math">x(t_0)=x_0</span> to <span class="math">x(t)=x</span>.</p>
+<img class="math" src="_images/math/907b76370dff90e95f5f98557a39cec716528d83.png" alt="\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)"/> is the set
+of all states <img class="math" src="_images/math/188c175aac0a8a9c22499336711b5d7256407254.png" alt="x"/>, such that there exists a control
+<img class="math" src="_images/math/92a65e24f2e97e53d3368a49ecf3db303566d594.png" alt="u(\tau)\in{\mathcal U}(\tau)"/> that for all disturbances
+<img class="math" src="_images/math/c1aa4494d5b8320290e79840475da74b8e3b93ef.png" alt="v(\tau)\in{\mathcal V}(\tau)"/>, <img class="math" src="_images/math/318499371b02e60472b58864afad183a0d3ff13c.png" alt="t_0\leqslant\tau&lt;t"/>,
+assigns an initial state <img class="math" src="_images/math/bce48b4aef0e0fa79362511d875f013203570971.png" alt="x_0\in{\mathcal X}_0"/> and steers system
+<a href="#equation-ctds2">(12)</a>, or <a href="#equation-dtds2">(13)</a>, from <img class="math" src="_images/math/bc27d5a9ac17ef8c0e41db4b17b611a625669152.png" alt="x(t_0)=x_0"/> to <img class="math" src="_images/math/f0a326e5bb3a2e449a02d455a1417349b6959384.png" alt="x(t)=x"/>.</p>
 <p>In the maxmin case the control is chosen
 <em>after</em> knowing the disturbance over the entire time interval
-<span class="math">[t_0, t]</span>, whereas in the minmax case the control is chosen
+<img class="math" src="_images/math/539d8278169a9818b382eb6cf1f9bfc93d0f3101.png" alt="[t_0, t]"/>, whereas in the minmax case the control is chosen
 <em>before</em> any knowledge of the disturbance. Consequently, the OLRS do not
 satisfy the semigroup property.</p>
 <p>The terms ‘maxmin’ and ‘minmax’ come from the fact that
-<span class="math">\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)</span> is the
+<img class="math" src="_images/math/fda74d4838a0c4c1e817fc25157f1c3fe2311db9.png" alt="\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)"/> is the
 subzero level set of the value function</p>
 <div class="math" id="equation-maxminvf">
-<p><span class="eqno">(14)</span><span class="math">\underline{V}(t, x) =
+<p><span class="eqno">(14)</span><img src="_images/math/57883f1e144e722111b43292c2b73f80c2f8ad72.png" alt="\underline{V}(t, x) =
 \max_v\min_u\{{\bf dist}(x(t_0), {\mathcal X}_0) ~|~ x(t)=x, \; u(\tau)\in{\mathcal U}(\tau), \;
-v(\tau)\in{\mathcal V}(\tau), \; t_0\leqslant\tau&lt;t\},</span></p>
+v(\tau)\in{\mathcal V}(\tau), \; t_0\leqslant\tau&lt;t\},"/></p>
 </div><p>i.e.,
-<span class="math">\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \{ x~|~\underline{V}(t, x) \leqslant0\}</span>,
-and <span class="math">\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)</span> is the
+<img class="math" src="_images/math/9b7d74647f0716b07e72a6b1cfea05f19713d4f4.png" alt="\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \{ x~|~\underline{V}(t, x) \leqslant0\}"/>,
+and <img class="math" src="_images/math/907b76370dff90e95f5f98557a39cec716528d83.png" alt="\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)"/> is the
 subzero level set of the value function</p>
 <div class="math" id="equation-minmaxvf">
-<p><span class="eqno">(15)</span><span class="math">\overline{V}(t, x) =
+<p><span class="eqno">(15)</span><img src="_images/math/b126422df4f8726f4823b1c02b7c1c0618711106.png" alt="\overline{V}(t, x) =
 \min_u\max_v\{{\bf dist}(x(t_0), {\mathcal X}_0) ~|~ x(t)=x, \; u(\tau)\in{\mathcal U}(\tau), \;
-v(\tau)\in{\mathcal V}(\tau), \; t_0\leqslant\tau&lt;t\},</span></p>
-</div><p>in which <span class="math">{\bf dist}(\cdot, \cdot)</span> denotes Hausdorff
+v(\tau)\in{\mathcal V}(\tau), \; t_0\leqslant\tau&lt;t\},"/></p>
+</div><p>in which <img class="math" src="_images/math/30305cfe1c01e36246fbdf8fa3d56e4333685176.png" alt="{\bf dist}(\cdot, \cdot)"/> denotes Hausdorff
 semidistance. <a class="footnote-reference" href="#id16" id="id6">[6]</a> Since
-<span class="math">\underline{V}(t, x)\leqslant\overline{V}(t, x)</span>,
-<span class="math">\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)\subseteq\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)</span>.</p>
+<img class="math" src="_images/math/089ce70e04b55f919b5a2ad8ccdd32e007b49e24.png" alt="\underline{V}(t, x)\leqslant\overline{V}(t, x)"/>,
+<img class="math" src="_images/math/f4da4f91305bd38b687b10253e107f8f1ef568b2.png" alt="\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)\subseteq\overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0)"/>.</p>
 <p>Note that maxmin and minmax OLRS imply <em>guarantees</em>: these are states
 that can be reached no matter what the disturbance is, whether it is
 known in advance (maxmin case) or not (minmax case). The OLRS may be
 empty.</p>
-<p>Fixing time instant <span class="math">\tau_1</span>, <span class="math">t_0&lt;\tau_1&lt;t</span>, define the
+<p>Fixing time instant <img class="math" src="_images/math/7535961332c7b400bb1f935a141711a30c82cd87.png" alt="\tau_1"/>, <img class="math" src="_images/math/76a9fb14fe4ad99712ce6f649493fb03308f6237.png" alt="t_0&lt;\tau_1&lt;t"/>, define the
 <em>piecewise maxmin open-loop reach set with one correction</em>,</p>
 <div class="math" id="equation-maxmin1">
-<p><span class="eqno">(16)</span><span class="math">\overline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) = \overline{{\mathcal X}}_{OL}(t, \tau_1, \overline{{\mathcal X}}_{OL}(\tau_1, t_0, {\mathcal X}_0)),</span></p>
+<p><span class="eqno">(16)</span><img src="_images/math/bcdb844339b4485ad22f05e4438c81e28a511a9d.png" alt="\overline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) = \overline{{\mathcal X}}_{OL}(t, \tau_1, \overline{{\mathcal X}}_{OL}(\tau_1, t_0, {\mathcal X}_0)),"/></p>
 </div><p>and the <em>piecewise minmax open-loop reach set with one correction</em>,</p>
 <div class="math" id="equation-minmax1">
-<p><span class="eqno">(17)</span><span class="math">\underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) = \underline{{\mathcal X}}_{OL}(t, \tau_1, \underline{{\mathcal X}}_{OL}(\tau_1, t_0, {\mathcal X}_0)).</span></p>
+<p><span class="eqno">(17)</span><img src="_images/math/cb23c97b0ec4120a218231fdeaaa5442b2f898c4.png" alt="\underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) = \underline{{\mathcal X}}_{OL}(t, \tau_1, \underline{{\mathcal X}}_{OL}(\tau_1, t_0, {\mathcal X}_0))."/></p>
 </div><p>The piecewise maxmin OLRS
-<span class="math">\overline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0)</span> is the
+<img class="math" src="_images/math/575d5e27e8da9b43c2220dff42d5fb1c61aed412.png" alt="\overline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0)"/> is the
 subzero level set of the value function</p>
 <div class="math" id="equation-maxminvf1">
-<p><span class="eqno">(18)</span><span class="math">\underline{V}^1(t, x) =
+<p><span class="eqno">(18)</span><img src="_images/math/51206c95daa18d2f14242c7915c6ef31a32c1ce9.png" alt="\underline{V}^1(t, x) =
 \max_v\min_u\{\underline{V}(\tau_1, x(\tau_1)) ~|~ x(t)=x, \;
-u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_1\leqslant\tau&lt;t\},</span></p>
-</div><p>with <span class="math">V(\tau_1, x(\tau_1))</span> given by <a href="#equation-maxminvf">(14)</a>, which yields</p>
+u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_1\leqslant\tau&lt;t\},"/></p>
+</div><p>with <img class="math" src="_images/math/53b900e92374f01c11c129833a36ef7805c2f189.png" alt="V(\tau_1, x(\tau_1))"/> given by <a href="#equation-maxminvf">(14)</a>, which yields</p>
 <div class="math">
-<p><span class="math">\underline{V}^1(t, x) \geqslant\underline{V}(t, x),</span></p>
+<p><img src="_images/math/d518458e004544c3f751e0da30df5024793cec1e.png" alt="\underline{V}^1(t, x) \geqslant\underline{V}(t, x),"/></p>
 </div><p>and thus,</p>
 <div class="math">
-<p><span class="math">\overline{{\mathcal X}}_{OL}^1(t, t_0 {\mathcal X}_0) \subseteq \overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) .</span></p>
+<p><img src="_images/math/9f887c0a093fff877fabc398422d38cf4885c9bd.png" alt="\overline{{\mathcal X}}_{OL}^1(t, t_0 {\mathcal X}_0) \subseteq \overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) ."/></p>
 </div><p>On the other hand, the piecewise minmax OLRS
-<span class="math">\underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0)</span> is the
+<img class="math" src="_images/math/a05772564b3121a0182788d1fadc8893dd3c6eed.png" alt="\underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0)"/> is the
 subzero level set of the value function</p>
 <div class="math" id="equation-minmaxvf1">
-<p><span class="eqno">(19)</span><span class="math">\overline{V}^1(t, x) =
+<p><span class="eqno">(19)</span><img src="_images/math/cd90fea220ff84fdebee779a2a4b4cd5a730a335.png" alt="\overline{V}^1(t, x) =
 \min_u\max_v\{\overline{V}(\tau_1, x(\tau_1)) ~|~ x(t)=x, \;
-u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_1\leqslant\tau&lt;t\},</span></p>
-</div><p>with <span class="math">V(\tau_1, x(\tau_1))</span> given by <a href="#equation-minmaxvf">(15)</a>, which yields</p>
+u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_1\leqslant\tau&lt;t\},"/></p>
+</div><p>with <img class="math" src="_images/math/53b900e92374f01c11c129833a36ef7805c2f189.png" alt="V(\tau_1, x(\tau_1))"/> given by <a href="#equation-minmaxvf">(15)</a>, which yields</p>
 <div class="math">
-<p><span class="math">\overline{V}(t, x) \geqslant\overline{V}^1(t, x),</span></p>
+<p><img src="_images/math/a3cd1f0192dbbcb91b9915d6670501a056b0123c.png" alt="\overline{V}(t, x) \geqslant\overline{V}^1(t, x),"/></p>
 </div><p>and thus,</p>
 <div class="math">
-<p><span class="math">\underline{{\mathcal X}}_{OL}(t, t_0 {\mathcal X}_0) \subseteq \underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) .</span></p>
+<p><img src="_images/math/c771f8709e060cf0a4b3c4a3c05cacc315046516.png" alt="\underline{{\mathcal X}}_{OL}(t, t_0 {\mathcal X}_0) \subseteq \underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) ."/></p>
 </div><p>We can now recursively define piecewise maxmin and minmax OLRS with
-<span class="math">k</span> corrections for <span class="math">t_0&lt;\tau_1&lt;\cdots&lt;\tau_k&lt;t</span>. The maxmin
-piecewise OLRS with <span class="math">k</span> corrections is</p>
+<img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> corrections for <img class="math" src="_images/math/3eeb12b3df8ce77e54f85537fef2a07ca4a0ebed.png" alt="t_0&lt;\tau_1&lt;\cdots&lt;\tau_k&lt;t"/>. The maxmin
+piecewise OLRS with <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> corrections is</p>
 <div class="math" id="equation-maxmink">
-<p><span class="eqno">(20)</span><span class="math">\overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) =
-\overline{{\mathcal X}}_{OL}(t, \tau_k, \overline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0)),</span></p>
+<p><span class="eqno">(20)</span><img src="_images/math/804c7e8e7b8ce57bb2f0090903988d3f48f0bb59.png" alt="\overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) =
+\overline{{\mathcal X}}_{OL}(t, \tau_k, \overline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0)),"/></p>
 </div><p>which is the subzero level set of the corresponding value function</p>
 <div class="math" id="equation-maxminvfk">
-<p><span class="eqno">(21)</span><span class="math">\underline{V}^k(t, x) = \max_v\min_u\{\underline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
-u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_k\leqslant\tau&lt;t\}.</span></p>
-</div><p>The minmax piecewise OLRS with <span class="math">k</span> corrections is</p>
+<p><span class="eqno">(21)</span><img src="_images/math/d29431a4726f9fe4d184fb6365d678d2f2bb9bca.png" alt="\underline{V}^k(t, x) = \max_v\min_u\{\underline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
+u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_k\leqslant\tau&lt;t\}."/></p>
+</div><p>The minmax piecewise OLRS with <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> corrections is</p>
 <div class="math" id="equation-minmaxk">
-<p><span class="eqno">(22)</span><span class="math">\underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) =
-\underline{{\mathcal X}}_{OL}(t, \tau_k, \underline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0)),</span></p>
+<p><span class="eqno">(22)</span><img src="_images/math/6a2a9740e0fee3b3836318c37e22b974f99da572.png" alt="\underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) =
+\underline{{\mathcal X}}_{OL}(t, \tau_k, \underline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0)),"/></p>
 </div><p>which is the subzero level set of the corresponding value function</p>
 <div class="math" id="equation-minmaxvfk">
-<p><span class="eqno">(23)</span><span class="math">\begin{aligned}
+<p><span class="eqno">(23)</span><img src="_images/math/2a058c90cf3ba9cb5dbe351e9ac0bd37aff3a322.png" alt="\begin{aligned}
 \overline{V}^k(t, x) = \min_u\max_v\{\overline{V}^{k-1}(\tau_k, x(\tau_k)) ~|~ x(t)=x, \;
 u(\tau)\in{\mathcal U}(\tau), \; v(\tau)\in{\mathcal V}(\tau), \; \tau_k\leqslant\tau&lt;t\}.
-\end{aligned}</span></p>
+\end{aligned}"/></p>
 </div><p>From <a href="#equation-maxminvf1">(18)</a>, <a href="#equation-minmaxvf1">(19)</a>, <a href="#equation-maxminvfk">(21)</a> and <a href="#equation-minmaxvfk">(23)</a> it
 follows that</p>
 <div class="math">
-<p><span class="math">\underline{V}(t, x) \leqslant\underline{V}^1(t, x)\leqslant\cdots
+<p><img src="_images/math/b769a46890a9789098d481e21fb0c2df49be3e09.png" alt="\underline{V}(t, x) \leqslant\underline{V}^1(t, x)\leqslant\cdots
 \leqslant\underline{V}^k(t, x) \leqslant\overline{V}^k(t, x) \leqslant\cdots
-\leqslant\overline{V}^1(t, x) \leqslant\overline{V}(t, x) .</span></p>
+\leqslant\overline{V}^1(t, x) \leqslant\overline{V}(t, x) ."/></p>
 </div><p>Hence,</p>
 <div class="math" id="equation-olrsinclusion">
-<p><span class="eqno">(24)</span><span class="math">\begin{aligned}
+<p><span class="eqno">(24)</span><img src="_images/math/5655ba2a6e76b433eaa375b97ea48cce70d1875f.png" alt="\begin{aligned}
 &amp;&amp;\underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) \subseteq \underline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0) \subseteq \cdots
 \subseteq \underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) \subseteq \nonumber \\
 &amp;&amp;\overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) \subseteq \cdots \subseteq \overline{{\mathcal X}}_{OL}^1(t, t_0, {\mathcal X}_0)
 \subseteq \overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) .
-\end{aligned}</span></p>
+\end{aligned}"/></p>
 </div><p>We call</p>
 <div class="math" id="equation-maxminclrs">
-<p><span class="eqno">(25)</span><span class="math">\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = \overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0), \;\;
+<p><span class="eqno">(25)</span><img src="_images/math/8594a3d5f097de613957c35a14796a8df5ea874e.png" alt="\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = \overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0), \;\;
 k = \left\{\begin{array}{ll}
 \infty &amp; \mbox{ for continuous-time system}\\
-t-t_0-1 &amp; \mbox{ for discrete-time system}\end{array}\right.</span></p>
+t-t_0-1 &amp; \mbox{ for discrete-time system}\end{array}\right."/></p>
 </div><p>the <em>maxmin closed-loop reach set</em> of system <a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at
-time <span class="math">t</span>, and we call</p>
+time <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>, and we call</p>
 <div class="math" id="equation-minmaxclrs">
-<p><span class="eqno">(26)</span><span class="math">\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = \underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0), \;\;
+<p><span class="eqno">(26)</span><img src="_images/math/89136b9c318b7bbf468f22f5376698eb3fb8ff03.png" alt="\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = \underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0), \;\;
 k = \left\{\begin{array}{ll}
 \infty &amp; \mbox{ for continuous-time system}\\
-t-t_0-1 &amp; \mbox{ for discrete-time system}\end{array}\right.</span></p>
+t-t_0-1 &amp; \mbox{ for discrete-time system}\end{array}\right."/></p>
 </div><p>the <em>minmax closed-loop reach set</em> of system <a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at
-time <span class="math">t</span>.</p>
-<p><strong>Definition.</strong> Given initial time <span class="math">t_0</span> and the set of initial
-states <span class="math">{\mathcal X}_0</span>, the maxmin CLRS
-<span class="math">\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)</span> of system
-<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at time <span class="math">t&gt;t_0</span>, is the set of all states
-<span class="math">x</span>, for each of which and for every disturbance
-<span class="math">v(\tau)\in{\mathcal V}(\tau)</span>, there exist an initial state
-<span class="math">x_0\in{\mathcal X}_0</span> and a control
-<span class="math">u(\tau, x(\tau))\in{\mathcal U}(\tau)</span>, such that the trajectory
-<span class="math">x(\tau | v(\tau), u(\tau, x(\tau)))</span> satisfying
-<span class="math">x(t_0) = x_0</span> and</p>
+time <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>.</p>
+<p><strong>Definition.</strong> Given initial time <img class="math" src="_images/math/fb761c2e199ad45ccf14767f48b88169479d840f.png" alt="t_0"/> and the set of initial
+states <img class="math" src="_images/math/1eae27d722cf74685b3dab099d6e0089009498ce.png" alt="{\mathcal X}_0"/>, the maxmin CLRS
+<img class="math" src="_images/math/da8352972752f59bf42a22437c121a973b6ec9d9.png" alt="\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)"/> of system
+<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at time <img class="math" src="_images/math/47a0f66af5c0a8153f3cc31637d82d745a941545.png" alt="t&gt;t_0"/>, is the set of all states
+<img class="math" src="_images/math/188c175aac0a8a9c22499336711b5d7256407254.png" alt="x"/>, for each of which and for every disturbance
+<img class="math" src="_images/math/c1aa4494d5b8320290e79840475da74b8e3b93ef.png" alt="v(\tau)\in{\mathcal V}(\tau)"/>, there exist an initial state
+<img class="math" src="_images/math/bce48b4aef0e0fa79362511d875f013203570971.png" alt="x_0\in{\mathcal X}_0"/> and a control
+<img class="math" src="_images/math/f1108a777b9c9e5400c7561dca28e08dbb907633.png" alt="u(\tau, x(\tau))\in{\mathcal U}(\tau)"/>, such that the trajectory
+<img class="math" src="_images/math/623840b492748629c459863a4ceba63a912c1fe1.png" alt="x(\tau | v(\tau), u(\tau, x(\tau)))"/> satisfying
+<img class="math" src="_images/math/433e8e46787ffef5c3d84013294acddac67bff72.png" alt="x(t_0) = x_0"/> and</p>
 <div class="math">
-<p><span class="math">\dot{x}(\tau | v(\tau), u(\tau, x(\tau))) \in
-f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))</span></p>
+<p><img src="_images/math/7c727074ea291080c23e532c48167b41584664cc.png" alt="\dot{x}(\tau | v(\tau), u(\tau, x(\tau))) \in
+f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))"/></p>
 </div><p>in the continuous-time case, or</p>
 <div class="math">
-<p><span class="math">x(\tau+1 | v(\tau), u(\tau, x(\tau))) \in
-f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))</span></p>
-</div><p>in the discrete-time case, with <span class="math">t_0\leqslant\tau&lt;t</span>, is such
-that <span class="math">x(t)=x</span>.</p>
-<p><strong>Definition.</strong> Given initial time <span class="math">t_0</span> and the set of initial states <span class="math">{\mathcal X}_0</span>, the
-maxmin CLRS <span class="math">\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)</span> of system
-<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a>, at time <span class="math">t&gt;t_0</span>, is the set of all states
-<span class="math">x</span>, for each of which there exists a control
-<span class="math">u(\tau, x(\tau))\in{\mathcal U}(\tau)</span>, and for every disturbance
-<span class="math">v(\tau)\in{\mathcal V}(\tau)</span> there exists an initial state
-<span class="math">x_0\in{\mathcal X}_0</span>, such that the trajectory
-<span class="math">x(\tau, v(\tau) | u(\tau, x(\tau)))</span> satisfying
-<span class="math">x(t_0) = x_0</span> and</p>
+<p><img src="_images/math/af935f321e67111c6ffbc3ee1fada771e118eaa5.png" alt="x(\tau+1 | v(\tau), u(\tau, x(\tau))) \in
+f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))"/></p>
+</div><p>in the discrete-time case, with <img class="math" src="_images/math/318499371b02e60472b58864afad183a0d3ff13c.png" alt="t_0\leqslant\tau&lt;t"/>, is such
+that <img class="math" src="_images/math/f0a326e5bb3a2e449a02d455a1417349b6959384.png" alt="x(t)=x"/>.</p>
+<p><strong>Definition.</strong> Given initial time <img class="math" src="_images/math/fb761c2e199ad45ccf14767f48b88169479d840f.png" alt="t_0"/> and the set of initial states <img class="math" src="_images/math/1eae27d722cf74685b3dab099d6e0089009498ce.png" alt="{\mathcal X}_0"/>, the
+maxmin CLRS <img class="math" src="_images/math/d9f97110fa885d35450b2782200b2d818509d75e.png" alt="\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)"/> of system
+<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a>, at time <img class="math" src="_images/math/47a0f66af5c0a8153f3cc31637d82d745a941545.png" alt="t&gt;t_0"/>, is the set of all states
+<img class="math" src="_images/math/188c175aac0a8a9c22499336711b5d7256407254.png" alt="x"/>, for each of which there exists a control
+<img class="math" src="_images/math/f1108a777b9c9e5400c7561dca28e08dbb907633.png" alt="u(\tau, x(\tau))\in{\mathcal U}(\tau)"/>, and for every disturbance
+<img class="math" src="_images/math/c1aa4494d5b8320290e79840475da74b8e3b93ef.png" alt="v(\tau)\in{\mathcal V}(\tau)"/> there exists an initial state
+<img class="math" src="_images/math/bce48b4aef0e0fa79362511d875f013203570971.png" alt="x_0\in{\mathcal X}_0"/>, such that the trajectory
+<img class="math" src="_images/math/a179cad2bc534707a02884cac8839913134932f9.png" alt="x(\tau, v(\tau) | u(\tau, x(\tau)))"/> satisfying
+<img class="math" src="_images/math/433e8e46787ffef5c3d84013294acddac67bff72.png" alt="x(t_0) = x_0"/> and</p>
 <div class="math">
-<p><span class="math">\dot{x}(\tau, v(\tau) | u(\tau, x(\tau))) \in
-f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))</span></p>
+<p><img src="_images/math/c48f92801d5065c1b3f4a91af37b94aa2b4b118e.png" alt="\dot{x}(\tau, v(\tau) | u(\tau, x(\tau))) \in
+f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))"/></p>
 </div><p>in the continuous-time case, or</p>
 <div class="math">
-<p><span class="math">x(\tau+1, v(\tau) | u(\tau, x(\tau))) \in
-f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))</span></p>
-</div><p>in the discrete-time case, with <span class="math">t_0\leqslant\tau&lt;t</span>, is such
-that <span class="math">x(t)=x</span>.
+<p><img src="_images/math/62b22c73821101bb0a113b4c7cdc1afe316eac95.png" alt="x(\tau+1, v(\tau) | u(\tau, x(\tau))) \in
+f(\tau, x(\tau), u(\tau, x(\tau)), v(\tau))"/></p>
+</div><p>in the discrete-time case, with <img class="math" src="_images/math/318499371b02e60472b58864afad183a0d3ff13c.png" alt="t_0\leqslant\tau&lt;t"/>, is such
+that <img class="math" src="_images/math/f0a326e5bb3a2e449a02d455a1417349b6959384.png" alt="x(t)=x"/>.
 By construction, both
 maxmin and minmax CLRS satisfy the semigroup property <a href="#equation-semigroup">(4)</a>.</p>
 <p>For some classes of dynamical systems and some types of constraints on
 initial conditions, controls and disturbances, the maxmin and minmax
 CLRS may coincide. This is the case for continuous-time linear systems
 with convex compact bounds on the initial set, controls and disturbances
-under the condition that the initial set <span class="math">{\mathcal X}_0</span> is large
+under the condition that the initial set <img class="math" src="_images/math/1eae27d722cf74685b3dab099d6e0089009498ce.png" alt="{\mathcal X}_0"/> is large
 enough to ensure that
-<span class="math">{\mathcal X}(t_0+\epsilon, t_0, {\mathcal X}_0)</span> is nonempty for
-some small <span class="math">\epsilon&gt;0</span>.</p>
+<img class="math" src="_images/math/5e7cb9efef0c680ffea90dc6d0085dd1217867b8.png" alt="{\mathcal X}(t_0+\epsilon, t_0, {\mathcal X}_0)"/> is nonempty for
+some small <img class="math" src="_images/math/1812e21f6af66c8a21218a60b1d6a7f2dc4368e9.png" alt="\epsilon&gt;0"/>.</p>
 <p>Consider the linear system case,</p>
 <div class="math" id="equation-linearrhsdist">
-<p><span class="eqno">(27)</span><span class="math">f(t, x, u) = A(t)x(t) + B(t)u + G(t)v,</span></p>
-</div><p>where <span class="math">A(t)</span> and <span class="math">B(t)</span> are as in <a href="#equation-linearrhs">(5)</a>, and
-<span class="math">G(t)</span> takes its values in <span class="math">{\bf R}^d</span>.</p>
+<p><span class="eqno">(27)</span><img src="_images/math/10f645948e87ca111bf98430a625b0ed246b2deb.png" alt="f(t, x, u) = A(t)x(t) + B(t)u + G(t)v,"/></p>
+</div><p>where <img class="math" src="_images/math/a79ae2055fb6a0774c0140d85756c9fc47af6e2a.png" alt="A(t)"/> and <img class="math" src="_images/math/9862381d627031d0a2e12c24690593e755041368.png" alt="B(t)"/> are as in <a href="#equation-linearrhs">(5)</a>, and
+<img class="math" src="_images/math/d1d72230feb39483b632288a3c3278f8b8ea6ea6.png" alt="G(t)"/> takes its values in <img class="math" src="_images/math/d4939503a4419502254568a63ec222846ce591bf.png" alt="{\bf R}^d"/>.</p>
 <p>The maxmin OLRS for the continuous-time linear system can be expressed
 through set valued integrals,</p>
 <div class="math" id="equation-ctlsmaxmin">
-<p><span class="eqno">(28)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(28)</span><img src="_images/math/aae2334367ad2e3d9d08d7e05e2e2f5ebed5afcc.png" alt="\begin{array}{l}
 \overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, t_0){\mathcal X}_0 \oplus
 \int_{t_0}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\right) \dot{-} \\
 \int_{t_0}^t\Phi(t, \tau)(-G(\tau)){\mathcal V}(\tau)d\tau,
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>and for discrete-time linear system through set-valued sums,</p>
 <div class="math" id="equation-dtlsmaxmin">
-<p><span class="eqno">(29)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(29)</span><img src="_images/math/4bbc00056b57b3c6f338b00385f0769e991dfaae.png" alt="\begin{array}{l}
 \overline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, t_0){\mathcal X}_0 \oplus \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
 \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau).
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>Similarly, the minmax OLRS for the continuous-time linear system is</p>
 <div class="math" id="equation-ctlsminmax">
-<p><span class="eqno">(30)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(30)</span><img src="_images/math/f8613f03b3aa91bed5e1b6dec93289d0fed64ac9.png" alt="\begin{array}{l}
 \underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, t_0){\mathcal X}_0 \dot{-}
 \int_{t_0}^t\Phi(t, \tau)(-G(\tau)){\mathcal V}(\tau)d\tau\right)
 \oplus \\
 \int_{t_0}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau,
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>and for the discrete-time linear system it is</p>
 <div class="math" id="equation-dtlsminmax">
-<p><span class="eqno">(31)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(31)</span><img src="_images/math/0c95f819dae3d6469b2a8849734febc5e09ef6b4.png" alt="\begin{array}{l}
 \underline{{\mathcal X}}_{OL}(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, t_0){\mathcal X}_0 \dot{-} \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau)\right) \oplus \\
 \sum_{\tau=t_0}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
-\end{array}</span></p>
-</div><p>The operation ‘<span class="math">\dot{-}</span>’ is <em>geometric difference</em>, also known as
+\end{array}"/></p>
+</div><p>The operation ‘<img class="math" src="_images/math/a8db451aea96e2d86ceb5fa311e0649e83fc7fff.png" alt="\dot{-}"/>’ is <em>geometric difference</em>, also known as
 <em>Minkowski difference</em>. <a class="footnote-reference" href="#id17" id="id7">[7]</a></p>
-<p>Now consider the piecewise OLRS with <span class="math">k</span> corrections. Expression
+<p>Now consider the piecewise OLRS with <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> corrections. Expression
 <a href="#equation-maxmink">(20)</a> translates into</p>
 <div class="math" id="equation-ctlsmaxmink">
-<p><span class="eqno">(32)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(32)</span><img src="_images/math/3172428610fb040988360121aa550e32526aa1da.png" alt="\begin{array}{l}
 \overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, \tau_k)\overline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0) \oplus
 \int_{\tau_k}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\right) \dot{-} \\
 \int_{\tau_k}^t\Phi(t, \tau)(-G(\tau)){\mathcal V}(\tau)d\tau,
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>in the continuous-time case, and for the discrete-time case into</p>
 <div class="math" id="equation-dtlsmaxmink">
-<p><span class="eqno">(33)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(33)</span><img src="_images/math/055132107fc0da62458e70990b7e05536afaa7c6.png" alt="\begin{array}{l}
 \overline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, \tau_k)\overline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0) \oplus
 \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
 \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau).
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>Expression <a href="#equation-minmaxk">(22)</a> translates into</p>
 <div class="math" id="equation-ctlsminmaxk">
-<p><span class="eqno">(34)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(34)</span><img src="_images/math/211e11aaec5b62201d1f9e28d724e606262d631d.png" alt="\begin{array}{l}
 \underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, \tau_k)\underline{{\mathcal X}}_{OL}^{k-1}(t, t_0, {\mathcal X}_0) \dot{-}
 \int_{\tau_k}^t\Phi(t, \tau)(-G(\tau)){\mathcal V}(\tau)d\tau\right)
 \oplus \\
 \int_{\tau_k}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau,
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>in the continuous-time case, and for the discrete-time case into</p>
 <div class="math" id="equation-dtlsminmaxk">
-<p><span class="eqno">(35)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(35)</span><img src="_images/math/2b1887c6e75a4fdc886974b688bafb445e6ede5d.png" alt="\begin{array}{l}
 \underline{{\mathcal X}}_{OL}^k(t, t_0, {\mathcal X}_0) = \\
 \left(\Phi(t, \tau_k)\underline{{\mathcal X}}_{OL}^{k-1}(\tau_k, t_0, {\mathcal X}_0) \dot{-}
 \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)(-G(\tau)){\mathcal V}(\tau)\right)
 \oplus \\
 \sum_{\tau=\tau_k}^{t-1}\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>Since for any
-<span class="math">{\mathcal W}_1, {\mathcal W}_2, {\mathcal W}_3 \subseteq {\bf R}^n</span>
+<img class="math" src="_images/math/a2af5dd6947be30ef78b671d0920e0e58a7b7fc2.png" alt="{\mathcal W}_1, {\mathcal W}_2, {\mathcal W}_3 \subseteq {\bf R}^n"/>
 it is true that</p>
 <div class="math">
-<p><span class="math">({\mathcal W}_1 \dot{-} {\mathcal W}_2) \oplus {\mathcal W}_3 =
+<p><img src="_images/math/7fb5c25ac241da54d016a2c3735f1939f33a0239.png" alt="({\mathcal W}_1 \dot{-} {\mathcal W}_2) \oplus {\mathcal W}_3 =
 ({\mathcal W}_1 \oplus {\mathcal W}_3) \dot{-} ({\mathcal W}_2 \oplus {\mathcal W}_3) \subseteq
-({\mathcal W}_1 \oplus {\mathcal W}_3) \dot{-} {\mathcal W}_2,</span></p>
+({\mathcal W}_1 \oplus {\mathcal W}_3) \dot{-} {\mathcal W}_2,"/></p>
 </div><p>from <a href="#equation-ctlsmaxmink">(32)</a>, <a href="#equation-ctlsminmaxk">(34)</a> and from <a href="#equation-dtlsmaxmink">(33)</a>,
 <a href="#equation-dtlsminmaxk">(35)</a>, it is clear that <a href="#equation-olrsinclusion">(24)</a> is true.
-For linear systems, if the initial set <span class="math">{\mathcal X}_0</span>, control
-bounds <span class="math">{\mathcal U}(\tau)</span> and disturbance bounds
-<span class="math">{\mathcal V}(\tau)</span>, <span class="math">t_0\leqslant\tau&lt;t</span>, are compact and
+For linear systems, if the initial set <img class="math" src="_images/math/1eae27d722cf74685b3dab099d6e0089009498ce.png" alt="{\mathcal X}_0"/>, control
+bounds <img class="math" src="_images/math/d5025379a275c633646266889a3f8afb66824361.png" alt="{\mathcal U}(\tau)"/> and disturbance bounds
+<img class="math" src="_images/math/3d1d7aa049009b09b08d23eafa47de5d551b1920.png" alt="{\mathcal V}(\tau)"/>, <img class="math" src="_images/math/318499371b02e60472b58864afad183a0d3ff13c.png" alt="t_0\leqslant\tau&lt;t"/>, are compact and
 convex, the CLRS
-<span class="math">\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)</span> and
-<span class="math">\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)</span> are
+<img class="math" src="_images/math/da8352972752f59bf42a22437c121a973b6ec9d9.png" alt="\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)"/> and
+<img class="math" src="_images/math/d9f97110fa885d35450b2782200b2d818509d75e.png" alt="\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0)"/> are
 compact and convex, provided they are nonempty. For continuous-time
 linear systems,
-<span class="math">\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = \underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = {\mathcal X}_{CL}(t, t_0, {\mathcal X}_0)</span>.</p>
+<img class="math" src="_images/math/f8927444016cb2c7c7d6c23de04d56b612d73014.png" alt="\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = \underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal X}_0) = {\mathcal X}_{CL}(t, t_0, {\mathcal X}_0)"/>.</p>
 <p>Just as for forward reach sets, the backward reach sets can be open-loop
 (OLBRS) or closed-loop (CLBRS).</p>
-<p><strong>Definition.</strong> Given the terminal time <span class="math">t_1</span> and target set
-<span class="math">{\mathcal Y}_1</span>, the maxmin open-loop backward reach set
-<span class="math">\overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)</span> of system
-<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at time <span class="math">t&lt;t_1</span>, is the set of all <span class="math">y</span>,
-such that for any disturbance <span class="math">v(\tau)\in{\mathcal V}(\tau)</span> there
-exists a terminal state <span class="math">y_1\in{\mathcal Y}_1</span> and control
-<span class="math">u(\tau)\in{\mathcal U}(\tau)</span>, <span class="math">t\leqslant\tau&lt;t_1</span>, which
-steers the system from <span class="math">y(t)=y</span> to <span class="math">y(t_1)=y_1</span>.</p>
-<p><span class="math">\overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)</span> is the
+<p><strong>Definition.</strong> Given the terminal time <img class="math" src="_images/math/44780f0598b4d22c6888cfca27deb04115f7fa88.png" alt="t_1"/> and target set
+<img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/>, the maxmin open-loop backward reach set
+<img class="math" src="_images/math/9974ae66786602ff13f7e3c476ffaec12cc36c92.png" alt="\overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)"/> of system
+<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at time <img class="math" src="_images/math/f172d25be351c54495d737f93750ec5e72cbddda.png" alt="t&lt;t_1"/>, is the set of all <img class="math" src="_images/math/b124ff74afb0914bb434e8fb849eb56d734412f8.png" alt="y"/>,
+such that for any disturbance <img class="math" src="_images/math/c1aa4494d5b8320290e79840475da74b8e3b93ef.png" alt="v(\tau)\in{\mathcal V}(\tau)"/> there
+exists a terminal state <img class="math" src="_images/math/ced8055b6491f5ac70552a2a55261202b01b331f.png" alt="y_1\in{\mathcal Y}_1"/> and control
+<img class="math" src="_images/math/92a65e24f2e97e53d3368a49ecf3db303566d594.png" alt="u(\tau)\in{\mathcal U}(\tau)"/>, <img class="math" src="_images/math/42a4765aa2413005dad1bd4ef454ddb42b4277c9.png" alt="t\leqslant\tau&lt;t_1"/>, which
+steers the system from <img class="math" src="_images/math/78a9574468c2042383d27cdda3b94edeecd8ca1e.png" alt="y(t)=y"/> to <img class="math" src="_images/math/dbb8eda36d29a589d7f1affac72fcef01f49ae18.png" alt="y(t_1)=y_1"/>.</p>
+<p><img class="math" src="_images/math/9974ae66786602ff13f7e3c476ffaec12cc36c92.png" alt="\overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)"/> is the
 subzero level set of the value function</p>
 <div class="math" id="equation-maxminvfb">
-<p><span class="eqno">(36)</span><span class="math">\begin{aligned}
+<p><span class="eqno">(36)</span><img src="_images/math/0eb848a9ccf73e1ac77ad3481c526b1ed2246ecb.png" alt="\begin{aligned}
 \underline{V}_b(t, y) = \max_v\min_u\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau&lt;t_1\},
-\end{aligned}</span></p>
-</div><p><strong>Definition.</strong> Given the terminal time <span class="math">t_1</span> and target set
-<span class="math">{\mathcal Y}_1</span>, the minmax open-loop backward reach set
-<span class="math">\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)</span> of system
-<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at time <span class="math">t&lt;t_1</span>, is the set of all <span class="math">y</span>,
-such that there exists a control <span class="math">u(\tau)\in{\mathcal U}(\tau)</span>
-that for all disturbances <span class="math">v(\tau\in{\mathcal V}(\tau)</span>,
-<span class="math">t\leqslant\tau&lt;t_1</span>, assigns a terminal state
-<span class="math">y_1\in{\mathcal Y}_1</span> and steers the system from <span class="math">y(t)=y</span>
-to <span class="math">y(t_1)=y_1</span>.
-<span class="math">\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)</span> is the
+\end{aligned}"/></p>
+</div><p><strong>Definition.</strong> Given the terminal time <img class="math" src="_images/math/44780f0598b4d22c6888cfca27deb04115f7fa88.png" alt="t_1"/> and target set
+<img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/>, the minmax open-loop backward reach set
+<img class="math" src="_images/math/ff9701e6b7f5e96c1d7f6a66c22c63686c182572.png" alt="\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)"/> of system
+<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at time <img class="math" src="_images/math/f172d25be351c54495d737f93750ec5e72cbddda.png" alt="t&lt;t_1"/>, is the set of all <img class="math" src="_images/math/b124ff74afb0914bb434e8fb849eb56d734412f8.png" alt="y"/>,
+such that there exists a control <img class="math" src="_images/math/92a65e24f2e97e53d3368a49ecf3db303566d594.png" alt="u(\tau)\in{\mathcal U}(\tau)"/>
+that for all disturbances <img class="math" src="_images/math/e1a6e6beed116d63096bc2fb84bb0231c2410ac2.png" alt="v(\tau\in{\mathcal V}(\tau)"/>,
+<img class="math" src="_images/math/42a4765aa2413005dad1bd4ef454ddb42b4277c9.png" alt="t\leqslant\tau&lt;t_1"/>, assigns a terminal state
+<img class="math" src="_images/math/ced8055b6491f5ac70552a2a55261202b01b331f.png" alt="y_1\in{\mathcal Y}_1"/> and steers the system from <img class="math" src="_images/math/78a9574468c2042383d27cdda3b94edeecd8ca1e.png" alt="y(t)=y"/>
+to <img class="math" src="_images/math/dbb8eda36d29a589d7f1affac72fcef01f49ae18.png" alt="y(t_1)=y_1"/>.
+<img class="math" src="_images/math/ff9701e6b7f5e96c1d7f6a66c22c63686c182572.png" alt="\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1)"/> is the
 subzero level set of the value function</p>
 <div class="math" id="equation-minmaxvfb">
-<p><span class="eqno">(37)</span><span class="math">\begin{aligned}
+<p><span class="eqno">(37)</span><img src="_images/math/ce52f77409f9d7502a3e16d643d45260ebb235ad.png" alt="\begin{aligned}
 \overline{V}_b(t, y) = \min_u\max_v\{{\bf dist}(y(t_1), {\mathcal Y}_1) ~|~ y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau&lt;t_1\},
-\end{aligned}</span></p>
+\end{aligned}"/></p>
 </div><p><strong>Remark.</strong> The backward reach set can be computed for a continuous-time
-system only if the solution of <a href="#equation-ctds2">(12)</a> exists for <span class="math">t&lt;t_1</span>, and
+system only if the solution of <a href="#equation-ctds2">(12)</a> exists for <img class="math" src="_images/math/f172d25be351c54495d737f93750ec5e72cbddda.png" alt="t&lt;t_1"/>, and
 for a discrete-time system only if the right hand side of <a href="#equation-dtds2">(13)</a> is
 invertible.</p>
 <p>Similarly to the forward reachability case, we construct piecewise OLBRS
-with one correction at time <span class="math">\tau_1</span>, <span class="math">t&lt;\tau_1&lt;t_1</span>. The
+with one correction at time <img class="math" src="_images/math/7535961332c7b400bb1f935a141711a30c82cd87.png" alt="\tau_1"/>, <img class="math" src="_images/math/230ea228b832dd11db41b41c8f8c6d94256f8848.png" alt="t&lt;\tau_1&lt;t_1"/>. The
 piecewise maxmin OLBRS with one correction is</p>
 <div class="math" id="equation-maxminb1">
-<p><span class="eqno">(38)</span><span class="math">\overline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}(\tau_1, t, \overline{{\mathcal Y}}_{OL}(t_1, \tau_1, {\mathcal Y}_1)),</span></p>
+<p><span class="eqno">(38)</span><img src="_images/math/e0b58b397da498de4382fb2e02cbe0a464aa5ac2.png" alt="\overline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}(\tau_1, t, \overline{{\mathcal Y}}_{OL}(t_1, \tau_1, {\mathcal Y}_1)),"/></p>
 </div><p>and it is the subzero level set of the function</p>
 <div class="math" id="equation-maxminvfb1">
-<p><span class="eqno">(39)</span><span class="math">\begin{aligned}
+<p><span class="eqno">(39)</span><img src="_images/math/72da0823ab1dec1a59a5dab97421999c8eed3f45.png" alt="\begin{aligned}
 \underline{V}^1_b(t, y) =  \max_v\min_u\{\underline{V}_b(\tau_1, y(\tau_1)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau&lt;\tau_1\}.
-\end{aligned}</span></p>
+\end{aligned}"/></p>
 </div><p>The piecewise minmax OLBRS with one correction is</p>
 <div class="math" id="equation-minmaxb1">
-<p><span class="eqno">(40)</span><span class="math">\underline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}(\tau_1, t, \underline{{\mathcal Y}}_{OL}(t_1, \tau_1, {\mathcal Y}_1)),</span></p>
+<p><span class="eqno">(40)</span><img src="_images/math/b280ba663c0e641b1a0cdb822e65fb7b0144b3fb.png" alt="\underline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}(\tau_1, t, \underline{{\mathcal Y}}_{OL}(t_1, \tau_1, {\mathcal Y}_1)),"/></p>
 </div><p>and it is the subzero level set of the function</p>
 <div class="math" id="equation-minmaxvfb1">
-<p><span class="eqno">(41)</span><span class="math">\begin{aligned}
+<p><span class="eqno">(41)</span><img src="_images/math/1706900f9e7d9e0fe78a6b52559d05f39b209c55.png" alt="\begin{aligned}
 \overline{V}^1_b(t, y) = \min_u\max_v\{\overline{V}_b(\tau_1, y(\tau_1)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau&lt;\tau_1\},
-\end{aligned}</span></p>
-</div><p>Recursively define maxmin and minmax OLBRS with <span class="math">k</span> corrections
-for <span class="math">t&lt;\tau_k&lt;\cdots&lt;\tau_1&lt;t_1</span>. The maxmin OLBRS with <span class="math">k</span>
+\end{aligned}"/></p>
+</div><p>Recursively define maxmin and minmax OLBRS with <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> corrections
+for <img class="math" src="_images/math/8cdd38adeb09f46dd390ce750511f835c5d21720.png" alt="t&lt;\tau_k&lt;\cdots&lt;\tau_1&lt;t_1"/>. The maxmin OLBRS with <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/>
 corrections is</p>
 <div class="math" id="equation-maxminbk">
-<p><span class="eqno">(42)</span><span class="math">\overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}(\tau_k, t, \overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1)),</span></p>
+<p><span class="eqno">(42)</span><img src="_images/math/ee077633d630b3b08c8709f43e865f4d2b90fa61.png" alt="\overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}(\tau_k, t, \overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1)),"/></p>
 </div><p>which is the subzero level set of function</p>
 <div class="math" id="equation-maxminvfbk">
-<p><span class="eqno">(43)</span><span class="math">\begin{aligned}
+<p><span class="eqno">(43)</span><img src="_images/math/7b87c73274d2cb87ee14e3db28ab39b0bf41b2c0.png" alt="\begin{aligned}
 \underline{V}^k_b(t, y) =  \max_v\min_u\{\underline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau&lt;\tau_k\}.
-\end{aligned}</span></p>
-</div><p>The minmax OLBRS with <span class="math">k</span> corrections is</p>
+\end{aligned}"/></p>
+</div><p>The minmax OLBRS with <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> corrections is</p>
 <div class="math" id="equation-minmaxbk">
-<p><span class="eqno">(44)</span><span class="math">\underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}(\tau_k, t, \underline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1)),</span></p>
+<p><span class="eqno">(44)</span><img src="_images/math/f61e8aa632dfa6b6cc5ef7f38710589b5f3be75f.png" alt="\underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}(\tau_k, t, \underline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1)),"/></p>
 </div><p>which is the subzero level set of the function</p>
 <div class="math" id="equation-minmaxvfbk">
-<p><span class="eqno">(45)</span><span class="math">\begin{aligned}
+<p><span class="eqno">(45)</span><img src="_images/math/7323346ed847035a4ea51057d66f0ee6806942af.png" alt="\begin{aligned}
 \overline{V}^k_b(t, y) =  \min_u\max_v\{\overline{V}^{k-1}_b(\tau_k, y(\tau_k)) ~|~
 y(t)=y, \; u(\tau)\in{\mathcal U}(\tau), \;
 v(\tau)\in{\mathcal V}(\tau), \; t\leqslant\tau&lt;\tau_k\},
-\end{aligned}</span></p>
+\end{aligned}"/></p>
 </div><p>From <a href="#equation-maxminvfb1">(39)</a>, <a href="#equation-minmaxvfb1">(41)</a>, <a href="#equation-maxminvfbk">(43)</a> and <a href="#equation-minmaxvfbk">(45)</a>
 it follows that</p>
 <div class="math">
-<p><span class="math">\underline{V}_b(t, y) \leqslant\underline{V}^1_b(t, y)\leqslant\cdots
+<p><img src="_images/math/9153c6db631286c1b216865f24912b3449f0dcc7.png" alt="\underline{V}_b(t, y) \leqslant\underline{V}^1_b(t, y)\leqslant\cdots
 \leqslant\underline{V}^k_b(t, y) \leqslant\overline{V}^k_b(t, y) \leqslant\cdots
-\leqslant\overline{V}^1_b(t, y) \leqslant\overline{V}_b(t, y) .</span></p>
+\leqslant\overline{V}^1_b(t, y) \leqslant\overline{V}_b(t, y) ."/></p>
 </div><p>Hence,</p>
 <div class="math" id="equation-olbrsinclusion">
-<p><span class="eqno">(46)</span><span class="math">\begin{aligned}
+<p><span class="eqno">(46)</span><img src="_images/math/b32e16928bf25806de305be52bcc7208da144a01.png" alt="\begin{aligned}
 &amp;&amp;\underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) \subseteq \underline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1) \subseteq \cdots
 \subseteq \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) \subseteq \nonumber \\
 &amp;&amp;\overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) \subseteq \cdots \subseteq \overline{{\mathcal Y}}_{OL}^1(t_1, t, {\mathcal Y}_1)
 \subseteq \overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) .
-\end{aligned}</span></p>
+\end{aligned}"/></p>
 </div><p>We say that</p>
 <div class="math" id="equation-maxminclbrs">
-<p><span class="eqno">(47)</span><span class="math">\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1), \;\;
+<p><span class="eqno">(47)</span><img src="_images/math/2bc0c133f3b36e086d6924bb1aa8db9980fd2619.png" alt="\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = \overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1), \;\;
 k = \left\{\begin{array}{ll}
 \infty &amp; \mbox{ for continuous-time system}\\
-t_1-t-1 &amp; \mbox{ for discrete-time system}\end{array}\right.</span></p>
+t_1-t-1 &amp; \mbox{ for discrete-time system}\end{array}\right."/></p>
 </div><p>is the <em>maxmin closed-loop backward reach set</em> of system <a href="#equation-ctds2">(12)</a> or
-<a href="#equation-dtds2">(13)</a> at time <span class="math">t</span>.</p>
+<a href="#equation-dtds2">(13)</a> at time <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>.</p>
 <p>We say that</p>
 <div class="math" id="equation-minmaxclbrs">
-<p><span class="eqno">(48)</span><span class="math">\underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1), \;\;
+<p><span class="eqno">(48)</span><img src="_images/math/5e1aed6742fc3b70822e233cfa0f6f4e764170e6.png" alt="\underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1), \;\;
 k = \left\{\begin{array}{ll}
 \infty &amp; \mbox{ for continuous-time system}\\
-t_1-t-1 &amp; \mbox{ for discrete-time system}\end{array}\right.</span></p>
+t_1-t-1 &amp; \mbox{ for discrete-time system}\end{array}\right."/></p>
 </div><p>is the <em>minmax closed-loop backward reach set</em> of system <a href="#equation-ctds2">(12)</a> or
-<a href="#equation-dtds2">(13)</a> at time <span class="math">t</span>.</p>
-<p><strong>Definition.</strong> Given the terminal time <span class="math">t_1</span> and
-target set <span class="math">{\mathcal Y}_1</span>, the maxmin CLBRS
-<span class="math">\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)</span> of system
-<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at time <span class="math">t&lt;t_1</span>, is the set of all states
-<span class="math">y</span>, for each of which for every disturbance
-<span class="math">v(\tau)\in{\mathcal V}(\tau)</span> there exists terminal state
-<span class="math">y_1\in{\mathcal Y}_1</span> and control
-<span class="math">u(\tau, y(\tau))\in{\mathcal U}(\tau)</span> that assigns trajectory
-<span class="math">y(\tau, | v(\tau), u(\tau, y(\tau)))</span> satisfying</p>
+<a href="#equation-dtds2">(13)</a> at time <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>.</p>
+<p><strong>Definition.</strong> Given the terminal time <img class="math" src="_images/math/44780f0598b4d22c6888cfca27deb04115f7fa88.png" alt="t_1"/> and
+target set <img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/>, the maxmin CLBRS
+<img class="math" src="_images/math/5443f2a60e21d0f66800bb85eadd3a99e717cb84.png" alt="\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)"/> of system
+<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at time <img class="math" src="_images/math/f172d25be351c54495d737f93750ec5e72cbddda.png" alt="t&lt;t_1"/>, is the set of all states
+<img class="math" src="_images/math/b124ff74afb0914bb434e8fb849eb56d734412f8.png" alt="y"/>, for each of which for every disturbance
+<img class="math" src="_images/math/c1aa4494d5b8320290e79840475da74b8e3b93ef.png" alt="v(\tau)\in{\mathcal V}(\tau)"/> there exists terminal state
+<img class="math" src="_images/math/ced8055b6491f5ac70552a2a55261202b01b331f.png" alt="y_1\in{\mathcal Y}_1"/> and control
+<img class="math" src="_images/math/c47dfab4f14dceae726e6780db6b2ec8893f0a70.png" alt="u(\tau, y(\tau))\in{\mathcal U}(\tau)"/> that assigns trajectory
+<img class="math" src="_images/math/25f41900d9cdf71d21efc6ef3d2ce7b4bb67b65e.png" alt="y(\tau, | v(\tau), u(\tau, y(\tau)))"/> satisfying</p>
 <div class="math">
-<p><span class="math">\dot{y}(\tau | v(\tau), u(\tau, y(\tau))) \in
-f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))</span></p>
+<p><img src="_images/math/5a48d0e96f553b1c0027af8b88f0dcab936672d3.png" alt="\dot{y}(\tau | v(\tau), u(\tau, y(\tau))) \in
+f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))"/></p>
 </div><p>in continuous-time case, or</p>
 <div class="math">
-<p><span class="math">y(\tau+1 | v(\tau), u(\tau, y(\tau))) \in
-f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))</span></p>
-</div><p>in discrete-time case, with <span class="math">t\leqslant\tau&lt;t_1</span>, such that
-<span class="math">y(t) = y</span> and <span class="math">y(t_1)=y_1</span>.</p>
-<p><strong>Definition.</strong> Given the terminal time <span class="math">t_1</span> and target set <span class="math">{\mathcal Y}_1</span>, the
-minmax CLBRS <span class="math">\underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)</span> of system
-<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at time <span class="math">t&lt;t_1</span>, is the set of all states
-<span class="math">y</span>, for each of which there exists control
-<span class="math">u(\tau, y(\tau))\in{\mathcal U}(\tau)</span> that for every disturbance
-<span class="math">v(\tau)\in{\mathcal V}(\tau)</span> assigns terminal state
-<span class="math">y_1\in{\mathcal Y}_1</span> and trajectory
-<span class="math">y(\tau, v(\tau) | u(\tau, y(\tau)))</span> satisfying</p>
+<p><img src="_images/math/b539d0860c33ed399739390b680039c6214f23f2.png" alt="y(\tau+1 | v(\tau), u(\tau, y(\tau))) \in
+f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))"/></p>
+</div><p>in discrete-time case, with <img class="math" src="_images/math/42a4765aa2413005dad1bd4ef454ddb42b4277c9.png" alt="t\leqslant\tau&lt;t_1"/>, such that
+<img class="math" src="_images/math/d0df7211409426f32ac2f6417f9f4cc34ac17650.png" alt="y(t) = y"/> and <img class="math" src="_images/math/dbb8eda36d29a589d7f1affac72fcef01f49ae18.png" alt="y(t_1)=y_1"/>.</p>
+<p><strong>Definition.</strong> Given the terminal time <img class="math" src="_images/math/44780f0598b4d22c6888cfca27deb04115f7fa88.png" alt="t_1"/> and target set <img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/>, the
+minmax CLBRS <img class="math" src="_images/math/536bb2217674c5328695de35f70b2e3120973e4b.png" alt="\underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)"/> of system
+<a href="#equation-ctds2">(12)</a> or <a href="#equation-dtds2">(13)</a> at time <img class="math" src="_images/math/f172d25be351c54495d737f93750ec5e72cbddda.png" alt="t&lt;t_1"/>, is the set of all states
+<img class="math" src="_images/math/b124ff74afb0914bb434e8fb849eb56d734412f8.png" alt="y"/>, for each of which there exists control
+<img class="math" src="_images/math/c47dfab4f14dceae726e6780db6b2ec8893f0a70.png" alt="u(\tau, y(\tau))\in{\mathcal U}(\tau)"/> that for every disturbance
+<img class="math" src="_images/math/c1aa4494d5b8320290e79840475da74b8e3b93ef.png" alt="v(\tau)\in{\mathcal V}(\tau)"/> assigns terminal state
+<img class="math" src="_images/math/ced8055b6491f5ac70552a2a55261202b01b331f.png" alt="y_1\in{\mathcal Y}_1"/> and trajectory
+<img class="math" src="_images/math/c356b7be1f87c32ea236c103ba8916cab7ca2e31.png" alt="y(\tau, v(\tau) | u(\tau, y(\tau)))"/> satisfying</p>
 <div class="math">
-<p><span class="math">\dot{y}(\tau, v(\tau) | u(\tau, y(\tau))) \in
-f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))</span></p>
+<p><img src="_images/math/e5602363dc25fb4ecd0c7056322ee267f64f0c9c.png" alt="\dot{y}(\tau, v(\tau) | u(\tau, y(\tau))) \in
+f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))"/></p>
 </div><p>in the continuous-time case, or</p>
 <div class="math">
-<p><span class="math">y(\tau+1, v(\tau) | u(\tau, y(\tau))) \in
-f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))</span></p>
-</div><p>in the discrete-time case, with <span class="math">t\leqslant\tau&lt;t_1</span>, such that
-<span class="math">y(t) = y</span> and <span class="math">y(t_1)=y_1</span>.</p>
+<p><img src="_images/math/8f73e9a26ecf893ed4e400be1ab2e1e5c94f59e2.png" alt="y(\tau+1, v(\tau) | u(\tau, y(\tau))) \in
+f(\tau, y(\tau), u(\tau, y(\tau)), v(\tau))"/></p>
+</div><p>in the discrete-time case, with <img class="math" src="_images/math/42a4765aa2413005dad1bd4ef454ddb42b4277c9.png" alt="t\leqslant\tau&lt;t_1"/>, such that
+<img class="math" src="_images/math/d0df7211409426f32ac2f6417f9f4cc34ac17650.png" alt="y(t) = y"/> and <img class="math" src="_images/math/dbb8eda36d29a589d7f1affac72fcef01f49ae18.png" alt="y(t_1)=y_1"/>.</p>
 <p>Both
 maxmin and minmax CLBRS satisfy the semigroup property
 <a href="#equation-semigroup_b">(9)</a>.</p>
 <p>The maxmin OLBRS for the continuous-time linear system can be expressed
 through set valued integrals,</p>
 <div class="math" id="equation-ctlsmaxminb">
-<p><span class="eqno">(49)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(49)</span><img src="_images/math/3912e284919cb83589ac428415a20c239b75a863.png" alt="\begin{array}{l}
 \overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, t_1){\mathcal Y}_1 \oplus
 \int_{t_1}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\right) \dot{-} \\
 \int_{t}^{t_1}\Phi(t, \tau)G(\tau){\mathcal V}(\tau)d\tau,
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>and for the discrete-time linear system through set-valued sums,</p>
 <div class="math" id="equation-dtlsmaxminb">
-<p><span class="eqno">(50)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(50)</span><img src="_images/math/f0968ac7e68fa6267d4b6cf428a99118d545959f.png" alt="\begin{array}{l}
 \overline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, t_1){\mathcal Y}_1 \oplus
 \sum_{\tau=t}^{t_1-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
 \sum_{\tau=t}^{t_1-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau).
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>Similarly, the minmax OLBRS for the continuous-time linear system is</p>
 <div class="math" id="equation-ctlsminmaxb">
-<p><span class="eqno">(51)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(51)</span><img src="_images/math/ab360b3a48f91dfa481fc94c668e022f23110638.png" alt="\begin{array}{l}
 \underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, t_1){\mathcal Y}_1 \dot{-}
 \int_{t}^{t_1}\Phi(t, \tau)G(\tau){\mathcal V}(\tau)d\tau\right)
 \oplus \\
 \int_{t_1}^{t}\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau,
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>and for the discrete-time linear system it is</p>
 <div class="math" id="equation-dtlsminmaxb">
-<p><span class="eqno">(52)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(52)</span><img src="_images/math/2440e5daf6a564e731f4c6b074065671b4247c4d.png" alt="\begin{array}{l}
 \underline{{\mathcal Y}}_{OL}(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, t_1){\mathcal Y}_1 \dot{-}
 \sum_{\tau=t}^{t_1-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau)\right)
 \oplus \\
 \sum_{\tau=t}^{t_1-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
-\end{array}</span></p>
-</div><p>Now consider piecewise OLBRS with <span class="math">k</span> corrections. Expression
+\end{array}"/></p>
+</div><p>Now consider piecewise OLBRS with <img class="math" src="_images/math/e9203da50e1059455123460d4e716c9c7f440cc3.png" alt="k"/> corrections. Expression
 <a href="#equation-maxminbk">(42)</a> translates into</p>
 <div class="math" id="equation-ctlsmaxminbk">
-<p><span class="eqno">(53)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(53)</span><img src="_images/math/ecda851a6cf6aa31daf3ea2407c912e02d42efc9.png" alt="\begin{array}{l}
 \overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \oplus
 \int_{\tau_k}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau\right) \dot{-} \\
 \int^{\tau_k}_t\Phi(t, \tau)G(\tau){\mathcal V}(\tau)d\tau,
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>in the continuous-time case, and for the discrete-time case into</p>
 <div class="math" id="equation-dtlsmaxminbk">
-<p><span class="eqno">(54)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(54)</span><img src="_images/math/8167ed55f92d9cb1c59541c39d6926db132bc77f.png" alt="\begin{array}{l}
 \overline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \oplus
 \sum_{\tau=t}^{\tau_k-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau)\right) \dot{-} \\
 \sum_{\tau=t}^{\tau_k-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau).
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>Expression <a href="#equation-minmaxbk">(44)</a> translates into</p>
 <div class="math" id="equation-ctlsminmaxbk">
-<p><span class="eqno">(55)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(55)</span><img src="_images/math/8bb4be8ae716127b20e51434c99069e11a852fab.png" alt="\begin{array}{l}
 \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \\
 \left(\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \dot{-}
 \int^{\tau_k}_t\Phi(t, \tau)G(\tau){\mathcal V}(\tau)d\tau\right)
 \oplus \\
 \int_{\tau_k}^t\Phi(t, \tau)B(\tau){\mathcal U}(\tau)d\tau,
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>in the continuous-time case, and for the discrete-time case into</p>
 <div class="math" id="equation-dtlsminmaxbk">
-<p><span class="eqno">(56)</span><span class="math">\begin{array}{l}
+<p><span class="eqno">(56)</span><img src="_images/math/6bf5d14f121bca6b179dac1f646881d0e9168866.png" alt="\begin{array}{l}
 \underline{{\mathcal Y}}_{OL}^k(t_1, t, {\mathcal Y}_1) = \\
 (\Phi(t, \tau_k)\overline{{\mathcal Y}}_{OL}^{k-1}(t_1, \tau_k, {\mathcal Y}_1) \dot{-}
 \sum_{\tau=t}^{\tau_k-1}\Phi(t, \tau+1)G(\tau){\mathcal V}(\tau))
 \oplus \\
 \sum_{\tau=t}^{\tau_k-1}-\Phi(t, \tau+1)B(\tau){\mathcal U}(\tau).
-\end{array}</span></p>
+\end{array}"/></p>
 </div><p>For continuous-time linear systems
-<span class="math">\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = {\mathcal Y}_{CL}(t_1, t, {\mathcal Y}_1)</span>
-under the condition that the target set <span class="math">{\mathcal Y}_1</span> is large
+<img class="math" src="_images/math/82d5ae6e78b84a69b647e0e2b1f0b3014679e0ac.png" alt="\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = \underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1) = {\mathcal Y}_{CL}(t_1, t, {\mathcal Y}_1)"/>
+under the condition that the target set <img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/> is large
 enough to ensure that
-<span class="math">\underline{{\mathcal Y}}_{CL}(t_1, t_1-\epsilon, {\mathcal Y}_1)</span>
-is nonempty for some small <span class="math">\epsilon&gt;0</span>.</p>
+<img class="math" src="_images/math/93adce0de4fe8c994b9376e26aa3ea8952f5ebd6.png" alt="\underline{{\mathcal Y}}_{CL}(t_1, t_1-\epsilon, {\mathcal Y}_1)"/>
+is nonempty for some small <img class="math" src="_images/math/1812e21f6af66c8a21218a60b1d6a7f2dc4368e9.png" alt="\epsilon&gt;0"/>.</p>
 <p>Computation of backward reach sets for discrete-time linear systems
-makes sense only if the state transition matrix <span class="math">\Phi(t_1, t)</span> is
+makes sense only if the state transition matrix <img class="math" src="_images/math/12aacf1f8c8dfc57817e3b1225fefcb6bf8f0809.png" alt="\Phi(t_1, t)"/> is
 invertible.</p>
-<p>If the target set <span class="math">{\mathcal Y}_1</span>, control sets
-<span class="math">{\mathcal U}(\tau)</span> and disturbance sets
-<span class="math">{\mathcal V}(\tau)</span>, <span class="math">t\leqslant\tau&lt;t_1</span>, are compact and
+<p>If the target set <img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/>, control sets
+<img class="math" src="_images/math/d5025379a275c633646266889a3f8afb66824361.png" alt="{\mathcal U}(\tau)"/> and disturbance sets
+<img class="math" src="_images/math/3d1d7aa049009b09b08d23eafa47de5d551b1920.png" alt="{\mathcal V}(\tau)"/>, <img class="math" src="_images/math/42a4765aa2413005dad1bd4ef454ddb42b4277c9.png" alt="t\leqslant\tau&lt;t_1"/>, are compact and
 convex, then CLBRS
-<span class="math">\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)</span> and
-<span class="math">\underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)</span> are
+<img class="math" src="_images/math/5443f2a60e21d0f66800bb85eadd3a99e717cb84.png" alt="\overline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)"/> and
+<img class="math" src="_images/math/536bb2217674c5328695de35f70b2e3120973e4b.png" alt="\underline{{\mathcal Y}}_{CL}(t_1, t, {\mathcal Y}_1)"/> are
 compact and convex, if they are nonempty.</p>
 </div>
 <div class="section" id="reachability-problem">
 <h3>Reachability problem<a class="headerlink" href="#reachability-problem" title="Permalink to this headline">¶</a></h3>
 <p>Reachability analysis is concerned with the computation of the forward
-<span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0)</span> and backward
-<span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1)</span> reach sets (the reach sets
+<img class="math" src="_images/math/811bdf7f2cb9ca774c4c8d632bfedbf768d28f91.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0)"/> and backward
+<img class="math" src="_images/math/5391e6459f27f329a5ba5ceac7e280b33da970ce.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1)"/> reach sets (the reach sets
 may be maxmin or minmax) in a way that can effectively meet requests
 like the following:</p>
 <ol class="arabic">
-<li><p class="first">For the given time interval <span class="math">[t_0, t]</span>, determine whether the
+<li><p class="first">For the given time interval <img class="math" src="_images/math/539d8278169a9818b382eb6cf1f9bfc93d0f3101.png" alt="[t_0, t]"/>, determine whether the
 system can be steered into the given target set
-<span class="math">{\mathcal Y}_1</span>. In other words, is the set
-<span class="math">{\mathcal Y}_1\cap\bigcup_{t_0 \leqslant\tau\leqslant t}{\mathcal X}(\tau, t_0, {\mathcal X}_0)</span>
+<img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/>. In other words, is the set
+<img class="math" src="_images/math/df907705ae42d135dbae5165479d20a25a93a90c.png" alt="{\mathcal Y}_1\cap\bigcup_{t_0 \leqslant\tau\leqslant t}{\mathcal X}(\tau, t_0, {\mathcal X}_0)"/>
 nonempty? And if the answer is ‘yes’, find a control that steers the
 system to the target set (or avoids the target set). <a class="footnote-reference" href="#id18" id="id8">[8]</a></p>
 </li>
-<li><p class="first">If the target set <span class="math">{\mathcal Y}_1</span> is reachable from the given
-initial condition <span class="math">\{t_0, {\mathcal X}_0\}</span> in the time
-interval <span class="math">[t_0, t]</span>, find the shortest time to reach
-<span class="math">{\mathcal Y}_1</span>,</p>
+<li><p class="first">If the target set <img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/> is reachable from the given
+initial condition <img class="math" src="_images/math/724d84613c3a637bf253c8482e034f0c9fa05730.png" alt="\{t_0, {\mathcal X}_0\}"/> in the time
+interval <img class="math" src="_images/math/539d8278169a9818b382eb6cf1f9bfc93d0f3101.png" alt="[t_0, t]"/>, find the shortest time to reach
+<img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/>,</p>
 <div class="math">
-<p><span class="math">\arg\min_{\tau}
-\{{\mathcal X}(\tau,t_0,{\mathcal X}_0)\cap{\mathcal Y}_1\neq\emptyset ~|~ t_0\leqslant\tau\leqslant t\}.</span></p>
+<p><img src="_images/math/5417959fab7da4f7dba2a9556a2f9c8099418220.png" alt="\arg\min_{\tau}
+\{{\mathcal X}(\tau,t_0,{\mathcal X}_0)\cap{\mathcal Y}_1\neq\emptyset ~|~ t_0\leqslant\tau\leqslant t\}."/></p>
 </div></li>
-<li><p class="first">Given the terminal time <span class="math">t_1</span>, target set
-<span class="math">{\mathcal Y}_1</span> and time <span class="math">t&lt;t_1</span> find the set of states
-starting at time <span class="math">t</span> from which the system can reach
-<span class="math">{\mathcal Y}_1</span> within time interval <span class="math">[t, t_1]</span>. In
+<li><p class="first">Given the terminal time <img class="math" src="_images/math/44780f0598b4d22c6888cfca27deb04115f7fa88.png" alt="t_1"/>, target set
+<img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/> and time <img class="math" src="_images/math/f172d25be351c54495d737f93750ec5e72cbddda.png" alt="t&lt;t_1"/> find the set of states
+starting at time <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/> from which the system can reach
+<img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/> within time interval <img class="math" src="_images/math/5ef5ad4af28346e48c7a7f4706bd005df4426612.png" alt="[t, t_1]"/>. In
 other words, find
-<span class="math">\bigcup_{t\leqslant\tau&lt;t_1}{\mathcal Y}(t_1, \tau, {\mathcal Y}_1)</span>.</p>
+<img class="math" src="_images/math/566d48739eea31b87a286ac5e5933a5d8f8753f2.png" alt="\bigcup_{t\leqslant\tau&lt;t_1}{\mathcal Y}(t_1, \tau, {\mathcal Y}_1)"/>.</p>
 </li>
 <li><p class="first">Find a closed-loop control that steers a system with disturbances to
 the given target set in given time.</p>
@@ -739,11 +739,11 @@ the given target set in given time.</p>
 specified two- or three-dimensional subspace.</p>
 </li>
 </ol>
-<p>For linear systems, if the initial set <span class="math">{\mathcal X}_0</span>, target
-set <span class="math">{\mathcal Y}_1</span>, control bounds <span class="math">{\mathcal U}(\cdot)</span>
-and disturbance bounds <span class="math">{\mathcal V}(\cdot)</span> are compact and
-convex, so are the forward <span class="math">{\mathcal X}(t, t_0, {\mathcal X}_0)</span>
-and backward <span class="math">{\mathcal Y}(t_1, t, {\mathcal Y}_1)</span> reach sets.
+<p>For linear systems, if the initial set <img class="math" src="_images/math/1eae27d722cf74685b3dab099d6e0089009498ce.png" alt="{\mathcal X}_0"/>, target
+set <img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/>, control bounds <img class="math" src="_images/math/825d2160d7150f90ad27e4754fd15b9f6349403d.png" alt="{\mathcal U}(\cdot)"/>
+and disturbance bounds <img class="math" src="_images/math/1731e80a5f896118a1ce18d2f77b651ab85888e8.png" alt="{\mathcal V}(\cdot)"/> are compact and
+convex, so are the forward <img class="math" src="_images/math/811bdf7f2cb9ca774c4c8d632bfedbf768d28f91.png" alt="{\mathcal X}(t, t_0, {\mathcal X}_0)"/>
+and backward <img class="math" src="_images/math/5391e6459f27f329a5ba5ceac7e280b33da970ce.png" alt="{\mathcal Y}(t_1, t, {\mathcal Y}_1)"/> reach sets.
 Hence reachability analysis requires the computationally effective
 manipulation of convex sets, and performing the set-valued operations of
 unions, intersections, geometric sums and differences.</p>
@@ -764,475 +764,475 @@ approaches in fact use reachability methods for linear systems.</p>
 <h3>Continuous-time systems<a class="headerlink" href="#continuous-time-systems" title="Permalink to this headline">¶</a></h3>
 <p>Consider the system</p>
 <div class="math" id="equation-ctsystem">
-<p><span class="eqno">(57)</span><span class="math">\dot{x}(t) = A(t)x(t) + B(t)u + G(t)v,</span></p>
-</div><p>in which <span class="math">x\in{\bf R}^n</span> is the state, <span class="math">u\in{\bf R}^m</span> is
-the control and <span class="math">v\in{\bf R}^d</span> is the disturbance. <span class="math">A(t)</span>,
-<span class="math">B(t)</span> and <span class="math">G(t)</span> are continuous and take their values in
-<span class="math">{\bf R}^{n\times n}</span>, <span class="math">{\bf R}^{n\times m}</span> and
-<span class="math">{\bf R}^{n\times d}</span> respectively. Control <span class="math">u(t,x(t))</span> and
-disturbance <span class="math">v(t)</span> are measurable functions restricted by
-ellipsoidal constraints: <span class="math">u(t,x(t)) \in {\mathcal E}(p(t), P(t))</span>
-and <span class="math">v(t) \in {\mathcal E}(q(t), Q(t))</span>. The set of initial states
-at initial time <span class="math">t_0</span> is assumed to be the ellipsoid
-<span class="math">{\mathcal E}(x_0,X_0)</span>.</p>
+<p><span class="eqno">(57)</span><img src="_images/math/33ff5ac7b7c582367c0e3a697df7c4cd030b2687.png" alt="\dot{x}(t) = A(t)x(t) + B(t)u + G(t)v,"/></p>
+</div><p>in which <img class="math" src="_images/math/1877db47ab2d3b518dfb41417f2d46e2d748a6a1.png" alt="x\in{\bf R}^n"/> is the state, <img class="math" src="_images/math/c58a71cb24aee0af2fe74d3a2de7f016bce262df.png" alt="u\in{\bf R}^m"/> is
+the control and <img class="math" src="_images/math/02790a9b69a54b12748a6ddb0282f6319086c5d8.png" alt="v\in{\bf R}^d"/> is the disturbance. <img class="math" src="_images/math/a79ae2055fb6a0774c0140d85756c9fc47af6e2a.png" alt="A(t)"/>,
+<img class="math" src="_images/math/9862381d627031d0a2e12c24690593e755041368.png" alt="B(t)"/> and <img class="math" src="_images/math/d1d72230feb39483b632288a3c3278f8b8ea6ea6.png" alt="G(t)"/> are continuous and take their values in
+<img class="math" src="_images/math/42c9c2a5bc3075244d212ae9545395031527d802.png" alt="{\bf R}^{n\times n}"/>, <img class="math" src="_images/math/a6a4f61454c05f2e1bf23c99632313c63f12c3b4.png" alt="{\bf R}^{n\times m}"/> and
+<img class="math" src="_images/math/07719217f82c173563335332e0967e7db1e7677d.png" alt="{\bf R}^{n\times d}"/> respectively. Control <img class="math" src="_images/math/c5a937c4aba600ec0ebadc0e27ea6493b744f877.png" alt="u(t,x(t))"/> and
+disturbance <img class="math" src="_images/math/8f786c22ff6d536a732133b2128a712eb1a50a83.png" alt="v(t)"/> are measurable functions restricted by
+ellipsoidal constraints: <img class="math" src="_images/math/9d6ccf70a6984fb57f3e669c97364d69485a420a.png" alt="u(t,x(t)) \in {\mathcal E}(p(t), P(t))"/>
+and <img class="math" src="_images/math/688381ebdb231823963d892ace07e4454a3bc468.png" alt="v(t) \in {\mathcal E}(q(t), Q(t))"/>. The set of initial states
+at initial time <img class="math" src="_images/math/fb761c2e199ad45ccf14767f48b88169479d840f.png" alt="t_0"/> is assumed to be the ellipsoid
+<img class="math" src="_images/math/2a09f80a76bf3aacce24cad6fa6a420854a0617e.png" alt="{\mathcal E}(x_0,X_0)"/>.</p>
 <p>The reach sets for systems with disturbances computed by the Ellipsoidal
 Toolbox are CLRS. Henceforth, when describing backward reachability,
 reach sets refer to CLRS or CLBRS. Recall that for continuous-time
 linear systems maxmin and minmax CLRS coincide, and the same is true for
 maxmin and minmax CLBRS.</p>
-<p>If the matrix <span class="math">Q(\cdot)=0</span>, the system <a href="#equation-ctsystem">(57)</a> becomes an
-ordinary affine system with known <span class="math">v(\cdot)=q(\cdot)</span>. If
-<span class="math">G(\cdot) = 0</span>, the system becomes linear. For these two cases
-(<span class="math">Q(\cdot)=0</span> or <span class="math">G(\cdot)=0</span>) the reach set is as given in
+<p>If the matrix <img class="math" src="_images/math/7deec47dc629381c6555351ff9390cf25ed43a06.png" alt="Q(\cdot)=0"/>, the system <a href="#equation-ctsystem">(57)</a> becomes an
+ordinary affine system with known <img class="math" src="_images/math/d8bb9895ab89f20f2ed80ef4aaedb2de3cf96bb7.png" alt="v(\cdot)=q(\cdot)"/>. If
+<img class="math" src="_images/math/324268e5e2cba2032f532f439b3de7ed089247b8.png" alt="G(\cdot) = 0"/>, the system becomes linear. For these two cases
+(<img class="math" src="_images/math/7deec47dc629381c6555351ff9390cf25ed43a06.png" alt="Q(\cdot)=0"/> or <img class="math" src="_images/math/3a038dbf279669075a546c509b63927392854662.png" alt="G(\cdot)=0"/>) the reach set is as given in
 definition <a href="#equation-def_olrs">(3)</a>, and so the reach set will be denoted as
-<span class="math">{\mathcal X}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)) = {\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))</span>.</p>
-<p>The reach set <span class="math">{\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))</span> is a
+<img class="math" src="_images/math/d7952fb507000d5808df1059df0f924649b943c8.png" alt="{\mathcal X}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)) = {\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))"/>.</p>
+<p>The reach set <img class="math" src="_images/math/3d0c89cd10ee7c0c1893343c253ead194f8e1da4.png" alt="{\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))"/> is a
 symmetric compact convex set, whose center evolves in time according to</p>
 <div class="math" id="equation-fwdcenter">
-<p><span class="eqno">(58)</span><span class="math">\dot{x}_c(t) = A(t)x_c(t) + B(t)p(t) + G(t)q(t), \;\;\;
-x_c(t_0)=x_0.</span></p>
-</div><p>Fix a vector <span class="math">l_0\in{\bf R}^n</span>, and consider the solution
-<span class="math">l(t)</span> of the adjoint equation</p>
+<p><span class="eqno">(58)</span><img src="_images/math/f2945972b2ca9d6f7f88d3c1c3b97db485a8703e.png" alt="\dot{x}_c(t) = A(t)x_c(t) + B(t)p(t) + G(t)q(t), \;\;\;
+x_c(t_0)=x_0."/></p>
+</div><p>Fix a vector <img class="math" src="_images/math/324764f934581a3931418bbe7466cb47204fd523.png" alt="l_0\in{\bf R}^n"/>, and consider the solution
+<img class="math" src="_images/math/bc5ac9be8a88ab87e8f5425fcf9fab1b3cd628ea.png" alt="l(t)"/> of the adjoint equation</p>
 <div class="math" id="equation-adjointct">
-<p><span class="eqno">(59)</span><span class="math">\dot{l}(t) = -A^T(t)l(t), \;\;\; l(t_0) = l_0,</span></p>
+<p><span class="eqno">(59)</span><img src="_images/math/23ebe4c160e20dd65272663461ffbec672cfd571.png" alt="\dot{l}(t) = -A^T(t)l(t), \;\;\; l(t_0) = l_0,"/></p>
 </div><p>which is equivalent to</p>
 <div class="math">
-<p><span class="math">l(t) = \Phi^T(t_0, t)l_0.</span></p>
-</div><p>If the reach set <span class="math">{\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))</span> is
+<p><img src="_images/math/b56a1289bdff2d6452124ec16b2ef77dc5fc1218.png" alt="l(t) = \Phi^T(t_0, t)l_0."/></p>
+</div><p>If the reach set <img class="math" src="_images/math/e9a6dc4de03a8e409394cd31cd5920a3347ec942.png" alt="{\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))"/> is
 nonempty, there exist tight external and tight internal approximating
-ellipsoids <span class="math">{\mathcal E}(x_c(t), X^+_l(t))</span> and
-<span class="math">{\mathcal E}(x_c(t), X^-_l(t))</span>, respectively, such that</p>
+ellipsoids <img class="math" src="_images/math/8fe857f4a0c9b4562a457b8c6eec2666eee60131.png" alt="{\mathcal E}(x_c(t), X^+_l(t))"/> and
+<img class="math" src="_images/math/1e8eca34af3e93553518d113de0160f4a3f1cece.png" alt="{\mathcal E}(x_c(t), X^-_l(t))"/>, respectively, such that</p>
 <div class="math" id="equation-fwdinclusion">
-<p><span class="eqno">(60)</span><span class="math">{\mathcal E}(x_c(t), X^-_l(t))\subseteq{\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))
-\subseteq {\mathcal E}(x_c(t), X^+_l(t)),</span></p>
+<p><span class="eqno">(60)</span><img src="_images/math/b80eb7ee2138bd082b540a56c22cbd614af45255.png" alt="{\mathcal E}(x_c(t), X^-_l(t))\subseteq{\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))
+\subseteq {\mathcal E}(x_c(t), X^+_l(t)),"/></p>
 </div><p>and</p>
 <div class="math" id="equation-fwdtightness">
-<p><span class="eqno">(61)</span><span class="math">\rho(l(t) ~|~ {\mathcal E}(x_c(t), X^-_l(t))) =
+<p><span class="eqno">(61)</span><img src="_images/math/ca53f9f8f67e4ada84cdd83e75ec11d6042868f6.png" alt="\rho(l(t) ~|~ {\mathcal E}(x_c(t), X^-_l(t))) =
 \rho(l(t) ~|~ {\mathcal X}(t, t_0, {\mathcal E}(x_0,X_0))) =
-\rho(l(t) ~|~ {\mathcal E}(x_c(t), X^+_l(t))) .</span></p>
+\rho(l(t) ~|~ {\mathcal E}(x_c(t), X^+_l(t))) ."/></p>
 </div><p>The equation for the shape matrix of the external ellipsoid is</p>
 <div class="math" id="equation-fwdext1">
-<p><span class="eqno">(62)</span><span class="math">\dot{X}^+_l(t) &amp; = A(t)X^+_l(t) + X^+_l(t)A^T(t) +\nonumber \\
+<p><span class="eqno">(62)</span><img src="_images/math/5736248bce9e8b1695791dcee07488d17e33e2e4.png" alt="\dot{X}^+_l(t) &amp; = A(t)X^+_l(t) + X^+_l(t)A^T(t) +\nonumber \\
 &amp;\pi_l(t)X^+_l(t) + \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) -\nonumber \\
 &amp; (X_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} \nonumber -\\
-&amp; (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(X_l^{+}(t))^{1/2}, \\</span></p>
+&amp; (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(X_l^{+}(t))^{1/2}, \\"/></p>
 </div><div class="math" id="equation-fwdext2">
-<p><span class="eqno">(63)</span><span class="math">X^+_l(t_0) =X_0,</span></p>
+<p><span class="eqno">(63)</span><img src="_images/math/b911818e89b3a0d1341609bc751d7f54c13e1aac.png" alt="X^+_l(t_0) =X_0,"/></p>
 </div><p>in which</p>
 <div class="math">
-<p><span class="math">\pi_l(t) = \frac{\langle l(t),
-B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}},</span></p>
-</div><p>and the orthogonal matrix <span class="math">S_l(t)</span> (<span class="math">S_l(t)S_l^T(t) = I</span>)
+<p><img src="_images/math/ea2d60119a74fe7fc436776c32576fdf1c79c646.png" alt="\pi_l(t) = \frac{\langle l(t),
+B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}},"/></p>
+</div><p>and the orthogonal matrix <img class="math" src="_images/math/c403bf0af8679ded62562ad77a144398503ec1ea.png" alt="S_l(t)"/> (<img class="math" src="_images/math/638cd21dba24aa7dda92d72db99cf988f03865f4.png" alt="S_l(t)S_l^T(t) = I"/>)
 is determined by the equation</p>
 <div class="math">
-<p><span class="math">S_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t) = \frac{\langle l(t),
+<p><img src="_images/math/417e1d175ee6a2484588054f0361734e8972ee59.png" alt="S_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t) = \frac{\langle l(t),
 G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t),
-X_l^+(t)l(t)\rangle^{1/2}}(X_l^{+}(t))^{1/2}l(t).</span></p>
+X_l^+(t)l(t)\rangle^{1/2}}(X_l^{+}(t))^{1/2}l(t)."/></p>
 </div><p>In the presence of disturbance, if the reach set is empty, the matrix
-<span class="math">X^+_l(t)</span> becomes sign indefinite. For a system without
-disturbance, the terms containing <span class="math">G(t)</span> and <span class="math">Q(t)</span> vanish
+<img class="math" src="_images/math/c6891e488bf902939ea94599ff9400e4ada1a28c.png" alt="X^+_l(t)"/> becomes sign indefinite. For a system without
+disturbance, the terms containing <img class="math" src="_images/math/d1d72230feb39483b632288a3c3278f8b8ea6ea6.png" alt="G(t)"/> and <img class="math" src="_images/math/28671f777356b768e2872f1c1b0357e17ed515c1.png" alt="Q(t)"/> vanish
 from the equation <a href="#equation-fwdext1">(62)</a>.</p>
 <p>The equation for the shape matrix of the internal ellipsoid is</p>
 <div class="math" id="equation-fwdint1">
-<p><span class="eqno">(64)</span><span class="math">\dot{X}^-_l(t) &amp; = A(t)X^-_l(t) + X^-_l(t)A^T(t) +\nonumber \\
+<p><span class="eqno">(64)</span><img src="_images/math/bf760f0cf71ed2f32b792ab78c35dbbbd0860be7.png" alt="\dot{X}^-_l(t) &amp; = A(t)X^-_l(t) + X^-_l(t)A^T(t) +\nonumber \\
 &amp; (X_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} +\nonumber \\
 &amp; (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(X_l^{-}(t))^{1/2} -\nonumber \\
-&amp; \eta_l(t)X^-_l(t) - \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \\</span></p>
+&amp; \eta_l(t)X^-_l(t) - \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t), \\"/></p>
 </div><div class="math" id="equation-fwdint2">
-<p><span class="eqno">(65)</span><span class="math">X^-_l(t_0) = X_0,</span></p>
+<p><span class="eqno">(65)</span><img src="_images/math/2068de2284f3cca0a520dadaebae484c3e16c8d8.png" alt="X^-_l(t_0) = X_0,"/></p>
 </div><p>in which</p>
 <div class="math">
-<p><span class="math">\eta_l(t) = \frac{\langle l(t),
-G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}},</span></p>
-</div><p>and the orthogonal matrix <span class="math">T_l(t)</span> is determined by the equation</p>
+<p><img src="_images/math/3fb6ea08dd9ef1614b5971fa1f11b533b2dd3a37.png" alt="\eta_l(t) = \frac{\langle l(t),
+G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}},"/></p>
+</div><p>and the orthogonal matrix <img class="math" src="_images/math/7a5ae5b8d111cc6153417eb1fc5377a561d2f416.png" alt="T_l(t)"/> is determined by the equation</p>
 <div class="math">
-<p><span class="math">T_l(t)(B(t)P(t)B^T(t))^{1/2}l(t) = \frac{\langle l(t),
+<p><img src="_images/math/367c38b25cde9da9fde53dde69536134623bbeec.png" alt="T_l(t)(B(t)P(t)B^T(t))^{1/2}l(t) = \frac{\langle l(t),
 B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t),
-X_l^-(t)l(t)\rangle^{1/2}}(X_l^{-}(t))^{1/2}l(t).</span></p>
-</div><p>Similarly to the external case, the terms containing <span class="math">G(t)</span> and
-<span class="math">Q(t)</span> vanish from the equation <a href="#equation-fwdint1">(64)</a> for a system without
+X_l^-(t)l(t)\rangle^{1/2}}(X_l^{-}(t))^{1/2}l(t)."/></p>
+</div><p>Similarly to the external case, the terms containing <img class="math" src="_images/math/d1d72230feb39483b632288a3c3278f8b8ea6ea6.png" alt="G(t)"/> and
+<img class="math" src="_images/math/28671f777356b768e2872f1c1b0357e17ed515c1.png" alt="Q(t)"/> vanish from the equation <a href="#equation-fwdint1">(64)</a> for a system without
 disturbance.</p>
 <p>The point where the external and internal ellipsoids touch the boundary
 of the reach set is given by</p>
 <div class="math">
-<p><span class="math">x_l^*(t) = x_c(t) +
-\frac{X^+_l(t)l(t)}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}} .</span></p>
-</div><p>The boundary points <span class="math">x^*_l(t)</span> form trajectories, which we call
+<p><img src="_images/math/e9fa989e2644c61bc417873e829573d9bf6f03f9.png" alt="x_l^*(t) = x_c(t) +
+\frac{X^+_l(t)l(t)}{\langle l(t), X^+_l(t)l(t)\rangle^{1/2}} ."/></p>
+</div><p>The boundary points <img class="math" src="_images/math/304c3ede07ce9e0d55c6be77814e09adfb7487ed.png" alt="x^*_l(t)"/> form trajectories, which we call
 <em>extremal trajectories</em>. Due to the nonsingular nature of the state
-transition matrix <span class="math">\Phi(t,t_0)</span>, every boundary point of the reach
+transition matrix <img class="math" src="_images/math/a42b343961080b4219a0e8348536dca15b8bafe6.png" alt="\Phi(t,t_0)"/>, every boundary point of the reach
 set belongs to an extremal trajectory. To follow an extremal trajectory
-specified by parameter <span class="math">l_0</span>, the system has to start at time
-<span class="math">t_0</span> at initial state</p>
+specified by parameter <img class="math" src="_images/math/dd5857c44fe96a5cd56db0b6b4860c78d9a1ee28.png" alt="l_0"/>, the system has to start at time
+<img class="math" src="_images/math/fb761c2e199ad45ccf14767f48b88169479d840f.png" alt="t_0"/> at initial state</p>
 <div class="math" id="equation-x0lct">
-<p><span class="eqno">(66)</span><span class="math">x^0_l = x_0 + \frac{X_0l_0}{\langle l_0,X_0l_0\rangle^{1/2}}.</span></p>
+<p><span class="eqno">(66)</span><img src="_images/math/b019d3f26c6153ce5df0ac39c81f4c5ae81beb9d.png" alt="x^0_l = x_0 + \frac{X_0l_0}{\langle l_0,X_0l_0\rangle^{1/2}}."/></p>
 </div><p>In the absence of disturbances, the open-loop control</p>
 <div class="math" id="equation-uct">
-<span id="uct-label"></span><p><span class="eqno">(67)</span><span class="math">u_l(t) = p(t) + \frac{P(t)B^T(t)l(t)}{\langle l(t),
-B(t)P(t)B^T(t)l(t)\rangle^{1/2}}.</span></p>
+<span id="uct-label"></span><p><span class="eqno">(67)</span><img src="_images/math/9f1c292ca2fe7d5140b6961c09d4fcd7d54c8c9c.png" alt="u_l(t) = p(t) + \frac{P(t)B^T(t)l(t)}{\langle l(t),
+B(t)P(t)B^T(t)l(t)\rangle^{1/2}}."/></p>
 </div><p>steers the system along the extremal trajectory defined by the vector
-<span class="math">l_0</span>. When a disturbance is present, this control keeps the
+<img class="math" src="_images/math/dd5857c44fe96a5cd56db0b6b4860c78d9a1ee28.png" alt="l_0"/>. When a disturbance is present, this control keeps the
 system on an extremal trajectory if and only if the disturbance plays
 against the control always taking its extreme values.</p>
 <p>Expressions <a href="#equation-fwdinclusion">(60)</a> and <a href="#equation-fwdtightness">(61)</a> lead to the following
 fact,</p>
 <div class="math">
-<p><span class="math">\bigcup_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),X^-_l(t)) =
+<p><img src="_images/math/aa64254107a32cf0f13ff1e1aeedfa55d57503d1.png" alt="\bigcup_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),X^-_l(t)) =
 {\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0)) =
-\bigcap_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),X^+_l(t)).</span></p>
-</div><p>In practice this means that the more values of <span class="math">l_0</span> we use to
-compute <span class="math">X^+_l(t)</span> and <span class="math">X^-_l(t)</span>, the better will be our
+\bigcap_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),X^+_l(t))."/></p>
+</div><p>In practice this means that the more values of <img class="math" src="_images/math/dd5857c44fe96a5cd56db0b6b4860c78d9a1ee28.png" alt="l_0"/> we use to
+compute <img class="math" src="_images/math/c6891e488bf902939ea94599ff9400e4ada1a28c.png" alt="X^+_l(t)"/> and <img class="math" src="_images/math/f70d91d0095a10808f1051aa8f1ec12e974a702c.png" alt="X^-_l(t)"/>, the better will be our
 approximation.</p>
 <p>Analogous results hold for the backward reach set.</p>
-<p>Given the terminal time <span class="math">t_1</span> and ellipsoidal target set
-<span class="math">{\mathcal E}_(y_1,Y_1)</span>, the CLBRS
-<span class="math">{\mathcal Y}_{CL}(t_1, t, {\mathcal Y}_1)={\mathcal Y}(t_1, t, {\mathcal Y}_1)</span>,
-<span class="math">t&lt;t_1</span>, if it is nonempty, is a symmetric compact convex set
+<p>Given the terminal time <img class="math" src="_images/math/44780f0598b4d22c6888cfca27deb04115f7fa88.png" alt="t_1"/> and ellipsoidal target set
+<img class="math" src="_images/math/e72b2d2987970a1cdce3cc9b512d8b76dcf782f1.png" alt="{\mathcal E}_(y_1,Y_1)"/>, the CLBRS
+<img class="math" src="_images/math/313f8d343bffcee3140facfd162d3248811770ef.png" alt="{\mathcal Y}_{CL}(t_1, t, {\mathcal Y}_1)={\mathcal Y}(t_1, t, {\mathcal Y}_1)"/>,
+<img class="math" src="_images/math/f172d25be351c54495d737f93750ec5e72cbddda.png" alt="t&lt;t_1"/>, if it is nonempty, is a symmetric compact convex set
 whose center is governed by</p>
 <div class="math" id="equation-bckcenter">
-<p><span class="eqno">(68)</span><span class="math">y_c(t) = Ay_c(t) + B(t)p(t) + G(t)q(t), \;\;\; y_c(t_1) = y_1.</span></p>
-</div><p>Fix a vector <span class="math">l_1\in{\bf R}^n</span>, and consider</p>
+<p><span class="eqno">(68)</span><img src="_images/math/7af78154b83d21f748a37f6f83f62f10327c586a.png" alt="y_c(t) = Ay_c(t) + B(t)p(t) + G(t)q(t), \;\;\; y_c(t_1) = y_1."/></p>
+</div><p>Fix a vector <img class="math" src="_images/math/7a9a25addfda190bc3e4eb0257f8e6fb8964a349.png" alt="l_1\in{\bf R}^n"/>, and consider</p>
 <div class="math" id="equation-bckadjoint">
-<p><span class="eqno">(69)</span><span class="math">l(t) = \Phi(t_1, t)^Tl_1 .</span></p>
+<p><span class="eqno">(69)</span><img src="_images/math/b3ecbb35878886ff4598f3feaa51e8831dc83604.png" alt="l(t) = \Phi(t_1, t)^Tl_1 ."/></p>
 </div><p>If the backward reach set
-<span class="math">{\mathcal Y}(t_1, t, {\mathcal E}(y_1,Y_1))</span> is nonempty, there
+<img class="math" src="_images/math/0ff0ec8addd157b6486f5090ce880134d968e03c.png" alt="{\mathcal Y}(t_1, t, {\mathcal E}(y_1,Y_1))"/> is nonempty, there
 exist tight external and tight internal approximating ellipsoids
-<span class="math">{\mathcal E}(y_c(t), Y^+_l(t))</span> and
-<span class="math">{\mathcal E}(y_c(t), Y^-_l(t))</span> respectively, such that</p>
+<img class="math" src="_images/math/fcb77e891c4b94793b9e1eb70fd8f9914ea2aa90.png" alt="{\mathcal E}(y_c(t), Y^+_l(t))"/> and
+<img class="math" src="_images/math/1ab6b69496ba4da2e62e878c927ad55eea80baa7.png" alt="{\mathcal E}(y_c(t), Y^-_l(t))"/> respectively, such that</p>
 <div class="math" id="equation-bckinclusion">
-<p><span class="eqno">(70)</span><span class="math">{\mathcal E}(y_c(t), Y^-_l(t))\subseteq{\mathcal Y}(t_1,t,{\mathcal E}(y_1,Y_1))
-\subseteq {\mathcal E}(y_c(t), Y^+_l(t)),</span></p>
+<p><span class="eqno">(70)</span><img src="_images/math/c954781943eeae71f4be613a1cb37b94bad78eba.png" alt="{\mathcal E}(y_c(t), Y^-_l(t))\subseteq{\mathcal Y}(t_1,t,{\mathcal E}(y_1,Y_1))
+\subseteq {\mathcal E}(y_c(t), Y^+_l(t)),"/></p>
 </div><p>and</p>
 <div class="math" id="equation-bcktightness">
-<p><span class="eqno">(71)</span><span class="math">\rho(l(t) ~|~ {\mathcal E}(y_c(t), Y^-_l(t))) =
+<p><span class="eqno">(71)</span><img src="_images/math/235834e23a4ecbc1ef5239b6b3cdef5c7f5c9d6d.png" alt="\rho(l(t) ~|~ {\mathcal E}(y_c(t), Y^-_l(t))) =
 \rho(l(t) ~|~ {\mathcal Y}(t_1, t, {\mathcal E}(y_0,Y_0))) =
-\rho(l(t) ~|~ {\mathcal E}(y_c(t), Y^+_l(t))) .</span></p>
+\rho(l(t) ~|~ {\mathcal E}(y_c(t), Y^+_l(t))) ."/></p>
 </div><p>The equation for the shape matrix of the external ellipsoid is</p>
 <div class="math" id="equation-bckext1">
-<p><span class="eqno">(72)</span><span class="math">\dot{Y}^+_l(t) &amp; = A(t)Y^+_l(t) + Y^+_l(t)A^T(t) -\nonumber \\
+<p><span class="eqno">(72)</span><img src="_images/math/d6b901165de231a15e48af42a5d31cdd54732c38.png" alt="\dot{Y}^+_l(t) &amp; = A(t)Y^+_l(t) + Y^+_l(t)A^T(t) -\nonumber \\
 &amp; \pi_l(t)Y^+_l(t) - \frac{1}{\pi_l(t)}B(t)P(t)B^T(t) +\nonumber \\
 &amp; (Y_l^{+}(t))^{1/2}S_l(t)(G(t)Q(t)G^T(t))^{1/2} +\nonumber \\
-&amp; (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(Y_l^{+}(t))^{1/2},\\</span></p>
+&amp; (G(t)Q(t)G^T(t))^{1/2}S_l^T(t)(Y_l^{+}(t))^{1/2},\\"/></p>
 </div><div class="math" id="equation-bckext2">
-<p><span class="eqno">(73)</span><span class="math">Y^+_l(t_1)  = Y_1,</span></p>
+<p><span class="eqno">(73)</span><img src="_images/math/c5c23d84a543cdc908a6b389635efd8e2e690bd7.png" alt="Y^+_l(t_1)  = Y_1,"/></p>
 </div><p>in which</p>
 <div class="math">
-<p><span class="math">\pi_l(t) = \frac{\langle l(t),
+<p><img src="_images/math/ed483d343004ee6344da26c26a8cd79ecc1efc8a.png" alt="\pi_l(t) = \frac{\langle l(t),
 B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t),
-Y^+_l(t)l(t)\rangle^{1/2}},</span></p>
-</div><p>and the orthogonal matrix <span class="math">S_l(t)</span> satisfies the equation</p>
+Y^+_l(t)l(t)\rangle^{1/2}},"/></p>
+</div><p>and the orthogonal matrix <img class="math" src="_images/math/c403bf0af8679ded62562ad77a144398503ec1ea.png" alt="S_l(t)"/> satisfies the equation</p>
 <div class="math">
-<p><span class="math">S_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t) = \frac{\langle l(t),
+<p><img src="_images/math/39e401fa7a13158205a18195392b1f1d854e2eb0.png" alt="S_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t) = \frac{\langle l(t),
 G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t),
-Y_l^+(t)l(t)\rangle^{1/2}}(Y_l^{+}(t))^{1/2}l(t).</span></p>
+Y_l^+(t)l(t)\rangle^{1/2}}(Y_l^{+}(t))^{1/2}l(t)."/></p>
 </div><p>The equation for the shape matrix of the internal ellipsoid is</p>
 <div class="math" id="equation-bckint1">
-<p><span class="eqno">(74)</span><span class="math">\dot{Y}^-_l(t) &amp; =  A(t)Y^-_l(t) + Y^-_l(t)A^T(t) -\nonumber \\
+<p><span class="eqno">(74)</span><img src="_images/math/e780b2c3c5c02b05e73dc3b28778d8777c5ecbea.png" alt="\dot{Y}^-_l(t) &amp; =  A(t)Y^-_l(t) + Y^-_l(t)A^T(t) -\nonumber \\
 &amp; (Y_l^{-}(t))^{1/2}T_l(t)(B(t)P(t)B^T(t))^{1/2} -\nonumber \\
 &amp; (B(t)P(t)B^T(t))^{1/2}T_l^T(t)(Y_l^{-}(t))^{1/2} +\nonumber \\
-&amp; \eta_l(t)Y^-_l(t) + \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t),\\</span></p>
+&amp; \eta_l(t)Y^-_l(t) + \frac{1}{\eta_l(t)}G(t)Q(t)G^T(t),\\"/></p>
 </div><div class="math" id="equation-bckint2">
-<p><span class="eqno">(75)</span><span class="math">Y^-_l(t_1) &amp; = Y_1,</span></p>
+<p><span class="eqno">(75)</span><img src="_images/math/689734f3867162098bab46ad4c77dc88f2b7ec7d.png" alt="Y^-_l(t_1) &amp; = Y_1,"/></p>
 </div><p>in which</p>
 <div class="math">
-<p><span class="math">\eta_l(t) = \frac{\langle l(t),
+<p><img src="_images/math/df7065f3e5051185f67818f2fd17c87cd780a16f.png" alt="\eta_l(t) = \frac{\langle l(t),
 G(t)Q(t)G^T(t)l(t)\rangle^{1/2}}{\langle l(t),
-Y^+_l(t)l(t)\rangle^{1/2}},</span></p>
-</div><p>and the orthogonal matrix <span class="math">T_l(t)</span> is determined by the equation</p>
+Y^+_l(t)l(t)\rangle^{1/2}},"/></p>
+</div><p>and the orthogonal matrix <img class="math" src="_images/math/7a5ae5b8d111cc6153417eb1fc5377a561d2f416.png" alt="T_l(t)"/> is determined by the equation</p>
 <div class="math">
-<p><span class="math">T_l(t)(B(t)P(t)B^T(t))^{1/2}l(t) = \frac{\langle l(t),
+<p><img src="_images/math/a8775d7bb53386e955f1bf196c015890c6805277.png" alt="T_l(t)(B(t)P(t)B^T(t))^{1/2}l(t) = \frac{\langle l(t),
 B(t)P(t)B^T(t)l(t)\rangle^{1/2}}{\langle l(t),
-Y_l^-(t)l(t)\rangle^{1/2}}(Y_l^{-}(t))^{1/2}l(t).</span></p>
+Y_l^-(t)l(t)\rangle^{1/2}}(Y_l^{-}(t))^{1/2}l(t)."/></p>
 </div><p>Just as in the forward reachability case, the terms containing
-<span class="math">G(t)</span> and <span class="math">Q(t)</span> vanish from equations <a href="#equation-bckext1">(72)</a> and
+<img class="math" src="_images/math/d1d72230feb39483b632288a3c3278f8b8ea6ea6.png" alt="G(t)"/> and <img class="math" src="_images/math/28671f777356b768e2872f1c1b0357e17ed515c1.png" alt="Q(t)"/> vanish from equations <a href="#equation-bckext1">(72)</a> and
 <a href="#equation-bckint1">(74)</a> in the absence of disturbances. The boundary value problems
 <a href="#equation-bckcenter">(68)</a>, <a href="#equation-bckext1">(72)</a> and <a href="#equation-bckint1">(74)</a> are converted to the initial
-value problems by the change of variables <span class="math">s = -t</span>.</p>
+value problems by the change of variables <img class="math" src="_images/math/9eb2847d41f9d0384968da4beb27d51e5b2c8008.png" alt="s = -t"/>.</p>
 <p>Due to <a href="#equation-bckinclusion">(70)</a> and <a href="#equation-bcktightness">(71)</a>,</p>
 <div class="math">
-<p><span class="math">\bigcup_{\langle l_1,l_1\rangle=1}{\mathcal E}(y_c(t),Y^-_l(t)) =
+<p><img src="_images/math/a1214d98e8ade0f98da3ff37c1b0e9f0705109b2.png" alt="\bigcup_{\langle l_1,l_1\rangle=1}{\mathcal E}(y_c(t),Y^-_l(t)) =
 {\mathcal Y}(t_1,t,{\mathcal E}(y_1,Y_1)) =
-\bigcap_{\langle l_1,l_1\rangle=1}{\mathcal E}(y_c(t),Y^+_l(t)).</span></p>
+\bigcap_{\langle l_1,l_1\rangle=1}{\mathcal E}(y_c(t),Y^+_l(t))."/></p>
 </div><p><strong>Remark.</strong> In expressions <a href="#equation-fwdext1">(62)</a>, <a href="#equation-fwdint1">(64)</a>, <a href="#equation-bckext1">(72)</a> and
-<a href="#equation-bckint1">(74)</a> the terms <span class="math">\frac{1}{\pi_l(t)}</span> and
-<span class="math">\frac{1}{\eta_l(t)}</span> may not be well defined for some vectors
-<span class="math">l</span>, because matrices <span class="math">B(t)P(t)B^T(t)</span> and
-<span class="math">G(t)Q(t)G^T(t)</span> may be singular. In such cases, we set these
+<a href="#equation-bckint1">(74)</a> the terms <img class="math" src="_images/math/ab863a0f71c1cd6d77420934f43825d39ac01b4a.png" alt="\frac{1}{\pi_l(t)}"/> and
+<img class="math" src="_images/math/138d4d8583f26168e43a947d73638923b0c1f27c.png" alt="\frac{1}{\eta_l(t)}"/> may not be well defined for some vectors
+<img class="math" src="_images/math/d99efde75c84ef402a92cd4497530d2366fb112f.png" alt="l"/>, because matrices <img class="math" src="_images/math/a73d26121453a9702b9bafc86d3c220036dead62.png" alt="B(t)P(t)B^T(t)"/> and
+<img class="math" src="_images/math/cd908d66ab2c51a0a72281545a05d1c1652bd6f0.png" alt="G(t)Q(t)G^T(t)"/> may be singular. In such cases, we set these
 entire expressions to zero.</p>
 </div>
 <div class="section" id="discrete-time-systems">
 <h3>Discrete-time systems<a class="headerlink" href="#discrete-time-systems" title="Permalink to this headline">¶</a></h3>
 <p>Consider the discrete-time linear system,</p>
 <div class="math" id="equation-dtsystem">
-<p><span class="eqno">(76)</span><span class="math">x(t+1) = A(t)x(t) + B(t)u(t,x(t)) + G(t)v(t),</span></p>
-</div><p>in which <span class="math">x(t)\in{\bf R}^n</span> is the state,
-<span class="math">u(t, x(t))\in{\bf R}^m</span> is the control bounded by the ellipsoid
-<span class="math">{\mathcal E}(p(t),P(t))</span>, <span class="math">v(t)\in{\bf R}^d</span> is disturbance
-bounded by ellipsoid <span class="math">{\mathcal E}(q(t),Q(t))</span>, and matrices
-<span class="math">A(t)</span>, <span class="math">B(t)</span>, <span class="math">G(t)</span> are in
-<span class="math">{\bf R}^{n\times n}</span>, <span class="math">{\bf R}^{n\times m}</span>,
-<span class="math">{\bf R}^{n\times d}</span> respectively. Here we shall assume
-<span class="math">A(t)</span> to be nonsingular. <a class="footnote-reference" href="#id19" id="id9">[9]</a> The set of initial conditions at
-initial time <span class="math">t_0</span> is ellipsoid <span class="math">{\mathcal E}(x_0,X_0)</span>.</p>
+<p><span class="eqno">(76)</span><img src="_images/math/da5cc345531b0b66484a9047476b16a3b786ef41.png" alt="x(t+1) = A(t)x(t) + B(t)u(t,x(t)) + G(t)v(t),"/></p>
+</div><p>in which <img class="math" src="_images/math/98f83cef9c835468a5d0a9e5de333c84fa2f703b.png" alt="x(t)\in{\bf R}^n"/> is the state,
+<img class="math" src="_images/math/15c25ab515c16bb797515dabc506b6c3952f24df.png" alt="u(t, x(t))\in{\bf R}^m"/> is the control bounded by the ellipsoid
+<img class="math" src="_images/math/78edb25bd174f9c9b6f2e6f245f5d434280cc427.png" alt="{\mathcal E}(p(t),P(t))"/>, <img class="math" src="_images/math/1189bdd7cfbb995746315bef655a4dea3df892e5.png" alt="v(t)\in{\bf R}^d"/> is disturbance
+bounded by ellipsoid <img class="math" src="_images/math/712ded8f11c7137e5fae6c72c944cbdc44c5d4b6.png" alt="{\mathcal E}(q(t),Q(t))"/>, and matrices
+<img class="math" src="_images/math/a79ae2055fb6a0774c0140d85756c9fc47af6e2a.png" alt="A(t)"/>, <img class="math" src="_images/math/9862381d627031d0a2e12c24690593e755041368.png" alt="B(t)"/>, <img class="math" src="_images/math/d1d72230feb39483b632288a3c3278f8b8ea6ea6.png" alt="G(t)"/> are in
+<img class="math" src="_images/math/42c9c2a5bc3075244d212ae9545395031527d802.png" alt="{\bf R}^{n\times n}"/>, <img class="math" src="_images/math/a6a4f61454c05f2e1bf23c99632313c63f12c3b4.png" alt="{\bf R}^{n\times m}"/>,
+<img class="math" src="_images/math/07719217f82c173563335332e0967e7db1e7677d.png" alt="{\bf R}^{n\times d}"/> respectively. Here we shall assume
+<img class="math" src="_images/math/a79ae2055fb6a0774c0140d85756c9fc47af6e2a.png" alt="A(t)"/> to be nonsingular. <a class="footnote-reference" href="#id19" id="id9">[9]</a> The set of initial conditions at
+initial time <img class="math" src="_images/math/fb761c2e199ad45ccf14767f48b88169479d840f.png" alt="t_0"/> is ellipsoid <img class="math" src="_images/math/2a09f80a76bf3aacce24cad6fa6a420854a0617e.png" alt="{\mathcal E}(x_0,X_0)"/>.</p>
 <p>Ellipsoidal Toolbox computes maxmin and minmax CLRS
-<span class="math">\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)</span> and
-<span class="math">\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)</span> for
+<img class="math" src="_images/math/a1fd3ecbe4438f42d8212a02e83718a49f16eeb7.png" alt="\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)"/> and
+<img class="math" src="_images/math/c216dfc0dc6df4ba53c8cd8548ec14b3a1757654.png" alt="\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)"/> for
 discrete-time systems.</p>
-<p>If matrix <span class="math">Q(\cdot)=0</span>, the system <a href="#equation-dtsystem">(76)</a> becomes an
-ordinary affine system with known <span class="math">v(\cdot)=q(\cdot)</span>. If matrix
-<span class="math">G(\cdot)=0</span>, the system reduces to a linear controlled system. In
-the absence of disturbance (<span class="math">Q(\cdot)=0</span> or <span class="math">G(\cdot)=0</span>),
-<span class="math">\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))=\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))={\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))</span>,
+<p>If matrix <img class="math" src="_images/math/7deec47dc629381c6555351ff9390cf25ed43a06.png" alt="Q(\cdot)=0"/>, the system <a href="#equation-dtsystem">(76)</a> becomes an
+ordinary affine system with known <img class="math" src="_images/math/d8bb9895ab89f20f2ed80ef4aaedb2de3cf96bb7.png" alt="v(\cdot)=q(\cdot)"/>. If matrix
+<img class="math" src="_images/math/3a038dbf279669075a546c509b63927392854662.png" alt="G(\cdot)=0"/>, the system reduces to a linear controlled system. In
+the absence of disturbance (<img class="math" src="_images/math/7deec47dc629381c6555351ff9390cf25ed43a06.png" alt="Q(\cdot)=0"/> or <img class="math" src="_images/math/3a038dbf279669075a546c509b63927392854662.png" alt="G(\cdot)=0"/>),
+<img class="math" src="_images/math/8d2e0a0aa1f95ecea56eb10604dca1ffb5d254c1.png" alt="\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))=\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))={\mathcal X}(t,t_0,{\mathcal E}(x_0,X_0))"/>,
 the reach set is as in definition <a href="#equation-def_olrs">(3)</a>.</p>
 <p>Maxmin and minmax CLRS
-<span class="math">\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)</span> and
-<span class="math">\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)</span>, if
+<img class="math" src="_images/math/a1fd3ecbe4438f42d8212a02e83718a49f16eeb7.png" alt="\overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)"/> and
+<img class="math" src="_images/math/c216dfc0dc6df4ba53c8cd8548ec14b3a1757654.png" alt="\underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0, X_0)"/>, if
 nonempty, are symmetric convex and compact, with the center evolving in
 time according to</p>
 <div class="math" id="equation-fwdcenterd">
-<p><span class="eqno">(77)</span><span class="math">x_c(t+1) = A(t)x_c(t) + B(t)p(t) + G(t)v(t), \\
-x_c(t_0)= x_0.</span></p>
-</div><p>Fix some vector <span class="math">l_0\in{\bf R}^n</span> and consider <span class="math">l(t)</span> that
+<p><span class="eqno">(77)</span><img src="_images/math/a0083ce2dad34fe59f200c20bce5ddce8d498261.png" alt="x_c(t+1) = A(t)x_c(t) + B(t)p(t) + G(t)v(t), \\
+x_c(t_0)= x_0."/></p>
+</div><p>Fix some vector <img class="math" src="_images/math/324764f934581a3931418bbe7466cb47204fd523.png" alt="l_0\in{\bf R}^n"/> and consider <img class="math" src="_images/math/bc5ac9be8a88ab87e8f5425fcf9fab1b3cd628ea.png" alt="l(t)"/> that
 satisfies the discrete-time adjoint equation, <a class="footnote-reference" href="#id22" id="id10">[10]</a></p>
 <div class="math" id="equation-adjointdt">
-<p><span class="eqno">(78)</span><span class="math">l(t+1) = \left(A^T\right)^{-1}(t)l(t), \\
-l(t_0) = l_0,</span></p>
+<p><span class="eqno">(78)</span><img src="_images/math/fe48b5b294bc834512822e3d4fb59c9c24c61559.png" alt="l(t+1) = \left(A^T\right)^{-1}(t)l(t), \\
+l(t_0) = l_0,"/></p>
 </div><p>or, equivalently</p>
 <div class="math">
-<p><span class="math">l(t) = \Phi^T(t_0, t)l_0 .</span></p>
+<p><img src="_images/math/997649282f2284fae1a14287bf572902f26a73dd.png" alt="l(t) = \Phi^T(t_0, t)l_0 ."/></p>
 </div><p>There exist tight external ellipsoids
-<span class="math">{\mathcal E}(x_c(t), \overline{X}^+_l(t))</span>,
-<span class="math">{\mathcal E}(x_c(t), \underline{X}^+_l(t))</span> and tight internal
-ellipsoids <span class="math">{\mathcal E}(x_c(t), \overline{X}^-_l(t))</span>,
-<span class="math">{\mathcal E}(x_c(t), \underline{X}^-_l(t))</span> such that</p>
+<img class="math" src="_images/math/30b38c176dd4d8684c424f2a4c370d66a780e7d0.png" alt="{\mathcal E}(x_c(t), \overline{X}^+_l(t))"/>,
+<img class="math" src="_images/math/5f744ae24d4388318213c99ae8a0216d9daeafad.png" alt="{\mathcal E}(x_c(t), \underline{X}^+_l(t))"/> and tight internal
+ellipsoids <img class="math" src="_images/math/e7c38a73c332d7b821a58c080f715b25e71ed315.png" alt="{\mathcal E}(x_c(t), \overline{X}^-_l(t))"/>,
+<img class="math" src="_images/math/172b3e0be2671ed5495f0c0f6d0cc4cc73e52760.png" alt="{\mathcal E}(x_c(t), \underline{X}^-_l(t))"/> such that</p>
 <div class="math" id="equation-maxmininclusion">
-<p><span class="eqno">(79)</span><span class="math">{\mathcal E}(x_c(t), \overline{X}^-_l(t))\subseteq\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))
-\subseteq {\mathcal E}(x_c(t), \overline{X}^+_l(t)),</span></p>
+<p><span class="eqno">(79)</span><img src="_images/math/0ad4ce5f188eab4e944a090f71b980e89d3a006d.png" alt="{\mathcal E}(x_c(t), \overline{X}^-_l(t))\subseteq\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))
+\subseteq {\mathcal E}(x_c(t), \overline{X}^+_l(t)),"/></p>
 </div><div class="math" id="equation-maxmintightness">
-<p><span class="eqno">(80)</span><span class="math">\rho(l(t) ~|~ {\mathcal E}(x_c(t), \overline{X}^-_l(t))) =
+<p><span class="eqno">(80)</span><img src="_images/math/58bfa865b4f2dadb330b7d5747de85b0fd758b79.png" alt="\rho(l(t) ~|~ {\mathcal E}(x_c(t), \overline{X}^-_l(t))) =
 \rho(l(t) ~|~ \overline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0,X_0))) =
-\rho(l(t) ~|~ {\mathcal E}(x_c(t), \overline{X}^+_l(t))) .</span></p>
+\rho(l(t) ~|~ {\mathcal E}(x_c(t), \overline{X}^+_l(t))) ."/></p>
 </div><p>and</p>
 <div class="math" id="equation-minmaxinclusion">
-<p><span class="eqno">(81)</span><span class="math">{\mathcal E}(x_c(t), \underline{X}^-_l(t))\subseteq\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))
-\subseteq {\mathcal E}(x_c(t), \underline{X}^+_l(t)),</span></p>
+<p><span class="eqno">(81)</span><img src="_images/math/9cba6a623ef791ec2e3497aa256ef11a1f964fb2.png" alt="{\mathcal E}(x_c(t), \underline{X}^-_l(t))\subseteq\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))
+\subseteq {\mathcal E}(x_c(t), \underline{X}^+_l(t)),"/></p>
 </div><div class="math" id="equation-minmaxtightness">
-<p><span class="eqno">(82)</span><span class="math">\rho(l(t) ~|~ {\mathcal E}(x_c(t), \underline{X}^-_l(t))) =
+<p><span class="eqno">(82)</span><img src="_images/math/41e4610265c841bf0434a2291261b43f48e6d179.png" alt="\rho(l(t) ~|~ {\mathcal E}(x_c(t), \underline{X}^-_l(t))) =
 \rho(l(t) ~|~ \underline{{\mathcal X}}_{CL}(t, t_0, {\mathcal E}(x_0,X_0))) =
-\rho(l(t) ~|~ {\mathcal E}(x_c(t), \underline{X}^+_l(t))) .</span></p>
+\rho(l(t) ~|~ {\mathcal E}(x_c(t), \underline{X}^+_l(t))) ."/></p>
 </div><p>The shape matrix of the external ellipsoid for maxmin reach set is
 determined from</p>
 <div class="math" id="equation-fwdextmaxmin1">
-<p><span class="eqno">(83)</span><span class="math">\hat{X}^+_l(t) &amp; = (1+\overline{\pi}_l(t))A(t)\overline{X}^+_l(t)A^T(t) +
+<p><span class="eqno">(83)</span><img src="_images/math/87d62e9529aa0ecaf4d1d399db02fdef20f2bf9f.png" alt="\hat{X}^+_l(t) &amp; = (1+\overline{\pi}_l(t))A(t)\overline{X}^+_l(t)A^T(t) +
 \left(1+\frac{1}{\overline{\pi}_l(t)}\right)
-B(t)P(t)B^T(t),  \\</span></p>
+B(t)P(t)B^T(t),  \\"/></p>
 </div><div class="math" id="equation-fwdextmaxmin2">
-<p><span class="eqno">(84)</span><span class="math">\overline{X}^+_l(t+1) &amp; = \left((\hat{X}^+_l(t))^{1/2} +
+<p><span class="eqno">(84)</span><img src="_images/math/856b96769baab6bfaaf98cdf19e3d937fc6ca4c3.png" alt="\overline{X}^+_l(t+1) &amp; = \left((\hat{X}^+_l(t))^{1/2} +
 \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
 \times \nonumber \\
-&amp; \left((\hat{X}^+_l(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right),\\</span></p>
+&amp; \left((\hat{X}^+_l(t))^{1/2} + \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right),\\"/></p>
 </div><div class="math" id="equation-fwdextmaxmin3">
-<p><span class="eqno">(85)</span><span class="math">\overline{X}^+_l(t_0) &amp; = X_0,</span></p>
+<p><span class="eqno">(85)</span><img src="_images/math/95018634456998c6a430318cb76843816aa331c9.png" alt="\overline{X}^+_l(t_0) &amp; = X_0,"/></p>
 </div><p>wherein</p>
 <div class="math">
-<p><span class="math">\overline{\pi}_l(t) = \frac{\langle l(t+1),
+<p><img src="_images/math/7b380d461904e06ea3c11f9df1054b05782830bf.png" alt="\overline{\pi}_l(t) = \frac{\langle l(t+1),
 B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
-\overline{X}^+_l(t)l(t)\rangle^{1/2}},</span></p>
-</div><p>and the orthogonal matrix <span class="math">\overline{S}_l(t)</span> is determined by
+\overline{X}^+_l(t)l(t)\rangle^{1/2}},"/></p>
+</div><p>and the orthogonal matrix <img class="math" src="_images/math/ce344b7e1de165166ac2f5f4de096d36f55d28c6.png" alt="\overline{S}_l(t)"/> is determined by
 the equation</p>
 <div class="math">
-<p><span class="math">\begin{aligned}
+<p><img src="_images/math/16b00229f7ef0e76d62d24fcfc4e615612c50c2d.png" alt="\begin{aligned}
 &amp; &amp; \overline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t+1) = \\
 &amp; &amp; \frac{\langle l(t+1),
 G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
-\hat{X}^+_l(t)l(t+1)\rangle^{1/2}}(\hat{X}^+_l(t))^{1/2}l(t+1).\end{aligned}</span></p>
+\hat{X}^+_l(t)l(t+1)\rangle^{1/2}}(\hat{X}^+_l(t))^{1/2}l(t+1).\end{aligned}"/></p>
 </div><p>Equation <a href="#equation-fwdextmaxmin2">(84)</a> is valid only if
-<span class="math">{\mathcal E}(0,G(t)Q(t)G^T(t))\subseteq{\mathcal E}(0,\hat{X}^+_l(t))</span>,
+<img class="math" src="_images/math/8f6189e9b99059129fd4ac29af855070e1afb5e8.png" alt="{\mathcal E}(0,G(t)Q(t)G^T(t))\subseteq{\mathcal E}(0,\hat{X}^+_l(t))"/>,
 otherwise the maxmin CLRS
-<span class="math">\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))</span> is
+<img class="math" src="_images/math/7de3a03cd7836d5a7efa21d10fef934c3f4c1ddb.png" alt="\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))"/> is
 empty.</p>
 <p>The shape matrix of the external ellipsoid for minmax reach set is
 determined from</p>
 <div class="math" id="equation-fwdextminmax1">
-<p><span class="eqno">(86)</span><span class="math">\breve{X}^+_l(t) &amp; =
+<p><span class="eqno">(86)</span><img src="_images/math/58ebb05d7b0f9187d706aaa2949291639bd75b39.png" alt="\breve{X}^+_l(t) &amp; =
 \left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
 \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)^T
 \times \nonumber \\
 &amp;\left((A(t)\underline{X}^+_l(t)A^T(t))^{1/2} +
-\underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)\\</span></p>
+\underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}\right)\\"/></p>
 </div><div class="math" id="equation-fwdextminmax2">
-<p><span class="eqno">(87)</span><span class="math">\underline{X}^+_l(t+1) &amp; =
+<p><span class="eqno">(87)</span><img src="_images/math/9ceb2e7e403df23317a86934a017b569363a4d16.png" alt="\underline{X}^+_l(t+1) &amp; =
 (1+\underline{\pi}_l(t))\breve{X}^+_l(t) +
 \left(1+\frac{1}{\underline{\pi}_l(t)}\right)
-B(t)P(t)B^T(t),\\</span></p>
+B(t)P(t)B^T(t),\\"/></p>
 </div><div class="math" id="equation-fwdextminmax3">
-<p><span class="eqno">(88)</span><span class="math">\underline{X}^+_l(t_0) &amp; = X_0,</span></p>
+<p><span class="eqno">(88)</span><img src="_images/math/49e75b1957916ac886e57b157df259b69e201d10.png" alt="\underline{X}^+_l(t_0) &amp; = X_0,"/></p>
 </div><p>where</p>
 <div class="math">
-<p><span class="math">\underline{\pi}_l(t) = \frac{\langle l(t+1),
+<p><img src="_images/math/dd9d943b70bf09184cda57e7c29f07c04639f168.png" alt="\underline{\pi}_l(t) = \frac{\langle l(t+1),
 B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
-\breve{X}^+_l(t)l(t+1)\rangle^{1/2}},</span></p>
-</div><p>and <span class="math">\underline{S}_l(t)</span> is orthogonal matrix determined from the
+\breve{X}^+_l(t)l(t+1)\rangle^{1/2}},"/></p>
+</div><p>and <img class="math" src="_images/math/c6acc78e5d90b641dc50c248f93ba2c20a7de280.png" alt="\underline{S}_l(t)"/> is orthogonal matrix determined from the
 equation</p>
 <div class="math">
-<p><span class="math">\begin{aligned}
+<p><img src="_images/math/f9afab1b85e15b3fcfa3177df59eb651912b2c37.png" alt="\begin{aligned}
 &amp; \underline{S}_l(t)(G(t)Q(t)G^T(t))^{1/2}l(t+1) = \\
 &amp; \frac{\langle l(t+1),
 G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
-\underline{X}^+_l(t)l(t)\rangle^{1/2}}(A(t)\underline{X}^+_l(t)A^T(t))^{1/2}l(t+1).\end{aligned}</span></p>
+\underline{X}^+_l(t)l(t)\rangle^{1/2}}(A(t)\underline{X}^+_l(t)A^T(t))^{1/2}l(t+1).\end{aligned}"/></p>
 </div><p>Equations <a href="#equation-fwdextminmax1">(86)</a>, <a href="#equation-fwdextminmax2">(87)</a> are valid only if
-<span class="math">{\mathcal E}(0,G(t)Q(t)G^T(t)\subseteq{\mathcal E}(0,A(t)\underline{X}^+_l(t)A^T(t))</span>,
+<img class="math" src="_images/math/21020902dcebb389355ce7c6871ae11601c86209.png" alt="{\mathcal E}(0,G(t)Q(t)G^T(t)\subseteq{\mathcal E}(0,A(t)\underline{X}^+_l(t)A^T(t))"/>,
 otherwise minmax CLRS
-<span class="math">\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))</span> is
+<img class="math" src="_images/math/c490d85d2ab461d96a18d0ce53071338f0e9a4e0.png" alt="\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))"/> is
 empty.</p>
 <p>The shape matrix of the internal ellipsoid for maxmin reach set is
 determined from</p>
 <div class="math" id="equation-fwdintmaxmin1">
-<p><span class="eqno">(89)</span><span class="math">\hat{X}^-_l(t) &amp; =
+<p><span class="eqno">(89)</span><img src="_images/math/722a4b3f08e7a1b48e7e55eec8c1585de474f9e0.png" alt="\hat{X}^-_l(t) &amp; =
 \left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
 \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
 \times \nonumber \\
 &amp; \left((A(t)\overline{X}^-_l(t)A^T(t))^{1/2} +
-\overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)\\</span></p>
+\overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)\\"/></p>
 </div><div class="math" id="equation-fwdintmaxmin2">
-<p><span class="eqno">(90)</span><span class="math">\overline{X}^-_l(t+1) &amp; =
+<p><span class="eqno">(90)</span><img src="_images/math/e15560a03e1b52cf1a1a5c5e84f2ddae7a9a1a7d.png" alt="\overline{X}^-_l(t+1) &amp; =
 (1+\overline{\eta}_l(t))\hat{X}^-_l(t) +
 \left(1+\frac{1}{\underline{\eta}_l(t)}\right)
-G(t)Q(t)G^T(t), \\</span></p>
+G(t)Q(t)G^T(t), \\"/></p>
 </div><div class="math" id="equation-fwdintmaxmin3">
-<p><span class="eqno">(91)</span><span class="math">\overline{X}^-_l(t_0) &amp; = X_0,</span></p>
+<p><span class="eqno">(91)</span><img src="_images/math/c927c4ef619c5b0a4be2a4bd009e9923167e0573.png" alt="\overline{X}^-_l(t_0) &amp; = X_0,"/></p>
 </div><p>where</p>
 <div class="math">
-<p><span class="math">\overline{\eta}_l(t) = \frac{\langle l(t+1),
+<p><img src="_images/math/53f94109a1468c358094fb9424df9e77a0dfb3fd.png" alt="\overline{\eta}_l(t) = \frac{\langle l(t+1),
 G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
-\hat{X}^-_l(t)l(t+1)\rangle^{1/2}},</span></p>
-</div><p>and <span class="math">\overline{T}_l(t)</span> is orthogonal matrix determined from the
+\hat{X}^-_l(t)l(t+1)\rangle^{1/2}},"/></p>
+</div><p>and <img class="math" src="_images/math/2575ec90cf3d2577728c3c6bd42ca3247800cba4.png" alt="\overline{T}_l(t)"/> is orthogonal matrix determined from the
 equation</p>
 <div class="math">
-<p><span class="math">\begin{aligned}
+<p><img src="_images/math/41af8ae7a510a5e064e126bd2a372dadad1b7486.png" alt="\begin{aligned}
 &amp; \overline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
 &amp; \frac{\langle l(t+1),
 B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
-\overline{X}^-_l(t)l(t)\rangle^{1/2}}(A(t)\overline{X}^-_l(t)A^T(t))^{1/2}l(t+1).\end{aligned}</span></p>
+\overline{X}^-_l(t)l(t)\rangle^{1/2}}(A(t)\overline{X}^-_l(t)A^T(t))^{1/2}l(t+1).\end{aligned}"/></p>
 </div><p>Equation <a href="#equation-fwdintmaxmin2">(90)</a> is valid only if
-<span class="math">{\mathcal E}(0,G(t)Q(t)G^T(t)\subseteq{\mathcal E}(0,\hat{X}^-_l(t))</span>.</p>
+<img class="math" src="_images/math/95c6ce63532318003d3df4d6a5c2afb5e394c367.png" alt="{\mathcal E}(0,G(t)Q(t)G^T(t)\subseteq{\mathcal E}(0,\hat{X}^-_l(t))"/>.</p>
 <p>The shape matrix of the internal ellipsoid for the minmax reach set is
 determined by</p>
 <div class="math" id="equation-fwdintminmax1">
-<p><span class="eqno">(92)</span><span class="math">\breve{X}^-_l(t) &amp; = (1+\underline{\eta}_l(t))A(t)\underline{X}^-_l(t)A^T(t) +
+<p><span class="eqno">(92)</span><img src="_images/math/01270fa5862a37a38ff23fc681557c0254dc6614.png" alt="\breve{X}^-_l(t) &amp; = (1+\underline{\eta}_l(t))A(t)\underline{X}^-_l(t)A^T(t) +
 \left(1+\frac{1}{\underline{\eta}_l(t)}\right)
-G(t)Q(t)G^T(t),\\</span></p>
+G(t)Q(t)G^T(t),\\"/></p>
 </div><div class="math" id="equation-fwdintminmax2">
-<p><span class="eqno">(93)</span><span class="math">\underline{X}^-_l(t+1) &amp; = \left((\breve{X}^-_l(t))^{1/2} +
+<p><span class="eqno">(93)</span><img src="_images/math/75d4fe351ea36276bfbd60d4b9e9b296b3252e79.png" alt="\underline{X}^-_l(t+1) &amp; = \left((\breve{X}^-_l(t))^{1/2} +
 \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right)^T
 \times \nonumber \\
-&amp;\left((\breve{X}^-_l(t))^{1/2} + \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right),\\</span></p>
+&amp;\left((\breve{X}^-_l(t))^{1/2} + \underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}\right),\\"/></p>
 </div><div class="math" id="equation-fwdintminmax3">
-<p><span class="eqno">(94)</span><span class="math">\underline{X}^-_l(t_0) &amp; = X_0,</span></p>
+<p><span class="eqno">(94)</span><img src="_images/math/def2c8ce36713ba48f88ecd583579ffad78fbddf.png" alt="\underline{X}^-_l(t_0) &amp; = X_0,"/></p>
 </div><p>wherein</p>
 <div class="math">
-<p><span class="math">\underline{\eta}_l(t) = \frac{\langle l(t+1),
+<p><img src="_images/math/41106afc70be61b02be0a66e2031ec5a6774bc93.png" alt="\underline{\eta}_l(t) = \frac{\langle l(t+1),
 G(t)Q(t)G^T(t)l(t+1)\rangle^{1/2}}{\langle l(t),
-\underline{X}^-_l(t)l(t)\rangle^{1/2}},</span></p>
-</div><p>and the orthogonal matrix <span class="math">\underline{T}_l(t)</span> is determined by
+\underline{X}^-_l(t)l(t)\rangle^{1/2}},"/></p>
+</div><p>and the orthogonal matrix <img class="math" src="_images/math/803f7f930cbe20e00abaac05c2d2078c005f9d85.png" alt="\underline{T}_l(t)"/> is determined by
 the equation</p>
 <div class="math">
-<p><span class="math">\begin{aligned}
+<p><img src="_images/math/e621f842f5a34067e48c4eb037c3bf71a888be85.png" alt="\begin{aligned}
 &amp;\underline{T}_l(t)(B(t)P(t)B^T(t))^{1/2}l(t+1) = \\
 &amp; \frac{\langle l(t+1),
 B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}{\langle l(t+1),
-\breve{X}^-_l(t)l(t+1)\rangle^{1/2}}(\breve{X}^-_l(t))^{1/2}l(t+1).\end{aligned}</span></p>
+\breve{X}^-_l(t)l(t+1)\rangle^{1/2}}(\breve{X}^-_l(t))^{1/2}l(t+1).\end{aligned}"/></p>
 </div><p>Equations <a href="#equation-fwdintminmax1">(92)</a>, <a href="#equation-fwdintminmax2">(93)</a> are valid only if
-<span class="math">{\mathcal E}(0,G(t)Q(t)G^T(t)\subseteq{\mathcal E}(0,A(t)\underline{X}^-_l(t)A^T(t))</span>.</p>
+<img class="math" src="_images/math/917c5445d243a439b6049d50af42ec19ff644a16.png" alt="{\mathcal E}(0,G(t)Q(t)G^T(t)\subseteq{\mathcal E}(0,A(t)\underline{X}^-_l(t)A^T(t))"/>.</p>
 <p>The point where the external and the internal ellipsoids both touch the
 boundary of the maxmin CLRS is</p>
 <div class="math">
-<p><span class="math">x_l^+(t) = x_c(t) + \frac{\overline{X}^+_l(t)l(t)}{\langle l(t),
-\overline{X}^+_l(t)l(t)\rangle^{1/2}} ,</span></p>
+<p><img src="_images/math/c030aacd59b83aa9b199760697ddc2c6c4a47714.png" alt="x_l^+(t) = x_c(t) + \frac{\overline{X}^+_l(t)l(t)}{\langle l(t),
+\overline{X}^+_l(t)l(t)\rangle^{1/2}} ,"/></p>
 </div><p>and the bounday point of minmax CLRS is</p>
 <div class="math">
-<p><span class="math">x_l^-(t) = x_c(t) + \frac{\overline{X}^-_l(t)l(t)}{\langle l(t),
-\overline{X}^-_l(t)l(t)\rangle^{1/2}} .</span></p>
-</div><p>Points <span class="math">x^{\pm}_l(t)</span>, <span class="math">t\geqslant t_0</span>, form extremal
+<p><img src="_images/math/5b0da9819b1d44fe17c53c8c5418fe4854b12580.png" alt="x_l^-(t) = x_c(t) + \frac{\overline{X}^-_l(t)l(t)}{\langle l(t),
+\overline{X}^-_l(t)l(t)\rangle^{1/2}} ."/></p>
+</div><p>Points <img class="math" src="_images/math/5c1f5c301d65a2f8fc7e82180b0b56241c9fe49b.png" alt="x^{\pm}_l(t)"/>, <img class="math" src="_images/math/385fa405ebba539576dfb3901c385b8064940041.png" alt="t\geqslant t_0"/>, form extremal
 trajectories. In order for the system to follow the extremal trajectory
-specified by some vector <span class="math">l_0</span>, the initial state must be</p>
+specified by some vector <img class="math" src="_images/math/dd5857c44fe96a5cd56db0b6b4860c78d9a1ee28.png" alt="l_0"/>, the initial state must be</p>
 <div class="math" id="equation-dx01">
-<p><span class="eqno">(95)</span><span class="math">x_l^0 = x_0 + \frac{X_0l_0}{\langle l_0, X_0l_0\rangle^{1/2}}.</span></p>
-</div><p>When there is no disturbance (<span class="math">G(t)=0</span> or <span class="math">Q(t)=0</span>),
-<span class="math">\overline{X}^+_l(t)=\underline{X}^+_l(t)</span> and
-<span class="math">\overline{X}^-_l(t)=\underline{X}^-_l(t)</span>, and the open-loop
+<p><span class="eqno">(95)</span><img src="_images/math/c474c73db94461949d449edd45d0b32c099ba7fc.png" alt="x_l^0 = x_0 + \frac{X_0l_0}{\langle l_0, X_0l_0\rangle^{1/2}}."/></p>
+</div><p>When there is no disturbance (<img class="math" src="_images/math/1f9b092b4a2b4fdb4d7c180c389df3e22e86a457.png" alt="G(t)=0"/> or <img class="math" src="_images/math/c0d67c6dce77b154b6024041834a3646ca227c9f.png" alt="Q(t)=0"/>),
+<img class="math" src="_images/math/352b89dbf8214e3b720027ce22ee30944cc6de7d.png" alt="\overline{X}^+_l(t)=\underline{X}^+_l(t)"/> and
+<img class="math" src="_images/math/845a583fe8f126103be1561108b571239baac93c.png" alt="\overline{X}^-_l(t)=\underline{X}^-_l(t)"/>, and the open-loop
 control that steers the system along the extremal trajectory defined by
-<span class="math">l_0</span> is</p>
+<img class="math" src="_images/math/dd5857c44fe96a5cd56db0b6b4860c78d9a1ee28.png" alt="l_0"/> is</p>
 <div class="math" id="equation-udt">
-<p><span class="eqno">(96)</span><span class="math">u_l(t) = p(t) + \frac{P(t)B^T(t)l(t+1)}{\langle l(t+1),
-B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}.</span></p>
-</div><p>Each choice of <span class="math">l_0</span> defines an external and internal
-approximation. If <span class="math">\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))</span> is
+<p><span class="eqno">(96)</span><img src="_images/math/caf1fbd4b297e726e501160a7dff59e20742da25.png" alt="u_l(t) = p(t) + \frac{P(t)B^T(t)l(t+1)}{\langle l(t+1),
+B(t)P(t)B^T(t)l(t+1)\rangle^{1/2}}."/></p>
+</div><p>Each choice of <img class="math" src="_images/math/dd5857c44fe96a5cd56db0b6b4860c78d9a1ee28.png" alt="l_0"/> defines an external and internal
+approximation. If <img class="math" src="_images/math/7de3a03cd7836d5a7efa21d10fef934c3f4c1ddb.png" alt="\overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))"/> is
 nonempty,</p>
 <div class="math">
-<p><span class="math">\bigcup_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),\overline{X}^-_l(t)) =
+<p><img src="_images/math/8f5ce24afecb33be44067be230148884f8669297.png" alt="\bigcup_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),\overline{X}^-_l(t)) =
 \overline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0)) =
-\bigcap_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),\overline{X}^+_l(t)).</span></p>
+\bigcap_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),\overline{X}^+_l(t))."/></p>
 </div><p>Similarly for
-<span class="math">\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))</span>,</p>
+<img class="math" src="_images/math/c490d85d2ab461d96a18d0ce53071338f0e9a4e0.png" alt="\underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0))"/>,</p>
 <div class="math">
-<p><span class="math">\bigcup_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),\underline{X}^-_l(t)) =
+<p><img src="_images/math/4b8b4b35d4bb75c574dec996f4cfc9225236568e.png" alt="\bigcup_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),\underline{X}^-_l(t)) =
 \underline{{\mathcal X}}_{CL}(t,t_0,{\mathcal E}(x_0,X_0)) =
-\bigcap_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),\underline{X}^+_l(t)).</span></p>
+\bigcap_{\langle l_0,l_0\rangle=1}{\mathcal E}(x_c(t),\underline{X}^+_l(t))."/></p>
 </div><p>Similarly, tight ellipsoidal approximations of maxmin and minmax CLBRS
-with terminating conditions <span class="math">(t_1, {\mathcal E}(y_1,Y_1))</span> can be
-obtained for those directions <span class="math">l(t)</span> satisfying</p>
+with terminating conditions <img class="math" src="_images/math/92bc8b6d388e0042b8b837fde1432375a97ee151.png" alt="(t_1, {\mathcal E}(y_1,Y_1))"/> can be
+obtained for those directions <img class="math" src="_images/math/bc5ac9be8a88ab87e8f5425fcf9fab1b3cd628ea.png" alt="l(t)"/> satisfying</p>
 <div class="math" id="equation-bckadjointd">
-<p><span class="eqno">(97)</span><span class="math">l(t) = \Phi^T(t_1,t)l_1,</span></p>
-</div><p>with some fixed <span class="math">l_1</span>, for which they exist.</p>
+<p><span class="eqno">(97)</span><img src="_images/math/3decfad751f0a3a909ea37760a3f19a2c7d0b2f8.png" alt="l(t) = \Phi^T(t_1,t)l_1,"/></p>
+</div><p>with some fixed <img class="math" src="_images/math/74c713b8e1ffbdb2755232d14c28023c4ee8159d.png" alt="l_1"/>, for which they exist.</p>
 <p>With boundary conditions</p>
 <div class="math" id="equation-bndconds">
-<p><span class="eqno">(98)</span><span class="math">y_c(t_1)=y_1, ~~~ \overline{Y}^+_l(t_1)=\overline{Y}^-_l(t_1)=\underline{Y}^+_l(t_1)=\underline{Y}^-_l(t_1)=Y_1,</span></p>
+<p><span class="eqno">(98)</span><img src="_images/math/a1aa93c176ce3fb2ff4532653fca1468500f9029.png" alt="y_c(t_1)=y_1, ~~~ \overline{Y}^+_l(t_1)=\overline{Y}^-_l(t_1)=\underline{Y}^+_l(t_1)=\underline{Y}^-_l(t_1)=Y_1,"/></p>
 </div><p>external and internal ellipsoids for maxmin CLBRS
-<span class="math">\overline{{\mathcal Y}}_{CL}(t_1,t,{\mathcal E}(y_1,Y_1))</span> at
-time <span class="math">t</span>, <span class="math">{\mathcal E}(y_c(t),\overline{Y}^+_l(t))</span> and
-<span class="math">{\mathcal E}(y_c(t),\overline{Y}^-_l(t))</span>, are computed as
+<img class="math" src="_images/math/b28f35d0953cf4b44ae906ed53893f4834a64ad2.png" alt="\overline{{\mathcal Y}}_{CL}(t_1,t,{\mathcal E}(y_1,Y_1))"/> at
+time <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>, <img class="math" src="_images/math/633d82c18bb8b4d191262084066dce731e3fdd7c.png" alt="{\mathcal E}(y_c(t),\overline{Y}^+_l(t))"/> and
+<img class="math" src="_images/math/50267587319eee87f6de2661eabdeaca65c93f4a.png" alt="{\mathcal E}(y_c(t),\overline{Y}^-_l(t))"/>, are computed as
 external and internal ellipsoidal approximations of the geometric
 sum-difference</p>
 <div class="math">
-<p><span class="math">A^{-1}(t)\left(
+<p><img src="_images/math/b7943e80f7fd86c9076536f7fdae6905ec32f88e.png" alt="A^{-1}(t)\left(
 {\mathcal E}(y_c(t+1),\overline{Y}^+_l(t+1)) \oplus B(t){\mathcal E}(-p(t),P(t))
 \dot{-}G(t){\mathcal E}(-q(t),Q(t))
-\right)</span></p>
+\right)"/></p>
 </div><p>and</p>
 <div class="math">
-<p><span class="math">A^{-1}(t)\left(
+<p><img src="_images/math/cea9336e520acbbcc1d03dd94e2975645392b0c7.png" alt="A^{-1}(t)\left(
 {\mathcal E}(y_c(t+1),\overline{Y}^-_l(t+1)) \oplus B(t){\mathcal E}(-p(t),P(t))
 \dot{-}G(t){\mathcal E}(-q(t),Q(t))
-\right)</span></p>
-</div><p>in direction <span class="math">l(t)</span> from <a href="#equation-bckadjointd">(97)</a>. Section
+\right)"/></p>
+</div><p>in direction <img class="math" src="_images/math/bc5ac9be8a88ab87e8f5425fcf9fab1b3cd628ea.png" alt="l(t)"/> from <a href="#equation-bckadjointd">(97)</a>. Section
 <a class="reference internal" href="chap_ellcalc.html#sum-diff-label"><em>Geometric Sum-Difference</em></a> describes the operation of geometric
 sum-difference for ellipsoids.</p>
 <p>External and internal ellipsoids for minmax CLBRS
-<span class="math">\underline{{\mathcal Y}}_{CL}(t_1,t,{\mathcal E}(y_1,Y_1))</span> at
-time <span class="math">t</span>, <span class="math">{\mathcal E}(y_c(t),\underline{Y}^+_l(t))</span> and
-<span class="math">{\mathcal E}(y_c(t),\underline{Y}^-_l(t))</span>, are computed as
+<img class="math" src="_images/math/5425bafff2256ffc3abebea998304eb7adbd3b5e.png" alt="\underline{{\mathcal Y}}_{CL}(t_1,t,{\mathcal E}(y_1,Y_1))"/> at
+time <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>, <img class="math" src="_images/math/416c0505da28e41c5a563a4938d2f4c7bbb6c5ee.png" alt="{\mathcal E}(y_c(t),\underline{Y}^+_l(t))"/> and
+<img class="math" src="_images/math/f924b4deb7b69a5eba900b9e26e42107a3987be1.png" alt="{\mathcal E}(y_c(t),\underline{Y}^-_l(t))"/>, are computed as
 external and internal ellipsoidal approximations of the geometric
 difference-sum</p>
 <div class="math">
-<p><span class="math">A^{-1}(t)\left(
+<p><img src="_images/math/628d392b2d242f4d89496e2f5a323afd61671b72.png" alt="A^{-1}(t)\left(
 {\mathcal E}(y_c(t+1),\underline{Y}^+_l(t+1))
 \dot{-}G(t){\mathcal E}(-q(t),Q(t))
 \oplus B(t){\mathcal E}(-p(t),P(t))
-\right)</span></p>
+\right)"/></p>
 </div><p>and</p>
 <div class="math">
-<p><span class="math">A^{-1}(t)\left(
+<p><img src="_images/math/ed0c7be3ee1976ebe8cb1e93d1c782fe836923ae.png" alt="A^{-1}(t)\left(
 {\mathcal E}(y_c(t+1),\underline{Y}^-_l(t+1))
 \dot{-}G(t){\mathcal E}(-q(t),Q(t))
 \oplus B(t){\mathcal E}(-p(t),P(t))
-\right)</span></p>
-</div><p>in direction <span class="math">l(t)</span> from <a href="#equation-bckadjointd">(97)</a>. Section
+\right)"/></p>
+</div><p>in direction <img class="math" src="_images/math/bc5ac9be8a88ab87e8f5425fcf9fab1b3cd628ea.png" alt="l(t)"/> from <a href="#equation-bckadjointd">(97)</a>. Section
 <a class="reference internal" href="chap_ellcalc.html#diff-sum-label"><em>Geometric Difference-Sum</em></a> describes the operation of geometric
 difference-sum for ellipsoids.</p>
 <table class="docutils footnote" frame="void" id="id11" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>In discrete-time case <span class="math">t</span> assumes integer values.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>In discrete-time case <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/> assumes integer values.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id12" rules="none">
@@ -1242,7 +1242,7 @@ difference-sum for ellipsoids.</p>
 is important to understand that for any specific <em>continuous-time</em>
 dynamical system it must be determined whether the solution exists
 and is unique, and in which class of solutions these conditions are
-met. Here we shall assume that function <span class="math">f</span> is such that the
+met. Here we shall assume that function <img class="math" src="_images/math/0001d02b63ede2fe3219e05a7cd09c82ae6298b6.png" alt="f"/> is such that the
 solution of the differential equation <a href="#equation-ctds1">(1)</a> exists and is unique
 in Fillipov sense. This allows the right-hand side to be
 discontinuous. For discrete-time systems this problem does not exist.</td></tr>
@@ -1252,47 +1252,47 @@ discontinuous. For discrete-time systems this problem does not exist.</td></tr>
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Minkowski sum of sets
-<span class="math">{\mathcal W}, {\mathcal Z}\subseteq {\bf R}^n</span> is defined as
-<span class="math">{\mathcal W}\oplus {\mathcal Z}= \{w+z ~|~ w\in{\mathcal W}, ~ z\in{\mathcal Z}\}</span>.
-Set <span class="math">{\mathcal W}\oplus{\mathcal Z}</span> is nonempty if and only if
-both, <span class="math">{\mathcal W}</span> and <span class="math">{\mathcal Z}</span> are nonempty. If
-<span class="math">{\mathcal W}</span> and <span class="math">{\mathcal Z}</span> are convex, set
-<span class="math">{\mathcal W}\oplus{\mathcal Z}</span> is convex.</td></tr>
+<img class="math" src="_images/math/67bda38ac661d308589d4e557b475554edf2d945.png" alt="{\mathcal W}, {\mathcal Z}\subseteq {\bf R}^n"/> is defined as
+<img class="math" src="_images/math/a81e79f1f19bc3cc1eb9fb3f0b3c458b51be1b31.png" alt="{\mathcal W}\oplus {\mathcal Z}= \{w+z ~|~ w\in{\mathcal W}, ~ z\in{\mathcal Z}\}"/>.
+Set <img class="math" src="_images/math/25857046a245190e8f6c01581174480ae8f44731.png" alt="{\mathcal W}\oplus{\mathcal Z}"/> is nonempty if and only if
+both, <img class="math" src="_images/math/b74a912901f35db357d02f168e5fcbd438b89877.png" alt="{\mathcal W}"/> and <img class="math" src="_images/math/28bdb0efc023d894db151293edb3a0ce0d4e2874.png" alt="{\mathcal Z}"/> are nonempty. If
+<img class="math" src="_images/math/b74a912901f35db357d02f168e5fcbd438b89877.png" alt="{\mathcal W}"/> and <img class="math" src="_images/math/28bdb0efc023d894db151293edb3a0ce0d4e2874.png" alt="{\mathcal Z}"/> are convex, set
+<img class="math" src="_images/math/25857046a245190e8f6c01581174480ae8f44731.png" alt="{\mathcal W}\oplus{\mathcal Z}"/> is convex.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id14" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td><span class="math">{\mathcal M}</span> is weakly invariant with respect to the target
-set <span class="math">{\mathcal Y}_1</span> and times <span class="math">t_0</span> and <span class="math">t</span>, if
-for every state <span class="math">x_0\in{\mathcal M}</span> there exists a control
-<span class="math">u(\tau, x(\tau))\in{\mathcal U}(\tau)</span>,
-<span class="math">t_0\leqslant\tau&lt; t</span>, that steers the system from <span class="math">x_0</span>
-at time <span class="math">t_0</span> to some state in <span class="math">{\mathcal Y}_1</span> at time
-<span class="math">t</span>. If <em>all</em> controls in <span class="math">{\mathcal U}(\tau)</span>,
-<span class="math">t_0\leqslant\tau&lt;t</span> steer the system from every
-<span class="math">x_0\in{\mathcal M}</span> at time <span class="math">t_0</span> to
-<span class="math">{\mathcal Y}_1</span> at time <span class="math">t</span>, set <span class="math">{\mathcal M}</span> is
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td><img class="math" src="_images/math/c8f5b94abf77863f71ceaaad0c0e26392ea2584a.png" alt="{\mathcal M}"/> is weakly invariant with respect to the target
+set <img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/> and times <img class="math" src="_images/math/fb761c2e199ad45ccf14767f48b88169479d840f.png" alt="t_0"/> and <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>, if
+for every state <img class="math" src="_images/math/9352e7c74769e37bed461cf12e3970b0eeee8d29.png" alt="x_0\in{\mathcal M}"/> there exists a control
+<img class="math" src="_images/math/f1108a777b9c9e5400c7561dca28e08dbb907633.png" alt="u(\tau, x(\tau))\in{\mathcal U}(\tau)"/>,
+<img class="math" src="_images/math/1a20ede2a2dca098b7ddb2bcf0d64eaf789fe4ef.png" alt="t_0\leqslant\tau&lt; t"/>, that steers the system from <img class="math" src="_images/math/c3c08496f07567285212e468b173bea9ca153fab.png" alt="x_0"/>
+at time <img class="math" src="_images/math/fb761c2e199ad45ccf14767f48b88169479d840f.png" alt="t_0"/> to some state in <img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/> at time
+<img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>. If <em>all</em> controls in <img class="math" src="_images/math/d5025379a275c633646266889a3f8afb66824361.png" alt="{\mathcal U}(\tau)"/>,
+<img class="math" src="_images/math/318499371b02e60472b58864afad183a0d3ff13c.png" alt="t_0\leqslant\tau&lt;t"/> steer the system from every
+<img class="math" src="_images/math/9352e7c74769e37bed461cf12e3970b0eeee8d29.png" alt="x_0\in{\mathcal M}"/> at time <img class="math" src="_images/math/fb761c2e199ad45ccf14767f48b88169479d840f.png" alt="t_0"/> to
+<img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/> at time <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>, set <img class="math" src="_images/math/c8f5b94abf77863f71ceaaad0c0e26392ea2584a.png" alt="{\mathcal M}"/> is
 said to be <em>strongly</em> invariant with respect to
-<span class="math">{\mathcal Y}_1</span>, <span class="math">t_0</span> and <span class="math">t</span>.</td></tr>
+<img class="math" src="_images/math/2f0e73dc2e9e3a9be3332eade7c81926e9e870c9.png" alt="{\mathcal Y}_1"/>, <img class="math" src="_images/math/fb761c2e199ad45ccf14767f48b88169479d840f.png" alt="t_0"/> and <img class="math" src="_images/math/ef9270877405055756d345facd044e4ab297f858.png" alt="t"/>.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id15" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>There exists <span class="math">f^{-1}(t,x,u)</span> such that
-<span class="math">x(t)=f^{-1}(t, x(t+1), u, v)</span>.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>There exists <img class="math" src="_images/math/c8dd2300320fddb6930635f9f53ce75dc858e09e.png" alt="f^{-1}(t,x,u)"/> such that
+<img class="math" src="_images/math/ab64d5faaac1c9cdd425333569bc181b4980c19e.png" alt="x(t)=f^{-1}(t, x(t+1), u, v)"/>.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id16" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td><p class="first">Hausdorff semidistance between compact sets
-<span class="math">{\mathcal W}, {\mathcal Z}\subseteq {\bf R}^n</span> is defined as</p>
+<img class="math" src="_images/math/67bda38ac661d308589d4e557b475554edf2d945.png" alt="{\mathcal W}, {\mathcal Z}\subseteq {\bf R}^n"/> is defined as</p>
 <div class="math">
-<p><span class="math">{\bf dist}({\mathcal W}, {\mathcal Z}) = \min\{\langle w-z, w-z\rangle^{1/2}
-~|~ w\in{\mathcal W}, \; z\in{\mathcal Z}\},</span></p>
-</div><p class="last">where <span class="math">\langle\cdot, \cdot\rangle</span> denotes inner product.</p>
+<p><img src="_images/math/22deb4d189ef83f7219d85e6062b20654ae9d4fd.png" alt="{\bf dist}({\mathcal W}, {\mathcal Z}) = \min\{\langle w-z, w-z\rangle^{1/2}
+~|~ w\in{\mathcal W}, \; z\in{\mathcal Z}\},"/></p>
+</div><p class="last">where <img class="math" src="_images/math/73818da353bc2c341b19f2361eb9c6a57777b8f5.png" alt="\langle\cdot, \cdot\rangle"/> denotes inner product.</p>
 </td></tr>
 </tbody>
 </table>
@@ -1300,11 +1300,11 @@ said to be <em>strongly</em> invariant with respect to
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id7">[7]</a></td><td>The Minkowski difference of sets
-<span class="math">{\mathcal W}, {\mathcal Z}\in{\bf R}^n</span> is defined as
-<span class="math">{\mathcal W}\dot{-}{\mathcal Z}= \left\{\xi\in{\bf R}^n ~|~
-\xi \oplus {\mathcal Z}\subseteq {\mathcal W}\right\}</span>. If
-<span class="math">{\mathcal W}</span> and <span class="math">{\mathcal Z}</span> are convex,
-<span class="math">{\mathcal W}\dot{-}{\mathcal Z}</span> is convex if it is nonempty.</td></tr>
+<img class="math" src="_images/math/b06279d7bf45ca181bd2775c0dd61df83cd0ca3f.png" alt="{\mathcal W}, {\mathcal Z}\in{\bf R}^n"/> is defined as
+<img class="math" src="_images/math/86e25a00c1fdf102c6480c598cf3dc8254064c44.png" alt="{\mathcal W}\dot{-}{\mathcal Z}= \left\{\xi\in{\bf R}^n ~|~
+\xi \oplus {\mathcal Z}\subseteq {\mathcal W}\right\}"/>. If
+<img class="math" src="_images/math/b74a912901f35db357d02f168e5fcbd438b89877.png" alt="{\mathcal W}"/> and <img class="math" src="_images/math/28bdb0efc023d894db151293edb3a0ce0d4e2874.png" alt="{\mathcal Z}"/> are convex,
+<img class="math" src="_images/math/5df09b7d9f10efe1dea1a576e735cc33f6651b40.png" alt="{\mathcal W}\dot{-}{\mathcal Z}"/> is convex if it is nonempty.</td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id18" rules="none">
@@ -1318,14 +1318,14 @@ interval.</td></tr>
 <table class="docutils footnote" frame="void" id="id19" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id9">[9]</a></td><td><p class="first">The case when <span class="math">A(t)</span> is singular is described in <a class="reference internal" href="#var2007" id="id20">[VAR2007]</a>.
-The idea is to substitute <span class="math">A(t)</span> with the
-nonsingular <span class="math">A_\delta(t) = A(t) + \delta U(t)W(t)</span>, in which
-<span class="math">U(t)</span> and <span class="math">W(t)</span> are obtained from the singular value
+<tr><td class="label"><a class="fn-backref" href="#id9">[9]</a></td><td><p class="first">The case when <img class="math" src="_images/math/a79ae2055fb6a0774c0140d85756c9fc47af6e2a.png" alt="A(t)"/> is singular is described in <a class="reference internal" href="#var2007" id="id20">[VAR2007]</a>.
+The idea is to substitute <img class="math" src="_images/math/a79ae2055fb6a0774c0140d85756c9fc47af6e2a.png" alt="A(t)"/> with the
+nonsingular <img class="math" src="_images/math/9cb6b9aa97fc71049b022e1878418483ccce55d7.png" alt="A_\delta(t) = A(t) + \delta U(t)W(t)"/>, in which
+<img class="math" src="_images/math/f186e41f3a6ef07f2a830faf9ad555007eb8c4ee.png" alt="U(t)"/> and <img class="math" src="_images/math/02decde7852427aece329cc3592cf12f32844c04.png" alt="W(t)"/> are obtained from the singular value
 decomposition</p>
 <div class="math">
-<p><span class="math">A(t) = U(t)\Sigma(t)V(t) .</span></p>
-</div><p class="last">The parameter <span class="math">\delta</span> can be chosen based on the number of
+<p><img src="_images/math/e5d3292590f6aaff59e0447a4039165ae1601381.png" alt="A(t) = U(t)\Sigma(t)V(t) ."/></p>
+</div><p class="last">The parameter <img class="math" src="_images/math/b35a9439ad8c8657b1b1d792ad5c2d77a52c0aef.png" alt="\delta"/> can be chosen based on the number of
 time steps for which the reach set must be computed and the required
 accuracy. The issue of inverting ill-conditioned matrices is also
 addressed in <a class="reference internal" href="#var2007" id="id21">[VAR2007]</a>.</p>
@@ -1335,7 +1335,7 @@ addressed in <a class="reference internal" href="#var2007" id="id21">[VAR2007]</
 <table class="docutils footnote" frame="void" id="id22" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id10">[10]</a></td><td>Note that for <a href="#equation-adjointdt">(78)</a> <span class="math">A(t)</span> must be invertible.</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id10">[10]</a></td><td>Note that for <a href="#equation-adjointdt">(78)</a> <img class="math" src="_images/math/a79ae2055fb6a0774c0140d85756c9fc47af6e2a.png" alt="A(t)"/> must be invertible.</td></tr>
 </tbody>
 </table>
 <h2>References</h2><table class="docutils citation" frame="void" id="var2007" rules="none">
@@ -1418,7 +1418,7 @@ linear systems. <em>IEEE Transactions on Automatic Control</em>, 52(1):26–38, 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2011-2013 Moscow State University, Faculty of Computational Mathematics and Computer Science, System Analysis Department, 2004-2011 The Regents of the University of California.
+        &copy; Copyright 2011-2014 Moscow State University, Faculty of Computational Mathematics and Computer Science, System Analysis Department, 2004-2011 The Regents of the University of California.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
     </div>
   </body>
