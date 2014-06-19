@@ -27,18 +27,14 @@ classdef EllTubeProjectorBuilder<handle
             %
             isDynamicEnabled=confRepoMgr.getParam(...
                 'projectionProps.isDynamicProjEnabled');
-            isStaticEnabled=confRepoMgr.getParam(...
-                'projectionProps.isStaticProjEnabled');
             projectorList=cell(1,2);
             if isDynamicEnabled
                 projectorList{2}=EllTubeDynamicSpaceProjector(...
                     projMatList,goodDirSetObj);
             end
             %
-            if isStaticEnabled
-                staticProjectorObj=EllTubeStaticSpaceProjector(projMatList);
-                projectorList{1}=staticProjectorObj;
-            end
+            staticProjectorObj=EllTubeStaticSpaceProjector(projMatList);            
+            projectorList{1}=staticProjectorObj;
             isnEmptyVec=~cellfun('isempty',projectorList);
             projectorObj=EllTubeCollectionProjector(...
                 projectorList(isnEmptyVec));
