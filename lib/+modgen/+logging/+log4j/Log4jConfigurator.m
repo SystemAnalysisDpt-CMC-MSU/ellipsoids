@@ -197,6 +197,7 @@ classdef Log4jConfigurator<handle
             import org.apache.log4j.PropertyConfigurator;
             import modgen.common.throwerror;
             %
+            org.apache.log4j.BasicConfigurator.resetConfiguration();
             [~,prop]=modgen.common.parseparams(varargin,[],0);
             nProp=length(prop);
             isLock = false;

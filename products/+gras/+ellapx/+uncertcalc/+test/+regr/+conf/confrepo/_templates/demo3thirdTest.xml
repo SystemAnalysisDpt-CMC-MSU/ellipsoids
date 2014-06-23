@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<root version="19" xml_tb_version="2.0" type="struct" >
+<root version="20" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 4</calcTimeLimVec>
@@ -14,7 +14,6 @@
 			</set1>
 		</projSpaceSets>
 		<isDynamicProjEnabled type="boolean" >0</isDynamicProjEnabled>
-		<isStaticProjEnabled type="boolean" >1</isStaticProjEnabled>
 	</projectionProps>
 	<goodDirSelection type="struct" >
 		<methodName type="char" >manual</methodName>
