@@ -1,4 +1,4 @@
-ellProjObj = gras.ellapx.smartdb.test.examples.getProj();
+ellProjObj = gras.ellapx.smartdb.test.examples.example_getProj();
 %
 % get a copy of the object
 %
@@ -7,7 +7,7 @@ ellCopy = ellProjObj.getCopy();
 % delete all the data from the object
 %
 ellProjObj.clearData();
-ellProjObj = gras.ellapx.smartdb.test.examples.getProj();
+ellProjObj = gras.ellapx.smartdb.test.examples.example_getProj();
 %
 % create a copy of a specified object via calling a copy constructor for 
 % the object class

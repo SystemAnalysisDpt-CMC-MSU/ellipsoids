@@ -1,4 +1,4 @@
-function ellTubeProjObj = getProj()
+function ellTubeProjObj = example_getProj()
 nTubes=1;
 nPoints = 20;
 timeBeg=0;

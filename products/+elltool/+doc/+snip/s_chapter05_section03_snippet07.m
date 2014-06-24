@@ -10,6 +10,8 @@ for iElem = 1:5
     dirInitial = dirInitial ./ norm(dirInitial);
     dirsMat(:, iElem) = dirInitial;
 end
-rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec,...
+    'absTol',1e-5,'relTol',1e-5);
+%
 ellTubeObj = rsObj.getEllTubeRel();
 ellTubeObj.dispOnUI();
