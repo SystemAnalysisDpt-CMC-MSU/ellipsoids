@@ -10,7 +10,7 @@
 	</emailNotification>
 	<logging type="struct" >
 		<log4jSettings type="char" >
-			log4j.rootLogger=INFO, stdout, A1
+			log4j.rootLogger=DEBUG, stdout, A1
 			#
 			log4j.appender.stdout=org.apache.log4j.ConsoleAppender
 			log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
