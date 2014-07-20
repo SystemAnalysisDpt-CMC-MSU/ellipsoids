@@ -19,6 +19,11 @@ function [vGridMat, fGridMat] = spheretriext(nDim,nPoints)
 %             Faculty of Computational Mathematics and Cybernetics,
 %             System Analysis Department 2013$
 %
+if ~(isscalar(nPoints)&&isnumeric(nPoints)&&...
+        (fix(nPoints)==nPoints)&&(nPoints>0))
+    modgen.common.throwerror('wrongInput',...
+        'nPoints is expected to be a positive integer scalar number');
+end
 if nDim==2
     fEllbndr=@spherebndr_2d;
 else

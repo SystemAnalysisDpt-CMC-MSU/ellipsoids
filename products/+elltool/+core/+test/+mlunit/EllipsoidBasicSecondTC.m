@@ -68,7 +68,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             
             [bpMatCArr fMatCArr supCVec lGridCMat] = cellfun(@(x, y)getRhoBoundaryByFactor(x, y),...
                 testEllCVec, testNumPointsCVec, 'UniformOutput', false);
-            testNumRightPointsCVec = cellfun(@(x,y)x.getNPlot2dPoints()*y,...
+            testNumRightPointsCVec = cellfun(@getNumPoints,...
                 testEllCVec, testNumPointsCVec,'UniformOutput',false);
             
             [bpRightMatCArr,fRightMatCArr,supRightCVec, lGridRightCMat] = ...
@@ -77,6 +77,14 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             isOk = isequal([bpMatCArr fMatCArr supCVec lGridCMat],...
                 [bpRightMatCArr fRightMatCArr, supRightCVec, lGridRightCMat]);
             mlunitext.assert(isOk);
+            function nPoints=getNumPoints(ell,factorVec)
+                nDims=ell.dimension;
+                if nDims==2
+                    nPoints=ell.getNPlot2dPoints()*factorVec(1);
+                else
+                    nPoints=ell.getNPlot3dPoints()*factorVec(nDims-1);
+                end
+            end
         end
         %
         function self = testNegBoundary(self)
@@ -611,7 +619,7 @@ else
     test2Ell = ellipsoid([1; 3], [3 1; 1 1]);
     test3Ell = ellipsoid([2; 1], [4 -1; -1 1]);
     test4Ell = ellipsoid(eye(3));
-    pointsCVec = {10 20 35 [5, 5]};
+    pointsCVec = {10 20 35 [5 5]};
 end
 ellCVec = {test1Ell, test2Ell, test3Ell, test4Ell};
 end
