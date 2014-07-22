@@ -1,4 +1,4 @@
-ellProjObj = gras.ellapx.smartdb.test.examples.getProj();
+ellProjObj = gras.ellapx.smartdb.test.examples.example_getProj();
 %
 % get the list of field descriptions
 %
