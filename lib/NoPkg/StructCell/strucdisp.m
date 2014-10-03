@@ -83,17 +83,12 @@ listStr = recFieldPrint(SInp, 0, inpPrintValues);
 % Now it's time to actually output the data
 % Default is to output to the command window
 % However, if the filename argument is defined, output it into a file
-
+resultString=modgen.string.catwithsep(listStr,sprintf('\n'));
 if nargout==0
     % write data to screen
-    for i = 1 : length(listStr)
-        disp(cell2mat(listStr(i, 1)));
-    end
+    disp(resultString);
 else
-    resStr='';
-    for i = 1 : length(listStr)
-        resStr=[resStr,evalc('disp(cell2mat(listStr(i, 1)))')];
-    end
+    resStr=[resultString,sprintf('\n')];
 end
 if ~isempty(fileName)
     % open file and check for errors
@@ -102,8 +97,9 @@ if ~isempty(fileName)
         error('Unable to open output file');
     end
     % write data to file
-    for i = 1 : length(listStr)
-        fprintf(fid, '%s\n', cell2mat(listStr(i, 1)));
+    nListRows=length(listStr);
+    for iListRow = 1 : nListRows
+        fprintf(fid, '%s\n', listStr{iListRow});
     end
     % close file
     fclose(fid);
@@ -125,27 +121,23 @@ end
         if numel(Structure) > 1
             if (printValues == 0)
                 varStr = createArraySize(Structure, 'Structure');
-                listStr = [{' '}; {[structureName, varStr]}];
                 body = recFieldPrint(Structure(1), indent);
-                listStr = [listStr; body; {'   O'}];
+                listStr = [{' '}; {[structureName, varStr]}; body; {'   O'}];
             else
                 sizeVec = size(Structure);
+                nStruc = min(numel(Structure), maxArrayLength);
                 indexVec = ones(1, length(sizeVec));
-                for iStruc = 1 : min(numel(Structure), maxArrayLength)
+                for iStruc = 1 : nStruc
                     if (~isvector(Structure))
-                        indexStr = [structureName, '('];
-                        for iDimension = 1 : length(sizeVec) - 1
-                            indexStr = [indexStr, sprintf('%d, ',...
-                                indexVec(iDimension))];
-                        end
-                        indexStr = [indexStr, sprintf('%d)', indexVec(end))];
+                        indexStr = sprintf('%d, ', indexVec);
+                        indexStr = horzcat(structureName, '(', ...
+                            indexStr(1:end-2), ')');
                         indexVec = incrementIndexVec(indexVec, sizeVec);
                     else
                         indexStr = sprintf([structureName,'(%d)'], iStruc);
                     end
-                    listStr = [listStr; {' '}; {indexStr}];
                     body = recFieldPrint(Structure(iStruc), indent);
-                    listStr = [listStr; body; {'   O'}];
+                    listStr = [listStr; {' '}; {indexStr}; body; {'   O'}];
                 end
                 if (numel(Structure) > maxArrayLength)
                     listStr = [listStr; {' '}; sprintf('<<%d elements more>>', ...
@@ -168,10 +160,12 @@ end
         if isempty(fields)
             return;
         end
-        isStruct = structfun(@isstruct, Structure);
+        valsCVec = struct2cell(Structure);
+        isStructVec = cellfun('isclass', valsCVec, 'struct');
         % Finally, select all the structure fields
         
-        strucFields = fields(isStruct == 1);
+        strucFields = fields(isStructVec);
+        strucVals = valsCVec(isStructVec);
         
         %% Recursively print structure fields
         % The next step is to select each structure field and handle it
@@ -186,88 +180,91 @@ end
         
         % First, some indentation calculations are required.
         
-        strIndent = getIndentation(indent + 1);
-        listStr = [listStr; {strIndent}];
-        strIndent = getIndentation(indent);
+        [strIndent, strIndent2] = getIndentation(indent + 1);
+        listStr = [listStr; {strIndent2}];
         
         % Next, select each field seperately and handle it accordingly
         
-        for iField = 1 : length(strucFields)
-            fieldName = cell2mat(strucFields(iField));
-            Field =  Structure.(fieldName);
+        nFields = length(strucFields);
+        for iField = 1 : nFields
+            fieldName = strucFields{iField};
+            fieldVal =  strucVals{iField};
             %
             % Empty structure
-            if isempty(Field)
-                strSize = createArraySize(Field, 'Structure');
-                line = sprintf('%s   |--- %s :%s', ...
-                    strIndent, fieldName, strSize);
-                listStr = [listStr; {line}];
+            if isempty(fieldVal)
+                strSize = createArraySize(fieldVal, 'Structure');
+                %line = sprintf('%s   |--- %s :%s', ...
+                %    strIndent, fieldName, strSize);
+                line = horzcat(strIndent, '   |--- ', fieldName,...
+                    ' :', strSize);
+                curListStr = {line};
                 %
                 % Scalar structure
-            elseif isscalar(Field)
-                line = sprintf('%s   |--- %s', strIndent, fieldName);
+            elseif isscalar(fieldVal)
+                %line = sprintf('%s   |--- %s', strIndent, fieldName);
+                line = horzcat(strIndent, '   |--- ', fieldName);
                 % Recall this function if the tree depth is not reached yet
                 if (depth < 0) || (indent + 1 < depth)
-                    lines = recFieldPrint(Field, indent + 1);
-                    listStr = [listStr; {line}; lines; ...
+                    lines = recFieldPrint(fieldVal, indent + 1);
+                    curListStr = [{line}; lines; ...
                         {[strIndent '   |       O']}];
                 else
-                    listStr = [listStr; {line}];
+                    curListStr = {line};
                 end
                 %
                 % Short vector structure of which the values should be printed
-            elseif (isvector(Field)) &&  ...
-                    (printValues > 0) && ...
-                    (length(Field) < maxArrayLength) && ...
+            elseif (printValues > 0) && ...
+                    (length(fieldVal) < maxArrayLength) && ...
                     ((depth < 0) || (indent + 1 < depth))
                 %
+                subIndList=cell(1,ndims(fieldVal));
+                sizeVec=size(fieldVal);
+               
                 % Use a for-loop to print all structures in the array
-                for iFieldElement = 1 : length(Field)
-                    line = sprintf('%s   |--- %s(%g)', ...
-                        strIndent, fieldName, iFieldElement);
-                    lines = recFieldPrint(Field(iFieldElement), indent + 1);
-                    listStr = [listStr; {line}; lines; ...
-                        {[strIndent '   |       O']}];
-                    if iFieldElement ~= length(Field)
-                        listStr = [listStr; {[strIndent '   |    ']}];
-                    end
+                nFieldElement = numel(fieldVal);
+                curListStr = {};
+                for iFieldElement = 1 : nFieldElement;
+                    [subIndList{:}]=ind2sub(sizeVec,iFieldElement);
+                    elemName=sprintf('%d ',horzcat(subIndList{:}));
+                    elemName=horzcat('[',elemName(1:end-1),']');
+                    %
+                    %line = sprintf('%s   |--- %s(%s)', ...
+                    %    strIndent, fieldName, elemName);
+                    line = horzcat(strIndent, '   |--- ',...
+                        fieldName, '(', elemName, ')');
+                    lines = recFieldPrint(fieldVal(iFieldElement), indent + 1);
+                    curListStr = [curListStr;{line}; lines; ...
+                        {[strIndent '   |       O'];[strIndent '   |    ']}];
                 end
-                %
-                % Structure is a matrix or long vector
-                % No values have to be printed or depth limit is reached
-            else
-                varStr = createArraySize(Field, 'Structure');
-                line = sprintf('%s   |--- %s :%s', ...
-                    strIndent, fieldName, varStr);
-                lines = recFieldPrint(Field(1), indent + 1,false);
-                listStr = [listStr; {line}; lines; ...
-                    {[strIndent '   |       O']}];
+                curListStr(end)=[];
             end
             %
             % Some extra blank lines to increase readability
-            listStr = [listStr; {[strIndent '   |    ']}];
+            listStr = [listStr; curListStr; {[strIndent '   |    ']}];
             
         end % End iField for-loop
-        
         
         %% Field Filler
         % To properly align the field names, a filler is required. To know how long
         % the filler must be, the length of the longest fieldname must be found.
         % Because 'fields' is a cell array, the function 'cellfun' can be used to
         % extract the lengths of all fields.
-        maxFieldLength = max(cellfun(@length, fields));
+        maxFieldLength = max(cellfun('length', fields));
         
         %% Print non-structure fields without values
         % Print non-structure fields without the values. This can be done very
         % quick.
         if printValues == 0
-            noStrucFields = fields(isStruct == 0);
-            for iField  = 1 : length(noStrucFields)
-                Field = cell2mat(noStrucFields(iField));
+            noStrucFields = fields(~isStructVec);
+            nFields = length(noStrucFields);
+            fieldListStr = cell(nFields, 1);
+            for iField  = 1 : nFields
+                fieldName = noStrucFields{iField};
                 filler = char(ones(1, ...
-                    maxFieldLength - length(Field) + 2) * DASH_SYMBOL_CODE);
-                listStr = [listStr; {[strIndent '   |' filler ' ' Field]}];
+                    maxFieldLength - length(fieldName) + 2) * DASH_SYMBOL_CODE);
+                fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName];
             end
+            listStr = vertcat(listStr, fieldListStr);
             return
         end
         
@@ -285,45 +282,108 @@ end
         %   - other data types
         
         % Character or string (array of characters)
-        isChar = structfun(@ischar, Structure);
-        charFields = fields(isChar == 1);
-        %
-        % Numeric fields
-        isNumeric = structfun(@isnumeric, Structure);
-        %
-        % Numeric scalars
-        isScalar = structfun(@isscalar, Structure);
-        isScalar = isScalar .* isNumeric;
-        scalarFields = fields(isScalar == 1);
-        %
-        % Numeric vectors (arrays)
-        isVector = structfun(@isvector, Structure);
-        isVector = isVector .* isNumeric .* not(isScalar);
-        vectorFields = fields(isVector == 1);
+        isnProcessedVec=~isStructVec;
+        if any(isnProcessedVec),
+            isCharVec = isnProcessedVec;
+            isCharVec(isnProcessedVec) = ...
+                cellfun('isclass', valsCVec(isnProcessedVec), 'char');
+            charFields = fields(isCharVec);
+            charVals = valsCVec(isCharVec);
+            isnProcessedVec(isnProcessedVec)=~isCharVec(isnProcessedVec);
+        else
+            charFields = {};
+        end
         %
         % Logical fields
-        isLogical = structfun(@islogical, Structure);
-        logicalFields = fields(isLogical == 1);
-        %
-        % Empty arrays
-        isEmpty = structfun(@isempty, Structure);
-        isEmpty = isEmpty&~structfun(@iscell, Structure)&~isChar;
-        emptyFields = fields(isEmpty == 1);
-        %
-        % Numeric matrix with dimension size 2 or higher
-        isMatrix = structfun(@(x) ndims(x) >= 2, Structure);
-        isMatrix = isMatrix .* isNumeric .* not(isVector) ...
-            .* not(isScalar) .* not(isEmpty);
-        matrixFields = fields(isMatrix == 1);
+        if any(isnProcessedVec),
+            isLogicalVec = isnProcessedVec;
+            isLogicalVec(isnProcessedVec) = ...
+                cellfun('isclass', valsCVec(isnProcessedVec), 'logical');
+            logicalFields = fields(isLogicalVec);
+            logicalVals = valsCVec(isLogicalVec);
+            isnProcessedVec(isnProcessedVec)=~isLogicalVec(isnProcessedVec);
+        else
+            logicalFields = {};
+        end
         %
         % Cell array
-        isCell = structfun(@iscell, Structure);
-        cellFields = fields(isCell == 1);
+        if any(isnProcessedVec),
+            isCellVec = isnProcessedVec;
+            isCellVec(isnProcessedVec) = ...
+                cellfun('isclass', valsCVec(isnProcessedVec), 'cell');
+            cellFields = fields(isCellVec);
+            cellVals = valsCVec(isCellVec);
+            isnProcessedVec(isnProcessedVec)=~isCellVec(isnProcessedVec);
+        else
+            cellFields = {};
+        end
+        %
+        % Empty arrays
+        if any(isnProcessedVec),
+            isEmptyVec = isnProcessedVec;
+            isEmptyVec(isnProcessedVec) = ...
+                cellfun('isempty', valsCVec(isnProcessedVec));
+            emptyFields = fields(isEmptyVec);
+            isnProcessedVec(isnProcessedVec)=~isEmptyVec(isnProcessedVec);
+        else
+            emptyFields = {};
+        end
+        %
+        % Numeric fields
+        if any(isnProcessedVec),
+            isNumericVec = isnProcessedVec;
+            isNumericVec(isnProcessedVec) = ...
+                cellfun(@isnumeric, valsCVec(isnProcessedVec));
+            isnProcessedVec(isnProcessedVec)=...
+                ~isNumericVec(isnProcessedVec);
+            %
+            % Numeric scalars
+            if any(isNumericVec),
+                isScalarVec = isNumericVec;
+                isScalarVec(isNumericVec) = ...
+                    cellfun('prodofsize', valsCVec(isNumericVec)) == 1;
+                scalarFields = fields(isScalarVec);
+                scalarVals = valsCVec(isScalarVec);
+                isNumericVec(isScalarVec)=false;
+            else
+                scalarFields = {};
+            end
+            %
+            % Numeric vectors (arrays)
+            if any(isNumericVec),
+                isVectorVec = isNumericVec;
+                isVectorVec(isNumericVec) = ...
+                    cellfun(@isvector, valsCVec(isNumericVec));
+                vectorFields = fields(isVectorVec);
+                vectorVals = valsCVec(isVectorVec);
+                isNumericVec(isVectorVec)=false;
+            else
+                vectorFields = {};
+            end
+            %
+            % Numeric matrix with dimension size 2 or higher
+            if any(isNumericVec),
+                %isMatrix = structfun(@(x) ndims(x) >= 2, Structure);
+                %isMatrix = isMatrix .* isNumeric .* not(isVector) ...
+                %    .* not(isScalar) .* not(isEmpty);
+                matrixFields = fields(isNumericVec);
+                matrixVals = valsCVec(isNumericVec);
+            else
+                matrixFields = {};
+            end
+        else
+            scalarFields = {};
+            vectorFields = {};
+            matrixFields = {};
+        end
         %
         % Datatypes that are not checked for
-        isOther = not(isChar + isNumeric + isCell + isStruct + ...
-            isLogical + isEmpty);
-        otherFields = fields(isOther == 1);
+        if any(isnProcessedVec),
+            otherFields = fields(isnProcessedVec);
+            otherVals = valsCVec(isnProcessedVec);
+        else
+            otherFields = {};
+        end
         
         %% Print non-structure fields
         % Print all the selected non structure fields
@@ -341,87 +401,102 @@ end
         % are printed, plus three dots to denote that the string is longer than
         % printed.
         
-        maxStrLength = 31;
-        for iField = 1 : length(charFields)
-            Field = charFields{iField};
-            filler = char(ones(1, maxFieldLength - length(Field) + 2)...
+        %maxStrLength = 31;
+        nFields = length(charFields);
+        fieldListStr = cell(nFields, 1);
+        for iField = 1 : nFields
+            fieldName = charFields{iField};
+            fieldVal = charVals{iField};
+            filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                 * DASH_SYMBOL_CODE);
-            if (size(Structure.(Field), 1) > 1) && (size(Structure.(Field), 2) > 1)
-                varStr = createArraySize(Structure.(Field), 'char');
+            if (size(fieldVal, 1) > 1) && (size(fieldVal, 2) > 1)
+                varStr = createArraySize(fieldVal, 'char');
                 %             elseif length(Field) > maxStrLength
                 %                 varStr = sprintf(' ''%s...''', Structure.(Field(1:maxStrLength)));
             else
-                varStr = sprintf(' ''%s''', Structure.(Field));
+                %varStr = sprintf(' ''%s''', fieldVal);
+                varStr = horzcat(' ''', fieldVal, '''');
             end
-            listStr = [listStr; {[strIndent '   |' filler ' ' Field ' :' varStr]}];
+            fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' :' varStr];
         end
+        listStr = vertcat(listStr, fieldListStr);
         
         %% Print empty fields
-        for iField = 1 : length(emptyFields)
-            Field = cell2mat(emptyFields(iField));
-            filler = char(ones(1, maxFieldLength - length(Field) + 2)...
+        nFields = length(emptyFields);
+        fieldListStr = cell(nFields, 1);
+        for iField = 1 : nFields
+            fieldName = emptyFields{iField};
+            filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                 * DASH_SYMBOL_CODE);
-            listStr = [listStr; {[strIndent '   |' filler ' ' Field ' : [ ]' ]}];
+            fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' : [ ]' ];
         end
+        listStr = vertcat(listStr, fieldListStr);
         %% Print logicals. If it is a scalar, print true/false, else print vector
         % information
-        for iField = 1 : length(logicalFields)
-            Field = cell2mat(logicalFields(iField));
-            filler = char(ones(1, maxFieldLength - length(Field) + 2)...
+        nFields = length(logicalFields);
+        fieldListStr = cell(nFields, 1);
+        for iField = 1 : nFields
+            fieldName = logicalFields{iField};
+            fieldVal = logicalVals{iField};
+            filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                 * DASH_SYMBOL_CODE);
-            if (isscalar(Structure.(Field)))
-                if (Structure.(Field))
+            if (isscalar(fieldVal))
+                if (fieldVal)
                     varStr = ' true';
                 else
                     varStr = ' false';
                 end
-            elseif (isvector(Structure.(Field)) && ...
-                    length(Structure.(Field)) <= maxArrayLength)
-                varStr = '';
-                for iIndex = 1 : numel(Structure.(Field))
-                    if (Structure.(Field)(iIndex))
-                        varStr = [varStr, 'true '];
-                    else
-                        varStr = [varStr, 'false '];
-                    end
+            elseif (isvector(fieldVal) && ...
+                    length(fieldVal) <= maxArrayLength)
+                varStr = repmat({'false '},1,numel(fieldVal));
+                if any(fieldVal),
+                    varStr(fieldVal) = {'true '};
                 end
+                varStr = horzcat(varStr{:});
                 varStr = ['[' varStr(1:length(varStr) - 1) ']'];
             else
-                varStr = createArraySize(Structure.(Field), 'Logic array');
+                varStr = createArraySize(fieldVal, 'Logic array');
             end
-            listStr = [listStr; {[strIndent '   |' filler ' ' Field ' :' varStr]}];
+            fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' :' varStr];
         end
+        listStr = vertcat(listStr, fieldListStr);
         
         % Print numeric scalar field. The %g format is used, so that integers,
         % floats and exponential numbers are printed in their own format.
         
-        for iField = 1 : length(scalarFields)
-            Field = cell2mat(scalarFields(iField));
-            filler = char(ones(1, maxFieldLength - length(Field) + 2)...
+        nFields = length(scalarFields);
+        fieldListStr = cell(nFields, 1);
+        for iField = 1 : nFields
+            fieldName = scalarFields{iField};
+            fieldVal = scalarVals{iField};
+            filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                 * DASH_SYMBOL_CODE);
-            varStr = sprintf([' ',numberFormat], Structure.(Field));
-            listStr = [listStr; {[strIndent '   |' filler ' ' Field ' :' varStr]}];
+            varStr = sprintf([' ',numberFormat], fieldVal);
+            fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' :' varStr];
         end
-        
+        listStr = vertcat(listStr, fieldListStr);
         
         %% Print numeric array. If the length of the array is smaller then
         % maxArrayLength, then the values are printed. Else, print the length of
         % the array.
         
-        for iField = 1 : length(vectorFields)
-            Field = cell2mat(vectorFields(iField));
-            filler = char(ones(1, maxFieldLength - length(Field) + 2)...
+        nFields = length(vectorFields);
+        fieldListStr = cell(nFields, 1);
+        for iField = 1 : nFields
+            fieldName = vectorFields{iField};
+            fieldVal = vectorVals{iField};
+            filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                 * DASH_SYMBOL_CODE);
-            if length(Structure.(Field)) > maxArrayLength
-                varStr = createArraySize(Structure.(Field), 'Array');
+            if length(fieldVal) > maxArrayLength
+                varStr = createArraySize(fieldVal, 'Array');
             else
-                varStr = sprintf([numberFormat,' '], Structure.(Field));
+                varStr = sprintf([numberFormat,' '], fieldVal);
                 varStr = ['[' varStr(1:length(varStr) - 1) ']'];
             end
-            listStr = [listStr; {[strIndent '   |' filler ' ' Field ...
-                ' : ' varStr]}];
-            
+            fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ...
+                ' : ' varStr];
         end
+        listStr = vertcat(listStr, fieldListStr);
         %% Print numeric matrices. If the matrix is two-dimensional and has more
         % than maxArrayLength elements, only its size is printed.
         % If the matrix is 'small', the elements are printed in a matrix structure.
@@ -432,85 +507,104 @@ end
         % lines. This is done by defining a 'filler2'.
         % This method was developed by S. Wegerich.
         
-        for iField = 1 : length(matrixFields)
-            Field = cell2mat(matrixFields(iField));
-            filler = char(ones(1, maxFieldLength - length(Field) + 2)...
+        nFields = length(matrixFields);
+        for iField = 1 : nFields
+            fieldName = matrixFields{iField};
+            fieldVal = matrixVals{iField};
+            filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                 * DASH_SYMBOL_CODE);
-            if numel(Structure.(Field)) > maxArrayLength
-                varStr = createArraySize(Structure.(Field), 'Array');
-                varCell = {[strIndent '   |' filler ' ' Field ' :' varStr]};
+            if numel(fieldVal) > maxArrayLength
+                varStr = createArraySize(fieldVal, 'Array');
+                varCell = {[strIndent '   |' filler ' ' fieldName ' :' varStr]};
             else
                 %                matrixSize = size(Structure.(Field));
                 %                 filler2 = char(ones(1, maxFieldLength + 6) * FILLER_SYMBOL_CODE);
                 %                 dashes = char(ones(1, 12 * matrixSize(2) + 1) * DASH_SYMBOL_CODE);
                 curPrintFormat=numberFormat;
                 printedFieldValue=cellfun(@(x)sprintf(curPrintFormat,x),...
-                    num2cell(Structure.(Field)),'UniformOutput',false);
+                    num2cell(fieldVal),'UniformOutput',false);
                 varCell=formCellOfString(strIndent,printedFieldValue,...
-                    maxFieldLength,[filler ' '  Field]);
+                    maxFieldLength,[filler ' '  fieldName]);
             end
             listStr = [listStr; varCell];
         end
         %% Print cell array information, i.e. the size of the cell array. The
         % content of the cell array is not printed.
-        for iField = 1 : length(cellFields)
-            Field = cell2mat(cellFields(iField));
-            filler = char(ones(1, maxFieldLength - length(Field) + 2)...
+        nFields = length(cellFields);
+        for iField = 1 : nFields
+            fieldName = cellFields{iField};
+            fieldVal = cellVals{iField};
+            filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                 * DASH_SYMBOL_CODE);
-            isMatOfStrings=ndims(Structure.(Field))==2&&...
-                iscellstr(Structure.(Field))&&...
-                all(all((cellfun('size',Structure.(Field),1)==1)&...
-                (cellfun('ndims',Structure.(Field))==2)));
-            if isempty(Structure.(Field))
-                varCell = {[strIndent '   |' filler ' ' Field ' : {}']};
-            elseif (numel(Structure.(Field)) > maxArrayLength)||~isMatOfStrings
-                varStr = createArraySize(Structure.(Field), 'Cell');
-                varCell = {[strIndent '   |' filler ' ' Field ' :' varStr]};
+            isMatOfStrings=ismatrix(fieldVal)&&...
+                iscellstr(fieldVal)&&...
+                all(all((cellfun('size',fieldVal,1)==1)&...
+                (cellfun('ndims',fieldVal)==2)));
+            if isempty(fieldVal)
+                varCell = {[strIndent '   |' filler ' ' fieldName ' : {}']};
+            elseif (numel(fieldVal) > maxArrayLength)||~isMatOfStrings
+                varStr = createArraySize(fieldVal, 'Cell');
+                varCell = {[strIndent '   |' filler ' ' fieldName ' :' varStr]};
             else
-                varCell=formCellOfString(strIndent,Structure.(Field),...
-                    maxFieldLength,[filler ' '  Field]);
+                varCell=formCellOfString(strIndent,fieldVal,...
+                    maxFieldLength,[filler ' '  fieldName]);
             end
             listStr = [listStr; varCell];
         end
         %% Print unknown datatypes. These include objects and user-defined classes
-        for iField = 1 : length(otherFields)
-            Field = cell2mat(otherFields(iField));
-            filler = char(ones(1, maxFieldLength - length(Field) + 2)...
+        nFields = length(otherFields);
+        fieldListStr = cell(nFields, 1);
+        for iField = 1 : nFields
+            fieldName = otherFields{iField};
+            fieldVal = otherVals{iField}; %#ok<NASGU>
+            filler = char(ones(1, maxFieldLength - length(fieldNa,e) + 2)...
                 * DASH_SYMBOL_CODE);
-            varStr=[' ',evalc('display(Structure.(Field))')];
+            varStr=[' ',evalc('display(fieldVal)')];
             varStr=varStr(1:end-1);
-            listStr = [listStr; {[strIndent '   |' filler ' ' Field ' :' varStr]}];
+            fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' :' varStr];
         end
+        listStr = vertcat(listStr, fieldListStr);
     end
     function varCell=formCellOfString(strIndent,fieldValue,...
             maxFieldLength,filler)
         matrixSize=size(fieldValue);
         maxStringLength=max(max(cellfun('length',fieldValue)));
-        adjustedFieldValue=cellfun(@(x)[x,...
-            repmat(' ',1,maxStringLength-length(x)),'|'],...
-            fieldValue,'UniformOutput',false);
+        nVals = numel(fieldValue);
+        %adjustedFieldValue=cellfun(@(x)[x,...
+        %    repmat(' ',1,maxStringLength-length(x)),'|'],...
+        %    fieldValue,'UniformOutput',false);
+        addLenVec=maxStringLength-cellfun('length',fieldValue(:));
+        space = ' ';
+        adjustedFieldValue=cell(matrixSize);
+        for iVal=1:nVals,
+            adjustedFieldValue{iVal}=horzcat(fieldValue{iVal},...
+                space(ones(1,addLenVec(iVal))),'|');
+        end
         nDashes=(maxStringLength+1)* matrixSize(2)+1;
         filler2 = char(ones(1, maxFieldLength + 6) * FILLER_SYMBOL_CODE);
         dashes = char(ones(1, nDashes)* DASH_SYMBOL_CODE);
-        varCell = {[strIndent '   |' filler2 dashes]};
+        nRows = size(adjustedFieldValue,1);
+        varCell = cell(nRows+2,1);
+        varCell{1} = [strIndent '   |' filler2 dashes];
         %
         % first line with field name
         varStr = [adjustedFieldValue{1,:}];
-        varCell = [varCell; {[strIndent '   |' filler ' : |' varStr]}];
+        varCell{2} = [strIndent '   |' filler ' : |' varStr];
         %
         % second and higher number rows
-        for j = 2 : size(adjustedFieldValue,1)
-            varStr = [adjustedFieldValue{j,:}];
-            varCell = [varCell; {[strIndent '   |' filler2 '|' varStr]}];
+        for iRow = 2 : nRows
+            varStr = [adjustedFieldValue{iRow,:}];
+            varCell{iRow+1} = [strIndent '   |' filler2 '|' varStr];
         end
-        varCell = [varCell; {[strIndent '   |' filler2 dashes]}];
+        varCell{nRows+2} = [strIndent '   |' filler2 dashes];
     end
 
 end
 
 function newIndexVec = incrementIndexVec(indexVec, sizeVec)
 newIndexVec = indexVec;
-for iDimension = 1 : length(sizeVec)
+nDimension = length(sizeVec);
+for iDimension = 1 : nDimension
     newIndexVec(iDimension) = newIndexVec(iDimension) + 1;
     if (newIndexVec(iDimension) <= sizeVec(iDimension))
         break;
@@ -523,12 +617,37 @@ end
 %% FUNCTION: getIndentation
 % This function creates the hierarchical indentations
 
-function str = getIndentation(indent)
-x = '   |    ';
-str = '';
-
-for i = 1 : indent
-    str = cat(2, str, x);
+function [str, str2] = getIndentation(indent)
+% x = '   |    ';
+% str = '';
+% 
+% for iElem = 1 : indent
+%     str = cat(2, str, x);
+% end
+persistent outCVec;
+if indent==1,
+    str = '';
+    str2 = '   |    ';
+else
+    nOuts=numel(outCVec);
+    if nOuts<indent,
+        x = '   |    ';
+        if nOuts>0,
+            str = outCVec{end};
+        else
+            str = '';
+        end
+        outCVec=horzcat(outCVec,cell(1,indent-nOuts));
+        for iElem = nOuts+1 : indent
+            str = cat(2, str, x);
+            outCVec{iElem} = str;
+        end
+        str2 = str;
+        str = outCVec{indent-1};
+    else
+        str = outCVec{indent-1};
+        str2 = outCVec{indent};
+    end
 end
 end
 

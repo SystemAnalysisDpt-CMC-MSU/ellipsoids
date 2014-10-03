@@ -17,7 +17,12 @@ function outStr = catwithsep(inpStrList,sepStr)
 %            System Analysis Department 2011 $
 %
 %
-outStrList=cellfun(@(x,y)[x,sepStr],inpStrList,'UniformOutput',false);
-outStr=[outStrList{:}];
+%outStrList=cellfun(@(x,y)[x,sepStr],inpStrList,'UniformOutput',false);
+%outStr=[outStrList{:}];
+outStr='';
+nElems=numel(inpStrList);
+for iElem=1:nElems,
+    outStr=horzcat(outStr, inpStrList{iElem}, sepStr); %#ok<AGROW>
+end
 nSepSymb=length(sepStr);
 outStr=outStr(1:(end-nSepSymb));
