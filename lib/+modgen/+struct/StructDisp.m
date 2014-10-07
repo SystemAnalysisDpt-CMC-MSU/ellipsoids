@@ -21,6 +21,7 @@ classdef StructDisp < handle
         maxArrayLength
         numberFormat
         structureName
+        isFullCheck
     end
     
     methods
@@ -58,6 +59,13 @@ classdef StructDisp < handle
             %           sprintf, by default '%g' is used
             %       defaultName: char [1,] - default name of the structure
             %           itself
+            %       isFullCheck: logical [1,1] - if false, then it is
+            %           supposed that only the values of leaves for SInp
+            %           may be changed when UPDATE method is called, so
+            %           that the inner structure is stable and no
+            %           additional checks should be performed; otherwise
+            %           the full check for consistency of inner structure
+            %           of old and new values of SInp is performed
             %
             % $Author: Ilya Roublev  <iroublev@gmail.com> $	$Date: 2014-10-01 $
             % $Copyright: Moscow State University,
@@ -69,19 +77,20 @@ classdef StructDisp < handle
             import modgen.common.parseparext;
             [reg,~,self.depth,self.inpPrintValues,...
                 self.maxArrayLength,self.numberFormat,...
-                self.structureName]=parseparext(varargin,...
+                self.structureName,self.isFullCheck]=parseparext(varargin,...
                 {'depth','printValues','maxArrayLength',...
-                'numberFormat','defaultName';...
+                'numberFormat','defaultName','isFullCheck';...
                 self.DEFAULT_DEPTH,...
                 self.DEFAULT_PRINT_VALUES,...
                 self.DEFAULT_MAX_ARRAY_LENGTH,...
                 self.DEFAULT_NUMBER_FORMAT,...
-                self.DEFAULT_NAME;
+                self.DEFAULT_NAME,true;
                 'isscalar(x)&&isnumeric(x)&&fix(x)==x',...
                 'islogical(x)&&isscalar(x)',...
                 'isscalar(x)&&isnumeric(x)&&fix(x)==x&&x>0',...
                 'isstring(x)',...
-                'isstring(x)'},[1 1],...
+                'isstring(x)',...
+                'islogical(x)&&isscalar(x)'},[1 1],...
                 'regDefList',{'isstruct(x)&&isscalar(x)'});
             self.initialize(reg{1});
         end
@@ -97,10 +106,12 @@ classdef StructDisp < handle
         end
         
         function update(self,SStructInp)
-            import modgen.common.type.simple.checkgen;
-            checkgen(SStructInp,'isstruct(x)&&isscalar(x)');
+            if ~(isstruct(SStructInp)&&isscalar(SStructInp)),
+                modgen.common.throwerror('wrongInput',...
+                    'SStructInp must be scalar structure')
+            end
             [isLocalChanges,changedLeavesPathCVec,changedLeavesValCVec]=...
-                getleaveslist(SStructInp,self.SStruct);
+                getleaveslist(SStructInp,self.SStruct,self.isFullCheck);
             if isLocalChanges,
                 if ~isempty(changedLeavesPathCVec),
                     [isLeavesVec,indLeavesVec]=ismember(changedLeavesPathCVec,...
@@ -114,14 +125,13 @@ classdef StructDisp < handle
                         rowIndCVec={SLeavesInfoVecCur.rowIndVec}.';
                         colIndCVec={SLeavesInfoVecCur.colIndVec}.';
                         nLeaves=numel(indLeavesVec);
-                        idCVec=cellfun(@num2str,num2cell(1:nLeaves).',...
-                            'UniformOutput',false);
-                        [curDispCVec,outIdCVec,curRowIndCVec,curColIndCVec]=...
+                        idVec=(1:nLeaves).';
+                        [curDispCVec,outIdVec,curRowIndCVec,curColIndCVec]=...
                             self.recFieldPrint(...
-                            {idCVec,changedLeavesValCVec},...
+                            {idVec,changedLeavesValCVec},...
                             0, self.inpPrintValues);
-                        if ~isequal(idCVec,outIdCVec),
-                            [~,indLeavesVec]=ismember(idCVec,outIdCVec);
+                        if ~isequal(idVec,outIdVec),
+                            [~,indLeavesVec]=ismember(idVec,outIdVec);
                             curRowIndCVec=curRowIndCVec(indLeavesVec);
                             curColIndCVec=curColIndCVec(indLeavesVec);
                         end
@@ -233,6 +243,9 @@ classdef StructDisp < handle
                 fields = fieldnames(Structure);
             else
                 fields=Structure{1};
+                if ~iscell(fields),
+                    leavesPathCVec=nan(0,1);
+                end
             end
             % Next, structfun is used to return an boolean array with information of
             % which fields are of type structure.
@@ -369,7 +382,11 @@ classdef StructDisp < handle
             % the filler must be, the length of the longest fieldname must be found.
             % Because 'fields' is a cell array, the function 'cellfun' can be used to
             % extract the lengths of all fields.
-            maxFieldLength = max(cellfun('length', fields));
+            if iscell(fields),
+                maxFieldLength = max(cellfun('length', fields));
+            else
+                maxFieldLength = 0;
+            end
             
             %% Print non-structure fields without values
             % Print non-structure fields without the values. This can be done very
@@ -526,7 +543,7 @@ classdef StructDisp < handle
             fieldListStr = cell(nFields, 1);
             fieldColIndVec = nan(nFields, 1);
             for iField = 1 : nFields
-                fieldName = charFields{iField};
+                fieldName = getFieldName(charFields,iField);
                 fieldVal = charVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                     * self.DASH_SYMBOL_CODE);
@@ -555,7 +572,7 @@ classdef StructDisp < handle
             fieldListStr = cell(nFields, 1);
             fieldColIndVec = nan(nFields, 1);
             for iField = 1 : nFields
-                fieldName = emptyFields{iField};
+                fieldName = getFieldName(emptyFields,iField);
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                     * self.DASH_SYMBOL_CODE);
                 fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' : [ ]' ];
@@ -575,7 +592,7 @@ classdef StructDisp < handle
             fieldListStr = cell(nFields, 1);
             fieldColIndVec = nan(nFields, 1);
             for iField = 1 : nFields
-                fieldName = logicalFields{iField};
+                fieldName = getFieldName(logicalFields,iField);
                 fieldVal = logicalVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                     * self.DASH_SYMBOL_CODE);
@@ -615,7 +632,7 @@ classdef StructDisp < handle
             fieldListStr = cell(nFields, 1);
             fieldColIndVec = nan(nFields, 1);
             for iField = 1 : nFields
-                fieldName = scalarFields{iField};
+                fieldName = getFieldName(scalarFields,iField);
                 fieldVal = scalarVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                     * self.DASH_SYMBOL_CODE);
@@ -640,7 +657,7 @@ classdef StructDisp < handle
             fieldListStr = cell(nFields, 1);
             fieldColIndVec = nan(nFields, 1);
             for iField = 1 : nFields
-                fieldName = vectorFields{iField};
+                fieldName = getFieldName(vectorFields,iField);
                 fieldVal = vectorVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                     * self.DASH_SYMBOL_CODE);
@@ -676,7 +693,7 @@ classdef StructDisp < handle
             fieldRowIndCVec = cell(nFields, 1);
             fieldColIndCVec = cell(nFields, 1);
             for iField = 1 : nFields
-                fieldName = matrixFields{iField};
+                fieldName = getFieldName(matrixFields,iField);
                 fieldVal = matrixVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                     * self.DASH_SYMBOL_CODE);
@@ -711,7 +728,7 @@ classdef StructDisp < handle
             fieldRowIndCVec = cell(nFields, 1);
             fieldColIndCVec = cell(nFields, 1);
             for iField = 1 : nFields
-                fieldName = cellFields{iField};
+                fieldName = getFieldName(cellFields,iField);
                 fieldVal = cellVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                     * self.DASH_SYMBOL_CODE);
@@ -747,7 +764,7 @@ classdef StructDisp < handle
             fieldListStr = cell(nFields, 1);
             fieldColIndVec = nan(nFields, 1);
             for iField = 1 : nFields
-                fieldName = otherFields{iField};
+                fieldName = getFieldName(otherFields,iField);
                 fieldVal = otherVals{iField}; %#ok<NASGU>
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
                     * self.DASH_SYMBOL_CODE);
@@ -764,6 +781,15 @@ classdef StructDisp < handle
                     num2cell(fieldColIndVec));
                 listStr = vertcat(listStr, fieldListStr);
             end
+            
+            function fieldName=getFieldName(fieldNameList,iElem)
+                if iscell(fieldNameList),
+                    fieldName=fieldNameList{iElem};
+                else
+                    fieldName='';
+                end
+            end
+
         end
     end
 end
@@ -864,7 +890,7 @@ varStr = [' [' arraySizeStr ' ' type ']'];
 end
 
 %%
-function [isLocalChanges,pathCVec,valCVec]=getleaveslist(SInp,SOld)
+function [isLocalChanges,pathCVec,valCVec]=getleaveslist(SInp,SOld,isFullCheck)
 % GETLEAVESLIST generates a list of structure leaves paths
 %
 % Input:
@@ -880,6 +906,11 @@ function [isLocalChanges,pathCVec,valCVec]=getleaveslist(SInp,SOld)
 %        comparison to previous structure SOld
 %     pathCVec: char cell [nLeaves,1] - list with paths to leaves
 %     valCVec: cell [nLeaves,1] - list with values of leaves
+%   optional:
+%     isFullCheck: logical [1,1] - if true, then full check for consistency
+%        of inner structure for SInp and SOld is performed, otherwise it is
+%        supposed that SInp and SOld differ only in the values of their
+%        leaves and no check is performed
 %
 % $Author: Ilya Roublev  <iroublev@gmail.com> $	$Date: 2014-10-03 $ 
 % $Copyright: Moscow State University,
@@ -887,6 +918,9 @@ function [isLocalChanges,pathCVec,valCVec]=getleaveslist(SInp,SOld)
 %            System Analysis Department 2014 $
 %
 %
+if nargin<3,
+    isFullCheck=true;
+end
 if isequaln(SInp,SOld),
     isLocalChanges=true;
     pathCVec=cell(0,1);
@@ -910,66 +944,101 @@ if nargout>1
         end
     end
 end
-end
-function [isLocalChanges,pathCVec]=getleaveslistint(SInp,SOld)
-pathCVec=cell(0,1);
-if isequaln(SInp,SOld),
-    isLocalChanges=true;
-    return;
-end
-fieldNameList=fieldnames(SInp);
-oldFieldNameList=fieldnames(SOld);
-sizeVec=size(SInp);
-isLocalChanges=numel(fieldNameList)==numel(oldFieldNameList)&&...
-    all(ismember(fieldNameList,oldFieldNameList))&&...
-    isequal(sizeVec,size(SOld));
-if ~isLocalChanges||isempty(SInp),
-    return;
-end
-nFields=numel(fieldNameList);
-%
-if nFields>0
-    nElems=numel(SInp);
-    fieldPathCVec=cell(nFields,nElems);
-    subIndList=cell(1,length(sizeVec));
-    for iElem=1:nElems,
-        [subIndList{:}]=ind2sub(sizeVec,iElem);
-        indexStr=sprintf('%d,',horzcat(subIndList{:}));
-        indexStr=['(' indexStr(1:end-1) ')'];
-        for iField=1:nFields
-            fieldName=fieldNameList{iField};
-            SCur=SInp(iElem).(fieldName);
-            SOldCur=SOld(iElem).(fieldName);
-            if isstruct(SCur)~=isstruct(SOldCur),
-                isLocalChanges=false;
+    function [isLocalChanges,pathCVec]=getleaveslistint(SInp,SOld,fieldNameList)
+        pathCVec=cell(0,1);
+        if nargin>=3,
+            if isequaln(SInp,SOld),
+                isLocalChanges=true;
                 return;
             end
-            if isstruct(SCur)&&~isempty(fieldnames(SCur))
-                [isLocalChanges,fieldPathCVec{iField,iElem}]=...
-                    getleaveslistint(SCur,SOldCur);
-                if ~isLocalChanges,
-                    return;
-                end
-                if numel(SCur)==1,
-                    fieldName=[fieldName '.']; %#ok<AGROW>
-                end
-                if nElems==1,
-                    fieldPathCVec{iField,iElem}=strcat(fieldName,...
-                        fieldPathCVec{iField,iElem});
-                else
-                    fieldPathCVec{iField,iElem}=strcat(indexStr,'.',...
-                        fieldName,fieldPathCVec{iField,iElem});
-                end
-            elseif ~isequaln(SCur,SOldCur),
-                if nElems==1,
-                    fieldPathCVec{iField,iElem}=fieldName;
-                else
-                    fieldPathCVec{iField,iElem}=strcat(indexStr,'.',...
-                        fieldName);
-                end
+        else
+            fieldNameList=fieldnames(SInp);
+        end
+        if isFullCheck,
+            sizeVec=size(SInp);
+            oldFieldNameList=fieldnames(SOld);
+            isLocalChanges=numel(fieldNameList)==numel(oldFieldNameList)&&...
+                all(ismember(fieldNameList,oldFieldNameList))&&...
+                isequal(sizeVec,size(SOld));
+            if ~isLocalChanges||isempty(SInp),
+                return;
+            end
+        else
+            if isempty(SInp),
+                isLocalChanges=true;
+                return;
             end
         end
+        nFields=numel(fieldNameList);
+        isLocalChanges=true;
+        %
+        if nFields>0
+            nElems=numel(SInp);
+            fieldPathCVec=cell(nFields,nElems);
+            isVector=nElems>1;
+            if isVector,
+                if ~isFullCheck,
+                    sizeVec=size(SInp);
+                end
+                subIndList=cell(1,length(sizeVec));
+            end
+            for iElem=1:nElems,
+                if isVector,
+                    [subIndList{:}]=ind2sub(sizeVec,iElem);
+                    indexStr=sprintf('%d,',horzcat(subIndList{:}));
+                    indexStr=['(' indexStr(1:end-1) ')'];
+                end
+                for iField=1:nFields
+                    fieldName=fieldNameList{iField};
+                    SCur=SInp(iElem).(fieldName);
+                    SOldCur=SOld(iElem).(fieldName);
+                    isCurStruct=isstruct(SCur);
+                    if isFullCheck,
+                        if isCurStruct~=isstruct(SOldCur),
+                            isLocalChanges=false;
+                            return;
+                        end
+                    end
+                    if isCurStruct,
+                        curFieldNameList=fieldnames(SCur);
+                        if ~isempty(curFieldNameList),
+                            [isLocalChanges,fieldPathCVec{iField,iElem}]=...
+                                getleaveslistint(SCur,SOldCur,curFieldNameList);
+                            if ~isLocalChanges,
+                                return;
+                            end
+                            curFieldPathCVec=fieldPathCVec{iField,iElem};
+                            nPaths=numel(curFieldPathCVec);
+                            if nElems==1,
+                                if numel(SCur)==1,
+                                    prefixStr=horzcat(fieldName,'.');
+                                else
+                                    prefixStr=fieldName;
+                                end
+                            else
+                                if numel(SCur)==1,
+                                    prefixStr=horzcat(indexStr,'.',fieldName,'.');
+                                else
+                                    prefixStr=horzcat(indexStr,'.',fieldName);
+                                end
+                            end
+                            for iPath=1:nPaths,
+                                curFieldPathCVec{iPath}=...
+                                    horzcat(prefixStr,curFieldPathCVec{iPath});
+                            end
+                            fieldPathCVec{iField,iElem}=curFieldPathCVec;
+                        end
+                    elseif ~isequaln(SCur,SOldCur),
+                        if nElems==1,
+                            fieldPathCVec{iField,iElem}={fieldName};
+                        else
+                            fieldPathCVec{iField,iElem}={horzcat(indexStr,'.',...
+                                fieldName)};
+                        end
+                    end
+                end
+            end
+            pathCVec=vertcat(fieldPathCVec{:});
+        end
     end
-    pathCVec=vertcat(fieldPathCVec{:});
-end
 end
