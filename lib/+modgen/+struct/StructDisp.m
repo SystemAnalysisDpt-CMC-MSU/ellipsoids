@@ -1,7 +1,7 @@
 classdef StructDisp < handle
     % This class is responsible for displaying structure outline
     
-    properties (GetAccess=private,Constant,Hidden)
+    properties (GetAccess=public,Constant,Hidden)
         FILLER_SYMBOL_CODE=32;
         DASH_SYMBOL_CODE=45;
         DEFAULT_MAX_ARRAY_LENGTH=10;
@@ -126,10 +126,10 @@ classdef StructDisp < handle
                         colIndCVec={SLeavesInfoVecCur.colIndVec}.';
                         nLeaves=numel(indLeavesVec);
                         idVec=(1:nLeaves).';
+                        inpCVec=self.getRecFieldPrintAddArgs();
                         [curDispCVec,outIdVec,curRowIndCVec,curColIndCVec]=...
                             self.recFieldPrint(...
-                            {idVec,changedLeavesValCVec},...
-                            0, self.inpPrintValues);
+                            {idVec,changedLeavesValCVec},inpCVec{:});
                         if ~isequal(idVec,outIdVec),
                             [~,indLeavesVec]=ismember(idVec,outIdVec);
                             curRowIndCVec=curRowIndCVec(indLeavesVec);
@@ -167,28 +167,43 @@ classdef StructDisp < handle
     methods (Access=private,Hidden)
         function initialize(self,SStructInp)
             self.SStruct=SStructInp;
+            inpCVec=self.getRecFieldPrintAddArgs();
             [self.dispCVec,...
                 leavesPathCVec,leavesRowIndCVec,leavesColIndCVec]=...
-                self.recFieldPrint(self.SStruct, 0, self.inpPrintValues);
+                self.recFieldPrint(self.SStruct, inpCVec{:});
             self.SLeavesInfoVec=struct(...
                 'path',leavesPathCVec,...
                 'rowIndVec',leavesRowIndCVec,...
                 'colIndVec',leavesColIndCVec);
         end
         
+        function inpCVec=getRecFieldPrintAddArgs(self)
+            inpCVec={0, self.inpPrintValues, self.structureName,...
+                self.maxArrayLength, self.depth, self.numberFormat,...
+                self.DASH_SYMBOL_CODE, self.FILLER_SYMBOL_CODE};
+        end
+    end
+    
+    methods (Access=public,Static,Hidden)
         %% FUNCTION: recFieldPrint
         function [listStr,...
                 leavesPathCVec,leavesRowIndCVec,leavesColIndCVec] = ...
-                recFieldPrint(self, Structure, indent, printValues)
-            if nargin<4
-                printValues=self.inpPrintValues;
-            end
+                recFieldPrint(Structure, indent, printValues,...
+                structureName, maxArrayLength, depth, numberFormat,...
+                DASH_SYMBOL_CODE, FILLER_SYMBOL_CODE)
+            className=mfilename('class');
+            inpCVec={printValues,...
+                structureName, maxArrayLength, depth, numberFormat,...
+                DASH_SYMBOL_CODE, FILLER_SYMBOL_CODE};
+            isnListStrOnly=nargout>1;
             % Start to initialiase the cell listStr. This cell is used to store all the
             % output, as this is much faster then directly printing it to screen.
             listStr = {};
-            leavesPathCVec = cell(0,1);
-            leavesRowIndCVec = cell(0,1);
-            leavesColIndCVec = cell(0,1);
+            if isnListStrOnly,
+                leavesPathCVec = cell(0,1);
+                leavesRowIndCVec = cell(0,1);
+                leavesColIndCVec = cell(0,1);
+            end
             
             % "Structure" can be a scalar or a vector.
             % In case of a vector, this recursive function is recalled for each of
@@ -197,11 +212,12 @@ classdef StructDisp < handle
             if isstruct(Structure) && numel(Structure) > 1
                 if (printValues == 0)
                     varStr = createArraySize(Structure, 'Structure');
-                    body = self.recFieldPrint(Structure(1), indent);
-                    listStr = [{' '}; {[self.structureName, varStr]}; body; {'   O'}];
+                    body = feval([className '.recFieldPrint'],...
+                        Structure(1), indent, inpCVec{:});
+                    listStr = [{' '}; {[structureName, varStr]}; body; {'   O'}];
                 else
                     sizeVec = size(Structure);
-                    nStruc = min(numel(Structure), self.maxArrayLength);
+                    nStruc = min(numel(Structure), maxArrayLength);
                     subIndList=cell(1,length(sizeVec));
                     for iStruc = 1 : nStruc
                         if (~isscalar(Structure))
@@ -212,21 +228,27 @@ classdef StructDisp < handle
                         else
                             indexStr = sprintf('(%d)', iStruc);
                         end
-                        [body,elemPathCVec,elemRowIndCVec,elemColIndCVec] = ...
-                            self.recFieldPrint(Structure(iStruc), indent);
-                        nAdd=numel(listStr);
-                        leavesPathCVec=vertcat(leavesPathCVec,...
-                            strcat(indexStr,'.',elemPathCVec)); %#ok<AGROW>
-                        leavesRowIndCVec=vertcat(leavesRowIndCVec,...
-                            cellfun(@(x)x+nAdd,...
-                            elemRowIndCVec,'UniformOutput',false)); %#ok<AGROW>
-                        leavesColIndCVec=vertcat(leavesColIndCVec,...
-                            elemColIndCVec); %#ok<AGROW>
-                        listStr = [listStr; {' '}; {[self.structureName,indexStr]}; body; {'   O'}]; %#ok<AGROW>
+                        if isnListStrOnly,
+                            [body,elemPathCVec,elemRowIndCVec,elemColIndCVec] = ...
+                                feval([className '.recFieldPrint'],...
+                                Structure(iStruc), indent, inpCVec{:});
+                            nAdd=numel(listStr);
+                            leavesPathCVec=vertcat(leavesPathCVec,...
+                                strcat(indexStr,'.',elemPathCVec)); %#ok<AGROW>
+                            leavesRowIndCVec=vertcat(leavesRowIndCVec,...
+                                cellfun(@(x)x+nAdd,...
+                                elemRowIndCVec,'UniformOutput',false)); %#ok<AGROW>
+                            leavesColIndCVec=vertcat(leavesColIndCVec,...
+                                elemColIndCVec); %#ok<AGROW>
+                        else
+                            body = feval([className '.recFieldPrint'],...
+                                Structure(iStruc), indent, inpCVec{:});
+                        end
+                        listStr = [listStr; {' '}; {[structureName,indexStr]}; body; {'   O'}]; %#ok<AGROW>
                     end
-                    if (numel(Structure) > self.maxArrayLength)
+                    if (numel(Structure) > maxArrayLength)
                         listStr = [listStr; {' '}; sprintf('<<%d elements more>>', ...
-                            numel(Structure) - self.maxArrayLength)];
+                            numel(Structure) - maxArrayLength)];
                     end
                 end
                 return
@@ -301,22 +323,28 @@ classdef StructDisp < handle
                     %line = sprintf('%s   |--- %s', strIndent, fieldName);
                     line = horzcat(strIndent, '   |--- ', fieldName);
                     % Recall this function if the tree depth is not reached yet
-                    if (self.depth < 0) || (indent + 1 < self.depth)
-                        [lines,curPathCVec,curRowIndCVec,curColIndCVec] = ...
-                            self.recFieldPrint(fieldVal, indent + 1);
+                    if (depth < 0) || (indent + 1 < depth)
+                        if isnListStrOnly,
+                            [lines,curPathCVec,curRowIndCVec,curColIndCVec] = ...
+                                feval([className '.recFieldPrint'],...
+                                fieldVal, indent + 1, inpCVec{:});
+                            isLeaves = ~isempty(curPathCVec);
+                            curRowIndCVec = cellfun(@(x)x+1,...
+                                curRowIndCVec,'UniformOutput',false);
+                        else
+                            lines = feval([className '.recFieldPrint'],...
+                                fieldVal, indent + 1, inpCVec{:});
+                        end
                         curListStr = [{line}; lines; ...
                             {[strIndent '   |       O']}];
-                        isLeaves = ~isempty(curPathCVec);
-                        curRowIndCVec = cellfun(@(x)x+1,...
-                            curRowIndCVec,'UniformOutput',false);
                     else
                         curListStr = {line};
                     end
                     %
                     % Short vector structure of which the values should be printed
                 elseif (printValues > 0) && ...
-                        (length(fieldVal) < self.maxArrayLength) && ...
-                        ((self.depth < 0) || (indent + 1 < self.depth))
+                        (length(fieldVal) < maxArrayLength) && ...
+                        ((depth < 0) || (indent + 1 < depth))
                     %
                     subIndList=cell(1,ndims(fieldVal));
                     sizeVec=size(fieldVal);
@@ -324,9 +352,11 @@ classdef StructDisp < handle
                     % Use a for-loop to print all structures in the array
                     nFieldElement = numel(fieldVal);
                     curListStr = {};
-                    curPathCVec = cell(0,1);
-                    curRowIndCVec = cell(0,1);
-                    curColIndCVec = cell(0,1);
+                    if isnListStrOnly,
+                        curPathCVec = cell(0,1);
+                        curRowIndCVec = cell(0,1);
+                        curColIndCVec = cell(0,1);
+                    end
                     for iFieldElement = 1 : nFieldElement;
                         [subIndList{:}]=ind2sub(sizeVec,iFieldElement);
                         indexStr=sprintf('%d ',horzcat(subIndList{:}));
@@ -337,25 +367,33 @@ classdef StructDisp < handle
                         %    strIndent, fieldName, elemName);
                         line = horzcat(strIndent, '   |--- ',...
                             fieldName, '(', elemName, ')');
-                        [lines,elemPathCVec,...
-                            elemRowIndCVec,elemColIndCVec] = ...
-                            self.recFieldPrint(fieldVal(iFieldElement), indent + 1);
-                        if ~isempty(elemPathCVec),
-                            nAdd=numel(curListStr);
-                            curPathCVec=vertcat(curPathCVec,...
-                                strcat('(',strrep(indexStr,' ',','),').',...
-                                elemPathCVec)); %#ok<AGROW>
-                            curRowIndCVec=vertcat(curRowIndCVec,...
-                                cellfun(@(x)x+nAdd+1,elemRowIndCVec,...
-                                'UniformOutput',false)); %#ok<AGROW>
-                            curColIndCVec=vertcat(curColIndCVec,...
-                                elemColIndCVec); %#ok<AGROW>
+                        if isnListStrOnly,
+                            [lines,elemPathCVec,...
+                                elemRowIndCVec,elemColIndCVec] = ...
+                                feval([className '.recFieldPrint'],...
+                                fieldVal(iFieldElement), indent + 1, inpCVec{:});
+                            if ~isempty(elemPathCVec),
+                                nAdd=numel(curListStr);
+                                curPathCVec=vertcat(curPathCVec,...
+                                    strcat('(',strrep(indexStr,' ',','),').',...
+                                    elemPathCVec)); %#ok<AGROW>
+                                curRowIndCVec=vertcat(curRowIndCVec,...
+                                    cellfun(@(x)x+nAdd+1,elemRowIndCVec,...
+                                    'UniformOutput',false)); %#ok<AGROW>
+                                curColIndCVec=vertcat(curColIndCVec,...
+                                    elemColIndCVec); %#ok<AGROW>
+                            end
+                        else
+                            lines = feval([className '.recFieldPrint'],...
+                                fieldVal(iFieldElement), indent + 1, inpCVec{:});
                         end
                         curListStr = [curListStr;{line}; lines; ...
                             {[strIndent '   |       O'];[strIndent '   |    ']}]; %#ok<AGROW>
                     end
                     curListStr(end)=[];
-                    isLeaves=~isempty(curPathCVec);
+                    if isnListStrOnly,
+                        isLeaves=~isempty(curPathCVec);
+                    end
                 end
                 %
                 if isLeaves,
@@ -398,7 +436,7 @@ classdef StructDisp < handle
                 for iField  = 1 : nFields
                     fieldName = noStrucFields{iField};
                     filler = char(ones(1, ...
-                        maxFieldLength - length(fieldName) + 2) * self.DASH_SYMBOL_CODE);
+                        maxFieldLength - length(fieldName) + 2) * DASH_SYMBOL_CODE);
                     fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName];
                 end
                 listStr = vertcat(listStr, fieldListStr);
@@ -541,12 +579,14 @@ classdef StructDisp < handle
             %maxStrLength = 31;
             nFields = length(charFields);
             fieldListStr = cell(nFields, 1);
-            fieldColIndVec = nan(nFields, 1);
+            if isnListStrOnly,
+                fieldColIndVec = nan(nFields, 1);
+            end
             for iField = 1 : nFields
                 fieldName = getFieldName(charFields,iField);
                 fieldVal = charVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
-                    * self.DASH_SYMBOL_CODE);
+                    * DASH_SYMBOL_CODE);
                 if (size(fieldVal, 1) > 1) && (size(fieldVal, 2) > 1)
                     varStr = createArraySize(fieldVal, 'char');
                     %             elseif length(Field) > maxStrLength
@@ -556,46 +596,58 @@ classdef StructDisp < handle
                     varStr = horzcat(' ''', reshape(fieldVal,1,[]), '''');
                 end
                 fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' :' varStr];
-                fieldColIndVec(iField) = numel(fieldListStr{iField})-numel(varStr)+2;
+                if isnListStrOnly,
+                    fieldColIndVec(iField) = numel(fieldListStr{iField})-numel(varStr)+2;
+                end
             end
             if nFields,
-                leavesPathCVec = vertcat(leavesPathCVec,charFields);
-                leavesRowIndCVec = vertcat(leavesRowIndCVec,...
-                    num2cell(numel(listStr)+(1:nFields).'));
-                leavesColIndCVec = vertcat(leavesColIndCVec,...
-                    num2cell(fieldColIndVec));
+                if isnListStrOnly,
+                    leavesPathCVec = vertcat(leavesPathCVec,charFields);
+                    leavesRowIndCVec = vertcat(leavesRowIndCVec,...
+                        num2cell(numel(listStr)+(1:nFields).'));
+                    leavesColIndCVec = vertcat(leavesColIndCVec,...
+                        num2cell(fieldColIndVec));
+                end
                 listStr = vertcat(listStr, fieldListStr);
             end            
             
             %% Print empty fields
             nFields = length(emptyFields);
             fieldListStr = cell(nFields, 1);
-            fieldColIndVec = nan(nFields, 1);
+            if isnListStrOnly,
+                fieldColIndVec = nan(nFields, 1);
+            end
             for iField = 1 : nFields
                 fieldName = getFieldName(emptyFields,iField);
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
-                    * self.DASH_SYMBOL_CODE);
+                    * DASH_SYMBOL_CODE);
                 fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' : [ ]' ];
-                fieldColIndVec(iField) = numel(fieldListStr{iField})-2;
+                if isnListStrOnly,
+                    fieldColIndVec(iField) = numel(fieldListStr{iField})-2;
+                end
             end
             if nFields,
-                leavesPathCVec = vertcat(leavesPathCVec,emptyFields);
-                leavesRowIndCVec = vertcat(leavesRowIndCVec,...
-                    num2cell(numel(listStr)+(1:nFields).'));
-                leavesColIndCVec = vertcat(leavesColIndCVec,...
-                    num2cell(fieldColIndVec));
+                if isnListStrOnly,
+                    leavesPathCVec = vertcat(leavesPathCVec,emptyFields);
+                    leavesRowIndCVec = vertcat(leavesRowIndCVec,...
+                        num2cell(numel(listStr)+(1:nFields).'));
+                    leavesColIndCVec = vertcat(leavesColIndCVec,...
+                        num2cell(fieldColIndVec));
+                end
                 listStr = vertcat(listStr, fieldListStr);
             end
             %% Print logicals. If it is a scalar, print true/false, else print vector
             % information
             nFields = length(logicalFields);
             fieldListStr = cell(nFields, 1);
-            fieldColIndVec = nan(nFields, 1);
+            if isnListStrOnly,
+                fieldColIndVec = nan(nFields, 1);
+            end
             for iField = 1 : nFields
                 fieldName = getFieldName(logicalFields,iField);
                 fieldVal = logicalVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
-                    * self.DASH_SYMBOL_CODE);
+                    * DASH_SYMBOL_CODE);
                 if (isscalar(fieldVal))
                     if (fieldVal)
                         varStr = ' true';
@@ -603,7 +655,7 @@ classdef StructDisp < handle
                         varStr = ' false';
                     end
                 elseif (isvector(fieldVal) && ...
-                        length(fieldVal) <= self.maxArrayLength)
+                        length(fieldVal) <= maxArrayLength)
                     varStr = repmat({'false '},1,numel(fieldVal));
                     if any(fieldVal),
                         varStr(fieldVal) = {'true '};
@@ -614,14 +666,18 @@ classdef StructDisp < handle
                     varStr = createArraySize(fieldVal, 'Logic array');
                 end
                 fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' :' varStr];
-                fieldColIndVec(iField) = numel(fieldListStr{iField})-numel(varStr)+2;
+                if isnListStrOnly,
+                    fieldColIndVec(iField) = numel(fieldListStr{iField})-numel(varStr)+2;
+                end
             end
             if nFields,
-                leavesPathCVec = vertcat(leavesPathCVec,logicalFields);
-                leavesRowIndCVec = vertcat(leavesRowIndCVec,...
-                    num2cell(numel(listStr)+(1:nFields).'));
-                leavesColIndCVec = vertcat(leavesColIndCVec,...
-                    num2cell(fieldColIndVec));
+                if isnListStrOnly,
+                    leavesPathCVec = vertcat(leavesPathCVec,logicalFields);
+                    leavesRowIndCVec = vertcat(leavesRowIndCVec,...
+                        num2cell(numel(listStr)+(1:nFields).'));
+                    leavesColIndCVec = vertcat(leavesColIndCVec,...
+                        num2cell(fieldColIndVec));
+                end
                 listStr = vertcat(listStr, fieldListStr);
             end
             
@@ -630,22 +686,28 @@ classdef StructDisp < handle
             
             nFields = length(scalarFields);
             fieldListStr = cell(nFields, 1);
-            fieldColIndVec = nan(nFields, 1);
+            if isnListStrOnly,
+                fieldColIndVec = nan(nFields, 1);
+            end
             for iField = 1 : nFields
                 fieldName = getFieldName(scalarFields,iField);
                 fieldVal = scalarVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
-                    * self.DASH_SYMBOL_CODE);
-                varStr = sprintf([' ',self.numberFormat], fieldVal);
+                    * DASH_SYMBOL_CODE);
+                varStr = sprintf([' ',numberFormat], fieldVal);
                 fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' :' varStr];
-                fieldColIndVec(iField) = numel(fieldListStr{iField})-numel(varStr)+2;
+                if isnListStrOnly,
+                    fieldColIndVec(iField) = numel(fieldListStr{iField})-numel(varStr)+2;
+                end
             end
             if nFields,
-                leavesPathCVec = vertcat(leavesPathCVec,scalarFields);
-                leavesRowIndCVec = vertcat(leavesRowIndCVec,...
-                    num2cell(numel(listStr)+(1:nFields).'));
-                leavesColIndCVec = vertcat(leavesColIndCVec,...
-                    num2cell(fieldColIndVec));
+                if isnListStrOnly,
+                    leavesPathCVec = vertcat(leavesPathCVec,scalarFields);
+                    leavesRowIndCVec = vertcat(leavesRowIndCVec,...
+                        num2cell(numel(listStr)+(1:nFields).'));
+                    leavesColIndCVec = vertcat(leavesColIndCVec,...
+                        num2cell(fieldColIndVec));
+                end
                 listStr = vertcat(listStr, fieldListStr);
             end
             
@@ -655,28 +717,34 @@ classdef StructDisp < handle
             
             nFields = length(vectorFields);
             fieldListStr = cell(nFields, 1);
-            fieldColIndVec = nan(nFields, 1);
+            if isnListStrOnly,
+                fieldColIndVec = nan(nFields, 1);
+            end
             for iField = 1 : nFields
                 fieldName = getFieldName(vectorFields,iField);
                 fieldVal = vectorVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
-                    * self.DASH_SYMBOL_CODE);
-                if length(fieldVal) > self.maxArrayLength
+                    * DASH_SYMBOL_CODE);
+                if length(fieldVal) > maxArrayLength
                     varStr = createArraySize(fieldVal, 'Array');
                 else
-                    varStr = sprintf([self.numberFormat,' '], fieldVal);
+                    varStr = sprintf([numberFormat,' '], fieldVal);
                     varStr = [' [' varStr(1:length(varStr) - 1) ']'];
                 end
                 fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ...
                     ' :' varStr];
-                fieldColIndVec(iField) = numel(fieldListStr{iField})-numel(varStr)+2;
+                if isnListStrOnly,
+                    fieldColIndVec(iField) = numel(fieldListStr{iField})-numel(varStr)+2;
+                end
             end
             if nFields,
-                leavesPathCVec = vertcat(leavesPathCVec,vectorFields);
-                leavesRowIndCVec = vertcat(leavesRowIndCVec,...
-                    num2cell(numel(listStr)+(1:nFields).'));
-                leavesColIndCVec = vertcat(leavesColIndCVec,...
-                    num2cell(fieldColIndVec));
+                if isnListStrOnly,
+                    leavesPathCVec = vertcat(leavesPathCVec,vectorFields);
+                    leavesRowIndCVec = vertcat(leavesRowIndCVec,...
+                        num2cell(numel(listStr)+(1:nFields).'));
+                    leavesColIndCVec = vertcat(leavesColIndCVec,...
+                        num2cell(fieldColIndVec));
+                end
                 listStr = vertcat(listStr, fieldListStr);
             end
             %% Print numeric matrices. If the matrix is two-dimensional and has more
@@ -690,34 +758,43 @@ classdef StructDisp < handle
             % This method was developed by S. Wegerich.
             
             nFields = length(matrixFields);
-            fieldRowIndCVec = cell(nFields, 1);
-            fieldColIndCVec = cell(nFields, 1);
+            if isnListStrOnly,
+                fieldRowIndCVec = cell(nFields, 1);
+                fieldColIndCVec = cell(nFields, 1);
+            end
             for iField = 1 : nFields
                 fieldName = getFieldName(matrixFields,iField);
                 fieldVal = matrixVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
-                    * self.DASH_SYMBOL_CODE);
-                if numel(fieldVal) > self.maxArrayLength
+                    * DASH_SYMBOL_CODE);
+                if numel(fieldVal) > maxArrayLength
                     varStr = createArraySize(fieldVal, 'Array');
                     varCell = {[strIndent '   |' filler ' ' fieldName ' :' varStr]};
-                    fieldRowIndCVec{iField} = numel(listStr)+1;
-                    fieldColIndCVec{iField} = numel(varCell{:})-numel(varStr)+2;
+                    if isnListStrOnly,
+                        fieldRowIndCVec{iField} = numel(listStr)+1;
+                        fieldColIndCVec{iField} = numel(varCell{:})-numel(varStr)+2;
+                    end
                 else
                     %                matrixSize = size(Structure.(Field));
                     %                 filler2 = char(ones(1, maxFieldLength + 6) * FILLER_SYMBOL_CODE);
                     %                 dashes = char(ones(1, 12 * matrixSize(2) + 1) * DASH_SYMBOL_CODE);
-                    curPrintFormat=self.numberFormat;
-                    printedFieldValue=cellfun(@(x)sprintf(curPrintFormat,x),...
+                    printedFieldValue=cellfun(@(x)sprintf(numberFormat,x),...
                         num2cell(fieldVal),'UniformOutput',false);
-                    [varCell,fieldRowIndCVec{iField},fieldColIndCVec{iField}]=...
-                        formCellOfString(strIndent,printedFieldValue,...
-                        maxFieldLength,[filler ' '  fieldName],...
-                        self.FILLER_SYMBOL_CODE,self.DASH_SYMBOL_CODE);
-                    fieldRowIndCVec{iField}=fieldRowIndCVec{iField}+numel(listStr);
+                    if isnListStrOnly,
+                        [varCell,fieldRowIndCVec{iField},fieldColIndCVec{iField}]=...
+                            formCellOfString(strIndent,printedFieldValue,...
+                            maxFieldLength,[filler ' '  fieldName],...
+                            FILLER_SYMBOL_CODE,DASH_SYMBOL_CODE);
+                        fieldRowIndCVec{iField}=fieldRowIndCVec{iField}+numel(listStr);
+                    else
+                        varCell=formCellOfString(strIndent,printedFieldValue,...
+                            maxFieldLength,[filler ' '  fieldName],...
+                            FILLER_SYMBOL_CODE,DASH_SYMBOL_CODE);
+                    end
                 end
                 listStr = [listStr; varCell]; %#ok<AGROW>
             end
-            if nFields,
+            if nFields&&isnListStrOnly,
                 leavesPathCVec=vertcat(leavesPathCVec,matrixFields);
                 leavesRowIndCVec = vertcat(leavesRowIndCVec,fieldRowIndCVec);
                 leavesColIndCVec = vertcat(leavesColIndCVec,fieldColIndCVec);
@@ -725,36 +802,49 @@ classdef StructDisp < handle
             %% Print cell array information, i.e. the size of the cell array. The
             % content of the cell array is not printed.
             nFields = length(cellFields);
-            fieldRowIndCVec = cell(nFields, 1);
-            fieldColIndCVec = cell(nFields, 1);
+            if isnListStrOnly,
+                fieldRowIndCVec = cell(nFields, 1);
+                fieldColIndCVec = cell(nFields, 1);
+            end
             for iField = 1 : nFields
                 fieldName = getFieldName(cellFields,iField);
                 fieldVal = cellVals{iField};
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
-                    * self.DASH_SYMBOL_CODE);
+                    * DASH_SYMBOL_CODE);
                 isMatOfStrings=ismatrix(fieldVal)&&...
                     iscellstr(fieldVal)&&...
                     all(all((cellfun('size',fieldVal,1)==1)&...
                     (cellfun('ndims',fieldVal)==2)));
                 if isempty(fieldVal)
                     varCell = {[strIndent '   |' filler ' ' fieldName ' : {}']};
-                    fieldRowIndCVec{iField} = numel(listStr)+1;
-                    fieldColIndCVec{iField} = numel(varCell{:})-1;
-                elseif (numel(fieldVal) > self.maxArrayLength)||~isMatOfStrings
+                    if isnListStrOnly,
+                        fieldRowIndCVec{iField} = numel(listStr)+1;
+                        fieldColIndCVec{iField} = numel(varCell{:})-1;
+                    end
+                elseif (numel(fieldVal) > maxArrayLength)||~isMatOfStrings
                     varStr = createArraySize(fieldVal, 'Cell');
                     varCell = {[strIndent '   |' filler ' ' fieldName ' :' varStr]};
-                    fieldRowIndCVec{iField} = numel(listStr)+1;
-                    fieldColIndCVec{iField} = numel(varCell{:})-numel(varStr)+2;
+                    if isnListStrOnly,
+                        fieldRowIndCVec{iField} = numel(listStr)+1;
+                        fieldColIndCVec{iField} = numel(varCell{:})-numel(varStr)+2;
+                    end
                 else
-                    [varCell,fieldRowIndCVec{iField},fieldColIndCVec{iField}]=...
-                        formCellOfString(strIndent,fieldVal,...
-                        maxFieldLength,[filler ' '  fieldName],...
-                        self.FILLER_SYMBOL_CODE,self.DASH_SYMBOL_CODE);
-                    fieldRowIndCVec{iField}=fieldRowIndCVec{iField}+numel(listStr);
+                    if isnListStrOnly,
+                        [varCell,fieldRowIndCVec{iField},fieldColIndCVec{iField}]=...
+                            formCellOfString(strIndent,fieldVal,...
+                            maxFieldLength,[filler ' '  fieldName],...
+                            FILLER_SYMBOL_CODE,DASH_SYMBOL_CODE);
+                        fieldRowIndCVec{iField}=fieldRowIndCVec{iField}+numel(listStr);
+                    else
+                        varCell=...
+                            formCellOfString(strIndent,fieldVal,...
+                            maxFieldLength,[filler ' '  fieldName],...
+                            FILLER_SYMBOL_CODE,DASH_SYMBOL_CODE);
+                    end
                 end
                 listStr = [listStr; varCell]; %#ok<AGROW>
             end
-            if nFields,
+            if nFields&&isnListStrOnly,
                 leavesPathCVec=vertcat(leavesPathCVec,cellFields);
                 leavesRowIndCVec = vertcat(leavesRowIndCVec,fieldRowIndCVec);
                 leavesColIndCVec = vertcat(leavesColIndCVec,fieldColIndCVec);
@@ -762,23 +852,29 @@ classdef StructDisp < handle
             %% Print unknown datatypes. These include objects and user-defined classes
             nFields = length(otherFields);
             fieldListStr = cell(nFields, 1);
-            fieldColIndVec = nan(nFields, 1);
+            if isnListStrOnly,
+                fieldColIndVec = nan(nFields, 1);
+            end
             for iField = 1 : nFields
                 fieldName = getFieldName(otherFields,iField);
                 fieldVal = otherVals{iField}; %#ok<NASGU>
                 filler = char(ones(1, maxFieldLength - length(fieldName) + 2)...
-                    * self.DASH_SYMBOL_CODE);
+                    * DASH_SYMBOL_CODE);
                 varStr=[' ',evalc('display(fieldVal)')];
                 varStr=varStr(1:end-1);
                 fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ' :' varStr];
-                fieldColIndVec(iField) = numel(fieldListStr{iField})-numel(varStr)+2;
+                if isnListStrOnly,
+                    fieldColIndVec(iField) = numel(fieldListStr{iField})-numel(varStr)+2;
+                end
             end
             if nFields,
-                leavesPathCVec = vertcat(leavesPathCVec,otherFields);
-                leavesRowIndCVec = vertcat(leavesRowIndCVec,...
-                    num2cell(numel(listStr)+(1:nFields).'));
-                leavesColIndCVec = vertcat(leavesColIndCVec,...
-                    num2cell(fieldColIndVec));
+                if isnListStrOnly,
+                    leavesPathCVec = vertcat(leavesPathCVec,otherFields);
+                    leavesRowIndCVec = vertcat(leavesRowIndCVec,...
+                        num2cell(numel(listStr)+(1:nFields).'));
+                    leavesColIndCVec = vertcat(leavesColIndCVec,...
+                        num2cell(fieldColIndVec));
+                end
                 listStr = vertcat(listStr, fieldListStr);
             end
             
@@ -795,6 +891,7 @@ classdef StructDisp < handle
 end
 function [varCell,rowIndVec,colIndVec]=formCellOfString(strIndent,fieldValue,...
     maxFieldLength,filler,FILLER_SYMBOL_CODE,DASH_SYMBOL_CODE)
+isnVarCellOnly=nargout>1;
 matrixSize=size(fieldValue);
 maxStringLength=max(max(cellfun('length',fieldValue)));
 nVals = numel(fieldValue);
@@ -815,28 +912,38 @@ dashes = char(ones(1, nDashes)* ...
     DASH_SYMBOL_CODE);
 nRows = size(adjustedFieldValue,1);
 varCell = cell(nRows+2,1);
-rowIndVec=(1:nRows+2).';
-colIndVec=nan(nRows+2,1);
+if isnVarCellOnly,
+    rowIndVec=(1:nRows+2).';
+    colIndVec=nan(nRows+2,1);
+end
 %
 prefixStr=[strIndent '   |' filler2];
-colIndVec(1)=numel(prefixStr)+1;
+if isnVarCellOnly,
+    colIndVec(1)=numel(prefixStr)+1;
+end
 varCell{1} = [prefixStr dashes];
 %
 % first line with field name
 prefixStr=[strIndent '   |' filler ' : |'];
 varStr=[adjustedFieldValue{1,:}];
-colIndVec(2)=numel(prefixStr)+1;
+if isnVarCellOnly,
+    colIndVec(2)=numel(prefixStr)+1;
+end
 varCell{2} =[prefixStr varStr];
 %
 % second and higher number rows
 prefixStr=[strIndent '   |' filler2 '|'];
-colIndVec(3:(nRows+1))=numel(prefixStr)+1;
+if isnVarCellOnly,
+    colIndVec(3:(nRows+1))=numel(prefixStr)+1;
+end
 for iRow = 2 : nRows
     varStr = [adjustedFieldValue{iRow,:}];
     varCell{iRow+1} = [prefixStr varStr];
 end
 prefixStr=[strIndent '   |' filler2];
-colIndVec(end)=numel(prefixStr)+1;
+if isnVarCellOnly,
+    colIndVec(end)=numel(prefixStr)+1;
+end
 varCell{nRows+2} = [prefixStr dashes];
 end
 
