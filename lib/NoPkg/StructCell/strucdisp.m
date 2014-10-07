@@ -126,15 +126,15 @@ end
             else
                 sizeVec = size(Structure);
                 nStruc = min(numel(Structure), maxArrayLength);
-                indexVec = ones(1, length(sizeVec));
+                subIndList=cell(1,length(sizeVec));
                 for iStruc = 1 : nStruc
-                    if (~isvector(Structure))
-                        indexStr = sprintf('%d, ', indexVec);
-                        indexStr = horzcat(structureName, '(', ...
+                    if (~isscalar(Structure))
+                        [subIndList{:}]=ind2sub(sizeVec,iStruc);
+                        indexStr = sprintf('%d, ', [subIndList{:}]);
+                        indexStr = horzcat('(', ...
                             indexStr(1:end-2), ')');
-                        indexVec = incrementIndexVec(indexVec, sizeVec);
                     else
-                        indexStr = sprintf([structureName,'(%d)'], iStruc);
+                        indexStr = sprintf('(%d)', iStruc);
                     end
                     body = recFieldPrint(Structure(iStruc), indent);
                     listStr = [listStr; {' '}; {indexStr}; body; {'   O'}];
@@ -453,7 +453,7 @@ end
                     varStr(fieldVal) = {'true '};
                 end
                 varStr = horzcat(varStr{:});
-                varStr = ['[' varStr(1:length(varStr) - 1) ']'];
+                varStr = [' [' varStr(1:length(varStr) - 1) ']'];
             else
                 varStr = createArraySize(fieldVal, 'Logic array');
             end
@@ -491,10 +491,10 @@ end
                 varStr = createArraySize(fieldVal, 'Array');
             else
                 varStr = sprintf([numberFormat,' '], fieldVal);
-                varStr = ['[' varStr(1:length(varStr) - 1) ']'];
+                varStr = [' [' varStr(1:length(varStr) - 1) ']'];
             end
             fieldListStr{iField} = [strIndent '   |' filler ' ' fieldName ...
-                ' : ' varStr];
+                ' :' varStr];
         end
         listStr = vertcat(listStr, fieldListStr);
         %% Print numeric matrices. If the matrix is two-dimensional and has more
@@ -599,19 +599,6 @@ end
         varCell{nRows+2} = [strIndent '   |' filler2 dashes];
     end
 
-end
-
-function newIndexVec = incrementIndexVec(indexVec, sizeVec)
-newIndexVec = indexVec;
-nDimension = length(sizeVec);
-for iDimension = 1 : nDimension
-    newIndexVec(iDimension) = newIndexVec(iDimension) + 1;
-    if (newIndexVec(iDimension) <= sizeVec(iDimension))
-        break;
-    else
-        newIndexVec(iDimension) = 1;
-    end
-end
 end
 
 %% FUNCTION: getIndentation

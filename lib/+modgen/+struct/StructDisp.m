@@ -204,7 +204,7 @@ classdef StructDisp < handle
                     nStruc = min(numel(Structure), self.maxArrayLength);
                     subIndList=cell(1,length(sizeVec));
                     for iStruc = 1 : nStruc
-                        if (~isvector(Structure))
+                        if (~isscalar(Structure))
                             [subIndList{:}]=ind2sub(sizeVec,iStruc);
                             indexStr = sprintf('%d, ', [subIndList{:}]);
                             indexStr = horzcat('(', ...
