@@ -137,7 +137,7 @@ end
                         indexStr = sprintf('(%d)', iStruc);
                     end
                     body = recFieldPrint(Structure(iStruc), indent);
-                    listStr = [listStr; {' '}; {indexStr}; body; {'   O'}];
+                    listStr = [listStr; {' '}; {[structureName,indexStr]}; body; {'   O'}];
                 end
                 if (numel(Structure) > maxArrayLength)
                     listStr = [listStr; {' '}; sprintf('<<%d elements more>>', ...
