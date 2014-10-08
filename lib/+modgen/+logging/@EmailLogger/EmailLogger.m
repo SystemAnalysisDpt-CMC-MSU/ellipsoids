@@ -5,6 +5,7 @@ classdef EmailLogger<handle
     properties (Access=private,Hidden)
         emailDistributionList={};
         emailAttachmentNameList={};
+        emailAttachmentZippedNameList={};
         userName='unknown';
         hostName='unknown';
         subjectSuffix='';
@@ -26,12 +27,16 @@ classdef EmailLogger<handle
             logger=modgen.logging.log4j.Log4jConfigurator.getLogger();
             [~,prop]=parseparams(varargin);
             nProp=length(prop);
+            isZippedSpecified=false;
             for k=1:2:nProp
                 switch lower(prop{k})
                     case 'emaildistributionlist',
                         self.emailDistributionList=prop{k+1};
                     case 'emailattachmentnamelist',
                         self.emailAttachmentNameList=prop{k+1};
+                    case 'emailattachmentzippednamelist',
+                        self.emailAttachmentZippedNameList=prop{k+1};
+                        isZippedSpecified=true;
                     case 'smtpserver',
                         self.smtpServer=prop{k+1};
                     case 'subjectsuffix',
@@ -50,6 +55,18 @@ classdef EmailLogger<handle
                         error([upper(mfilename),':wrongInput'],...
                             'unknown property %s',prop{k});
                 end
+            end
+            if isZippedSpecified,
+                if numel(self.emailAttachmentNameList)~=...
+                        numel(self.emailAttachmentZippedNameList),
+                    error([upper(mfilename),':wrongInput'],[...
+                        'properties emailAttachmentNameList and '...
+                        'emailAttachmentZippedNameList are not '...
+                        'consistent in length']);
+                end
+            else
+                self.emailAttachmentZippedNameList=...
+                    cell(size(self.emailAttachmentNameList));
             end
             %% Configure email notification
             if ~self.isDryRun
@@ -85,8 +102,17 @@ classdef EmailLogger<handle
                     ', running on ',self.hostName,'(',self.userName,')'];
                 emailSubject=[emailSubjectPrefix,subjectMessage,...
                     emailSubjectSuffix];
+                emailAttachNameList=self.emailAttachmentNameList;
+                emailAttachZippedNameList=self.emailAttachmentZippedNameList;
+                for iElem=1:numel(emailAttachNameList),
+                    zippedNameStr=emailAttachZippedNameList{iElem};
+                    if ~isempty(zippedNameStr),
+                        zip(zippedNameStr,emailAttachNameList{iElem});
+                        emailAttachNameList{iElem}=zippedNameStr;
+                    end
+                end
                 attachNameList=[attachNameList,...
-                    self.emailAttachmentNameList];
+                    emailAttachNameList];
                 %
                 nAttachemments=length(attachNameList);
                 for iFile=1:nAttachemments
