@@ -1,29 +1,6 @@
 classdef StructDisp < handle
     % This class is responsible for displaying structure outline
     
-    properties (GetAccess=public,Constant,Hidden)
-        FILLER_SYMBOL_CODE=32;
-        DASH_SYMBOL_CODE=45;
-        DEFAULT_MAX_ARRAY_LENGTH=10;
-        DEFAULT_DEPTH=-1;
-        DEFAULT_PRINT_VALUES=true;
-        DEFAULT_NUMBER_FORMAT='%g';
-        DEFAULT_NAME = 'Structure';
-    end
-    
-    properties (Access=private,Hidden)
-        SStruct
-        dispCVec = cell(0,1);
-        SLeavesInfoVec = repmat(...
-            struct('path','','rowIndVec',NaN,'colIndVec',NaN),[0 1]);
-        depth
-        inpPrintValues
-        maxArrayLength
-        numberFormat
-        structureName
-        isFullCheck
-    end
-    
     methods
         function self=StructDisp(varargin)
             % STRUCTDISP is a constructor for the class of the same name
@@ -72,30 +49,40 @@ classdef StructDisp < handle
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2014 $
             %
-            %
             
             import modgen.common.parseparext;
-            [reg,~,self.depth,self.inpPrintValues,...
-                self.maxArrayLength,self.numberFormat,...
-                self.structureName,self.isFullCheck]=parseparext(varargin,...
-                {'depth','printValues','maxArrayLength',...
-                'numberFormat','defaultName','isFullCheck';...
-                self.DEFAULT_DEPTH,...
-                self.DEFAULT_PRINT_VALUES,...
-                self.DEFAULT_MAX_ARRAY_LENGTH,...
-                self.DEFAULT_NUMBER_FORMAT,...
-                self.DEFAULT_NAME,true;
-                'isscalar(x)&&isnumeric(x)&&fix(x)==x',...
-                'islogical(x)&&isscalar(x)',...
-                'isscalar(x)&&isnumeric(x)&&fix(x)==x&&x>0',...
-                'isstring(x)',...
-                'isstring(x)',...
-                'islogical(x)&&isscalar(x)'},[1 1],...
-                'regDefList',{'isstruct(x)&&isscalar(x)'});
+            [reg,propValCVec]=self.parseArgList(varargin);
+            [reg,~,self.isFullCheck]=parseparext(reg,...
+                {'isFullCheck';true;'islogical(x)&&isscalar(x)'},...
+                [1 1],'regDefList',{'isstruct(x)&&isscalar(x)'});
+            [self.inpPrintValues,self.structureName,...
+                self.maxArrayLength,self.depth,self.numberFormat]=...
+                deal(propValCVec{:});
             self.initialize(reg{1});
         end
         
         function resStr=display(self)
+            % DISPLAY returns string with displayed outline of structure or
+            % simply displays this outline (in the case there are no output
+            % arguments)
+            %
+            % Usage: resStr=display(self) OR
+            %        display(self)
+            %
+            % input:
+            %   regular:
+            %     self: StructDisp [1,1] - class object
+            % output:
+            %   optional:
+            %     resStr: char [1,] - string with displayed outline of
+            %         structure
+            %
+            % $Author: Ilya Roublev  <iroublev@gmail.com> $	$Date: 2014-10-08 $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Computer Science,
+            %            System Analysis Department 2014 $
+            %
+            
             resultString=modgen.string.catwithsep(self.dispCVec,sprintf('\n'));
             if nargout==0
                 % write data to screen
@@ -105,7 +92,38 @@ classdef StructDisp < handle
             end
         end
         
-        function update(self,SStructInp)
+        function [changedRowIndVec,changedColIndVec]=update(self,SStructInp)
+            % UPDATE quickly updates stored displayed outline by comparison
+            % of old and new values of structure, besides, some additional
+            % information concerning numbers of rows that were changed and
+            % for each of these row the corresponding number of column
+            % starting from which the change in this row was made
+            %
+            % Usage: update(self,SStructInp) OR
+            %        [changedRowIndVec,changedColIndVec]=...
+            %            update(self,SStructInp)
+            %
+            % input:
+            %   regular:
+            %     self: StructDisp [1,1] - class object containing previous
+            %         ("old") outline of structure
+            %     SStructInp: struct [1,1] - scalar structure containing
+            %         new structure
+            % output:
+            %   optional:
+            %     changedRowIndVec: double [nRows,1] - numbers of rows in
+            %         which changes were made
+            %     changedColIndVec: double [nRows,1] - for each row in 
+            %         changedRowIndVec the corresponding elemenent in this
+            %         array contain the number of column starting from
+            %         which the change was made
+            %
+            % $Author: Ilya Roublev  <iroublev@gmail.com> $	$Date: 2014-10-08 $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Computer Science,
+            %            System Analysis Department 2014 $
+            %
+            
             if ~(isstruct(SStructInp)&&isscalar(SStructInp)),
                 modgen.common.throwerror('wrongInput',...
                     'SStructInp must be scalar structure')
@@ -154,14 +172,151 @@ classdef StructDisp < handle
                                 end
                             end
                             self.SStruct=SStructInp;
+                            if nargout>0,
+                                changedRowIndVec=vertcat(rowIndCVec{:});
+                                changedColIndVec=vertcat(colIndCVec{:});
+                            end
                         end
                     end
                 end
             end
             if ~isLocalChanges,
                 self.initialize(SStructInp);
+                if nargout>0,
+                    nRows=numel(self.dispCVec);
+                    changedRowIndVec=(1:nRows).';
+                    changedColIndVec=ones(nRows,1);
+                end
             end
         end
+    end
+    
+    methods (Static)
+        function resStr=strucdisp(varargin)
+            % STRUCDISP  display structure outline
+            %
+            % Usage: STRUCDISP(STRUC,fileName,'depth',DEPTH,'printValues',PRINTVALUES,...
+            %           'maxArrayLength',MAXARRAYLENGTH) stores
+            %        the hierarchical outline of a structure and its substructures into
+            %        the specified file
+            %
+            % input:
+            %   regular:
+            %       SInp: struct[1,1] - is a structure datatype with unknown field
+            %           content. It can be  either a scalar or a vector, but not a
+            %           matrix. STRUC is the only mandatory argument in this function.
+            %           All other arguments are optional.
+            %
+            %   optional
+            %       fileName: char[1,] is the name of the file to which the output
+            %           should be printed. if this argument is not defined, the output
+            %           is printed to the command window.
+            %
+            %   properties
+            %       depth: numeric[1,1] - the number of hierarchical levels of
+            %           the structure that are printed. If DEPTH is smaller than zero,
+            %           all levels are printed. Default value for DEPTH is -1
+            %           (print all levels).
+            %
+            %       printValues: logical[1,1] -  flag that states if the field values
+            %           should be printed  as well. The default value is 1 (print values)
+            %
+            %       maxArrayLength: numberic[1,1] - a positive integer,
+            %           which determines up to which length or size the values of
+            %           a vector or matrix are printed. For a  vector holds that
+            %           if the length of the vector is smaller or equal to
+            %           MAXARRAYLENGTH, the values are printed. If the vector is
+            %           longer than MAXARRAYLENGTH, then only the size of the
+            %           vector is printed. The values of a 2-dimensional (m,n)
+            %           array are printed if the number of elements (m x n) is
+            %           smaller or equal to MAXARRAYLENGTH. For vectors and arrays,
+            %           this constraint overrides the PRINTVALUES flag.
+            %       numberFormat: char[1,] - format specification used for displaying
+            %           numberic values, passed directly to sprintf, by default '%g' is
+            %           used
+            % output:
+            %   regular:
+            %       resStr: char [1,] - resulting string with displayed
+            %           structure contents
+            %
+            % $Author: Ilya Roublev  <iroublev@gmail.com> $	$Date: 2014-10-08 $
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Computer Science,
+            %            System Analysis Department 2014 $
+            %
+            %
+            
+            import modgen.common.parseparext;
+            className=mfilename('class');
+            [reg,propValCVec]=feval([className '.parseArgList'],...
+                varargin);
+            reg=parseparext(reg,{},[1 2],...
+                'regDefList',{[],''},...
+                'regCheckList',{'isstruct(x)','isstring(x)'});
+            SInp=reg{1};
+            fileName=reg{2};
+            propValCVec=horzcat(propValCVec,{...
+                eval([className '.DASH_SYMBOL_CODE']),...
+                eval([className '.FILLER_SYMBOL_CODE'])});
+            %% Main program
+            %%%%% start program %%%%%
+            % start recursive function
+            listStr = modgen.struct.StructDisp.recFieldPrint(SInp, 0,...
+                propValCVec{:});
+            
+            % 'listStr' is a cell array containing the output
+            % Now it's time to actually output the data
+            % Default is to output to the command window
+            % However, if the filename argument is defined, output it into a file
+            resultString=modgen.string.catwithsep(listStr,sprintf('\n'));
+            if nargout==0
+                % write data to screen
+                disp(resultString);
+            else
+                resStr=[resultString,sprintf('\n')];
+            end
+            if ~isempty(fileName)
+                % open file and check for errors
+                fid = fopen(fileName, 'wt');
+                if fid < 0
+                    error('Unable to open output file');
+                end
+                % write data to file
+                nListRows=length(listStr);
+                for iListRow = 1 : nListRows
+                    fprintf(fid, '%s\n', listStr{iListRow});
+                end
+                % close file
+                fclose(fid);
+            end
+        end
+    end
+
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% Private properties and methods
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    properties (GetAccess=private,Constant,Hidden)
+        FILLER_SYMBOL_CODE=32;
+        DASH_SYMBOL_CODE=45;
+        DEFAULT_MAX_ARRAY_LENGTH=10;
+        DEFAULT_DEPTH=-1;
+        DEFAULT_PRINT_VALUES=true;
+        DEFAULT_NUMBER_FORMAT='%g';
+        DEFAULT_NAME = 'Structure';
+    end
+    
+    properties (Access=private,Hidden)
+        SStruct
+        dispCVec = cell(0,1);
+        SLeavesInfoVec = repmat(...
+            struct('path','','rowIndVec',NaN,'colIndVec',NaN),[0 1]);
+        depth
+        inpPrintValues
+        maxArrayLength
+        numberFormat
+        structureName
+        isFullCheck
     end
     
     methods (Access=private,Hidden)
@@ -184,7 +339,33 @@ classdef StructDisp < handle
         end
     end
     
-    methods (Access=public,Static,Hidden)
+    methods (Access=private,Static,Hidden)
+        function [regCVec,propValCVec]=parseArgList(argCVec)
+            import modgen.common.parseparext;
+            className=mfilename('class');
+            [regCVec,~,depthVal,printValuesVal,...
+                maxArrayLengthVal,numberFormatVal,...
+                structureNameVal]=parseparext(argCVec,...
+                {'depth','printValues','maxArrayLength',...
+                'numberFormat','defaultName',;...
+                getConstant('DEFAULT_DEPTH'),...
+                getConstant('DEFAULT_PRINT_VALUES'),...
+                getConstant('DEFAULT_MAX_ARRAY_LENGTH'),...
+                getConstant('DEFAULT_NUMBER_FORMAT'),...
+                getConstant('DEFAULT_NAME');
+                'isscalar(x)&&isnumeric(x)&&fix(x)==x',...
+                'islogical(x)&&isscalar(x)',...
+                'isscalar(x)&&isnumeric(x)&&fix(x)==x&&x>0',...
+                'isstring(x)',...
+                'isstring(x)'});
+            propValCVec={printValuesVal,structureNameVal,maxArrayLengthVal,...
+                depthVal,numberFormatVal};
+
+            function res=getConstant(constantName)
+                res=eval([className '.' constantName]);
+            end
+        end
+        
         %% FUNCTION: recFieldPrint
         function [listStr,...
                 leavesPathCVec,leavesRowIndCVec,leavesColIndCVec] = ...
@@ -889,6 +1070,9 @@ classdef StructDisp < handle
         end
     end
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Inner functions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [varCell,rowIndVec,colIndVec]=formCellOfString(strIndent,fieldValue,...
     maxFieldLength,filler,FILLER_SYMBOL_CODE,DASH_SYMBOL_CODE)
 isnVarCellOnly=nargout>1;
