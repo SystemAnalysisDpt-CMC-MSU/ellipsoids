@@ -20,9 +20,12 @@ classdef mlunit_test_prallelproc < mlunitext.test_case
         end
         %
         function test_runMultiPar(self)
-            loader = mlunitext.test_loader;
-            suite = loader.load_tests_from_test_case('mlunitext.test.mock_test');
-            self.aux_test_run_tests(suite);
+            if ~isempty(which('getCurrentTask'))||...
+                    ~isempty(which('modgen.pcalcalt.auxdfeval'))
+                loader = mlunitext.test_loader;
+                suite = loader.load_tests_from_test_case('mlunitext.test.mock_test');
+                self.aux_test_run_tests(suite);
+            end
         end
         function aux_test_run_tests(self,suite)
             runner = mlunitext.text_test_runner(1, 1); %#ok<NASGU>

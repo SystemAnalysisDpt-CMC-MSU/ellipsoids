@@ -82,16 +82,27 @@ classdef text_test_runner
             if isa(test,'mlunitext.test_case')
                 testCaseNameList={class(test)};
                 testNameList={test.name};
+                markerList={test.marker};
             elseif isa(test,'mlunitext.test_suite')
                 testCaseNameList=cellfun(@class,test.tests,...
                     'UniformOutput',false);
                 testNameList=cellfun(@(x)x.name,test.tests,...
                     'UniformOutput',false);
+                markerList=cellfun(@(x)x.marker,test.tests,...
+                    'UniformOutput',false);
             else
                 throwerror('wrongInput','Oops, we shouldn''t be here');
             end
             %
-            testCaseNameList=strcat(testCaseNameList,'/',testNameList);
+            isnEmptyVec=~cellfun('isempty',markerList);
+            %
+            testCaseNameList=strcat(...
+                testCaseNameList,'/',testNameList);
+            if any(isnEmptyVec)
+                testCaseNameList(isnEmptyVec)=...
+                    strcat(testCaseNameList(isnEmptyVec),...
+                '[',markerList(isnEmptyVec),']');
+            end
             %
             testCaseName=modgen.string.catwithsep(testCaseNameList,...
                 sprintf('\n\t'));

@@ -19,8 +19,13 @@ classdef mlunit_test_log4jconfigurator < mlunitext.test_case
             % This test changes Log4j configuration. We'll run it in a
             % separate process, so that the changes do not affect the
             % current process.
-            mlunitext.pcalc.auxdfeval(@(x)self.aux_test_configuration_persistence,...
-                 cell(1,1), 'alwaysFork', true, self.configurationProp{:});
+            isParToolboxInstalled=~isempty(which('getCurrentTask'));
+            if isParToolboxInstalled
+                mlunitext.pcalc.auxdfeval(...
+                    @(x)self.aux_test_configuration_persistence,...
+                    cell(1,1), 'alwaysFork', true,...
+                    self.configurationProp{:});
+            end
         end
         %
         function self=test_getLogger(self)
@@ -38,6 +43,11 @@ classdef mlunit_test_log4jconfigurator < mlunitext.test_case
             % warning.
             import modgen.logging.log4j.test.Log4jConfigurator;
             import org.apache.log4j.Level;
+            
+            lastPropStr=modgen.logging.log4j.Log4jConfigurator.getLastLogPropStr;
+            isLocked=modgen.logging.log4j.Log4jConfigurator.isLocked();
+            onCln=onCleanup(@()restoreConf(lastPropStr,isLocked));
+            %
             NL = sprintf('\n');
             appenderConfStr = ['log4j.appender.stdout=org.apache.log4j.ConsoleAppender',NL,...
                 'log4j.appender.stdout.layout=org.apache.log4j.PatternLayout',NL,...
@@ -95,6 +105,11 @@ classdef mlunit_test_log4jconfigurator < mlunitext.test_case
             end
             mlunitext.assert_equals(true,Log4jConfigurator.isLocked(),...
                 'Failed to lock configuration using isLockAfterConfigure property');
+            function restoreConf(confStr,isLocked)
+                modgen.logging.log4j.test.Log4jConfigurator.unlockConfiguration();
+                modgen.logging.log4j.test.Log4jConfigurator.configure(...
+                    confStr,'islockafterconfigure',isLocked);
+            end
         end
         %
         function self=test_getLoggerBySuffix(self)

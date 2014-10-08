@@ -132,6 +132,12 @@ function [groupHandles,hPlotHandlesVec]=plotts(varargin)
 %         fHandle: double [1,1]
 %                     figure handle, if not specified plotts would create a
 %                     new figure for you
+%         figurePropSetFunc: function_handle [1,1] - function that is
+%                called after figure is created, if it is given, it is
+%                assumed that this function has single input argument,
+%                namely, handle of a figure and no output arguments, this
+%                function sets additional properties of the respective
+%                figure; by default it is not given
 %         fontSize: double [1,1]
 %         fontWeight: double [1,1]
 %         groupXLabelRotation, double [1,nGroups]
@@ -249,6 +255,7 @@ yGrid=1;
 [reg,prop]=parseparams(varargin);
 nProp=length(prop);
 fHandle=[];
+figurePropSetFunc=[];
 xTypes=[];
 roundXLabels=[];
 %shifts and margins
@@ -316,6 +323,8 @@ for k=1:2:nProp-1
             groupTitles=prop{k+1};
         case 'fhandle',
             fHandle=prop{k+1};
+        case 'figurepropsetfunc',
+            figurePropSetFunc=prop{k+1};
         case 'xtypes',
             xTypes=prop{k+1};
         case 'roundxlabels'
@@ -587,6 +596,13 @@ if ~isempty(fHandle)
     end
 else
     fHandle=figure;
+end
+if ~isempty(figurePropSetFunc),
+    modgen.common.checkvar(...
+        figurePropSetFunc,...
+        'isa(x,''function_handle'')&&numel(x)==1',...
+        'figurePropSetFunc');
+    feval(figurePropSetFunc,fHandle);
 end
 %
 visibleState=get(fHandle,'visible');

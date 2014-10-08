@@ -20,28 +20,34 @@ classdef mlunit_test_auxdfeval < mlunitext.test_case
             taskName2=modgen.pcalc.gettaskname();
             mlunitext.assert_equals(taskName,taskName2);
             mlunitext.assert_equals(true,SProp.isMain);
-            [a,b]=modgen.pcalc.auxdfeval(...
-                @(x)modgen.pcalc.gettaskname(),cell(1,2));
-            isOk=all(cellfun(@(x)~strcmp(x,taskName),a));
-            mlunitext.assert_equals(true,isOk);
-            isOk=all(cellfun(@(x)isequal(x.isMain,false),b));
-            mlunitext.assert_equals(true,isOk);
+            if ~isempty(which('getCurrentTask'))||...
+                    ~isempty(which('modgen.pcalcalt.auxdfeval'))
+                [a,b]=modgen.pcalc.auxdfeval(...
+                    @(x)modgen.pcalc.gettaskname(),cell(1,2));
+                isOk=all(cellfun(@(x)~strcmp(x,taskName),a));
+                mlunitext.assert_equals(true,isOk);
+                isOk=all(cellfun(@(x)isequal(x.isMain,false),b));
+                mlunitext.assert_equals(true,isOk);
+            end
         end
         %
         function self=test_always_fork(self)
-            % alwaysFork=false by default, which means that the following
-            % will execute within the same process. The presistent variable
-            % will be set to [1]
-            modgen.pcalc.auxdfeval(@self.setPersistent,{1});
-            % Check that the persistent variable is not empty and reset it
-            % to []
-            mlunitext.assert_equals(false, self.setPersistent([]));
-            % With the flag set to true, execute setPersistent(1) in a new
-            % process, which should have no effect on the presistent
-            % variable within this process
-            modgen.pcalc.auxdfeval(@self.setPersistent,{1},'alwaysFork',true,...
-                self.configurationProp{:});
-            mlunitext.assert_equals(true, self.setPersistent([]));
+            if ~isempty(which('getCurrentTask'))||...
+                    ~isempty(which('modgen.pcalcalt.auxdfeval'))
+                % alwaysFork=false by default, which means that the following
+                % will execute within the same process. The presistent variable
+                % will be set to [1]
+                modgen.pcalc.auxdfeval(@self.setPersistent,{1});
+                % Check that the persistent variable is not empty and reset it
+                % to []
+                mlunitext.assert_equals(false, self.setPersistent([]));
+                % With the flag set to true, execute setPersistent(1) in a new
+                % process, which should have no effect on the presistent
+                % variable within this process
+                modgen.pcalc.auxdfeval(@self.setPersistent,{1},'alwaysFork',true,...
+                    self.configurationProp{:});
+                mlunitext.assert_equals(true, self.setPersistent([]));
+            end
         end
         %
         function isEmpty = setPersistent(~,val)

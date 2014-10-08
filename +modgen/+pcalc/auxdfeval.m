@@ -67,6 +67,8 @@ if ~isempty(which('modgen.pcalcalt.auxdfeval'))
 else
     import modgen.pcalc.dfevalasync;
     %
+    isParToolboxInstalled=~isempty(which('getCurrentTask'));
+    %
     isStartupFileUsed=false;
     isSharedPathMapSpec=false;
     isConfSpec=false;
@@ -132,10 +134,25 @@ else
         end
         startupFileName=[startupFilePath,filesep,'taskStartup.m'];
     end
-    if ~isConfSpec
+    if (~isConfSpec)&&isParToolboxInstalled
         confName=parallel.defaultClusterProfile;
     end
-    dfevalArgList=[dfevalArgList,{'configuration',confName}];
+    if isParToolboxInstalled
+        dfevalArgList=[dfevalArgList,{'configuration',confName}];
+    else
+        if isFork
+            modgen.common.throwwarn('wrongInput',...
+                ['isFork=true is ignored when Parallel Toolbox ',...
+                'is not installed']);
+            isFork=false;
+        end
+        if clusterSize>1
+            modgen.common.throwwarn('wrongInput',...
+                ['clusterSize>1 is ignored when Parallel Toolbox ',...
+                'is not installed']);
+        end
+        clusterSize=1;
+    end
     nOut=nargout;
     nTasks=size(reg{1},2);
     if (nTasks>1&&clusterSize>1) || isFork

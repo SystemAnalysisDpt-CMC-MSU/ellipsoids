@@ -1,6 +1,15 @@
 function res=isgit(pathStr)
-if nargin==0,
-    pathStr=fileparts(mfilename('fullpath'));
+persistent mp
+if isempty(mp)
+    mp=containers.Map();
 end
-res=~strcmp(modgen.git.gitgethash(pathStr),'unversioned');
+if mp.isKey(pathStr)
+    res=mp(pathStr);
+else
+    if nargin==0,
+        pathStr=fileparts(mfilename('fullpath'));
+    end
+    res=~strcmp(modgen.git.gitgethash(pathStr),'unversioned');
+    mp(pathStr)=res;
+end
 end
