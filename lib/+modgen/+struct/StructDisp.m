@@ -495,90 +495,102 @@ classdef StructDisp < handle
                 isLeaves = false;
                 %
                 % Empty structure
-                if isempty(fieldVal)
-                    strSize = createArraySize(fieldVal, 'Structure');
-                    %line = sprintf('%s   |--- %s :%s', ...
-                    %    strIndent, fieldName, strSize);
-                    line = horzcat(strIndent, '   |--- ', fieldName,...
-                        ' :', strSize);
-                    curListStr = {line};
-                    %
-                    % Scalar structure
-                elseif isscalar(fieldVal)
-                    %line = sprintf('%s   |--- %s', strIndent, fieldName);
-                    line = horzcat(strIndent, '   |--- ', fieldName);
-                    % Recall this function if the tree depth is not reached yet
-                    if (depth < 0) || (indent + 1 < depth)
-                        if isnListStrOnly,
-                            [lines,curPathCVec,curRowIndCVec,curColIndCVec] = ...
-                                feval([className '.recFieldPrint'],...
-                                fieldVal, indent + 1, inpCVec{:});
-                            isLeaves = ~isempty(curPathCVec);
-                            curRowIndCVec = cellfun(@(x)x+1,...
-                                curRowIndCVec,'UniformOutput',false);
-                        else
-                            lines = feval([className '.recFieldPrint'],...
-                                fieldVal, indent + 1, inpCVec{:});
-                        end
-                        curListStr = [{line}; lines; ...
-                            {[strIndent '   |       O']}];
-                    else
-                        curListStr = {line};
-                    end
-                    %
-                    % Short vector structure of which the values should be printed
-                elseif (printValues > 0) && ...
-                        (length(fieldVal) < maxArrayLength) && ...
-                        ((depth < 0) || (indent + 1 < depth))
-                    %
-                    subIndList=cell(1,ndims(fieldVal));
-                    sizeVec=size(fieldVal);
-                    
-                    % Use a for-loop to print all structures in the array
-                    nFieldElement = numel(fieldVal);
-                    curListStr = {};
-                    if isnListStrOnly,
-                        curPathCVec = cell(0,1);
-                        curRowIndCVec = cell(0,1);
-                        curColIndCVec = cell(0,1);
-                    end
-                    for iFieldElement = 1 : nFieldElement;
-                        [subIndList{:}]=ind2sub(sizeVec,iFieldElement);
-                        indexStr=sprintf('%d ',horzcat(subIndList{:}));
-                        indexStr=indexStr(1:end-1);
-                        elemName=horzcat('[',indexStr,']');
-                        %
-                        %line = sprintf('%s   |--- %s(%s)', ...
-                        %    strIndent, fieldName, elemName);
-                        line = horzcat(strIndent, '   |--- ',...
-                            fieldName, '(', elemName, ')');
-                        if isnListStrOnly,
-                            [lines,elemPathCVec,...
-                                elemRowIndCVec,elemColIndCVec] = ...
-                                feval([className '.recFieldPrint'],...
-                                fieldVal(iFieldElement), indent + 1, inpCVec{:});
-                            if ~isempty(elemPathCVec),
-                                nAdd=numel(curListStr);
-                                curPathCVec=vertcat(curPathCVec,...
-                                    strcat('(',strrep(indexStr,' ',','),').',...
-                                    elemPathCVec)); %#ok<AGROW>
-                                curRowIndCVec=vertcat(curRowIndCVec,...
-                                    cellfun(@(x)x+nAdd+1,elemRowIndCVec,...
-                                    'UniformOutput',false)); %#ok<AGROW>
-                                curColIndCVec=vertcat(curColIndCVec,...
-                                    elemColIndCVec); %#ok<AGROW>
+                isPrintWithSize=isempty(fieldVal);
+                if ~isPrintWithSize,
+                    if isscalar(fieldVal)
+                        %line = sprintf('%s   |--- %s', strIndent, fieldName);
+                        line = horzcat(strIndent, '   |--- ', fieldName);
+                        % Recall this function if the tree depth is not reached yet
+                        if (depth < 0) || (indent + 1 < depth)
+                            if isnListStrOnly,
+                                [lines,curPathCVec,curRowIndCVec,curColIndCVec] = ...
+                                    feval([className '.recFieldPrint'],...
+                                    fieldVal, indent + 1, inpCVec{:});
+                                isLeaves = ~isempty(curPathCVec);
+                                curRowIndCVec = cellfun(@(x)x+1,...
+                                    curRowIndCVec,'UniformOutput',false);
+                            else
+                                lines = feval([className '.recFieldPrint'],...
+                                    fieldVal, indent + 1, inpCVec{:});
                             end
+                            curListStr = [{line}; lines; ...
+                                {[strIndent '   |       O']}];
                         else
-                            lines = feval([className '.recFieldPrint'],...
-                                fieldVal(iFieldElement), indent + 1, inpCVec{:});
+                            if printValues,
+                                line = horzcat(line, ' :',...
+                                    createArraySize(fieldVal, 'Structure')); %#ok<AGROW>
+                            end
+                            curListStr = {line};
                         end
-                        curListStr = [curListStr;{line}; lines; ...
-                            {[strIndent '   |       O'];[strIndent '   |    ']}]; %#ok<AGROW>
+                        %
+                        % Short vector structure of which the values should be printed
+                    elseif (length(fieldVal) < maxArrayLength) && ...
+                            ((depth < 0) || (indent + 1 < depth))
+                        %
+                        subIndList=cell(1,ndims(fieldVal));
+                        sizeVec=size(fieldVal);
+                        
+                        % Use a for-loop to print all structures in the array
+                        nFieldElement = numel(fieldVal);
+                        curListStr = {};
+                        if isnListStrOnly,
+                            curPathCVec = cell(0,1);
+                            curRowIndCVec = cell(0,1);
+                            curColIndCVec = cell(0,1);
+                        end
+                        for iFieldElement = 1 : nFieldElement;
+                            [subIndList{:}]=ind2sub(sizeVec,iFieldElement);
+                            indexStr=sprintf('%d ',horzcat(subIndList{:}));
+                            indexStr=indexStr(1:end-1);
+                            elemName=horzcat('[',indexStr,']');
+                            %
+                            %line = sprintf('%s   |--- %s(%s)', ...
+                            %    strIndent, fieldName, elemName);
+                            line = horzcat(strIndent, '   |--- ',...
+                                fieldName, '(', elemName, ')');
+                            if isnListStrOnly,
+                                [lines,elemPathCVec,...
+                                    elemRowIndCVec,elemColIndCVec] = ...
+                                    feval([className '.recFieldPrint'],...
+                                    fieldVal(iFieldElement), indent + 1, inpCVec{:});
+                                if ~isempty(elemPathCVec),
+                                    nAdd=numel(curListStr);
+                                    curPathCVec=vertcat(curPathCVec,...
+                                        strcat('(',strrep(indexStr,' ',','),').',...
+                                        elemPathCVec)); %#ok<AGROW>
+                                    curRowIndCVec=vertcat(curRowIndCVec,...
+                                        cellfun(@(x)x+nAdd+1,elemRowIndCVec,...
+                                        'UniformOutput',false)); %#ok<AGROW>
+                                    curColIndCVec=vertcat(curColIndCVec,...
+                                        elemColIndCVec); %#ok<AGROW>
+                                end
+                            else
+                                lines = feval([className '.recFieldPrint'],...
+                                    fieldVal(iFieldElement), indent + 1, inpCVec{:});
+                            end
+                            curListStr = [curListStr;{line}; lines; ...
+                                {[strIndent '   |       O'];[strIndent '   |    ']}]; %#ok<AGROW>
+                        end
+                        curListStr(end)=[];
+                        if isnListStrOnly,
+                            isLeaves=~isempty(curPathCVec);
+                        end
+                    else
+                        isPrintWithSize=true;
                     end
-                    curListStr(end)=[];
-                    if isnListStrOnly,
-                        isLeaves=~isempty(curPathCVec);
+                end
+                % Structure printed with size only
+                if isPrintWithSize,
+                    if printValues,
+                        strSize = createArraySize(fieldVal, 'Structure');
+                        %line = sprintf('%s   |--- %s :%s', ...
+                        %    strIndent, fieldName, strSize);
+                        line = horzcat(strIndent, '   |--- ', fieldName,...
+                            ' :', strSize);
+                    else
+                        line = horzcat(strIndent, '   |--- ', fieldName);
                     end
+                    curListStr = {line};
                 end
                 %
                 if isLeaves,
