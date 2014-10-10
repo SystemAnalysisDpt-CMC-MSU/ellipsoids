@@ -128,6 +128,10 @@ classdef StructDisp < handle
                 modgen.common.throwerror('wrongInput',...
                     'SStructInp must be scalar structure')
             end
+            if nargout>0,
+                changedRowIndVec=nan(0,1);
+                changedColIndVec=nan(0,1);
+            end
             [isLocalChanges,changedLeavesPathCVec,changedLeavesValCVec]=...
                 getleaveslist(SStructInp,self.SStruct,self.isFullCheck);
             if isLocalChanges,
