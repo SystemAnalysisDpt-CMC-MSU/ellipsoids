@@ -1,4 +1,4 @@
-function [methodName className]=getcallernameext(indStack)
+function [methodName,className]=getcallernameext(indStack)
 % GETCALLERNAME determines function/script name or method name of caller
 % together with class name in the case it is method of class for element
 % of stack given by its index (this index is 1 for immediate caller of this
@@ -64,65 +64,4 @@ else
         error([upper(mfilename),':wrongInput'],'indStack is incorrect');
     end
 end
-StFunc=StFunc(indStack+1);
-[pathStr,fileName]=fileparts(StFunc.file);
-if isempty(strfind(pathStr,[filesep '+']))&&isempty(strfind(pathStr,[filesep '@'])),
-    pathStr='';
-    isClass=false;
-    isPath=false;
-else
-    pathStr=strrep(pathStr,[filesep '+'],'.');
-    indClass=strfind(pathStr,[filesep '@']);
-    isClass=~isempty(indClass);
-    if isClass,
-        pathStr(indClass)='.';
-        pathStr(indClass+1)=[];
-    end
-    curInd=find(pathStr==filesep,1,'last');
-    if ~isempty(curInd),
-        pathStr=pathStr(curInd+1:end);
-    end
-    curInd=find(pathStr=='.',1,'first');
-    if isempty(curInd),
-        isPath=false;
-    else
-        pathStr=pathStr(curInd+1:end);
-        isPath=~isempty(pathStr);
-    end
-end
-methodName=StFunc.name;
-curInd=find(methodName=='.',1,'last');
-if ~isempty(curInd),
-    methodName=methodName(curInd+1:end);
-    if ~isClass,
-        if isPath,
-            pathStr=[pathStr '.' fileName];
-        else
-            pathStr=fileName;
-            isPath=true;
-        end
-        isClass=true;
-    end
-end
-className='';
-if isPath&&isClass,
-    className=pathStr;
-end
-curInd=find(methodName=='/'|methodName=='\',1,'first');
-if isempty(curInd),
-    mainMethodName=methodName;
-else
-    mainMethodName=methodName(1:curInd-1);
-end
-curInd=find(className=='.',1,'last');
-if isempty(curInd),
-    mainClassName=className;
-else
-    mainClassName=className(curInd+1:end);
-end
-if ~(isequal(fileName,mainMethodName)||(isClass&&isequal(fileName,mainClassName))),
-    methodName=[fileName '/' methodName];
-end
-if isPath&&~isClass,
-    methodName=[pathStr '.' methodName];
-end
+[methodName,className]=modgen.common.parsestackelem(StFunc(indStack+1));

@@ -11,6 +11,10 @@ function meObj=throwerror(msgTag,varargin)
 %       ...
 %       same inputs as in error function
 %       ...
+%   properties:
+%       nCallerStackStepsUp: numeric[1,1] - number of steps up in the call
+%           stacks for the caller, by which name the full message tag is to
+%           be generated, =1 by default
 %
 % Output:
 %   optional: meObj: MException[1,1]
@@ -20,13 +24,15 @@ function meObj=throwerror(msgTag,varargin)
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
 import modgen.common.*;
-if nargin>1
-    varargin{1}=strrep(varargin{1},'\','\\');
+[reg,~,nCallerStackStepsUp]=parseparext(varargin,...
+    {'nCallerStackStepsUp';1},'propRetMode','separate');
+if numel(reg)>1
+    reg{1}=strrep(reg{1},'\','\\');
 end
-callerName=getcallername(2,'full');
+callerName=getcallername(1+nCallerStackStepsUp,'full');
 callerName=strrep(callerName,'.',':');
 
-meObj=MException([upper(callerName),':',msgTag],varargin{:});
+meObj=MException([upper(callerName),':',msgTag],reg{:});
 if nargout==0
     throwAsCaller(meObj);
 end

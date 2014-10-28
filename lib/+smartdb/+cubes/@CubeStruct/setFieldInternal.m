@@ -39,7 +39,7 @@ VALUE_PART_NAME_LIST={'[value]','[isNull]','[isValueNull]'};
 %
 import modgen.common.throwerror;
 if nargin<3
-    throwerror(':wrongInput',...
+    throwerror('wrongInput',...
         'at least 2 input arguments apart from the class object are expected');
 end
 %

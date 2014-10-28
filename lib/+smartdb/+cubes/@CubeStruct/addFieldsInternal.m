@@ -55,6 +55,10 @@ if ~auxchecksize(addFieldNameList,[1 nan])
 end
 %
 nAddFields=length(addFieldNameList); 
+if nAddFields==0,
+    throwerror('wrongInput',...
+        'addFieldNameList must be nonempty');
+end
 if ~isempty(reg)
     addFieldDescrList=reg{1};
     if ischar(addFieldDescrList),
@@ -124,8 +128,8 @@ typeSpecList(isnEmptySourceVec)=...
 addFieldDescrList(isnEmptySourceVec)=...
     self.getFieldDescrList(sourceFieldNameList(isnEmptySourceVec));
 %
-newMetaDataVec=smartdb.cubes.CubeStructFieldInfo.customArray(...
-    self,addFieldNameList,addFieldDescrList,typeSpecList);
+newMetaDataVec=self.getMetaDataInternal(...
+    addFieldNameList,addFieldDescrList,typeSpecList);
 %
 for iField=1:nAddFields,
     fieldName=addFieldNameList{iField};

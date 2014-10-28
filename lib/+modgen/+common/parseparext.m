@@ -154,7 +154,7 @@ if ~isempty(inpProp)
                 %
                 for iReg=1:nRegs
                     checkgen(reg{iReg},regCheckList{iReg},...
-                        sprintf('regular arg #%d',iReg));
+                        sprintf('regular arg #%d',iReg),'nCallerStackStepsUp',2);
                 end
             case 'regdeflist',
                 regDefList=inpProp{iInpProp+1};
@@ -236,7 +236,8 @@ if isPropNameSpec
         propValList(~isPropSpecVec)=propNameValMat(2,~isPropSpecVec);
     end
     if isCheckSpec&&any(isPropSpecVec)
-        cellfun(@checkgen,propValList(isPropSpecVec),...
+        cellfun(@(x,y,z)checkgen(x,y,z,'nCallerStackStepsUp',2),...
+            propValList(isPropSpecVec),...
             propNameValMat(3,isPropSpecVec),...
             strcat('property:',propNameList(isPropSpecVec)));
     end

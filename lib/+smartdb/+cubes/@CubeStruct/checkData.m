@@ -93,7 +93,7 @@ isStructSpecifiedSpec=false;
 isFieldNamesSpec=false;
 isMDFieldNamesSpec=false;
 nProp=length(prop);
-addArgList={};
+isAddArgVec=false(1,nProp);
 %
 for k=1:2:nProp-1
     switch lower(prop{k})
@@ -108,12 +108,12 @@ for k=1:2:nProp-1
                     nStruct);
             end
         case 'isstructspecified',
-            addArgList=[addArgList,prop([k,k+1])];
+            isAddArgVec([k k+1])=true;
             isStructSpecifiedSpec=true;
             isStructSpecifiedVec=prop{k+1};
             
         case {'structnamelist','fillunspecified'}
-            addArgList=[addArgList,prop([k,k+1])];
+            isAddArgVec([k k+1])=true;
         case 'fieldmetadata',
             isMetaDataSpec=true;
             fieldMetaData=prop{k+1};
@@ -128,6 +128,7 @@ for k=1:2:nProp-1
                 'unknown property: %s',prop{k});
     end
 end
+addArgList=prop(isAddArgVec);
 if ~isStructSpecifiedSpec
     isStructSpecifiedVec=true(1,nStruct);
 end

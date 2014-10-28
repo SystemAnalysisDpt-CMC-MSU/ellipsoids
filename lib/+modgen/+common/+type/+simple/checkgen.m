@@ -24,6 +24,9 @@ function checkgen(x,typeSpec,varargin)
 %           thrown in case of error. If not specified the message 
 %           is generated automatically.
 %
+%       nCallerStackStepsUp: numeric[1,1] - number of steps up in the call
+%           stacks for the caller, by which name the full message tag is to
+%           be generated, =1 by default
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-05-24 $ 
 % $Copyright: Moscow State University,
@@ -31,4 +34,12 @@ function checkgen(x,typeSpec,varargin)
 %            System Analysis Department 2012 $
 %
 %
-modgen.common.checkvar(x,typeSpec,varargin{:});
+if isempty(varargin),
+    reg=varargin;
+    nCallerStackStepsUp=1;
+else
+    [reg,~,nCallerStackStepsUp]=modgen.common.parseparext(varargin,...
+        {'nCallerStackStepsUp';1},'propRetMode','separate');
+end
+modgen.common.checkvar(x,typeSpec,reg{:},'nCallerStackStepsUp',...
+    1+nCallerStackStepsUp);

@@ -93,7 +93,7 @@ else
 end
 %
 if nElems>1
-    resArray(nElems)=smartdb.cubes.CubeStructFieldInfo();
+    resArray(nElems)=feval(class(self));
     resArray=reshape(resArray,expSizeVec);
 elseif nElems==0
     resArray=self.empty(expSizeVec);
@@ -177,5 +177,3 @@ else
         resArray(iElem).type=typeList{iElem};
     end
 end
-    
-

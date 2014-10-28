@@ -1,4 +1,4 @@
-function resArray=customArray(cubeStructRef,nameList,descriptionList,typeSpecList)
+function resArray=customArray(varargin)
 % CUSTOMARRAY creates an array of CubeStructFieldInfo objects
 % based on the specified properties
 %
@@ -20,18 +20,5 @@ function resArray=customArray(cubeStructRef,nameList,descriptionList,typeSpecLis
 %            System Analysis Department 2011 $
 %
 %
-if nargin<2
-    error([upper(mfilename),':wrongInput'],...
-        'nameList parameter is obligator');
-end
-%
-inpArgList={'nameList',nameList};
-if nargin>=3
-    inpArgList=[inpArgList,{'descriptionList',descriptionList}];
-end
-%
-if nargin>=4
-    inpArgList=[inpArgList,{'typeSpecList',typeSpecList}];
-end
-%
-resArray=smartdb.cubes.CubeStructFieldInfo(cubeStructRef,inpArgList{:});
+inpArgList=feval([mfilename('class') '.processCustomArrayArgList'],varargin{:});
+resArray=feval(mfilename('class'),inpArgList{:});

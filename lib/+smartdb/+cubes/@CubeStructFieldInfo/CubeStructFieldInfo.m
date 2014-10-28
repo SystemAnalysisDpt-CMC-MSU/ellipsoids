@@ -40,11 +40,45 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
             isNullVec=self.type.generateIsNull(valueVec);
             %
         end        
-        function isPositive=eq(self,obj)
-            isPositive=isEqual(self,obj);
+        function [isPositiveMat,reportStr]=eq(self,obj)
+            reportStr='';
+            [self,obj]=adjustSizesForEq(self,obj);
+            isPositiveMat=true(size(self));
+            if isempty(self),
+                return
+            end
+            nElems=numel(self);
+            reportStrList=cell(1,nElems);
+            for iElem=1:nElems,
+                if nargout>1,
+                    [isPositiveMat(iElem),reportStrCur]=isEqual(self(iElem),obj(iElem));
+                    if ~isempty(reportStrCur),
+                        reportStrList{iElem}=...
+                            sprintf('(%d-th elements):%s',iElem,reportStrCur);
+                    end
+                else
+                    isPositiveMat(iElem)=isEqual(self(iElem),obj(iElem));
+                end
+            end
+            if nargout>1,
+                reportStrList(cellfun('isempty',reportStrList))=[];
+                if numel(reportStrList)>1,
+                    reportStr=modgen.string.catwithsep(reportStrList,sprintf('\n'));
+                elseif ~isempty(reportStrList),
+                    reportStr=reportStrList{:};
+                end
+            end
         end
-        function isPositive=ne(self,obj)
-            isPositive=~isEqual(self,obj);
+        function isPositiveMat=ne(self,obj)
+            [self,obj]=adjustSizesForEq(self,obj);
+            isPositiveMat=false(size(self));
+            if isempty(self),
+                return
+            end
+            nElems=numel(self);
+            for iElem=1:nElems,
+                isPositiveMat(iElem)=~isEqual(self(iElem),obj(iElem));
+            end
         end
         function display(self)
             SRes=self.saveObjInternal();
@@ -90,11 +124,26 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
         end
     end
     %
-    methods (Static, Access=private)
+    methods (Static, Access=protected)
         function cubeStructRefList=processCubeStructRefList(sizeVec,cubeStructRefList)
             if ~iscell(cubeStructRefList)
                 cubeStructRefList={cubeStructRefList};
                 cubeStructRefList=cubeStructRefList(ones(sizeVec));
+            end
+        end
+        function inpArgList=processCustomArrayArgList(varargin)
+            if nargin<2
+                modgen.common.throwerror('wrongInput',...
+                    'nameList parameter is obligatory');
+            end
+            %
+            inpArgList={varargin{1},'nameList',varargin{2}};
+            if nargin>=3
+                inpArgList=[inpArgList,{'descriptionList',varargin{3}}];
+            end
+            %
+            if nargin>=4
+                inpArgList=[inpArgList,{'typeSpecList',varargin{4}}];
             end
         end
     end
@@ -104,6 +153,18 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
         %
     end
     methods (Access=private)
+        function [self,obj]=adjustSizesForEq(self,obj)
+            if ~isequal(size(self),size(obj)),
+                if numel(self)==1,
+                    self=repmat(self,size(obj));
+                elseif numel(obj)==1,
+                    obj=repmat(obj,size(self));
+                else
+                    error('MATLAB:dimagree',...
+                        'Matrix dimensions must agree.');
+                end
+            end
+        end
         function assignValue(self,value,fTypeCheckFunc,fieldName)
             % ASSIGN value is a thin wrapper for processValue which allows
             % a vectorial value assignment
@@ -114,13 +175,14 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
             end
             %
         end
+    end
+    methods (Access=protected)
         SObjectData=saveObjInternal(self)
         % SAVEOBJINTERNAL saves a current object state to a structure,
         %    please note that this function is only used for implementing
         %    isEqual method
         %
-    end
-    methods (Access=private)
+        
         resArray=buildArrayByProp(self,cubeStructRefList,varargin)
         % BUILDARRAYBYPROP is a helper method for filling an object arrays
         % with the specified properties        
@@ -154,7 +216,11 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
             %   self: CubeStructFieldInfo[] - constructed object array
             %
             %
+            
             import modgen.common.throwerror;
+            metaClassObj=metaclass(self);
+            className=metaClassObj.Name;
+            %
             [reg,prop]=modgen.common.parseparams(varargin);
             nReg=length(reg);
             %
@@ -176,12 +242,12 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
             elseif nReg>=1&&(iscell(reg{1})||isa(reg{1},...
                     'smartdb.cubes.CubeStruct'))
                 isCubeStructRefListOnInput=true;
-            elseif nReg>=1&&smartdb.cubes.CubeStructFieldInfo.isMe(reg{1});
+            elseif nReg>=1&&feval([className '.isMe'],reg{1});
                 isMeOnInput=true;
             end
             %
             if isEmptyToCreate
-                self=self.empty(size(reg{1}));
+                self=feval([className '.empty'],size(reg{1}));
             else
                 if isMeOnInput
                     sizeVec=size(reg{1});
@@ -190,13 +256,14 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
                     else
                         cubeStructRefList=reg{1}.getCubeStructRefList();
                     end
-                    self=smartdb.cubes.CubeStructFieldInfo.defaultArray(...
+                    self=feval([className '.defaultArray'],...
                         cubeStructRefList,sizeVec);
                     %
                     self.copyFrom(reg{1});
                 elseif isCubeStructRefListOnInput
                     cubeStructRefList=reg{1};
-                    self=self.buildArrayByProp(cubeStructRefList,prop{:});
+                    self=self.buildArrayByProp(...
+                        cubeStructRefList,prop{:});
                 else
                     throwerror('wrongInput',...
                         'unsupported way to construct an object');
@@ -311,10 +378,10 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
                 typeSpec,@iscellstr);
             nElem=numel(self);
             for iElem=1:nElem
-                type=smartdb.cubes.CubeStructFieldTypeFactory.fromClassName(...
+                typeObj=smartdb.cubes.CubeStructFieldTypeFactory.fromClassName(...
                     self(iElem).cubeStructRef,...
                     typeSpecList{iElem});
-                self(iElem).type=type;
+                self(iElem).type=typeObj;
             end
             %
         end

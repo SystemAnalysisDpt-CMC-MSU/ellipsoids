@@ -45,7 +45,7 @@ else
     modgen.common.type.simple.checkgen(mode,'isstring(x)&&~isempty(x)');
 end
 %
-[methodName className]=modgen.common.getcallernameext(nStepsUp+1);
+[methodName,className]=modgen.common.getcallernameext(nStepsUp+1);
 if ~strcmpi(mode,'default')||isempty(className),
     % delete info on subfunctions
     curInd=find(methodName=='/'|methodName=='\',1,'first');

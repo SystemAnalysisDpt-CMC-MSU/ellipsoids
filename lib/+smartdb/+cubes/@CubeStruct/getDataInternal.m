@@ -191,6 +191,10 @@ if nReg>=1
                 '[1,minDimensionality]= [1,%d]'],....
                 self.getMinDimensionality());
         end        
+        if any(diff(sort(dimVec))==0),
+            error([upper(mfilename),':wrongInput'],...
+                'dimVec is expected to have unique values');
+        end
     end
     %
     if ~all(dimVec<=length(minDimSize))

@@ -357,46 +357,7 @@ classdef ACubeStructFieldType
             self=self.setValueTypeBySpec({});
         end
     end
-    methods (Static,Access=private)
-        function cubeStructRefList=processCubeStructRefList(sizeVec,cubeStructRefList)
-            if ~iscell(cubeStructRefList)
-                cubeStructRefList={cubeStructRefList};
-                cubeStructRefList=cubeStructRefList(ones(sizeVec));
-            end
-        end
-        function objArray=uninitializedArray(cubeStructRef,sizeVec)
-            if ~isempty(cubeStructRef)&&(prod(sizeVec)~=0)
-                cubeStructRefList=smartdb.cubes.ACubeStructFieldType.processCubeStructRefList(...
-                    sizeVec,cubeStructRef);
-            else
-                cubeStructRefList=cubeStructRef.empty(sizeVec);
-            end
-            objArray=smartdb.cubes.CubeStructFieldTypeFactory.fromCubeStructRefList(cubeStructRefList);
-        end
-    end
     methods (Static)
-        function objArray=defaultArray(cubeStructRef,sizeVec)
-            objArray=smartdb.cubes.ACubeStructFieldType.uninitializedArray(cubeStructRef,sizeVec);
-            objArray=objArray.setDefault();
-        end
-        %
-        function obj=fromClassName(cubeStructRef,className)
-            obj=smartdb.cubes.ACubeStructFieldType.fromClassNameArray(cubeStructRef,{className});
-        end
-        %
-        function objArray=fromClassNameArray(cubeStructRef,classNameArray)
-            import modgen.common.throwerror;
-            if numel(cubeStructRef)>1
-                throwerror('wrongInput',...
-                    'method is not supported for a vectorial value of cubeStructRef');
-            end
-            sizeVec=size(classNameArray);
-            objArray=smartdb.cubes.ACubeStructFieldType.uninitializedArray(cubeStructRef,sizeVec);
-            objArray=objArray.setValueTypeBySpec(classNameArray);
-        end
-        valueMat=createarraybytypesizeinfo(STypeSizeInfoInp,varargin)
-        STypeSizeInfo=generatetypesizeinfostruct(value)
-        [isOk,STypeInfo]=istypesizeinfouniform(STypeSizeInfo)
         [isOk,SValueTypeInfo]=checkvaluematchisnull(minDimensionality,isSpecified,value,isNull,isValueNull)
         isOk=checkvaluematchisnull_aux(value,valueIsNull)
         isNullMat=generateisnull(typeName,depth,valueMat,isNull)
