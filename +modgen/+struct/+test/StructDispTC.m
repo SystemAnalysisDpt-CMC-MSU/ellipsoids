@@ -1,4 +1,4 @@
-classdef StructDispTC < mlunitext.test_case
+classdef StructDispTC < mlunitext.test_case %#ok<*NASGU>
     %
     %$Author: Alexander Karev <Alexander.Karev.30@gmail.com> $
     %$Date: 2013-06$
@@ -30,7 +30,7 @@ classdef StructDispTC < mlunitext.test_case
         %
         function self = test_strucdisp(self)
             S.name='';
-            S.description=[];
+            S.description=[]; %#ok<STRNU>
             %
             res=evalc('strucdisp(S)');
             ind=strfind(res,'name');
@@ -38,7 +38,7 @@ classdef StructDispTC < mlunitext.test_case
             ind=strfind(res,'description');
             mlunitext.assert_equals(1,numel(ind));
         end
-        function testStruct2Str(self)
+        function testStruct2Str(~)
             S.alpha=1;
             S.beta=2;
             S.gamma.alpha=1;
@@ -47,7 +47,7 @@ classdef StructDispTC < mlunitext.test_case
             resStr2=modgen.struct.struct2str(S);
             mlunitext.assert_equals(true,isequal(resStr,resStr2));
         end
-        function testStrucDispSimpleRegress(self)
+        function testStrucDispSimpleRegress(~)
             S.alpha=1;
             S.beta=2;
             S.gamma.alpha=1;
@@ -93,8 +93,8 @@ classdef StructDispTC < mlunitext.test_case
             nFields=length(structNameList);
             nArgCombs=length(ARG_COMB_LIST);
             %
-            resTmpDir=self.resTmpDir;
-            resFileName=[resTmpDir,filesep,'out.txt'];
+            %resTmpDir=self.resTmpDir;
+            %resFileName=[resTmpDir,filesep,'out.txt'];
             for iField=1:nFields
                 structName=structNameList{iField};
                 S=SData.(structName);
@@ -140,7 +140,7 @@ classdef StructDispTC < mlunitext.test_case
                 function compare()
                     [isEqual,reportStr]=modgen.struct.structcompare(SRes,Data);
                     mlunitext.assert_equals(true,isEqual,reportStr);
-                    mlunitext.assert_equals(true,isequalwithequalnans(SRes,Data));
+                    mlunitext.assert_equals(true,isequaln(SRes,Data));
                 end
                 function SRes=checkValue()
                     [pathSpecList,valList]=modgen.struct.getleavelist(Data);
@@ -194,11 +194,11 @@ classdef StructDispTC < mlunitext.test_case
             function check()
                 SRes=modgen.struct.updateleaves(SData,@(x,y)x);
                 mlunitext.assert_equals(true,...
-                    isequalwithequalnans(SData,SRes));
+                    isequaln(SData,SRes));
                 SRes=modgen.struct.updateleaves(SData,@fMinus);
                 SRes=modgen.struct.updateleaves(SRes,@fMinus);
                 mlunitext.assert_equals(true,...
-                    isequalwithequalnans(SData,SRes));
+                    isequaln(SData,SRes));
                 %
                 pathExpList=modgen.struct.getleavelist(SData);
                 pathList={};
@@ -236,7 +236,7 @@ classdef StructDispTC < mlunitext.test_case
             str = evalc('strucdisp(S)');
             isOk = isOk & ~isempty(strfind(str, '[1 2 3]'));
             
-            S = struct('a', ones(5, 3, 2));
+            S = struct('a', ones(5, 3, 2)); 
             str = evalc('strucdisp(S)');
             isOk = isOk & ~isempty(strfind(str, '[5x3x2 Array]'));
             
@@ -257,6 +257,65 @@ classdef StructDispTC < mlunitext.test_case
             isOk = isOk & ~isempty(strfind(str, '[5x5 Logic array]'));
             
             mlunitext.assert_equals(isOk, true);
+        end
+        
+        function self = testUpdateRegress(self)
+            ARG_COMB_LIST={...
+                {'depth',100,'printValues',false,'maxArrayLength',100},...
+                {'depth',100,'printValues',true,'maxArrayLength',100},...
+                {'depth',2,'printValues',true},...
+                {'depth',100,'printValues',true},...
+                {'depth',100,'printValues',false}};
+            %
+            methodName=modgen.common.getcallernameext(1);
+            
+            inpResMap=modgen.containers.ondisk.HashMapMatXML(...
+                'storageLocationRoot',self.testDataRootDir,...
+                'storageBranchKey',[methodName '_inp'],'storageFormat','mat',...
+                'useHashedPath',false,'useHashedKeys',true);
+            outResMap=modgen.containers.ondisk.HashMapMatXML(...
+                'storageLocationRoot',self.testDataRootDir,...
+                'storageBranchKey',[methodName '_out'],'storageFormat','mat',...
+                'useHashedPath',false,'useHashedKeys',true);
+            nArgCombs=length(ARG_COMB_LIST);
+            %
+            keyList=inpResMap.getKeyList();
+            nKeys=numel(keyList);
+            for iKey=1:nKeys,
+                keyName=keyList{iKey};
+                SDataVec=inpResMap.get(keyName);
+                for iArgComb=1:nArgCombs
+                    inpArgList=ARG_COMB_LIST{iArgComb};
+                    nElems=numel(SDataVec);
+                    stDispObj=modgen.struct.StructDisp(SDataVec(1),...
+                        inpArgList{:});
+                    for iElem=1:nElems,
+                        if iElem==1,
+                            rowIndVec=nan(0,1);
+                            colIndVec=nan(0,1);
+                        else
+                            [rowIndVec,colIndVec]=...
+                                stDispObj.update(SDataVec(iElem));
+                        end
+                        resStr=stDispObj.display();
+                        SRes=struct(...
+                            'S',{SDataVec(iElem)},...
+                            'inpArgList',{inpArgList},...
+                            'rowIndVec',{rowIndVec},...
+                            'colIndVec',{colIndVec},...
+                            'resStr',{resStr});
+                        mlunitext.assert_equals(true,isequal(resStr,...
+                            strucdisp(SDataVec(iElem),inpArgList{:})));
+                        inpKey=hash({SDataVec(iElem),inpArgList});
+                        %
+                        SExpRes=outResMap.get(inpKey);
+                        [isPos,reportStr]=...
+                            modgen.struct.structcompare(SRes,SExpRes);
+                        mlunitext.assert_equals(true,isPos,reportStr);
+                    end
+                end
+            end
+            %
         end
     end
 end

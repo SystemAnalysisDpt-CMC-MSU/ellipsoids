@@ -75,7 +75,7 @@ if numel(self)~=1||numel(otherObj)~=1,
     error([upper(mfilename),':wrongInput'],...
         'both object to be compared must be scalar');
 end
-isEq=strcmp(class(otherObj),class(self));
+isEq=isa(otherObj,class(self));
 if ~isEq,
     reportStr='Objects are of different classes';
     return;
@@ -158,12 +158,6 @@ if isCompareCubeStructBackwardRef
     compareCubeStructParamList={'comparemetadatabackwardref',false};
 end
 %
-selfMetaClass=metaclass(self);
-isEq=selfMetaClass==metaclass(otherObj);
-if ~isEq,
-    reportStr='Objects are of different types';
-    return;
-end
 selfFieldNameList=self.getFieldNameList();
 isFieldOrderEq=isequal(selfFieldNameList,otherObj.getFieldNameList());
 %

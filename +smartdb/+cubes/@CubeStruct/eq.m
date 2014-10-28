@@ -1,22 +1,19 @@
-function [isEq,reportStr]=eq(self,otherObj,varargin)
+function [isEqMat,reportStr]=eq(self,otherObj,varargin)
 % EQ returns true if CubeStruct objects are equal and false
 % otherwise; EQ(A,B) overloads symbolic A == B
 %
-% Usage: isEq=eq(self,otherObj,varargin)
+% Usage: isEqMat=eq(self,otherObj,varargin)
 %
 % Input:
 %   regular:
-%     self: CubeStruct [1,nElems] - current CubeStruct object(s)
-%     otherObj: CubeStruct [1,nElems] - other CubeStruct object(s)
-%
-%   properties:
-%     isFullCheck: logical [1,1] - if true, then all elements of arrays are
-%         compared, otherwise (default) check is performed up to the first
-%         difference
-%
+%     self: CubeStruct [n_1,n_2,...,n_k] or CubeStruct [1,1] - current
+%         CubeStruct object(s)
+%     otherObj: CubeStruct [n_1,n_2,...,n_k] or CubeStruct [1,1] - other
+%         CubeStruct object(s)
 % Output:
 %   regular:
-%     isEq: logical[1,1] - true if the specified objects are equal
+%     isEqMat: [n_1,n_2,...,n_k] - the element is true if the
+%         corresponding objects are equal, false otherwise
 %   optional:
 %     reportStr: char - report about the found differences
 %
@@ -26,53 +23,55 @@ function [isEq,reportStr]=eq(self,otherObj,varargin)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
-%   reportStr is returned, isFullCheck property is added
+%   reportStr is returned
 %
 
 if nargin<2,
     error([upper(mfilename),':wrongInput'],...
         'both object to be compared must be given');
 end
-reportStr='';
-isEq=isequal(size(self),size(otherObj));
-if ~isEq,
-    if nargout>1,
-        reportStr='Not equal sizes of objects';
+if ~isempty(varargin),
+    if ~ischar(varargin{1}),
+        error([upper(mfilename),':wrongInput'],...
+            'Additional regular arguments must not be passed');
     end
+end
+reportStr='';
+sizeVec=size(self);
+if ~isequal(sizeVec,size(otherObj)),
+    if numel(self)==1,
+        sizeVec=size(otherObj);
+        self=repmat(self,sizeVec);
+    elseif numel(otherObj)==1,
+        otherObj=repmat(otherObj,sizeVec);
+    else
+        error('MATLAB:dimagree',...
+            'Matrix dimensions must agree.');
+    end
+end
+isEqMat=true(sizeVec);
+if eq@handle(self,otherObj),
     return;
 end
-if eq@handle(self,otherObj)
-    isEq=true;
-    return;
-end
-isEq=strcmp(class(self),class(otherObj));
-if ~isEq,
+if ~isa(otherObj,class(self)),
+    isEqMat(:)=false;
     if nargout>1,
         reportStr='Not equal classes of objects';
     end
     return;
 end
-isEq=isempty(self)&&isempty(otherObj);
-if isEq,
+if isempty(isEqMat),
     return;
 end
-isFullCheck=false;
 prop=varargin;
 if ~isempty(prop),
     if ~ischar(prop{1}),
         error([upper(mfilename),':wrongInput'],...
             'Additional regular arguments must not be passed');
     end
-    indProp=find(strcmpi('isfullcheck',prop(1:2:end-1)),1,'first');
-    if ~isempty(indProp),
-        indProp=2*indProp;
-        isFullCheck=prop{indProp};
-        prop([indProp-1 indProp])=[];
-    end
 end
 nElems=numel(self);
 reportStrList=cell(1,nElems);
-isEq=true;
 for iElem=1:nElems,
     if nargout>1,
         [isEqCur,reportStrCur]=isEqual(self(iElem),otherObj(iElem),prop{:});
@@ -82,17 +81,14 @@ for iElem=1:nElems,
     else
         isEqCur=isEqual(self(iElem),otherObj(iElem),prop{:});
     end
-    isEq=isEq&&isEqCur;
-    if ~(isEq||isFullCheck),
-        break;
+    isEqMat(iElem)=isEqCur;
+end
+if nargout>1,
+    reportStrList(cellfun('isempty',reportStrList))=[];
+    if length(reportStrList)>1,
+        reportStr=modgen.string.catwithsep(reportStrList,sprintf('\n'));
+    elseif ~isempty(reportStrList),
+        reportStr=reportStrList{:};
     end
-end
-reportStrList(cellfun('isempty',reportStrList))=[];
-nReports=length(reportStrList);
-if nReports>1,
-    reportStrList(1:end-1)=cellfun(@(x)horzcat(x,sprintf('\n')),reportStrList(1:end-1),'UniformOutput',false);
-end
-if nReports>0,
-    reportStr=horzcat(reportStrList{:});
 end
 end

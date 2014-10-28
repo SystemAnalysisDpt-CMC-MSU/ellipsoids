@@ -1,4 +1,4 @@
-function resStr=strucdisp(SInp,varargin)
+function varargout=strucdisp(varargin)
 % STRUCDISP  display structure outline
 %
 % Usage: STRUCDISP(STRUC,fileName,'depth',DEPTH,'printValues',PRINTVALUES,...
@@ -40,7 +40,10 @@ function resStr=strucdisp(SInp,varargin)
 %       numberFormat: char[1,] - format specification used for displaying
 %           numberic values, passed directly to sprintf, by default '%g' is
 %           used
-%
+% Output:
+%   regular:
+%       resStr: char [1,] - resulting string with displayed
+%           structure contents
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-12-08 $
 % $Copyright: Moscow State University,
@@ -49,55 +52,9 @@ function resStr=strucdisp(SInp,varargin)
 %
 %
 
-import modgen.common.type.simple.checkgen;
-import modgen.common.parseparext;
-%% Constants
-FILLER_SYMBOL_CODE=modgen.struct.StructDisp.FILLER_SYMBOL_CODE;
-DASH_SYMBOL_CODE=modgen.struct.StructDisp.DASH_SYMBOL_CODE;
-%% Main program
-%%%%% start program %%%%%
-checkgen(SInp,'isstruct(x)');
-[reg,~,depth,inpPrintValues,maxArrayLength,numberFormat,structureName]=parseparext(varargin,...
-    {'depth','printValues','maxArrayLength','numberFormat','defaultName';...
-    modgen.struct.StructDisp.DEFAULT_DEPTH,...
-    modgen.struct.StructDisp.DEFAULT_PRINT_VALUES,...
-    modgen.struct.StructDisp.DEFAULT_MAX_ARRAY_LENGTH,...
-    modgen.struct.StructDisp.DEFAULT_NUMBER_FORMAT,...
-    modgen.struct.StructDisp.DEFAULT_NAME;
-    'isscalar(x)&&isnumeric(x)&&fix(x)==x',...
-    'islogical(x)&&isscalar(x)',...
-    'isscalar(x)&&isnumeric(x)&&fix(x)==x&&x>0',...
-    'isstring(x)',...
-    'isstring(x)'},[0,1],...
-    'regDefList',{''});
-fileName=reg{1};
-% start recursive function
-listStr = modgen.struct.StructDisp.recFieldPrint(SInp, 0, inpPrintValues,...
-    structureName, maxArrayLength, depth, numberFormat,...
-    DASH_SYMBOL_CODE, FILLER_SYMBOL_CODE);
-
-% 'listStr' is a cell array containing the output
-% Now it's time to actually output the data
-% Default is to output to the command window
-% However, if the filename argument is defined, output it into a file
-resultString=modgen.string.catwithsep(listStr,sprintf('\n'));
-if nargout==0
-    % write data to screen
-    disp(resultString);
+varargout=cell(1,nargout);
+if nargout>0,
+    [varargout{:}]=modgen.struct.StructDisp.strucdisp(varargin{:});
 else
-    resStr=[resultString,sprintf('\n')];
-end
-if ~isempty(fileName)
-    % open file and check for errors
-    fid = fopen(fileName, 'wt');
-    if fid < 0
-        error('Unable to open output file');
-    end
-    % write data to file
-    nListRows=length(listStr);
-    for iListRow = 1 : nListRows
-        fprintf(fid, '%s\n', listStr{iListRow});
-    end
-    % close file
-    fclose(fid);
+    modgen.struct.StructDisp.strucdisp(varargin{:});
 end

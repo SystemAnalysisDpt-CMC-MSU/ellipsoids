@@ -33,6 +33,8 @@ elseif numel(reg)==1
     fieldNameList=reg{1};
     if ischar(fieldNameList)
         fieldNameList={fieldNameList};
+    elseif ~iscellstr(fieldNameList),
+        throwerror('wrongInput','fieldNameList must be cell array of strings');
     end
 else
     fieldNameList=self.getFieldNameList;
@@ -51,6 +53,10 @@ fieldTypeList=self.fieldMetaData.getTypeList();
 %
 if ~isempty(fieldNameList)
     [~,indLoc]=ismember(fieldNameList,fullFieldNameList);
+    if any(indLoc==0),
+        throwerror('wrongInput',...
+            'Not all fields from fieldNameList are fields in given object');
+    end
     typeInfoList=fieldTypeList(indLoc);
     if isUniformOutput
         typeInfoList=[typeInfoList{:}];

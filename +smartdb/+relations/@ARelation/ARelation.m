@@ -109,9 +109,15 @@ classdef ARelation<smartdb.cubes.CubeStruct
             %         determining whether value corresponding to each field
             %         and each tuple is null or not
             %
+            %   OR
+            %
+            %   regular:
+            %     sizeVec: double [1,nDims] - size of array that is
+            %         necessary to generate as result of constructor
             % Output:
             %   regular:
-            %     self: ARelation [1,1] - constructed class object
+            %     self: ARelation [1,1] (or any size) - constructed class
+            %         object(s)
             %
             %   Subclasses probably do have an overriden version of this
             %   method which defines either dynamic or static set of fields

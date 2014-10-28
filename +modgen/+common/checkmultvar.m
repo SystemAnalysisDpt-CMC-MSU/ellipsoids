@@ -26,7 +26,9 @@ function checkmultvar(typeSpec,nPlaceHolders,varargin)
 %       errorMessage: char[1,] - error message for MException object
 %           thrown in case of error. If not specified the message
 %           is generated automatically.
-%
+%       nCallerStackStepsUp: numeric[1,1] - number of steps up in the call
+%           stacks for the caller, by which name the full message tag is to
+%           be generated, =1 by default
 % Example:
 %
 %   modgen.common.checkmultvar('numel(x1)==numel(x2)',2,a,b,...
@@ -43,24 +45,32 @@ function checkmultvar(typeSpec,nPlaceHolders,varargin)
 import modgen.common.type.simple.lib.*;
 import modgen.common.throwerror;
 %
-nVarArgs=length(varargin);
+if isempty(varargin),
+    reg=varargin;
+    nCallerStackStepsUp=1;
+else
+    [reg,~,nCallerStackStepsUp]=modgen.common.parseparext(varargin,...
+        {'nCallerStackStepsUp';1},'propRetMode','separate');
+end
+%
+nVarArgs=length(reg);
 if isempty(nPlaceHolders)
     nPlaceHolders=nVarArgs;
 end
 %
 if nVarArgs<nPlaceHolders
     throwerror('wrongInput',['Values are expected to be provided for ',...
-        'each placeholder']);
+        'each placeholder'],'nCallerStackStepsUp',1+nCallerStackStepsUp);
 end
 
 isChar=ischar(typeSpec);
 if isChar
     for iVar=1:nPlaceHolders
-        assignIn(sprintf('x%d',iVar),varargin{iVar});
+        assignIn(sprintf('x%d',iVar),reg{iVar});
     end
     isOk=eval(typeSpec);
 else
-    isOk=feval(typeSpec,varargin{1:nPlaceHolders});
+    isOk=feval(typeSpec,reg{1:nPlaceHolders});
 end
 
 if ~isOk
@@ -75,7 +85,7 @@ if ~isOk
         'conditions: %s'];
     %
     [~,~,varNameList,errorTag,errorMessage]=modgen.common.parseparext(...
-        varargin((nPlaceHolders+1):end),...
+        reg((nPlaceHolders+1):end),...
         {...
         'varNameList','errorTag','errorMessage';...
         {},'wrongInput',defaultErrorMessage;...
@@ -85,7 +95,7 @@ if ~isOk
     nVarNames=length(varNameList);
     if nVarNames>nPlaceHolders
         throwerror('wrongInput',['Number of variable names exceeds ',...
-            'a number of place holders']);
+            'a number of place holders'],'nCallerStackStepsUp',1+nCallerStackStepsUp);
     end
     varNameList=[varNameList,cell(1,nPlaceHolders-nVarNames)];
     %
@@ -95,7 +105,7 @@ if ~isOk
     errorMessage=sprintf(errorMessage,cell2sepstr([],varNameList,','),...
         checkName);
     %
-    throwerror(errorTag,errorMessage);
+    throwerror(errorTag,errorMessage,'nCallerStackStepsUp',1+nCallerStackStepsUp);
 end
 end
 function assignIn(varName,varValue)

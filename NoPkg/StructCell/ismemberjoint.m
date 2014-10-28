@@ -284,7 +284,7 @@ for iRow=1:nLeftComp,
             [rightMat,~,rightIndMat(:,iRow),isRightSorted]=uniquejoint(rightCell(iRow),1);
             leftMat=leftMat{:};
             rightMat=rightMat{:};
-            if ~isequalwithequalnans(leftMat,rightMat),
+            if ~isequaln(leftMat,rightMat),
                 if isLeftSorted&&isRightSorted,
                     nElems=size(leftMat,1);
                     [~,~,curInd]=uniquejoint({vertcat(leftMat,rightMat)},1);

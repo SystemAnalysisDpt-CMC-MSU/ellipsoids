@@ -113,27 +113,62 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
             %           checkstruct: logical[1,1] - determines if presence of
             %               all relation fields in the input structures is checked
             %
+            %   Case3 (building of array):
+            %       optional:
+            %           sizeVec: double [1,nDims] - size of array that is
+            %               necessary to generate as result of constructor;
+            %               if not given, then array with single element is
+            %               constructed
+            %
             % Output:
             %   self: CubeStruct[1,1] - created object
             %
             %
             minDimensionality=...
                 smartdb.cubes.CubeStruct.DEFAULT_MIN_DIMENSIONALITY;
+            sizeVec=[1 1];
             %
             [reg,prop]=modgen.common.parseparams(varargin);
             nReg=length(reg);
+            isSize=false;
             if nReg>=1
-                isCubeObjectOnInput= smartdb.cubes.CubeStruct.isMe(reg{1});
+                isCubeObjectOnInput=smartdb.cubes.CubeStruct.isMe(reg{1});
+                isSize=nReg==1&&~isCubeObjectOnInput&&~isstruct(reg{1});
+                if isSize,
+                    sizeVec=reg{1};
+                    isnWrong=isnumeric(sizeVec)&&ismatrix(sizeVec)&&...
+                        size(sizeVec,1)==1&&size(sizeVec,2)>=2;
+                    if isnWrong,
+                        isnWrong=isreal(sizeVec)&&...
+                            all(floor(sizeVec)==sizeVec&...
+                            sizeVec>=0&isfinite(sizeVec));
+                    end
+                    if ~isnWrong,
+                        error([upper(mfilename),':wrongInput'],...
+                            'unsupported way to construct CubeStruct');
+                    end
+                    reg={};
+                    nReg=0;
+                end
             else
                 isCubeObjectOnInput=false;
             end
+            nObjs=prod(sizeVec);
             %
             if ~isCubeObjectOnInput && nReg>3
                 error([upper(mfilename),':wrongInput'],...
                     'incorrect number of regular arguments');
             end
             %
-            if isCubeObjectOnInput
+            if nObjs==0,
+                self=self.empty(sizeVec);
+            elseif isSize,
+                className=class(self);
+                for iObj=nObjs:-1:1,
+                    self(iObj)=feval(className);%feval(className,'checkConsistency',false);
+                end
+                self=reshape(self,sizeVec);
+            elseif isCubeObjectOnInput
                 if ~(numel(prop)==0||numel(prop)==2&&...
                         strcmpi(prop{1},'minDimensionality'))
                     %
@@ -272,6 +307,9 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         end
         copyFromInternal(self,obj,varargin)
     end
+    methods (Access=protected, Hidden)
+        addFieldsInternal(self,addFieldNameList,varargin)
+    end
     methods (Access=protected, Hidden,Sealed)
         minDimensionSizeVec=getMinDimensionSizeByDataInternal(self,dimNumVec,varargin)
         nFields=getNFieldsInternal(self,varargin)
@@ -296,7 +334,6 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         %
         catWithInternal(self,inpObj,varargin)
         %
-        addFieldsInternal(self,addFieldNameList,varargin)
         removeFieldsInternal(self,removeFieldList)
         setDataInternal(self,varargin)
         %
@@ -498,5 +535,12 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
             %                  structures interpreting each structure as the data for 
             %                  several CubeStruct data slices.
             %        
+    end
+    methods (Access=protected)
+        function metaDataVec=getMetaDataInternal(self,fieldNameList,...
+                fieldDescrList,typeSpecList)
+            metaDataVec=smartdb.cubes.CubeStructFieldInfo.customArray(...
+                self,fieldNameList,fieldDescrList,typeSpecList);
+        end
     end
 end
