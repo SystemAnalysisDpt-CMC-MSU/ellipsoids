@@ -57,12 +57,22 @@ function varargout=auxdfeval(processorFunc,varargin)
 %
 %
 %
-if ~isempty(which('modgen.pcalcalt.auxdfeval'))
+[reg,prop]=modgen.common.parseparams(varargin);
+if ~isempty(which('modgen.pcalcalt.auxdfeval')),
+    if ~isempty(prop),
+        isIgnoredPropVec=ismember(lower(prop(1:2:end-1)),...
+            lower({'sharedPathMap','configuration'}));
+        if any(isIgnoredPropVec),
+            isIgnoredPropVec=reshape(repmat(...
+                reshape(isIgnoredPropVec,1,[]),2,1),1,[]);
+            prop(isIgnoredPropVec)=[];
+        end
+    end
     if nargout==0
-        modgen.pcalcalt.auxdfeval(processorFunc,varargin{:});
+        modgen.pcalcalt.auxdfeval(processorFunc,reg{:},prop{:});
     else
         varargout=cell(1,nargout);
-        [varargout{:}]=modgen.pcalcalt.auxdfeval(processorFunc,varargin{:});
+        [varargout{:}]=modgen.pcalcalt.auxdfeval(processorFunc,reg{:},prop{:});
     end
 else
     import modgen.pcalc.dfevalasync;
@@ -73,8 +83,6 @@ else
     isSharedPathMapSpec=false;
     isConfSpec=false;
     isFork = false;
-    %
-    [reg,prop]=modgen.common.parseparams(varargin);
     %
     if isempty(reg)
         error([upper(mfilename),':wrongInput'],...

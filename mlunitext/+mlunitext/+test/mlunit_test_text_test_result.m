@@ -57,6 +57,21 @@ classdef mlunit_test_text_test_result < mlunitext.test_case
         end
         %
         function test_dots(self)
+            import modgen.logging.log4j.test.Log4jConfigurator;
+            %
+            lastPropStr=modgen.logging.log4j.Log4jConfigurator.getLastLogPropStr;
+            isLocked=modgen.logging.log4j.Log4jConfigurator.isLocked();
+            onCln=onCleanup(@()restoreConf(lastPropStr,isLocked));
+            % Unlock and reconfigure
+            Log4jConfigurator.unlockConfiguration();
+            mlunitext.assert_equals(false,Log4jConfigurator.isLocked());            
+            NL = sprintf('\n');            
+            appenderConfStr = ['log4j.appender.stdout=org.apache.log4j.ConsoleAppender',NL,...
+                'log4j.appender.stdout.layout=org.apache.log4j.PatternLayout',NL,...
+                'log4j.appender.stdout.layout.ConversionPattern=%5p %c - %m\\n'];            
+            confStr = ['log4j.rootLogger=WARN,stdout', NL, appenderConfStr];
+            evalc('Log4jConfigurator.configure(confStr)');            
+            %
             [runner,suite]=self.getSimpleRunnerSuite(); %#ok<ASGLU,NASGU>
             stdOut=evalc('runner.run(suite);');
             linesCVec = strsplit(stdOut);
@@ -69,6 +84,11 @@ classdef mlunit_test_text_test_result < mlunitext.test_case
             end
             mlunitext.assert_equals(true,isFound,...
                 'Expected standard output not found');
+            function restoreConf(confStr,isLocked)
+                modgen.logging.log4j.test.Log4jConfigurator.unlockConfiguration();
+                modgen.logging.log4j.test.Log4jConfigurator.configure(...
+                    confStr,'islockafterconfigure',isLocked);
+            end
         end
         %
         function testPrintErrorList(self)

@@ -394,7 +394,8 @@ classdef test_suite<handle
             %
             nBlocks=ceil(nTests/blockLen);
             suiteCVec=cell(1,nBlocks);
-            resultCVec=repmat({feval(class(result),result)},1,nBlocks);
+            resultCVec=arrayfun(@(x)feval(class(result),result),1:nBlocks,...
+                'UniformOutput',false);
             mlunitext.logprintf('debug',...
                 '===== START suite [%s] with %d test(s), %d parallel block(s)', ...
                 self.str(), nTests, nBlocks);
