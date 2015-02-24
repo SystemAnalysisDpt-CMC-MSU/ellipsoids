@@ -1,18 +1,18 @@
 function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
-                            varargin)
+    varargin)
 %
-% DOESINTERSECTIONCONTAIN - checks if the intersection of ellipsoids 
-%                           contains the union or intersection of given 
+% DOESINTERSECTIONCONTAIN - checks if the intersection of ellipsoids
+%                           contains the union or intersection of given
 %                           ellipsoids or Polyhedrons.
 %
-%   res = DOESINTERSECTIONCONTAIN(fstEllArr, secEllArr, mode) 
+%   res = DOESINTERSECTIONCONTAIN(fstEllArr, secEllArr, mode)
 %       Checks if the union
 %       (mode = 'u') or intersection (mode = 'i') of ellipsoids in
 %       secEllArr lies inside the intersection of ellipsoids in
 %       fstEllArr. Ellipsoids in fstEllArr and secEllArr must be
 %       of the same dimension. mode = 'u' (default) - union of
 %       ellipsoids in secEllArr. mode = 'i' - intersection.
-%   res = DOESINTERSECTIONCONTAIN(fstEllArr, secPolyArr, mode) 
+%   res = DOESINTERSECTIONCONTAIN(fstEllArr, secPolyArr, mode)
 %        Checks if the union
 %       (mode = 'u') or intersection (mode = 'i')  of Polyhedrons in
 %       secPolyArr lies inside the intersection of ellipsoids in
@@ -47,7 +47,7 @@ function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
 %   contains the given intersection, otherwise, it does not.
 %
 %   The intersection of Polyhedrons is a Polyhedron, which is computed
-%   by the standard routine of MPT. How checked if intersection of  
+%   by the standard routine of MPT. How checked if intersection of
 %   ellipsoids contains Polyhedron is explained in doesContainPoly.
 %
 %   Checking if the union of Polyhedrons belongs to the intersection
@@ -67,14 +67,14 @@ function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
 %
 %   properties:
 %       mode: char[1, 1] - 'u' or 'i', go to description.
-%       computeMode: char[1,] - 'highDimFast' or 'lowDimFast'. Determines, 
-%           which way function is computed, when secObjArr is Polyhedron. If 
-%           secObjArr is ellipsoid computeMode is ignored. 'highDimFast' 
+%       computeMode: char[1,] - 'highDimFast' or 'lowDimFast'. Determines,
+%           which way function is computed, when secObjArr is Polyhedron. If
+%           secObjArr is ellipsoid computeMode is ignored. 'highDimFast'
 %           works  faster for  high dimensions, 'lowDimFast' for low. If
 %           this property is omitted if dimension of ellipsoids is greater
 %           then 10, then 'hightDimFast' is choosen, otherwise -
 %           'lowDimFast'
-%                       
+%
 %
 % Output:
 %   res: double[1, 1] - result:
@@ -90,9 +90,9 @@ function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
 %   secEllObj = [0 ; 0] + ellipsoid(2*eye(2, 2));
 %   thirdEllObj = [1; 0] + ellipsoid(0.5 * eye(2, 2));
 %   secEllObj.doesIntersectionContain([firstEllObj secEllObj], 'i')
-% 
+%
 %   ans =
-% 
+%
 %        1
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
@@ -154,12 +154,8 @@ if isa(secObjArr,'Polyhedron')
     else
         isInsideVec = false(1,nCols);
         for iCols = 1:nCols
-            try
             isInsideVec(iCols) = doesContainPoly(fstEllArr,...
                 polyVec(iCols),varargin);
-            catch
-                keyboard;
-            end
         end
         res = all(isInsideVec);
     end
@@ -291,7 +287,3 @@ if (xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
 else
     res = 0;
 end
-
-end
-%
-%
