@@ -38,7 +38,7 @@ classdef ADispStructTC < mlunitext.test_case
         end
         
         function self = auxDisplayTest(self, objArr,...
-                displayStringCVec, isExpOk)
+                displayStringCVec, isExpOk) %#ok<INUSL>
             obtainedStr = evalc('objArr.display()');
             isOk = all(cellfun(@(Str1, Str2)~isempty(strfind(Str1, Str2)), ...
                 repmat({obtainedStr}, size(displayStringCVec)),...
@@ -46,15 +46,15 @@ classdef ADispStructTC < mlunitext.test_case
             mlunitext.assert_equals(isOk, isExpOk);
         end
         
-        function self = auxFromStructTest(self, StructArr, ObjArr, result)
-            obtainedObjArr = ObjArr.fromStruct(StructArr);
-            isOk = isequal(ObjArr, obtainedObjArr);
-            mlunitext.assert_equals(isOk, result);
+        function self = auxFromStructTest(self, StructArr, objArr, isOkExp)
+            obtainedObjArr = objArr.fromStruct(StructArr);
+            isOk = isequal(objArr,obtainedObjArr);
+            mlunitext.assert_equals(isOk, isOkExp);
         end
         
-        function self = auxEqTest(self, ObjArr1, ObjArr2, result)
+        function self = auxEqTest(self, ObjArr1, ObjArr2, isExpOk)
             isOk = isequal(ObjArr1, ObjArr2);
-            mlunitext.assert_equals(isOk, result);
+            mlunitext.assert_equals(isOk, isExpOk);
         end
         
         function self = testToStuct(self)

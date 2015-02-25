@@ -13,7 +13,8 @@ x0EllObj = [0 2 0 0].' + ellipsoid([0.01 0 0 0; 0 0.01 0 0; 0 0 0 0;...
 dirsMat = [1 0 1 0; 1 -1 0 0; 0 -1 0 1; 1 1 -1 1; -1 1 1 0; -2 0 1 1].';
 % reach set
 rsObj = elltool.reach.ReachContinuous(lsys, x0EllObj, dirsMat, timeVec,...
-    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-3);  
+    'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-3,...
+    'absTol',1e-5,'relTol',1e-4);  
 basisMat = [1 0 0 0; 0 1 0 0]';  % orthogonal basis of (x1, x2) subspace
 psObj = rsObj.projection(basisMat);  % reach set projection
 % plot projection of reach set external approximation:

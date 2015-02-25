@@ -100,7 +100,6 @@ for k=1:2:nProp-1
             end
         case 'clustersize',
             clusterSize=prop{k+1};
-            dfevalArgList=[dfevalArgList,prop([k,k+1])]; %#ok<AGROW>
         otherwise,
             throwerror('wrongInput',...
                 'property %s is not supported', prop{k});
@@ -126,7 +125,28 @@ if isStartupFileUsed
         throwerror('wrongInput',...
             'startupFilePath cannot be empty');
     end
-    startupFileName=[startupFilePath,filesep,'taskStartup.m'];
+    startupFileName=[startupFilePath,filesep,'jobStartup.m'];
+else
+    %generate jobStartup.m file
+    tmpDir=modgen.io.TmpDataManager.getDirByCallerKey(...
+        modgen.system.getpidhost());
+    javaUserPath=modgen.java.AJavaStaticPathMgr.getUserPathList;
+    javaAddPathCallStr=['javaaddpath({',modgen.string.catwithsep(...
+        cellfun(@(x)['''',x,''''],javaUserPath,...
+        'UniformOutput',false),','),'})'];
+    javaAddPathCallStr=strrep(javaAddPathCallStr,filesep,[filesep,filesep]);
+    startupFileName=[tmpDir,filesep,'jobStartup.m'];
+    fidJobCreate = fopen(startupFileName,'w');
+    try
+        fprintf(fidJobCreate,'function jobCreate(~)\n');
+        fprintf(fidJobCreate,javaAddPathCallStr);
+        fclose(fidJobCreate);
+    catch meObj
+        fclose(fidJobCreate);
+        rethrow(meObj);
+    end
+    %
+    isStartupFileUsed=true;
 end
 if (~isConfSpec)&&isParToolboxInstalled
     confName=parallel.defaultClusterProfile;
@@ -184,7 +204,11 @@ if (nTasks>1&&clusterSize>1) || isFork
         dfevalArgList=[dfevalArgList,{'AttachedFiles',{startupFileName}}];
     end
     parClustObj=parcluster(confName);
+    if ~isequal(clusterSize,Inf)
+        parClustObj.NumWorkers=clusterSize;
+    end
     jobObj=createJob(parClustObj,dfevalArgList{:});
+    jobObj.AutoAttachFiles=false;
     %
     inpArgCMat = transpose(vertcat(reg{:}));
     %

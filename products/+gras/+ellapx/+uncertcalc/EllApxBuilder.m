@@ -88,9 +88,11 @@ classdef EllApxBuilder<handle
         %
         function builderObj=buildOneApx(pDynObj,goodDirSetObj,...
                 calcTimeLimVec,calcPrecision,fHandle,SProps)
+            PRECISION_ADJUSTMENT=1e-02;
             paramsCMat = [fieldnames(SProps),struct2cell(SProps)].';
             builderObj=fHandle(pDynObj,goodDirSetObj,calcTimeLimVec,...
-                calcPrecision,calcPrecision*1e-02,paramsCMat{:});
+                calcPrecision,calcPrecision*PRECISION_ADJUSTMENT,...
+                paramsCMat{:});
         end
     end
     %

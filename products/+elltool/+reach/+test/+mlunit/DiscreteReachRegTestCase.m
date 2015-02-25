@@ -71,19 +71,13 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
         end
         %
         function self = testRegularization(self)
-            x0Ell = self.x0Ell.getCopy();
+            x0Ell = self.x0Ell.getCopy(); %#ok<*PROP>
             l0Mat = self.l0Mat;
             timeVec = self.timeVec;
-            regTol = self.regTol;
+            regTol = self.regTol; %#ok<NASGU>
             atDefCMat = self.atDefCMat;
             btDefCMat = self.btDefCMat;
-            ctDefCMat = self.ctDefCMat;
-            ctDefCMat = [1;0];
-            DistBounds = struct();
-            DistBounds.shape = {'0.09*(sin(t))^2'};
-            DistBounds.center = {'2*cos(t)'};
             ControlBounds = self.ControlBounds;
-            DistBounds = self.DistBounds;
             %
             %% 1
             btDefCMat = {'sin(t - 1)' 'sin(t - 1)'; 'sin(t - 1)' 'sin(t - 1)'; ...
@@ -100,7 +94,8 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
             %
             %% 2 OVERFLOW
             self.runAndCheckError(@runBad2,...
-                'MAKEELLTUBEREL:wrongInput:ShapeMatCalcFailure');
+                {'MAKEELLTUBEREL:wrongInput:ShapeMatCalcFailure',...
+                'MATLAB:realsqrt:complexResult'});
             %
             %% 3 DEGRADED ESTIMATE, DEGRADED INITIAL SET
             self.runAndCheckError(@runBad3,...

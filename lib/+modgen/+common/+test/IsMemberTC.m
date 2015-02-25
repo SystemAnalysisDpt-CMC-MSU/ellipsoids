@@ -721,7 +721,7 @@ classdef IsMemberTC < mlunitext.test_case
             
             function checkTime(inpMat,nRuns) %#ok<INUSL>
                 import modgen.common.uniquejoint;
-                MAX_TOLERANCE=0.25;
+                MAX_TOLERANCE=0.9;
                 outMat1=[];
                 indForwardVec1=[];
                 indBackwardVec1=[];
@@ -771,7 +771,7 @@ classdef IsMemberTC < mlunitext.test_case
             
             function checkTime(inpMat1,inpMat2,nRuns,maxTol) %#ok<INUSL>
                 import modgen.common.ismemberjoint;
-                MAX_TOLERANCE_DEFAULT=0.3;                
+                MAX_TOLERANCE_DEFAULT=0.9;                
                 if nargin<4
                     maxTol=MAX_TOLERANCE_DEFAULT;
                 end

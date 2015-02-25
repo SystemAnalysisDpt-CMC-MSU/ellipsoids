@@ -162,7 +162,13 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             %
             modgen.common.type.simple.checkgen(indGroup,'x==1');
             %
-            set(hFigure,'NumberTitle','off','WindowStyle','docked',...
+            if usejava('swing')
+                winStyleArgList={'WindowStyle','docked'};
+            else
+                winStyleArgList={};
+            end
+            %
+            set(hFigure,'NumberTitle','off',winStyleArgList{:},...
                 'RendererMode','manual','Renderer','OpenGL','Name',...
                 figureGroupName,'PaperPositionMode','auto');
         end

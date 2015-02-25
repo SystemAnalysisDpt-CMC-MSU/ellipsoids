@@ -121,7 +121,7 @@ classdef IReach < handle
         %   Number of external approximations: 2
         %   Number of internal approximations: 2
         %
-        display(self)
+        disp(self)
         % 
         % REFINE - adds new approximations computed for the specified directions
         %          to the given reach set or to the projection of reach set.

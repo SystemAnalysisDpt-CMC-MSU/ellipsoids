@@ -10,6 +10,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
         crmSys
         resTmpDir
     end
+    %
     properties (Constant, GetAccess = private)
         REL_TOL_FACTOR = 1e-3;
         ABS_TOL_FACTOR = 1e-3;
@@ -56,7 +57,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 self.crmSys =...
                     gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
             end
-            confNameList = varargin{1};
+            confNameList = varargin{1}; %#ok<*PROPLC>
             if strcmp(confNameList, '*')
                 self.crm.deployConfTemplate('*');
                 confNameList = self.crm.getConfNameList();
@@ -70,15 +71,13 @@ classdef SuiteSupportFunction < mlunitext.test_case
         function testSupportCompare(self)
             import modgen.common.throwerror;
             %
-            crm = self.crm;
+            crm = self.crm; %#ok<*PROP>
             crmSys = self.crmSys;
             confNameList = self.confNameList;
             nConfs = length(confNameList);
             for iConf = 1 : nConfs
                 crm.deployConfTemplate(confNameList{iConf});
             end
-            %
-            matOpObj = gras.mat.CompositeMatrixOperations();
             %
             for iConf = 1 : nConfs
                 confName = confNameList{iConf};
@@ -133,7 +132,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         lsGoodDirMat(:, iGoodDir) / ...
                         norm(lsGoodDirMat(:, iGoodDir));
                 end
-                lsGoodDirCMat = SRunProp.ellTubeRel.lsGoodDirVec();
+                %
+                lsGoodDirCMat = SRunProp.ellTubeRel.lsGoodDirVec;
                 curGoodDirObj = SRunAuxProp.goodDirSetObj;
                 curGoodDirTransMatObj = curGoodDirObj.getRstTransDynamics;
                 fCalcTransMat = @(t) curGoodDirTransMatObj.evaluate(t);

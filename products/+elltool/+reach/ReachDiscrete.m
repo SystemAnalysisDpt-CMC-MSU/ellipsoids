@@ -30,12 +30,12 @@ classdef ReachDiscrete < elltool.reach.AReach
     end
     %
     methods (Static, Access = protected)
-        function [atStrCMat btStrCMat gtStrCMat...
-                ptStrCMat ptStrCVec...
-                qtStrCMat qtStrCVec] = prepareSysParam(linSys, ~)
-            [atStrCMat btStrCMat gtStrCMat...
-                ptStrCMat ptStrCVec...
-                qtStrCMat qtStrCVec] = ...
+        function [atStrCMat, btStrCMat, gtStrCMat,...
+                ptStrCMat, ptStrCVec,...
+                qtStrCMat, qtStrCVec] = prepareSysParam(linSys, ~)
+            [atStrCMat, btStrCMat, gtStrCMat,...
+                ptStrCMat, ptStrCVec,...
+                qtStrCMat, qtStrCVec] = ...
                 prepareSysParam@elltool.reach.AReach(linSys);
             %
             atStrCMat = unifySym(atStrCMat);
@@ -98,7 +98,7 @@ classdef ReachDiscrete < elltool.reach.AReach
     end
     %
     methods (Static, Access = private)
-        function [qArrayList ltGoodDirArray] = ...
+        function [qArrayList, ltGoodDirArray] = ...
                 calculateApproxShape(probDynObj, l0Mat, ...
                 approxType, isDisturb, isMinMax)
             import elltool.conf.Properties;
@@ -213,7 +213,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             if isExtApprox
                 approxType = EApproxType.External;
-                [qArrayList ltGoodDirArray] = fCalcApproxShape(approxType);
+                [qArrayList, ltGoodDirArray] = fCalcApproxShape(approxType);
                 extEllTubeRel = create();
                 if ~isIntApprox
                     ellTubeRel = extEllTubeRel;
@@ -221,7 +221,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             if isIntApprox
                 approxType = EApproxType.Internal;
-                [qArrayList ltGoodDirArray] = fCalcApproxShape(approxType);
+                [qArrayList, ltGoodDirArray] = fCalcApproxShape(approxType);
                 intEllTubeRel = create();
                 if isExtApprox
                     intEllTubeRel.unionWith(extEllTubeRel);
@@ -231,9 +231,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             %
             function rel = create()
                 if self.isBackward
-                    qArrayList = cellfun(@(x) flipdim(x, 3), qArrayList, ...
+                    qArrayList = cellfun(@(x) flip(x, 3), qArrayList, ...
                         'UniformOutput', false);
-                    ltGoodDirArray = flipdim(ltGoodDirArray, 3);
+                    ltGoodDirArray = flip(ltGoodDirArray, 3);
                 end
                 %
                 rel = gras.ellapx.smartdb.rels.EllTube.fromQArrays(...

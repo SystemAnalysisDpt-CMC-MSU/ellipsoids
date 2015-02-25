@@ -15,6 +15,8 @@ classdef ReachFactory < handle
         isRegEnabled
         isJustCheck
         regTol
+        absTol
+        relTol
     end
     methods
         function linSysObj = createSysInstance(self, inpAtMat, inpBtMat,...
@@ -89,6 +91,10 @@ classdef ReachFactory < handle
                 crm.getParam('regularizationProps.isJustCheck');
             self.regTol = crm.getParam('regularizationProps.regTol');
             self.x0Ell = ellipsoid(x0DefVec, x0DefMat);
+            %
+            self.relTol=crm.getParam('genericProps.calcPrecision');
+            self.absTol=crm.getParam('genericProps.calcPrecision');
+            %
             if self.isBack
                 self.tVec = [crmSys.getParam('time_interval.t1'),...
                     crmSys.getParam('time_interval.t0')];
@@ -158,14 +164,16 @@ classdef ReachFactory < handle
                         linSysObj, x0EllObj, l0DirMat,...
                         [timeVec(1) sum(timeVec)/2], 'isRegEnabled',...
                         self.isRegEnabled, 'isJustCheck',...
-                        self.isJustCheck, 'regTol', self.regTol);
+                        self.isJustCheck, 'regTol', self.regTol,...
+                        'absTol',self.absTol,'relTol',self.relTol);
                     reachObj = halfReachObj.evolve(timeVec(2));
                 else
                     reachObj = elltool.reach.ReachContinuous(...
                         linSysObj, x0EllObj, l0DirMat, timeVec,...
                         'isRegEnabled', self.isRegEnabled,...
                         'isJustCheck', self.isJustCheck,...
-                        'regTol', self.regTol);
+                        'regTol', self.regTol,'absTol',self.absTol,...
+                        'relTol',self.relTol);
                 end
                 self.reachObjMap(keyStr) = reachObj.getCopy();
             else

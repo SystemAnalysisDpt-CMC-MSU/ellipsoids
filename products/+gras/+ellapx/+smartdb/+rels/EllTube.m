@@ -54,7 +54,13 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
                 self.goodDirProp2Str(lsGoodDirVec,sTime));
         end
         function figureSetPropFunc(~,hFigure,figureName,~)
-            set(hFigure,'NumberTitle','off','WindowStyle','docked',...
+            if usejava('swing')
+                winStyleArgList={'WindowStyle','docked'};
+            else
+                winStyleArgList={};
+            end
+            %
+            set(hFigure,'NumberTitle','off',winStyleArgList{:},...
                 'RendererMode','manual','Renderer','OpenGL',...
                 'Name',figureName);
         end

@@ -752,7 +752,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         end
         %
         function self = testRuntimeGetBoundary(self)
-            MAX_PORTION = 0.28;
+            MAX_PORTION = 0.32;
             NUMBER_STEPS = 100;
             ellConstrMat = eye(2);
             shiftVec = [0.05; 0];
@@ -776,8 +776,10 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 [~, ~] = ell3.getBoundary();
             end;
             boundTime = toc;
-            mlunitext.assert(boundTime / polTime < MAX_PORTION, ...
-                'Runtime of getBoundary has gone beyond the possible.');
+            boundRatio=boundTime / polTime;
+            mlunitext.assert(boundRatio < MAX_PORTION, ...
+                sprintf(['Ratio of of getBoundary runtime (%g) ',...
+                'exceeds expected maximum (%g).'],boundRatio,MAX_PORTION));
         end
         %
     end

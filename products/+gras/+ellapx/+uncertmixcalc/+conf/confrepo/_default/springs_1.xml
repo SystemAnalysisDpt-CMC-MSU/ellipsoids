@@ -10,7 +10,7 @@
 		<projSpaceSetName type="char" >set1</projSpaceSetName>
 		<projSpaceSets type="struct" >
 			<set1 type="cell" >
-				<item type="double" >1 1 0 0</item>
+				<item type="boolean" >1 1 0 0</item>
 			</set1>
 		</projSpaceSets>
 		<isDynamicProjEnabled type="boolean" >0</isDynamicProjEnabled>

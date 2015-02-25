@@ -548,8 +548,9 @@ classdef test_result<handle
                 reports=testCaseMap(ReportVec(iRep).name);
                 testCaseName=reports(1).testCaseName{1};
                 suiteNode.setAttribute('name',testCaseName);
+                localHostAddrObj=java.net.InetAddress.getLocalHost();
                 suiteNode.setAttribute('hostname',...
-                    char(java.net.InetAddress.getLocalHost().getHostName()));
+                    char(localHostAddrObj.getHostName()));
                 suiteNode.setAttribute('timestamp',datestr(clock,'yyyy-mm-ddTHH:MM:SS'));
                 suiteNode.setAttribute('tests',int2str(length(reports)));
                 suiteNode.setAttribute('errors',...

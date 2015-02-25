@@ -9,7 +9,8 @@ import gras.mat.fcnlib.iscellofstringconst;
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
-BAD_TEST_NAME_LIST = {};
+NOT_TO_TEST_CONF_NAME_LIST = {'discrSecondTest',...
+    'check','checkTime','testA0Cunitball'};
 %
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 if nargin>0
@@ -20,18 +21,12 @@ end
 %
 if nargin==0
     confNameList=crm.deployConfTemplate('*');    
-    confNameList = setdiff(confNameList, BAD_TEST_NAME_LIST);    
 else
     confNameList=inpConfNameList;
 end
 %
-notToTestConfNameList = {'discrSecondTest'};
-testConfIndArray = ones(1, length(confNameList));
-for confName = notToTestConfNameList{:}
-    testConfIndArray = testConfIndArray & ...
-        ~ismember(confNameList, 'discrSecondTest');
-end
-confNameList = confNameList(testConfIndArray);
+isNotToTestVec=ismember(confNameList,NOT_TO_TEST_CONF_NAME_LIST);
+confNameList=confNameList(~isNotToTestVec);
 %
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 crmSys.deployConfTemplate('*');
