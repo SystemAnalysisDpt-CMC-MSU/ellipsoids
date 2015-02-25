@@ -287,3 +287,4 @@ if (xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
 else
     res = 0;
 end
+end
