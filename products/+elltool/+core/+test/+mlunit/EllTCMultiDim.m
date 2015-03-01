@@ -25,9 +25,6 @@ classdef EllTCMultiDim < mlunitext.test_case
             arrSizeVec=[1, 2, 3];
             testFirstArr=ones(arrSizeVec);
             testSecArr=ellipsoid(1);
-            self.runAndCheckError(...
-                'distance(ones([1, 2, 3]),ellipsoid(1))',...
-                'wrongInput');
             %
             % Create Data for tests
             arrSizeVec=[2, 3, 2, 2];
@@ -48,7 +45,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             % Wrong dimension of vectors
             %vecArrSizeVec=[3, arrSizeVec];
             vec3Array=zeros([3,arrSizeVec]);%repmat([1;0;0],1,nEll);
-            self.runAndCheckError('distance(testEllArray,vec3Array)',...
+            self.runAndCheckError('testEllArray.distance(vec3Array)',...
                 'wrongInput');           
             %
             % Test ellipsoid-ellipsoids distance 
@@ -60,7 +57,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             % wrong number of one of dims
             testEll4Array=createObjectArray(arrSizeVec(end:-1:1),...
                 @ell_unitball,2,1,1);
-            self.runAndCheckError('distance(testEllArray,testEll4Array)',...
+            self.runAndCheckError('testEllArray.distance(testEll4Array)',...
                 'wrongInput');
             %
             % Test ellipsoid-hiperplane distance 
@@ -97,9 +94,9 @@ classdef EllTCMultiDim < mlunitext.test_case
                 end
             end
             function checkCommonErrors(arrayStr)
-              self.runAndCheckError(strcat('distance(testEll3Array,',...
+              self.runAndCheckError(strcat('testEll3Array.distance(',...
                   arrayStr,')'),'wrongInput');
-             self.runAndCheckError(strcat('distance(testEll2Array,',...
+             self.runAndCheckError(strcat('testEll2Array.distance(',...
                   arrayStr,')'),'wrongInput');
             end
         end
