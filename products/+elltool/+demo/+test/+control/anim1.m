@@ -1,10 +1,10 @@
 function anim1(varargin)
 
-  if nargin == 1
+if nargin == 1
     nDirs = varargin{1};
-  else
+else
     nDirs = 4;
-  end
+end
 import elltool.conf.Properties;
 
 Properties.setNPlot2dPoints(1000)
@@ -30,7 +30,8 @@ forthRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, forthDirsMat, tim
 
 %%%%%%%%%%%%%%%%%%%%%%
 axisConfVec = [0 timeVec(2) -40 40 -5 5];
-writerObj = VideoWriter('anim1','MPEG-4');
+writerObj=getVideoWriter('anim1');
+%
 writerObj.FrameRate = 10;
 open(writerObj);
 writerObj = getAnimation(firstRsObj,writerObj,[0,5],axisConfVec);
@@ -41,18 +42,27 @@ close(writerObj);
 
 end
 
+function writerObj=getVideoWriter(objName)
+profileNameList=arrayfun(@(x)x.Name,VideoWriter.getProfiles,...
+    'UniformOutput',false);
+PRIORITY_PROFILE_LIST={'MPEG-4','Motion JPEG AVI'};
+profileName=profileNameList{find(ismember(profileNameList,...
+    PRIORITY_PROFILE_LIST),1,'last')};
+writerObj = VideoWriter(objName,profileName);
+end
+
 function writerObj = getAnimation(rsObj,writerObj,timeVec,axisConfVec)
-  nTimeSteps = writerObj.FrameRate * (timeVec(2)-timeVec(1));
-  timeStepsVec = linspace(timeVec(1),timeVec(2),nTimeSteps);
-  timeStepsVec(1) = [];
-  nTimeSteps = nTimeSteps - 1;
-  for iTimeSteps = 1:nTimeSteps
-    rsObj.cut([0 timeStepsVec(iTimeSteps)]).plotByEa(); 
+nTimeSteps = writerObj.FrameRate * (timeVec(2)-timeVec(1));
+timeStepsVec = linspace(timeVec(1),timeVec(2),nTimeSteps);
+timeStepsVec(1) = [];
+nTimeSteps = nTimeSteps - 1;
+for iTimeSteps = 1:nTimeSteps
+    rsObj.cut([0 timeStepsVec(iTimeSteps)]).plotByEa();
     axis(axisConfVec);
     set(gcf,'WindowStyle','normal');
     set(gcf,'units','normalized','outerposition',[0 0 1 1]);
     videoFrameObj = getframe(gcf);
     writeVideo(writerObj,videoFrameObj);
     closereq;
-  end
+end
 end

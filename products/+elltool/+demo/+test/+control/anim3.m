@@ -19,7 +19,7 @@ function anim3(varargin)
   %%%%%%%%%%%%%%%%%%%%%%
 axisConfVec = [-20 20 -2 2 -30 30];
 camposConfVec = [-20 -2 -30];
-writerObj = VideoWriter('anim3','MPEG-4');
+writerObj=getVideoWriter('anim3');
 writerObj.FrameRate = 15;
 open(writerObj);
 writerObj = getAnimation(firstRsObj,writerObj,[0 2],axisConfVec,camposConfVec);
@@ -27,7 +27,14 @@ writerObj = getAnimation(secondRsObj,writerObj,[2 5],axisConfVec,camposConfVec);
 close(writerObj);
   
 end
-
+function writerObj=getVideoWriter(objName)
+profileNameList=arrayfun(@(x)x.Name,VideoWriter.getProfiles,...
+    'UniformOutput',false);
+PRIORITY_PROFILE_LIST={'MPEG-4','Motion JPEG AVI'};
+profileName=profileNameList{find(ismember(profileNameList,...
+    PRIORITY_PROFILE_LIST),1,'last')};
+writerObj = VideoWriter(objName,profileName);
+end
 function writerObj = getAnimation(rsObj,writerObj,timeVec,axisConfVec,camposConfVec)
   nTimeSteps = writerObj.FrameRate * (timeVec(2)-timeVec(1));
   timeStepsVec = linspace(timeVec(1),timeVec(2),nTimeSteps);
