@@ -44,12 +44,11 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %no test for dimension mismatch with different dimension of
             %Polyhedrons, becuse Polyhedron class forbid to create vector of
             %Polyhedrons with different dimensions
-            self.runAndCheckError('distance(ellArr, testPoly2DVec(1:2))',...
+            self.runAndCheckError('ellArr.distance(testPoly2DVec(1:2))',...
                 'wrongInput');
-            self.runAndCheckError(strcat('distance([testEll60D, ',...
-                'testEll2DVec(1)], testPoly2DVec(1:2))'),'wrongInput');
-            self.runAndCheckError(strcat('distance(testEll60D,',...
-                ' testPoly2DVec(1:2))'),'wrongInput');
+            ellVec=[testEll60D,testEll2DVec(1)]; %#ok<NASGU>
+            self.runAndCheckError(strcat('ellVec.distance(testPoly2DVec(1:2))'),'wrongInput');
+            self.runAndCheckError(strcat('testEll60D.distance(testPoly2DVec(1:2))'),'wrongInput');
             %
             %
             function myTestDist(ellVec,polyVec, testDistVec, tol)
