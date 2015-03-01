@@ -5,28 +5,28 @@ classdef ContControlBuilder
         goodDirSetList
     end
     methods        
-        function self=ContControlBuilder(reachContObj)
+        function self=ContControlBuilder(ReachContObj)
             import modgen.common.throwerror;
-            ellTubeRel=reachContObj.getEllTubeRel();
+            ellTubeRel=ReachContObj.getEllTubeRel();
             self.intEllTube=ellTubeRel.getTuplesFilteredBy('approxType', ...
                 gras.ellapx.enums.EApproxType.Internal);
-            self.probDynamicsList=reachContObj.getIntProbDynamicsList();
-            self.goodDirSetList=reachContObj.getGoodDirSetList();
-            isBackward=reachContObj.isbackward();
+            self.probDynamicsList=ReachContObj.getIntProbDynamicsList();
+            self.goodDirSetList=ReachContObj.getGoodDirSetList();
+            isBackward=ReachContObj.isbackward();
             if (~isBackward)
                 throwerror('wrongInput',...
                     'System is in the forward time while should be backward system');                
             end
         end
         
-        function controlFuncObj=getControl(self,x0)
+        function ControlFuncObj=getControl(self,x0Vec)
             import modgen.common.throwerror;
             nTuples = self.intEllTube.getNTuples;
             TOL=10^(-5);
             %Tuple selection
             properIndTube=1;
-            isx0inset=false;
-            if (~all(size(x0)==size(self.intEllTube.aMat{1}(:,1))))
+            isX0inset=false;
+            if (~all(size(x0Vec)==size(self.intEllTube.aMat{1}(:,1))))
                 throwerror('wrongInput',...
                     'the dimension of x0 does not correspond the dimension of solvability domain');
             end
@@ -36,8 +36,8 @@ classdef ContControlBuilder
                 
                 qVec=self.intEllTube.aMat{iTube}(:,1);  
                 qMat=self.intEllTube.QArray{iTube}(:,:,1); 
-                if (dot(x0-qVec,qMat\(x0-qVec))<=1+TOL)                    
-                    isx0inset=true;                    
+                if (dot(x0Vec-qVec,qMat\(x0Vec-qVec))<=1+TOL)                    
+                    isX0inset=true;                    
                     properIndTube=iTube;
                 end
             end
@@ -46,20 +46,20 @@ classdef ContControlBuilder
             properEllTube=self.intEllTube.getTuples(properIndTube); 
             qVec=properEllTube.aMat{:}(:,1);  
             qMat=properEllTube.QArray{:}(:,:,1);  
-            if (isx0inset)  
-                k=findEllWithoutX(qVec, qMat, x0);
+            if (isX0inset)  
+                iWithoutX=findEllWithoutX(qVec, qMat, x0Vec);
             else
-                k=1;
+                iWithoutX=1;
             end
-            properEllTube.scale(@(x)sqrt(k),'QArray'); 
+            properEllTube.scale(@(x)sqrt(iWithoutX),'QArray'); 
             % scale multiplies k^2 
  
-            controlFuncObj=elltool.control.Control(properEllTube,...
-                self.probDynamicsList, self.goodDirSetList,indTube,k);  
-            function k=findEllWithoutX(qVec, qMat, x0)
-                k=1;
-                if (dot(x0-qVec,qMat\(x0-qVec))<=1)
-                    k=dot(x0-qVec,qMat\(x0-qVec));                    
+            ControlFuncObj=elltool.control.Control(properEllTube,...
+                self.probDynamicsList, self.goodDirSetList,indTube,iWithoutX);  
+            function iWithoutX=findEllWithoutX(qVec, qMat, x0Vec)
+                iWithoutX=1;
+                if (dot(x0Vec-qVec,qMat\(x0Vec-qVec))<=1)
+                    iWithoutX=dot(x0Vec-qVec,qMat\(x0Vec-qVec));                    
                 end                
             end            
    
