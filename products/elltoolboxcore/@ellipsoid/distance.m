@@ -661,7 +661,8 @@ nPolObj=prod(polArrSizeVec);
 if (nEllObj > 1) && (nPolObj > 1) && (~(nEllObj==nPolObj)||...
         ~(length(ellArrSizeVec)==length(polArrSizeVec))||...
         ~all(ellArrSizeVec==polArrSizeVec))
-    throwerror('wrongInput','sizes of ellipsoidal and Polyhedron arrays do not match.');
+    throwerror('wrongInput',...
+        'sizes of ellipsoidal and Polyhedron arrays do not match.');
 end
 
 dimEllArray=dimension(ellObjArray);
