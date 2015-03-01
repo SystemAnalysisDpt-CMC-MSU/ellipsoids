@@ -107,7 +107,7 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
                 'normal',...
                 'Hyperplane shift'};
             stringsCVec = repmat({stringsCVec}, 1, 6);
-            stringsCVec{5} = horzcat(stringsCVec{5}, 'ObjArr(1)');
+            stringsCVec{5} = horzcat(stringsCVec{5}, 'objArr(1, 1)');
         end
         
         function isResultCVec = getDisplayResult()

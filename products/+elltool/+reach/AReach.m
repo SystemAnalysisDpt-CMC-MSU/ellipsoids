@@ -674,7 +674,7 @@ classdef AReach < elltool.reach.IReach
                     errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
                     errorTag = [self.ETAG_WR_INP, self.ETAG_R_PROB, ...
                         self.ETAG_LOW_REG_TOL];
-                elseif isMatch('MODGEN:COMMON:CHECKVAR:wrongInput')
+                elseif isMatch('GRAS:MAT:MATRIXPOSCHECK:EVALUATE:wrongInput')
                     errorStr = [self.EMSG_R_PROB, self.EMSG_USE_REG];
                     errorTag = [self.ETAG_WR_INP, ...
                         self.ETAG_R_PROB, self.ETAG_ONLY_CHECK];

@@ -37,13 +37,13 @@ classdef ADispStructTC < mlunitext.test_case
             mlunitext.assert_equals(isOk, result);
         end
         
-        function self = auxDisplayTest(self, ObjArr,...
-                displayStringCVec, result)
-            obtainedStr = evalc('ObjArr.display()');
+        function self = auxDisplayTest(self, objArr,...
+                displayStringCVec, isExpOk)
+            obtainedStr = evalc('objArr.display()');
             isOk = all(cellfun(@(Str1, Str2)~isempty(strfind(Str1, Str2)), ...
                 repmat({obtainedStr}, size(displayStringCVec)),...
                 displayStringCVec));
-            mlunitext.assert_equals(isOk, result);
+            mlunitext.assert_equals(isOk, isExpOk);
         end
         
         function self = auxFromStructTest(self, StructArr, ObjArr, result)
