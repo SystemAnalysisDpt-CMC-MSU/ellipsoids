@@ -50,7 +50,7 @@ xEnd = [timeVec(end); C*gcVec(:, end)];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-writerObj = VideoWriter('anim4','MPEG-4');
+writerObj=getVideoWriter('anim4');
 writerObj.FrameRate = 1;
 open(writerObj);
 for iGc = 1:(size(gcVec,2)-1)
@@ -81,4 +81,12 @@ for iGc = 1:(size(gcVec,2)-1)
     closereq;
 end
 close(writerObj);
+end
+function writerObj=getVideoWriter(objName)
+profileNameList=arrayfun(@(x)x.Name,VideoWriter.getProfiles,...
+    'UniformOutput',false);
+PRIORITY_PROFILE_LIST={'MPEG-4','Motion JPEG AVI'};
+profileName=profileNameList{find(ismember(profileNameList,...
+    PRIORITY_PROFILE_LIST),1,'last')};
+writerObj = VideoWriter(objName,profileName);
 end

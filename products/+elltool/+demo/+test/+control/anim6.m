@@ -25,7 +25,8 @@ rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat,...
 gcVec = gcCVec{1};
 
 %%%%%%%%%%%%%%%%%
-writerObj = VideoWriter('anim6','MPEG-4');
+writerObj=getVideoWriter('anim6');
+%
 writerObj.FrameRate = 15;
 open(writerObj);
 for iGc = 1:(size(gcVec,2)-1)
@@ -50,4 +51,12 @@ end
 
 close(writerObj);
 
+end
+function writerObj=getVideoWriter(objName)
+profileNameList=arrayfun(@(x)x.Name,VideoWriter.getProfiles,...
+    'UniformOutput',false);
+PRIORITY_PROFILE_LIST={'MPEG-4','Motion JPEG AVI'};
+profileName=profileNameList{find(ismember(profileNameList,...
+    PRIORITY_PROFILE_LIST),1,'last')};
+writerObj = VideoWriter(objName,profileName);
 end

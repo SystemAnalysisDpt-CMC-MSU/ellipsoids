@@ -38,7 +38,7 @@ thirdRsObj = secondRsObj.evolve(secondNewEndTime, thirdSys);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 axisConfVec = [0 secondNewEndTime -50 50 -10 10];
-writerObj = VideoWriter('anim2','MPEG-4');
+writerObj=getVideoWriter('anim2');
 writerObj.FrameRate = 10;
 open(writerObj);
 writerObj = getAnimation(firstRsObj,writerObj,[0 5],axisConfVec);
@@ -47,7 +47,14 @@ writerObj = getAnimation(thirdRsObj,writerObj,[10 15],axisConfVec);
 close(writerObj);       
 
 end
-
+function writerObj=getVideoWriter(objName)
+profileNameList=arrayfun(@(x)x.Name,VideoWriter.getProfiles,...
+    'UniformOutput',false);
+PRIORITY_PROFILE_LIST={'MPEG-4','Motion JPEG AVI'};
+profileName=profileNameList{find(ismember(profileNameList,...
+    PRIORITY_PROFILE_LIST),1,'last')};
+writerObj = VideoWriter(objName,profileName);
+end
 function writerObj = getAnimation(rsObj,writerObj,timeVec,axisConfVec)
   nTimeSteps = writerObj.FrameRate * (timeVec(2)-timeVec(1));
   timeStepsVec = linspace(timeVec(1),timeVec(2),nTimeSteps);
