@@ -32,7 +32,7 @@ forthRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, forthDirsMat, tim
 axisConfVec = [0 timeVec(2) -40 40 -5 5];
 writerObj=getVideoWriter('anim1');
 %
-writerObj.FrameRate = 10;
+writerObj.FrameRate = 5;% use 10 for better granularity
 open(writerObj);
 writerObj = getAnimation(firstRsObj,writerObj,[0,5],axisConfVec);
 writerObj = getAnimation(secondRsObj,writerObj,[5,10],axisConfVec);

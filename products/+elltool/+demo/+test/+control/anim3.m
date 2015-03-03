@@ -20,7 +20,7 @@ function anim3(varargin)
 axisConfVec = [-20 20 -2 2 -30 30];
 camposConfVec = [-20 -2 -30];
 writerObj=getVideoWriter('anim3');
-writerObj.FrameRate = 15;
+writerObj.FrameRate = 10;% use 15 for better granularity
 open(writerObj);
 writerObj = getAnimation(firstRsObj,writerObj,[0 2],axisConfVec,camposConfVec);
 writerObj = getAnimation(secondRsObj,writerObj,[2 5],axisConfVec,camposConfVec);
