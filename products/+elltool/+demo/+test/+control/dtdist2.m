@@ -1,5 +1,9 @@
 function dtdist2(varargin)
-if ~isempty(ver('control'))%check if Control System Toolbox is installed
+import modgen.common.throwwarn;
+if isempty(ver('control'))%check if Control System Toolbox is installed
+    throwwarn('toolboxMissing',...
+        'cannot run this demo: Control System Toolbox is not installed');
+else 
     if nargin == 1
         nDirs = varargin{1};
     else
