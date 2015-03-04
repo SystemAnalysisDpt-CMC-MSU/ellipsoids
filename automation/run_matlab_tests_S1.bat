@@ -14,5 +14,5 @@ set gitRoot=%~dp1
 set matlabDir=install
 set logDir=automation\log
 set matlabBin="C:\Program Files\MATLAB\R2013b\bin"
-set runMarker=
+set runMarker=df
 call %~dp0run_matlab_tests.bat %gitRoot% %matlabDir% %logDir% %matlabBin% %runMarker%
