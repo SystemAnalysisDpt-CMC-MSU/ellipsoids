@@ -11,6 +11,7 @@ suiteList{end+1} = loader.load_tests_from_test_case(...
 testLists = cellfun(@(x) x.tests, suiteList, 'UniformOutput', false);
 suite = mlunitext.test_suite(horzcat(testLists{:}));
 %
-resultList{2}=runner.run(suite);
-resultList{1}=elltool.demo.test.run_demo_tests();
+%resultList{2}=elltool.demo.test.run_demo_tests();
+resultList{1}=runner.run(suite);
+
 result=[resultList{:}];
