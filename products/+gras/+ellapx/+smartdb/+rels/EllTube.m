@@ -235,7 +235,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
         function ellTubeRel=fromQArrays(QArrayList,aMat,varargin)
             % FROMQARRAYS  - creates a relation object using an array of ellipsoids,
             %                described by the array of ellipsoid matrices and
-            %                array of ellipsoid centers.This method used default
+            %                array of ellipsoid centers. This method used default
             %                scale factor.
             %
             % Input:
@@ -243,21 +243,18 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %     QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
             %         matrices
             %     aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
-            %
-            % Optional:
-            %    MArrayList:cell[1, nElem] - array of regularization ellipsoid matrices
-            %    timeVec:cell[1, m] - time vector
-            %    ltGoodDirArray:cell[1, nElem] - good direction at time s
-            %    sTime:double[1, 1] - time s
-            %    approxType:gras.ellapx.enums.EApproxType - type of approximation
-            %                 (external, internal, not defined)
-            %    approxSchemaName:cell[1,] - name of the schema
-            %    approxSchemaDescr:cell[1,] - description of the schema
-            %    absTol:double[1, 1] - absolute tolerance
-            %    relTol:double[1, 1] - relative tolerance            
+            %     timeVec:cell[1, m] - time vector
+            %     ltGoodDirArray:cell[1, nElem] - good direction at time s
+            %     sTime:double[1, 1] - time s
+            %     approxType:gras.ellapx.enums.EApproxType - type of approximation
+            %                  (external, internal, not defined)
+            %     approxSchemaName:cell[1,] - name of the schema
+            %     approxSchemaDescr:cell[1,] - description of the schema
+            %     absTol:double[1, 1] - absolute tolerance
+            %     relTol:double[1, 1] - relative tolerance            
             % Output:
-            %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
-            %        object
+            %     ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
+            %         object
             import gras.ellapx.smartdb.rels.EllTube;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
             %
@@ -278,22 +275,20 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %
             % Input:
             %   regular:
-            %   QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
-            %         matrices
-            %   aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
-            %   MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid  matrices of
-            %         regularization
-            %
-            %  optional:
-            %    timeVec:cell[1, m] - time vector
-            %    ltGoodDirArray:cell[1, nElem] - good direction at time s
-            %    sTime:double[1, 1] - time s
-            %    approxType:gras.ellapx.enums.EApproxType - type of approximation
-            %                 (external, internal, not defined)
-            %    approxSchemaName:cell[1,] - name of the schema
-            %    approxSchemaDescr:cell[1,] - description of the schema
-            %    absTol:double[1, 1] - absolute tolerance
-            %    relTol:double[1, 1] - relative tolerance
+            %       QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
+            %             matrices
+            %       aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
+            %       MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid  matrices of
+            %             regularization
+            %       timeVec:cell[1, m] - time vector
+            %       ltGoodDirArray:cell[1, nElem] - good direction at time s
+            %       sTime:double[1, 1] - time s
+            %       approxType:gras.ellapx.enums.EApproxType - type of approximation
+            %                  (external, internal, not defined)
+            %       approxSchemaName:cell[1,] - name of the schema
+            %       approxSchemaDescr:cell[1,] - description of the schema
+            %       absTol:double[1, 1] - absolute tolerance
+            %       relTol:double[1, 1] - relative tolerance
             %
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
@@ -316,23 +311,22 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %
             % Input:
             %   regular:
-            %     QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
-            %         matrices
-            %     aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
-            %     MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid matrices
-            %               of regularization
-            %     scaleFactor:double[1, 1] - tube scale factor
+            %       QArrayList: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid
+            %           matrices
+            %       aMat: double[nDim1, nDim2, ..., nDimN] - array of ellipsoid centers
+            %       MArrayList: double[nDim1, nDim2, ..., nDimN] - ellipsoid matrices
+            %           of regularization
+            %       timeVec:cell[1, m] - time vector
+            %           ltGoodDirArray:cell[1, nElem] - good direction at time s
+            %       sTime:double[1, 1] - time s
+            %       approxType:gras.ellapx.enums.EApproxType - type of approximation
+            %           (external, internal, not defined)
+            %       approxSchemaName:cell[1,] - name of the schema
+            %       approxSchemaDescr:cell[1,] - description of the schema
+            %       absTol:double[1, 1] - absolute tolerance
+            %       relTol:double[1, 1] - relative tolerance  
+            %       scaleFactor:double[1, 1] - tube scale factor            
             %
-            %  optional:
-            %    timeVec:cell[1, m] - time vector
-            %    ltGoodDirArray:cell[1, nElem] - good direction at time s
-            %    sTime:double[1, 1] - time s
-            %    approxType:gras.ellapx.enums.EApproxType - type of approximation
-            %                 (external, internal, not defined)
-            %    approxSchemaName:cell[1,] - name of the schema
-            %    approxSchemaDescr:cell[1,] - description of the schema
-            %    absTol:double[1, 1] - absolute tolerance
-            %    relTol:double[1, 1] - relative tolerance            %
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
             %          object
@@ -346,24 +340,22 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
         function ellTubeRel = fromEllMArray(qEllArray, ellMArr, varargin)
             % FROMELLMARRAY  - creates a relation object using an array of ellipsoids.
             %                  This method uses regularizer in the form of a matrix
-            %                  function.
+            %                  function. Default scale factor is used.
             %
             % Input:
             %   regular:
-            %     qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
-            %     ellMArr: double[nDim1, nDim2, ..., nDimN] - regularization ellipsoid
-            %         matrices
-            %
-            %   optional:
-            %    timeVec:cell[1, m] - time vector
-            %    ltGoodDirArray:cell[1, nElem] - good direction at time s
-            %    sTime:double[1, 1] - time s
-            %    approxType:gras.ellapx.enums.EApproxType - type of approximation
-            %                 (external, internal, not defined)
-            %    approxSchemaName:cell[1,] - name of the schema
-            %    approxSchemaDescr:cell[1,] - description of the schema
-            %    absTol:double[1, 1] - absolute tolerance
-            %    relTol:double[1, 1] - relative tolerance
+            %       qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
+            %       ellMArr: double[nDim1, nDim2, ..., nDimN] - regularization ellipsoid
+            %           matrices
+            %       timeVec:cell[1, m] - time vector
+            %       ltGoodDirArray:cell[1, nElem] - good direction at time s
+            %       sTime:double[1, 1] - time s
+            %       approxType:gras.ellapx.enums.EApproxType - type of approximation
+            %           (external, internal, not defined)
+            %       approxSchemaName:cell[1,] - name of the schema
+            %       approxSchemaDescr:cell[1,] - description of the schema
+            %       absTol:double[1, 1] - absolute tolerance
+            %       relTol:double[1, 1] - relative tolerance
             %
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
@@ -391,18 +383,16 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %
             % Input:
             %   regular:
-            %     qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
-            %
-            %   optional:
-            %    timeVec:cell[1, m] - time vector
-            %    ltGoodDirArray:cell[1, nElem] - good direction at time s
-            %    sTime:double[1, 1] - time s
-            %    approxType:gras.ellapx.enums.EApproxType - type of approximation
-            %                 (external, internal, not defined)
-            %    approxSchemaName:cell[1,] - name of the schema
-            %    approxSchemaDescr:cell[1,] - description of the schema
-            %    absTol:double[1, 1] - absolute tolerance
-            %    relTol:double[1, 1] - relative tolerance
+            %       qEllArray: ellipsoid[nDim1, nDim2, ..., nDimN] - array of ellipsoids
+            %       timeVec:cell[1, m] - time vector
+            %       ltGoodDirArray:cell[1, nElem] - good direction at time s
+            %       sTime:double[1, 1] - time s
+            %       approxType:gras.ellapx.enums.EApproxType - type of approximation
+            %           (external, internal, not defined)
+            %       approxSchemaName:cell[1,] - name of the schema
+            %       approxSchemaDescr:cell[1,] - description of the schema
+            %       absTol:double[1, 1] - absolute tolerance
+            %       relTol:double[1, 1] - relative tolerance
             %
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
