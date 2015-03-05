@@ -206,6 +206,14 @@ classdef Properties<modgen.common.obj.StaticPropStorage
                 nTimeGridPoints);
         end
         %
+        function setAbsTol(value)
+            % SETRELTOL - set global absolute tolerance
+            %
+            % Input
+            % absTol: double[1,1]
+            elltool.conf.Properties.setOption('absTol',value);
+        end        
+        %
         function setRelTol(value)
             % SETRELTOL - set global relative tolerance
             %
