@@ -846,36 +846,11 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             end
         end
         %
-        function isBound = isBoundary(ellShiftVec,ellConstrMat,poly)
-            import modgen.common.absrelcompare;
-            if isa(poly,'ellipsoid')
-                poly = poly.toPolytope();
-    end
-            pointsArray=poly.V;
-            nPoints = size(pointsArray,1);
-            isBound = true;
-            nDims = size(pointsArray,2);
-            for i = 1:nPoints
-                if nDims == 3
-                    [isEqual, absDiff] = absrelcompare(((pointsArray(i,1) - ellShiftVec(1))^2/ellConstrMat(1,1))...
-                        +((pointsArray(i,2)-ellShiftVec(2))^2/ellConstrMat(2,2))...
-                        +((pointsArray(i,3)-ellShiftVec(3))^2/ellConstrMat(3,3)),...
-                        1,1e-7,[],@abs);
-                else
-                    [isEqual, absDiff] = absrelcompare(((pointsArray(i,1)-ellShiftVec(1))^2/ellConstrMat(1,1))...
-                        +((pointsArray(i,2)-ellShiftVec(2))^2/ellConstrMat(2,2)),...
-                        1,1e-7,[],@abs);
-                end
-                if ~isEqual
-                    isBound = false;
-                    i = nPoints + 1;
-                end
-            end
-        end
         %
     end
 end
-function [myMultiDimEllArray, mCount, nDelta]=constructEllForTests(dimsShMatArrayVec)
+    
+    function [myMultiDimEllArray, mCount, nDelta]=constructEllForTests(dimsShMatArrayVec)
 %constructs a multi-dimensional array of ellipsoids
     dimsCentVecArrayVec=dimsShMatArrayVec(2:end);
     if numel(dimsShMatArrayVec)==2

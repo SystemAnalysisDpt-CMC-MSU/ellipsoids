@@ -854,17 +854,17 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunitext.assert_equals(true, isTestRes);
         end
         %
-%         function self = testEq(self)
-%             import elltool.conf.Properties;
-%             MAX_TOL = Properties.getRelTol();
-%             
-%             testMat = eye(2);
-%             self.checkEllEqual(self.ellFactoryObj.create(testMat), self.ellFactoryObj.create(testMat), true, '');
-%             
-%             test1Mat = eye(2);
-%             test2Mat = eye(2) + MAX_TOL;
-%             self.checkEllEqual(self.ellFactoryObj.create(test1Mat), self.ellFactoryObj.create(test2Mat), true, '');
-%             
+         function self = testEq(self)
+             import elltool.conf.Properties;
+            MAX_TOL = Properties.getRelTol();
+            
+            testMat = eye(2);
+            self.checkEllEqual(self.ellFactoryObj.create(testMat), self.ellFactoryObj.create(testMat), true, '');
+            
+            test1Mat = eye(2);
+            test2Mat = eye(2) + MAX_TOL;
+            self.checkEllEqual(self.ellFactoryObj.create(test1Mat), self.ellFactoryObj.create(test2Mat), true, '');
+            
             testEll = self.ellFactoryObj.create(eye(2));
             testEll2 = self.ellFactoryObj.create([1e-3, 0].', eye(2));
             mDim = 10;
@@ -1616,6 +1616,7 @@ switch flag
 end
 end
 %
+function checkEllEqual(testEll1Vec, testEll2Vec, isEqRight, ansStr,ansAltStr)
 if nargin<5
     ansAltStr=ansStr;
 end
