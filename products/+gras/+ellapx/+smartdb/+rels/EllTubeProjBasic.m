@@ -839,6 +839,7 @@ for iTube = 2:nTubes
             'Time vectors are expected to be equal');
     end
 end
+
 %
 maxRelTol = max(relTol);
 maxAbsTol = max(absTol);
@@ -932,9 +933,7 @@ function [vMat,fMat] = calcPoints(fTri,fCalcPoints,...
     qArrayList, aMatList, dimVec,...
     calcPrecisionaVec, calcPrecisionrVec, varargin)
 %
-nDims = dimVec(1);
-checkCenterVecAndTimeVec(aMatList,timeVecList,calcPrecisionaVec, calcPrecisionrVec);
-[lGridMat, fMat] = gras.geom.tri.spheretriext(nDims,nPlotPoints);
+nDims = dimVec(1);[lGridMat, fMat] = gras.geom.tri.spheretriext(nDims,nPlotPoints);
 lGridMat = lGridMat';
 timeVec = timeVecList{1};
 nDir = size(lGridMat, 2);

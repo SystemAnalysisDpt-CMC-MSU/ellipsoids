@@ -1,4 +1,5 @@
-function ellInvObj = inv( ellObj )
+%function ellInvObj = inv(myEllArr)
+function myEllArr = inv(myEllArr)
 % INV - create generalized ellipsoid whose matrix in pseudoinverse
 %       to the matrix of input generalized ellipsoid
 %
@@ -33,17 +34,24 @@ function ellInvObj = inv( ellObj )
 %
 import elltool.core.GenEllipsoid;
 import elltool.conf.Properties;
-modgen.common.type.simple.checkgenext(@(x)isa(x,'elltool.core.GenEllipsoid'),...
-    1,ellObj);
-modgen.common.type.simple.checkgenext('isscalar(x1)',1,ellObj);
+% modgen.common.type.simple.checkgenext(@(x)isa(x,'elltool.core.GenEllipsoid'),...
+%     1,ellObj);
+% modgen.common.type.simple.checkgenext('isscalar(x1)',1,ellObj);
+elltool.core.GenEllipsoid.checkIsMe(myEllArr);
+arrayfun(@(x) fSingleInv(x),myEllArr);
 %
-absTol=ellObj.CHECK_TOL;
-%
-diagVec=diag(ellObj.diagMat);
-isInfVec=diagVec==Inf;
-isZeroVec=abs(diagVec)<absTol;
-isFinNZVec=(~isInfVec) | (~isZeroVec);
-diagVec(isFinNZVec)=1./diagVec(isFinNZVec);
-diagVec(isInfVec)=0;
-diagVec(isZeroVec)=Inf;
-ellInvObj=GenEllipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
+    function fSingleInv(ellObj)
+        absTol=ellObj.getAbsTol;
+        diagVec=diag(ellObj.diagMat);
+        isInfVec=diagVec==Inf;
+        isZeroVec=abs(diagVec)<absTol;
+        isFinNZVec=(~isInfVec) | (~isZeroVec);
+        diagVec(isFinNZVec)=1./diagVec(isFinNZVec);
+        diagVec(isInfVec)=0;
+        diagVec(isZeroVec)=Inf;
+        diagMat = diag(diagVec);
+        ellObj.diagMat = diagMat;
+        %ellInvObj=elltool.core.GenEllipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
+        %ellObj=elltool.core.GenEllipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
+    end
+end

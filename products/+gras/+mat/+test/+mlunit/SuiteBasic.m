@@ -31,7 +31,9 @@ classdef SuiteBasic < mlunitext.test_case
                 sprintf('gras.mat.ConstMatrixFunctionFactory.createInstance(%s)',...
                 x), 'ACONSTMATRIXFUNCTION:wrongInput'),...
                 argCVec, 'UniformOutput', false);            
-            %
+
+
+        %
             argCVec={'zeros([2 2 2])','{1 2; 3 4}'};
             cellfun(@(x)self.runAndCheckError(...
                  sprintf('gras.mat.ConstMatrixFunctionFactory.createInstance(%s)',...
@@ -71,10 +73,7 @@ classdef SuiteBasic < mlunitext.test_case
                 x),'CONSTROWFUNCTION:wrongInput'),...
                 argCVec, 'UniformOutput', false);                   
             
-               
-        end
-        %
-        function testConstColFunction(self)
+        end        function testConstColFunction(self)
             import gras.mat.fcnlib.ConstColFunction;
             %
             testCMat = {zeros(1), zeros(10, 1)};

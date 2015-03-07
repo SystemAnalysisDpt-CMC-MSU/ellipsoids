@@ -578,7 +578,7 @@ classdef AReach < elltool.reach.IReach
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType).getData();
                 %probDynObjCell{il0Num}=probDynObj;
-            end 
+            end
         end
     end
     %
@@ -763,7 +763,7 @@ classdef AReach < elltool.reach.IReach
                     ptStrCMat, ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec,...
                     x0Mat, x0Vec, timeVec, self.relTol, isDisturbance);
                 approxTypeVec = [EApproxType.External, EApproxType.Internal];
-                %               
+                %
                 [self.ellTubeRel,goodDirSetObj,probDynObj] = self.makeEllTubeRel(probDynObj, l0Mat,...
                     timeVec, isDisturbance, self.absTol,...
                     self.relTol, approxTypeVec);

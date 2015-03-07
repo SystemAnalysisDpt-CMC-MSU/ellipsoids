@@ -6,6 +6,24 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
+    properties
+        ellFactoryObj
+    end
+    
+    methods (Access = protected)
+        function objArrCVec = getDisplayObj(self)
+            objArrCVec = {hyperplane([1, 2]', 3),...
+                hyperplane(),...
+                hyperplane([1, 1]', 3),...
+                hyperplane.fromStruct(struct('normal',...
+                num2cell(ones(5, 5, 5)), ...
+                'shift', num2cell(ones(5, 5, 5)))),...
+                hyperplane([1, 2]', 3),...
+                self.ellFactoryObj.create()};
+            objArrCVec{5} = [objArrCVec{5} objArrCVec{5}];
+        end
+    end
+    
     methods (Access = protected, Static)
         
         function objArrCVec = getToStructObj()
@@ -88,18 +106,6 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
             testNumber = 6;
         end
         
-        function objArrCVec = getDisplayObj()
-            objArrCVec = {hyperplane([1, 2]', 3),...
-                hyperplane(),...
-                hyperplane([1, 1]', 3),...
-                hyperplane.fromStruct(struct('normal',...
-                num2cell(ones(5, 5, 5)), ...
-                'shift', num2cell(ones(5, 5, 5)))),...
-                hyperplane([1, 2]', 3),...
-                ellipsoid()};
-            objArrCVec{5} = [objArrCVec{5} objArrCVec{5}];
-        end
-        
         function stringsCVec = getDisplayStrings()
             stringsCVec = {'hyperplane object', ...
                 'Properties',...
@@ -164,5 +170,9 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
         function self = HyperplaneDispStructTC(varargin)
             self = self@elltool.core.test.mlunit.ADispStructTC(varargin{:});
         end
+        function self = set_up_param(self, ellFactoryObj)
+            self.ellFactoryObj = ellFactoryObj;
+        end
     end
+    
 end
