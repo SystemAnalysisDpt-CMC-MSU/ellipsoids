@@ -66,6 +66,77 @@ classdef CompositeMatrixOperations<gras.mat.AMatrixOperations
                 obj=gras.mat.fcnlib.MatrixDotFunc(lMatFunc,rMatFunc);
             end
         end 
+        % catDiffTimeVec
+        function obj=catDiffTimeVec(self,lMatFunc,rMatFunc,dimCat,...
+                timePartition,timePartitionRight)
+            obj=catDiffTimeVec@gras.mat.AMatrixOperations(self,lMatFunc,rMatFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixCatDiffTimeVecFunc(lMatFunc,...
+                    rMatFunc,dimCat,timePartition,timePartitionRight);
+            end
+        end
+        % flipdim
+        function obj=flipdim(self,inMatrixFunc,dimFlip)
+            obj=flipdim@gras.mat.AMatrixOperations(self,inMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixFlipdimFunc(inMatrixFunc,...
+                    dimFlip);
+            end
+        end
+        % subarray
+        function obj=subarray(self,inMatrixFunc,indexesList)
+            obj=subarray@gras.mat.AMatrixOperations(self,inMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixSubArrayFunc(inMatrixFunc,...
+                    indexesList);
+            end
+        end
+        % subarrayInit
+        function obj=subarrayInit(self,inMatrixFunc,indexesList,valueArray)
+            obj=subarrayInit@gras.mat.AMatrixOperations(self,inMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixSubArrayInitFunc(inMatrixFunc,...
+                    indexesList,valueArray);
+            end
+        end
+        % reshape
+        function obj=reshape(self,inMatrixFunc,newSizeVec)
+            obj=reshape@gras.mat.AMatrixOperations(self,inMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixReshapeFunc(inMatrixFunc,...
+                    newSizeVec);
+            end
+        end
+        % mulHadamard
+        function obj=mulHadamard(self,lMatrixFunc,rMatrixFunc)
+            obj=mulHadamard@gras.mat.AMatrixOperations(self,lMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixMulHadamardFunc(lMatrixFunc,...
+                    rMatrixFunc);
+            end
+        end
+        % squeeze
+        function obj=squeeze(self,lMatrixFunc)
+            obj=squeeze@gras.mat.AMatrixOperations(self,lMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixSqueezeFunc(lMatrixFunc);
+            end
+        end
+        % divHadamard
+        function obj=divHadamard(self,lMatrixFunc,rMatrix)
+            obj=divHadamard@gras.mat.AMatrixOperations(self,lMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixDivHadamardFunc(lMatrixFunc,rMatrix);
+            end
+        end
+        % rMultiplyByVecSpecial
+        function obj=rMultiplyByVecSpecial(self,lMatrixFunc,rMatrixFunc,sizeMatrix)
+            obj=rMultiplyByVecSpecial@gras.mat.AMatrixOperations(self,lMatrixFunc);
+            if isempty(obj)
+                obj=gras.mat.fcnlib.MatrixRMultiplyByVecSpecialFunc(...
+                    lMatrixFunc,rMatrixFunc,sizeMatrix);
+            end
+        end
         function obj=rMultiplyByScalar(self,lMatFunc,rScalFunc)
             obj=rMultiplyByScalar@gras.mat.AMatrixOperations(...
                 self,lMatFunc,rScalFunc);

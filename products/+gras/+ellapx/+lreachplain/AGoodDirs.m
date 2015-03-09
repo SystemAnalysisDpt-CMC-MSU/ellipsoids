@@ -4,10 +4,11 @@ classdef AGoodDirs
         % directions l(t)=X(s,t)'l_s
         %
         % RstTransDynamics - R(s,t)' is a transition matrix for good
-        % directions lR(t)=R(s,t)'l_s
+        % directions l(t)=R(s,t)'l_s
         XstTransDynamics
         RstTransDynamics
         XstNormDynamics
+        RstTransInterpObj
         ltGoodDirCurveSpline
         ltGoodDirOneCurveSplineList
         ltRGoodDirCurveSpline
@@ -58,11 +59,15 @@ classdef AGoodDirs
         function lsGoodDirMat = getlsGoodDirMat(self)
             lsGoodDirMat = self.lsGoodDirMat;
         end
+        function RstTransInterpObj = getRstTransInterpObj(self)
+            RstTransInterpObj = self.RstTransInterpObj;
+        end
         function self = AGoodDirs(pDynObj, sTime, ...
                 lsGoodDirMat, relTol, absTol)
             import gras.ellapx.common.*;
             import gras.mat.MatrixOperationsFactory;
             import gras.mat.ConstMatrixFunctionFactory;
+            import gras.mat.CompositeMatrixOperations;
             import modgen.common.throwerror;
             %
             self.lsGoodDirMat = lsGoodDirMat;
@@ -96,13 +101,16 @@ classdef AGoodDirs
             %
             matOpFactory = MatrixOperationsFactory.create(timeVec);
             %
-            [XstDynamics, RstDynamics, cXstNormDynamics] = ...
+            compMatrixOprs = CompositeMatrixOperations();
+            %
+                [XstDynamics, RstDynamics, cXstNormDynamics, RstInterpObj]= ...
                 self.calcTransMatDynamics(matOpFactory, STimeData, ...
                 pDynObj.getAtDynamics(), relTol, absTol);
             %
             self.XstNormDynamics = cXstNormDynamics;
             self.XstTransDynamics = matOpFactory.transpose(XstDynamics);
             self.RstTransDynamics = matOpFactory.transpose(RstDynamics);
+            self.RstTransInterpObj = compMatrixOprs.transpose(RstInterpObj);
             %
             [self.ltGoodDirCurveSpline, ...
                 self.ltGoodDirOneCurveSplineList] = ...
@@ -137,7 +145,7 @@ classdef AGoodDirs
         end
     end
     methods (Abstract, Access = protected)
-        [XstDynamics, RstDynamics, cXstNormDynamics] = ...
+        [XstDynamics, RstDynamics, cXstNormDynamics, interpRstObj] = ...
             calcTransMatDynamics(matOpFactory, STimeData, AtDynamics, ...
             relTol, absTol)
     end

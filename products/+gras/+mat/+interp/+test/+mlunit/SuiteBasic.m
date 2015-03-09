@@ -126,6 +126,34 @@ classdef SuiteBasic < mlunitext.test_case
             isOk=max(abs(expArray(:)-resArray(:)))<=CMP_TOL;
             mlunitext.assert(isOk);
         end
+        function testNearestInterp(~)
+            CMP_TOL=1e-14;
+            %
+            timeVec=1:10;
+            inpMat=ones(3,10);
+            inpArgList={inpMat,timeVec};
+            interpTimeVec=timeVec+0.1;
+            expArray=ones(3,1,10);
+            check(inpArgList,interpTimeVec,expArray);
+            %
+            inpArray=ones(3,1,10);
+            inpArgList={inpArray,timeVec};
+            check(inpArgList,interpTimeVec,expArray);
+            %
+            inpMat=eye(2,2);
+            timeVec=1;
+            inpArgList={inpMat,timeVec};
+            interpTime=1;
+            expMat=eye(2,2);
+            check(inpArgList,interpTime,expMat);
+            %
+            function check(inpArgList,interpTimeVec,expArray)
+                intObj=gras.mat.interp.MatrixNearestInterp(inpArgList{:});
+                resArray=intObj.evaluate(interpTimeVec);
+                isOk=max(abs(expArray(:)-resArray(:)))<=CMP_TOL;
+                mlunitext.assert(isOk);
+            end
+        end
         function testNNDedTriuSpline(~)
             ZERO_EIG_TOL=1e-7;
             MAX_COMP_TOL=1e-14;

@@ -12,6 +12,11 @@ classdef MatrixNearestInterp<gras.mat.IMatrixFunction
         function self=MatrixNearestInterp(dataArray,timeVec)
             import modgen.common.checkmultvar;
             if nargin>0
+                dSizeVec=size(dataArray);
+                if (length(dSizeVec) == 2) && (numel(timeVec) ~= 1 )
+                    dataArray=permute(dataArray,[1 3 2]);
+                end
+                
                 checkmultvar(['size(x1,3)==numel(x2)&&isrow(x2)',...
                     '&&isnumeric(x1)&&isnumeric(x2)&&',...
                     'all(diff(x2)>0)'],2,dataArray,timeVec);
@@ -29,6 +34,8 @@ classdef MatrixNearestInterp<gras.mat.IMatrixFunction
             timeVec=self.timeVec;
             if isempty(timeVec)
                 resArray=dataArray;
+            elseif numel(timeVec) == 1
+                resArray=repmat(dataArray,[1 1 numel(newTimeVec)]);    
             else
                 indInterpVec=interp1(timeVec,1:numel(timeVec),newTimeVec,...
                     'nearest','extrap');

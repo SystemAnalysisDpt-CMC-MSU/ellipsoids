@@ -1,4 +1,7 @@
 classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
+    properties (Access=private)
+        absTol
+    end
     methods
         function self = GoodDirsDiscrete(pDynObj, sTime, ...
                 lsGoodDirMat, relTol, absTol)
@@ -7,9 +10,9 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
         end
     end
     methods (Access = protected)
-        function [XstDynamics, RstDynamics, XstNormDynamics] = ...
-                calcTransMatDynamics(self, matOpFactory, STimeData, ...
-                AtDynamics, relTol, absTol)
+        function [XstDynamics, RstDynamics, XstNormDynamics, ...
+                RstInterpObj] = calcTransMatDynamics(self, matOpFactory, ...
+                STimeData, AtDynamics, relTol, absTol)
             %
             import gras.mat.interp.MatrixInterpolantFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
@@ -19,9 +22,8 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
             logger=Log4jConfigurator.getLogger();
             %
             compOpFactory = CompositeMatrixOperations();
-            aInvMatFcn = compOpFactory.inv(AtDynamics);
-            fAtMat = @(t) aInvMatFcn.evaluate(t);
-            sizeSysVec = size(fAtMat(0));
+            %
+            self.absTol = absTol;
             %
             t0 = STimeData.t0;
             t1 = STimeData.t1;
@@ -33,6 +35,22 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
                 timeVec = t0:t1;
             end
             nTimePoints = length(timeVec);
+            %
+            %%Check, if AtDynamics is not degenerate
+            %
+            fAtMat = @(t) AtDynamics.evaluate(t);
+            for iTime = 1 : nTimePoints
+                if ~gras.la.ismatnotdeg(fAtMat(timeVec(iTime)), ...
+                        self.absTol)
+                    modgen.common.throwerror('wrongInput',...
+                        cat(2, 'At matrix seems to be degenerate,', ...
+                        ' det(At) should be != 0 for all t in [t0, t1]'));
+                end
+            end
+            %
+            aInvMatFcn = compOpFactory.inv(AtDynamics);
+            fAtInvMat = @(t) aInvMatFcn.evaluate(t);
+            sizeSysVec = size(fAtInvMat(0));
             %
             dataXtt0Arr = zeros([sizeSysVec nTimePoints]);
             dataRtt0Arr = zeros([sizeSysVec nTimePoints]);
@@ -46,7 +64,8 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
             %
             for iTime = 2:nTimePoints
                 dataXtt0Arr(:, :, iTime) = ...
-                    dataXtt0Arr(:, :, iTime - 1) * fAtMat(timeVec(iTime - 1 + isBack));
+                    dataXtt0Arr(:, :, iTime - 1) * ...
+                    fAtInvMat(timeVec(iTime - 1 + isBack));
                 dataXtt0NormVec(iTime) = realsqrt(matdot(...
                     dataXtt0Arr(:, :, iTime), dataXtt0Arr(:, :, iTime)));
                 dataRtt0Arr(:, :, iTime) = dataXtt0Arr(:, :, iTime) ./ ...
@@ -64,6 +83,7 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
                 'column', dataRtt0Arr, timeVec);
             XstNormDynamics = MatrixInterpolantFactory.createInstance(...
                 'scalar', dataXtt0NormVec, timeVec);
+            RstInterpObj = XstDynamics;
             %
             tStart = tic;
             %

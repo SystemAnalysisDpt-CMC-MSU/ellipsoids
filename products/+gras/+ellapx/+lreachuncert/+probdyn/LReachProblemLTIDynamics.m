@@ -5,7 +5,7 @@ classdef LReachProblemLTIDynamics<...
         xtDynamics
     end
     methods
-        function self=LReachProblemLTIDynamics(problemDef,relTol,absTol)
+        function self=LReachProblemLTIDynamics(problemDef,calcPrecision)
             import gras.mat.interp.MatrixInterpolantFactory;
             import gras.gen.MatVector;
             import gras.ode.MatrixODESolver;
@@ -19,7 +19,7 @@ classdef LReachProblemLTIDynamics<...
             % call superclass constructor
             %
             self=self@gras.ellapx.lreachplain.probdyn.AReachProblemLTIDynamics(...
-                problemDef,relTol,absTol);
+                problemDef,calcPrecision);
             %
             % copy necessary data to local variables
             %
@@ -42,18 +42,29 @@ classdef LReachProblemLTIDynamics<...
                 CMat*QMat*(CMat.'));
             %
             % compute x(t)
-            %
-            odeArgList=self.getOdePropList(relTol,absTol);
-            solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
-            %
+            %          
+            odeArgList=self.getOdePropList(calcPrecision);
+            fSolver = @gras.ode.ode45reg;
+            fSolveFunc = @(varargin)fSolver(varargin{:},...
+                    odeset(odeArgList{:}));
+               
+            solverObj = gras.ode.MatrixSysODERegInterpSolver(...
+                {[sysDim 1]},fSolveFunc,'outArgStartIndVec',[1 2]);
             BpPlusCqVec = BpVec + CqVec;
             xtDerivFunc = @(t,x) AMat*x+BpPlusCqVec;
+            
+            function varargout=fAdvRegFunc(~,varargin)
+                nEqs=length(varargin);
+                varargout{1}=false;
+                for iEq=1:nEqs
+                    varargout{iEq+1} = varargin{iEq};
+                end
+            end
             %
-            [timeXtVec,xtArray]=solverObj.solve(xtDerivFunc,...
-                self.timeVec,x0Vec);
-            %
-            self.xtDynamics=MatrixInterpolantFactory.createInstance(...
-                'column',xtArray,timeXtVec);
+            [~,~,~,interpObj] = ...
+                solverObj.solve({xtDerivFunc,@fAdvRegFunc},...
+                self.timeVec, problemDef.getx0Vec());
+            self.xtDynamics = gras.ode.MatrixODE45InterpFunc(interpObj);
         end
     end
 end
