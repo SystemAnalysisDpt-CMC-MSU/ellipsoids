@@ -1,24 +1,29 @@
 classdef ControlVectorFunct < elltool.control.IControlVectFunction
+    properties (Constant = true)
+        FSOLVE_TOL = 1e-5;
+    end
+    
     properties
         properEllTube
         probDynamicsList
         goodDirSetList
-        iTube
-        koef
+        indTube
+        downScaleKoeff
     end
+    
     methods
         function self=ControlVectorFunct(properEllTube,... % class constructor
-                probDynamicsList, goodDirSetList,iTube,inKoef)
+                probDynamicsList, goodDirSetList,indTube,inDownScaleKoeff)
             self.properEllTube=properEllTube;
             self.probDynamicsList=probDynamicsList;
             self.goodDirSetList=goodDirSetList;
-            self.iTube=iTube;
-            self.koef=inKoef;
+            self.indTube=indTube;
+            self.downScaleKoeff=inDownScaleKoeff;
         end
-        function resVec=evaluate(self,xVec,timeVec)
+        
+        function resMat=evaluate(self,xVec,timeVec)
             
-            resVec=zeros(size(xVec,1),size(timeVec,2));
-%             import ; % <- I don't think we need it because the argument is void
+            resMat=zeros(size(xVec,1),size(timeVec,2));
 
             % next step is to find curProbDynObj, curGoodDirSetObj corresponding to that time period                       
             
@@ -30,10 +35,10 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
                     
                 else
                     for iSwitch=2:numel(self.probDynamicsList)
-                        probTimeVec=self.probDynamicsList{iSwitch}{self.iTube}.getTimeVec();
+                        probTimeVec=self.probDynamicsList{iSwitch}{self.indTube}.getTimeVec();
                         if ((timeVec(iTime)<=probTimeVec(end))&&(timeVec(iTime)>=probTimeVec(1)))
-                            curProbDynObj=self.probDynamicsList{iSwitch}{self.iTube};
-                            curGoodDirSetObj=self.goodDirSetList{iSwitch}{self.iTube};
+                            curProbDynObj=self.probDynamicsList{iSwitch}{self.indTube};
+                            curGoodDirSetObj=self.goodDirSetList{iSwitch}{self.indTube};
                             break;
                         end
                     end
@@ -45,23 +50,23 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
                 xstTransMat = curGoodDirSetObj.getXstTransDynamics();
                 tFin = max(probTimeVec);  
                 tStart = min(probTimeVec);
-                xt1tMat = inv(transpose(xstTransMat.evaluate(tFin-tFin+tStart)))*(transpose(xstTransMat.evaluate(tFin-timeVec(iTime)+tStart)));
-                %tFin-tFin there is some mistake... of course she is a woman  
+                xt1tMat = (transpose(xstTransMat.evaluate(tFin-tFin+tStart)))\(transpose(xstTransMat.evaluate(tFin-timeVec(iTime)+tStart)));
+                %tFin-tFin seems to be okay. Better look in other place
                 % There is an opinion that we are to have 
                 % X(t1,t) = inv( X(s,t1) ) * X(s,t) 
 
-                bpVec=-curProbDynObj.getBptDynamics.evaluate(tFin-timeVec(iTime)+tStart); % ellipsoid center
-                bpbMat=curProbDynObj.getBPBTransDynamics.evaluate(tFin-timeVec(iTime)+tStart);   % ellipsoid shape matrix
-                pVec=xt1tMat*bpVec;
-                pMat=xt1tMat*bpbMat*transpose(xt1tMat);
+                bpVec = -curProbDynObj.getBptDynamics.evaluate(tFin-timeVec(iTime)+tStart); % ellipsoid center
+                bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(tFin-timeVec(iTime)+tStart);   % ellipsoid shape matrix
+                pVec = xt1tMat*bpVec;
+                pMat = xt1tMat*bpbMat*transpose(xt1tMat);
                     
-                ellTubeTimeVec=self.properEllTube.timeVec{:};
+                ellTubeTimeVec = self.properEllTube.timeVec{:};
                 
-                ind=find(ellTubeTimeVec <= timeVec(iTime));
-                tInd=size(ind,2);
+                ind = find(ellTubeTimeVec <= timeVec(iTime));
+                indTime = size(ind,2);
               
-                %find proper ellipsoid which corresponts current time
-                if ellTubeTimeVec(tInd)<timeVec(iTime)
+                %find proper ellipsoid which corresponds to current time
+                if ellTubeTimeVec(indTime)<timeVec(iTime)
                     
                     nDim=size(self.properEllTube.aMat{:},1);
                     qVec=zeros(nDim,1);
@@ -79,42 +84,30 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
                     end;
                     
                 else
-                    if (ellTubeTimeVec(tInd)==timeVec(iTime))
-                        qVec=self.properEllTube.aMat{:}(:,tInd);
-                        qMat=self.properEllTube.QArray{:}(:,:,tInd);                        
+                    if (ellTubeTimeVec(indTime)==timeVec(iTime))
+                        qVec=self.properEllTube.aMat{:}(:,indTime);
+                        qMat=self.properEllTube.QArray{:}(:,:,indTime);                        
                     end
                 end                
                 qVec=xt1tMat*qVec;
                 qMat=xt1tMat*qMat*transpose(xt1tMat); 
                 xVec=xt1tMat*xVec;
-                ml1Vec=sqrt(dot(xVec-qVec,inv(qMat)*(xVec-qVec)));
-                l0Vec=inv(qMat)*(xVec-qVec)/ml1Vec;
+                ml1Vec=sqrt(dot(xVec-qVec,qMat\(xVec-qVec)));
+                l0Vec=(qMat\(xVec-qVec))/ml1Vec;
                 if (dot(-l0Vec,xVec)-dot(-l0Vec,qVec)>dot(l0Vec,xVec)-dot(l0Vec,qVec))
                     l0Vec=-l0Vec;
                 end
                 l0Vec=l0Vec/norm(l0Vec);
-                %l0Vec=findl0(qVec,qMat,xVec)
                 
-                resVec(:,iTime)=pVec-(pMat*l0Vec)/sqrt(dot(l0Vec,pMat*l0Vec));
-                resVec(:,iTime)=inv(xt1tMat)*resVec(:,iTime);
+                resMat(:,iTime)=pVec-(pMat*l0Vec)/sqrt(dot(l0Vec,pMat*l0Vec));
+                resMat(:,iTime)=xt1tMat\resMat(:,iTime);
 
             end 
             
-            function l0Vec=findl0(elxCentVec,elXMat,xVec)
-                %from the article
-                 IMat=eye(size(elXMat));
-                  fCalc=@(lambda)1/(dot(inv(IMat+lambda*inv(elXMat))*(xVec-elxCentVec),...
-                      inv(elXMat)*inv(IMat+lambda*inv(elXMat))*(xVec-elxCentVec)))-1;
-                  lamMat=fsolve(fCalc,1.0e-5);
-                  s0Vec=inv(IMat+lamMat*inv(elXMat))*(xVec-elxCentVec)+elxCentVec;
-                  l0Vec=(xVec-s0Vec)/norm(xVec-s0Vec);
-
-            end
-            
         end % of evaluate()
         
-        function iTube=getITube(self)
-            iTube=self.iTube;
+        function indTube=getITube(self)
+            indTube=self.iTube;
         end
         
     end
