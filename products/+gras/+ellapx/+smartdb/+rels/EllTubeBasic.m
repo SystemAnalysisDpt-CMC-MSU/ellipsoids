@@ -6,6 +6,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         FCODE_A_MAT
         FCODE_SCALE_FACTOR
         FCODE_M_ARRAY
+        FCODE_TUBE_Q_ARRAY_INTERP_OBJ
+        FCODE_TUBE_A_MAT_INTERP_OBJ
+        FCODE_TUBE_GOOD_DIR_INTERP_OBJ
+        FCODE_TUBE_GOOD_DIR_NORM_VEC_INTERP_OBJ
     end
     methods
         function fieldsList = getNoCatOrCutFieldsList(~)
@@ -92,9 +96,28 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 'UniformOutput',false);
             STubeData.MArray=cellfun(@(x,y)x.*y,STubeData.MArray,...
                 scaleQFactorList,'UniformOutput',false);
+            % interp obj operations
+            nLDirs = length(STubeData.QArray);
+            compositeMatrixSysOperationsObj = ...
+                gras.mat.CompositeMatrixSysOperations();
+            for iLDir=1:nLDirs
+                scaledHelpInterpObj = ...
+                    compositeMatrixSysOperationsObj.mulOnScalar(...
+                    STubeData.QArrayInterpObjList{iLDir},...
+                    scaleQFactorVec(iLDir));
+                transposeHelpInterpObj = ...
+                    compositeMatrixSysOperationsObj.transpose(...
+                    scaledHelpInterpObj);
+                sumHelpInterpObj = compositeMatrixSysOperationsObj.sum(...
+                    scaledHelpInterpObj,transposeHelpInterpObj);
+                STubeData.QArrayInterpObjList{iLDir}=...
+                    compositeMatrixSysOperationsObj.mulOnScalar(...
+                    sumHelpInterpObj,0.5);
+            end
             %
             STubeData=EllTubeBasic.calcTouchCurveData(STubeData);
             STubeData.scaleFactor=STubeData.scaleFactor.*scaleFactorVec;
+            STubeData = EllTubeBasic.unificationInterpObjs(STubeData);
         end
         %
         function STubeData=calcTouchCurveData(STubeData)
@@ -126,6 +149,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData.indSTime=zeros(nLDirs,1);
             STubeData.lsGoodDirVec=cell(nLDirs,1);
             STubeData.ltGoodDirNormVec=cell(nLDirs,1);
+            STubeData.ltGoodDirNormVecInterpObj=cell(nLDirs,1);
             STubeData.lsGoodDirNorm=zeros(nLDirs,1);
             %
             STubeData.isLsTouch=false(nLDirs,1);
@@ -144,6 +168,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 absTol=STubeData.absTol(iLDir);
                 %
                 ltGoodDirMat=STubeData.ltGoodDirMat{iLDir};
+                ltGoodDirMatInterpObj = STubeData.ltGoodDirInterpObjList{iLDir};
                 lsGoodDirVec=ltGoodDirMat(:,indSTime);
                 STubeData.indSTime(iLDir)=indSTime;
                 %
@@ -161,20 +186,31 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 %
                 isLtTouchVec=ltGoodDirNormVec>absTol;
                 %
+                newLtGoodDirMatInterpObj = gras.mat.MatrixLtGoodDirNormFunc(...
+                        ltGoodDirMatInterpObj,absTol);              
+                    
+                    
                 if any(isLtTouchVec)
-                    ltGoodDirMat(:,isLtTouchVec)=ltGoodDirMat(:,isLtTouchVec)./...
-                        repmat(ltGoodDirNormVec(isLtTouchVec),...
+                    helpMatrix = repmat(ltGoodDirNormVec(isLtTouchVec),...
                         size(ltGoodDirMat,1),1);
+                    ltGoodDirMat(:,isLtTouchVec)=ltGoodDirMat(:,isLtTouchVec)./...
+                        helpMatrix;                  
                 end
                 %
                 STubeData.ltGoodDirMat{iLDir}=ltGoodDirMat;
+                STubeData.ltGoodDirInterpObjList{iLDir} =...
+                    newLtGoodDirMatInterpObj;
                 STubeData.lsGoodDirVec{iLDir}=lsGoodDirVec;
                 STubeData.ltGoodDirNormVec{iLDir}=ltGoodDirNormVec;
+                STubeData.ltGoodDirNormVecInterpObj{iLDir} = ...
+                    gras.mat.MatrixLtDoodDirNormVecFunc(...
+                    ltGoodDirMatInterpObj,timeVec);
                 STubeData.lsGoodDirNorm(iLDir)=lsGoodDirNorm;
                 %
                 STubeData.isLsTouch(iLDir)=isLsTouch;
                 %
                 STubeData.isLtTouchVec{iLDir}=isLtTouchVec;
+                STubeData = gras.ellapx.smartdb.rels.EllTubeBasic.unificationInterpObjs(STubeData);
             end
         end
         function STubeData=deNormGoodDirs(STubeData)
@@ -202,9 +238,33 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             end
             STubeData.lsGoodDirNorm=ones(size(STubeData.lsGoodDirNorm));
         end
+        %
+        function STubeData = unificationInterpObjs(STubeData)            
+            function interpObj = unificationInterpObj(interpObj)
+                import gras.interp.MatrixSysUnifiedInterpFunc;
+                if(~isa(interpObj,'gras.interp.MatrixSysUnifiedInterpFunc'))
+                    interpObj = MatrixSysUnifiedInterpFunc(interpObj);
+                end
+            end
+            nInterpObjs = length(STubeData.QArrayInterpObjList);
+            for iInterObj = 1:nInterpObjs
+                STubeData.QArrayInterpObjList{iInterObj} = ...
+                    unificationInterpObj(...
+                    STubeData.QArrayInterpObjList{iInterObj});
+                STubeData.aMatInterpObj{iInterObj} = ...
+                    unificationInterpObj(...
+                    STubeData.aMatInterpObj{iInterObj});
+                STubeData.ltGoodDirInterpObjList{iInterObj} = ...
+                    unificationInterpObj(...
+                    STubeData.ltGoodDirInterpObjList{iInterObj});
+            end
+        end
+        %
         function STubeData=fromQArraysInternal(QArrayList,aMat,...
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
-                approxSchemaName,approxSchemaDescr,absTol,relTol,scaleFactorVec)
+                approxSchemaName,approxSchemaDescr,absTol,relTol,...
+                scaleFactorVec,QArrayInterpObjList,aMatInterpObj,...
+                ltGoodDirInterObj)
             %
             % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $
             % $Copyright: Moscow State University,
@@ -230,6 +290,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData.aMat=repmat({aMat},nLDirs,1);
             %
             STubeData.MArray=MArrayList.';
+            %
+            STubeData.QArrayInterpObjList = QArrayInterpObjList.';
+            STubeData.aMatInterpObj = repmat({aMatInterpObj},nLDirs,1);  
+            STubeData.ltGoodDirInterpObjList=cell(nLDirs,1);
             %
             STubeData.dim=repmat(size(aMat,1),nLDirs,1);
             %
@@ -260,18 +324,32 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             STubeData.ltGoodDirMat=cell(nLDirs,1);
             %
             STubeData.ltGoodDirNormVec=cell(nLDirs,1);
+            STubeData.ltGoodDirNormVecInterpObj=cell(nLDirs,1);
             %
             STubeData.absTol=repmat(absTol,nLDirs,1);
             %
             STubeData.relTol=repmat(relTol,nLDirs,1);
             % 
+            nRows = ltGoodDirInterObj.getNRows();
+            compositeMatrixOperationsObj =...
+                gras.mat.CompositeMatrixOperations();
             for iLDir=1:1:nLDirs
+                % array operations
                 STubeData.ltGoodDirMat{iLDir}=...
                     squeeze(ltGoodDirArray(:,iLDir,:));
+                % interp obj operations                
+                STubeData.ltGoodDirInterpObjList{iLDir} = ...
+                    compositeMatrixOperationsObj.subarray(...
+                    ltGoodDirInterObj,[{1:nRows} {iLDir}]);
+                STubeData.ltGoodDirInterpObjList{iLDir}=...
+                    compositeMatrixOperationsObj.squeeze(...
+                    STubeData.ltGoodDirInterpObjList{iLDir});
             end
-            STubeData=EllTubeBasic.calcGoodCurveData(STubeData);
-            STubeData=EllTubeBasic.scaleTubeData(STubeData,scaleFactorVec.');
+            STubeData=EllTubeBasic.calcGoodCurveData(STubeData);            
+            STubeData=EllTubeBasic.scaleTubeData(STubeData,scaleFactorVec.');            
             STubeData=EllTubeBasic.calcTouchCurveData(STubeData);
+            
+            STubeData = EllTubeBasic.unificationInterpObjs(STubeData);
         end
     end
     methods (Access=protected)
@@ -570,53 +648,29 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         function SData = getInterpDataInternal(self, newTimeVec)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
+            evalArrayFunc = @(x)x.evaluate(newTimeVec);            
             SData=self.getData('denormGoodDirs',true);
-            [SData.QArray, SData.aMat, SData.MArray,...
-                SData.ltGoodDirMat,SData.timeVec,sTimeList] =...
-                cellfun(@fInterpTuple,SData.QArray,...
-                SData.aMat, SData.MArray,...
-                SData.ltGoodDirMat,SData.timeVec,...
-                num2cell(SData.sTime),...
+            [SData.timeVec,sTimeList] =...
+                cellfun(@fInterpTuple, num2cell(SData.sTime),...
                 'UniformOutput',false);
+            [SData.QArray SData.MArray] = cellfun(evalArrayFunc,...
+                SData.QArrayInterpObjList,'UniformOutput',false);
+            SData.aMat = cellfun(evalArrayFunc,SData.aMatInterpObj,...
+                'UniformOutput',false);
+            SData.ltGoodDirMat = cellfun(evalArrayFunc,...
+                SData.ltGoodDirInterpObjList,'UniformOutput',false);
             SData.sTime=vertcat(sTimeList{:});
             SData=EllTubeBasic.calcGoodCurveData(SData);
             SData=EllTubeBasic.calcTouchCurveData(SData);
             %
-            function [QArray, aMat, MArray,ltGoodDirMat,timeVec,sTime] =...
-                    fInterpTuple(QArray, aMat, MArray,ltGoodDirMat,...
-                    timeVec,sTime)
-                nDims=size(QArray,1);
-                nPoints=size(QArray,3);
-                %
-                QArray = simpleInterp(QArray);
-                %
-                MArray = simpleInterp(MArray);
-                ltGoodDirMat = simpleInterp(ltGoodDirMat,true);
-                aMat = simpleInterp(aMat,true);
-                timeVec=newTimeVec;
-                distVec=abs(sTime-newTimeVec);
-                [~,indMin]=min(distVec);
-                sTime=newTimeVec(indMin);
-                %
-                function interpArray=simpleInterp(inpArray,isVector)
-                    import gras.mat.interp.MatrixInterpolantFactory;
-                    if nargin<2
-                        isVector=false;
-                    end
-                    if isVector
-                        nDims=size(inpArray,1);
-                        nPoints=size(inpArray,2);
-                        inpArray=reshape(inpArray,[nDims,1,nPoints]);
-                    end
-                    splineObj=MatrixInterpolantFactory.createInstance(...
-                        'nearest',inpArray,timeVec);
-                    interpArray=splineObj.evaluate(newTimeVec);
-                    if isVector
-                        interpArray=permute(interpArray,[1 3 2]);
-                    end
-                end
+            function [timeVec,sTime] = fInterpTuple(sTime)
+                timeVec = newTimeVec;
+                distVec = abs(sTime-newTimeVec);
+                [~,indMin] = min(distVec);
+                sTime = newTimeVec(indMin);
             end
         end
+
     end
     methods (Access=protected)
         function [ellTubeProjRel,indProj2OrigVec]=projectInternal(self,projType,...
@@ -658,6 +712,10 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 indLDirs=find(indBackwardVec==iGroup);
                 indProj2OrigCVec{iGroup}=indLDirs;
                 nLDirs=length(indLDirs);
+                compositeMatrixOperationsObj =...
+                        gras.mat.CompositeMatrixOperations();
+                compositeMatrixSysOperationsObj =...
+                        gras.mat.CompositeMatrixSysOperations();
                 %
                 for iProj=nProj:-1:1
                     projMat=projMatList{iProj};
@@ -665,10 +723,18 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     %% Create projection matrix vector
                     [projArray,projTransArray]=...
                         fGetProjMat(projMat,timeVec,sTime,dim,indSTime);
+                    projArrayFunc = gras.mat.AProjArrayFunction(projMat,...
+                        timeVec,sTime,dim,indSTime,fGetProjMat);
+                    projTransArrayFunc = ...
+                        compositeMatrixOperationsObj.transpose(...
+                        projArrayFunc);
+                    
                     %%
                     projOrthArray=SquareMatVector.evalMFunc(...
                         @(x)transpose(gras.la.matorthcol(transpose(x))),...
                         projArray,'keepSize',true);
+                    projOrthArrayFunc = gras.mat.AProjOrthArrayFunction(...
+                        projArrayFunc,timeVec);
                     %
                     tubeProjDataCMat{iGroup,iProj}.dim=...
                         repmat(size(projMat,1),nLDirs,1);
@@ -681,7 +747,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         repmat(projType,nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.QArray=cell(nLDirs,1);
+                    %QArrayInterpObjList
+                    tubeProjDataCMat{iGroup,iProj}.QArrayInterpObjList=cell(nLDirs,1);
+                    
                     tubeProjDataCMat{iGroup,iProj}.aMat=cell(nLDirs,1);
+                    %aMatInterpObj
+                    tubeProjDataCMat{iGroup,iProj}.aMatInterpObj=cell(nLDirs,1);
                     %
                     tubeProjDataCMat{iGroup,iProj}.MArray=cell(nLDirs,1);
                     %
@@ -694,6 +765,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     %
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat=cell(nLDirs,1);
+                    %ltGoodDirInterObj
+                    tubeProjDataCMat{iGroup,iProj}.ltGoodDirInterpObjList=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.lsGoodDirNormOrig=zeros(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigVec=cell(nLDirs,1);
                     tubeProjDataCMat{iGroup,iProj}.ltGoodDirNormOrigProjVec=cell(nLDirs,1);
@@ -734,29 +807,70 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         tubeProjDataCMat{iGroup,iProj}.QArray{iLDir}=...
                             SquareMatVector.rMultiply(projArray,...
                             STubeData.QArray{iOLDir},projTransArray);
+                        
+                        %project interp objects for configuration matrices
+                        %and regularization matrix
+                        tubeProjDataCMat{iGroup,iProj}.QArrayInterpObjList{iLDir}=...
+                            compositeMatrixSysOperationsObj.rMultiply(...
+                            projArrayFunc,...
+                            STubeData.QArrayInterpObjList{iOLDir},...
+                            projTransArrayFunc);
+                        
+                        
+                        
                         %Matrices must remain symmetric
-                        tubeProjDataCMat{iGroup,iProj}.QArray{iLDir}=...
+                        tubeProjDataCMat{iGroup,iProj}.QArray{iLDir} = ...
                             0.5*(tubeProjDataCMat{iGroup,iProj}.QArray{iLDir}+...
                             SquareMatVector.transpose(...
                             tubeProjDataCMat{iGroup,iProj}.QArray{iLDir}));
+                        % interp obj operations for this 
+                        % (interp corresponds configuration matrices and 
+                        % regularization matrix)
+                        transposeHelpInterpObj = ...
+                            compositeMatrixSysOperationsObj.transpose(...
+                            tubeProjDataCMat{iGroup,iProj}.QArrayInterpObjList{iLDir});
+                        sumHelpInterpObj = ...
+                            compositeMatrixSysOperationsObj.sum(...
+                            tubeProjDataCMat{iGroup,iProj}.QArrayInterpObjList{iLDir},...
+                            transposeHelpInterpObj);
+                        tubeProjDataCMat{iGroup,iProj}.QArrayInterpObjList{iLDir}=...
+                            compositeMatrixSysOperationsObj.mulOnScalar(...
+                            sumHelpInterpObj,0.5);
+                        
                         %project centers
                         tubeProjDataCMat{iGroup,iProj}.aMat{iLDir}=...
                             SquareMatVector.rMultiplyByVec(projArray,...
                             STubeData.aMat{iOLDir});
+                        %project interp objects for centers
+                        tubeProjDataCMat{iGroup,iProj}.aMatInterpObj{iLDir}=...
+                            compositeMatrixOperationsObj.rMultiplyByVec(...
+                            projArrayFunc,STubeData.aMatInterpObj{iOLDir});
+                            
                         %project regularization matrix
                         tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}=...
                             SquareMatVector.rMultiply(projArray,...
-                            STubeData.MArray{iOLDir},projTransArray);
+                            STubeData.MArray{iOLDir},projTransArray);                        
                         %Matrices must remain symmetric
                         tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}=...
                             0.5*(tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}+...
                             SquareMatVector.transpose(...
                             tubeProjDataCMat{iGroup,iProj}.MArray{iLDir}));
-                        %
+                        
+                                            
                         %the following statement only valid for orthogonal projections
                         ltGoodDirMat=...
                             SquareMatVector.rMultiplyByVec(projOrthArray,...
-                            STubeData.ltGoodDirMat{iOLDir});
+                            STubeData.ltGoodDirMat{iOLDir});      
+                        
+                        %project interp objects for ltGoodDirMat
+                        sizeMatrix = ...
+                            STubeData.ltGoodDirInterpObjList{iOLDir}.getMatrixSize();
+                        ltGoodDirMatInterpObj = ...
+                            compositeMatrixOperationsObj.rMultiplyByVecSpecial(...
+                            projOrthArrayFunc,...
+                            STubeData.ltGoodDirInterpObjList{iOLDir},...
+                            sizeMatrix);                       
+                         
                         %
                         %record original norm values
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirNormOrig(iLDir)=...
@@ -779,18 +893,41 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         %
                         %check norm of projected direction
                         isnLtTouchVec=abs(ltProjGoodDirNormVec-1)>absTol;
-                        ltGoodDirMat(:,isnLtTouchVec)=0;
-                        ltGoodDirMat=ltGoodDirMat.*repmat(ltGoodDirNormOrigVec,dimProj,1);
+                        ltGoodDirMat(:,isnLtTouchVec)=0;                        
+                        % interpObj subarray
+                        ltGoodDirMatSubarrayFunc =...
+                            gras.mat.MatrixSubArrayCauseNormFunc(...
+                            ltGoodDirMatInterpObj,dimProj);
+                        
+                        
+                        helpMatrix = repmat(ltGoodDirNormOrigVec,dimProj,1);
+                        ltGoodDirMat=ltGoodDirMat.*helpMatrix;
+                        % build helpMatrix
+                        normOrigVecMatrixFunc = gras.mat.MatrixNormOrigVecFunc(...
+                             STubeData.ltGoodDirNormVecInterpObj{iOLDir},...
+                             dimProj,timeVec);
+                                                
+                        ltGoodDirMatInterpObj=...
+                            compositeMatrixOperationsObj.mulHadamard(...
+                            normOrigVecMatrixFunc,ltGoodDirMatSubarrayFunc);
+                        
+                        %store final ltGoodDirMatInterpObj
+                        tubeProjDataCMat{iGroup,iProj}.ltGoodDirInterpObjList{iLDir}=...
+                            ltGoodDirMatInterpObj;                        
                         %store final ltGoodDirMat and lsGoodDirVec
                         tubeProjDataCMat{iGroup,iProj}.ltGoodDirMat{iLDir}=ltGoodDirMat;
+
                         %the following statement only valid for orthogonal projections
                         tubeProjDataCMat{iGroup,iProj}.lsGoodDirVec{iLDir}=ltGoodDirMat(:,indSTime);
                         %
                     end
                     tubeProjDataCMat{iGroup,iProj}=...
-                        self.calcGoodCurveData(tubeProjDataCMat{iGroup,iProj});
+                        self.calcGoodCurveData(tubeProjDataCMat{iGroup,iProj});                    
                     tubeProjDataCMat{iGroup,iProj}=...
                         EllTubeBasic.calcTouchCurveData(tubeProjDataCMat{iGroup,iProj});
+                    
+                    tubeProjDataCMat{iGroup,iProj} = ...
+                        EllTubeBasic.unificationInterpObjs(tubeProjDataCMat{iGroup,iProj});
                 end
             end
             ellTubeProjRel=...

@@ -88,7 +88,7 @@ classdef VecOde45RegInterp
             %           stored in   this object
             %       timeVec: double[1,nPoints] - time range, same meaning 
             %           as in ode45
-            %   Output:
+            % Output:
             %       tOutVec: double[nPoints,1] - time grid, same meaning
             %           as in ode45
             %       yOutMat: double[nPoints,nDims] - solution, same meaning

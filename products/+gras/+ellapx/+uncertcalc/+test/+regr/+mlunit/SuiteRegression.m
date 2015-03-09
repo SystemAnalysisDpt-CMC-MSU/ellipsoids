@@ -104,6 +104,8 @@ classdef SuiteRegression < mlunitext.test_case
                     %rel=smartdb.relations.DynamicRelation(rel);
                     %rel.removeFields('approxSchemaName');
                     %
+                    
+                    % Warning ! This added on time.
                     [isOk,reportStr]=expRel.isEqual(rel);
                     %
                     reportStr=sprintf('confName=%s\n %s',confName,...

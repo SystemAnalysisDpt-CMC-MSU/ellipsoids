@@ -158,5 +158,22 @@ classdef F<smartdb.gen.AFieldDefs
         SCALE_FACTOR='scaleFactor';
         SCALE_FACTOR_D='Tube scale factor';
         SCALE_FACTOR_T={'double'};
+        %
+        TUBE_Q_ARRAY_INTERP_OBJ='QArrayInterpObjList';
+        TUBE_Q_ARRAY_INTERP_OBJ_D='Interpolation object to the matrix Q'
+        TUBE_Q_ARRAY_INTERP_OBJ_T={'cell','gras.interp.MatrixSysUnifiedInterpFunc'};
+        %
+        TUBE_A_MAT_INTERP_OBJ='aMatInterpObj';
+        TUBE_A_MAT_INTERP_OBJ_D='Interpolation object to the aMat'
+        TUBE_A_MAT_INTERP_OBJ_T={'cell','gras.interp.MatrixSysUnifiedInterpFunc'};
+        %
+        TUBE_GOOD_DIR_INTERP_OBJ='ltGoodDirInterpObjList';
+        TUBE_GOOD_DIR_INTERP_OBJ_D='Interpolation object to the ltGoodDirArray'
+        TUBE_GOOD_DIR_INTERP_OBJ_T={'cell','gras.interp.MatrixSysUnifiedInterpFunc'};
+        %
+        TUBE_GOOD_DIR_NORM_VEC_INTERP_OBJ='ltGoodDirNormVecInterpObj';
+        TUBE_GOOD_DIR_NORM_VEC_INTERP_OBJ_D='Interpolation object to the ltGoodDirNormVec'
+        TUBE_GOOD_DIR_NORM_VEC_INTERP_OBJ_T={'cell','gras.mat.MatrixLtDoodDirNormVecFunc'};
+        
     end
 end

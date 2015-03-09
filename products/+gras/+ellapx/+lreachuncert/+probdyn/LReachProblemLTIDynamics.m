@@ -42,18 +42,29 @@ classdef LReachProblemLTIDynamics<...
                 CMat*QMat*(CMat.'));
             %
             % compute x(t)
-            %
+            %          
             odeArgList=self.getOdePropList(calcPrecision);
-            solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
-            %
+            fSolver = @gras.ode.ode45reg;
+            fSolveFunc = @(varargin)fSolver(varargin{:},...
+                    odeset(odeArgList{:}));
+               
+            solverObj = gras.ode.MatrixSysODERegInterpSolver(...
+                {[sysDim 1]},fSolveFunc,'outArgStartIndVec',[1 2]);
             BpPlusCqVec = BpVec + CqVec;
             xtDerivFunc = @(t,x) AMat*x+BpPlusCqVec;
+            
+            function varargout=fAdvRegFunc(~,varargin)
+                nEqs=length(varargin);
+                varargout{1}=false;
+                for iEq=1:nEqs
+                    varargout{iEq+1} = varargin{iEq};
+                end
+            end
             %
-            [timeXtVec,xtArray]=solverObj.solve(xtDerivFunc,...
-                self.timeVec,x0Vec);
-            %
-            self.xtDynamics=MatrixInterpolantFactory.createInstance(...
-                'column',xtArray,timeXtVec);
+            [~,~,~,interpObj] = ...
+                solverObj.solve({xtDerivFunc,@fAdvRegFunc},...
+                self.timeVec, problemDef.getx0Vec());
+            self.xtDynamics = gras.ode.MatrixODE45InterpFunc(interpObj);
         end
     end
 end

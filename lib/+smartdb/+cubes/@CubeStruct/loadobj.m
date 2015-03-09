@@ -19,7 +19,7 @@ else
                 typeList=inpObj.getFieldTypeList();
                 sizeMat=inpObj.getFieldValueSizeMat();
                 for iField=indEnumVec
-                    fieldName=fieldNameList{iField};
+                    fieldName=fieldNameList{iField}
                     inpObj.setField(fieldName,...
                         typeList{iField}.createDefaultValueArray(...
                         sizeMat(iField,:)));

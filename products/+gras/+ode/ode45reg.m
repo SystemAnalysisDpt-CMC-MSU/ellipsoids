@@ -1,5 +1,5 @@
-function [tout,yout,dyRegMat,interpObj] = ode45reg(fOdeDeriv,fOdeReg,tspan,y0Vec,...
-    options,varargin)
+function [tout,yout,dyRegMat,interpObj] = ode45reg(fOdeDeriv,fOdeReg,...
+    tspan,y0Vec,options,varargin)
 % ODE45REG is an extension of built-in ode45 solver capable of solving ODEs
 % with right hand-side functions having a limited definition area
 %
@@ -38,7 +38,7 @@ function [tout,yout,dyRegMat,interpObj] = ode45reg(fOdeDeriv,fOdeReg,tspan,y0Vec
 %   dyRegMat: double[nPoints,nDims] - regularizing derivative addition
 %       to the right-hand side function value performed at each step,
 %       basically yout is a solution of dot(y)=fOdeDeriv(t,y)+dyRegMat(t,y)
-%   interpObj: gras.ode.VecOde45RegInterp[1,1] - all the data nessecary 
+%   interpObj: gras.ode.VecOde45RegInterp[1,1] - all the data necessary 
 %       for calculation on an arbitrary time grid is stored in  this object
 %
 % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011$

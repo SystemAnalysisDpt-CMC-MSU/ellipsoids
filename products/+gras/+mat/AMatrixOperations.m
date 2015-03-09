@@ -110,6 +110,42 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                 obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
             end
         end
+        % catDiffTimeVec
+        function obj=catDiffTimeVec(self,lMatFunc,rMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % flipdim
+        function obj=flipdim(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % subarray
+        function obj=subarray(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % subarrayInit
+        function obj=subarrayInit(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % reshape
+        function obj=reshape(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end 
+        % mulHadamard
+        function obj=mulHadamard(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end 
+        % squeeze
+        function obj=squeeze(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % divHadamard
+        function obj=divHadamard(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
+        % rMultiplyByVecSpecial
+        function obj=rMultiplyByVecSpecial(self,inMatFunc)
+            obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
+        end
         function obj=rMultiplyByScalar(self,lMatFunc,rScalFunc)
             if self.isMatFuncConst(lMatFunc,rScalFunc)
                 obj = self.constBinaryOperation(@times,lMatFunc,rScalFunc);
