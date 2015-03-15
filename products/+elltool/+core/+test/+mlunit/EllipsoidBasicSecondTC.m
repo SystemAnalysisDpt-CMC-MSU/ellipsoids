@@ -7,7 +7,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
     end
     methods
         function self = testGetBoundary(self)
-            [testEllCVec testNumPointsCVec]  = getEllParams(1);
+            [testEllCVec testNumPointsCVec]  = self.getEllParams(1);
             [bpCMat fCMat] = cellfun(@(x,y)getBoundary(x,y),testEllCVec,...
                 testNumPointsCVec, 'UniformOutput', false);
             bpRightCMat = {[1 0; 0.5 sqrt(3) / 2; -0.5 sqrt(3) / 2; -1 0;...
@@ -23,8 +23,12 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             
         end
         
+        function self = set_up_param(self, ellFactoryObj)
+            self.ellFactoryObj = ellFactoryObj;
+        end
+        
         function self = testGetBoundaryByFactor(self)
-            [testEllCVec, testNumPointsCVec]  = getEllParams(1);
+            [testEllCVec, testNumPointsCVec] = self.getEllParams(1);
             [bpCMat, fCMat] = cellfun(@(x, y)getBoundaryByFactor(x, y),testEllCVec,...
                 testNumPointsCVec, 'UniformOutput', false);
             testNumRightPointsCVec = cellfun(@(x,y)x.getNPlot2dPoints()*y,...
@@ -37,7 +41,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         end
         
         function self = testGetRhoBoundary(self)
-            [testEllCVec testNumPointsCVec]  = getEllParams(2);
+            [testEllCVec testNumPointsCVec]  = self.getEllParams(2);
             
             [bpMatCArr fMatCArr supCVec lGridCMat] = cellfun(@(x, y)getRhoBoundary(x, y(1))...
                 ,testEllCVec, testNumPointsCVec, 'UniformOutput', false);
@@ -67,7 +71,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         end
         
         function self = testGetRhoBoundaryByFactor(self)
-            [testEllCVec testNumPointsCVec]  = getEllParams(2);
+            [testEllCVec testNumPointsCVec] = self.getEllParams(2);
             
             [bpMatCArr fMatCArr supCVec lGridCMat] = cellfun(@(x, y)getRhoBoundaryByFactor(x, y),...
                 testEllCVec, testNumPointsCVec, 'UniformOutput', false);
@@ -687,24 +691,6 @@ ABSTOL = 1.0e-12;
 isFlag = isEqual1 && isEqual2;
 
 
-end
-
-
-function [ellCVec, pointsCVec] = getEllParams(flag)
-if(flag == 1)
-    test1Ell = self.ellFactoryObj.create(eye(2));
-    test2Ell = self.ellFactoryObj.create([1; 0], [1 0; 0 1]);
-    test3Ell = self.ellFactoryObj.create([0; 0], [0 0; 0 0]);
-    test4Ell = self.ellFactoryObj.create([2; 1], [4 0; 0 4]);
-    pointsCVec = {6 6 6 6};
-else
-    test1Ell = self.ellFactoryObj.create(eye(2));
-    test2Ell = self.ellFactoryObj.create([1; 3], [3 1; 1 1]);
-    test3Ell = self.ellFactoryObj.create([2; 1], [4 -1; -1 1]);
-    test4Ell = self.ellFactoryObj.create(eye(3));
-    pointsCVec = {10 20 35 [5 5]};
-end
-ellCVec = {test1Ell, test2Ell, test3Ell, test4Ell};
 end
 
 function operationCheckEqFunc(testEllArr, compList, operation,...

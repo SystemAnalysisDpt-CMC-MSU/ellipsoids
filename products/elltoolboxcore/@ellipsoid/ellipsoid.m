@@ -207,7 +207,7 @@ classdef ellipsoid < elltool.core.AEllipsoid
         ellArr = fromRepMat(varargin)
         ellArr = fromStruct(SEllArr)
     end
-    methods(Static,Access = private)     
+    methods(Static,Access = protected)     
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
         [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat,...
@@ -216,18 +216,70 @@ classdef ellipsoid < elltool.core.AEllipsoid
         [bpMat, fMat] = ellbndr_3dmat(nPoints, cenVec, qMat,absTol)
         [bpMat, fMat] = ellbndr_2dmat(nPoints, cenVec, qMat,absTol)
     end
-    methods(Access = private)
-        [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
+    methods(Access = protected)
+        %[propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
         [bpMat, fVec] = getGridByFactor(ellObj,factorVec)
-        checkDoesContainArgs(ell,poly)
+        function checkDoesContainArgs(fstEllArr,secObjArr)
+        % CHECKDOESCONTAINARGS -- private function, used by doesContain and
+        %    doesIntersectionContain to check their arguments.
+            import modgen.common.throwerror;
+            import modgen.common.checkmultvar;
+
+            ellipsoid.checkIsMe(fstEllArr,'first');
+            modgen.common.checkvar(secObjArr,@(x)isa(x, 'ellipsoid') || ...
+            isa(x, 'Polyhedron'),'errorTag','wrongInput', 'errorMessage',...
+                'second input argument must be ellipsoid or Polyhedron.');
+            modgen.common.checkvar(secObjArr,@(x)isa(x, 'polytope') || isa(x, 'ellipsoid'), ...
+                'errorTag','wrongInput', 'errorMessage',...
+                'second input argument must be ellipsoid or polytope.');
+
+            modgen.common.checkvar(fstEllArr , 'numel(x) > 0', 'errorTag', ...
+                'wrongInput:emptyArray', 'errorMessage', ...
+                'Each array must be not empty.');
+
+            modgen.common.checkvar(fstEllArr,'all(~x(:).isEmpty())','errorTag', ...
+                'wrongInput:emptyEllipsoid', 'errorMessage', ...
+                'Array should not have empty ellipsoid.');
+
+            if isa(secObjArr,'ellipsoid')
+                modgen.common.checkvar( secObjArr, 'numel(x) > 0', 'errorTag', ...
+                    'wrongInput:emptyArray', 'errorMessage', ...
+                    'Each array must be not empty.');
+            end
+            %
+            nFstEllDimsMat = dimension(fstEllArr);
+            if isa(secObjArr,'Polyhedron')
+                nSecEllDimsMat=secObjArr.Dim;
+            else
+                nSecEllDimsMat = dimension(secObjArr);
+            end
+            %
+            if isa(secObjArr, 'Polyhedron')
+                isEmptyArr = true(size(secObjArr));
+                nElem = numel(secObjArr);
+                for iElem = 1:nElem
+                    isEmptyArr(iElem) = isempty(secObjArr(iElem));
+                end
+                isAnyObjEmpty = any(isEmptyArr);
+            else
+                isAnyObjEmpty = any(secObjArr(:).isEmpty());
+            end
+            if isAnyObjEmpty
+                throwerror('wrongInput:emptyEllipsoid',...
+                    'Array should not have empty ellipsoid or Polyhedron.');
+            end
+            checkmultvar('(x1(1)==x2(1))&&all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
+                2,nFstEllDimsMat,nSecEllDimsMat,...
+                'errorTag','wrongSizes',...
+                'errorMessage','input arguments must be of the same dimension.');
+        end
         doesContain = doesContainPoly(ellArr,polyhedronObj,varagin)
     end
     methods (Static)
         checkIsMe(someObj,varargin)
     end
-    methods(Access = protected)
-        checkDoesContainArgs(fstEllArr,secObjArr)
-    end    methods (Access=private)
+
+    methods (Access=protected)
         function isArrEq = isMatEqualInternal(self,aArr,bArr)
             % ISMATEQUALINTERNAL - returns isArrEq - logical 1(true) if
             %           multidimensional arrays aArr and bArr are equal,
@@ -258,10 +310,10 @@ classdef ellipsoid < elltool.core.AEllipsoid
                 isArrEq = true;
             end
         end
-    end    end
+    end
     
     
-    methods (Access = protected, Static)
+    methods(Access = protected, Static)
         function SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
             if (~isempty(SEll.shapeMat))
                 SComp.(SFieldNiceNames.shapeMat) = gras.la.sqrtmpos(SEll.shapeMat, absTol);

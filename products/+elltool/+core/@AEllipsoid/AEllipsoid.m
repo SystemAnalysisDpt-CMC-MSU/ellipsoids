@@ -105,8 +105,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
     methods(Abstract, Access = protected)
        checkDoesContainArgs(fstEllArr,secObjArr)
     end
-    methods(Access = protected)
-        
+    methods(Access = protected)        
         doesContain = doesContainPoly(ellArr,polytope,varagin)
         function checkIfScalar(self,errMsg)
             if nargin<2

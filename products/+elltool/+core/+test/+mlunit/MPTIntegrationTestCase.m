@@ -441,7 +441,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %ELLIPSOID AND Polyhedron
             %analitically proved, that minimal volume ellipsoid, covering
             %intersection of my1Ell and my1Poly is my1Ell.
-            my1Ell = self.ellFactoryObj(eye(2));
+            my1Ell = self.ellFactoryObj.create(eye(2));
             my1PolyMat = [0 1];
             my1PolyConst = 0.25;
             my1Poly = Polyhedron(my1PolyMat,my1PolyConst);

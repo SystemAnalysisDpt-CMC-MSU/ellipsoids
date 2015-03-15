@@ -22,7 +22,7 @@ classdef ABasicEllipsoid < handle
                     'input ellipsoidal arrays should be empty at the same time');
             end
             
-            [~, absTol] = ellFirstArr.getAbsTol;
+            [~, absTol] = ellFirstArr.getAbsTol();
             firstSizeVec = size(ellFirstArr);
             secSizeVec = size(ellSecArr);
             isnFirstScalar=nFirstElems > 1;
