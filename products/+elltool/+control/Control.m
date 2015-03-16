@@ -41,18 +41,18 @@ classdef Control
                 indFin=find(self.properEllTube.timeVec{1}==tFin);
                 AtMat=self.probDynamicsList{iSwitchBack}{iTube}.getAtDynamics();
                 
-                [~,odeResMat] = ode45(@(t,y)ode(t,y,AtMat,self.controlVectorFunct,tStart,tFin),[tStart tFin],x0Vec',SOptions);
+                [~,odeResMat] = ode45(@(t,y)ode(t,y,AtMat,self.controlVectorFunct,tFin),[tStart tFin],x0Vec',SOptions);
              
                 q1Vec=self.properEllTube.aMat{1}(:,indFin);
                 q1Mat=self.properEllTube.QArray{1}(:,:,indFin);
                 
-                isOdeResInEll = dot(odeResMat(end,:)'-q1Vec,q1Mat\(odeResMat(end,:)'-q1Vec));
+                currentScalProd = dot(odeResMat(end,:)'-q1Vec,q1Mat\(odeResMat(end,:)'-q1Vec));
                 
-                if (isX0inSet)&&(isOdeResInEll > 1 + ERR_TOL)
+                if (isX0inSet)&&(currentScalProd > 1 + ERR_TOL)
                     throwerror('TestFails',...
                         'the result of test does not correspond with theory');
                 end
-                if (~isX0inSet)&&(isOdeResInEll < 1 - ERR_TOL)
+                if (~isX0inSet)&&(currentScalProd < 1 - ERR_TOL)
                     throwerror('TestFails',...
                         'the result of test does not correspond with theory');
                 end
@@ -60,8 +60,8 @@ classdef Control
                 trajectory=cat(1,trajectory,odeResMat);
             end
             
-            function dyMat=ode(time,yMat,AtMat,controlFuncVec,tStart,tFin)
-               dyMat=-AtMat.evaluate(tFin-time+tStart)*yMat+controlFuncVec.evaluate(yMat,time);
+            function dyMat=ode(time,yMat,AtMat,controlFuncVec,tFin)
+               dyMat=-AtMat.evaluate(tFin-time)*yMat+controlFuncVec.evaluate(yMat,time);
             end
             
             

@@ -49,21 +49,21 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
                 
                 xstTransMat = curGoodDirSetObj.getXstTransDynamics();
                 tFin = max(probTimeVec);  
-                tStart = min(probTimeVec);
-                xt1tMat = (transpose(xstTransMat.evaluate(tFin-tFin+tStart)))\(transpose(xstTransMat.evaluate(tFin-timeVec(iTime)+tStart)));
+                
+                xt1tMat = (transpose(xstTransMat.evaluate(tFin)))\(transpose(xstTransMat.evaluate(tFin-timeVec(iTime))));
                 %tFin-tFin seems to be okay. Better look in other place
                 % There is an opinion that we are to have 
                 % X(t1,t) = inv( X(s,t1) ) * X(s,t) 
 
-                bpVec = -curProbDynObj.getBptDynamics.evaluate(tFin-timeVec(iTime)+tStart); % ellipsoid center
-                bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(tFin-timeVec(iTime)+tStart);   % ellipsoid shape matrix
+                bpVec = -curProbDynObj.getBptDynamics.evaluate(tFin-timeVec(iTime)); % ellipsoid center
+                bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(tFin-timeVec(iTime));   % ellipsoid shape matrix
                 pVec = xt1tMat*bpVec;
                 pMat = xt1tMat*bpbMat*transpose(xt1tMat);
                     
                 ellTubeTimeVec = self.properEllTube.timeVec{:};
                 
-                ind = find(ellTubeTimeVec <= timeVec(iTime));
-                indTime = size(ind,2);
+                indVec = find(ellTubeTimeVec <= timeVec(iTime));
+                indTime = length(indVec);
               
                 %find proper ellipsoid which corresponds to current time
                 if ellTubeTimeVec(indTime)<timeVec(iTime)
@@ -107,7 +107,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
         end % of evaluate()
         
         function indTube=getITube(self)
-            indTube=self.iTube;
+            indTube=self.indTube;
         end
         
     end
