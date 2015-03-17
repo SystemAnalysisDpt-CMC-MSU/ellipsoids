@@ -6,5 +6,4 @@ pathPatternToExclude='\.git';
 pathList=genpathexclusive(rootPathList,pathPatternToExclude);
 restoredefaultpath;
 addpath(pathList{:});
-savepath;
 savepath([deploymentPath,filesep,'pathdef.m']);
