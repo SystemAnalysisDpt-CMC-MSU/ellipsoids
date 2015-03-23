@@ -7,28 +7,28 @@ classdef DiscreteControl
         controlVectorFunct
         isBackward
     end
-    
     methods
         function self=DiscreteControl(properEllTube,...
                 probDynamicsList, goodDirSetList,indTube,inDownScaleKoeff,isBackward)
-            self.properEllTube = properEllTube;
-            self.probDynamicsList = probDynamicsList;
-            self.goodDirSetList = goodDirSetList;
-            self.downScaleKoeff = inDownScaleKoeff;
-            self.controlVectorFunct = elltool.control.DiscreteControlVectorFunct(properEllTube,...
-                self.probDynamicsList, self.goodDirSetList,indTube,inDownScaleKoeff,isBackward);
+            self.properEllTube=properEllTube;
+            self.probDynamicsList=probDynamicsList;
+            self.goodDirSetList=goodDirSetList;
+            self.downScaleKoeff=inDownScaleKoeff;
             self.isBackward = isBackward;
+            self.controlVectorFunct=elltool.control.DiscreteControlVectorFunct(properEllTube,...
+                self.probDynamicsList, self.goodDirSetList,indTube,inDownScaleKoeff);
         end
 
 
-        function trajectory = getTrajectory(self,x0Vec,switchSysTimeVec,isX0inSet)
+        function trajectory=getTrajectory(self,x0Vec,switchSysTimeVec,isX0inSet)
             import modgen.common.throwerror;
-            ERR_TOL = 1e-4;
-            trajectory = [];
+            ERR_TOL=10^(-4);
+            %REL_TOL = 1e-4;
+            %ABS_TOL = 1e-4;
+            trajectory=[];
             switchTimeVecLenght=numel(switchSysTimeVec);
-            properTube=self.DiscretecontrolVectorFunct.getITube();
+            properTube=self.controlVectorFunct.getITube();
             self.properEllTube.scale(@(x)1/sqrt(self.downScaleKoeff),'QArray'); 
-
             for iSwitch=1:switchTimeVecLenght-1                 
                 iTube=1;
                 iSwitchBack=switchTimeVecLenght-iSwitch;
@@ -39,42 +39,71 @@ classdef DiscreteControl
                 tFin=switchSysTimeVec(iSwitch+1);
                
                 indFin=find(self.properEllTube.timeVec{1}==tFin);
-                AtMat=self.probDynamicsList{iSwitchBack}{iTube}.getAtDynamics();
-                x0DefVec = problemDef.getx0Vec();
-                sysDim = size(problemDef.getAMatDef(), 1);
-                nTimePoints = length(self.timeVec);
-            
-                xtArray = zeros(sysDim, nTimePoints);
-                xtArray(:, 1) = x0DefVec;
-                for iTime = 1:nTimePoints - 1
-                   aMat = AtMat.evaluate(self.timeVec(iTime));
-                   bpVec = controlFuncVec.evaluate(yMat,time);
-                   xtArray(:, iTime + 1) = ...
-                    aMat * xtArray(:, iTime) + bpVec;
-                end
+                AtMat=self.probDynamicsList{iSwitchBack}{iTube}.getAtDynamics();    
                 
+                CRel = 1000;
+                timeVec = tStart:(tFin-tStart)/CRel:tFin;
+           
+                if self.isBackward
+                    odeResMat = DiscrBackwardDynamics(AtMat,self.controlVectorFunct,x0Vec,timeVec);
+                else
+                    odeResMat = DiscrForwardDynamics(AtMat,self.controlVectorFunct,x0Vec,timeVec);
+                end
              
                 q1Vec=self.properEllTube.aMat{1}(:,indFin);
                 q1Mat=self.properEllTube.QArray{1}(:,:,indFin);
                 
-                isOdeResInEll = dot(xtArray(end,:)'-q1Vec,q1Mat\(xtArray(end,:)'-q1Vec));
+                isOdeResInEll = dot(odeResMat(end,:)'-q1Vec,q1Mat\(odeResMat(end,:)'-q1Vec));
                 
                 if (isX0inSet)&&(isOdeResInEll > 1 + ERR_TOL)
+                   
                     throwerror('TestFails',...
                         'the result of test does not correspond with theory');
                 end
                 if (~isX0inSet)&&(isOdeResInEll < 1 - ERR_TOL)
+                    
+                    
                     throwerror('TestFails',...
                         'the result of test does not correspond with theory');
                 end
-                x0Vec=xtArray(end,:);
-                trajectory=cat(1,trajectory,xtArray);
+                x0Vec=odeResMat(end,:);
+                trajectory=cat(1,trajectory,odeResMat);
             end
             
-           
+            function resMat = DiscrForwardDynamics(AtMat,controlVectorFunct,x0Vec,timeVec)
+                sysDim = size(AtMat, 1);
+                nTimePoints = length(timeVec);
+                
+                xtArray = zeros(sysDim, nTimePoints);
+                xtArray(:, 1) = x0Vec;
+                for iTime = 1:nTimePoints - 1
+                   aMat = AtMat.evaluate(timeVec(iTime));
+                   bpVec = controlVectorFunct().evaluate(timeVec(iTime));
+                   xtArray(:, iTime + 1) = ...
+                     aMat * xtArray(:, iTime) + bpVec;
+                end
+                 resMat = xtArray.';                   
+            end
+             
+            
+            function resMat = DiscrBackwardDynamics(AtMat,controlVectorFunct,x0Vec,timeVec)
+                sysDim = size(AtMat, 1);
+                nTimePoints = length(timeVec);
+                
+                xtArray = zeros(sysDim, nTimePoints);
+                xtArray(:, 1) = x0Vec;
+                for iTime = 2:nTimePoints 
+                   aMat = AtMat.evaluate(timeVec(iTime));
+                   bpVec = controlVectorFunct().evaluate(timeVec(iTime));
+                   xtArray(:, iTime) = ...
+                     aMat * xtArray(:, iTime-1) - bpVec;
+                end
+                 resMat = xtArray.';                   
+             end
         end
-        function indTube=getITube(self)
-            indTube=self.controlVectorFunct.getITube();
+        
+        function iTube=getITube(self)
+            iTube=self.controlVectorFunct.getITube();
         end
     end
 end
