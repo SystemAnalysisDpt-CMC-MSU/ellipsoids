@@ -9,7 +9,7 @@ classdef EllipsoidPlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
     properties (Access=private)
         testDataRootDir
     end
-    properties
+    properties (Access = private)
         ellFactoryObj
     end
     %

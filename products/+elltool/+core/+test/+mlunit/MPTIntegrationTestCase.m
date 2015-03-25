@@ -6,7 +6,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
     % Computer Science, System Analysis Department <2013> $
     %
     
-    properties
+    properties (Access = private)
         ellFactoryObj
     end
     
@@ -215,9 +215,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             [isOk, reportStr] = my1Ell.isEqual(my1EllPolyIAObj);
             mlunitext.assert(isOk, reportStr);
             %
-            %ellipsoid lies in polytope
+            %ellipsoid lies in Polyhedron
             ell4 = self.ellFactoryObj.create(eye(2));
-            poly4 = polytope([eye(2); -eye(2)], ones(4,1));
+            poly4 = Polyhedron([eye(2); -eye(2)], ones(4,1));
             ellPolyIA5 = intersection_ia(ell4,poly4);
             mlunitext.assert(isEqual(ell4,ellPolyIA5));
             %mlunitext.assert(eq(ell4,ellPolyIA5));
@@ -229,9 +229,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             [isOk, reportStr] = myExpectedEll.isEqual(my2EllPolyIAObj);
             mlunitext.assert(isOk, reportStr);
             %
-            %polytope lies in ellipsoid
+            %Polyhedron lies in ellipsoid
             ell5 = self.ellFactoryObj.create(eye(2));
-            poly5 = polytope([eye(2); eye(2)], 1/4*ones(4,1));
+            poly5 = Polyhedron([eye(2); eye(2)], 1/4*ones(4,1));
             expEll = self.ellFactoryObj.create([-0.362623; -0.362623],[0.375307 -0.13955;-0.13955 0.375307]);
             ellPolyIA5 = intersection_ia(ell5,poly5);
             mlunitext.assert(eq(expEll,ellPolyIA5));
@@ -497,7 +497,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             my5Vec = [1; -1; zeros(nDims-2,1)];
             %
             my5TransfMat = my5Mat*(my5Mat)';
-            my5Ell = self.ellFactoryObj(my5Vec,my5TransfMat);
+            my5Ell = self.ellFactoryObj.create(my5Vec,my5TransfMat);
             my5Poly = Polyhedron(my4PolyMat/(my5Mat),...
                 -(my4PolyConst+(my4PolyMat/(my5Mat))*my5Vec));
             my5EllPolyEAObj = intersection_ea(my5Ell,my5Poly);
@@ -753,9 +753,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ell2ShiftVec = [0.5; 0];
             ell3ShiftVec = [0.05; -0.1; 0];
             %
-            ell1 = self.ellFactoryObj(ell1ShiftVec,ell1ConstrMat);
-            ell2 = self.ellFactoryObj(ell2ShiftVec,ell2ConstrMat);
-            ell3 = self.ellFactoryObj(ell3ShiftVec,ell3ConstrMat);
+            ell1 = self.ellFactoryObj.create(ell1ShiftVec,ell1ConstrMat);
+            ell2 = self.ellFactoryObj.create(ell2ShiftVec,ell2ConstrMat);
+            ell3 = self.ellFactoryObj.create(ell3ShiftVec,ell3ConstrMat);
             poly1 = toPolytope(ell1);
             poly2 = toPolytope(ell2);
             poly3 = toPolytope(ell3);
@@ -777,15 +777,15 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             testEll2DVec(2) = self.ellFactoryObj.create([1.25 0.75; 0.75 1.25]);
             testEll2DVec(1) = self.ellFactoryObj.create(eye(2));
             %
-            testPoly2DVec = [polytope([-1 0; 1 0; 0 1; 0 -1],[-3; 4; 1; 1]),...
-                polytope([1 0; -1 0; 0 1; 0 -1], [2.5; -1.5; -1.5; 100]),...
-                polytope([1 -1; -1 1; -1 0; 0 1], [-2; 2.5; 2; 2]),...
-                polytope([1 0; -1 0; 0 1; 0 -1], [1; 0; 1; 0])];
+            testPoly2DVec = [Polyhedron([-1 0; 1 0; 0 1; 0 -1],[-3; 4; 1; 1]),...
+                Polyhedron([1 0; -1 0; 0 1; 0 -1], [2.5; -1.5; -1.5; 100]),...
+                Polyhedron([1 -1; -1 1; -1 0; 0 1], [-2; 2.5; 2; 2]),...
+                Polyhedron([1 0; -1 0; 0 1; 0 -1], [1; 0; 1; 0])];
             testEll60D = self.ellFactoryObj.create(eye(60));
             h60D = [eye(60); -eye(60)];
             h60D(121,:) = [-1 1 zeros(1,58)];
             k60D = [4; 0; ones(58,1); 0; 4; ones(58,1); -4];
-            testPoly60D = polytope(h60D,k60D);
+            testPoly60D = Polyhedron(h60D,k60D);
             ellArr = self.ellFactoryObj.create.fromRepMat(eye(2),[2,2,2]);
         end
     end
@@ -823,7 +823,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
 
         function isBound = isBoundary(ellShiftVec,ellConstrMat,poly)
             import modgen.common.absrelcompare;
-            polyhedron = toPolyhedron(poly);
+            %polyhedron = toPolyhedron(poly);
+            polyhedron = poly;
             pointsArray=polyhedron.V;
             nPoints = size(pointsArray,1);
             isBound = true;

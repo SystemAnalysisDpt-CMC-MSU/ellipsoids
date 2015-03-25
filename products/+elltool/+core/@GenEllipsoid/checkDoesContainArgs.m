@@ -6,11 +6,11 @@ import modgen.common.checkmultvar;
 
 elltool.core.GenEllipsoid.checkIsMe(fstEllArr,'first');
 modgen.common.checkvar(secObjArr,@(x)isa(x, 'elltool.core.GenEllipsoid') || ...
-    isa(x, 'polytope'),'errorTag','wrongInput', 'errorMessage',...
-    'second input argument must be ellipsoid or polytope.');
-modgen.common.checkvar(secObjArr,@(x)isa(x, 'polytope') || isa(x, 'elltool.core.GenEllipsoid'), ...
+    isa(x, 'Polyhedron'),'errorTag','wrongInput', 'errorMessage',...
+    'second input argument must be ellipsoid or Polyhedron.');
+modgen.common.checkvar(secObjArr,@(x)isa(x, 'Polyhedron') || isa(x, 'elltool.core.GenEllipsoid'), ...
     'errorTag','wrongInput', 'errorMessage',...
-    'second input argument must be ellipsoid or polytope.');
+    'second input argument must be ellipsoid or Polyhedron.');
 
 modgen.common.checkvar(fstEllArr , 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
@@ -27,9 +27,14 @@ if isa(secObjArr, 'elltool.core.GenEllipsoid')
 end
 
 nFstEllDimsMat = dimension(fstEllArr);
-nSecEllDimsMat = dimension(secObjArr);
+%nSecEllDimsMat = dimension(secObjArr);
+if isa(secObjArr,'Polyhedron')
+    nSecEllDimsMat=secObjArr.Dim;
+else
+    nSecEllDimsMat = dimension(secObjArr);
+end
 
-if isa(secObjArr, 'polytope')
+if isa(secObjArr, 'Polyhedron')
     isEmptyArr = true(size(secObjArr));
     [~, nCols] = size(secObjArr);
     for iCols = 1:nCols
@@ -41,7 +46,7 @@ else
 end
 if isAnyObjEmpty
     throwerror('wrongInput:emptyEllipsoid',...
-    'Array should not have empty ellipsoid or polytope.');
+    'Array should not have empty ellipsoid or Polyhedron.');
 end
 checkmultvar('(x1(1)==x2(1))&&all(x1(:)==x1(1))&&all(x2(:)==x2(1))',...
     2,nFstEllDimsMat,nSecEllDimsMat,...

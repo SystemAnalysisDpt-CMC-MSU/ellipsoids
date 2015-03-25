@@ -8,7 +8,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
     end
-    properties
+    properties (Access = private)
         ellFactoryObj
     end
     
@@ -44,7 +44,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllunionEa_inp.mat')), 'testEllCenterVec', ...
                 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
-            testEllVec(2) = self.ellFactoryObj.create;
+            testEllVec(2) = self.ellFactoryObj.create();
             testEllVec(1) = self.ellFactoryObj.create(testEllCenterVec, testEllMat);
             testEllVec(2) = self.ellFactoryObj.create(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellunion_ea(testEllVec);

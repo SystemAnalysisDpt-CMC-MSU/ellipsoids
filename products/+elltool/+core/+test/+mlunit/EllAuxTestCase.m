@@ -2,7 +2,7 @@ classdef EllAuxTestCase < mlunitext.test_case
     properties (Access=private)
         ABS_TOL = 1e-8;
     end
-    properties
+    properties (Access = private)
         ellFactoryObj
     end
     methods

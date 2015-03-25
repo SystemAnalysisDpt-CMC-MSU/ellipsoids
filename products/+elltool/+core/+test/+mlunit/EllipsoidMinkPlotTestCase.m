@@ -3,7 +3,7 @@ classdef EllipsoidMinkPlotTestCase < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
     end
-    properties
+    properties (Access = private)
         ellFactoryObj
     end
     %

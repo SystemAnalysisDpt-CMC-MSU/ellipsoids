@@ -3,7 +3,7 @@ function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
 %
 % DOESINTERSECTIONCONTAIN - checks if the intersection of ellipsoids 
 %                           contains the union or intersection of given 
-%                           ellipsoids or polytopes.
+%                           ellipsoids or Polyhedrons.
 %
 %   res = DOESINTERSECTIONCONTAIN(fstEllArr, secEllArr, mode) 
 %       Checks if the union
@@ -14,11 +14,11 @@ function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
 %       ellipsoids in secEllArr. mode = 'i' - intersection.
 %   res = DOESINTERSECTIONCONTAIN(fstEllArr, secPolyArr, mode) 
 %        Checks if the union
-%       (mode = 'u') or intersection (mode = 'i')  of polytopes in
+%       (mode = 'u') or intersection (mode = 'i')  of Polyhedrons in
 %       secPolyArr lies inside the intersection of ellipsoids in
-%       fstEllArr. Ellipsoids in fstEllArr and polytopes in secPolyArr
+%       fstEllArr. Ellipsoids in fstEllArr and Polyhedrons in secPolyArr
 %       must be of the same dimension. mode = 'u' (default) - union of
-%       polytopes in secPolyMat. mode = 'i' - intersection.
+%       Polyhedrons in secPolyMat. mode = 'i' - intersection.
 %
 %   To check if the union of ellipsoids secEllArr belongs to the
 %   intersection of ellipsoids fstEllArr, it is enough to check that
@@ -46,11 +46,11 @@ function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
 %   and maximizes function J. If J(y) <= 1, then ellipsoid E(q, Q)
 %   contains the given intersection, otherwise, it does not.
 %
-%   The intersection of polytopes is a polytope, which is computed
+%   The intersection of Polyhedrons is a Polyhedron, which is computed
 %   by the standard routine of MPT. How checked if intersection of  
-%   ellipsoids contains polytope is explained in doesContainPoly.
+%   ellipsoids contains Polyhedron is explained in doesContainPoly.
 %
-%   Checking if the union of polytopes belongs to the intersection
+%   Checking if the union of Polyhedrons belongs to the intersection
 %   of ellipsoids is the same as checking if its convex hull belongs
 %   to this intersection.
 %
@@ -59,8 +59,8 @@ function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
 %       fstEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of ellipsoids
 %           of the same size.
 %       secEllArr: ellipsoid /
-%           polytope [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
-%           polytopes of the same sizes.
+%           Polyhedron [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
+%           Polyhedrons of the same sizes.
 %
 %           note: if mode == 'i', then fstEllArr, secEllVec should be
 %               array.
@@ -68,7 +68,7 @@ function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
 %   properties:
 %       mode: char[1, 1] - 'u' or 'i', go to description.
 %       computeMode: char[1,] - 'highDimFast' or 'lowDimFast'. Determines, 
-%           which way function is computed, when secObjArr is polytope. If 
+%           which way function is computed, when secObjArr is Polyhedron. If 
 %           secObjArr is ellipsoid computeMode is ignored. 'highDimFast' 
 %           works  faster for  high dimensions, 'lowDimFast' for low. If
 %           this property is omitted if dimension of ellipsoids is greater
@@ -113,7 +113,7 @@ persistent logger;
 checkDoesContainArgs(fstEllArr,secObjArr);
 
 
-if ~isa(secObjArr,'polytope')
+if ~isa(secObjArr,'Polyhedron')
     nElem = numel(secObjArr);
     secObjVec  = reshape(secObjArr, 1, nElem);
 end
@@ -126,7 +126,7 @@ else
     mode = modeNameAndVal{2};
 end
 
-if isa(secObjArr,'polytope')
+if isa(secObjArr,'Polyhedron')
     isAnyEllDeg = any(isdegenerate(fstEllArr(:)));
     if mode == 'i'
         secObjArr_size = size(secObjArr);
@@ -142,10 +142,10 @@ if isa(secObjArr,'polytope')
     isBndVec = false(1,nCols);
     isPolyDegVec = false(1,nCols);
     for iCols = 1:nCols
-        isBndVec(iCols) = isbounded(polyVec(iCols));
-        isPolyDegVec(iCols) = ~isfulldim(polyVec(iCols));
+        isBndVec(iCols) = polyVec(iCols).isBounded();
+        isPolyDegVec(iCols) = ~any(polyVec(iCols).isFullDim());
     end;
-    isEmpty = isempty(double(polyVec(1)));
+    isEmpty = polyVec(1).isEmptySet();    
     
     if isEmpty
         res = -1;
@@ -217,7 +217,7 @@ function [res, status] = qcqp(fstEllArr, secObj)
 %       fstEllArr: ellipsod [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
 %       secObj: ellipsoid [1, 1] - ellipsoid.
 %               or
-%               polytope [1, 1] - polytope.
+%               Polyhedron [1, 1] - Polyhedron.
 %
 % Output:
 %   res: double[1, 1]

@@ -6,7 +6,7 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
-    properties
+    properties (Access = private)
         ellFactoryObj
     end
     

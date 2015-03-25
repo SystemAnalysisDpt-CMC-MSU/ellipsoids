@@ -1,14 +1,14 @@
 function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %
 % INTERSECT - checks if the union or intersection of ellipsoids intersects
-%             given ellipsoid, hyperplane or polytope.
+%             given ellipsoid, hyperplane or Polyhedron.
 %
 %   resArr = INTERSECT(myEllArr, objArr, mode) - Checks if the union
 %       (mode = 'u') or intersection (mode = 'i') of ellipsoids
 %       in myEllArr intersects with objects in objArr.
 %       objArr can be array of ellipsoids, array of hyperplanes,
-%       or array of polytopes.
-%       Ellipsoids, hyperplanes or polytopes in objMat must have
+%       or array of Polyhedrons.
+%       Ellipsoids, hyperplanes or Polyhedrons in objMat must have
 %       the same dimension as ellipsoids in myEllArr.
 %       mode = 'u' (default) - union of ellipsoids in myEllArr.
 %       mode = 'i' - intersection.
@@ -52,7 +52,7 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %   with constraints (1)-(n), plus
 %                     <v, x> - c = 0.
 %
-%   Checking the intersection of ellipsoids with polytope
+%   Checking the intersection of ellipsoids with Polyhedron
 %   objArr = P(A, b) reduces to checking if there any x, satisfying
 %   constraints (1)-(n) and 
 %                        Ax <= b.
@@ -62,8 +62,8 @@ function [resArr, statusArr] = intersect(myEllArr, objArr, mode)
 %       myEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of 
 %            ellipsoids.
 %       objArr: ellipsoid / hyperplane /
-%           / polytope [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
-%           hyperplanes or polytopes of the same sizes.
+%           / Polyhedron [nDims1,nDims2,...,nDimsN] - array of ellipsoids or
+%           hyperplanes or Polyhedrons of the same sizes.
 %
 %   optional:
 %       mode: char[1, 1] - 'u' or 'i', go to description.
@@ -133,9 +133,9 @@ ellipsoid.checkIsMe(myEllArr,'first');
 %     'errorTag','wrongInput', 'errorMessage',...
 %     'second input argument must be ellipsoid,hyperplane or polytope.');
 modgen.common.checkvar(objArr,@(x) isa(x, 'hyperplane') ||...
-     isa(x, 'polytope') || isa(x, 'ellipsoid') || isa(x, 'elltool.core.GenEllipsoid'),... 
+     isa(x, 'Polyhedron') || isa(x, 'ellipsoid') || isa(x, 'elltool.core.GenEllipsoid'),... 
     'errorTag','wrongInput', 'errorMessage',...
-    'second input argument must be ellipsoid,hyperplane or polytope.');
+    'second input argument must be ellipsoid,hyperplane or Polyhedron.');
 
 if (nargin < 3) || ~(ischar(mode))
     mode = 'u';
@@ -149,7 +149,7 @@ if isempty(logger)
 end
 
 if mode == 'u'
-    if ~isa(objArr,'polytope')
+    if ~isa(objArr,'Polyhedron')
         auxArr = arrayfun(@(x,y) distance(myEllArr, x), objArr,'UniformOutput',false);
     else
         auxArr = cell(size(objArr));
@@ -393,7 +393,7 @@ function [res, status] = lqcqp2(myEllArr, polyt)
 % Input:
 %   regular:
 %       fstEllArr: ellipsod [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
-%       polyt: polytope [1, 1] - polytope.
+%       polyt: Polyhedron [1, 1] - Polyhedron.
 %
 % Output:
 %   res: double[1, 1]
