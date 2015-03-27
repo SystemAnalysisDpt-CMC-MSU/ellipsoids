@@ -15,8 +15,9 @@ classdef DiscreteControl
             self.goodDirSetList=goodDirSetList;
             self.downScaleKoeff=inDownScaleKoeff;
             self.isBackward = isBackward;
-            self.controlVectorFunct=elltool.control.DiscreteControlVectorFunct(properEllTube,...
-                self.probDynamicsList, self.goodDirSetList,indTube,inDownScaleKoeff);
+            %self.controlVectorFunct=elltool.control.DiscreteControlVectorFunct(properEllTube,...
+            %    self.probDynamicsList, self.goodDirSetList,indTube,inDownScaleKoeff);
+            self.controlVectorFunct =0;
         end
 
 
@@ -31,10 +32,7 @@ classdef DiscreteControl
             self.properEllTube.scale(@(x)1/sqrt(self.downScaleKoeff),'QArray'); 
             for iSwitch=1:switchTimeVecLenght-1                 
                 iTube=1;
-                iSwitchBack=switchTimeVecLenght-iSwitch;
-                if (iSwitchBack>1)
-                    iTube=properTube;
-                end
+                
                 tStart=switchSysTimeVec(iSwitch);
                 tFin=switchSysTimeVec(iSwitch+1);
                
@@ -71,14 +69,19 @@ classdef DiscreteControl
             end
             
             function resMat = DiscrForwardDynamics(AtMat,controlVectorFunct,x0Vec,timeVec)
-                sysDim = size(AtMat, 1);
+                sysDim = max([size(x0Vec, 1) size(x0Vec, 2)]);
                 nTimePoints = length(timeVec);
                 
                 xtArray = zeros(sysDim, nTimePoints);
-                xtArray(:, 1) = x0Vec;
+                if (size(x0Vec, 2)>size(x0Vec, 1))
+                    xtArray(:, 1) = x0Vec.';
+                else
+                    xtArray(:, 1) = x0Vec;
+                end;
                 for iTime = 1:nTimePoints - 1
                    aMat = AtMat.evaluate(timeVec(iTime));
-                   bpVec = controlVectorFunct().evaluate(timeVec(iTime));
+                   %bpVec = controlVectorFunct().evaluate(timeVec(iTime));
+                   bpVec = zeros(sysDim,1);
                    xtArray(:, iTime + 1) = ...
                      aMat * xtArray(:, iTime) + bpVec;
                 end
@@ -87,14 +90,19 @@ classdef DiscreteControl
              
             
             function resMat = DiscrBackwardDynamics(AtMat,controlVectorFunct,x0Vec,timeVec)
-                sysDim = size(AtMat, 1);
+                sysDim = max([size(x0Vec, 1) size(x0Vec, 2)]);
                 nTimePoints = length(timeVec);
                 
                 xtArray = zeros(sysDim, nTimePoints);
-                xtArray(:, 1) = x0Vec;
+                if (size(x0Vec, 2)>size(x0Vec, 1))
+                    xtArray(:, 1) = x0Vec.';
+                else
+                    xtArray(:, 1) = x0Vec;
+                end;
                 for iTime = 2:nTimePoints 
                    aMat = AtMat.evaluate(timeVec(iTime));
-                   bpVec = controlVectorFunct().evaluate(timeVec(iTime));
+                   %bpVec = controlVectorFunct().evaluate(timeVec(iTime));
+                   bpVec = zeros(sysDim,1);
                    xtArray(:, iTime) = ...
                      aMat * xtArray(:, iTime-1) - bpVec;
                 end
@@ -103,7 +111,8 @@ classdef DiscreteControl
         end
         
         function iTube=getITube(self)
-            iTube=self.controlVectorFunct.getITube();
+            %iTube=self.controlVectorFunct.getITube();
+            iTube = 0;
         end
     end
 end
