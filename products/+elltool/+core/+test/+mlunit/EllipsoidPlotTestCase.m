@@ -1,4 +1,6 @@
-classdef EllipsoidPlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
+classdef EllipsoidPlotTestCase < ...
+        elltool.core.test.mlunit.BGeomBodyTC & ...
+        elltool.core.test.mlunit.EllFactoryTC
     %%$Author: Ilya Lyubich <lubi4ig@gmail.com> $
     %$Date: 2013-05-7 $
     %$Copyright: Moscow State University,
@@ -9,21 +11,18 @@ classdef EllipsoidPlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
     properties (Access=private)
         testDataRootDir
     end
-    properties (Access = private)
-        ellFactoryObj
-    end
     %
     methods(Access=protected)
         function [plObj,numObj] = getInstance(self, varargin)
             if numel(varargin)==1
-                plObj = self.ellFactoryObj.create(varargin{1});
+                plObj = self.createEll(varargin{1});
                 if size(varargin{1},1) == 2
                     numObj = 2;
                 else
                     numObj = 4;
                 end
             else
-                plObj = self.ellFactoryObj.create(varargin{1},varargin{2});
+                plObj = self.createEll(varargin{1},varargin{2});
                 if size(varargin{2},1) == 2
                     numObj = 2;
                 else
@@ -35,7 +34,7 @@ classdef EllipsoidPlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
     methods
         function self = EllipsoidPlotTestCase(varargin)
             self = self@elltool.core.test.mlunit.BGeomBodyTC(varargin{:});
-            self.fTest = @(varargin)self.ellFactoryObj.create(varargin{:});
+            self.fTest = @(varargin)self.createEll(varargin{:});
             self.fCheckBoundary = @checkBoundary;
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
@@ -136,9 +135,6 @@ classdef EllipsoidPlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
                     <= qMat*(1 + absTol), ...
                     cellPoints);
             end
-        end
-        function self = set_up_param(self, ellFactoryObj)
-            self.ellFactoryObj = ellFactoryObj;
         end
         function self = tear_down(self,varargin)
             close all;

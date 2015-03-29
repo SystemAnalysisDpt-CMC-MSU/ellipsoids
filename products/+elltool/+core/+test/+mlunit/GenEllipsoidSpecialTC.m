@@ -1,4 +1,4 @@
-classdef GenEllipsoidSpecialTC < mlunitext.test_case
+classdef GenEllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
     %$Author: Egor Grachev <egorgrachev.msu@gmail.com>$
     %$Date: 2013-12-5 $
     %$Copyright: Moscow State University,
@@ -8,21 +8,15 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
     end
-    properties (Access = private)
-        ellFactoryObj
-    end
     
     methods
         function self = GenEllipsoidSpecialTC(varargin)
-            self = self@mlunitext.test_case(varargin{:});
+            self = self@elltool.core.test.mlunit.EllFactoryTC(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),filesep,...
                 'TestData',...
                 filesep,shortClassName];          
-        end
-        function self = set_up_param(self, ellFactoryObj)
-            self.ellFactoryObj = ellFactoryObj;
         end
         function setUpCheckSettings(self)
             import elltool.conf.Properties;
@@ -41,7 +35,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 1.01*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            [isEq, reportStr] = isEqual(self.ellFactoryObj.create(test1Mat), self.ellFactoryObj.create(test2Mat));
+            [isEq, reportStr] = isEqual(self.createEll(test1Mat), self.createEll(test2Mat));
             mlunitext.assert_equals(false, isEq);
             ansStr = ...
                 '\(1).Q-->.*\(1.010000e\-05).*tolerance.\(1.000000e\-05)';
@@ -50,8 +44,8 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 0.5*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            [isEq, reportStr] = isEqual(self.ellFactoryObj.create(test1Mat),...
-                self.ellFactoryObj.create(test2Mat));
+            [isEq, reportStr] = isEqual(self.createEll(test1Mat),...
+                self.createEll(test2Mat));
             mlunitext.assert_equals(true, isEq);
             ansStr = '';
             checkRep();
@@ -59,8 +53,8 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            [isEq, reportStr] = isEqual(self.ellFactoryObj.create(test1Mat),...
-                self.ellFactoryObj.create(test2Mat));
+            [isEq, reportStr] = isEqual(self.createEll(test1Mat),...
+                self.createEll(test2Mat));
             mlunitext.assert_equals(false, isEq);
             mlunitext.assert_equals(false, isEq);
             ansStr = ...
@@ -85,7 +79,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             centerCVec{4} = [1 0 0 0];
             shapeMatCVec{4} = diag([3 2 1 0]);
             for iElem = 1 : 4
-                ellVec(iElem) = self.ellFactoryObj.create(centerCVec{iElem}', shapeMatCVec{iElem});
+                ellVec(iElem) = self.createEll(centerCVec{iElem}', shapeMatCVec{iElem});
                 transposedCenterCVec{iElem} = centerCVec{iElem}';
             end
             SEllVec = struct('centerVec', transposedCenterCVec, 'shapeMat', shapeMatCVec);
@@ -101,46 +95,46 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             MAX_TOL = Properties.getRelTol();
             
             testMat = eye(2);
-            self.checkEllEqual(self.ellFactoryObj.create(testMat), self.ellFactoryObj.create(testMat), true, '');
+            self.checkEllEqual(self.createEll(testMat), self.createEll(testMat), true, '');
             
             test1Mat = eye(2);
             test2Mat = eye(2) + MAX_TOL;
-            self.checkEllEqual(self.ellFactoryObj.create(test1Mat), self.ellFactoryObj.create(test2Mat), true, '');
+            self.checkEllEqual(self.createEll(test1Mat), self.createEll(test2Mat), true, '');
             
             test1Mat = eye(2);
             test2Mat = eye(2) - 0.99*MAX_TOL;
-            self.checkEllEqual(self.ellFactoryObj.create(test1Mat), self.ellFactoryObj.create(test2Mat), true, '');
+            self.checkEllEqual(self.createEll(test1Mat), self.createEll(test2Mat), true, '');
             
             test1Mat = 100*eye(2);
             test2Mat = 100*eye(2) - 0.99*MAX_TOL;
-            self.checkEllEqual(self.ellFactoryObj.create(test1Mat), self.ellFactoryObj.create(test2Mat), true, '');
+            self.checkEllEqual(self.createEll(test1Mat), self.createEll(test2Mat), true, '');
             %
             %test for maxTolerance
             firstMat = eye(2);
             secMat = eye(2)+1;
             secVec = [1;0];
             maxTol = 1;
-            ell1 = self.ellFactoryObj.create(firstMat);
-            ell2 = self.ellFactoryObj.create(secVec,secMat);
+            ell1 = self.createEll(firstMat);
+            ell2 = self.createEll(secVec,secMat);
             [isOk,reportStr]=ell1.isEqual(ell2);
             mlunitext.assert(~isOk,reportStr);
             %
             %
-            testEll = self.ellFactoryObj.create(eye(2));
-            testEll2 = self.ellFactoryObj.create([1e-3, 0].', eye(2));
+            testEll = self.createEll(eye(2));
+            testEll2 = self.createEll([1e-3, 0].', eye(2));
             mDim = 10;
             nDim = 15;
             testEllArr = repmat(testEll, mDim, nDim);
             isEqualArr = true(mDim, nDim);
             isnEqualArr = ~isEqualArr;
-            mlunitext.assert_equals(isEqualArr, testEll.eq(testEllArr));
-            mlunitext.assert_equals(isEqualArr, testEllArr.eq(testEll));
-            mlunitext.assert_equals(isnEqualArr, testEll2.eq(testEllArr));
-            mlunitext.assert_equals(isnEqualArr, testEllArr.eq(testEll2));
+            assert_equals_with_report(isEqualArr, testEll, testEllArr);
+            assert_equals_with_report(isEqualArr, testEllArr, testEll);
+            assert_equals_with_report(isnEqualArr, testEll2, testEllArr);
+            assert_equals_with_report(isnEqualArr, testEllArr, testEll2);
             
             testEll2Arr = repmat(testEll2, mDim, nDim);
-            mlunitext.assert_equals(isEqualArr, testEllArr.eq(testEllArr));
-            mlunitext.assert_equals(isnEqualArr, testEll2Arr.eq(testEllArr));
+            assert_equals_with_report(isEqualArr, testEllArr, testEllArr);
+            assert_equals_with_report(isnEqualArr, testEll2Arr, testEllArr);
             
             self.runAndCheckError...
                 ('eq([testEll, testEll2], [testEll; testEll2])','wrongSizes');
@@ -214,7 +208,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             %
             %distance between ellipsoid and two vectors
             absTol = Properties.getAbsTol();
-            testEllipsoid = self.ellFactoryObj.create([1,0,0;0,5,0;0,0,10]);
+            testEllipsoid = self.createEll([1,0,0;0,5,0;0,0,10]);
             testPointMat = [3,0,0; 5,0,0].';
             testResVec = distance(testEllipsoid, testPointMat);
             mlunitext.assert_equals(true, (abs(testResVec(1)-2)<absTol) &&...
@@ -222,22 +216,22 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             %
             %distance between ellipsoid and point in the ellipsoid
             %and point on the boader of the ellipsoid
-            testEllipsoid = self.ellFactoryObj.create([1,2,3].',4*eye(3,3));
+            testEllipsoid = self.createEll([1,2,3].',4*eye(3,3));
             testPointMat = [2,3,2; 1,2,5].';
             testResVec = distance(testEllipsoid, testPointMat);
             mlunitext.assert_equals(true, testResVec(1)==-1 && testResVec(2)==0);
             %
             %distance between two ellipsoids and two vectors
-            testEllipsoidVec = [self.ellFactoryObj.create([5,2,0;2,5,0;0,0,1]),...
-                self.ellFactoryObj.create([0,0,5].',[4, 0, 0; 0, 9 , 0; 0,0, 25])];
+            testEllipsoidVec = [self.createEll([5,2,0;2,5,0;0,0,1]),...
+                self.createEll([0,0,5].',[4, 0, 0; 0, 9 , 0; 0,0, 25])];
             testPointMat = [0,0,5; 0,5,5].';
             testResVec = distance(testEllipsoidVec, testPointMat);
             mlunitext.assert_equals(true, (abs(testResVec(1)-4)<absTol) &&...
                 (abs(testResVec(2)-2)<absTol));
             %
             %distance between two ellipsoids and a vector
-            testEllipsoidVec = [self.ellFactoryObj.create([5,5,0].',[1,0,0;0,5,0;0,0,10]),...
-                self.ellFactoryObj.create([0,10,0].',[10, 0, 0; 0, 16 , 0; 0,0, 5])];
+            testEllipsoidVec = [self.createEll([5,5,0].',[1,0,0;0,5,0;0,0,10]),...
+                self.createEll([0,10,0].',[10, 0, 0; 0, 16 , 0; 0,0, 5])];
             testPointVec = [0,5,0].';
             testResVec = distance(testEllipsoidVec, testPointVec);
             mlunitext.assert_equals(true, (abs(testResVec(1)-4)<absTol) &&...
@@ -245,7 +239,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             %
             %negative test: matrix shapeMat of ellipsoid has very large
             %eigenvalues.
-            testEllipsoid = self.ellFactoryObj.create([1e+15,0;0,1e+15]);
+            testEllipsoid = self.createEll([1e+15,0;0,1e+15]);
             testPointVec = [3e+15,0].';
             self.runAndCheckError('distance(testEllipsoid, testPointVec)',...
                 'notSecant');
@@ -255,7 +249,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEllMat=diag(1:2);
             testEllMat=testOrth2Mat*testEllMat*testOrth2Mat.';
             testEllMat=0.5*(testEllMat+testEllMat.');
-            testEllipsoid=self.ellFactoryObj.create(testEllMat);
+            testEllipsoid=self.createEll(testEllMat);
             testPoint=testOrth2Mat*[10;zeros(nDim-1,1)];
             testRes=distance(testEllipsoid, testPoint);
             mlunitext.assert_equals(true,abs(testRes-9)<absTol);
@@ -265,7 +259,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEllMat=diag(nDim:-1:1);
             testEllMat=testOrth50Mat*testEllMat*testOrth50Mat.';
             testEllMat=0.5*(testEllMat+testEllMat.');
-            testEllipsoid=self.ellFactoryObj.create(testEllMat);
+            testEllipsoid=self.createEll(testEllMat);
             testPoint=testOrth50Mat*[zeros(nDim-1,1);10];
             testRes=distance(testEllipsoid, testPoint);
             mlunitext.assert_equals(true,abs(testRes-9)<absTol);
@@ -278,8 +272,8 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEll2Mat=testOrth3Mat*testEll2Mat*testOrth3Mat.';
             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
             testEll2CenterVec=testOrth3Mat*[0;0;5];
-            testEllipsoidVec = [self.ellFactoryObj.create(testEll1Mat),...
-                self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat)];
+            testEllipsoidVec = [self.createEll(testEll1Mat),...
+                self.createEll(testEll2CenterVec,testEll2Mat)];
             testPointMat = testOrth3Mat*([0,0,5; 0,5,5].');
             testResVec = distance(testEllipsoidVec, testPointMat);
             mlunitext.assert_equals(true, (abs(testResVec(1)-4)<absTol) &&...
@@ -291,43 +285,43 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             %Testing ellipsoid-ellipsoid distance
             %
             %distance between two ellipsoids
-            testEllipsoid1 = self.ellFactoryObj.create([25,0;0,9]);
-            testEllipsoid2 = self.ellFactoryObj.create([10;0],[4,0;0,9]);
+            testEllipsoid1 = self.createEll([25,0;0,9]);
+            testEllipsoid2 = self.createEll([10;0],[4,0;0,9]);
             testRes=distance(testEllipsoid1,testEllipsoid2);
             mlunitext.assert_equals(true, (abs(testRes-3)<absTol));
             %
-            testEllipsoid1 = self.ellFactoryObj.create([0,-15,0].',[25,0,0;0,100,0;0,0,9]);
-            testEllipsoid2 = self.ellFactoryObj.create([0,7,0].',[9,0,0;0,25,0;0,0,100]);
+            testEllipsoid1 = self.createEll([0,-15,0].',[25,0,0;0,100,0;0,0,9]);
+            testEllipsoid2 = self.createEll([0,7,0].',[9,0,0;0,25,0;0,0,100]);
             testRes=distance(testEllipsoid1,testEllipsoid2);
             mlunitext.assert_equals(true, (abs(testRes-7)<absTol));
             %
             % case of ellipses with common center
-            testEllipsoid1 = self.ellFactoryObj.create([1 2 3].',[1,2,5;2,5,3;5,3,100]);
-            testEllipsoid2 = self.ellFactoryObj.create([1,2,3].',[1,2,7;2,10,5;7,5,100]);
+            testEllipsoid1 = self.createEll([1 2 3].',[1,2,5;2,5,3;5,3,100]);
+            testEllipsoid2 = self.createEll([1,2,3].',[1,2,7;2,10,5;7,5,100]);
             testRes=distance(testEllipsoid1,testEllipsoid2);
             mlunitext.assert_equals(true, (abs(testRes)<absTol));
             %
             % distance between two pairs of ellipsoids
-            testEllipsoid1Vec=[self.ellFactoryObj.create([0, -6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
-                self.ellFactoryObj.create([0,0,-4.5].',[100,0,0; 0, 25,0; 0,0,4])];
-            testEllipsoid2Vec=[self.ellFactoryObj.create([0, 6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
-                self.ellFactoryObj.create([0,0,4.5].',[100,0,0; 0, 25,0; 0,0,4])];
+            testEllipsoid1Vec=[self.createEll([0, -6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
+                self.createEll([0,0,-4.5].',[100,0,0; 0, 25,0; 0,0,4])];
+            testEllipsoid2Vec=[self.createEll([0, 6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
+                self.createEll([0,0,4.5].',[100,0,0; 0, 25,0; 0,0,4])];
             testResVec=distance(testEllipsoid1Vec,testEllipsoid2Vec);
             mlunitext.assert_equals(true, (abs(testResVec(1)-8)<absTol) &&...
                 (abs(testResVec(2)-5)<absTol));
             %
             % distance between two ellipsoids and an ellipsoid
-            testEllipsoidVec=[self.ellFactoryObj.create([0, 0, 0].',[9,0,0; 0,25,0; 0,0, 1]),...
-                self.ellFactoryObj.create([-5,0,0].',[9,0,0; 0, 25,0; 0,0,1])];
-            testEllipsoid=self.ellFactoryObj.create([5, 0, 0].',[25,0,0; 0,100,0; 0,0, 1]);
+            testEllipsoidVec=[self.createEll([0, 0, 0].',[9,0,0; 0,25,0; 0,0, 1]),...
+                self.createEll([-5,0,0].',[9,0,0; 0, 25,0; 0,0,1])];
+            testEllipsoid=self.createEll([5, 0, 0].',[25,0,0; 0,100,0; 0,0, 1]);
             testResVec=distance(testEllipsoidVec,testEllipsoid);
             mlunitext.assert_equals(true, (abs(testResVec(1))<absTol) &&...
                 (abs(testResVec(2)-2)<absTol));
             %
             %distance between two ellipsoids of high dimensions
             nDim=100;
-            testEllipsoid1=self.ellFactoryObj.create(diag(1:2:2*nDim));
-            testEllipsoid2=self.ellFactoryObj.create([5;zeros(nDim-1,1)],diag(1:nDim));
+            testEllipsoid1=self.createEll(diag(1:2:2*nDim));
+            testEllipsoid2=self.createEll([5;zeros(nDim-1,1)],diag(1:nDim));
             testRes=distance(testEllipsoid1,testEllipsoid2);
             mlunitext.assert_equals(true,abs(testRes-3)<absTol);
             %
@@ -338,8 +332,8 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
 %                 'testEllipsoid1Vec','testEllipsoid2Vec','testAnswVec','nEllVec');
             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
                 'testEllipsoid1Struct','testEllipsoid2Struct','testAnswVec','nEllVec');
-            testEllipsoid1Vec = self.ellFactoryObj.create.fromStruct(testEllipsoid1Struct);
-            testEllipsoid2Vec = self.ellFactoryObj.create.fromStruct(testEllipsoid2Struct);
+            testEllipsoid1Vec = self.createEll.fromStruct(testEllipsoid1Struct);
+            testEllipsoid2Vec = self.createEll.fromStruct(testEllipsoid2Struct);
             testResVec=distance(testEllipsoid1Vec,testEllipsoid2Vec);
             mlunitext.assert_equals(ones(1,nEllVec),...
                 abs(testResVec-testAnswVec)<absTol);
@@ -357,9 +351,9 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEll3Mat=testOrth3Mat*testEll3Mat*testOrth3Mat.';
             testEll3Mat=0.5*(testEll3Mat+testEll3Mat.');
             testEll3CenterVec=testOrth3Mat*[5;0;0];
-            testEllipsoidVec=[self.ellFactoryObj.create(testEll1Mat),...
-                self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat)];
-            testEllipsoid=self.ellFactoryObj.create(testEll3CenterVec,testEll3Mat);
+            testEllipsoidVec=[self.createEll(testEll1Mat),...
+                self.createEll(testEll2CenterVec,testEll2Mat)];
+            testEllipsoid=self.createEll(testEll3CenterVec,testEll3Mat);
             testResVec=distance(testEllipsoidVec,testEllipsoid);
             mlunitext.assert_equals(true, (abs(testResVec(1))<absTol) &&...
                 (abs(testResVec(2)-2)<absTol));
@@ -374,8 +368,8 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEll2Mat=testOrth100Mat*testEll2Mat*testOrth100Mat.';
             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
             testEll2CenterVec=testOrth100Mat*[9;zeros(nDim-1,1)];
-            testEllipsoid1=self.ellFactoryObj.create(testEll1Mat);
-            testEllipsoid2=self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat);
+            testEllipsoid1=self.createEll(testEll1Mat);
+            testEllipsoid2=self.createEll(testEll2CenterVec,testEll2Mat);
             testRes=distance(testEllipsoid1,testEllipsoid2);
             mlunitext.assert_equals(true,abs(testRes-3)<absTol);
             %
@@ -387,8 +381,8 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
 %                 'testEllArr','testDistResArr');
             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
                 'testEllStruct','testDistResArr');
-            testEllArr = self.ellFactoryObj.create.fromStruct(testEllStruct);
-            testEll = self.ellFactoryObj.create(eye(2));
+            testEllArr = self.createEll.fromStruct(testEllStruct);
+            testEll = self.createEll(eye(2));
             resArr = distance(testEll, testEllArr);
             isOkArr = abs(resArr - testDistResArr) <= elltool.conf.Properties.getAbsTol();
             mlunitext.assert(all(isOkArr(:)));
@@ -400,7 +394,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEllCenterVec=testOrth2Mat*[0;5];
             testHypVVec=testOrth2Mat*[0;1];
             testHypC=0;
-            testEllipsoid=self.ellFactoryObj.create(testEllCenterVec,testEllMat);
+            testEllipsoid=self.createEll(testEllCenterVec,testEllMat);
             testHyp=hyperplane(testHypVVec,testHypC);
             testRes=distance(testEllipsoid,testHyp);
             mlunitext.assert_equals(true,abs(testRes-3)<absTol);
@@ -412,7 +406,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEllMat=0.5*(testEllMat+testEllMat.');
             testHypVVec=testOrth3Mat*[0;1;0];
             testHypC=10;
-            testEllipsoid=self.ellFactoryObj.create(testEllMat);
+            testEllipsoid=self.createEll(testEllMat);
             testHyp=hyperplane(testHypVVec,testHypC);
             testRes=distance(testEllipsoid,testHyp);
             mlunitext.assert_equals(true,abs(testRes-5)<absTol);
@@ -430,20 +424,20 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEll2CenterVec=testOrth100Mat*[10;zeros(nDim-1,1)];
             testHypVVec=testOrth100Mat*[1;zeros(nDim-1,1)];
             testHypC=0;
-            testEllipsoid=[self.ellFactoryObj.create(testEll1CenterVec,testEll1Mat),...
-                self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat)];
+            testEllipsoid=[self.createEll(testEll1CenterVec,testEll1Mat),...
+                self.createEll(testEll2CenterVec,testEll2Mat)];
             testHyp=hyperplane(testHypVVec,testHypC);
             testRes=distance(testEllipsoid,testHyp);
             mlunitext.assert_equals(true,abs(testRes(1)-7)<absTol&&...
                 abs(testRes(2)-5)<absTol);
             %distance where two ellipsoids have one common point
             % according to existing precision policy elltool.conf.Properties.getAbsTol()
-            testEll1=self.ellFactoryObj.create([1+1e-20 0].',[1 0; 0 1]);
-            testEll2=self.ellFactoryObj.create([-1 0].',[1 0;0 1]);
+            testEll1=self.createEll([1+1e-20 0].',[1 0; 0 1]);
+            testEll2=self.createEll([-1 0].',[1 0;0 1]);
             testRes=distance(testEll1,testEll2);
             mlunitext.assert_equals(true,abs(testRes)<elltool.conf.Properties.getAbsTol());
             %negative test: ellipsoid and hyperplane have different dimensions
-            testEll = self.ellFactoryObj.create(eye(2));
+            testEll = self.createEll(eye(2));
             testHyp = hyperplane(eye(3));
             self.runAndCheckError('distance(testEll, testHyp)',...
                 'wrongInput');
@@ -453,7 +447,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             %IN ELLIPSOID METRIC
             %
             % Test#1. Distance between an ellipsoid and a vector.
-            testEllipsoid = self.ellFactoryObj.create([1,0,0;0,5,0;0,0,10]);
+            testEllipsoid = self.createEll([1,0,0;0,5,0;0,0,10]);
             testPointVec = [3,0,0].';
             %
             testRes = distance(testEllipsoid, testPointVec,true);
@@ -461,7 +455,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             mlunitext.assert_equals(true, (abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol()));
             %
             % Test#2. Distance between an ellipsoid and a vector.
-            testEllipsoid = self.ellFactoryObj.create([2,0,0;0,5,0;0,0,10]);
+            testEllipsoid = self.createEll([2,0,0;0,5,0;0,0,10]);
             testPointVec = [3,0,0].';
             %
             testRes = distance(testEllipsoid, testPointVec,true);
@@ -470,8 +464,8 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             %
             %Test#3
             % Distance between two ellipsoids and a vector
-            testEllipsoidVec = [self.ellFactoryObj.create([5,5,0].',[1,0,0;0,5,0;0,0,10]),...
-                self.ellFactoryObj.create([0,10,0].',[10, 0, 0; 0, 16 , 0; 0,0, 5])];
+            testEllipsoidVec = [self.createEll([5,5,0].',[1,0,0;0,5,0;0,0,10]),...
+                self.createEll([0,10,0].',[10, 0, 0; 0, 16 , 0; 0,0, 5])];
             testPointVec = [0,5,0].';
             %
             testResVec = distance(testEllipsoidVec, testPointVec,true);
@@ -486,7 +480,7 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEllMat=diag(1:2);
             testEllMat=testOrth2Mat*testEllMat*testOrth2Mat.';
             testEllMat=0.5*(testEllMat+testEllMat.');
-            testEllipsoid=self.ellFactoryObj.create(testEllMat);
+            testEllipsoid=self.createEll(testEllMat);
             testPointVec=testOrth2Mat*[10;zeros(nDim-1,1)];
             %
             testRes=distance(testEllipsoid, testPointVec,true);
@@ -502,8 +496,8 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEll2Mat=testOrth3Mat*testEll2Mat*testOrth3Mat.';
             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
             testEll2CenterVec=testOrth3Mat*[0;0;5];
-            testEllipsoid1=self.ellFactoryObj.create(testEll1Mat);
-            testEllipsoid2=self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat);
+            testEllipsoid1=self.createEll(testEll1Mat);
+            testEllipsoid2=self.createEll(testEll2CenterVec,testEll2Mat);
             testEllipsoidVec = [testEllipsoid1,testEllipsoid2];
             testPointMat = testOrth3Mat*([0,0,5; 0,5,5].');
             %
@@ -518,8 +512,8 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             %
             % Test#1.
             % Distance between two ellipsoids
-            testEllipsoid1 = self.ellFactoryObj.create([25,0;0,9]);
-            testEllipsoid2 = self.ellFactoryObj.create([10;0],[4,0;0,9]);
+            testEllipsoid1 = self.createEll([25,0;0,9]);
+            testEllipsoid2 = self.createEll([10;0],[4,0;0,9]);
             testRes=distance(testEllipsoid1,testEllipsoid2,true);
             ansRes=self.ellEllDistanceCVX(testEllipsoid1,testEllipsoid2,true);
             mlunitext.assert_equals(true, (abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol()));
@@ -535,8 +529,8 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEll2Mat=testOrth100Mat*testEll2Mat*testOrth100Mat.';
             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
             testEll2CenterVec=testOrth100Mat*[9;zeros(nDim-1,1)];
-            testEllipsoid1=self.ellFactoryObj.create(testEll1Mat);
-            testEllipsoid2=self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat);
+            testEllipsoid1=self.createEll(testEll1Mat);
+            testEllipsoid2=self.createEll(testEll2CenterVec,testEll2Mat);
             %
             testRes=distance(testEllipsoid1,testEllipsoid2,true);
             ansRes=self.ellEllDistanceCVX(testEllipsoid1,testEllipsoid2,true);
@@ -556,9 +550,9 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             testEll3Mat=testOrth3Mat*testEll3Mat*testOrth3Mat.';
             testEll3Mat=0.5*(testEll3Mat+testEll3Mat.');
             testEll3CenterVec=testOrth3Mat*[5;0;0];
-            testEllipsoidVec=[self.ellFactoryObj.create(testEll1Mat),...
-                self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat)];
-            testEllipsoid=self.ellFactoryObj.create(testEll3CenterVec,testEll3Mat);
+            testEllipsoidVec=[self.createEll(testEll1Mat),...
+                self.createEll(testEll2CenterVec,testEll2Mat)];
+            testEllipsoid=self.createEll(testEll3CenterVec,testEll3Mat);
             %
             testResVec=distance(testEllipsoidVec,testEllipsoid,true);
             ansResVec(1)=distance(testEllipsoidVec(1),testEllipsoid,true);
@@ -568,10 +562,10 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
             %
             % Test #4.
             % distance between two pairs of ellipsoids
-            testEllipsoid1Vec=[self.ellFactoryObj.create([0, -6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
-                self.ellFactoryObj.create([0,0,-4.5].',[100,0,0; 0, 25,0; 0,0,4])];
-            testEllipsoid2Vec=[self.ellFactoryObj.create([0, 6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
-                self.ellFactoryObj.create([0,0,4.5].',[100,0,0; 0, 25,0; 0,0,4])];
+            testEllipsoid1Vec=[self.createEll([0, -6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
+                self.createEll([0,0,-4.5].',[100,0,0; 0, 25,0; 0,0,4])];
+            testEllipsoid2Vec=[self.createEll([0, 6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
+                self.createEll([0,0,4.5].',[100,0,0; 0, 25,0; 0,0,4])];
             %
             testResVec=distance(testEllipsoid1Vec,testEllipsoid2Vec,true);
             ansResVec(1)=distance(testEllipsoid1Vec(1),testEllipsoid2Vec(1),true);
@@ -593,19 +587,19 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
         function [varargout] = createTypicalEll(self, flag)
             switch flag
             case 1
-                varargout{1} = self.ellFactoryObj.create([0; 0], [1 0; 0 1]);
-                varargout{2} = self.ellFactoryObj.create([1; 0], [1 0; 0 1]);
-                varargout{3} = self.ellFactoryObj.create([1; 0], [2 0; 0 1]);
-                varargout{4} = self.ellFactoryObj.create([0; 0], [0 0; 0 0]);
-                varargout{5} = self.ellFactoryObj.create([0; 0; 0], [0 0 0 ;0 0 0; 0 0 0]);
-                varargout{6} = self.ellFactoryObj.create;
-                varargout{7} = self.ellFactoryObj.create([2; 1], [3 1; 1 1]);
-                varargout{8} = self.ellFactoryObj.create([1; 1], [1 0; 0 1]);
+                varargout{1} = self.createEll([0; 0], [1 0; 0 1]);
+                varargout{2} = self.createEll([1; 0], [1 0; 0 1]);
+                varargout{3} = self.createEll([1; 0], [2 0; 0 1]);
+                varargout{4} = self.createEll([0; 0], [0 0; 0 0]);
+                varargout{5} = self.createEll([0; 0; 0], [0 0 0 ;0 0 0; 0 0 0]);
+                varargout{6} = self.createEll;
+                varargout{7} = self.createEll([2; 1], [3 1; 1 1]);
+                varargout{8} = self.createEll([1; 1], [1 0; 0 1]);
             case 2
-                varargout{1} = self.ellFactoryObj.create([0; 0], [1 0; 0 1]);
-                varargout{2} = self.ellFactoryObj.create([0; 0], [2 0; 0 2]);
-                varargout{3} = self.ellFactoryObj.create([0; 0], [4 2; 2 4]);
-                varargout{4} = self.ellFactoryObj.create;
+                varargout{1} = self.createEll([0; 0], [1 0; 0 1]);
+                varargout{2} = self.createEll([0; 0], [2 0; 0 2]);
+                varargout{3} = self.createEll([0; 0], [4 2; 2 4]);
+                varargout{4} = self.createEll;
                 otherwise
             end
         end
@@ -613,14 +607,14 @@ classdef GenEllipsoidSpecialTC < mlunitext.test_case
         function [varargout] = createTypicalHighDimEll(self, flag)
             switch flag
                 case 1
-                    varargout{1} = self.ellFactoryObj.create(diag(1:0.5:6.5));
-                    varargout{2} = self.ellFactoryObj.create(diag(11:0.5:16.5));
+                    varargout{1} = self.createEll(diag(1:0.5:6.5));
+                    varargout{2} = self.createEll(diag(11:0.5:16.5));
                 case 2
-                    varargout{1} = self.ellFactoryObj.create(diag(1:0.5:10.5));
-                    varargout{2} = self.ellFactoryObj.create(diag(11:0.5:20.5));
+                    varargout{1} = self.createEll(diag(1:0.5:10.5));
+                    varargout{2} = self.createEll(diag(11:0.5:20.5));
                 case 3
-                    varargout{1} = self.ellFactoryObj.create(diag(1:0.1:10.9));
-                    varargout{2} = self.ellFactoryObj.create(diag(11:0.1:20.9));
+                    varargout{1} = self.createEll(diag(1:0.1:10.9));
+                    varargout{2} = self.createEll(diag(11:0.1:20.9));
                 case 4
                     varargout{1} = diag(1:0.5:6.5);
                     varargout{2} = diag(11:0.5:16.5);

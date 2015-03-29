@@ -1,4 +1,4 @@
-classdef HyperplaneTestCase < mlunitext.test_case
+classdef HyperplaneTestCase < elltool.core.test.mlunit.EllFactoryTC
     %$Author: <Zakharov Eugene>  <justenterrr@gmail.com> $
     %$Date: 2012-10-31 $
     %$Copyright: Moscow State University,
@@ -9,19 +9,13 @@ classdef HyperplaneTestCase < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
     end
-    properties (Access = private)
-        ellFactoryObj
-    end
     methods
         function self = HyperplaneTestCase(varargin)
-            self = self@mlunitext.test_case(varargin{:});
+            self = self@elltool.core.test.mlunit.EllFactoryTC(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
                 filesep,shortClassName];
-        end
-        function self = set_up_param(self, ellFactoryObj)
-            self.ellFactoryObj = ellFactoryObj;
         end
         function tear_down(~)
             close all;

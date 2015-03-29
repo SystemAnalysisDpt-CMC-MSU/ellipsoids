@@ -7,8 +7,8 @@ function ellArr = fromStruct(SEllArr)
 %       SEllArr: struct [nDim1, nDim2, ...] - array
 %           of structures with the following fields:
 %
-%       q: double[1, nEllDim] - the center of ellipsoid
-%       Q: double[nEllDim, nEllDim] - the shape matrix of ellipsoid
+%       centerVec: double[1, nEllDim] - the center of ellipsoid
+%       shapeMat: double[nEllDim, nEllDim] - the shape matrix of ellipsoid
 % Output:
 %       ellArr: ellipsoid [nDim1, nDim2, ...] - ellipsoid array with size of
 %           SEllArr.

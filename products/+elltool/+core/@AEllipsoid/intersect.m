@@ -184,7 +184,7 @@ else
     nDimsArr = zeros(size(objArr));
     [~, nCols] = size(objArr);
     for iCols = 1:nCols
-        nDimsArr(iCols) = dimension(objArr(iCols));
+        nDimsArr(iCols) = objArr(iCols).Dim;
     end
     fCheckDims(dimension(myEllArr),nDimsArr);
    
@@ -385,7 +385,7 @@ end
 
 %%%%%%%%
 
-function [res, status] = lqcqp2(myEllArr, polyt)
+function [res, status] = lqcqp2(myEllArr, polyh)
 %
 % LQCQP2 - formulate quadratic programming problem with
 %          linear and quadratic constraints, and invoke external solver.
@@ -393,7 +393,7 @@ function [res, status] = lqcqp2(myEllArr, polyt)
 % Input:
 %   regular:
 %       fstEllArr: ellipsod [nDims1,nDims2,...,nDimsN] - array of ellipsoids.
-%       polyt: Polyhedron [1, 1] - Polyhedron.
+%       polyh: Polyhedron [1, 1] - Polyhedron.
 %
 % Output:
 %   res: double[1, 1]
@@ -406,7 +406,10 @@ function [res, status] = lqcqp2(myEllArr, polyt)
 import modgen.common.throwerror;
 import elltool.conf.Properties;
 status = 1;
-[aMat, bVec] = double(polyt);
+%[aMat, bVec] = double(polyh);
+hMat = polyh.H;
+aMat=hMat(:,1:end-1);
+bVec=hMat(:,end);
 nNumel = numel(myEllArr);
 
 absTolArr = getAbsTol(myEllArr);

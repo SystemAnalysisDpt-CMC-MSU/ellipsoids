@@ -1,15 +1,12 @@
-classdef EllipsoidMinkPlotTestCase < mlunitext.test_case
+classdef EllipsoidMinkPlotTestCase < elltool.core.test.mlunit.EllFactoryTC
     %
     properties (Access=private)
         testDataRootDir
     end
-    properties (Access = private)
-        ellFactoryObj
-    end
     %
     methods
         function self = EllipsoidMinkPlotTestCase(varargin)
-            self = self@mlunitext.test_case(varargin{:});
+            self = self@elltool.core.test.mlunit.EllFactoryTC(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),filesep,'TestData',...
@@ -18,13 +15,10 @@ classdef EllipsoidMinkPlotTestCase < mlunitext.test_case
         function self = tear_down(self,varargin)
             close all;
         end
-        function self = set_up_param(self, ellFactoryObj)
-            self.ellFactoryObj = ellFactoryObj;
-        end
         function self = testFillAndShade(self)
-            testFirEll = self.ellFactoryObj.create(2*eye(2));
-            testSecEll = self.ellFactoryObj.create([1, 0].', eye(2));
-            testThirdEll = self.ellFactoryObj.create([0, -1].', 1.5*eye(2));
+            testFirEll = self.createEll(2*eye(2));
+            testSecEll = self.createEll([1, 0].', eye(2));
+            testThirdEll = self.createEll([0, -1].', 1.5*eye(2));
             minksum(testFirEll,testSecEll,'fill',false,'shade',0.7);
             minksum(testFirEll,testSecEll,'fill',true,'shade',0.7);
             minksum(testFirEll,testSecEll,testThirdEll,'fill',false,'shade',1);
@@ -126,7 +120,7 @@ classdef EllipsoidMinkPlotTestCase < mlunitext.test_case
 %             self.runAndCheckError...
 %                 ('minksum([testFirEll,testSecEll,testThirdEll], 1)', ...
 %                 'wrongPropertyType');
-%             testFirEll = self.ellFactoryObj.create(eye(3));
+%             testFirEll = self.createEll(eye(3));
 %             self.runAndCheckError...
 %                 ('minksum([testFirEll,testSecEll,testThirdEll])', 'dimMismatch');
 %             testFirEll = self.ellFactoryObj.create(1);

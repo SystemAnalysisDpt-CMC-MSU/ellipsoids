@@ -1,13 +1,10 @@
-classdef EllAuxTestCase < mlunitext.test_case
+classdef EllAuxTestCase < elltool.core.test.mlunit.EllFactoryTC
     properties (Access=private)
         ABS_TOL = 1e-8;
     end
-    properties (Access = private)
-        ellFactoryObj
-    end
     methods
         function self=EllAuxTestCase(varargin)
-            self=self@mlunitext.test_case(varargin{:});
+            self=self@elltool.core.test.mlunit.EllFactoryTC(varargin{:});
         end
         %
         function testEllRegularize(self)
@@ -19,9 +16,6 @@ classdef EllAuxTestCase < mlunitext.test_case
             isOk=gras.la.ismatposdef(shMat,self.ABS_TOL,true);
             mlunitext.assert(isOk);
         end
-        function self = set_up_param(self, ellFactoryObj)
-            self.ellFactoryObj = ellFactoryObj;
-        end
         %
         function testEllRegConsitent(self)
             absTol=self.ABS_TOL;
@@ -31,7 +25,7 @@ classdef EllAuxTestCase < mlunitext.test_case
             shRegMat=gras.la.regposdefmat(shMat,absTol);
             masterCheckIsPos(shRegMat);
             %
-            ell=self.ellFactoryObj.create(shMat,'absTol',absTol);
+            ell=self.createEll(shMat,'absTol',absTol);
                                  
             mlunitext.assert(modgen.common.absrelcompare(ell.getShapeMat(), shMat, absTol, absTol, @norm));
             
@@ -67,7 +61,7 @@ classdef EllAuxTestCase < mlunitext.test_case
                     isSemPosDef=false;
                 end
                 if ~isSemPosDef
-                    ell=self.ellFactoryObj.create(inpMat,'absTol',absTol+delta);
+                    ell=self.createEll(inpMat,'absTol',absTol+delta);
                     isOk=~ell.isdegenerate();
                     mlunitext.assert_equals(isOk,isExpOk);
                 end

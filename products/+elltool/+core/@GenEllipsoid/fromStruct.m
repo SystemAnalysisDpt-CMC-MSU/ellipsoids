@@ -3,12 +3,28 @@ function ellArr = fromStruct(SEllArr)
 % fromStruct -- converts structure array into ellipsoid array.
 %
 % Input:
-%   regular:
-%       SEllArr: struct [nDim1, nDim2, ...] - array
-%           of structures with the following fields:
+%   Case 1:
+%       regular:
+%           SEllArr: struct [nDim1, nDim2, ...] - array
+%               of structures with the following fields:
 %
-%       q: double[1, nEllDim] - the center of ellipsoid
-%       Q: double[nEllDim, nEllDim] - the shape matrix of ellipsoid
+%           centerVec: double[1, nEllDim] - the center of ellipsoid
+%           shapeMat: double[nEllDim, nEllDim] - the shape matrix of
+%               ellipsoid
+%
+%   Case 2:
+%       regular:
+%           SEllArr: struct [nDim1, nDim2, ...] - array
+%               of structures with the following fields:
+%
+%           centerVec: double[1, nEllDim] - the center of ellipsoid
+%           diagMat: double[nEllDim, nEllDim] - the diagonal matrix of
+%               eigenvalues
+%           eigvMat: double[nEllDum, nEllDim] - the matrix of eigenvectors
+%          
+%
+%   
+%
 % Output:
 %       ellArr: ellipsoid [nDim1, nDim2, ...] - ellipsoid array with size of
 %           SEllArr.
@@ -45,16 +61,20 @@ for iEll = numel(SEllArr) : -1 : 1
     ellArr(iEll) = struct2Ell(SEllArr(iEll));
 end
 ellArr = reshape(ellArr, size(SEllArr));
-
-
 end
 
 function ell = struct2Ell(SEll)
+if isfield(SEll, 'shapeMat')
+    [eigvMat, diagMat] = eig(SEll.shapeMat);
+else
+    diagMat = SEll.diagMat;
+    eigvMat = SEll.eigvMat;
+end
 if (isfield(SEll, 'absTol'))
     SProp = rmfield(SEll, {'diagMat', 'eigvMat', 'centerVec'});
     propNameValueCMat = [fieldnames(SProp), struct2cell(SProp)].';
-    ell = elltool.core.GenEllipsoid(SEll.centerVec, SEll.diagMat, SEll.eigvMat, propNameValueCMat{:});
+    ell = elltool.core.GenEllipsoid(SEll.centerVec.', diagMat, eigvMat, propNameValueCMat{:});
 else
-    ell = elltool.core.GenEllipsoid(SEll.centerVec, SEll.diagMat, SEll.eigvMat);
+    ell = elltool.core.GenEllipsoid(SEll.centerVec.', diagMat, eigvMat);
 end
 end

@@ -1,4 +1,6 @@
-classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
+classdef HyperplaneDispStructTC < ...
+        elltool.core.test.mlunit.ADispStructTC & ...
+        elltool.core.test.mlunit.EllFactoryTC
     %
     %$Author: Alexander Karev <Alexander.Karev.30@gmail.com> $
     %$Date: 2013-06$
@@ -6,9 +8,6 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
-    properties (Access = private)
-        ellFactoryObj
-    end
     
     methods (Access = protected)
         function objArrCVec = getDisplayObj(self)
@@ -19,7 +18,7 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
                 num2cell(ones(5, 5, 5)), ...
                 'shift', num2cell(ones(5, 5, 5)))),...
                 hyperplane([1, 2]', 3),...
-                self.ellFactoryObj.create()};
+                self.createEll()};
             objArrCVec{5} = [objArrCVec{5} objArrCVec{5}];
         end
     end
@@ -169,9 +168,6 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
     methods (Access = public)
         function self = HyperplaneDispStructTC(varargin)
             self = self@elltool.core.test.mlunit.ADispStructTC(varargin{:});
-        end
-        function self = set_up_param(self, ellFactoryObj)
-            self.ellFactoryObj = ellFactoryObj;
         end
     end
     

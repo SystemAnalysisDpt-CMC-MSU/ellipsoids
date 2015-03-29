@@ -1,4 +1,4 @@
-classdef MPTIntegrationTestCase < mlunitext.test_case
+classdef MPTIntegrationTestCase < elltool.core.test.mlunit.EllFactoryTC
     % $Author: <Zakharov Eugene>  <justenterrr@gmail.com> $
     % $Date: <28 february> $
     % $Copyright: Moscow State University,
@@ -6,17 +6,10 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
     % Computer Science, System Analysis Department <2013> $
     %
     
-    properties (Access = private)
-        ellFactoryObj
-    end
-    
     methods
         
         function self = MPTIntegrationTestCase(varargin)
-            self = self@mlunitext.test_case(varargin{:});
-        end
-        function self = set_up_param(self, ellFactoryObj)
-            self.ellFactoryObj = ellFactoryObj;
+            self = self@elltool.core.test.mlunit.EllFactoryTC(varargin{:});
         end
         function tear_down(~)
             close all;
@@ -113,10 +106,10 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ellShift1 = [0.05; 0];
             ellShift2 = [0; 4];
             %
-            ell1 = self.ellFactoryObj.create(ellConstrMat);
-            ell2 = self.ellFactoryObj.create(ellShift1,ellConstrMat);
-            ell3 = self.ellFactoryObj.create(ellShift2,ellConstrMat);
-            ell14D = self.ellFactoryObj.create(ellConstr15DMat);
+            ell1 = self.createEll(ellConstrMat);
+            ell2 = self.createEll(ellShift1,ellConstrMat);
+            ell3 = self.createEll(ellShift2,ellConstrMat);
+            ell14D = self.createEll(ellConstr15DMat);
             %
             %
             polyConstrMat = [-1 0; 1 0; 0 1; 0 -1];
@@ -178,7 +171,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 '(ell1, poly3D)'),'wrongSizes');
             %
             nDims2 = 9;
-            ell9D = self.ellFactoryObj.create(eye(nDims2));
+            ell9D = self.createEll(eye(nDims2));
             poly9D = Polyhedron([eye(nDims2); -eye(nDims2)],ones(2*nDims2,1)/...
                 sqrt(nDims2));
             self.myTestIsCII(ell9D, poly9D, 'u',isExpVec(7),true,'low')
@@ -216,23 +209,23 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             mlunitext.assert(isOk, reportStr);
             %
             %ellipsoid lies in Polyhedron
-            ell4 = self.ellFactoryObj.create(eye(2));
+            ell4 = self.createEll(eye(2));
             poly4 = Polyhedron([eye(2); -eye(2)], ones(4,1));
             ellPolyIA5 = intersection_ia(ell4,poly4);
             mlunitext.assert(isEqual(ell4,ellPolyIA5));
             %mlunitext.assert(eq(ell4,ellPolyIA5));
             %Polyhedron lies in ellipsoid
-            my2Ell = self.ellFactoryObj.create(eye(2));
+            my2Ell = self.createEll(eye(2));
             my2Poly = Polyhedron([eye(2); eye(2)], 1/4*ones(4,1));
-            myExpectedEll = self.ellFactoryObj.create([-0.362623; -0.362623],[0.375307 -0.13955;-0.13955 0.375307]);
+            myExpectedEll = self.createEll([-0.362623; -0.362623],[0.375307 -0.13955;-0.13955 0.375307]);
             my2EllPolyIAObj = intersection_ia(my2Ell,my2Poly);
             [isOk, reportStr] = myExpectedEll.isEqual(my2EllPolyIAObj);
             mlunitext.assert(isOk, reportStr);
             %
             %Polyhedron lies in ellipsoid
-            ell5 = self.ellFactoryObj.create(eye(2));
+            ell5 = self.createEll(eye(2));
             poly5 = Polyhedron([eye(2); eye(2)], 1/4*ones(4,1));
-            expEll = self.ellFactoryObj.create([-0.362623; -0.362623],[0.375307 -0.13955;-0.13955 0.375307]);
+            expEll = self.createEll([-0.362623; -0.362623],[0.375307 -0.13955;-0.13955 0.375307]);
             ellPolyIA5 = intersection_ia(ell5,poly5);
             mlunitext.assert(eq(expEll,ellPolyIA5));
             %
@@ -243,7 +236,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 1.0085 0.9390 2.2240 2.3271 1.7218;...
                 1.4706 1.1156 2.3271 2.9144 1.6438;...
                 0.6325 0.6908 1.7218 1.6438 1.6557];
-            my3Ell = self.ellFactoryObj.create(my3EllVec, my3EllMat);
+            my3Ell = self.createEll(my3EllVec, my3EllMat);
             my3Poly = Polyhedron(eye(5),my3EllVec);
             my3EllPolyIAObj = intersection_ia(my3Ell,my3Poly);
             mlunitext.assert(doesIntersectionContain(my3Ell,my3EllPolyIAObj) &&...
@@ -251,7 +244,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             my4EllMat = [1.1954 0.3180 1.3183; 0.3180 0.2167 0.5039;...
                 1.3183 0.5039 1.6320];
-            my4Ell = self.ellFactory.create(my4EllMat);
+            my4Ell = self.createEll(my4EllMat);
             my4Poly = Polyhedron([1 1 1], 0.2);
             my4EllPolyIAObj = intersection_ia(my4Ell,my4Poly);
             mlunitext.assert(doesIntersectionContain(my4Ell,my4EllPolyIAObj) &&...
@@ -390,7 +383,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             %test if internal approximation is an empty ellipsoid, when
             %ellipsoid doesn't lie in the halfspace
-            my2Ell = self.ellFactoryObj.create(eye(2));
+            my2Ell = self.createEll(eye(2));
             my2Hyper = hyperplane([-1;-1], -3);
             my2EllHyperIAObj = intersection_ia(my2Ell, my2Hyper);
             [~,my2EllHyperIAObjMat] = double(my2EllHyperIAObj);
@@ -441,7 +434,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %ELLIPSOID AND Polyhedron
             %analitically proved, that minimal volume ellipsoid, covering
             %intersection of my1Ell and my1Poly is my1Ell.
-            my1Ell = self.ellFactoryObj.create(eye(2));
+            my1Ell = self.createEll(eye(2));
             my1PolyMat = [0 1];
             my1PolyConst = 0.25;
             my1Poly = Polyhedron(my1PolyMat,my1PolyConst);
@@ -455,7 +448,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             my2Mat =  [1 3; 2 2];
             my2Vec = [1; 1];
             my2TransfMat = my2Mat*(my2Mat)';
-            my2Ell = self.ellFactoryObj.create(my2Vec,my2TransfMat);
+            my2Ell = self.createEll(my2Vec,my2TransfMat);
             my2Poly = Polyhedron(my1PolyMat/(my2Mat),...
                 my1PolyConst+(my1PolyMat/(my2Mat))*my2Vec);
             my2EllPolyEAObj = intersection_ea(my2Ell,my2Poly);
@@ -476,7 +469,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             %first example, but for nDims
             nDims = 10;
-            my4Ell = self.ellFactoryObj.create(eye(nDims));
+            my4Ell = self.createEll(eye(nDims));
             my4PolyMat = [1, zeros(1,nDims-1)];
             my4PolyConst = 1/(2*nDims);
             my4Poly = Polyhedron(my4PolyMat,my4PolyConst);
@@ -497,7 +490,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             my5Vec = [1; -1; zeros(nDims-2,1)];
             %
             my5TransfMat = my5Mat*(my5Mat)';
-            my5Ell = self.ellFactoryObj.create(my5Vec,my5TransfMat);
+            my5Ell = self.createEll(my5Vec,my5TransfMat);
             my5Poly = Polyhedron(my4PolyMat/(my5Mat),...
                 -(my4PolyConst+(my4PolyMat/(my5Mat))*my5Vec));
             my5EllPolyEAObj = intersection_ea(my5Ell,my5Poly);
@@ -648,7 +641,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         %
         %
         function self = testIsInside(self)
-            ellVec = self.ellFactoryObj.create.fromRepMat(eye(2),[1,3]);
+            ellVec = self.createEll.fromRepMat(eye(2),[1,3]);
             polyVec = reshape([Polyhedron([1,0],1), Polyhedron([0, 1],2),...
                 Polyhedron([1 0],0)],1,[]);
             isExpRes = true;
@@ -720,8 +713,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ellConstrMat = eye(2);
             ellShift1 = [0.05; 0];
             %
-            ell1 = self.ellFactoryObj.create(ellConstrMat);
-            ell2 = self.ellFactoryObj.create(ellShift1,ellConstrMat);
+            ell1 = self.createEll(ellConstrMat);
+            ell2 = self.createEll(ellShift1,ellConstrMat);
             %
             polyConstrMat = [-1 0; 1 0; 0 1; 0 -1];
             %
@@ -753,9 +746,9 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ell2ShiftVec = [0.5; 0];
             ell3ShiftVec = [0.05; -0.1; 0];
             %
-            ell1 = self.ellFactoryObj.create(ell1ShiftVec,ell1ConstrMat);
-            ell2 = self.ellFactoryObj.create(ell2ShiftVec,ell2ConstrMat);
-            ell3 = self.ellFactoryObj.create(ell3ShiftVec,ell3ConstrMat);
+            ell1 = self.createEll(ell1ShiftVec,ell1ConstrMat);
+            ell2 = self.createEll(ell2ShiftVec,ell2ConstrMat);
+            ell3 = self.createEll(ell3ShiftVec,ell3ConstrMat);
             poly1 = toPolytope(ell1);
             poly2 = toPolytope(ell2);
             poly3 = toPolytope(ell3);
@@ -772,21 +765,21 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         
         function [testEll2DVec,testPoly2DVec,testEll60D,....
                 testPoly60D,ellArr] = genDataDistAndInter(self)
-            testEll2DVec(4) = self.ellFactoryObj.create(16*eye(2));
-            testEll2DVec(3) = self.ellFactoryObj.create([1.25 -0.75; -0.75 1.25]);
-            testEll2DVec(2) = self.ellFactoryObj.create([1.25 0.75; 0.75 1.25]);
-            testEll2DVec(1) = self.ellFactoryObj.create(eye(2));
+            testEll2DVec(4) = self.createEll(16*eye(2));
+            testEll2DVec(3) = self.createEll([1.25 -0.75; -0.75 1.25]);
+            testEll2DVec(2) = self.createEll([1.25 0.75; 0.75 1.25]);
+            testEll2DVec(1) = self.createEll(eye(2));
             %
             testPoly2DVec = [Polyhedron([-1 0; 1 0; 0 1; 0 -1],[-3; 4; 1; 1]),...
                 Polyhedron([1 0; -1 0; 0 1; 0 -1], [2.5; -1.5; -1.5; 100]),...
                 Polyhedron([1 -1; -1 1; -1 0; 0 1], [-2; 2.5; 2; 2]),...
-                Polyhedron([1 0; -1 0; 0 1; 0 -1], [1; 0; 1; 0])];
-            testEll60D = self.ellFactoryObj.create(eye(60));
+                Polyhedron([1 0; -1 0; 0 1; 0 -1], [1; 0; 1; 0])]';
+            testEll60D = self.createEll(eye(60));
             h60D = [eye(60); -eye(60)];
             h60D(121,:) = [-1 1 zeros(1,58)];
             k60D = [4; 0; ones(58,1); 0; 4; ones(58,1); -4];
             testPoly60D = Polyhedron(h60D,k60D);
-            ellArr = self.ellFactoryObj.create.fromRepMat(eye(2),[2,2,2]);
+            ellArr = self.createEll.fromRepMat(eye(2),[2,2,2]);
         end
     end
     %

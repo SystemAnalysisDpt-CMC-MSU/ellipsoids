@@ -1,4 +1,4 @@
-classdef EllipsoidIntUnionTC < mlunitext.test_case
+classdef EllipsoidIntUnionTC < elltool.core.test.mlunit.EllFactoryTC
     %$Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com>$
     %$Date: 2012-12-24 $
     %$Copyright: Moscow State University,
@@ -8,21 +8,15 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
     properties (Access=private)
         testDataRootDir
     end
-    properties (Access = private)
-        ellFactoryObj
-    end
     
     methods
         function self = EllipsoidIntUnionTC(varargin)
-            self = self@mlunitext.test_case(varargin{:});
+            self = self@elltool.core.test.mlunit.EllFactoryTC(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             shortClassName=mfilename('classname');
             self.testDataRootDir=[fileparts(which(className)),filesep,...
                 'TestData',...
                 filesep,shortClassName];          
-        end
-        function self = set_up_param(self, ellFactoryObj)
-            self.ellFactoryObj = ellFactoryObj;
         end
         function setUpCheckSettings(self)
             import elltool.conf.Properties;
@@ -44,9 +38,9 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllunionEa_inp.mat')), 'testEllCenterVec', ...
                 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
-            testEllVec(2) = self.ellFactoryObj.create();
-            testEllVec(1) = self.ellFactoryObj.create(testEllCenterVec, testEllMat);
-            testEllVec(2) = self.ellFactoryObj.create(testEllCenter2Vec, testEll2Mat);
+            testEllVec(2) = self.createEll();
+            testEllVec(1) = self.createEll(testEllCenterVec, testEllMat);
+            testEllVec(2) = self.createEll(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellunion_ea(testEllVec);
             
             testEllCenterVec = testEllCenterVec + sensEPS;
@@ -54,8 +48,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEllCenter2Vec = testEllCenter2Vec + sensEPS;
             testEll2Mat = testEll2Mat + sensEPS;
             
-            testEllVec(1) = self.ellFactoryObj.create(testEllCenterVec, testEllMat);
-            testEllVec(2) = self.ellFactoryObj.create(testEllCenter2Vec, testEll2Mat);
+            testEllVec(1) = self.createEll(testEllCenterVec, testEllMat);
+            testEllVec(2) = self.createEll(testEllCenter2Vec, testEll2Mat);
             
             resSensEllVec = ellunion_ea(testEllVec);
             
@@ -75,9 +69,9 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllintersectionIa_inp.mat')), 'testEllCenterVec', ...
                 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
-            testEllVec(2) = self.ellFactoryObj.create;
-            testEllVec(1) = self.ellFactoryObj.create(testEllCenterVec, testEllMat);
-            testEllVec(2) = self.ellFactoryObj.create(testEllCenter2Vec, testEll2Mat);
+            testEllVec(2) = self.createEll;
+            testEllVec(1) = self.createEll(testEllCenterVec, testEllMat);
+            testEllVec(2) = self.createEll(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellintersection_ia(testEllVec);
             
             testEllCenterVec = testEllCenterVec + sensEPS;
@@ -85,8 +79,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEllCenter2Vec = testEllCenter2Vec + sensEPS;
             testEll2Mat = testEll2Mat + sensEPS;
             
-            testEllVec(1) = self.ellFactoryObj.create(testEllCenterVec, testEllMat);
-            testEllVec(2) = self.ellFactoryObj.create(testEllCenter2Vec, testEll2Mat);
+            testEllVec(1) = self.createEll(testEllCenterVec, testEllMat);
+            testEllVec(2) = self.createEll(testEllCenter2Vec, testEll2Mat);
             
             resSensEllVec = ellintersection_ia(testEllVec);
             
@@ -96,45 +90,45 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         
         function self = testDoesContain(self)
             self.setUpCheckSettings();
-            testEll1Vec = self.ellFactoryObj.create(eye(3));
-            testEll2Vec = self.ellFactoryObj.create([10, 0, 5]',...
+            testEll1Vec = self.createEll(eye(3));
+            testEll2Vec = self.createEll([10, 0, 5]',...
                 [1, 0, 0; 0, 0, 0; 0, 0, 1]);
             isTestResVec = doesContain(testEll1Vec, testEll2Vec);
             mlunitext.assert_equals(false, isTestResVec);
             
-            testEll1Vec = self.ellFactoryObj.create(eye(3));
-            testEll2Vec = self.ellFactoryObj.create([1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testEll1Vec = self.createEll(eye(3));
+            testEll2Vec = self.createEll([1, 0, 0; 0, 0, 0; 0, 0, 1]);
             %testResVec = doesContain(testEll1Vec, testEll2Vec);
             %mlunitext.assert_equals(true, testResVec);
             
-            testEll1Vec = self.ellFactoryObj.create(eye(3));
-            testEll2Vec = self.ellFactoryObj.create(eye(3));
+            testEll1Vec = self.createEll(eye(3));
+            testEll2Vec = self.createEll(eye(3));
             isTestResVec = doesContain(testEll1Vec, testEll2Vec);
             mlunitext.assert_equals(true, isTestResVec);
             
-            testEll1Vec = self.ellFactoryObj.create(eye(3));
-            testEll2Vec = self.ellFactoryObj.create([1e-4, 1e-4, 0]', eye(3));
+            testEll1Vec = self.createEll(eye(3));
+            testEll2Vec = self.createEll([1e-4, 1e-4, 0]', eye(3));
             isTestResVec = doesContain(testEll1Vec, testEll2Vec);
             mlunitext.assert_equals(false, isTestResVec);
             
-            testEll1Vec = self.ellFactoryObj.create(4*eye(2));
-            testEll2Vec = self.ellFactoryObj.create([1, 0]', eye(2));
+            testEll1Vec = self.createEll(4*eye(2));
+            testEll2Vec = self.createEll([1, 0]', eye(2));
             isTestResVec = doesContain(testEll1Vec, testEll2Vec);
             mlunitext.assert_equals(true, isTestResVec);
             
             
-            testEll1Vec = self.ellFactoryObj.create(eye(2));
-            testEll2Vec = self.ellFactoryObj.create(zeros(2));
+            testEll1Vec = self.createEll(eye(2));
+            testEll2Vec = self.createEll(zeros(2));
             isTestResVec = doesContain(testEll1Vec, testEll2Vec);
             mlunitext.assert_equals(true, isTestResVec);
             
-            testEll1Vec = self.ellFactoryObj.create(eye(2));
-            testEll2Vec = self.ellFactoryObj.create([1, 0; 0, 0]);
+            testEll1Vec = self.createEll(eye(2));
+            testEll2Vec = self.createEll([1, 0; 0, 0]);
             isTestResVec = doesContain(testEll1Vec, testEll2Vec);
             mlunitext.assert_equals(true, isTestResVec);
             
-            testEll1Vec = self.ellFactoryObj.create([1, 0, 0; 0, 0, 0; 0, 0, 1]);
-            testEll2Vec = self.ellFactoryObj.create([1, 0, 0; 0, 0, 0; 0, 0, 0]);
+            testEll1Vec = self.createEll([1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testEll2Vec = self.createEll([1, 0, 0; 0, 0, 0; 0, 0, 0]);
             isTestResVec = doesContain(testEll1Vec, testEll2Vec);
             mlunitext.assert_equals(true, isTestResVec);
         end
@@ -145,7 +139,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 1.01*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            [isEq, reportStr] = isEqual(self.ellFactoryObj.create(test1Mat), self.ellFactoryObj.create(test2Mat));
+            [isEq, reportStr] = isEqual(self.createEll(test1Mat), self.createEll(test2Mat));
             mlunitext.assert_equals(false, isEq);
             ansStr = ...
                 '\(1).Q-->.*\(1.010000e\-05).*tolerance.\(1.000000e\-05)';
@@ -156,8 +150,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 0.5*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            [isEq, reportStr] = isEqual(self.ellFactoryObj.create(test1Mat),...
-                self.ellFactoryObj.create(test2Mat));
+            [isEq, reportStr] = isEqual(self.createEll(test1Mat),...
+                self.createEll(test2Mat));
             mlunitext.assert_equals(true, isEq);
             ansStr = '';
             checkRep();
@@ -165,8 +159,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
-            [isEq, reportStr] = isEqual(self.ellFactoryObj.create(test1Mat),...
-                self.ellFactoryObj.create(test2Mat));
+            [isEq, reportStr] = isEqual(self.createEll(test1Mat),...
+                self.createEll(test2Mat));
             mlunitext.assert_equals(false, isEq);
             mlunitext.assert_equals(false, isEq);
             ansStr = ...
@@ -185,19 +179,19 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         end
         
         function testIsInternalCenter(self)
-            my1EllVec(2) = self.ellFactoryObj.create([5; 5; 5; 5], ...
+            my1EllVec(2) = self.createEll([5; 5; 5; 5], ...
                 [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6]);
-            my1EllVec(1) = self.ellFactoryObj.create([5; 5; 5; 5], ...
+            my1EllVec(1) = self.createEll([5; 5; 5; 5], ...
                 [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6]);
-            my2EllVec(2) = self.ellFactoryObj.create(eye(4));
-            my2EllVec(1) = self.ellFactoryObj.create(eye(4));
+            my2EllVec(2) = self.createEll(eye(4));
+            my2EllVec(1) = self.createEll(eye(4));
             isOk = doesIntersectionContain(my2EllVec, my1EllVec, 'i');
             mlunitext.assert_equals(isOk,false);
         end
         
         function self = testIsInternal(self)
             nDim = 100;
-            testEllVec = self.ellFactoryObj.create(zeros(nDim, 1), eye(nDim));
+            testEllVec = self.createEll(zeros(nDim, 1), eye(nDim));
             testPointVec = zeros(nDim, 1);
             testResVec = isinternal(testEllVec, testPointVec);
             self.flexAssert(1, testResVec);
@@ -226,7 +220,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             
             nDim = 3;
-            testEllVec = self.ellFactoryObj.create(zeros(nDim, 1),...
+            testEllVec = self.createEll(zeros(nDim, 1),...
                 [1, 0, 0; 0, 2, 0; 0, 0, 0]);
             testPointVec = [0.3, -0.8, 0].';
             testResVec = isinternal(testEllVec, testPointVec);
@@ -238,8 +232,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             nDim = 2;
             
-            testEllVec(1) = self.ellFactoryObj.create(zeros(nDim, 1), eye(nDim));
-            testEllVec(2) = self.ellFactoryObj.create([2, 0].', eye(nDim));
+            testEllVec(1) = self.createEll(zeros(nDim, 1), eye(nDim));
+            testEllVec(2) = self.createEll([2, 0].', eye(nDim));
             testPointVec = [1, 0; 2, 0].';
             testResVec = isinternal(testEllVec, testPointVec, 'u');
             self.flexAssert([1, 1], testResVec);
@@ -247,7 +241,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert([1, 0], testResVec);
             
             for iNum = 1:1000
-                testEllVec(iNum) = self.ellFactoryObj.create(eye(2));
+                testEllVec(iNum) = self.createEll(eye(2));
             end;
             testPointVec = [0, 0].';
             testResVec = isinternal(testEllVec, testPointVec, 'i');
@@ -258,44 +252,44 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         function self = testPolar(self)
             
             nDim = 100;
-            testEllVec = self.ellFactoryObj.create(zeros(nDim, 1), eye(nDim));
+            testEllVec = self.createEll(zeros(nDim, 1), eye(nDim));
             polarEllipsoid = polar(testEllVec);
             self.flexAssert(true, eq(testEllVec, polarEllipsoid));
             
             nDim = 100;
-            testSingEllVec = self.ellFactoryObj.create(zeros(nDim, 1), zeros(nDim));
+            testSingEllVec = self.createEll(zeros(nDim, 1), zeros(nDim));
             self.runAndCheckError...
                 ('polar(testSingEllVec)','degenerateEllipsoid');
             
             nDim = 3;
-            testSingEllVec = self.ellFactoryObj.create(zeros(nDim, 1),...
+            testSingEllVec = self.createEll(zeros(nDim, 1),...
                 [1, 0, 0; 0, 2, 0; 0, 0, 0]);
             self.runAndCheckError...
                 ('polar(testSingEllVec)','degenerateEllipsoid');
             
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create(zeros(nDim, 1), [2, 0; 0, 1]);
+            testEllVec = self.createEll(zeros(nDim, 1), [2, 0; 0, 1]);
             polarEllVec = polar(testEllVec);
-            ansEllVec = self.ellFactoryObj.create(zeros(nDim, 1), [0.5, 0; 0, 1]);
+            ansEllVec = self.createEll(zeros(nDim, 1), [0.5, 0; 0, 1]);
             self.flexAssert(true, eq(polarEllVec, ansEllVec));
             
             
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create([0, 0.5].', eye(2));
+            testEllVec = self.createEll([0, 0.5].', eye(2));
             polarEllVec = polar(testEllVec);
-            ansEllVec = self.ellFactoryObj.create([0, -2/3].', [4/3, 0; 0, 16/9]);
+            ansEllVec = self.createEll([0, -2/3].', [4/3, 0; 0, 16/9]);
             self.flexAssert(true, eq(polarEllVec, ansEllVec));
         end
         function self = testIntersect(self)
             %problem is infeasible
             nDim = 2;
-            testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-            testEllVec(2) = self.ellFactoryObj.create([2, 2].', eye(nDim));
+            testEllVec(1) = self.createEll(eye(nDim));
+            testEllVec(2) = self.createEll([2, 2].', eye(nDim));
             testHyperplane = hyperplane([1, 0].', 10);
             testResVec = intersect(testEllVec, testHyperplane, 'i');
             self.flexAssert(-1, testResVec);
             
-            testEllVec_2 = self.ellFactoryObj.create(eye(nDim));
+            testEllVec_2 = self.createEll(eye(nDim));
             testResVec = intersect(testEllVec, testEllVec_2, 'i');
             self.flexAssert(-1, testResVec);
             
@@ -304,77 +298,77 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             %with ellipsoid
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
-            testEllVec_2 = self.ellFactoryObj.create([1000, -1000].', eye(nDim));
+            testEllVec = self.createEll(eye(nDim));
+            testEllVec_2 = self.createEll([1000, -1000].', eye(nDim));
             testResVec = intersect(testEllVec, testEllVec_2, 'i');
             self.flexAssert(0, testResVec);
             
             %degenerate ellipsoid
             nDim = 3;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
-            testEllVec_2 = self.ellFactoryObj.create([1, 0, 0; 0, 0, 0; 0, 0, 1]);
+            testEllVec = self.createEll(eye(nDim));
+            testEllVec_2 = self.createEll([1, 0, 0; 0, 0, 0; 0, 0, 1]);
             testResVec = intersect(testEllVec, testEllVec_2);
             self.flexAssert(1, testResVec);
             
             nDim = 3;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
-            testEllVec_2 = self.ellFactoryObj.create([10, 0, 0].',...
+            testEllVec = self.createEll(eye(nDim));
+            testEllVec_2 = self.createEll([10, 0, 0].',...
                 [1, 0, 0; 0, 0, 0; 0, 0, 1]);
             testResVec = intersect(testEllVec, testEllVec_2);
             self.flexAssert(0, testResVec);
             %with hyperplane
             
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create([1000, -1000].', eye(nDim));
+            testEllVec = self.createEll([1000, -1000].', eye(nDim));
             testHyperPlane = hyperplane([1, 0].', 10);
             testResVec = intersect(testEllVec, testHyperPlane);
             self.flexAssert(0, testResVec);
             
             %two ellipsoids
             nDim = 2;
-            testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-            testEllVec(2) = self.ellFactoryObj.create([1, 0].', eye(nDim));
-            testEllVec_2 = self.ellFactoryObj.create([100, -100].', eye(nDim));
+            testEllVec(1) = self.createEll(eye(nDim));
+            testEllVec(2) = self.createEll([1, 0].', eye(nDim));
+            testEllVec_2 = self.createEll([100, -100].', eye(nDim));
             testResVec = intersect(testEllVec, testEllVec_2, 'i');
             self.flexAssert(0, testResVec);
             %intersection is not empty
             
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
+            testEllVec = self.createEll(eye(nDim));
             testResVec = intersect(testEllVec, testEllVec);
             self.flexAssert(1, testResVec);
             
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
-            testEllVec_2 = self.ellFactoryObj.create([2, 0].', eye(nDim));
+            testEllVec = self.createEll(eye(nDim));
+            testEllVec_2 = self.createEll([2, 0].', eye(nDim));
             testResVec = intersect(testEllVec, testEllVec_2);
             self.flexAssert(1, testResVec);
             
             
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
-            testEllVec_2 = self.ellFactoryObj.create([1, 0].', eye(nDim));
+            testEllVec = self.createEll(eye(nDim));
+            testEllVec_2 = self.createEll([1, 0].', eye(nDim));
             testResVec = intersect(testEllVec, testEllVec_2);
             self.flexAssert(1, testResVec);
             
             nDim = 2;
-            testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-            testEllVec(2) = self.ellFactoryObj.create([1, 0].', eye(nDim));
-            testEllVec_2 = self.ellFactoryObj.create([0, 1].', eye(nDim));
+            testEllVec(1) = self.createEll(eye(nDim));
+            testEllVec(2) = self.createEll([1, 0].', eye(nDim));
+            testEllVec_2 = self.createEll([0, 1].', eye(nDim));
             testResVec = intersect(testEllVec, testEllVec_2, 'i');
             self.flexAssert(1, testResVec);
             
             nDim = 2;
-            testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-            testEllVec(2) = self.ellFactoryObj.create([2, 0].', eye(nDim));
-            testEllVec_2 = self.ellFactoryObj.create([1, 1].', eye(nDim));
+            testEllVec(1) = self.createEll(eye(nDim));
+            testEllVec(2) = self.createEll([2, 0].', eye(nDim));
+            testEllVec_2 = self.createEll([1, 1].', eye(nDim));
             testResVec = intersect(testEllVec, testEllVec_2, 'u');
             self.flexAssert(1, testResVec);
             
             %hyperplane
             nDim = 2;
-            testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-            testEllVec(2) = self.ellFactoryObj.create([2, 0].', eye(nDim));
+            testEllVec(1) = self.createEll(eye(nDim));
+            testEllVec(2) = self.createEll([2, 0].', eye(nDim));
             testHp = hyperplane([1, 0].', 1);
             testResVec = intersect(testEllVec, testHp, 'i');
             self.flexAssert(1, testResVec);
@@ -383,7 +377,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             %test intersect(ell1Arr,ell2Arr), where ell1Arr and ell2Arr have
             %same sizes, and non-scalar
             for iEll = 12:-1:1
-                testEllArr(iEll) = self.ellFactoryObj.create(eye(3));
+                testEllArr(iEll) = self.createEll(eye(3));
             end
             testEllArr = reshape(testEllArr,2,3,2);
             testIntResArr = ones(size(testEllArr));
@@ -397,7 +391,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.setUpCheckSettings()
             nDim = 10;
             nArr = 15;
-            eyeEllipsoid = self.ellFactoryObj.create(eye(nDim));
+            eyeEllipsoid = self.createEll(eye(nDim));
             for iArr = 1:nArr
                 testEllVec(iArr) = eyeEllipsoid;
             end;
@@ -410,11 +404,11 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             clear testEllVec;
             
             nDim = 2;
-            testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-            testEllVec(2) = self.ellFactoryObj.create([1, 0].', eye(nDim));
+            testEllVec(1) = self.createEll(eye(nDim));
+            testEllVec(2) = self.createEll([1, 0].', eye(nDim));
             resEllVec = ellintersection_ia(testEllVec);
             
-            ansEllVec = self.ellFactoryObj.create([0.5, 0]', [0.235394505823186,...
+            ansEllVec = self.createEll([0.5, 0]', [0.235394505823186,...
                 0; 0, 0.578464829541428]);
             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
@@ -423,14 +417,14 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             clear testEllVec;
             nDim = 2;
-            testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-            testEllVec(2) = self.ellFactoryObj.create([1, 0].', eye(nDim));
-            testEllVec(3) = self.ellFactoryObj.create([0, 1].', eye(nDim));
+            testEllVec(1) = self.createEll(eye(nDim));
+            testEllVec(2) = self.createEll([1, 0].', eye(nDim));
+            testEllVec(3) = self.createEll([0, 1].', eye(nDim));
             resEllVec = ellintersection_ia(testEllVec);
             ansEllCenterVec =  [0.407334113249147, 0.407334108829435].';
             ansEllMat = [0.125814744141070, 0.053912566043053;...
                 0.053912566043053, 0.125814738841440];
-            ansEllVec = self.ellFactoryObj.create(ansEllCenterVec, ansEllMat);
+            ansEllVec = self.createEll(ansEllCenterVec, ansEllMat);
             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
             self.flexAssert(true, doesContain(testEllVec(1), resEllVec));
@@ -440,10 +434,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             clear testEllVec;
             nDim = 3;
-            testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-            testEllVec(2) = self.ellFactoryObj.create([1, 0.5, -0.5].', ...
+            testEllVec(1) = self.createEll(eye(nDim));
+            testEllVec(2) = self.createEll([1, 0.5, -0.5].', ...
                 [2, 0, 0; 0, 1, 0; 0, 0, 0.5]);
-            testEllVec(3) = self.ellFactoryObj.create([0.5, 0.3, 1].', ...
+            testEllVec(3) = self.createEll([0.5, 0.3, 1].', ...
                 [0.5, 0, 0; 0, 0.5, 0; 0, 0, 2]);
             resEllVec = ellintersection_ia(testEllVec);
             
@@ -453,7 +447,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 0.011041318375176; -0.005159338786834, 0.161491682085078,...
                 0.014052111019755; 0.011041318375176,...
                 0.014052111019755, 0.062235791525665];
-            ansEllVec = self.ellFactoryObj.create(ansEllCenterVec, ansEllMat);
+            ansEllVec = self.createEll(ansEllCenterVec, ansEllMat);
             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
             self.flexAssert(true, doesContain(testEllVec(1), resEllVec));
@@ -464,13 +458,13 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllintersection_inpSimple.mat')), 'testEllCenterVec',...
                 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
-            testEllVec(1) = self.ellFactoryObj.create(testEllCenterVec, testEllMat);
-            testEllVec(2) = self.ellFactoryObj.create(testEllCenter2Vec, testEll2Mat);
+            testEllVec(1) = self.createEll(testEllCenterVec, testEllMat);
+            testEllVec(2) = self.createEll(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellintersection_ia(testEllVec);
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllintersection_outSimple.mat')), ...
                 'ansEllCenterVec', 'ansEllMat');
-            ansEllVec = self.ellFactoryObj.create(ansEllCenterVec, ansEllMat);
+            ansEllVec = self.createEll(ansEllCenterVec, ansEllMat);
             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
             self.flexAssert(true, doesContain(testEllVec(1), resEllVec));
@@ -480,13 +474,13 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllintersectionIa_inp.mat')), 'testEllCenterVec', ...
                 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
-            testEllVec(1) = self.ellFactoryObj.create(testEllCenterVec, testEllMat);
-            testEllVec(2) = self.ellFactoryObj.create(testEllCenter2Vec, testEll2Mat);
+            testEllVec(1) = self.createEll(testEllCenterVec, testEllMat);
+            testEllVec(2) = self.createEll(testEllCenter2Vec, testEll2Mat);
             resEllVec = ellintersection_ia(testEllVec);
             load(strcat(self.testDataRootDir, strcat(filesep, ...
                 'testEllintersectionIa_out.mat')),...
                 'ansEllCenterVec', 'ansEllMat');
-            ansEllVec = self.ellFactoryObj.create(ansEllCenterVec, ansEllMat);
+            ansEllVec = self.createEll(ansEllCenterVec, ansEllMat);
             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
             self.flexAssert(1, isEq, reportStr);
             self.flexAssert(1, doesContain(testEllVec(1), resEllVec));
@@ -494,8 +488,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             clear testEllVec;
             nDim = 2;
-            testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-            testEllVec(2) = self.ellFactoryObj.create([100, 0]', eye(nDim));
+            testEllVec(1) = self.createEll(eye(nDim));
+            testEllVec(2) = self.createEll([100, 0]', eye(nDim));
 
             self.runAndCheckError('testEllVec.ellintersection_ia()',...
                 'ELLIPSOID:ELLINTERSECTION_IA:cvxError');
@@ -516,8 +510,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             function checkIfSameCentersEll(firstEllShMat,secEllShMat)
                 
-                firstTestEllVec(1) = self.ellFactoryObj.create(firstEllShMat);
-                firstTestEllVec(2) = self.ellFactoryObj.create(secEllShMat);
+                firstTestEllVec(1) = self.createEll(firstEllShMat);
+                firstTestEllVec(2) = self.createEll(secEllShMat);
                 
                 secTestEllVec = [firstTestEllVec firstTestEllVec(2)];
                 
@@ -534,7 +528,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
 %             nDim = 10;
 %             
 %             nArr = 15;
-%             eyeEllipsoid = self.ellFactoryObj.create(eye(nDim));
+%             eyeEllipsoid = self.createEll(eye(nDim));
 %             for iArr = 1:nArr
 %                 testEllVec(iArr) = eyeEllipsoid;
 %             end;
@@ -629,76 +623,76 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         function self = testHpIntersection(self)
             %empty intersection
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create([100, -100]', eye(nDim));
+            testEllVec = self.createEll([100, -100]', eye(nDim));
             testHpVec = hyperplane([0 -1]', 1);
             resEllVec = hpintersection(testEllVec, testHpVec);
-            ansEllVec = self.ellFactoryObj.create;
+            ansEllVec = self.createEll;
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
+            testEllVec = self.createEll(eye(nDim));
             testHpVec = hyperplane([1, 0].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
-            ansEllVec = self.ellFactoryObj.create([0, 0; 0, 1]);    
+            ansEllVec = self.createEll([0, 0; 0, 1]);    
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
+            testEllVec = self.createEll(eye(nDim));
             testHpVec = hyperplane([0, 1].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
-            ansEllVec = self.ellFactoryObj.create([1, 0; 0, 0]);
+            ansEllVec = self.createEll([1, 0; 0, 0]);
             %[isEq, reportStr] = isEqual(resEllVec, ansEllVec)
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
+            testEllVec = self.createEll(eye(nDim));
             testHpVec = hyperplane([1, 1].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
-            ansEllVec = self.ellFactoryObj.create([0.5, -0.5; -0.5, 0.5]);
+            ansEllVec = self.createEll([0.5, -0.5; -0.5, 0.5]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
+            testEllVec = self.createEll(eye(nDim));
             testHpVec = hyperplane([1, 0].', 1);
             resEllVec = hpintersection(testEllVec, testHpVec);
-            ansEllVec = self.ellFactoryObj.create([1, 0].', [0, 0; 0, 0]);
+            ansEllVec = self.createEll([1, 0].', [0, 0; 0, 0]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 3;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
+            testEllVec = self.createEll(eye(nDim));
             testHpVec = hyperplane([0, 0, 1].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
-            ansEllVec = self.ellFactoryObj.create([1, 0, 0; 0, 1, 0; 0, 0, 0]);
+            ansEllVec = self.createEll([1, 0, 0; 0, 1, 0; 0, 0, 0]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 3;
-            testEllVec = self.ellFactoryObj.create([3, 0, 0; 0, 2, 0; 0, 0, 4]);
+            testEllVec = self.createEll([3, 0, 0; 0, 2, 0; 0, 0, 4]);
             testHpVec = hyperplane([0, 1, 0].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
-            ansEllVec = self.ellFactoryObj.create([3, 0, 0; 0, 0, 0; 0, 0, 4]);
+            ansEllVec = self.createEll([3, 0, 0; 0, 0, 0; 0, 0, 4]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             
             nDim = 3;
-            testEllVec = self.ellFactoryObj.create(eye(3));
+            testEllVec = self.createEll(eye(3));
             testHpVec = hyperplane([1, 1, 1].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
-            ansEllVec = self.ellFactoryObj.create([2/3, -1/3, -1/3; -1/3, 2/3, -1/3; ...
+            ansEllVec = self.createEll([2/3, -1/3, -1/3; -1/3, 2/3, -1/3; ...
                 -1/3, -1/3, 2/3]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             
             
             nDim = 3;
-            testEllVec = self.ellFactoryObj.create([1, 0, 0; 0, 1, 0; 0, 0, 4]);
+            testEllVec = self.createEll([1, 0, 0; 0, 1, 0; 0, 0, 4]);
             testHpVec = hyperplane([0, 0, 1].', 2);
             resEllVec = hpintersection(testEllVec, testHpVec);
-            ansEllVec = self.ellFactoryObj.create([0, 0, 2].', ...
+            ansEllVec = self.createEll([0, 0, 2].', ...
                 [0, 0, 0; 0, 0, 0; 0, 0, 0]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 100;
-            testEllVec = self.ellFactoryObj.create(eye(nDim));
+            testEllVec = self.createEll(eye(nDim));
             PlaneNorm = zeros(nDim, 1);
             PlaneNorm(1) = 1;
             testHpVec = hyperplane(PlaneNorm, 0);
@@ -706,37 +700,37 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllMat = eye(nDim);
             ansEllMat(1) = 0;
-            ansEllVec = self.ellFactoryObj.create(zeros(nDim, 1), ansEllMat);
+            ansEllVec = self.createEll(zeros(nDim, 1), ansEllMat);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             
             %two output arguments
             nDim = 2;
-            testEllVec = self.ellFactoryObj.create([100, -100].', eye(nDim));
+            testEllVec = self.createEll([100, -100].', eye(nDim));
             testHpVec = hyperplane([0 -1].', 1);
             [resEllVec, isnIntersected] = hpintersection(testEllVec, ...
                 testHpVec);
-            ansEllVec = self.ellFactoryObj.create;
+            ansEllVec = self.createEll;
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             self.flexAssert(true, isnIntersected);
             
             nDim = 2;
-            testEllMat(1, 1) = self.ellFactoryObj.create([100, -100].', eye(nDim));
+            testEllMat(1, 1) = self.createEll([100, -100].', eye(nDim));
             testHpMat(1, 1) = hyperplane([0 -1].', 1);
-            testEllMat(2, 2) = self.ellFactoryObj.create([100, -100].', eye(nDim));
+            testEllMat(2, 2) = self.createEll([100, -100].', eye(nDim));
             testHpMat(2, 2) = hyperplane([0 -1].', 1);
-            testEllMat(1, 2) = self.ellFactoryObj.create(eye(nDim));
+            testEllMat(1, 2) = self.createEll(eye(nDim));
             testHpMat(1, 2) = hyperplane([0, 1].', 0);
-            testEllMat(2, 1) = self.ellFactoryObj.create(eye(nDim));
+            testEllMat(2, 1) = self.createEll(eye(nDim));
             testHpMat(2, 1) = hyperplane([0, 1].', 0);
             [resEllMat, isnIntersected] = hpintersection(testEllMat, ...
                 testHpMat);
             
             clear ansEllMat;
-            ansEllMat(1, 1) = self.ellFactoryObj.create;
-            ansEllMat(2, 2) = self.ellFactoryObj.create;
-            ansEllMat(1, 2) = self.ellFactoryObj.create([1, 0; 0, 0]);
-            ansEllMat(2, 1) = self.ellFactoryObj.create([1, 0; 0, 0]);
+            ansEllMat(1, 1) = self.createEll;
+            ansEllMat(2, 2) = self.createEll;
+            ansEllMat(1, 2) = self.createEll([1, 0; 0, 0]);
+            ansEllMat(2, 1) = self.createEll([1, 0; 0, 0]);
             ansIsnIntersectedMat = [true, false; false, true];
             self.flexAssert([true, true; true, true], eq(resEllMat, ...
                 ansEllMat));
@@ -745,16 +739,16 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             %Arrays
             arrSizeVec=[2,2,2];
             nElem=prod(arrSizeVec);
-            testEll1=self.ellFactoryObj.create(eye(3));
-            testEll2=self.ellFactoryObj.create([2/3, -1/3, -1/3; -1/3, 2/3, -1/3; ...
+            testEll1=self.createEll(eye(3));
+            testEll2=self.createEll([2/3, -1/3, -1/3; -1/3, 2/3, -1/3; ...
                 -1/3, -1/3, 2/3]);
-            ellArr(nElem)=self.ellFactoryObj.create();
+            ellArr(nElem)=self.createEll();
             arrayfun(@(x)fCopyEll(x,testEll1),1:prod(arrSizeVec));
             ellArr=reshape(ellArr,arrSizeVec);
             
             testHp = hyperplane([1, 1, 1].', 0);
             resEllArr = hpintersection(ellArr, testHp);
-            ellArr(nElem)=self.ellFactoryObj.create();
+            ellArr(nElem)=self.createEll();
             ellArr=reshape(ellArr,arrSizeVec);
             arrayfun(@(x)fCopyEll(x,testEll2),1:prod(arrSizeVec));
             
@@ -762,7 +756,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(true, all(isEqArr(:)));
             
             testHpArr = repmat(hyperplane([0, 0, 1].', 2),[2,2,2]);
-            testEll = self.ellFactoryObj.create(eye(3));
+            testEll = self.createEll(eye(3));
             [resEllArr isnIntersecArr] = hpintersection(testEll, testHpArr);
             self.flexAssert(true([2,2,2]), resEllArr.isEmpty());
             self.flexAssert(true([2,2,2]), isnIntersecArr);
