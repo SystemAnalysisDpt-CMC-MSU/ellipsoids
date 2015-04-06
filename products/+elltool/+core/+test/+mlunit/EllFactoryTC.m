@@ -11,7 +11,9 @@ classdef EllFactoryTC < mlunitext.test_case
         function self = set_up_param(self, ellFactoryObj)
             self.ellFactoryObj = ellFactoryObj;
         end
-        
+    end
+
+    methods (Access = protected)        
         function ellObj = createEll(self, varargin)
             ellObj = self.ellFactoryObj.create(varargin{:});
         end
