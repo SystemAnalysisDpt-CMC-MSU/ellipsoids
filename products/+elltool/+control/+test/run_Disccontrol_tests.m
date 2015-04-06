@@ -8,7 +8,7 @@ crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 %
 confCMat = {
-    'varTest', [1 1],[-3 4; -3 4.70281982421875; -3 5]; 
+    'ellDemo3test',[1 1],[1 1];
     };
 nConfs = size(confCMat, 1);
 suiteList = {};

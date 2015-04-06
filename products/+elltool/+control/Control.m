@@ -96,22 +96,22 @@ classdef Control
             REL_TOL = 1e-4;
             ABS_TOL = 1e-4;
             trajectory = [];
-            switchTimeVecLenght = numel(switchSysTimeVec);
+            switchTimeVecLenght = length(switchSysTimeVec);
             SOptions = odeset('RelTol',REL_TOL,'AbsTol',ABS_TOL);
             properTube = self.controlVectorFunct.getITube();
             self.properEllTube.scale(@(x)1/sqrt(self.downScaleKoeff),'QArray'); 
 
             for iSwitch = 1:switchTimeVecLenght-1                 
-                iTube = 1;
+%                 iTube = 1;
                 iSwitchBack = switchTimeVecLenght - iSwitch;
-                if (iSwitchBack > 1)
-                    iTube = properTube;
-                end
+%                 if (iSwitchBack > 1)
+%                     iTube = properTube;
+%                 end
                 tStart = switchSysTimeVec(iSwitch);
                 tFin = switchSysTimeVec(iSwitch+1);
-               
-                indFin = find(self.properEllTube.timeVec{1}==tFin);
-                AtMat = self.probDynamicsList{iSwitchBack}{iTube}.getAtDynamics();
+                
+                indFin = find(self.properEllTube.timeVec{1} == tFin);
+                AtMat = self.probDynamicsList{iSwitchBack}{1}.getAtDynamics();
                 
                 [~,odeResMat] = ode45(@(t,y)ode(t,y,AtMat,self.controlVectorFunct,tFin),[tStart tFin],x0Vec',SOptions);
              
@@ -122,18 +122,19 @@ classdef Control
                 
                 if (isX0inSet)&&(currentScalProd > 1 + ERR_TOL)
                     throwerror('TestFails',...
-                        'the result of test does not correspond with theory');
+                        ['the result of test does not correspond with theory, ', num2str(currentScalProd)]);
                 end
                 if (~isX0inSet)&&(currentScalProd < 1 - ERR_TOL)
                     throwerror('TestFails',...
-                        'the result of test does not correspond with theory');
+                        ['the result of test does not correspond with theory, ', num2str(currentScalProd)]);
                 end
+                
                 x0Vec = odeResMat(end,:);
                 trajectory = cat(1,trajectory,odeResMat);
             end
             
             function dyMat = ode(time,yMat,AtMat,controlFuncVec,tFin)
-               dyMat = -AtMat.evaluate(tFin-time)*yMat+controlFuncVec.evaluate(yMat,time);
+               dyMat = -AtMat.evaluate(tFin-time)*yMat + controlFuncVec.evaluate(yMat,time);
             end
             
             
