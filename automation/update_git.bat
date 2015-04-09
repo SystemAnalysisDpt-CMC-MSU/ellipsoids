@@ -12,7 +12,8 @@ if "%~1"=="" (
 set repo_dir=%1
 
 cd %repo_dir%
-git clean -f -d
-git pull
-
+@echo off
+for /f %%i in ('git rev-parse --abbrev-ref --symbolic-full-name @{u}') do set remote_branch_name=%%i
+@echo on
+git reset --hard %remote_branch_name%
 :: --non-interactive
