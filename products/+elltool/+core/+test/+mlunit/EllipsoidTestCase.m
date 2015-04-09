@@ -886,35 +886,33 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '\(1).Q-->.*\(2.31662.*).*tolerance.\(1.00000.*e\-05)');
+                '(1).Q-->Max. absolute difference (2.3166247903553998) is greater than the specified tolerance (1.0000000000000001e-05)');
             
             [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(2);
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '\(1).Q-->.*\(2.31662.*).*tolerance.\(1.00000.*e\-05)');
+                '(1).Q-->Max. absolute difference (2.3166247903553998) is greater than the specified tolerance (1.0000000000000001e-05)');
             
             [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(3);
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '\(1).Q-->.*\(2.31662.*).*tolerance.\(1.00000.*e\-05)');
-            
+                '(1).Q-->Max. absolute difference (2.3166247903553998) is greater than the specified tolerance (1.0000000000000001e-05)'); 
+ 
             
             checkEllEqual(testEllipsoid1, testEllipsoid1, true, '');
             
             checkEllEqual(testEllipsoid2, testEllipsoid1, false, ...
-                '\(1).q-->.*\(1.*).*tolerance.\(1.00000.*e\-05)');
+                '(1).q-->Max. absolute difference (1) is greater than the specified tolerance (1.0000000000000001e-05)');
             
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-                '\(1).Q-->.*\(4.14213.*e\-01).*tolerance.\(1.00000.*e\-05)',...
-                '\(1).Q-->.*\(0.414213.*).*tolerance.\(1.00000.*e\-05)');
+                '(1).Q-->Max. absolute difference (0.41421356237309515) is greater than the specified tolerance (1.0000000000000001e-05)');
             
             
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-                '\(1).Q-->.*\(4.14213.*e\-01).*tolerance.\(1.00000.*e\-05)',...
-                '\(1).Q-->.*\(0.414213.*).*tolerance.\(1.00000.*e\-05)');
+                '(1).Q-->Max. absolute difference (0.41421356237309515) is greater than the specified tolerance (1.0000000000000001e-05)');
             
             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
@@ -938,100 +936,6 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
             checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr);
         end
-        %
-        %             test1Mat = 100*eye(2);
-        %             test2Mat = 100*eye(2) - 0.99*MAX_TOL;
-        %             self.checkEllEqual(self.ellFactoryObj.create(test1Mat), self.ellFactoryObj.create(test2Mat), true, '');
-        %             %
-        %             %test for maxTolerance
-        %             firstMat = eye(2);
-        %             secMat = eye(2)+1;
-        %             secVec = [1;0];
-        %             maxTol = 1;
-        %             ell1 = self.ellFactoryObj.create(firstMat);
-        %             ell2 = self.ellFactoryObj.create(secVec,secMat);
-        %             [isOk,reportStr]=ell1.isEqual(ell2);
-        %             mlunitext.assert(~isOk,reportStr);
-        %             %
-        %             %
-        %             testEll = self.ellFactoryObj.create(eye(2));
-        %             testEll2 = self.ellFactoryObj.create([1e-3, 0].', eye(2));
-        %             mDim = 10;
-        %             nDim = 15;
-        %             testEllArr = repmat(testEll, mDim, nDim);
-        %             isEqualArr = true(mDim, nDim);
-        %             isnEqualArr = ~isEqualArr;
-        %             mlunitext.assert_equals(isEqualArr, testEll.eq(testEllArr));
-        %             mlunitext.assert_equals(isEqualArr, testEllArr.eq(testEll));
-        %             mlunitext.assert_equals(isnEqualArr, testEll2.eq(testEllArr));
-        %             mlunitext.assert_equals(isnEqualArr, testEllArr.eq(testEll2));
-        %
-        %             testEll2Arr = repmat(testEll2, mDim, nDim);
-        %             mlunitext.assert_equals(isEqualArr, testEllArr.eq(testEllArr));
-        %             mlunitext.assert_equals(isnEqualArr, testEll2Arr.eq(testEllArr));
-        %
-        %             self.runAndCheckError...
-        %                 ('eq([testEll, testEll2], [testEll; testEll2])','wrongSizes');
-        %
-        %             [testEllipsoid1 testEllipsoid2 testEllipsoid3 testEllipsoidZeros2 ...
-        %                 testEllipsoidZeros3 testEllipsoidEmpty] = self.createTypicalEll(1);
-        %             [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(1);
-        %
-        %
-        %             self.checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
-        %
-        %             self.checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-        %                 '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
-        %
-        %             [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(2);
-        %             self.checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
-        %
-        %
-        %             self.checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-        %                 '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
-        %
-        %             [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(3);
-        %             self.checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
-        %
-        %             self.checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-        %                 '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
-        %
-        %
-        %             self.checkEllEqual(testEllipsoid1, testEllipsoid1, true, '');
-        %
-        %             self.checkEllEqual(testEllipsoid2, testEllipsoid1, false, ...
-        %                 '\(1).q-->.*\(1.000000e\+00).*tolerance.\(1.000000e\-05)');
-        %
-        %             self.checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-        %                 '\(1).Q-->.*\(4.142136e\-01).*tolerance.\(1.000000e\-05)');
-        %
-        %
-        %             self.checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-        %                 '\(1).Q-->.*\(4.142136e\-01).*tolerance.\(1.000000e\-05)');
-        %
-        %             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
-        %             self.checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
-        %
-        %
-        %             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [0 0])\n(1).q-->Different sizes (left: [2 1], right: [0 0])');
-        %             self.checkEllEqual(testEllipsoidZeros2, testEllipsoidEmpty, false, ansStr);
-        %
-        %
-        %             self.checkEllEqual(testEllipsoidEmpty, testEllipsoidEmpty, true, '');
-        %
-        %             testNotEllipsoid = [];
-        %             %'==: both arguments must be ellipsoids.'
-        %             self.runAndCheckError('eq(testEllipsoidEmpty, testNotEllipsoid)','wrongInput:emptyArray');
-        %
-        %             %'==: sizes of ellipsoidal arrays do not match.'
-        %             self.runAndCheckError('eq([testEllipsoidEmpty testEllipsoidEmpty], [testEllipsoidEmpty; testEllipsoidEmpty])','wrongSizes');
-        %
-        %
-        %
-        %             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
-        %             self.checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr);
-        %         end
-        %
         function self = testNe(self)
             [testEllipsoid1 testEllipsoid2 testEllipsoid3 testEllipsoidZeros2 testEllipsoidZeros3 ...
                 testEllipsoidEmpty] = self.createTypicalEll(1);
@@ -1270,6 +1174,8 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
         end
         %
         function self = testMtimes(self)
+            absTol = elltool.conf.Properties.getAbsTol();
+            
             testEllipsoid1 = self.createEll([1; 1], eye(2));
             
             [testHighDimShapeMat testHighDimMat] = self.createTypicalHighDimEll(4);
@@ -1305,7 +1211,11 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
                 0.255693118460086 - 0.343438979993794i];
             testEllipsoid3 = self.createEll(diag(1:1:4));
             resEll = mtimes(AMat, testEllipsoid3);
-            ansEll = self.createEll(zeros(4, 1), AMat*diag(1:1:4)*AMat');
+            shapeMat = AMat*diag(1:1:4)*AMat';
+            if norm(imag(shapeMat)) < absTol
+                shapeMat = real(shapeMat);
+            end
+            ansEll = self.createEll(zeros(4, 1), shapeMat);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
@@ -1383,48 +1293,6 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
                 '([1; 1], eye(2), [2; 2; 3.5])'),...
                 'wrongInput');
         end
-        %
-        %         function self = testMultiDimensionalConstructor(self)
-        %             % one argument
-        %             testShape = [2,0;0,3];
-        %             testEll = self.ellFactoryObj.create(testShape);
-        %             testShMatArray = zeros(2,2,3,4);
-        %             testShMatArray(:,:,1,3) = testShape;
-        %             testEllArray = self.ellFactoryObj.create(testShMatArray);
-        %             mlunitext.assert(eq(testEllArray(1,3),testEll));
-        %             % two arguments and properties
-        %             testShape = [2,0;0,3];
-        %             testCent = [1;5];
-        %             testEll = self.ellFactoryObj.create(testCent, testShape);
-        %             testCentArray = zeros(2,3,4);
-        %             testCentArray(:,1,3) = testCent;
-        %             testEllArray1 = self.ellFactoryObj.create(testCentArray, testShMatArray);
-        %             testEllArray2 = self.ellFactoryObj.create(testCentArray, testShMatArray, ...
-        %                 'absTol', 1e-3);
-        %             mlunitext.assert(eq(testEllArray1(1,3),testEll));
-        %             mlunitext.assert(eq(testEllArray2(1,3),testEll));
-        %             %3d constructor case
-        %             testShMatArray = zeros(2,2,3);
-        %             testShMatArray(:,:,1) = testShape;
-        %             testCentArray = zeros(2,3);
-        %             testCentArray(:,1) = testCent;
-        %             testEllArray = self.ellFactoryObj.create(testCentArray, testShMatArray);
-        %             mlunitext.assert(eq(testEllArray(1),testEll));
-        %             % bad dimensions
-        %             self.runAndCheckError(...
-        %                 'self.ellFactoryObj.create(zeros(3,4,5,6),zeros(3,3,5,5,6))',...
-        %                 'wrongInput');
-        %             self.runAndCheckError(...
-        %                 'self.ellFactoryObj.create(zeros(3,4,5,6,7,8),zeros(3,3,5,5,6))',...
-        %                 'wrongInput');
-        %             self.runAndCheckError(...
-        %                 'self.ellFactoryObj.create(zeros(3,4,5,6,7,8),zeros(3,3,5,5,6,6,6))',...
-        %                 'wrongInput');
-        %             self.runAndCheckError(...
-        %                 'self.ellFactoryObj.create(zeros(3),zeros(3))',...
-        %                 'wrongInput');
-        %         end
-        %
         function self = testGetCopy(self)
             ellMat(3, 3) = self.createEll;
             ellMat(1) = self.createEll(eye(3));
@@ -1462,27 +1330,6 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
             minksum_ia([self.createEll(zeros(4, 1), sh1Mat),...
                 self.createEll(zeros(4, 1), sh2Mat)], [0 0 1 0]');
         end
-        %
-        %         function self = testToStruct(self)
-        %             centerCVec{1} = [1 2 3];
-        %             shapeMatCVec{1} = eye(3);
-        %             centerCVec{2} = [2 3 4];
-        %             shapeMatCVec{2} = ones(3);
-        %             centerCVec{3} = [1 0];
-        %             shapeMatCVec{3} = [3 1; 1 2];
-        %             centerCVec{4} = [1 0 0 0];
-        %             shapeMatCVec{4} = diag([3 2 1 0]);
-        %             for iElem = 1 : 4
-        %                 ellVec(iElem) = self.ellFactoryObj.create(centerCVec{iElem}', shapeMatCVec{iElem});
-        %                 transposedCenterCVec{iElem} = centerCVec{iElem}';
-        %             end
-        %             SEllVec = struct('centerVec', transposedCenterCVec, 'shapeMat', shapeMatCVec);
-        %             ObtainedEllStruct = ellVec(1).toStruct();
-        %             isOk = isequal(ObtainedEllStruct, SEllVec(1));
-        %             ObtainedEllStructVec = ellVec.toStruct();
-        %             isOk = isOk && isequal(ObtainedEllStructVec, SEllVec);
-        %             mlunitext.assert_equals(true, isOk);
-        %         end
     end
     methods
         %
@@ -1495,9 +1342,12 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
                 testEllipsoid=self.createEll(qCenterVec,qShapeMat);
             end
             [testCenterVec, testShapeMat]=double(testEllipsoid);
+            absTol = elltool.conf.Properties.getAbsTol();
             try
-                isTestCVec  = testCenterVec == qCenterVec;
-                isTestEyeMat = testShapeMat == qShapeMat;
+                isTestCVec  = modgen.common.absrelcompare(...
+                    testCenterVec, qCenterVec, absTol, [], @abs);
+                isTestEyeMat = modgen.common.absrelcompare(...
+                    testShapeMat, qShapeMat, absTol, [], @abs);;
             catch
                 isTestRes = false;
             end
@@ -1514,9 +1364,12 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
                 testEllipsoid=self.createEll(qCenterVec,qShapeMat);
             end
             [testCenterVec, testShapeMat]=parameters(testEllipsoid);
+            absTol = elltool.conf.Properties.getAbsTol();
             try
-                isTestCVec  = testCenterVec == qCenterVec;
-                isTestEyeMat = testShapeMat == qShapeMat;
+                isTestCVec  = modgen.common.absrelcompare(...
+                    testCenterVec, qCenterVec, absTol, [], @abs);
+                isTestEyeMat = modgen.common.absrelcompare(...
+                    testShapeMat, qShapeMat, absTol, [], @abs);;
             catch
                 isTestRes = false;
             end
@@ -1635,18 +1488,37 @@ cvx_end
 distEllEll = sqrt(fDist);
 end
 %
-function checkEllEqual(testEll1Vec, testEll2Vec, isEqRight, ansStr,ansAltStr)
-if nargin<5
-    ansAltStr=ansStr;
-end
+function checkEllEqual(testEll1Vec, testEll2Vec, isEqRight, ansStr)
 [isEq, reportStr] = isEqual(testEll1Vec, testEll2Vec);
 mlunitext.assert_equals(isEq, isEqRight, reportStr);
-isRepEq = isequal(reportStr, ansStr);
-if ~isRepEq
-    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'))||...
-        ~isempty(regexp(reportStr, ansAltStr, 'once'));
+
+if isempty(ansStr)
+    return;
 end
-mlunitext.assert_equals(isRepEq, true);
+mlunitext.assert_equals(false, isempty(reportStr));
+
+[diffRight, tolRight] = parse(ansStr);
+[diffReport, tolReport] = parse(reportStr);
+            
+relTol = elltool.conf.Properties.getRelTol();
+[isDiffEq, ~] = modgen.common.absrelcompare( ...
+    diffRight, diffReport, Inf, relTol, @abs);
+[isTolEq, ~] = modgen.common.absrelcompare( ...
+    tolRight, tolReport, Inf, relTol, @abs);
+mlunitext.assert_equals(isDiffEq, true);
+mlunitext.assert_equals(isTolEq, true);
+            
+function [diff, tol] = parse(str)
+    doubleExpr = '[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?';
+    exprDiff = ...
+        ['absolute difference \((' doubleExpr ')\)'];
+    exprTol = ...
+        ['specified tolerance \((' doubleExpr ')\)'];
+    diff = str2double(regexp(str, exprDiff, ...
+        'tokens', 'once'));
+    tol = ...
+        str2double(regexp(str, exprTol, 'tokens', 'once'));
+end
 end
 
 function assert_equals_with_report(isAnsArray, ellArray1, ellArray2)

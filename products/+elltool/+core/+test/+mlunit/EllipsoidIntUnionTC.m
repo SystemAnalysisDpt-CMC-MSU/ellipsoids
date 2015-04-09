@@ -142,13 +142,11 @@ classdef EllipsoidIntUnionTC < elltool.core.test.mlunit.EllFactoryTC
             [isEq, reportStr] = isEqual(self.createEll(test1Mat), self.createEll(test2Mat));
             mlunitext.assert_equals(false, isEq);
             ansStr = ...
-                '\(1).Q-->.*\(1.010000e\-05).*tolerance.\(1.000000e\-05)';
-            ansAltStr=...
-                '\(1).Q-->.*\(1.00999.*e\-05).*tolerance.\(1.000000.*e\-05)';
+                '(1).diagMat-->Max. absolute difference (2.0199999983816497e-07) is greater than the specified tolerance (9.9999999999999995e-08)';
             checkRep();
 %         
             test1Mat = eye(2);
-            test2SqrtMat = eye(2) + 0.5*MAX_TOL;
+            test2SqrtMat = eye(2) + 0.4*MAX_TOL; % BAD TEST
             test2Mat = test2SqrtMat*test2SqrtMat.';
             [isEq, reportStr] = isEqual(self.createEll(test1Mat),...
                 self.createEll(test2Mat));
@@ -162,19 +160,38 @@ classdef EllipsoidIntUnionTC < elltool.core.test.mlunit.EllFactoryTC
             [isEq, reportStr] = isEqual(self.createEll(test1Mat),...
                 self.createEll(test2Mat));
             mlunitext.assert_equals(false, isEq);
-            mlunitext.assert_equals(false, isEq);
             ansStr = ...
-                '\(1).Q-->.*\(1.000000.*e\-05).*tolerance.\(1.000000.*e\-05)';
-            ansAltStr=ansStr;
-            %
+                '(1).diagMat-->Max. absolute difference (1.9999999989472883e-07) is greater than the specified tolerance (9.9999999999999995e-08)';
             checkRep();
+            %
             function checkRep()
-                isRepEq = isequal(reportStr, ansStr);
-                if ~isRepEq
-                    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'))||...
-                        ~isempty(regexp(reportStr, ansAltStr, 'once'));
+                if isempty(ansStr)
+                    return;
                 end
-                mlunitext.assert_equals(isRepEq, true);
+                mlunitext.assert_equals(false, isempty(reportStr));
+                
+                [diffRight, tolRight] = parse(ansStr);
+                [diffReport, tolReport] = parse(reportStr);
+            
+                relTol = elltool.conf.Properties.getRelTol();
+                [isDiffEq, ~] = modgen.common.absrelcompare( ...
+                    diffRight, diffReport, Inf, relTol, @abs);
+                [isTolEq, ~] = modgen.common.absrelcompare( ...
+                    tolRight, tolReport, Inf, relTol, @abs);
+                mlunitext.assert_equals(isDiffEq, true);
+                mlunitext.assert_equals(isTolEq, true);
+            
+                function [diff, tol] = parse(str)
+                    doubleExpr = '[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?';
+                    exprDiff = ...
+                        ['absolute difference \((' doubleExpr ')\)'];
+                    exprTol = ...
+                        ['specified tolerance \((' doubleExpr ')\)'];
+                    diff = str2double(regexp(str, exprDiff, ...
+                        'tokens', 'once'));
+                    tol = ...
+                        str2double(regexp(str, exprTol, 'tokens', 'once'));
+                end
             end
         end
         
@@ -523,103 +540,6 @@ classdef EllipsoidIntUnionTC < elltool.core.test.mlunit.EllFactoryTC
             end
             
         end
-%         function self = testEllunionEa(self)
-%             self.setUpCheckSettings();
-%             nDim = 10;
-%             
-%             nArr = 15;
-%             eyeEllipsoid = self.createEll(eye(nDim));
-%             for iArr = 1:nArr
-%                 testEllVec(iArr) = eyeEllipsoid;
-%             end;
-%             resEllVec = ellunion_ea(testEllVec);
-%             ansEllVec = eyeEllipsoid;
-%             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-%             self.flexAssert(true, isEq, reportStr);
-%             
-%             clear testEllVec;
-%             nDim = 2;
-%             testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-%             testEllVec(2) = self.ellFactoryObj.create([1, 0].', eye(nDim));
-%             resEllVec = ellunion_ea(testEllVec);
-%             
-%             ansEllVec = self.ellFactoryObj.create([0.5, 0].', [2.389605510164642, ...
-%                 0; 0, 1.296535157845836]);
-%             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-%             self.flexAssert(true, isEq, reportStr);
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(1)));
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
-%             
-%             clear testEllVec;
-%             nDim = 2;
-%             testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-%             testEllVec(2) = self.ellFactoryObj.create([1, 0].', eye(nDim));
-%             testEllVec(3) = self.ellFactoryObj.create([0, 1].', eye(nDim));
-%             resEllVec = ellunion_ea(testEllVec);
-%             ansEllVec = self.ellFactoryObj.create([0.361900110249858, ...
-%                 0.361900133569072].', [2.713989398757731, ...
-%                 -0.428437874833322;-0.428437874833322, 2.713989515632939]);
-%             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-%             self.flexAssert(true, isEq, reportStr);
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(1)));
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(3)));
-%             
-%             
-%             nDim = 3;
-%             testEllVec(1) = self.ellFactoryObj.create(eye(nDim));
-%             testEllVec(2) = self.ellFactoryObj.create([1, 0.5, -0.5].', ...
-%                 [2, 0, 0; 0, 1, 0; 0, 0, 0.5]);
-%             testEllVec(3) = self.ellFactoryObj.create([0.5, 0.3, 1].', ...
-%                 [0.5, 0, 0; 0, 0.5, 0; 0, 0, 2]);
-%             resEllVec = ellunion_ea(testEllVec);
-%             
-%             ansEllShape = [3.214279075152898 0.597782711155458 ...
-%                 -0.610826375241159; 0.597782711155458 1.826390617268878 ...
-%                 -0.135640717373030;-0.610826375241159 ...
-%                 -0.135640717373030 4.757741393980497];
-%             ansEllCenterVec = [0.678847905650305, 0.271345357930677, ...
-%                 0.242812593977658].';
-%             ansEllVec = self.ellFactoryObj.create(ansEllCenterVec, ansEllShape);
-%             
-%             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-%             self.flexAssert(true, isEq, reportStr);
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(1)));
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(3)));
-%             
-%             clear testEllVec;
-%             nDim = 15;
-%             load(strcat(self.testDataRootDir, strcat(filesep, ...
-%                 'testEllunion_inpSimple.mat')), 'testEllCenterVec', ...
-%                 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
-%             testEllVec(1) = self.ellFactoryObj.create(testEllCenterVec, testEllMat);
-%             testEllVec(2) = self.ellFactoryObj.create(testEllCenter2Vec, testEll2Mat);
-%             resEllVec = ellunion_ea(testEllVec);
-%             load(strcat(self.testDataRootDir, strcat(filesep, ...
-%                 'testEllunion_outSimple.mat')), ...
-%                 'ansEllCenterVec', 'ansEllMat');
-%             ansEllVec = self.ellFactoryObj.create(ansEllCenterVec, ansEllMat);
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(1)));
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
-%             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-%             self.flexAssert(true, isEq, reportStr);
-%             clear testEllVec;
-%             nDim = 15;
-%             load(strcat(self.testDataRootDir, strcat(filesep,...
-%                 'testEllunionEa_inp.mat')), 'testEllCenterVec', ...
-%                 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
-%             testEllVec(1) = self.ellFactoryObj.create(testEllCenterVec, testEllMat);
-%             testEllVec(2) = self.ellFactoryObj.create(testEllCenter2Vec, testEll2Mat);
-%             resEllVec = ellunion_ea(testEllVec);
-%             load(strcat(self.testDataRootDir, strcat(filesep, ...
-%                 'testEllunionEa_out.mat')), 'ansEllCenterVec', 'ansEllMat');
-%             ansEllVec = self.ellFactoryObj.create(ansEllCenterVec, ansEllMat);
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(1)));
-%             self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
-%             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-%             self.flexAssert(true, isEq, reportStr);
-%         end
         function self = testHpIntersection(self)
             %empty intersection
             nDim = 2;
@@ -641,7 +561,6 @@ classdef EllipsoidIntUnionTC < elltool.core.test.mlunit.EllFactoryTC
             testHpVec = hyperplane([0, 1].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllVec = self.createEll([1, 0; 0, 0]);
-            %[isEq, reportStr] = isEqual(resEllVec, ansEllVec)
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 2;
@@ -764,48 +683,7 @@ classdef EllipsoidIntUnionTC < elltool.core.test.mlunit.EllFactoryTC
                 ellArr(index)=ellObj;
             end
         end
-        
-%         function self = testEllEnclose(self)
-%             self.setUpCheckSettings()
-%             pointsVec = [1, 0, -1, 0; 0, 1, 0, -1];
-%             resEllVec = ell_enclose(pointsVec);
-%             ansEllVec = self.ellFactoryObj.create([0, 0].', eye(2));
-%             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-%             mlunitext.assert_equals(true, isEq, reportStr);
-%             
-%             
-%             pointsVec = [2, 0, -2, 0; 0, 1/3, 0, -1/3];
-%             resEllVec = ell_enclose(pointsVec);
-%             ansEllVec = self.ellFactoryObj.create([0, 0].', [4, 0; 0, 1/9]);
-%             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-%             mlunitext.assert_equals(true, isEq, reportStr);
-%             
-%             pointsVec = [1/2, 0, 0, 0; 0, 0, 0, -3];
-%             resEllVec = ell_enclose(pointsVec);
-%             ansEllVec = self.ellFactoryObj.create([1/6, -1].', [1/9, 1/3; 1/3, 4]);
-%             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-%             mlunitext.assert_equals(true, isEq, reportStr);
-%             
-%             phiAngleVec = 0:0.1:2*pi;
-%             psiAngleVec = 0:0.1:pi;
-%             pointsVec = zeros(3, numel(phiAngleVec)*numel(psiAngleVec));
-%             for iAngle = 1:numel(phiAngleVec)
-%                 for jAngle = 1:numel(psiAngleVec)
-%                     pointsVec(1, (iAngle-1)*numel(psiAngleVec) + jAngle)...
-%                         = cos(phiAngleVec(iAngle))*sin(psiAngleVec(jAngle));
-%                     pointsVec(2, (iAngle-1)*numel(psiAngleVec) + jAngle)...
-%                         = sin(phiAngleVec(iAngle))*sin(psiAngleVec(jAngle));
-%                     pointsVec(3, (iAngle-1)*numel(psiAngleVec) + jAngle)...
-%                         = cos(psiAngleVec(jAngle));
-%                 end
-%             end
-%             resEllVec = ell_enclose(pointsVec);
-%             ansEllVec = self.ellFactoryObj.create([0, 0, 0].', eye(3));
-%             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-%             mlunitext.assert_equals(true, isEq, reportStr);
-%             
-%         end
-        
+                
     end
     
 end

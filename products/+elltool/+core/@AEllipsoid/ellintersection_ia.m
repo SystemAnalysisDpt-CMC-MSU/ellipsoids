@@ -7,7 +7,7 @@ function outEll = ellintersection_ia(inpEllArr)
 % Input:
 %   regular:
 %       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of  
-%           ellipsoids of the same dimentions.
+%           ellipsoids of the same dimensions.
 %
 % Output:
 %   outEll: ellipsoid [1, 1] - resulting maximum volume ellipsoid.
@@ -64,6 +64,11 @@ modgen.common.checkvar(dimsArr,'all(x(:)==x(1))',...
     'errorTag','wrongSizes',...
     'errorMessage','all ellipsoids must be of the same dimension.');
 
+modgen.common.checkvar(inpEllArr, ...
+    'det(x.getShapeMat()) > elltool.conf.Properties.getAbsTol()', ...
+    'errorTag', 'wrongInput:shapeMat', ...
+    'errorMessage', 'Shape matrix of ellipsoid shouldn'' be equal to zero.');
+
 nEllipsoids = numel(inpEllArr);    
 inpEllVec = reshape(inpEllArr, 1, nEllipsoids);
     
@@ -93,7 +98,6 @@ if is2EllEqCentre(inpEllVec)
              sqrtFirstEllShMat';
     ellMat = 0.5*(ellMat + ellMat');
 
-%     outEll = ellipsoid(EllCenterVec, ellMat);
     outEll = firstEllObj.create(EllCenterVec, ellMat);
 else
 
@@ -146,7 +150,6 @@ else
     ellMat = cvxEllMat * cvxEllMat';
     ellMat = 0.5*(ellMat + ellMat');
 
-%     outEll = ellipsoid(cvxEllCenterVec, ellMat);
     outEll = inpEllVec(1).create(cvxEllCenterVec, ellMat);
 end
 end

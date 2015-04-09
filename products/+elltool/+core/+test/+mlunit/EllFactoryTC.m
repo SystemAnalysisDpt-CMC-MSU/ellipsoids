@@ -13,7 +13,7 @@ classdef EllFactoryTC < mlunitext.test_case
         end
     end
 
-    methods (Access = protected)        
+    methods (Access = public)        
         function ellObj = createEll(self, varargin)
             ellObj = self.ellFactoryObj.create(varargin{:});
         end

@@ -29,14 +29,14 @@ classdef ABasicEllipsoid < handle
             isnSecScalar=nSecElems > 1;
             
             [~, tolerance] = ellFirstArr.getRelTol;
-            [SEll1Array, SFieldNiceNames, ~] = ...
+            [SEll1Array, SFirstFieldNiceNames, ~] = ...
                 ellFirstArr.toStruct(isPropIncluded);
-            SEll2Array = ellSecArr.toStruct(isPropIncluded);
+            [SEll2Array, SSecFieldNiceNames, ~] = ellSecArr.toStruct(isPropIncluded);
             %
             SEll1Array = arrayfun(@(SEll)ellFirstArr.formCompStruct(SEll,...
-                SFieldNiceNames, absTol, isPropIncluded), SEll1Array);
+                SFirstFieldNiceNames, absTol, isPropIncluded), SEll1Array);
             SEll2Array = arrayfun(@(SEll)ellSecArr.formCompStruct(SEll,...
-                SFieldNiceNames, absTol, isPropIncluded), SEll2Array);
+                SSecFieldNiceNames, absTol, isPropIncluded), SEll2Array);
             
             if isnFirstScalar&&isnSecScalar
                 if ~isequal(firstSizeVec, secSizeVec)

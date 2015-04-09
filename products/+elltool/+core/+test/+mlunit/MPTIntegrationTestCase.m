@@ -375,7 +375,7 @@ classdef MPTIntegrationTestCase < elltool.core.test.mlunit.EllFactoryTC
             %of an ellipsoid and a hyperplane
             %
             %ellipsoid lies in halfspace
-            my1Ell = ellipsoid(eye(2));
+            my1Ell = self.createEll(eye(2));
             my1Hyper = hyperplane([1;1], 3);
             my1EllHyperIAObj = my1Ell.intersection_ia(my1Hyper);
             [isOk, reportStr] = my1Ell.isEqual(my1EllHyperIAObj);
@@ -390,7 +390,7 @@ classdef MPTIntegrationTestCase < elltool.core.test.mlunit.EllFactoryTC
             mlunitext.assert(my2EllHyperIAObjMat == [])
             %
             %halfspace intersects an ellpsoid
-            my3Ell = ellipsoid(eye(3));
+            my3Ell = self.createEll(eye(3));
             my3Hyper = hyperplane([-1;1;1], 1);
             my3EllHyperIAObj = my3Ell.intersection_ia(my3Hyper);
             mlunitext.assert(my3Ell.doesIntersectionContain(my3EllHyperIAObj));
@@ -398,7 +398,7 @@ classdef MPTIntegrationTestCase < elltool.core.test.mlunit.EllFactoryTC
             %the same for nDims
             nDims=10;
             my4Vec = ones(nDims, 1);
-            my4Ell = ellipsoid(2*eye(nDims));
+            my4Ell = self.createEll(2*eye(nDims));
             my4Hyper = hyperplane(my4Vec, 1);
             myEllHyperIAObj=intersection_ia(my4Ell, my4Hyper);
             mlunitext.assert(my4Ell.doesIntersectionContain(myEllHyperIAObj));
@@ -550,10 +550,12 @@ classdef MPTIntegrationTestCase < elltool.core.test.mlunit.EllFactoryTC
             my52Ell = ellipsoid(eye(2));
             my5EllEllIAObj = my51Ell.intersection_ea(my52Ell);
             [~,my5EllEllIAObjMat] = double(my5EllEllIAObj);
-            mlunitext.assert(all(my5EllEllIAObjMat(:) == 0));
+            mlunitext.assert(all(abs(my5EllEllIAObjMat(:)) <= ...
+                elltool.conf.Properties.getAbsTol()));
             my5EllEllIAObj = my52Ell.intersection_ea(my51Ell);
             [~,my5EllEllIAObjMat] = double(my5EllEllIAObj);
-            mlunitext.assert(all(my5EllEllIAObjMat(:) == 0));
+            mlunitext.assert(all(abs(my5EllEllIAObjMat(:)) <= ...
+                elltool.conf.Properties.getAbsTol()));
             %
             %test when a shape matrix is a multidimensional array
             checkEAShMatArrayEll([2,2]);

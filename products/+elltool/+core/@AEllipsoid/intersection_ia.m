@@ -119,7 +119,6 @@ else
     nAmount = numel(objArr);
     sizeCVec = num2cell(size(objArr));
 end
-% outEllArr(sizeCVec{:}) = ellipsoid;
 outEllArr(sizeCVec{:}) = myEllArr(1).create;
 indexVec = 1:nAmount;
 
@@ -169,12 +168,10 @@ function outEll = l_intersection_ia(fstEll, secObj)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-% if isa(secObj, 'ellipsoid')
 if isMe(secObj)
     if fstEll == secObj
         outEll = fstEll;
     elseif ~intersect(fstEll, secObj)
-%         outEll = ellipsoid;
         outEll = fstEll.create;
     else
         outEll = ellintersection_ia([fstEll secObj]);
@@ -202,7 +199,6 @@ if (normHypVec'*fstEllCentVec > hypScalar) ...
 end
 if (normHypVec'*fstEllCentVec < hypScalar) ...
         && ~(intersect(fstEll, secObj))
-%     outEll = ellipsoid;
         outEll = fstEll.create;
     return;
 end
@@ -230,7 +226,6 @@ intEllShMat      = intEllShMat/(1 - ...
     intEllCentVec'*intEllShMat*intEllCentVec));
 intEllShMat      = ell_inv(intEllShMat);
 intEllShMat      = (1-fstEll.absTol)*0.5*(intEllShMat + intEllShMat');
-% outEll      = ellipsoid(intEllCentVec, intEllShMat);
 outEll      = fstEll.create(intEllCentVec, intEllShMat);
 end
 
@@ -263,16 +258,13 @@ function outEll = l_polyintersect(ell, poly)
 %
 
 if doesIntersectionContain(ell, poly)
-    outEll = getInnerEllipsoid(poly);
+    [x0 E] = getInnerEllipsoidParams(poly);
+    outEll = ell.create(x0, E);
 elseif ~intersect(ell,poly)
-%     outEll = ellipsoid();
     outEll = ell.create();
 else
     [ellVec ellMat] = double(ell);
     [n,~] = size(ellMat);
-%    polyDouble = double(poly);
-%    polyMat = polyDouble(:,1:end-1);
-%    polyVec = polyDouble(:,end);
     hMat = poly.H;
     polyMat = hMat(:,1:end-1);
     polyVec = hMat(:,end);
@@ -300,15 +292,13 @@ else
     Q = (B*B');
     v = d;
     if ~gras.la.ismatposdef(Q,getAbsTol(ell))
-%         outEll = ellipsoid(v,zeros(size(Q)));
         outEll = ell.create(v,zeros(size(Q)));
     else
-%         outEll = ellipsoid(v,Q);
         outEll = ell.create(v,Q);
     end
 end
 end
-function E = getInnerEllipsoid(Pset,E,Options)
+function [x0, E] = getInnerEllipsoidParams(Pset,E,Options)
 %GETINNERELLIPSOID Computes the largest ellipsoid inscribed in a Polyhedron
 %
 % E = getInnerEllipsoid(Pset,x0,E,Options)
@@ -383,7 +373,9 @@ if ~isfield(Options,'plotresult')
     Options.plotresult=0;
 end
 
-[H,K]=double(Pset);
+hMat = Pset.H;
+H = hMat(:, 1 : end - 1);
+K = hMat(:, end);
 nx=size(H,2);
 
 if(nargin>1)
@@ -417,7 +409,7 @@ else
     E=inv(E)'*inv(E);
 end
 
-if nx==2 & Options.plotresult
+if nx==2 && Options.plotresult
     plot(Pset)
     hold on
     [xe,ye]=mpt_plotellip(E,x0);
@@ -425,6 +417,4 @@ end
 
 E = inv(E);
 E = 0.5*(E + E');
-% E = ellipsoid(x0, E);
-E = create(x0, E);
 end

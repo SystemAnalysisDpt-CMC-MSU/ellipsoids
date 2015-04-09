@@ -38,7 +38,7 @@ classdef EllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
             [isEq, reportStr] = isEqual(self.createEll(test1Mat), self.createEll(test2Mat));
             mlunitext.assert_equals(false, isEq);
             ansStr = ...
-                '\(1).Q-->.*\(1.010000e\-05).*tolerance.\(1.000000e\-05)';
+                '(1).Q-->Max. absolute difference (1.0099999999997759e-05) is greater than the specified tolerance (1.0000000000000001e-05)';
             checkRep();
             %            
             test1Mat = eye(2);
@@ -56,9 +56,8 @@ classdef EllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
             [isEq, reportStr] = isEqual(self.createEll(test1Mat),...
                 self.createEll(test2Mat));
             mlunitext.assert_equals(false, isEq);
-            mlunitext.assert_equals(false, isEq);
             ansStr = ...
-                '\(1).Q-->.*\(1.000000e\-05).*tolerance.\(1.000000e\-05)';
+                '(1).Q-->Max. absolute difference (1.000000000006041e-05) is greater than the specified tolerance (1.0000000000000001e-05)';
             checkRep();
             function checkRep()
                 isRepEq = isequal(reportStr, ansStr);
@@ -147,33 +146,30 @@ classdef EllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
             self.checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             self.checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
-            
+                '(1).Q-->Max. absolute difference (2.3166247903553998) is greater than the specified tolerance (1.0000000000000001e-05)');
             [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(2);
             self.checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             
             self.checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
-            
+                '(1).Q-->Max. absolute difference (2.3166247903553998) is greater than the specified tolerance (1.0000000000000001e-05)');
+
             [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(3);
             self.checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             self.checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
-                '\(1).Q-->.*\(2.316625e\+00).*tolerance.\(1.000000e\-05)');
-            
+                '(1).Q-->Max. absolute difference (2.3166247903553998) is greater than the specified tolerance (1.0000000000000001e-05)');
             
             self.checkEllEqual(testEllipsoid1, testEllipsoid1, true, '');
             
             self.checkEllEqual(testEllipsoid2, testEllipsoid1, false, ...
-                '\(1).q-->.*\(1.000000e\+00).*tolerance.\(1.000000e\-05)');
+                '(1).q-->Max. absolute difference (1) is greater than the specified tolerance (1.0000000000000001e-05)');
             
             self.checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-                '\(1).Q-->.*\(4.142136e\-01).*tolerance.\(1.000000e\-05)');
-            
+                '(1).Q-->Max. absolute difference (0.41421356237309515) is greater than the specified tolerance (1.0000000000000001e-05)');
             
             self.checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
-                '\(1).Q-->.*\(4.142136e\-01).*tolerance.\(1.000000e\-05)');
+                '(1).Q-->Max. absolute difference (0.41421356237309515) is greater than the specified tolerance (1.0000000000000001e-05)');
             
             ansStr = sprintf('(1).Q-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
             self.checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
@@ -377,8 +373,6 @@ classdef EllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
             %
             %
             % distance between single ellipsoid and array of ellipsoids
-%             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
-%                 'testEllArr','testDistResArr');
             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
                 'testEllStruct','testDistResArr');
             testEllArr = self.createEll.fromStruct(testEllStruct);
@@ -839,11 +833,24 @@ classdef EllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
         function checkEllEqual(self, testEll1Vec, testEll2Vec, isEqRight, ansStr)
             [isEq, reportStr] = isEqual(testEll1Vec, testEll2Vec);
             mlunitext.assert_equals(isEq, isEqRight, reportStr);
-            isRepEq = isequal(reportStr, ansStr);
-            if ~isRepEq
-                isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'));
+            [diffRight, tolRight] = parse(ansStr);
+            [diffReport, tolReport] = parse(reportStr);
+            
+            absTol = elltool.conf.Properties.getAbsTol();
+            [isDiffEq, ~] = modgen.common.absrelcompare( ...
+                diffRight, diffReport, absTol, [], @abs);
+            [isTolEq, ~] = modgen.common.absrelcompare( ...
+                tolRight, tolReport, absTol, [], @abs);
+            mlunitext.assert_equals(isDiffEq, true);
+            mlunitext.assert_equals(isTolEq, true);
+            
+            function [diff, tol] = parse(str)
+                doubleExpr = '[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?';
+                exprDiff = ['absolute difference \((' doubleExpr ')\)'];
+                exprTol = ['specified tolerance \((' doubleExpr ')\)'];
+                diff = str2double(regexp(str, exprDiff, 'tokens', 'once'));
+                tol = str2double(regexp(str, exprTol, 'tokens', 'once'));
             end
-            mlunitext.assert_equals(isRepEq, true);
         end
         
         function [varargout] = createTypicalEll(self, flag)
