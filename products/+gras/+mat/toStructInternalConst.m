@@ -1,5 +1,5 @@
 function [SDataArr, SFieldNiceNames, SFieldDescr] = ...
-    toStructInternal(matrix, isPropIncluded)
+    toStructInternalConst(matrix, isPropIncluded)
 
 if (nargin < 2)
     isPropIncluded = false;

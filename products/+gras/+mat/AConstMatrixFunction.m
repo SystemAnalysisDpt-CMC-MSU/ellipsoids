@@ -1,4 +1,4 @@
-classdef AConstMatrixFunction<gras.mat.IMatrixFunction
+classdef AConstMatrixFunction<gras.mat.AMatrixFunctionComparable
     properties (Access=protected)
         mMat
         mSizeVec
@@ -34,5 +34,12 @@ classdef AConstMatrixFunction<gras.mat.IMatrixFunction
             self.nRows = self.mSizeVec(1);
             self.nCols = self.mSizeVec(2);
         end
+        function SData = toStructInternal(self,isPropIncluded)
+             SData = toStructInternalConst(self,isPropIncluded);
+        end
+        
+    end
+    methods     
+        SData = toStructInternalConst(self,isPropIncluded);
     end
 end

@@ -1,44 +1,40 @@
-function [isEqualArr, reportStr] = isEqual(FirstArr, SecArr)
+function [isEqualArr, reportStr] = isEqual(FirstObj, SecObj)
 
 import modgen.common.throwerror;
 import modgen.struct.structcomparevec;
 import gras.la.sqrtmpos;
 
+nFirstElems = numel(FirstObj);
+nSecElems = numel(SecObj);
 
-nFirstElems = numel(FirstArr);
-nSecElems = numel(SecArr);
+firstSizeVec = size(FirstObj);
+secSizeVec = size(SecObj);
+isnFirstScalar = nFirstElems > 1;
+isnSecScalar = nSecElems > 1;
 
-firstSizeVec = size(FirstArr);
-secSizeVec = size(SecArr);
-isnFirstScalar=nFirstElems > 1;
-isnSecScalar=nSecElems > 1;
-
-SEll1Array=FirstArr.toStruct();
-SEll2Array=SecArr.toStruct();
+SEll1Array = FirstObj.toStructInternal(); % add param 'true' for absTol and relTol
+SEll2Array = SecObj.toStructInternal(); % add param 'true' for absTol and relTol
 
 if isnFirstScalar&&isnSecScalar
     
     if ~isequal(firstSizeVec, secSizeVec)
-        throwerror('wrongSizes',...
-            'sizes of ellipsoidal arrays do not... match');
+        throwerror('errorinSizes',...
+            'sizes do not match');
     end;
     compare();
-    isEqualArr = reshape(isEqualArr, firstSizeVec);
 elseif isnFirstScalar
     
-    SEll2Array=repmat(SEll2Array, firstSizeVec);
+    SEll2Array = repmat(SEll2Array, firstSizeVec);
     compare();   
-    isEqualArr = reshape(isEqualArr, firstSizeVec);
 else
     
-    SEll1Array=repmat(SEll1Array, secSizeVec);
+    SEll1Array = repmat(SEll1Array, secSizeVec);
     compare();
-    isEqualArr = reshape(isEqualArr, secSizeVec);
 end
 
     function compare()
-        [isEqualArr,reportStr]=modgen.struct.structcomparevec(SEll1Array,...
-            SEll2Array,relTol);
+        [isEqualArr,reportStr] = modgen.struct.structcomparevec(SEll1Array,...
+            SEll2Array);
     end
 
 end
