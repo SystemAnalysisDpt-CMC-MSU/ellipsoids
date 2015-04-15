@@ -259,7 +259,7 @@ classdef mlunit_test_common < mlunitext.test_case
         function testThrowWarn(~)
             check('wrongInput','test message');
             check('wrongInput',...
-                'test \ message C:\SomeFolder\sdf/sdf/sdfsdf');
+                'test \n message C:\\SomeFolder\\sdf/sdf/sdfsdf');
             function check(identifier,message)
                 ID_STR=...
                     ['MODGEN:COMMON:TEST:MLUNIT_TEST_COMMON:TESTTHROWWARN:',...
@@ -268,7 +268,7 @@ classdef mlunit_test_common < mlunitext.test_case
                 lastwarn('');
                 modgen.common.throwwarn('wrongInput',message);
                 [lastMsg,lastId]=lastwarn();
-                mlunitext.assert_equals(true,isequal(message,lastMsg));
+                mlunitext.assert_equals(true,isequal(sprintf(message),lastMsg));
                 mlunitext.assert_equals(true,isequal(ID_STR,lastId));
             end
         end

@@ -89,7 +89,7 @@ classdef SuiteBasic < mlunitext.test_case
             crm.setConfPatchRepo(...
                 modgen.configuration.test.StructChangeTrackerNoPatches());
             SData.alpha=0;
-            crm.putConf('def',SData);
+            crm.putConf('def',SData,'selectConf',false);
             %
             crm.updateConf('def');
             crm.flushCache();

@@ -26,12 +26,26 @@ classdef ConfRepoManagerAnyStorage<handle
                 modgen.struct.updateleaves(SConfData,self.getStorageHook);
         end
         %
+    end
+    methods
+        function isPositive=isCachedConf(self,confName)
+            % ISCACHEDCONF checks if the configuration with a given name is
+            % cached
+            %
+            isPositive=self.cache.isKey(confName);
+        end        
+        function putConfToCache(self,varargin)
+            self.cacheConf(varargin{:});
+        end   
+        function putConfToCacheAndSelect(self,varargin)
+            self.cacheAndSelectConf(varargin{:});
+        end
         function putConfToStorage(self,confName,SConfData,metaData)
             SConfData=...
                 modgen.struct.updateleaves(SConfData,...
                 self.putStorageHook);
             self.storage.put(confName,SConfData,metaData);
-        end
+        end        
     end
     %
     methods (Access=protected,Static)
@@ -48,10 +62,13 @@ classdef ConfRepoManagerAnyStorage<handle
         end
     end    
     methods
+        function otherObj=getCopy(self)
+            otherObj=getArrayFromByteStream(getByteStreamFromArray(self));
+        end
         function isPos=isConfSelected(self,confName)
             %ISCONFSELECTED - checks if the specified configuration
             %                 selected
-            isPos=self.isCachedConf(confName);
+            isPos=strcmp(self.curConfName,confName);
         end
         function storeCachedConf(self,confName)
             [SConfData,metaData]=getCachedConf(self,confName);
@@ -197,7 +214,7 @@ classdef ConfRepoManagerAnyStorage<handle
                 end
                 %
                 [SConf,metaData]=self.getConfFromStorage(confName);
-                self.cacheConf(confName,SConf,metaData);
+                self.cacheAndSelectConf(confName,SConf,metaData);
             else
                 self.curConfName=confName;
             end
@@ -285,10 +302,10 @@ classdef ConfRepoManagerAnyStorage<handle
                 paramName=['.',paramName];
             end
             %
-            curConfName=self.getCurConfName();
+            curConfName=self.getCurConfName(); %#ok<*PROP>
             [curConf,metaData]=self.getCurConf();
             SConf=structapplypath(curConf,paramName,paramValue);
-            self.cacheConf(curConfName,SConf,metaData);
+            self.cacheAndSelectConf(curConfName,SConf,metaData);
             if isWriteToDisk
                 self.putConfToStorage(curConfName,SConf,metaData);
             end
@@ -309,8 +326,20 @@ classdef ConfRepoManagerAnyStorage<handle
            %        metaData: struct[1,1] - meta data to store along with
            %            the configuration structure
            %
+           %    properties:
+           %        selectConf: logical[1,1] - if true, the configuration
+           %            is also selected as a current configuration
            %
-           self.putConfInternal(confName,SConf,varargin{:}); 
+           %
+           [restArgList,~,isSelected]=modgen.common.parseparext(varargin,...
+               {'selectConf';true;'islogical(x)&&isscalar(x)'});
+           %
+           self.putConfInternal(confName,SConf,restArgList{:});
+           %
+           if isSelected
+               self.curConfName=confName;
+           end
+           %
         end
         %
         function [SConf,confVersion,metaData]=getConf(self,confName)
@@ -525,6 +554,7 @@ classdef ConfRepoManagerAnyStorage<handle
         function confNameList=getCachedConfNames(self)
             confNameList=self.cache.keys();
         end
+        %
         function updateAllInternal(self)
             confNameList=self.getConfNameListInternal();
             nConfs=length(confNameList);
@@ -532,7 +562,9 @@ classdef ConfRepoManagerAnyStorage<handle
                 confName=confNameList{iConf};
                 self.updateConfInternal(confName);
             end
-        end        function confNameList=getConfNameListInternal(self)
+        end
+        %
+        function confNameList=getConfNameListInternal(self)
             % GETCONFNAMELISTINTERNAL - an internal implementation of
             %                           getConfNameList
             %
@@ -561,7 +593,8 @@ classdef ConfRepoManagerAnyStorage<handle
                 self.putConfInternal(confName,SConf,confVersion,metaData);
             end
         end
-        function [SConf,confVersion,metaData]=updateConfStructInternal(self,SConf,confVersion,metaData)
+        function [SConf,confVersion,metaData]=updateConfStructInternal(...
+                self,SConf,confVersion,metaData)
             % UPDATESCONFSTRUCTINTERNAL - updates configuration structure
             %                             up to the latest version
             %
@@ -594,6 +627,7 @@ classdef ConfRepoManagerAnyStorage<handle
             end
             confVersion=self.getConfVersionFromMetaData(metaData);
         end
+        %
         function putConfInternal(self,confName,SConf,confVersion,metaData)
             % PUTCONFINTERNAL - an internal implementation of putConf
             %
@@ -609,15 +643,19 @@ classdef ConfRepoManagerAnyStorage<handle
             %
             self.cacheConf(confName,SConf,metaData);
             self.putConfToStorage(confName,SConf,metaData); 
-        end          
+        end   
+        %
     end
-    methods (Access=private)
-        function cacheConf(self,confName,SConf,metaData)
+    methods (Access=protected)
+        function cacheAndSelectConf(self,confName,SConf,metaData)
             % CACHECONF - chaches the specified configuration and makes it
             %             current
             %
-            self.cache(confName)={SConf,metaData};
+            self.cacheConf(confName,SConf,metaData);
             self.curConfName=confName;
+        end
+        function cacheConf(self,confName,SConf,metaData)
+            self.cache(confName)={SConf,metaData};            
         end
         function [SConf,metaData]=getCachedConf(self,confName)
             % GETCACHEDCONF - returns a cached configuration by its name; 
@@ -635,18 +673,12 @@ classdef ConfRepoManagerAnyStorage<handle
                     'configuration %s is not cached',confName);
             end
         end
-        function isPositive=isCachedConf(self,confName)
-            % ISCACHEDCONF checks if the configuration with a given name is
-            % cached
-            %
-            isPositive=self.cache.isKey(confName);
-        end
         function reCacheCurConf(self)
             % RECACHECURCONF rehaches the current configuration
             %
             curConfName=self.getCurConfName();
             [conf,metaData]=self.getConfFromStorage(curConfName);
-            self.cacheConf(curConfName,conf,metaData);
+            self.cacheAndSelectConf(curConfName,conf,metaData);
         end        
         function initCache(self)
             % INITCACHE initializes the cache

@@ -12,7 +12,7 @@ else
     [hashStr,StMsg]=modgen.git.gitcall('log -1 HEAD --pretty=format:%H',...
         pathStr);
     if isempty(StMsg),
-        hashStr=hashStr{:};
+        hashStr=[hashStr{:}];
     else
         if iscell(hashStr)&&isempty(hashStr),
             error(StMsg);

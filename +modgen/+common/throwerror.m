@@ -26,9 +26,6 @@ function meObj=throwerror(msgTag,varargin)
 import modgen.common.*;
 [reg,~,nCallerStackStepsUp]=parseparext(varargin,...
     {'nCallerStackStepsUp';1},'propRetMode','separate');
-if numel(reg)>1
-    reg{1}=strrep(reg{1},'\','\\');
-end
 callerName=getcallername(1+nCallerStackStepsUp,'full');
 callerName=strrep(callerName,'.',':');
 
