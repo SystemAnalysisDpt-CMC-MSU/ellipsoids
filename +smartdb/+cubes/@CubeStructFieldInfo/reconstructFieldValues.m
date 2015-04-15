@@ -1,4 +1,5 @@
-function [reg,isSpecified]=reconstructFieldValues(self,reg,isSpecified,isNullInferred)
+function [reg,isSpecified]=reconstructFieldValues(self,...
+    reg,isSpecified,isNullInferred)
 %
 if numel(self)~=1
     error([upper(mfilename),':wrongInput'],...

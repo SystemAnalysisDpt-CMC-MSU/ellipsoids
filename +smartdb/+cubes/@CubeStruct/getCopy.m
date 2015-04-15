@@ -16,5 +16,10 @@ function resObj=getCopy(self,varargin)
 %            System Analysis Department 2011 $
 %
 %
-p=metaclass(self);
-resObj=feval(p.Name,self,varargin{:});
+if isempty(varargin)
+    %performance optimization    
+    resObj = getArrayFromByteStream(getByteStreamFromArray(self));
+else
+    p=metaclass(self);
+    resObj=feval(p.Name,self,varargin{:});
+end

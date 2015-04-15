@@ -49,7 +49,7 @@ for k=1:2:nProp-1
 end
 %
 fullFieldNameList=self.getFieldNameList();
-fieldTypeList=self.fieldMetaData.getTypeList();
+fieldTypeList=self.fieldMetData.getTypeList();
 %
 if ~isempty(fieldNameList)
     [~,indLoc]=ismember(fieldNameList,fullFieldNameList);
@@ -63,7 +63,7 @@ if ~isempty(fieldNameList)
     end
 else
     if isUniformOutput
-        typeInfoList=self.fieldMetaData.getDefaultTypeByCubeStructRef(...
+        typeInfoList=self.fieldMetData.getDefaultTypeByCubeStructRef(...
             self,size(fieldNameList));
     else
        typeInfoList=cell.empty(size(fieldNameList)); 

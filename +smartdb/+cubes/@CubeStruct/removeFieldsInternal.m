@@ -23,6 +23,6 @@ self.SData=rmfield(self.SData,clearFieldNameList);
 self.SIsNull=rmfield(self.SIsNull,clearFieldNameList);
 self.SIsValueNull=rmfield(self.SIsValueNull,clearFieldNameList);
 %
-self.fieldMetaData(indDel)=[];
+self.fieldMetData.removeFieldsByInd(indDel);
 %
 self.clearFieldsAsProps(clearFieldNameList);

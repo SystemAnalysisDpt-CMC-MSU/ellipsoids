@@ -42,11 +42,12 @@ nFields=length(fieldNameList);
 SDataNew=struct();
 SIsNullNew=struct();
 SIsValueNullNew=struct();
-fieldMetaDataVec=self.getFieldMetaData(fieldNameList);
+fieldMetaData=self.getFieldMetaData(fieldNameList);
 for iField=1:nFields
     fieldName=fieldNameList{iField};
     [SDataNew.(fieldName),...
         SIsNullNew.(fieldName),...
         SIsValueNullNew.(fieldName)]=...
-                fieldMetaDataVec(iField).generateDefaultFieldValue(minDimensionSizeVec);
+                fieldMetaData.generateDefaultFieldValue(iField,...
+                minDimensionSizeVec);
 end

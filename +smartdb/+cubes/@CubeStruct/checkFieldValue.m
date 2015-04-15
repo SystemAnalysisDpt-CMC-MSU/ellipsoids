@@ -115,6 +115,8 @@ if isUnspecifiedFilled
 end
 %
 if ~isFieldMetaDataPassed
-    fieldMetaData=self.getFieldMetaData(fieldName);
+    fieldMetaData=self.fieldMetData;
 end
-checkFieldValue(fieldMetaData,isConsistencyChecked,actionType,isSpecified,reg);
+%
+fieldMetaData.checkFieldValue(fieldName,isConsistencyChecked,...
+    actionType,isSpecified,reg);

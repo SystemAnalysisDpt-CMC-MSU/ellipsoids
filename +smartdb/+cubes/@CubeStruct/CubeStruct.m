@@ -28,8 +28,17 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
     end
     %
     properties (Access=private, Hidden)
-        fieldMetaData=smartdb.cubes.CubeStructFieldInfo(zeros(1,0))
+        fieldMetData
         %
+    end
+    methods
+        function set.fieldMetData(self,value)
+            if ~isa(value,'smartdb.cubes.CubeStructFieldNfo')
+                modgen.common.throwerror('wrongInput',...
+                    'bad type of fieldMetData field');
+            end
+            self.fieldMetData=value;
+        end
     end
     properties(Access=private,Hidden)
         SData=struct()
@@ -164,8 +173,10 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
                 self=self.empty(sizeVec);
             elseif isSize,
                 className=class(self);
-                for iObj=nObjs:-1:1,
-                    self(iObj)=feval(className);%feval(className,'checkConsistency',false);
+                self(nObjs)=feval(className);
+                refByteVec=getByteStreamFromArray(self(nObjs));
+                for iObj=(nObjs-1):-1:1,
+                    self(iObj)=getArrayFromByteStream(refByteVec);%feval(className,'checkConsistency',false);
                 end
                 self=reshape(self,sizeVec);
             elseif isCubeObjectOnInput
@@ -250,11 +261,11 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
             %
         end
         function fieldNameList=get.fieldNameList(self)
-            fieldNameList=self.fieldMetaData.getNameList;
+            fieldNameList=self.fieldMetData.getNameList();
         end
         %
         function fieldDescrList=get.fieldDescrList(self)
-            fieldDescrList=self.fieldMetaData.getDescriptionList();
+            fieldDescrList=self.fieldMetData.getDescriptionList();
         end
         %
         function set.fieldNameList(~,fieldNameList)
@@ -353,31 +364,29 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         %
         sortInd=getSortIndexInternal(self,sortFieldNameList,sortDim,varargin)
         %
-        function fieldMetaDataVec=getFieldMetaData(self,fieldNameList)
-            fieldMetaDataVec=self.fieldMetaData;
+        function fieldMetaData=getFieldMetaData(self,fieldNameList)
+            fieldMetaData=self.fieldMetData;
             if nargin==2
-                fieldMetaDataVec=fieldMetaDataVec.filterByName(fieldNameList);
+                fieldMetaData=fieldMetaData.getFilterByName(fieldNameList);
             end
         end
         %
-        function setFieldMetaData(self,fieldMetaData,fieldNameList)
-            if nargin<=2
-                inpArgList={};
-                isFieldNameListSpec=false;
+        function setFieldMetaData(self,fieldMetaData,varargin)
+            if isempty(self.fieldMetData)
+                nMdFields=0;
             else
-                inpArgList={fieldNameList};
-                isFieldNameListSpec=true;
+                nMdFields=self.fieldMetData.getNFields();
             end
-            curFieldMetaData=self.getFieldMetaData(inpArgList{:});
-            isEmptyMd=~isFieldNameListSpec&&isempty(curFieldMetaData);
-            %
-            isCopy=~isEmptyMd&&...
-                (numel(curFieldMetaData)==numel(fieldMetaData));
-            %
-            if isCopy
-                curFieldMetaData.copyFrom(fieldMetaData);
+            if nargin<=2
+                nSrcFields=fieldMetaData.getNFields();
+                isReplace=(nMdFields==0)||(nMdFields~=nSrcFields);
             else
-                self.fieldMetaData=fieldMetaData;
+                isReplace=false;
+            end
+            if isReplace
+                self.fieldMetData=fieldMetaData;
+            else
+                self.fieldMetData.copyFrom(fieldMetaData,varargin{:});
             end
         end
         function setDefaultFieldType(self,fieldNameList)
@@ -539,7 +548,7 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
     methods (Access=protected)
         function metaDataVec=getMetaDataInternal(self,fieldNameList,...
                 fieldDescrList,typeSpecList)
-            metaDataVec=smartdb.cubes.CubeStructFieldInfo.customArray(...
+            metaDataVec=smartdb.cubes.CubeStructFieldNfo.customArray(...
                 self,fieldNameList,fieldDescrList,typeSpecList);
         end
     end

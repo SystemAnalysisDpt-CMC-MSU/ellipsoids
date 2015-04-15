@@ -56,7 +56,7 @@ else
     end
 end
 fullFieldNameList=self.getFieldNameList();
-fieldTypeSpecList=self.fieldMetaData.getTypeSpecList();
+fieldTypeSpecList=self.fieldMetData.getTypeSpecList();
 if ~isempty(fieldNameList)
     [isThereVec,indLoc]=ismember(fieldNameList,fullFieldNameList);
     if ~all(isThereVec)

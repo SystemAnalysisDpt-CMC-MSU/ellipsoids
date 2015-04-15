@@ -29,5 +29,5 @@ if ~isempty(varargin)
             'incorrect property name-value list');
     end
 else
-    nFields=numel(self.fieldMetaData);
+    nFields=self.fieldMetData.getNFields();
 end

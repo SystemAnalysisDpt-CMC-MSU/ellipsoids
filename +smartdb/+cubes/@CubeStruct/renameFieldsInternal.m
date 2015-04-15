@@ -65,10 +65,10 @@ for iField=1:self.getNFields()
 end
 self.clearFieldsAsProps();
 %
-self.fieldMetaData(indLoc).setName(toFieldNameList);
+self.fieldMetData.setNameList(toFieldNameList,indLoc);
 %
 if isDescrSpec
-    self.fieldMetaData(indLoc).setDescription(toFieldDescrList);
+    self.fieldMetData.setDescrList(toFieldDescrList,indLoc);
 end
 %
 self.SData=SResData;

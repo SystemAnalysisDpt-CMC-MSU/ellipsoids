@@ -167,7 +167,7 @@ for iField=1:nFields
                 [minDimSizeVec,inpValueDimSizeVec]);
         end
         [value,isReconstructed]=...
-            self.fieldMetaData(iField).reconstructFieldValues(...
+            self.fieldMetData.reconstructFieldValues(iField,...
             getstructsfield(reg,fieldName,isSpecified),...
             isSpecified,true);
         if ~all(isReconstructed)&&isConsistencyChecked
@@ -185,7 +185,8 @@ for iField=1:nFields
     else
         value=cell(size(self.completeStructNameList));
         sizeVec=[inpMinDimSizeVec,dataValueSizeMat(iField,:)];
-        [value{:}]=self.fieldMetaData(iField).generateDefaultFieldValue(sizeVec);
+        [value{:}]=self.fieldMetData.generateDefaultFieldValue(...
+            iField,sizeVec);
         for iStruct=1:nAllStructs
             reg{iStruct}.(fieldName)=value{iStruct};
         end

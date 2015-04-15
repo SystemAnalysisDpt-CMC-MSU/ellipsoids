@@ -6,7 +6,7 @@ else
     %empty enum values are not loaded correctly in 2011a so we use a simple
     %workround (it only works for enum fields, not cells of enums)
     %
-    if inpObj.getNTuples()==0
+    if inpObj.getNElems()==0
         fieldTypeList=inpObj.getFieldTypeSpecList();
         isSimpleTypeVec=cellfun('length',fieldTypeList)==1;
         if any(isSimpleTypeVec)
