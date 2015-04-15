@@ -20,9 +20,6 @@ function throwwarn(msgTag,varargin)
 %
 %
 import modgen.common.*;
-if nargin>1
-    varargin{1}=strrep(varargin{1},'\','\\');
-end
 callerName=getcallername(2,'full');
 callerName=strrep(callerName,'.',':');
 warnMsg=[upper(callerName),':',msgTag];

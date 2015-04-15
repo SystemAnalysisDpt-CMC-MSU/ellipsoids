@@ -1,10 +1,24 @@
-function results=run_tests()
+function results=run_tests(varargin)
+%
+% Usage:
+%  
+%   modgen.configuration.test.run_tests('filter',{'adaptive','modgen.configuration.test.mlunit_test_adaptiveconfrepomgr','test_setGetParamNegative'})
+%   modgen.configuration.test.run_tests('filter',{'.*','modgen.configuration.test.mlunit_test_common','testCacheConf'})
+%   modgen.configuration.test.run_tests('filter',{'plainver','.*','testRegression'})
+%   modgen.configuration.test.run_tests('filter',{'plainver','.*','testRegression'})
+%
 import modgen.configuration.*;
 import modgen.configuration.test.*;
 %
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
+[~,filterPropValList]=modgen.common.parseparams(varargin,{'filter'});
+if isempty(filterPropValList)
+    filterParamList={};
+else
+    filterParamList=filterPropValList{2};
+end
 
 factory=modgen.configuration.test.ConfRepoManagerFactory('plain');
 suite_crm = loader.load_tests_from_test_case(...
@@ -66,4 +80,6 @@ suite = mlunitext.test_suite(horzcat(...
     suite_adaptive_negative.tests,...
     suite_adaptive_basic.tests));
 %
+suite=suite.getCopyFiltered(filterParamList{:});
+
 results=runner.run(suite);

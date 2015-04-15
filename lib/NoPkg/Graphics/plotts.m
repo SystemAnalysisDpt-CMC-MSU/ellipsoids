@@ -39,7 +39,7 @@ function [groupHandles,hPlotHandlesVec]=plotts(varargin)
 %               along each column is equal to 1
 %         graphLegends: cell [1,nGraphs]
 %         graphLegendsLocation: cell[1,nGroups] of strings, specified
-%                    location of Legend (by default - 'NorthEast')
+%                    location of Legend (by default - 'WestOutside')
 %                    By details -- see 'legend' function doc
 %         groupYLabels: cell [1,nGroups]
 %         groupTitles: cell [1,nGroups]
@@ -182,6 +182,12 @@ function [groupHandles,hPlotHandlesVec]=plotts(varargin)
 %                   specification as dragCallback
 %         isSortByXAxis: specified whether the data is sorted by x-axes
 %                   value before displaying
+%           
+%         markerSize: double[1,nGraphs] - vector of marker sizes per each graph
+%       
+%         markerName: cell[1,nGraphs] of char[1,] - list of marker names
+%            such as 'none','*','.' etc
+%           
 %   notes:
 %       graphRgbColors has a color specify priority over graphPlotSpecs
 %          if you give color parameters in graphPlotSpecs {'r.-'},
@@ -209,9 +215,6 @@ function [groupHandles,hPlotHandlesVec]=plotts(varargin)
 %      'groupYLabels',{'aaaa','2222'},'figureName','myFigure','scale', {'sqrtscale'}, 'scaleparam', 3, ...
 %       'graphPlotSpecs',{'g','r*'},'graphTypes',{'edgebar','plot'},'fontSize'
 %       ,12,'xlim',{[1,10]},'ylim',{[0,6]});
-%
-%
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 5-Sep-2013 $
 %
 linkAxesSpec='none';
 synchroDates=1;

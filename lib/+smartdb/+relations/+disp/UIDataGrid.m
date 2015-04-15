@@ -1,4 +1,4 @@
-classdef UIDataGrid<handle
+classdef UIDataGrid<modgen.gui.ADataGrid
     properties (Access=private)
         relToMatProp=struct();
         dataRel
@@ -12,6 +12,21 @@ classdef UIDataGrid<handle
         end
     end    
     methods
+        function putData(self,varargin)
+            self.gridObj.putData(varargin{:});
+        end
+        function keyVec=getFilteredRowKeys(self)
+            keyVec=self.gridObj.getFilteredRowKeys();
+        end
+        function keyVec=getSelectedRowKeys(self)
+            keyVec=self.gridObj.getSelectedRowKeys();
+        end
+        function nRows=getRowCount(self)
+            nRows=self.gridObj.getRowCount();
+        end
+        function nCols=getColumnCount(self)
+            nCols=self.gridObj.getColumnCount();
+        end
         function putRel(self,dataObj,varargin)
             self.dataRel=dataObj.getCopy();            
             inpArgList=self.getRelToMatProps();
@@ -31,7 +46,7 @@ classdef UIDataGrid<handle
         end
         function self=UIDataGrid(varargin)
             import modgen.common.throwerror;
-            [~,~,tableType,nullTopReplacement,panelHandle,...
+            [reg,~,tableType,nullTopReplacement,panelHandle,...
                 isTableTypeSpec,isNullTopRepSpec]=...
                 modgen.common.parseparext(varargin,...
                 {'tableType','nullTopReplacement','panelHandle';...
@@ -39,7 +54,7 @@ classdef UIDataGrid<handle
                 @(x)ischar(x)&&isrow(x)&&...
                 ismember(lower(x),{'scijavatable','uitable'}),...
                 @(x)ischar(x)&&isrow(x),...
-                @(x)ishandle(x)&&strcmp(get(x,'Type'),'uipanel')},0,...
+                @(x)ishandle(x)&&strcmp(get(x,'Type'),'uipanel')},[],...
                 'isObligatoryPropVec',[false,false,true]);
             %
             if ~isTableTypeSpec
@@ -57,10 +72,10 @@ classdef UIDataGrid<handle
             switch lower(tableType)
                 case 'scijavatable',
                     self.gridObj=modgen.gui.JDataGrid('panelHandle',...
-                        panelHandle);
+                        panelHandle,reg{:});
                 case 'uitable',
                     self.gridObj=modgen.gui.MDataGrid('panelHandle',...
-                        panelHandle);
+                        panelHandle,reg{:});
             end
             %
             if isNullTopRepSpec
