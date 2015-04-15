@@ -165,11 +165,11 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
                 end
             end
         end
-        function assignValue(self,value,fTypeCheckFunc,fieldName)
+        function assignValues(self,valueList,fTypeCheckFunc,fieldName)
             % ASSIGN value is a thin wrapper for processValue which allows
             % a vectorial value assignment
             %
-            valueList=modgen.common.obj.processpropvalue(size(self),value,fTypeCheckFunc);
+            valueList=modgen.common.obj.processpropvalue(size(self),valueList,fTypeCheckFunc);
             if ~isempty(self)
                 [self.(fieldName)]=deal(valueList{:});
             end
@@ -356,16 +356,16 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
                 self.getTypeList,'UniformOutput',false);
         end
         %
-        function setName(self,fieldName)
-            self.assignValue(fieldName,@ischar,'name');
+        function setNameList(self,fieldName)
+            self.assignValues(fieldName,@ischar,'name');
         end
         %
-        function setDescription(self,description)
-            self.assignValue(description,@ischar,'description');
+        function setDescrList(self,description)
+            self.assignValues(description,@ischar,'description');
         end
         %
         function setTypeList(self,typeList)
-            self.assignValue(typeList,@(x)isa(x,...
+            self.assignValues(typeList,@(x)isa(x,...
                 smartdb.cubes.CubeStructFieldInfo.TYPE_FIELD_TYPE_NAME),'type');
         end
         function setTypeBySpec(self,typeSpec)
@@ -414,19 +414,27 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
                 self.type.createDefaultValueArray(varargin{:})
             end
         end
-        function checkFieldValue(self,varargin)
+        function checkFieldValue(self,fieldNameInd,varargin)
             import modgen.common.throwerror;
-            if numel(self)>1
+            if ischar(fieldNameInd)
+                mdObj=self.filterByName(fieldNameInd);            
+            elseif isnumeric(fieldNameInd)
+                mdObj=self(fieldNameInd);
+            else
                 throwerror('wrongInput',...
-                    'this method is not implemented for object arrays');
+                    'fieldNameInd can be either a field name of a field number');
+            end
+            if numel(mdObj)~=1
+                throwerror('wrongInput',...
+                    'this method is implemented for scalar objects');
             end
             %
             try
-                self.type=self.type.checkValue(varargin{:});
+                mdObj.type=mdObj.type.checkValue(varargin{:});
             catch meObj
                 if ~isempty(strfind(meObj.identifier,':wrongInput'))
                     newMeObj=MException([upper(mfilename),':wrongInput'],...
-                        'type check failed for field %s',self.name);
+                        'type check failed for field %s',mdObj.name);
                     newMeObj=addCause(newMeObj,meObj);
                     throw(newMeObj);
                 else

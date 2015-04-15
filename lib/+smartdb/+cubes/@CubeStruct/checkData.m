@@ -215,7 +215,7 @@ if any(isDataConsistencyCheckedVec)||any(isStructCheckedVec)
                     fieldName=fieldNameList{iField};
                     self.checkFieldValue(isDataConsistencyCheckedVec,fieldName,...
                         actionType,{reg{1}.(fieldName)},...
-                        'fieldMetaData',fieldMetaData(iField),addArgList{:});
+                        'fieldMetaData',fieldMetaData,addArgList{:});
                 end
             case 2
                 for iField=1:nFields
@@ -223,7 +223,7 @@ if any(isDataConsistencyCheckedVec)||any(isStructCheckedVec)
                     self.checkFieldValue(isDataConsistencyCheckedVec,fieldName,...
                         actionType,{reg{1}.(fieldName),...
                         reg{2}.(fieldName)},...
-                        'fieldMetaData',fieldMetaData(iField),addArgList{:});
+                        'fieldMetaData',fieldMetaData,addArgList{:});
                 end
             case 3
                 for iField=1:nFields
@@ -231,7 +231,7 @@ if any(isDataConsistencyCheckedVec)||any(isStructCheckedVec)
                     self.checkFieldValue(isDataConsistencyCheckedVec,fieldName,...
                         actionType,{reg{1}.(fieldName),...
                         reg{2}.(fieldName),reg{3}.(fieldName)},...
-                        'fieldMetaData',fieldMetaData(iField),addArgList{:});
+                        'fieldMetaData',fieldMetaData,addArgList{:});
                 end
         end
     end

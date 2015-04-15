@@ -36,4 +36,4 @@ if ~all(isThereVec)
         'newFieldNameList should cosists of field names only');
 end
 %
-self.fieldMetaData=self.fieldMetaData(indLoc);
+self.fieldMetData.filterByInd(indLoc);

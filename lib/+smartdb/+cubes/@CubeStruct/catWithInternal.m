@@ -71,9 +71,8 @@ if ~isempty(otherFieldNameList)
             self.getMinDimensionality());
     end
     %concatenate meta data
-    otherFieldMetaData=other.getFieldMetaData(otherFieldNameList);
-    self.fieldMetaData=[self.getFieldMetaData(selfFieldNameList),...
-        otherFieldMetaData.clone(self)];
+    self.fieldMetData.catWithByName(other.fieldMetData,selfFieldNameList,...
+        otherFieldNameList,self);
     %concatenate data
     [SData,SIsNull,SIsValueNull]=other.getDataInternal(...
         'fieldNameList',otherFieldNameList);

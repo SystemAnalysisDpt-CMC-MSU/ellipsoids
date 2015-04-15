@@ -134,7 +134,12 @@ classdef HandleObjectCloner<handle
             %
             % Ouput:
             %   self: any [] - constructed object
-            obj=self.createInstance(self,varargin{:});
+            if isempty(varargin)
+                %Performance optimization
+                obj = getArrayFromByteStream(getByteStreamFromArray(self));
+            else
+                obj=self.createInstance(self,varargin{:});
+            end
         end
         function resObj=createInstance(self,varargin)
             % CREATEINSTANCE - returns an object of the same class by calling a default

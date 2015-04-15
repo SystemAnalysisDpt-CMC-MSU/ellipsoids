@@ -128,7 +128,7 @@ typeSpecList(isnEmptySourceVec)=...
 addFieldDescrList(isnEmptySourceVec)=...
     self.getFieldDescrList(sourceFieldNameList(isnEmptySourceVec));
 %
-newMetaDataVec=self.getMetaDataInternal(...
+newMetaData=self.getMetaDataInternal(...
     addFieldNameList,addFieldDescrList,typeSpecList);
 %
 for iField=1:nAddFields,
@@ -140,16 +140,16 @@ for iField=1:nAddFields,
         self.SIsValueNull.(fieldName)=self.SIsValueNull.(sourceFieldName);
     else
         [valueVec,isNullVec,isValueNullVec]=...
-            newMetaDataVec(iField).generateDefaultFieldValue();
+            newMetaData.generateDefaultFieldValue(iField);
         self.SData.(fieldName)=valueVec;
         self.SIsNull.(fieldName)=isNullVec;
         self.SIsValueNull.(fieldName)=isValueNullVec;
     end
 end
 if isAddedInFront
-    self.fieldMetaData=[newMetaDataVec,self.fieldMetaData];
+    self.fieldMetData.catWithToFront(newMetaData);
 else
-    self.fieldMetaData=[self.fieldMetaData,newMetaDataVec];
+    self.fieldMetData.catWith(newMetaData);
 end
 %
 %clear field definitions as properties and then recreate them

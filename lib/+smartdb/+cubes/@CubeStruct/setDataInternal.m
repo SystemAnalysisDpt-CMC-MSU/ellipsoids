@@ -144,9 +144,9 @@ end
 %
 if ~isMetaDataSpecified
     if isTransactionSafe
-        fieldMetaData=self.fieldMetaData.clone(self);
+        fieldMetaData=self.fieldMetData.clone(self);
     else
-        fieldMetaData=self.fieldMetaData;
+        fieldMetaData=self.fieldMetData;
     end
 end
 %
@@ -171,7 +171,7 @@ if nReg>0&&~isSIsValueNullSetterUsed
         dataFieldNameList=fieldnames(reg{1});
         nDataFields=length(dataFieldNameList);
         %
-        if numel(fieldMetaData)>nDataFields
+        if fieldMetaData.getNFields()>nDataFields
             mdFieldNameList=fieldMetaData.getNameList();
             isThereVec=ismember(mdFieldNameList,dataFieldNameList);
             misFieldNameList=mdFieldNameList(~isThereVec);

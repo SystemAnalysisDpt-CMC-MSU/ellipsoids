@@ -28,7 +28,7 @@ end
 function loadScalarObj(self,SObjectData,varargin)
 import modgen.common.throwerror;
 [~,~,fieldNameList,isMissingFieldsFilledWithNulls,...
-    isFieldNameSpec,isFillMissingFieldsWithNullsSpec]=...
+    isFieldNameSpec]=...
     modgen.common.parseparext(varargin,...
     {'fieldNameList','fillMissingFieldsWithNulls';...
     {},false},0);
@@ -91,22 +91,21 @@ elseif ~isempty(fieldNameList)
     %
 end
 %
-if ~isfield(SObjectData,'fieldMetaData')
+if ~isfield(SObjectData,'fieldMetData')
     self.inferFieldMetaData();
-elseif ~isa(SObjectData.fieldMetaData,'smartdb.cubes.CubeStructFieldInfo')
+elseif ~isa(SObjectData.fieldMetData,'smartdb.cubes.CubeStructFieldNfo')
     warning([mfilename,':badFieldMetaData'],...
         ['fieldMetaData field was loaded ',...
         'incorrectly, inferring it from data...']);
     self.inferFieldMetaData();
 else
     if ~isFieldNameSpec
-        self.fieldMetaData=SObjectData.fieldMetaData.clone(self);
+        self.fieldMetData=SObjectData.fieldMetData.clone(self);
     elseif ~isempty(fieldNameList)
-        fieldMetaData=[...
-            self.fieldMetaData.filterByName(notExistFieldList),...
-            SObjectData.fieldMetaData.filterByName(existFieldList).clone(self)];
+        self.fieldMetData.catWithByName(SObjectData.fieldMetData,notExistFieldList,...
+            existFieldList,self);
         [~,indVec]=sort([indNotExistVec,indExistVec]);
-        self.fieldMetaData=fieldMetaData(indVec);
+        self.fieldMetData.filterByInd(indVec);
     end
 end
 %

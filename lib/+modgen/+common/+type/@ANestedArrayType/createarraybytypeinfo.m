@@ -24,7 +24,11 @@ if isempty(STypeInfo.type)
 end
 %    
 if numel(sizeVec)==1
-    sizeVec=[sizeVec,1];
+    if sizeVec(1)==0
+        sizeVec=[0 0];
+    else
+        sizeVec=[sizeVec,1];
+    end
 end
 if STypeInfo.depth==0
     valueArray=modgen.common.type.createarray(STypeInfo.type,sizeVec);

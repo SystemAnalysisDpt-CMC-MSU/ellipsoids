@@ -170,7 +170,7 @@ end
 isEq=isequal(self.getMinDimensionSizeInternal(),...
     otherObj.getMinDimensionSizeInternal());
 if ~isEq,
-    reportStr='Cube dimensionalities are different';
+    reportStr='Dimensionalities of objects are different';
     return;
 end
 %
@@ -183,17 +183,17 @@ if ~isFieldOrderEq
         return;
     end
     otherFieldMetaData=otherObj.getFieldMetaData();
-    otherFieldMetaData=otherFieldMetaData(indLoc);
+    otherFieldMetaData=otherFieldMetaData.getFilterByInd(indLoc);
     if ~issorted(indLoc)
         inpIsMemberOtherArgList={'fieldNameList',selfFieldNameList};
     end
 else
     otherFieldMetaData=otherObj.getFieldMetaData();
 end
-isEq=self.getFieldMetaData.isEqual(otherFieldMetaData,...
+[isEq,mdReportStr]=self.getFieldMetaData.isEqual(otherFieldMetaData,...
     isCompareCubeStructBackwardRef,compareCubeStructParamList);
 if ~isEq
-    reportStr='Field meta data is different';
+    reportStr=sprintf('Field meta data is different: %s',mdReportStr);
     return;
 end
 nFields=length(selfFieldNameList);
@@ -202,7 +202,7 @@ for iField=1:nFields,
     p2=findprop(otherObj,selfFieldNameList{iField});
     isEq=isequal(isempty(p1),isempty(p2));
     if ~isEq,
-        reportStr=['CubeStruct fields are not defined as properties ',...
+        reportStr=['Fields of objects are not defined as properties ',...
             'in the same way'];
         return;
     end
