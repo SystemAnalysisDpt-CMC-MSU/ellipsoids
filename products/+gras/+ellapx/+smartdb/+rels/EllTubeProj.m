@@ -38,6 +38,15 @@ classdef EllTubeProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
     %
     % TODO: correct description of the fields in 
     %     gras.ellapx.smartdb.rels.EllTubeProj
+    
+    methods (Access=protected,Static,Hidden)
+        function outObj=loadobj(inpObj)
+            import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;
+            outObj=ATypifiedAdjustedRel.loadObjViaConstructor(...
+                mfilename('class'),inpObj);
+        end
+    end
+   
     methods(Access=protected)
         function changeDataPostHook(self)
             self.checkDataConsistency();

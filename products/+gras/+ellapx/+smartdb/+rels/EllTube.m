@@ -38,6 +38,14 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
     properties (GetAccess=private,Constant)
         DEFAULT_SCALE_FACTOR=1;
     end
+    methods (Access=protected,Static,Hidden)
+        function outObj=loadobj(inpObj)
+            import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;
+            outObj=ATypifiedAdjustedRel.loadObjViaConstructor(...
+                mfilename('class'),inpObj);
+        end
+    end
+    %
     methods (Access=protected)
         function figureGroupKeyName=figureGetGroupKeyFunc(self,sTime,lsGoodDirVec)
             figureGroupKeyName=sprintf(...

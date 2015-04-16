@@ -54,6 +54,14 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
     %
     %   TODO: correct description of the fields in
     %     gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
+    methods (Access=protected,Static,Hidden)
+        function outObj=loadobj(inpObj)
+            import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;
+            outObj=ATypifiedAdjustedRel.loadObjViaConstructor(...
+                mfilename('class'),inpObj);
+        end
+    end
+    %
     methods
         function fieldsList = getNoCatOrCutFieldsList(self)
             import  gras.ellapx.smartdb.F;

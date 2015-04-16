@@ -21,6 +21,26 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
             self.sortDetermenisticallyInternal(varargin{:});
         end
     end
+    methods (Access=protected,Static,Hidden)
+        function outObj=loadObjViaConstructor(className,inpObj)
+            import modgen.common.throwwarn;
+            if isstruct(inpObj)&&isfield(inpObj,'SData')&&...
+                    isfield(inpObj,'SIsNull')&&isfield(inpObj,'SIsValueNull')
+                throwwarn('badMatFile:wrongState',...
+                    ['Apparently relation loaded from ',...
+                    'the file has a legacy format \n',...
+                    'and was loaded as a structure. ',...
+                    'Calling %s constructor on loaded data.'],className);                
+                %                
+                inpObj=feval(className,inpObj.SData,...
+                    inpObj.SIsNull,inpObj.SIsValueNull);
+            end
+            outObj=...
+                gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel.loadobj(inpObj);
+        end
+    end    
+    
+    
     methods (Access=protected)
         function sortDetermenisticallyInternal(self,maxTolerance)
             import modgen.common.checkvar;

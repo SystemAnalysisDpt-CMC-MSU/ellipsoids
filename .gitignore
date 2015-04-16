@@ -2,6 +2,7 @@
 /cvx
 /tbxmanager
 /install/pathdef.m
+/install/javaclasspath.txt
 /products/+elltool/+logging/Logs
 /products/+elltool/+conf/confrepo
 /products/+elltool/+test/+configuration/confrepo
