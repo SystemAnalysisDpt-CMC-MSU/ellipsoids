@@ -31,9 +31,15 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
                     'the file has a legacy format \n',...
                     'and was loaded as a structure. ',...
                     'Calling %s constructor on loaded data.'],className);                
-                %                
-                inpObj=feval(className,inpObj.SData,...
-                    inpObj.SIsNull,inpObj.SIsValueNull);
+                %
+                isEmptyFieldVec=structfun(@isempty,inpObj.SData);
+                %
+                if all(isEmptyFieldVec)
+                    inpObj=feval(className);
+                else
+                    inpObj=feval(className,inpObj.SData,...
+                        inpObj.SIsNull,inpObj.SIsValueNull);
+                end
             end
             outObj=...
                 gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel.loadobj(inpObj);
