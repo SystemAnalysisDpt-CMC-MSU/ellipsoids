@@ -213,7 +213,6 @@ classdef MPTIntegrationTestCase < elltool.core.test.mlunit.EllFactoryTC
             poly4 = Polyhedron([eye(2); -eye(2)], ones(4,1));
             ellPolyIA5 = intersection_ia(ell4,poly4);
             mlunitext.assert(isEqual(ell4,ellPolyIA5));
-            %mlunitext.assert(eq(ell4,ellPolyIA5));
             %Polyhedron lies in ellipsoid
             my2Ell = self.createEll(eye(2));
             my2Poly = Polyhedron([eye(2); eye(2)], 1/4*ones(4,1));
@@ -816,10 +815,8 @@ classdef MPTIntegrationTestCase < elltool.core.test.mlunit.EllFactoryTC
         %
 
 
-        function isBound = isBoundary(ellShiftVec,ellConstrMat,poly)
+        function isBound = isBoundary(ellShiftVec,ellConstrMat,polyhedron)
             import modgen.common.absrelcompare;
-            %polyhedron = toPolyhedron(poly);
-            polyhedron = poly;
             pointsArray=polyhedron.V;
             nPoints = size(pointsArray,1);
             isBound = true;

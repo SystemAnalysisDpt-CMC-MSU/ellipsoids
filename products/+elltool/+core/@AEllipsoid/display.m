@@ -43,11 +43,6 @@ fprintf('Properties:\n');
 strucdisp(Properties);
 fprintf('\n');
 fprintf('Fields (name, type, description):\n');
-    
-%     fprintf(['    ', SFieldNames.shapeMat, '    double    ',...
-%         SFieldDescription.shapeMat, '\n']);
-%     fprintf(['    ', SFieldNames.centerVec, '    double    ',...
-%         SFieldDescription.centerVec, '\n']);
 
 SFieldNamesArr = fieldnames(SFieldNames);
 for i = 1 : size(SFieldNamesArr, 1)

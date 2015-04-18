@@ -39,7 +39,6 @@ else
 end
     function fSingleCopy(copyEll,ell)
         copyEll.centerVec=ell.centerVec;
-        %copyEll.shapeMat=ell.shapeMat;
         copyEll.absTol=ell.absTol;
         copyEll.relTol=ell.relTol;
         copyEll.nPlot2dPoints=ell.nPlot2dPoints;

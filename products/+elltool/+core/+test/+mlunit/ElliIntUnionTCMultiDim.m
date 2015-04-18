@@ -237,21 +237,18 @@ function [varargout] = createTypicalArray(self, flag)
             testEllArray = self.createObjectArray(arraySizeVec, @(x)self.createEll(eye(x)), ...
                 3, 1, 1);
             varargout{1} = testEllArray;
-            %varargout{2} = ell_unitball(3);
             varargout{2} = self.createEll(eye(3));
         case 2
             arraySizeVec = [1, 2, 4, 3, 2];
             testEllArray = self.createObjectArray(arraySizeVec, @(x)self.createEll(eye(x)), ...
                 2, 1, 1);
             varargout{1} = testEllArray;
-%             varargout{2} = ell_unitball(2);
             varargout{2} = self.createEll(eye(2));
         case 3
             arraySizeVec = [1, 1, 1, 1, 1, 7, 1, 1, 7];
             testEllArray = self.createObjectArray(arraySizeVec, @(x)self.createEll(eye(x)), ...
                 4, 1, 1);
             varargout{1} = testEllArray;
-%             varargout{2} = ell_unitball(4);
             varargout{2} = self.createEll(eye(4)); 
         case 4
             testEllArray = self.createEll.empty(1, 0, 0, 1, 5);
@@ -284,7 +281,6 @@ function [varargout] = createTypicalArray(self, flag)
         case 7
             testEllArray = self.createObjectArray(arraySizeVec, @(x)self.createEll(eye(x)), ...
                 3, 1, 1);
-%             testEllArray(2, 1, 1, 1, 1, 1, 1) = ell_unitball(7);
             testEllArray(2, 1, 1, 1, 1, 1, 1) = self.createEll(eye(7));
             test2EllArray = self.createObjectArray(arraySizeVec, @(x)self.createEll(eye(x)), ...
                 3, 1, 1);

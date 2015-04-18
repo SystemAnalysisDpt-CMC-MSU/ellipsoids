@@ -18,465 +18,6 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
             ellVec(1).shape(2);
             mlunitext.assert(isequal(ellVec(2).getShapeMat,shMat));
         end
-        %
-        %         function testConstructorProps(self)
-        %             nDims=3;
-        %             absTol=1e-7;
-        %             relTol=1e-4;
-        %             nPlot2dPoints=100;
-        %             nPlot3dPoints=200;
-        %             %
-        %             getterList={@getNPlot2dPoints,@getNPlot3dPoints,@getAbsTol,...
-        %                 @getRelTol};
-        %             %
-        %             propNameList={'nPlot2dPoints','nPlot3dPoints','absTol',...
-        %                 'relTol'};
-        %             valList={nPlot2dPoints,nPlot3dPoints,absTol,relTol};
-        %             check([2 3 1 4]);
-        %             check(1);
-        %             check([1 2]);
-        %             check([2 3]);
-        %             check([2 3]);
-        %             check([1 4]);
-        %             function check(indVec)
-        %                 propNameValCMat=[propNameList(indVec);valList(indVec)];
-        %                 %
-        %                 checkForSize([]);
-        %                 checkForSize([2 3 4]);
-        %                 %
-        %                 function checkForSize(ellArrSizeVec)
-        %                     sizeList=num2cell(ellArrSizeVec);
-        %                     shCArr=arrayfun(@(x)genPosMat(nDims),...
-        %                         ones(sizeList{:}),'UniformOutput',false);
-        %                     shArr=cell2mat(shiftdim(shCArr,-2));
-        %                     ellArr=self.ellFactoryObj.create(shArr,propNameValCMat{:});
-        %                     checkShape();
-        %                     checkProp();
-        %                     ellArr=ellArr.getCopy();
-        %                     checkShape();
-        %                     checkProp();
-        %                     if isempty(ellArrSizeVec)
-        %                         ellArrSizeVec=[ellArrSizeVec, 1];
-        %                     end
-        %                     centArr=rand([nDims ellArrSizeVec]);
-        %                     centCArr=shiftdim(num2cell(centArr,1),1);
-        %                     ellArr=self.ellFactoryObj.create(centArr,shArr,propNameValCMat{:});
-        %                     checkCenter();
-        %                     checkShape();
-        %                     checkProp();
-        %                     ellArr=ellArr.getCopy();
-        %                     checkCenter();
-        %                     checkShape();
-        %                     checkProp();
-        %                     function resMat=genPosMat(nDims)
-        %                         randMat=rand(nDims);
-        %                         resMat=eye(nDims)+randMat*randMat.';
-        %                     end
-        %                     function checkCenter()
-        %                         isOkArr=arrayfun(@(x,y)isequal(x.getCenterVec(),...
-        %                             y{1}),ellArr,centCArr);
-        %                         mlunitext.assert(all(isOkArr(:)));
-        %                     end
-        %                     %
-        %                     function checkShape()
-        %                         %isOkArr=arrayfun(@(x,y)isequal(x.getShapeMat(),...
-        %                         %    y{1}),ellArr,shCArr);
-        %                         isOkArr = modgen.common.absrelcompare(ellArr.getShapeMat, shCArr{1}, absTol, absTol, @abs);
-        %
-        %                         mlunitext.assert(all(isOkArr(:)));
-        %                     end
-        %                     function checkProp()
-        %                         arrayfun(@checkPropElem,ellArr);
-        %                     end
-        %                 end
-        %                 function checkPropElem(ell)
-        %                     nProps=length(indVec);
-        %                     for iProp=1:nProps
-        %                         fGetter=getterList{indVec(iProp)};
-        %                         propVal=feval(fGetter,ell);
-        %                         expPropVal=valList{indVec(iProp)};
-        %                         mlunitext.assert(isequal(propVal,expPropVal));
-        %                     end
-        %                 end
-        %             end
-        %         end
-        %
-        %         function self = testDistance(self)
-        %
-        %             import elltool.conf.Properties;
-        %             load(strcat(self.testDataRootDir,filesep,'testEllEllRMat.mat'),...
-        %                 'testOrth50Mat','testOrth100Mat','testOrth3Mat','testOrth2Mat');
-        %             %
-        %             %testing vector-ellipsoid distance
-        %             %
-        %             %distance between ellipsoid and two vectors
-        %             absTol = Properties.getAbsTol();
-        %             testEllipsoid = self.ellFactoryObj.create([1,0,0;0,5,0;0,0,10]);
-        %             testPointMat = [3,0,0; 5,0,0].';
-        %             testResVec = distance(testEllipsoid, testPointMat);
-        %             mlunitext.assert_equals(true, (abs(testResVec(1)-2)<absTol) &&...
-        %                 (abs(testResVec(2)-4)<absTol));
-        %             %
-        %             %distance between ellipsoid and point in the ellipsoid
-        %             %and point on the boader of the ellipsoid
-        %             testEllipsoid = self.ellFactoryObj.create([1,2,3].',4*eye(3,3));
-        %             testPointMat = [2,3,2; 1,2,5].';
-        %             testResVec = distance(testEllipsoid, testPointMat);
-        %             mlunitext.assert_equals(true, testResVec(1)==-1 && testResVec(2)==0);
-        %             %
-        %             %distance between two ellipsoids and two vectors
-        %             testEllipsoidVec = [self.ellFactoryObj.create([5,2,0;2,5,0;0,0,1]),...
-        %                 self.ellFactoryObj.create([0,0,5].',[4, 0, 0; 0, 9 , 0; 0,0, 25])];
-        %             testPointMat = [0,0,5; 0,5,5].';
-        %             testResVec = distance(testEllipsoidVec, testPointMat);
-        %             mlunitext.assert_equals(true, (abs(testResVec(1)-4)<absTol) &&...
-        %                 (abs(testResVec(2)-2)<absTol));
-        %             %
-        %             %distance between two ellipsoids and a vector
-        %             testEllipsoidVec = [self.ellFactoryObj.create([5,5,0].',[1,0,0;0,5,0;0,0,10]),...
-        %                 self.ellFactoryObj.create([0,10,0].',[10, 0, 0; 0, 16 , 0; 0,0, 5])];
-        %             testPointVec = [0,5,0].';
-        %             testResVec = distance(testEllipsoidVec, testPointVec);
-        %             mlunitext.assert_equals(true, (abs(testResVec(1)-4)<absTol) &&...
-        %                 (abs(testResVec(2)-1)<absTol));
-        %             %
-        %             %negative test: matrix shapeMat of ellipsoid has very large
-        %             %eigenvalues.
-        %             testEllipsoid = self.ellFactoryObj.create([1e+15,0;0,1e+15]);
-        %             testPointVec = [3e+15,0].';
-        %             self.runAndCheckError('distance(testEllipsoid, testPointVec)',...
-        %                 'notSecant');
-        %             %
-        %             %random ellipsoid matrix, low dimension case
-        %             nDim=2;
-        %             testEllMat=diag(1:2);
-        %             testEllMat=testOrth2Mat*testEllMat*testOrth2Mat.';
-        %             testEllMat=0.5*(testEllMat+testEllMat.');
-        %             testEllipsoid=self.ellFactoryObj.create(testEllMat);
-        %             testPoint=testOrth2Mat*[10;zeros(nDim-1,1)];
-        %             testRes=distance(testEllipsoid, testPoint);
-        %             mlunitext.assert_equals(true,abs(testRes-9)<absTol);
-        %             %
-        %             %high dimensional tests with rotated ellipsoids
-        %             nDim=50;
-        %             testEllMat=diag(nDim:-1:1);
-        %             testEllMat=testOrth50Mat*testEllMat*testOrth50Mat.';
-        %             testEllMat=0.5*(testEllMat+testEllMat.');
-        %             testEllipsoid=self.ellFactoryObj.create(testEllMat);
-        %             testPoint=testOrth50Mat*[zeros(nDim-1,1);10];
-        %             testRes=distance(testEllipsoid, testPoint);
-        %             mlunitext.assert_equals(true,abs(testRes-9)<absTol);
-        %
-        %             %distance between two ellipsoids with random matrices and two vectors
-        %             testEll1Mat=[5,2,0;2,5,0;0,0,1];
-        %             testEll1Mat=testOrth3Mat*testEll1Mat*testOrth3Mat.';
-        %             testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
-        %             testEll2Mat=[4,0,0;0,9,0;0,0,25];
-        %             testEll2Mat=testOrth3Mat*testEll2Mat*testOrth3Mat.';
-        %             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
-        %             testEll2CenterVec=testOrth3Mat*[0;0;5];
-        %             testEllipsoidVec = [self.ellFactoryObj.create(testEll1Mat),...
-        %                 self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat)];
-        %             testPointMat = testOrth3Mat*([0,0,5; 0,5,5].');
-        %             testResVec = distance(testEllipsoidVec, testPointMat);
-        %             mlunitext.assert_equals(true, (abs(testResVec(1)-4)<absTol) &&...
-        %                 (abs(testResVec(2)-2)<absTol));
-        %             %
-        %             %
-        %             %
-        %             %
-        %             %Testing ellipsoid-ellipsoid distance
-        %             %
-        %             %distance between two ellipsoids
-        %             testEllipsoid1 = self.ellFactoryObj.create([25,0;0,9]);
-        %             testEllipsoid2 = self.ellFactoryObj.create([10;0],[4,0;0,9]);
-        %             testRes=distance(testEllipsoid1,testEllipsoid2);
-        %             mlunitext.assert_equals(true, (abs(testRes-3)<absTol));
-        %             %
-        %             testEllipsoid1 = self.ellFactoryObj.create([0,-15,0].',[25,0,0;0,100,0;0,0,9]);
-        %             testEllipsoid2 = self.ellFactoryObj.create([0,7,0].',[9,0,0;0,25,0;0,0,100]);
-        %             testRes=distance(testEllipsoid1,testEllipsoid2);
-        %             mlunitext.assert_equals(true, (abs(testRes-7)<absTol));
-        %             %
-        %             % case of ellipses with common center
-        %             testEllipsoid1 = self.ellFactoryObj.create([1 2 3].',[1,2,5;2,5,3;5,3,100]);
-        %             testEllipsoid2 = self.ellFactoryObj.create([1,2,3].',[1,2,7;2,10,5;7,5,100]);
-        %             testRes=distance(testEllipsoid1,testEllipsoid2);
-        %             mlunitext.assert_equals(true, (abs(testRes)<absTol));
-        %             %
-        %             % distance between two pairs of ellipsoids
-        %             testEllipsoid1Vec=[self.ellFactoryObj.create([0, -6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
-        %                 self.ellFactoryObj.create([0,0,-4.5].',[100,0,0; 0, 25,0; 0,0,4])];
-        %             testEllipsoid2Vec=[self.ellFactoryObj.create([0, 6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
-        %                 self.ellFactoryObj.create([0,0,4.5].',[100,0,0; 0, 25,0; 0,0,4])];
-        %             testResVec=distance(testEllipsoid1Vec,testEllipsoid2Vec);
-        %             mlunitext.assert_equals(true, (abs(testResVec(1)-8)<absTol) &&...
-        %                 (abs(testResVec(2)-5)<absTol));
-        %             %
-        %             % distance between two ellipsoids and an ellipsoid
-        %             testEllipsoidVec=[self.ellFactoryObj.create([0, 0, 0].',[9,0,0; 0,25,0; 0,0, 1]),...
-        %                 self.ellFactoryObj.create([-5,0,0].',[9,0,0; 0, 25,0; 0,0,1])];
-        %             testEllipsoid=self.ellFactoryObj.create([5, 0, 0].',[25,0,0; 0,100,0; 0,0, 1]);
-        %             testResVec=distance(testEllipsoidVec,testEllipsoid);
-        %             mlunitext.assert_equals(true, (abs(testResVec(1))<absTol) &&...
-        %                 (abs(testResVec(2)-2)<absTol));
-        %             %
-        %             %distance between two ellipsoids of high dimensions
-        %             nDim=100;
-        %             testEllipsoid1=self.ellFactoryObj.create(diag(1:2:2*nDim));
-        %             testEllipsoid2=self.ellFactoryObj.create([5;zeros(nDim-1,1)],diag(1:nDim));
-        %             testRes=distance(testEllipsoid1,testEllipsoid2);
-        %             mlunitext.assert_equals(true,abs(testRes-3)<absTol);
-        %             %
-        %             %distance between two vectors of ellipsoids of rather high
-        %             %dimension (12<=nDim<=26) with matrices that have nonzero non
-        %             %diagonal elements
-        % %             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
-        % %                 'testEllipsoid1Vec','testEllipsoid2Vec','testAnswVec','nEllVec');
-        %             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
-        %                 'testEllipsoid1Struct','testEllipsoid2Struct','testAnswVec','nEllVec');
-        %             testEllipsoid1Vec = self.ellFactoryObj.create.fromStruct(testEllipsoid1Struct);
-        %             testEllipsoid2Vec = self.ellFactoryObj.create.fromStruct(testEllipsoid2Struct);
-        %             testResVec=distance(testEllipsoid1Vec,testEllipsoid2Vec);
-        %             mlunitext.assert_equals(ones(1,nEllVec),...
-        %                 abs(testResVec-testAnswVec)<absTol);
-        %             %
-        %             %distance between two ellipsoids and an ellipsoid (of 3-dimension),
-        %             %all matrices with nonzero nondiagonal elements
-        %             testEll1Mat=[9,0,0; 0,25,0; 0,0, 1];
-        %             testEll1Mat=testOrth3Mat*testEll1Mat*testOrth3Mat.';
-        %             testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
-        %             testEll2Mat=[9,0,0; 0, 25,0; 0,0,1];
-        %             testEll2Mat=testOrth3Mat*testEll2Mat*testOrth3Mat.';
-        %             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
-        %             testEll2CenterVec=testOrth3Mat*[-5;0;0];
-        %             testEll3Mat=[25,0,0; 0,100,0; 0,0, 1];
-        %             testEll3Mat=testOrth3Mat*testEll3Mat*testOrth3Mat.';
-        %             testEll3Mat=0.5*(testEll3Mat+testEll3Mat.');
-        %             testEll3CenterVec=testOrth3Mat*[5;0;0];
-        %             testEllipsoidVec=[self.ellFactoryObj.create(testEll1Mat),...
-        %                 self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat)];
-        %             testEllipsoid=self.ellFactoryObj.create(testEll3CenterVec,testEll3Mat);
-        %             testResVec=distance(testEllipsoidVec,testEllipsoid);
-        %             mlunitext.assert_equals(true, (abs(testResVec(1))<absTol) &&...
-        %                 (abs(testResVec(2)-2)<absTol));
-        %             %
-        %             %distance between two ellipsoids of high dimensions and random
-        %             %matrices
-        %             nDim=100;
-        %             testEll1Mat=diag(1:2:2*nDim);
-        %             testEll1Mat=testOrth100Mat*testEll1Mat*testOrth100Mat.';
-        %             testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
-        %             testEll2Mat=diag([25;(1:(nDim-1)).']);
-        %             testEll2Mat=testOrth100Mat*testEll2Mat*testOrth100Mat.';
-        %             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
-        %             testEll2CenterVec=testOrth100Mat*[9;zeros(nDim-1,1)];
-        %             testEllipsoid1=self.ellFactoryObj.create(testEll1Mat);
-        %             testEllipsoid2=self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat);
-        %             testRes=distance(testEllipsoid1,testEllipsoid2);
-        %             mlunitext.assert_equals(true,abs(testRes-3)<absTol);
-        %             %
-        %             %
-        %             %
-        %             %
-        %             % distance between single ellipsoid and array of ellipsoids
-        % %             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
-        % %                 'testEllArr','testDistResArr');
-        %             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
-        %                 'testEllStruct','testDistResArr');
-        %             testEllArr = self.ellFactoryObj.create.fromStruct(testEllStruct);
-        %             testEll = self.ellFactoryObj.create(eye(2));
-        %             resArr = distance(testEll, testEllArr);
-        %             isOkArr = abs(resArr - testDistResArr) <= elltool.conf.Properties.getAbsTol();
-        %             mlunitext.assert(all(isOkArr(:)));
-        %             %distance between an ellipsoid (with nonzeros nondiagonal elements)
-        %             %and a hyperplane in 2 dimensions
-        %             testEllMat=[9 0; 0 4];
-        %             testEllMat=testOrth2Mat*testEllMat*testOrth2Mat.';
-        %             testEllMat=0.5*(testEllMat+testEllMat.');
-        %             testEllCenterVec=testOrth2Mat*[0;5];
-        %             testHypVVec=testOrth2Mat*[0;1];
-        %             testHypC=0;
-        %             testEllipsoid=self.ellFactoryObj.create(testEllCenterVec,testEllMat);
-        %             testHyp=hyperplane(testHypVVec,testHypC);
-        %             testRes=distance(testEllipsoid,testHyp);
-        %             mlunitext.assert_equals(true,abs(testRes-3)<absTol);
-        %             %
-        %             %distance between an ellipsoid (with nonzero nondiagonal elements)
-        %             %and a hyperplane in 3 dimensions
-        %             testEllMat=[100,0,0;0,25,0;0,0,9];
-        %             testEllMat=testOrth3Mat*testEllMat*testOrth3Mat.';
-        %             testEllMat=0.5*(testEllMat+testEllMat.');
-        %             testHypVVec=testOrth3Mat*[0;1;0];
-        %             testHypC=10;
-        %             testEllipsoid=self.ellFactoryObj.create(testEllMat);
-        %             testHyp=hyperplane(testHypVVec,testHypC);
-        %             testRes=distance(testEllipsoid,testHyp);
-        %             mlunitext.assert_equals(true,abs(testRes-5)<absTol);
-        %             %
-        %             %distance between two high dimensional ellipsoids (with nonzero
-        %             %nondiagonal elements) and a hyperplane
-        %             nDim=100;
-        %             testEll1Mat=diag(1:nDim);
-        %             testEll1Mat=testOrth100Mat*testEll1Mat*testOrth100Mat.';
-        %             testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
-        %             testEll1CenterVec=testOrth100Mat*[-8;zeros(nDim-1,1)];
-        %             testEll2Mat=diag([25;(1:(nDim-1)).']);
-        %             testEll2Mat=testOrth100Mat*testEll2Mat*testOrth100Mat.';
-        %             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
-        %             testEll2CenterVec=testOrth100Mat*[10;zeros(nDim-1,1)];
-        %             testHypVVec=testOrth100Mat*[1;zeros(nDim-1,1)];
-        %             testHypC=0;
-        %             testEllipsoid=[self.ellFactoryObj.create(testEll1CenterVec,testEll1Mat),...
-        %                 self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat)];
-        %             testHyp=hyperplane(testHypVVec,testHypC);
-        %             testRes=distance(testEllipsoid,testHyp);
-        %             mlunitext.assert_equals(true,abs(testRes(1)-7)<absTol&&...
-        %                 abs(testRes(2)-5)<absTol);
-        %             %distance where two ellipsoids have one common point
-        %             % according to existing precision policy elltool.conf.Properties.getAbsTol()
-        %             testEll1=self.ellFactoryObj.create([1+1e-20 0].',[1 0; 0 1]);
-        %             testEll2=self.ellFactoryObj.create([-1 0].',[1 0;0 1]);
-        %             testRes=distance(testEll1,testEll2);
-        %             mlunitext.assert_equals(true,abs(testRes)<elltool.conf.Properties.getAbsTol());
-        %             %negative test: ellipsoid and hyperplane have different dimensions
-        %             testEll = self.ellFactoryObj.create(eye(2));
-        %             testHyp = hyperplane(eye(3));
-        %             self.runAndCheckError('distance(testEll, testHyp)',...
-        %                 'wrongInput');
-        %             %
-        %             %
-        %             %DISTANCE FROM VECTOR TO ELLIPSOID
-        %             %IN ELLIPSOID METRIC
-        %             %
-        %             % Test#1. Distance between an ellipsoid and a vector.
-        %             testEllipsoid = self.ellFactoryObj.create([1,0,0;0,5,0;0,0,10]);
-        %             testPointVec = [3,0,0].';
-        %             %
-        %             testRes = distance(testEllipsoid, testPointVec,true);
-        %             ansRes = self.ellVecDistanceCVX(testEllipsoid, testPointVec,true);
-        %             mlunitext.assert_equals(true, (abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol()));
-        %             %
-        %             % Test#2. Distance between an ellipsoid and a vector.
-        %             testEllipsoid = self.ellFactoryObj.create([2,0,0;0,5,0;0,0,10]);
-        %             testPointVec = [3,0,0].';
-        %             %
-        %             testRes = distance(testEllipsoid, testPointVec,true);
-        %             ansRes = self.ellVecDistanceCVX(testEllipsoid, testPointVec,true);
-        %             mlunitext.assert_equals(true, (abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol()));
-        %             %
-        %             %Test#3
-        %             % Distance between two ellipsoids and a vector
-        %             testEllipsoidVec = [self.ellFactoryObj.create([5,5,0].',[1,0,0;0,5,0;0,0,10]),...
-        %                 self.ellFactoryObj.create([0,10,0].',[10, 0, 0; 0, 16 , 0; 0,0, 5])];
-        %             testPointVec = [0,5,0].';
-        %             %
-        %             testResVec = distance(testEllipsoidVec, testPointVec,true);
-        %             ansResVec(1)=self.ellVecDistanceCVX(testEllipsoidVec(1), testPointVec,true);
-        %             ansResVec(2)=self.ellVecDistanceCVX(testEllipsoidVec(2), testPointVec,true);
-        %             mlunitext.assert_equals(true, (abs(testResVec(1)-ansResVec(1))<elltool.conf.Properties.getAbsTol()) &&...
-        %                 (abs(testResVec(2)-ansResVec(2))<elltool.conf.Properties.getAbsTol()));
-        %             %
-        %             %Test#4.
-        %             % Random ellipsoid matrix, low dimension case.
-        %             nDim=2;
-        %             testEllMat=diag(1:2);
-        %             testEllMat=testOrth2Mat*testEllMat*testOrth2Mat.';
-        %             testEllMat=0.5*(testEllMat+testEllMat.');
-        %             testEllipsoid=self.ellFactoryObj.create(testEllMat);
-        %             testPointVec=testOrth2Mat*[10;zeros(nDim-1,1)];
-        %             %
-        %             testRes=distance(testEllipsoid, testPointVec,true);
-        %             ansRes = self.ellVecDistanceCVX(testEllipsoid, testPointVec,true);
-        %             mlunitext.assert_equals(true,abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol());
-        %             %
-        %             %Test#5.
-        %             % Distance between two ellipsoids with random matrices and two vectors
-        %             testEll1Mat=[5,2,0;2,5,0;0,0,1];
-        %             testEll1Mat=testOrth3Mat*testEll1Mat*testOrth3Mat.';
-        %             testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
-        %             testEll2Mat=[4,0,0;0,9,0;0,0,25];
-        %             testEll2Mat=testOrth3Mat*testEll2Mat*testOrth3Mat.';
-        %             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
-        %             testEll2CenterVec=testOrth3Mat*[0;0;5];
-        %             testEllipsoid1=self.ellFactoryObj.create(testEll1Mat);
-        %             testEllipsoid2=self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat);
-        %             testEllipsoidVec = [testEllipsoid1,testEllipsoid2];
-        %             testPointMat = testOrth3Mat*([0,0,5; 0,5,5].');
-        %             %
-        %             testResVec = distance(testEllipsoidVec, testPointMat,true);
-        %             ansResVec(1)=distance(testEllipsoid1,testPointMat(:,1),true);
-        %             ansResVec(2)=distance(testEllipsoid2,testPointMat(:,2),true);
-        %             mlunitext.assert_equals(true, all(abs(testResVec-ansResVec)<...
-        %                 elltool.conf.Properties.getAbsTol()));
-        %             %
-        %             %DISTANCE FROM ELLIPSOID TO ELLIPSOID
-        %             %IN ELLIPSOIDAL METRIC
-        %             %
-        %             % Test#1.
-        %             % Distance between two ellipsoids
-        %             testEllipsoid1 = self.ellFactoryObj.create([25,0;0,9]);
-        %             testEllipsoid2 = self.ellFactoryObj.create([10;0],[4,0;0,9]);
-        %             testRes=distance(testEllipsoid1,testEllipsoid2,true);
-        %             ansRes=self.ellEllDistanceCVX(testEllipsoid1,testEllipsoid2,true);
-        %             mlunitext.assert_equals(true, (abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol()));
-        %             %
-        %             % Test#2.
-        %             % Distance between two ellipsoids of high dimensions and random
-        %             % matrices
-        %             nDim=100;
-        %             testEll1Mat=diag(1:2:2*nDim);
-        %             testEll1Mat=testOrth100Mat*testEll1Mat*testOrth100Mat.';
-        %             testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
-        %             testEll2Mat=diag([25;(1:(nDim-1)).']);
-        %             testEll2Mat=testOrth100Mat*testEll2Mat*testOrth100Mat.';
-        %             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
-        %             testEll2CenterVec=testOrth100Mat*[9;zeros(nDim-1,1)];
-        %             testEllipsoid1=self.ellFactoryObj.create(testEll1Mat);
-        %             testEllipsoid2=self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat);
-        %             %
-        %             testRes=distance(testEllipsoid1,testEllipsoid2,true);
-        %             ansRes=self.ellEllDistanceCVX(testEllipsoid1,testEllipsoid2,true);
-        %             mlunitext.assert_equals(true,abs(testRes-ansRes)<elltool.conf.Properties.getAbsTol());
-        %             %
-        %             % Test#3.
-        %             % Distance between two ellipsoids and an ellipsoid (of 3-dimension),
-        %             % all matrices with nonzero nondiagonal elements
-        %             testEll1Mat=[9,0,0; 0,25,0; 0,0, 1];
-        %             testEll1Mat=testOrth3Mat*testEll1Mat*testOrth3Mat.';
-        %             testEll1Mat=0.5*(testEll1Mat+testEll1Mat.');
-        %             testEll2Mat=[9,0,0; 0, 25,0; 0,0,1];
-        %             testEll2Mat=testOrth3Mat*testEll2Mat*testOrth3Mat.';
-        %             testEll2Mat=0.5*(testEll2Mat+testEll2Mat.');
-        %             testEll2CenterVec=testOrth3Mat*[-5;0;0];
-        %             testEll3Mat=[25,0,0; 0,100,0; 0,0, 1];
-        %             testEll3Mat=testOrth3Mat*testEll3Mat*testOrth3Mat.';
-        %             testEll3Mat=0.5*(testEll3Mat+testEll3Mat.');
-        %             testEll3CenterVec=testOrth3Mat*[5;0;0];
-        %             testEllipsoidVec=[self.ellFactoryObj.create(testEll1Mat),...
-        %                 self.ellFactoryObj.create(testEll2CenterVec,testEll2Mat)];
-        %             testEllipsoid=self.ellFactoryObj.create(testEll3CenterVec,testEll3Mat);
-        %             %
-        %             testResVec=distance(testEllipsoidVec,testEllipsoid,true);
-        %             ansResVec(1)=distance(testEllipsoidVec(1),testEllipsoid,true);
-        %             ansResVec(2)=distance(testEllipsoidVec(2),testEllipsoid,true);
-        %             mlunitext.assert_equals(true, all(abs(testResVec-ansResVec)<...
-        %                 elltool.conf.Properties.getAbsTol()));
-        %             %
-        %             % Test #4.
-        %             % distance between two pairs of ellipsoids
-        %             testEllipsoid1Vec=[self.ellFactoryObj.create([0, -6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
-        %                 self.ellFactoryObj.create([0,0,-4.5].',[100,0,0; 0, 25,0; 0,0,4])];
-        %             testEllipsoid2Vec=[self.ellFactoryObj.create([0, 6, 0].',[100,0,0; 0,4,0; 0,0, 25]),...
-        %                 self.ellFactoryObj.create([0,0,4.5].',[100,0,0; 0, 25,0; 0,0,4])];
-        %             %
-        %             testResVec=distance(testEllipsoid1Vec,testEllipsoid2Vec,true);
-        %             ansResVec(1)=distance(testEllipsoid1Vec(1),testEllipsoid2Vec(1),true);
-        %             ansResVec(2)=distance(testEllipsoid1Vec(2),testEllipsoid2Vec(2),true);
-        %             mlunitext.assert_equals(true, all(abs(testResVec-ansResVec)<...
-        %                 elltool.conf.Properties.getAbsTol()));
-        %         end
-        %
         function self = testPropertyGetters(self)
             ellCenter = [1;1];
             ellMat = eye(2);
@@ -734,10 +275,13 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
             %Check empty ellipsoid
             self.runAndCheckError('mineig(self.createEll)','wrongInput:emptyEllipsoid');
             
+            absTol = elltool.conf.Properties.getAbsTol();
+            
             %Check degenerate matrix
             testEllipsoid1=self.createEll([-2; -2], zeros(2,2));
             testEllipsoid2=self.createEll(zeros(2,2));
-            isTestRes=(mineig(testEllipsoid1)==0)&&(mineig(testEllipsoid2)==0);
+            isTestRes=(abs(mineig(testEllipsoid1)) <= absTol)&&...
+                (abs(mineig(testEllipsoid2)) <= absTol);
             mlunitext.assert_equals(true, isTestRes);
             
             %Check on diaganal matrix
@@ -747,20 +291,21 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
             
             %Check on not diaganal matrix
             testEllipsoid=self.createEll([1 1 -1; 1 4 -4; -1 -4 9]);
-            isTestRes=( (mineig(testEllipsoid)-min(eig([1 1 -1; 1 4 -3; -1 -3 9])))<=eps );
+            isTestRes=( abs((mineig(testEllipsoid)-min(eig([1 1 -1; 1 4 -3; -1 -3 9])))) > absTol );
             mlunitext.assert_equals(true, isTestRes);
             
             %High-dimensional ellipsoids
             testEllVec = [self.createEll(diag(1:12)), self.createEll((0:0.1:1.4).',diag(0.1:0.1:1.5)), ...
                 self.createEll(rand(21,1),diag(0:20))];
             testMinEigVec = mineig(testEllVec);
-            isTestRes = all( testMinEigVec == [1 0.1 0] );
+            isTestRes = all( abs(testMinEigVec - [1 0.1 0]) <= absTol );
             mlunitext.assert_equals(true, isTestRes);
             
             testEllMat= [self.createEll((0.1:0.1:2).',diag(0.01:0.01:0.2)), self.createEll(-10*ones(41,1),diag(20:10:420)), self.createEll(rand(50,1),9*eye(50,50));
                 self.createEll(repmat(diag(1:20),2,2)), self.createEll(diag(0.0001:0.0001:0.01)), self.createEll(zeros(30,30))];
             testMinEigMat = mineig(testEllMat);
-            isTestMat = (testMinEigMat == [0.01 20 9; 0 0.0001 0]);
+            isTestMat = ...
+                abs(testMinEigMat - [0.01 20 9; 0 0.0001 0]) <= absTol;
             isTestRes = all( isTestMat(:));
             mlunitext.assert_equals(true, isTestRes);
         end
@@ -769,29 +314,31 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
             %Empty ellipsoid
             self.runAndCheckError('trace(self.createEll)','wrongInput:emptyEllipsoid');
             
+            absTol = elltool.conf.Properties.getAbsTol();
+            
             %Not empty ellipsoid
             testEllipsoid=self.createEll(zeros(10,1),eye(10,10));
-            isTestRes=trace(testEllipsoid)==10;
-            %isTestRes = modgen.common.absrelcompare(trace(testEllipsoid), 10);
+            isTestRes=abs(trace(testEllipsoid) - 10) <= absTol;
             mlunitext.assert_equals(true, isTestRes);
             
             testEllipsoid=self.createEll(-eye(3,1),[1 0 1; 0 0 0; 1 0 2 ]);
-            isTestRes=trace(testEllipsoid)==3;
-            %isTestRes = modgen.common.absrelcompare(trace(testEllipsoid), 3);
+            isTestRes=abs(trace(testEllipsoid) - 3) <= absTol;
             mlunitext.assert_equals(true, isTestRes);
             
             %High-dimensional ellipsoids
             testEllVec = [self.createEll(diag(1:12)), self.createEll((0:0.1:1.4).',diag(0.1:0.1:1.5)), ...
                 self.createEll(rand(21,1),diag(0:20))];
             testTraceVec = trace(testEllVec);
-            isTestRes = all( testTraceVec == [78 12 210] );
+            isTestRes = all( abs(testTraceVec - [78 12 210]) <= absTol );
             mlunitext.assert_equals(true, isTestRes);
             
             testEllMat= [self.createEll((0.1:0.1:2).',diag(0.01:0.01:0.2)), self.createEll(-10*ones(41,1),diag(20:10:420)),...
                 self.createEll(rand(50,1),9*eye(50,50));   self.createEll(repmat(diag(1:20),2,2)),...
                 self.createEll(diag(0.0001:0.0001:0.01)), self.createEll(zeros(30,30))];
             testTraceMat = trace(testEllMat);
-            isTestMat = ( testTraceMat == [sum(0.01:0.01:0.2) sum(20:10:420) 9*50; 2*sum(1:20) sum(0.0001:0.0001:0.01) 0] );
+            isTestMat = ( abs(testTraceMat - ...
+                [sum(0.01:0.01:0.2) sum(20:10:420) 9*50; ...
+                2*sum(1:20) sum(0.0001:0.0001:0.01) 0]) <= absTol );
             isTestRes = all( isTestMat(:));
             mlunitext.assert_equals(true, isTestRes);
         end

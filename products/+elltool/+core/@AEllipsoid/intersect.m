@@ -128,10 +128,6 @@ import elltool.logging.Log4jConfigurator;
 persistent logger;
 
 ellipsoid.checkIsMe(myEllArr,'first');
-% modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
-%     isa(x, 'hyperplane') || isa(x, 'polytope'),...
-%     'errorTag','wrongInput', 'errorMessage',...
-%     'second input argument must be ellipsoid,hyperplane or polytope.');
 modgen.common.checkvar(objArr,@(x) isa(x, 'hyperplane') ||...
      isa(x, 'Polyhedron') || isa(x, 'ellipsoid') || isa(x, 'elltool.core.GenEllipsoid'),... 
     'errorTag','wrongInput', 'errorMessage',...
@@ -171,7 +167,6 @@ elseif isa(objArr, 'hyperplane')
    
     [resArr statusArr] = arrayfun(@(x) lqcqp(myEllArr, x), objArr);
 elseif isa(objArr, 'ellipsoid') || isa(objArr, 'elltool.core.GenEllipsoid')
-%elseif isMe(objArr)
     
     fCheckDims(dimension(myEllArr),dimension(objArr));
    
@@ -406,7 +401,6 @@ function [res, status] = lqcqp2(myEllArr, polyh)
 import modgen.common.throwerror;
 import elltool.conf.Properties;
 status = 1;
-%[aMat, bVec] = double(polyh);
 hMat = polyh.H;
 aMat=hMat(:,1:end-1);
 bVec=hMat(:,end);

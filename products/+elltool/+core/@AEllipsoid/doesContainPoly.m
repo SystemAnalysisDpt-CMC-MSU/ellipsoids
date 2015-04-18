@@ -163,7 +163,6 @@ invShMat = inv(shMat);
 normConst = cVec'*(shMat\cVec);
 polarCVec = -(shMat\cVec)/(1-normConst);
 polarShMat = invShMat/(1-normConst) + polarCVec*polarCVec';
-% polar = ellipsoid(polarCVec,polarShMat);
 polar = ell.create(polarCVec,polarShMat);
 end
 

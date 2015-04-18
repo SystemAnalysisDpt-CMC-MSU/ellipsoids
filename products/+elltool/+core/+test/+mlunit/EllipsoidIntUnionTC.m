@@ -33,7 +33,6 @@ classdef EllipsoidIntUnionTC < elltool.core.test.mlunit.EllFactoryTC
             import elltool.conf.Properties;
             self.setUpCheckSettings();
             relTol = Properties.getRelTol();
-            %sensEPS = 0.5*relTol;
             sensEPS = 0.25*relTol;
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllunionEa_inp.mat')), 'testEllCenterVec', ...
@@ -63,7 +62,6 @@ classdef EllipsoidIntUnionTC < elltool.core.test.mlunit.EllFactoryTC
             import elltool.conf.Properties;
             self.setUpCheckSettings();
             relTol = Properties.getRelTol();
-            %sensEPS = relTol;
             sensEPS = 0.5 * relTol;
             
             load(strcat(self.testDataRootDir, strcat(filesep,...
@@ -98,8 +96,8 @@ classdef EllipsoidIntUnionTC < elltool.core.test.mlunit.EllFactoryTC
             
             testEll1Vec = self.createEll(eye(3));
             testEll2Vec = self.createEll([1, 0, 0; 0, 0, 0; 0, 0, 1]);
-            %testResVec = doesContain(testEll1Vec, testEll2Vec);
-            %mlunitext.assert_equals(true, testResVec);
+            testResVec = doesContain(testEll1Vec, testEll2Vec);
+            mlunitext.assert_equals(true, testResVec);
             
             testEll1Vec = self.createEll(eye(3));
             testEll2Vec = self.createEll(eye(3));

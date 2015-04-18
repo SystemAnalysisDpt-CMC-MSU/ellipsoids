@@ -34,9 +34,6 @@ function myEllArr = inv(myEllArr)
 %
 import elltool.core.GenEllipsoid;
 import elltool.conf.Properties;
-% modgen.common.type.simple.checkgenext(@(x)isa(x,'elltool.core.GenEllipsoid'),...
-%     1,ellObj);
-% modgen.common.type.simple.checkgenext('isscalar(x1)',1,ellObj);
 elltool.core.GenEllipsoid.checkIsMe(myEllArr);
 arrayfun(@(x) fSingleInv(x),myEllArr);
 %
@@ -51,7 +48,5 @@ arrayfun(@(x) fSingleInv(x),myEllArr);
         diagVec(isZeroVec)=Inf;
         diagMat = diag(diagVec);
         ellObj.diagMat = diagMat;
-        %ellInvObj=elltool.core.GenEllipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
-        %ellObj=elltool.core.GenEllipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
     end
 end

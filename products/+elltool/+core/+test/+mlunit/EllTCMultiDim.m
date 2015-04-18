@@ -33,7 +33,6 @@ classdef EllTCMultiDim < elltool.core.test.mlunit.EllFactoryTC
             arrSizeVec=[2, 3, 2, 2];
             testEllArray=self.createObjectArray(arrSizeVec,@(x)self.createEll(eye(x)),2,1,1);
             nEll=numel(testEllArray);
-            %vecMat=repmat([2;0],1,nEll);
             vecArrSizeVec=[2, arrSizeVec];
             vecArray=zeros(vecArrSizeVec);
             vecArray(1,:)=2;
@@ -46,8 +45,7 @@ classdef EllTCMultiDim < elltool.core.test.mlunit.EllFactoryTC
             checkCommonErrors('vecArray');
             checkMultyInput(testEllArray,vecArray,true);
             % Wrong dimension of vectors
-            %vecArrSizeVec=[3, arrSizeVec];
-            vec3Array=zeros([3,arrSizeVec]);%repmat([1;0;0],1,nEll);
+            vec3Array=zeros([3,arrSizeVec]);
             self.runAndCheckError('testEllArray.distance(vec3Array)',...
                 'wrongInput');           
             %
@@ -136,7 +134,6 @@ classdef EllTCMultiDim < elltool.core.test.mlunit.EllFactoryTC
                         testRes = dimension(testEllArray);
                         isOk = modgen.common.absrelcompare(ansNumArray(:), testRes(:), absTol, absTol, @abs);
                         mlunitext.assert_equals(true, isOk);
-                        %mlunitext.assert_equals(ansNumArray, testRes);
                         if (flag == 16)
                            mlunitext.assert_equals(class(ansNumArray), ...
                                class(testRes)); 
@@ -145,10 +142,8 @@ classdef EllTCMultiDim < elltool.core.test.mlunit.EllFactoryTC
                         [testDim, testRank] = dimension(testEllArray);
                         isOk = modgen.common.absrelcompare(ansNumArray(:), testDim(:), absTol, absTol, @abs);
                         mlunitext.assert_equals(true, isOk);
-                        %mlunitext.assert_equals(ansNumArray, testDim);
                         isOk = modgen.common.absrelcompare(ansNumArray(:), testRank(:), absTol, absTol, @abs);
                         mlunitext.assert_equals(true, isOk);
-                        %mlunitext.assert_equals(ansNumArray, testRank);
                         if (flag == 16)
                            mlunitext.assert_equals(class(ansNumArray), ...
                                class(testDim)); 
@@ -170,8 +165,6 @@ classdef EllTCMultiDim < elltool.core.test.mlunit.EllFactoryTC
                 mlunitext.assert_equals(true, isOk);
                 isOk = modgen.common.absrelcompare(ansRankNumArray(:), testRank(:), absTol, absTol, @abs);
                 mlunitext.assert_equals(true, isOk);
-                %mlunitext.assert_equals(ansDimNumArray, testDim);
-                %mlunitext.assert_equals(ansRankNumArray, testRank);
             end
             
         end

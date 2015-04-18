@@ -88,7 +88,6 @@ else
     nAmount = numel(myHypArr);
     sizeCVec = num2cell(size(myHypArr));
 end
-% intEllArr(sizeCVec{:}) = ellipsoid;
 intEllArr(sizeCVec{:}) = myEllArr(1).create;
 isnIntersectedArr = false(sizeCVec{:});
 indexVec = 1:nAmount;
@@ -118,7 +117,6 @@ end
         myHyp = myHypArr(hypIndex);
         index = max(ellIndex,hypIndex);
         if distance(myEll, myHyp) > absTol
-%            intEllArr(index) = ellipsoid;
            intEllArr(index) = myEll.create;
            isnIntersectedArr(index) = true;
         else

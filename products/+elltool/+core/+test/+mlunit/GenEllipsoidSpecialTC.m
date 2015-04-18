@@ -328,8 +328,6 @@ classdef GenEllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
             %distance between two vectors of ellipsoids of rather high
             %dimension (12<=nDim<=26) with matrices that have nonzero non
             %diagonal elements
-%             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
-%                 'testEllipsoid1Vec','testEllipsoid2Vec','testAnswVec','nEllVec');
             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
                 'testEllipsoid1Struct','testEllipsoid2Struct','testAnswVec','nEllVec');
             testEllipsoid1Vec = self.createEll.fromStruct(testEllipsoid1Struct);
@@ -377,8 +375,6 @@ classdef GenEllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
             %
             %
             % distance between single ellipsoid and array of ellipsoids
-%             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
-%                 'testEllArr','testDistResArr');
             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
                 'testEllStruct','testDistResArr');
             testEllArr = self.createEll.fromStruct(testEllStruct);

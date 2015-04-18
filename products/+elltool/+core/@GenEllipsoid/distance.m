@@ -609,7 +609,6 @@ end
 function [ distVal, cvxStat] = findEllPolDist(ellObj,polObj,isFlagOn)
 absTol=ellObj.getAbsTol();
 [qPar, QPar] = parameters(ellObj);
-%[aMat, bVec] = double(polObj);
 aMat=polObj.H(:,1:end-1);
 bVec=polObj.H(:,end);
 if size(QPar, 2) > rank(QPar)

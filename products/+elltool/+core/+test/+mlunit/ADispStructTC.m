@@ -57,7 +57,7 @@ classdef ADispStructTC < mlunitext.test_case
             mlunitext.assert_equals(isOk, result);
         end
         
-        function self = testToStuct(self)
+        function self = testToStruct(self)
             objArrCVec = self.getToStructObj();
             SArrCVec = self.getToStructStruct();
             isPropCVec = self.getToStructIsPropIncluded();

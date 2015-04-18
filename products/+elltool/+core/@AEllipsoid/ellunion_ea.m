@@ -112,5 +112,4 @@ ellMat = inv(cvxEllMat);
 ellMat = 0.5*(ellMat + ellMat');
 ellCenterVec = -ellMat * cvxEllCenterVec;
 
-% outEll = ellipsoid(ellCenterVec, ellMat);
 outEll = inpEllArr.create(ellCenterVec, ellMat);

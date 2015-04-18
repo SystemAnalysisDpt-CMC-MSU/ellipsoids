@@ -628,7 +628,7 @@ function auxTestProjection(self, methodName, centVec, shapeMat, projMat, dimVec)
      end
      if nargin < 6
         projEllObj = ellObj.(methodName)(projMat); 
-        testIsRight1 = isequal(compEllObj, projEllObj);
+        testIsRight1 = all(compEllObj(:).isEqual(projEllObj(:)));
         if isInpObjModif    
             %additional test for modification of input object
             testIsRight2 = compEllObj.isEqual(ellObj);
@@ -722,12 +722,8 @@ function checkRes(testEllResArr,compList, operation)
     [testEllResCentersVecList, testEllResShapeMatList] = arrayfun(@(x) double(x),...
         testEllResArr, 'UniformOutput', false);
     if ismember(operation, VEC_COMP_METHODS_LIST)
-        %eqArr = cellfun(@(x,y) isequal(x,y),testEllResCentersVecList,...
-        %    compList);
         eqArr = cellfun(@(x,y) modgen.common.absrelcompare(x, y, absTol, absTol, @norm), testEllResCentersVecList, compList);
     elseif ismember(operation, MAT_COMP_METHODS_LIST)
-        %eqArr = cellfun(@(x,y) isequal(x,y), testEllResShapeMatList,...
-        %    compList);
         eqArr = cellfun(@(x,y) modgen.common.absrelcompare(x, y, absTol, absTol, @norm), testEllResShapeMatList, compList);
     else
         throwerror('wrongInput:badMethodName',...

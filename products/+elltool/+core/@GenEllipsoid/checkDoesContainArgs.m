@@ -27,7 +27,6 @@ if isa(secObjArr, 'elltool.core.GenEllipsoid')
 end
 
 nFstEllDimsMat = dimension(fstEllArr);
-%nSecEllDimsMat = dimension(secObjArr);
 if isa(secObjArr,'Polyhedron')
     nSecEllDimsMat=secObjArr.Dim;
 else

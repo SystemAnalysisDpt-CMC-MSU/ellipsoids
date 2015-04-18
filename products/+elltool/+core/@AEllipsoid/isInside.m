@@ -44,9 +44,6 @@ import modgen.common.throwerror;
 %
 %Checking arguments
 ellipsoid.checkIsMe(ellArr,'first');
-% checkvar(objArr,@(x) isa(x,'polytope') || isa(x,'ellipsoid'),...
-%     'wrongInput','errorMessage',...
-%     'second argument must be vector of ellipsoids or polytopes.');
 checkvar(objArr,@(x) isa(x, 'ellipsoid') || isa(x, 'elltool.core.GenEllipsoid') ||...
     isa(x,'Polyhedron'), 'wrongInput','errorMessage',...
     'second argument must be vector of ellipsoids or Polyhedrons.');
@@ -95,9 +92,6 @@ end
         if isEll
             res = doesContain(objArr(polyIndex),ellArr(ellIndex));
         else
-            %[constrMat constrValVec] = double(objArr(polyIndex));
-            %suppFuncVec =rho(ellArr(ellIndex),constrMat');
-            %res = all(suppFuncVec' <= constrValVec+absTol);
             hMat=objArr(polyIndex).H;
             suppFuncVec =rho(ellArr(ellIndex),hMat(:,1:end-1).');
             res = all(suppFuncVec' <= hMat(:,end)+absTol);

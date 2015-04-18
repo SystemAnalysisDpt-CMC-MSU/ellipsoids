@@ -67,10 +67,6 @@ import modgen.common.throwerror;
 import modgen.common.checkmultvar;
 
 ellipsoid.checkIsMe(myEllArr,'first');
-% modgen.common.checkvar(objArr,@(x) isa(x, 'ellipsoid') ||...
-%     isa(x, 'hyperplane') || isa(x, 'polytope'),...
-%     'errorTag','wrongInput', 'errorMessage',...
-%     'second input argument must be ellipsoid,hyperplane or polytope.');
 modgen.common.checkvar(objArr,@(x) isa(x, 'hyperplane') || isa(x, 'Polyhedron') || ...
     isa(x, 'ellipsoid') || isa(x, 'elltool.core.GenEllipsoid'),...
     'errorTag','wrongInput', 'errorMessage',...
@@ -107,7 +103,6 @@ else
     nAmount = numel(objArr);
     sizeCVec = num2cell(size(objArr));
 end
-% outEllArr(sizeCVec{:}) = ellipsoid;
 outEllArr(sizeCVec{:}) = myEllArr(1).create;
 indexVec = 1:nAmount;
 
@@ -175,7 +170,6 @@ if isa(secObj, 'hyperplane')
     end
     if (normHypVec'*fstEllCentVec < hypScalar) ...
             && ~(intersect(fstEll, secObj))
-%         outEll = ellipsoid;
           outEll = fstEll.create;
         return;
     end
@@ -191,7 +185,6 @@ else
         return;
     end
     if ~intersect(fstEll, secObj)
-%         outEll = ellipsoid;
           outEll = fstEll.create;
         return;
     end
@@ -215,7 +208,6 @@ const = 1 - lambda*(1 - lambda)*(qSecVec - ...
 qCenterVec = invXMat*(lambda*fstEllShMat*fstEllCentVec + ...
     (1 - lambda)*seqQMat*qSecVec);
 shQMat = const*invXMat;
-% outEll = ellipsoid(qCenterVec, shQMat);
 outEll = fstEll.create(qCenterVec, shQMat);
 
 end

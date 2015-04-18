@@ -208,7 +208,6 @@ classdef ellipsoid < elltool.core.AEllipsoid
         ellArr = fromStruct(SEllArr)
     end
     methods(Static,Access = protected)     
-        %regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
         [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat,...
             dirsMat,absTol)
@@ -217,10 +216,7 @@ classdef ellipsoid < elltool.core.AEllipsoid
         [bpMat, fMat] = ellbndr_2dmat(nPoints, cenVec, qMat,absTol)
     end
     methods(Access = protected)
-        %[propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
-        %[bpMat, fVec] = getGridByFactor(ellObj,factorVec)
         checkDoesContainArgs(fstEllArr,secObjArr)
-        %doesContain = doesContainPoly(ellArr,polyhedronObj,varagin)
     end
     methods (Static)
         checkIsMe(someObj,varargin)

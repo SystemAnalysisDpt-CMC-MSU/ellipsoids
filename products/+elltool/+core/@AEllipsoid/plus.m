@@ -91,7 +91,6 @@ else
     
     checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimArr,...
         'errorMessage','dimensions mismatch');
-%     outEllArr(sizeCVec{:})=ellipsoid;
     outEllArr(sizeCVec{:})=inpEllArr(1).create;
     arrayfun(@(x) fSinglePlus(x),1:numel(inpEllArr));
 end        

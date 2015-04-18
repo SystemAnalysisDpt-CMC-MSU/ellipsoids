@@ -29,14 +29,6 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
             close all;
         end
         
-        
-        
-        
-        
-        
-        
-        
-        
         function self = testPlot1d(self)
             import elltool.core.GenEllipsoid;
             nDims = 1;
@@ -338,8 +330,6 @@ mlunitext.assert_equals(ones(size(isBoundVec)), isBoundVec);
         eigMat = testEll.getEigvMat();
         eigPoint = @(x) eigMat*(x-qCenVec) + qCenVec;
         invMat = diag(1./diag(diagMat));
-%         isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
-%             (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints);  
         isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
             (eigPoint(x) - qCenVec)), cellPoints);
         for i = 1 : size(isBoundEllVec, 2)

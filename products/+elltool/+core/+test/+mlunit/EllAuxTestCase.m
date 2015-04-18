@@ -42,7 +42,6 @@ classdef EllAuxTestCase < elltool.core.test.mlunit.EllFactoryTC
                 isOk=maxDiff<=CMP_TOL;
                 mlunitext.assert(isOk);
             end
-            %masterCheckIsPos(ellRegShapeMat);
             %
             function masterCheckIsPos(inpMat)
                 epsVal=absTol*1e-5;

@@ -324,8 +324,6 @@ classdef EllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
             %distance between two vectors of ellipsoids of rather high
             %dimension (12<=nDim<=26) with matrices that have nonzero non
             %diagonal elements
-%             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
-%                 'testEllipsoid1Vec','testEllipsoid2Vec','testAnswVec','nEllVec');
             load(strcat(self.testDataRootDir,filesep,'testEllEllDist.mat'),...
                 'testEllipsoid1Struct','testEllipsoid2Struct','testAnswVec','nEllVec');
             testEllipsoid1Vec = self.createEll.fromStruct(testEllipsoid1Struct);
@@ -808,8 +806,6 @@ classdef EllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
                     end
                     %
                     function checkShape()
-                        %isOkArr=arrayfun(@(x,y)isequal(x.getShapeMat(),...
-                        %    y{1}),ellArr,shCArr);
                         isOkArr = modgen.common.absrelcompare(ellArr(:).getShapeMat, shCArr{1}, absTol, absTol, @abs);
                        
                         mlunitext.assert(all(isOkArr(:)));
@@ -919,9 +915,7 @@ classdef EllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
         
         function distEllEll=ellEllDistanceCVX(self, ellObj1,ellObj2,flag)
             dims1Mat = dimension(ellObj1);
-            %dims2Mat = dimension(ellObj2);
             maxDim   = max(max(dims1Mat));
-            %maxDim2   = max(max(dims2Mat));
             [cen1Vec, q1Mat] = double(ellObj1);
             [cen2Vec, q2Mat] = double(ellObj2);
             qi1Mat     = ell_inv(q1Mat);

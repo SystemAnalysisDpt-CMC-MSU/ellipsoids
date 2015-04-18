@@ -121,13 +121,12 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
     methods
         function shapeMat=get.shapeMat(self)
             shapeMat=self.eigvMat*self.diagMat*transpose(self.eigvMat);
-            shapeMat = (shapeMat + transpose(shapeMat)) / 2;
+            shapeMat = (shapeMat + transpose(shapeMat)) * 0.5;
         end
         
         function obj = set.shapeMat(self, shMat)
             import modgen.common.throwerror;
             [self.eigvMat, self.diagMat] = eig(shMat);
-            %throwerror('wrongParameters', 'Access to set.shapeMat');
         end
         
         function isOk=getIsGoodDir(ellObj1,ellObj2,curDirVec)
@@ -251,8 +250,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             end
             diagResVec(infIndVec)=Inf;
             eigvResMat=orthBasMat;
-            %                 end
-            %ellObj.diagMat=diag(diagResVec);
             
             ellObj.diagMat=diag(sort(diagResVec));
             ellObj.eigvMat=eigvResMat;
@@ -283,8 +280,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 throwerror('wrongParameters',...
                     'Incorrect number of parameters');
             elseif nInput==1
-                %ellMat=varargin{1};
-                %
                 checkvar(regParamList{1},@(x) isa(x,'double')&&isreal(x),...
                     'errorTag','wrongInput:imagArgs',...
                     'errorMessage','shapeMat matrix must be real.');
@@ -318,9 +313,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 end
                 ellObj.centerVec=zeros(mSize,1);
             elseif nInput==2
-                %ellCenterVec=varargin{1};
-                %ellMat=varargin{2};
-                %
                 checkmultvar(@(x,y) isa(x,'double') && isa(y,'double') &&...
                     isreal(x) && isreal(y),2,regParamList{1},regParamList{2},...
                     'errorTag','wrongInput:imagArgs',...
@@ -366,10 +358,10 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     end
                 end
                 if nCenSize~=1
-                    throwerror('wrongInput','Center must be a vector');
+                    throwerror('wrongInput:wrongCenter','Center must be a vector');
                 end
                 if mSize~=mCenSize
-                    throwerror('wrongInput',...
+                    throwerror('wrongInput:wrongDimensions',...
                         ['Dimension of center vector must ',...
                         'be the same as matrix']);
                 end
@@ -394,29 +386,29 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 [mWSize nWSize]=size(ellWMat);
                 %
                 if (nCenSize~=1)
-                    throwerror('wrongInput','Center must be a vector');
+                    throwerror('wrongInput:wrongCenter','Center must be a vector');
                 end
                 if (mCenSize ~=mDSize || mCenSize~=mWSize)
-                    throwerror('wrongInput',...
+                    throwerror('wrongInput:wrongDimensions',...
                         ['Input matrices and center vector must ',...
                         'be of the same dimension']);
                 end
                 if (nDSize>1)
                     if nDSize~=mDSize
-                        throwerror('wrongInput',...
+                        throwerror('wrongInput:wrongDiagonal',...
                             ['Second argument should be either ',...
                             'diagonal matrix or a vector']);
                     end
                     isDiagonal=all(all(ellDiagMat==...
                         (ellDiagMat.*eye(mDSize))));
                     if ~isDiagonal
-                        throwerror('wrongInput',...
+                        throwerror('wrongInput:wrongDiagonal',...
                             ['Second argument should be either ',...
                             'diagonal matrix or a vector']);
                     end
                 end
                 if (nWSize~=mWSize)
-                    throwerror('wrongInput',...
+                    throwerror('wrongInput:wrongParameters',...
                         'Third parameter should be a square matrix');
                 end
                 if (nDSize==1)
@@ -477,7 +469,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 isNotInfIndVec = ~(diag(ellObj.diagMat)==Inf);
                 if any(isNotInfIndVec)
                     if ~ismatposdef(ellObj.diagMat(isNotInfIndVec,...
-                            isNotInfIndVec),absTol,1)
+                            isNotInfIndVec),absTol,true)
                         throwerror('wrongInput',...
                             ['GenEllipsoid matrix should be positive ',...
                             'semi-definite.'])

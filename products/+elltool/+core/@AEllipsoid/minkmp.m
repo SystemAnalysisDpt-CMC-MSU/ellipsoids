@@ -183,12 +183,7 @@ end
         end
     end
     function ellsVec = getEllArr(ellsArr)
-%         ellsVec = ellipsoid;
             ellsVec = ellsArr(1).create;
-%         if isa(ellsArr, 'ellipsoid')
-%             cnt    = numel(ellsArr);
-%             ellsVec = reshape(ellsArr, cnt, 1);
-%         end
         if isMe(ellsArr)
             cnt    = numel(ellsArr);
             ellsVec = reshape(ellsArr, cnt, 1);
@@ -201,8 +196,6 @@ end
         nDim = 2;
         function ellTwoDim = oneDim2TwoDim(ell)
             [ellCenVec, qMat] = ell.double();
-%             ellTwoDim = ellipsoid([ellCenVec, 0].', ...
-%                 diag([qMat, 0]));\
             ellTwoDim = ell.create([ellCenVec, 0].', ...
                  diag([qMat, 0]));
         end

@@ -137,7 +137,7 @@ end
         sDirVec = dirVec;
         dirInfProjVec=0;
         if ~all(~isInfVec)
-            %есть бесконечные элементы в diagMat
+            % there are some infinite elements in diagMat
             nDimSpace=length(diagVec);
             allInfDirMat=eigvMat(:,isInfVec);
             [orthBasMat rankInf]=ellObj.findBasRank(allInfDirMat,absTol);
@@ -153,7 +153,7 @@ end
             dirVec=finBasMat.'*dirVec;
             cenVec=finBasMat.'*cenVec;
         else
-            %нет беск. элементов
+            % there is no infinite elements in diagMat
             nDimSpace=length(diagVec);
             finBasMat = eye(nDimSpace);
             ellQMat=eigvMat*diag(diagVec)*eigvMat.';
