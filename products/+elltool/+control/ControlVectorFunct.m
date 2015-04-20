@@ -61,10 +61,8 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
                 
                 xt1tMat = transpose(xstTransMat.evaluate(tFin)\xstTransMat.evaluate(curControlTime));
 
-% %                 bpVec = -curProbDynObj.getBptDynamics.evaluate(tFin-timeVec(iTime)); % ellipsoid center
-                bpVec = curProbDynObj.getBptDynamics.evaluate(curControlTime); % ellipsoid center                
-% %                 bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(tFin-timeVec(iTime));   % ellipsoid shape matrix
-                bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(curControlTime);   % ellipsoid shape matrix
+                bpVec = -curProbDynObj.getBptDynamics.evaluate(tFin-timeVec(iTime)); % ellipsoid center           
+                bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(tFin-timeVec(iTime));   % ellipsoid shape matrix
                 pVec = xt1tMat*bpVec;
                 pMat = xt1tMat*bpbMat*transpose(xt1tMat);
                     

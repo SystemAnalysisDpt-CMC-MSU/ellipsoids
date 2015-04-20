@@ -96,6 +96,7 @@ classdef ContControlBuilder
             goodDirOrderedVec = mapGoodDirInd(self.goodDirSetList{1}{1},self.intEllTube);
             indTube = goodDirOrderedVec(properIndTube);
             properEllTube = self.intEllTube.getTuples(properIndTube); 
+            
             qVec = properEllTube.aMat{:}(:,1);  
             qMat = properEllTube.QArray{:}(:,:,1);  
             if (isX0InSet)  
@@ -104,15 +105,16 @@ classdef ContControlBuilder
                 indWithoutX=1;
             end
             properEllTube.scale(@(x)sqrt(indWithoutX),'QArray'); 
-            % scale multiplies k^2 
+            % scale multiplies QArray*(k^2)
  
             controlFuncObj = elltool.control.Control(properEllTube,...
                 self.probDynamicsList, self.goodDirSetList,indTube,indWithoutX);  
             
             function iWithoutX = findEllWithoutX(qVec, qMat, x0Vec)
                 iWithoutX = 1;
-                if (dot(x0Vec-qVec,qMat\(x0Vec-qVec)) <= 1)
-                    iWithoutX = dot(x0Vec-qVec,qMat\(x0Vec-qVec));                    
+                scalProd = dot(x0Vec-qVec,qMat\(x0Vec-qVec));
+                if (scalProd <= 1)
+                    iWithoutX = scalProd;
                 end                
             end            
    

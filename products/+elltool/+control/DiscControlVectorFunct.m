@@ -22,14 +22,14 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
             self.downScaleKoeff=inDownScaleKoeff;
         end
         
-        function resMat=evaluate(self,xVec,timeVec)
+        function resMat=evaluate(self,xVec,timeVec,iTime)
             
             resMat=zeros(size(xVec,1),size(timeVec,2));
 %             import ; % <- I don't think we need it because the argument is void
 
             % next step is to find curProbDynObj, curGoodDirSetObj corresponding to that time period                       
    
-            for iTime=1:size(timeVec,2) % for every moment of time in timeVec
+            
                 probTimeVec=self.probDynamicsList{1}{1}.getTimeVec(); % what is probDynamicList? probTimeVec is the time vector for the system before first switch
                 if ((timeVec(iTime)<=probTimeVec(1))&&(timeVec(iTime)>=probTimeVec(end))) % if the tube is constructed for the selected moment of time
                     curProbDynObj=self.probDynamicsList{1}{1};
@@ -49,17 +49,11 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
                 % now we got the needed objects corresponding to the time
                 % moment we interested in
                 
-                xstTransMat = curGoodDirSetObj.getXstTransDynamics();
                 tFin = max(probTimeVec);  
                 tStart = min(probTimeVec);
-                xt1tMat = (transpose(xstTransMat.evaluate(tFin)))\(transpose(xstTransMat.evaluate(tFin-timeVec(iTime))));
-                % There is an opinion that we are to have 
-                % X(t1,t) = inv( X(s,t1) ) * X(s,t) 
-
-                bpVec = -curProbDynObj.getBptDynamics.evaluate(tFin-timeVec(iTime)); % ellipsoid center
-                bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(tFin-timeVec(iTime));   % ellipsoid shape matrix
-                pVec = xt1tMat*bpVec;
-                pMat = xt1tMat*bpbMat*transpose(xt1tMat);
+                
+                pVec = curProbDynObj.getBptDynamics.evaluate(tFin-timeVec(iTime-1)); % ellipsoid center
+                pMat = curProbDynObj.getBPBTransDynamics.evaluate(tFin-timeVec(iTime-1));   % ellipsoid shape matrix
                     
                 ellTubeTimeVec = self.properEllTube.timeVec{:};
                                 
@@ -90,25 +84,19 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
                         qMat=self.properEllTube.QArray{:}(:,:,indTime);                        
                     end
                 end                
-                qVec=xt1tMat*qVec;
-                qMat=xt1tMat*qMat*transpose(xt1tMat); 
-                xVec=xt1tMat*xVec;
-                ml1Vec=sqrt(dot(xVec-qVec,(qMat)\(xVec-qVec)));
-                l0Vec=((qMat)\(xVec-qVec))/ml1Vec;
-                if (dot(-l0Vec,xVec)-dot(-l0Vec,qVec)>dot(l0Vec,xVec)-dot(l0Vec,qVec))
-                    l0Vec=-l0Vec;
-                end
-                l0Vec=l0Vec/norm(l0Vec);
+                l0Vec=((qMat)\(xVec-qVec));
+                if (dot((xVec-qVec),l0Vec) <= 1)
+                    resMat = pVec;
+                else
                
-                
-                resMat(:,iTime) = pVec-(pMat*l0Vec)/sqrt(dot(l0Vec,pMat*l0Vec));
-                resMat(:,iTime) = xt1tMat\resMat(:,iTime);
-                if (dot(bpVec-resMat(:,iTime),bpbMat\(bpVec-resMat(:,iTime))) > 1.05)
+                resMat = pVec-(pMat*l0Vec)/sqrt(dot(l0Vec,pMat*l0Vec));
+                end;
+                if (dot(bpVec-resMat,bpbMat\(bpVec-resMat)) > 1.05)
                     disp('error');
-                    disp(dot(bpVec-resMat(:,iTime),bpbMat\(bpVec-resMat(:,iTime))));
+                    disp(dot(bpVec-resMat,bpbMat\(bpVec-resMat)));
                 end;
 
-            end % go to next moment in timeVec
+            % go to next moment in timeVec
             
         end % of evaluate()
         

@@ -104,9 +104,9 @@ classdef DiscreteControl
                 end;
                 for iTime = 2:nTimePoints 
                    aMat = AtMat.evaluate(timeVec(iTime));
-                   bpVec = controlVectorFunct.evaluate(xtArray(:,iTime-1),timeVec(iTime));
+                   bpVec = controlVectorFunct.evaluate(xtArray(:,iTime-1),timeVec,iTime);
                    xtArray(:,iTime) = ...
-                     aMat * xtArray(:,iTime-1) - bpVec;
+                     aMat \ xtArray(:,iTime-1) - bpVec;
                 end
                  resMat = xtArray.';        
              end

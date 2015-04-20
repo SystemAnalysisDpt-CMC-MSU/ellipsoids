@@ -98,15 +98,11 @@ classdef Control
             trajectory = [];
             switchTimeVecLenght = length(switchSysTimeVec);
             SOptions = odeset('RelTol',REL_TOL,'AbsTol',ABS_TOL);
-            properTube = self.controlVectorFunct.getITube();
             self.properEllTube.scale(@(x)1/sqrt(self.downScaleKoeff),'QArray'); 
 
             for iSwitch = 1:switchTimeVecLenght-1                 
-%                 iTube = 1;
                 iSwitchBack = switchTimeVecLenght - iSwitch;
-%                 if (iSwitchBack > 1)
-%                     iTube = properTube;
-%                 end
+
                 tStart = switchSysTimeVec(iSwitch);
                 tFin = switchSysTimeVec(iSwitch+1);
                 
@@ -121,12 +117,14 @@ classdef Control
                 currentScalProd = dot(odeResMat(end,:)'-q1Vec,q1Mat\(odeResMat(end,:)'-q1Vec));
                 
                 if (isX0inSet)&&(currentScalProd > 1 + ERR_TOL)
-                    throwerror('TestFails',...
-                        ['the result of test does not correspond with theory, ', num2str(currentScalProd)]);
+                    throwerror('TestFails', ['the result of test does not',...
+                        'correspond with theory, current scalar production is ',...
+                        num2str(currentScalProd), 'while isX0inSet is ', num2str(isX0inSet) ]);
                 end
                 if (~isX0inSet)&&(currentScalProd < 1 - ERR_TOL)
-                    throwerror('TestFails',...
-                        ['the result of test does not correspond with theory, ', num2str(currentScalProd)]);
+                    throwerror('TestFails', ['the result of test does not',...
+                        'correspond with theory, current scalar production is ',...
+                        num2str(currentScalProd), 'while isX0inSet is ', num2str(isX0inSet) ]);
                 end
                 
                 x0Vec = odeResMat(end,:);

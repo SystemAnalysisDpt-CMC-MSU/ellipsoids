@@ -47,17 +47,19 @@ confCMat = {
   
     
     'empty',[1,1],[-1 0 0 0 -5.3 6 -3 2;-1 1.59722852706909 0 0 -3.46318719387055...
-          2.80554294586182 0.194457054138184 -1.19445705413818;-1 2 0 0 -3 2 1 -2];
+          2.80554294586182 0.194457054138184 -1.19445705413818;-1 2 0 0 -3 2 1 -2]; % isEvolve = true crashed with 
+                            % scalProd = 1.2949 and isXoInSet = 1
           
       'advanced',[1,1],[-1 0 0 0 -5.3 6 -3 2; -2.92020392417908 0.960101962089539...
         -0.960101962089539 0.960101962089539 -3.09176548719406 10.3204588294029...
-         -3.96010196208954 3.92020392417908;-3 1 -1 1 -3 10.5 -4 4]; %fail, external point, 
-%                               the final dot product is 0.95
+         -3.96010196208954 3.92020392417908;-3 1 -1 1 -3 10.5 -4 4]; %fail, noEvolve: 0.95325while isX0inSet is 0
+                            % evolve: 2.1896while isX0inSet is 1
 
 
     'basic',[1 1],[-0.1 0 0 0 -3 6 -4 2; 0.51117172241211 1.11122131347656 0.555610656738281...
             0 -0.777557373046875 3.77755737304688 -1.77755737304688 1.44438934326172; 1 2 1 0 1 2 0 1];
-%             as in 'advanced' the same problem with [-3 1 -1 1 -3 10.5 -4 4];
+%             evolve: 3.0057while isX0inSet is 1
+% %             as in 'advanced' the same problem with [-3 1 -1 1 -3 10.5 -4 4];
 
  
     'demo3firstBackTest',[1 1],[-1.4 0.1; -1.40863134860992 0.108631348609924;-1.5 0.2];
@@ -128,6 +130,6 @@ suiteList{end + 1} = loader.load_tests_from_test_case(...
 testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 testList=horzcat(testLists{:});
 suite = mlunitext.test_suite(testList);
-suiteFilteredObj = suite.getCopyFiltered(varargin{:}); 
-% suiteFilteredObj = suite.getCopyFiltered('rot2d'); 
+% suiteFilteredObj = suite.getCopyFiltered(varargin{:}); 
+suiteFilteredObj = suite.getCopyFiltered('basic'); 
 results = runner.run(suiteFilteredObj);
