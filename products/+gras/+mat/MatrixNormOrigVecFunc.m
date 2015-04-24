@@ -1,4 +1,4 @@
-classdef MatrixNormOrigVecFunc<gras.mat.IMatrixFunction
+classdef MatrixNormOrigVecFunc<gras.mat.AMatrixFunctionComparable
     properties (Access=protected)
         ltGoodDirNormVecInterObj
         dimProj
@@ -29,12 +29,49 @@ classdef MatrixNormOrigVecFunc<gras.mat.IMatrixFunction
         function nRows=getNRows(self)
             nRows = self.nRows;
         end
+        function dimProj = getdimProj(self)
+            dimProj = self.dimProj;
+        end
+        function ltGoodDirNormVecInterObj = getltGoodDirNormVecInterObj(self)
+            ltGoodDirNormVecInterObj = self.ltGoodDirNormVecInterObj;
+        end
     end
     methods
         function self=MatrixNormOrigVecFunc(ltGoodDirNormVecInterObj,dimProj,timeVec)
             self.ltGoodDirNormVecInterObj = ltGoodDirNormVecInterObj;
             self.dimProj = dimProj;
             self.evaluate(timeVec);
+        end
+        function SData = toStructInternal(self,isPropIncluded)
+            SData = toStructInternalMatrixNormOrigVecFunc(self,isPropIncluded);
+        end
+    end
+    methods
+         function [SDataArr, SFieldNiceNames, SFieldDescr] = ...
+                toStructInternalMatrixNormOrigVecFunc(MatObj, isPropIncluded)
+            
+            if (nargin < 2)
+                isPropIncluded = false;
+            end
+            
+            SEll = struct('ltGoodDirNormVecInterObj', MatObj.getltGoodDirNormVecInterObj());
+            if (isPropIncluded)
+                SEll.absTol = MatObj.getAbsTol();
+                SEll.relTol = MatObj.getRelTol();
+            end
+            
+            SDataArr = SEll;
+            SFieldNiceNames = struct('ltGoodDirNormVecInterObj','ltGoodDirNormVecInterObj');
+            SFieldDescr = struct('dimProj','dimProj');
+            
+            if (isPropIncluded)
+                SFieldNiceNames.absTol = 'absTol';
+                SFieldNiceNames.relTol = 'relTol';
+                
+                SFieldDescr.absTol = 'Absolute tolerance.';
+                SFieldDescr.relTol = 'Relative tolerance.';
+            end
+            
         end
     end
 end
