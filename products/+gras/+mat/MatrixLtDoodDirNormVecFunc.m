@@ -1,4 +1,4 @@
-classdef MatrixLtDoodDirNormVecFunc<gras.mat.IMatrixFunction
+classdef MatrixLtDoodDirNormVecFunc<gras.mat.AMatrixFunctionComparable
     properties (Access=protected)
         ltGoodDirMatInterObj
         %
@@ -29,11 +29,48 @@ classdef MatrixLtDoodDirNormVecFunc<gras.mat.IMatrixFunction
         function nRows=getNRows(self)
             nRows = self.nRows;
         end
+        function ltGoodDirMatInterObj = getltGoodDirMatInterObj(self)
+            ltGoodDirMatInterObj = self.ltGoodDirMatInterObj;
+        end
     end
     methods
         function self=MatrixLtDoodDirNormVecFunc(ltGoodDirMatInterObj,timeVec)
             self.ltGoodDirMatInterObj = ltGoodDirMatInterObj;
             self.evaluate(timeVec);
         end
+        
+        function SData = toStructInternal(self,isPropIncluded)
+            SData = toStructInternalMatDoodDirNormVecFun(self, isPropIncluded);
+        end
+    end
+    
+    methods
+        function [SDataArr, SFieldNiceNames, SFieldDescr] = ...
+                toStructInternalMatDoodDirNormVecFun(MatObj, isPropIncluded)
+            
+            if (nargin < 2)
+                isPropIncluded = false;
+            end
+            
+            SEll = struct('ltGoodDirMatInterObj', MatObj.getltGoodDirMatInterObj());
+            if (isPropIncluded)
+                SEll.absTol = MatObj.getAbsTol();
+                SEll.relTol = MatObj.getRelTol();
+            end
+            
+            SDataArr = SEll;
+            SFieldNiceNames = struct('ltGoodDirMatInterObj','ltGDMIO');
+            SFieldDescr = struct('ltGoodDirMatInterObj','ltGoodDirMatInterObj');
+            
+            if (isPropIncluded)
+                SFieldNiceNames.absTol = 'absTol';
+                SFieldNiceNames.relTol = 'relTol';
+                
+                SFieldDescr.absTol = 'Absolute tolerance.';
+                SFieldDescr.relTol = 'Relative tolerance.';
+            end
+            
+        end
+
     end
 end
