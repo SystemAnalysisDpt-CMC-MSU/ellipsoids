@@ -3,7 +3,7 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
         function isOk = isMatFuncConst(self,varargin)
             isOk = true;
             for iArg = 1:length(varargin)
-                if ~isa(varargin{iArg}, 'gras.mat.AConstMatrixFunction')
+                if ~isa(varargin{iArg}, 'gras.mat.ConstMatrixFunction')
                     isOk = false;
                     break;
                 end
