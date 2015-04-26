@@ -6,6 +6,7 @@
 /products/+elltool/+logging/Logs
 /products/+elltool/+conf/confrepo
 /products/+elltool/+test/+configuration/confrepo
+/products/+gras/+ellapx/+uncertcalc/+log/Logs
 /console.log
 /automation/cron
 /automation/log
@@ -26,6 +27,8 @@
 !/products/+gras/+ellapx/+uncertcalc/+test/+comp/+conf/confrepo/_templates
 /products/+gras/+ellapx/+uncertcalc/+test/+comp/+conf/+sysdef/confrepo/*
 !/products/+gras/+ellapx/+uncertcalc/+test/+comp/+conf/+sysdef/confrepo/_templates
+
+
 
 
 
