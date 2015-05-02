@@ -10,12 +10,13 @@ classdef SintTC < mlunitext.test_case
         reachFactoryObj
         inPointList 
         outPointList
+        isReCache
    end
  
    methods (Abstract, Access = public)
-       controlObj = getcontrolObj(self)
-       %    
-       
+       controlObj = getControlObj(self)
+       % GETCONTROLLOBJ() - returns a ControlBuilder object
+
    end
    
     methods
@@ -25,12 +26,13 @@ classdef SintTC < mlunitext.test_case
             shortClassName = mfilename('classname');
             self.testDataRootDir = [fileparts(which(className)),...
                 filesep, 'TestData', filesep, shortClassName];
-            
         end
-        %
-        function self = set_up_param(self, reachFactObj,inPointVecList,outPointVecList)
-            self.reachFactoryObj=reachFactObj;
-            self.reachObj = reachFactObj.createInstance();
+        
+        
+        function self = set_up_param(self, reachFactObj,inPointVecList,outPointVecList,isReCache)
+            self.isReCache = isReCache;
+            self.reachFactoryObj = reachFactObj;
+            self.set_up_reachObj();
             self.linSys = reachFactObj.getLinSys();
             self.expDim = reachFactObj.getDim();
             self.tVec = reachFactObj.getTVec();
@@ -40,6 +42,22 @@ classdef SintTC < mlunitext.test_case
             self.outPointList=outPointVecList;
         end
  
+        function self = set_up_reachObj(self)
+            methodName = modgen.common.getcallernameext(1);
+            resMap = modgen.containers.ondisk.HashMapMatXML(...
+                'storageLocationRoot',self.testDataRootDir,...
+                'storageBranchKey',[methodName,'_out'],...
+                'storageFormat','mat',...
+                'useHashedPath',false,'useHashedKeys',false);
+            inpKey = self.marker;
+            if self.isReCache||~resMap.isKey(inpKey);
+                self.reachObj = self.reachFactoryObj.createInstance();
+                resMap.put(inpKey,self.reachObj);
+            else
+                self.reachObj = resMap.get(inpKey);
+            end
+        end
+        
     end
     
     methods 
@@ -49,7 +67,8 @@ classdef SintTC < mlunitext.test_case
             TOL=10^(-5);
             ellTubeRel=self.reachObj.getEllTubeRel();
             switchSysTimeVec=self.reachObj.getSwitchTimeVec();                
-            intEllTube=ellTubeRel.getTuplesFilteredBy('approxType', gras.ellapx.enums.EApproxType.Internal);
+            intEllTube=ellTubeRel.getTuplesFilteredBy('approxType',...
+                        gras.ellapx.enums.EApproxType.Internal);
             
             nTuples = intEllTube.getNTuples();           
             x0Mat=self.inPointList;
@@ -58,15 +77,14 @@ classdef SintTC < mlunitext.test_case
                 x0Vec=transpose(x0Vec);
                 isX0inSet=false;
   
-                controlObj = self.getcontrolObj();
-                controlFuncObj=controlObj.getControl(x0Vec);
+                controlBuilderObj = self.getControlObj();
+                controlObj = controlBuilderObj.getControlObj(x0Vec);
                 if (~all(size(x0Vec)==size(intEllTube.aMat{1}(:,1))))
-                    self.runAndCheckError('controlObj.getControl(x0Vec)','wrongInput');
+                    self.runAndCheckError('controlObj.getControl(x0Vec)',...
+                                                            'wrongInput');
                     return; 
                 end   
                 for iTube=1:nTuples
-                   
-
                     qVec=intEllTube.aMat{iTube}(:,1);  
                     qMat=intEllTube.QArray{iTube}(:,:,1); 
                     if (dot(x0Vec-qVec,qMat\(x0Vec-qVec))<=1+TOL)
@@ -74,19 +92,27 @@ classdef SintTC < mlunitext.test_case
                     end
                 end
                 isCurrentEqual=true;
-                properTube=controlFuncObj.getITube();   
-                trajectory=controlFuncObj.getTrajectory(x0Vec,switchSysTimeVec,isX0inSet);
                 
-                Y=trajectory(end,:);
-                q1Vec=ellTubeRel.aMat{properTube}(:,end);
-                q1Mat=ellTubeRel.QArray{properTube}(:,:,end);
-                if (isX0inSet)&&(dot(Y(end,:)'-q1Vec,q1Mat\(Y(end,:)'-q1Vec))>1+TOL)
-                    isCurrentEqual=false;
+                properTube = controlObj.getProperEllTube();
+                [isMemberTube, properTubeInd] = properTube.isMemberTuples(ellTubeRel,'lsGoodDirVec');
+                
+                if (isMemberTube)
+                    trajectory = controlObj.getTrajectory(x0Vec,switchSysTimeVec,isX0inSet);
+                    Y=trajectory(end,:);
+
+                    q1Vec=ellTubeRel.aMat{properTubeInd}(:,end);
+                    q1Mat=ellTubeRel.QArray{properTubeInd}(:,:,end);
+                    currentScalProd = dot(Y(end,:)'-q1Vec,q1Mat\(Y(end,:)'-q1Vec));
+                    if (isX0inSet)&&(currentScalProd > 1+TOL)
+                        isCurrentEqual=false;
+                    end
+                    if (~isX0inSet)&&(currentScalProd < 1-TOL)
+                        isCurrentEqual=false;
+                    end
+                    isOk=isOk&&isCurrentEqual;
+                else
+                    isOk = false;
                 end
-                if (~isX0inSet)&&(dot(Y(end,:)'-q1Vec,q1Mat\(Y(end,:)'-q1Vec))<1-TOL)
-                    isCurrentEqual=false;
-                end
-                isOk=isOk&&isCurrentEqual;
                 
             end
             mlunitext.assert_equals(true, isOk);

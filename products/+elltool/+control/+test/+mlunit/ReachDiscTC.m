@@ -7,7 +7,7 @@ classdef ReachDiscTC < elltool.control.test.mlunit.SintTC
             
         end
 
-        function controlObj = getcontrolObj(self)
+        function controlObj = getControlObj(self)
             controlObj=elltool.control.DiscreteControlBuilder(self.reachObj);
         end
     

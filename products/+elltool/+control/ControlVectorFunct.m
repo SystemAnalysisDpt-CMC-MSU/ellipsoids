@@ -7,17 +7,15 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
         properEllTube
         probDynamicsList
         goodDirSetList
-        indTube
         downScaleKoeff
     end
     
     methods
         function self=ControlVectorFunct(properEllTube,... % class constructor
-                probDynamicsList, goodDirSetList,indTube,inDownScaleKoeff)
+                probDynamicsList, goodDirSetList,inDownScaleKoeff)
             self.properEllTube=properEllTube;
             self.probDynamicsList=probDynamicsList;
             self.goodDirSetList=goodDirSetList;
-            self.indTube=indTube;
             self.downScaleKoeff=inDownScaleKoeff;
         end
         
@@ -29,27 +27,22 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
             
             for iTime = 1:size(timeVec,2) % for every moment of time in timeVec
                 curControlTime = timeVec(iTime);                
-                probTimeVec = self.probDynamicsList{1}{1}.getTimeVec();
+                probTimeVec = self.probDynamicsList{1}.getTimeVec();
                 % probDynamicsList{indSwitch}{indTube} returns dynamics for
                 %       indSwitch time period and indTube tube
 
                 % getting probDynmicsObject corresponding to correct tube
                 %   and time period
-                if ( ( curControlTime <= probTimeVec(end) ) && ...
-                        ( curControlTime >= probTimeVec(1) ) )
-                    curProbDynObj = self.probDynamicsList{1}{1};
-                    curGoodDirSetObj = self.goodDirSetList{1}{1};
-                else
-                    for iSwitch = 2:length(self.probDynamicsList)
-                        probTimeVec = self.probDynamicsList{iSwitch}{self.indTube}.getTimeVec();
-                        if ( ( curControlTime <= probTimeVec(end) ) && ...
-                                ( curControlTime >= probTimeVec(1) ) )
-                            curProbDynObj = self.probDynamicsList{iSwitch}{self.indTube};
-                            curGoodDirSetObj = self.goodDirSetList{iSwitch}{self.indTube};
-                            break;
-                        end
+
+                for iSwitch = 1:length(self.probDynamicsList)
+                    probTimeVec = self.probDynamicsList{iSwitch}.getTimeVec();
+                    if ( ( curControlTime <= probTimeVec(end) ) && ...
+                            ( curControlTime >= probTimeVec(1) ) )
+                        curProbDynObj = self.probDynamicsList{iSwitch};
+                        curGoodDirSetObj = self.goodDirSetList{iSwitch};
+                        break;
                     end
-                end;
+                end
                 
                 % now we got the needed objects corresponding to the time
                 % moment we interested in
@@ -86,8 +79,8 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
                     qVec = interp1(ellTubeTimeVec',transpose(self.properEllTube.aMat{1}),curControlTime);
                     qVec = qVec';
                     
-                    nDimRow=size(self.properEllTube.QArray{:},1);
-                    nDimCol=size(self.properEllTube.QArray{:},2);
+                    nDimRow=size(self.properEllTube.QArray{1},1);
+                    nDimCol=size(self.properEllTube.QArray{1},2);
                     qMat=zeros(nDimRow,nDimCol);
                     
                     for iDim=1:nDimRow                       
@@ -100,8 +93,8 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
                 else
 % %                     we need to implemet TRUE comparison between floats!!
                     if (ellTubeTimeVec(indTime)==timeVec(iTime)) 
-                        qVec = self.properEllTube.aMat{:}(:,indTime);
-                        qMat = self.properEllTube.QArray{:}(:,:,indTime);                        
+                        qVec = self.properEllTube.aMat{1}(:,indTime);
+                        qMat = self.properEllTube.QArray{1}(:,:,indTime);                        
                     end
                 end                
                 
@@ -122,10 +115,6 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction
             end 
             
         end % of evaluate()
-        
-        function indTube=getITube(self)
-            indTube=self.indTube;
-        end
         
     end
 end
