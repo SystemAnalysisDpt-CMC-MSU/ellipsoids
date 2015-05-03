@@ -20,7 +20,7 @@ classdef DiscreteControlBuilder
             end
         end
         
-        function controlFuncObj=getControl(self,x0Vec)
+        function controlFuncObj=getControlObj(self,x0Vec)
             import modgen.common.throwerror;
             nTuples = self.intEllTube.getNTuples;
             ELL_INT_TOL=10^(-5);
@@ -46,8 +46,8 @@ classdef DiscreteControlBuilder
             goodDirOrderedVec=mapGoodDirInd(self.goodDirSetList{1}{1},self.intEllTube);
             indTube=goodDirOrderedVec(properIndTube);
             properEllTube=self.intEllTube.getTuples(properIndTube); 
-            qVec=properEllTube.aMat{:}(:,1);  
-            qMat=properEllTube.QArray{:}(:,:,1);  
+            qVec=properEllTube.aMat{1}(:,1);  
+            qMat=properEllTube.QArray{1}(:,:,1);  
             if (isX0InSet)  
                 indWithoutX=findEllWithoutX(qVec, qMat, x0Vec);
             else
@@ -56,8 +56,30 @@ classdef DiscreteControlBuilder
             properEllTube.scale(@(x)sqrt(indWithoutX),'QArray'); 
             % scale multiplies k^2 
  
-            controlFuncObj=elltool.control.DiscreteControl(properEllTube,...
-                self.probDynamicsList, self.goodDirSetList,indTube,indWithoutX,self.isBackward);  
+             properProbDynList = getProperProbDynList(indTube);
+            properGoodDirSetList = getProperGoodDirSetList(indTube);
+            
+            controlFuncObj = elltool.control.DiscrSingleTubeControl(properEllTube,...
+                properProbDynList, properGoodDirSetList,indWithoutX);  
+                 
+            
+            function properProbDynList = getProperProbDynList(indTube)
+                probDynListLength = length(self.probDynamicsList);
+                properProbDynList = cell(1,probDynListLength);
+                properProbDynList{1} = self.probDynamicsList{1}{1};
+                for iSwitch = 2:probDynListLength
+                    properProbDynList{iSwitch} = self.probDynamicsList{iSwitch}{indTube};
+                end
+            end
+            
+            function properGoodDirSetList = getProperGoodDirSetList(indTube)
+                goodDirSetListLength = length(self.goodDirSetList);
+                properGoodDirSetList = cell(1,goodDirSetListLength);
+                properGoodDirSetList{1} = self.goodDirSetList{1}{1};
+                for iSwitch = 2:goodDirSetListLength
+                    properGoodDirSetList{iSwitch} = self.goodDirSetList{iSwitch}{indTube};
+                end
+            end
             function iWithoutX=findEllWithoutX(qVec, qMat, x0Vec)
                 iWithoutX=1;
                 if (dot(x0Vec-qVec,qMat\(x0Vec-qVec))<=1)

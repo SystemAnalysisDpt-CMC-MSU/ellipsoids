@@ -7,18 +7,16 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
         properEllTube
         probDynamicsList
         goodDirSetList
-        indTube
         downScaleKoeff
     end
    
     
     methods
         function self = DiscControlVectorFunct(properEllTube,... % class constructor
-                probDynamicsList, goodDirSetList,indTube,inDownScaleKoeff)
+                probDynamicsList, goodDirSetList,inDownScaleKoeff)
             self.properEllTube=properEllTube;
             self.probDynamicsList=probDynamicsList;
             self.goodDirSetList=goodDirSetList;
-            self.indTube=indTube;
             self.downScaleKoeff=inDownScaleKoeff;
         end
         
@@ -30,21 +28,16 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
             % next step is to find curProbDynObj, curGoodDirSetObj corresponding to that time period                       
    
             
-                probTimeVec=self.probDynamicsList{1}{1}.getTimeVec(); % what is probDynamicList? probTimeVec is the time vector for the system before first switch
-                if ((timeVec(iTime)<=probTimeVec(1))&&(timeVec(iTime)>=probTimeVec(end))) % if the tube is constructed for the selected moment of time
-                    curProbDynObj=self.probDynamicsList{1}{1};
-                    curGoodDirSetObj=self.goodDirSetList{1}{1};
-                    
-                else
-                    for iSwitch=2:numel(self.probDynamicsList)
-                        probTimeVec=self.probDynamicsList{iSwitch}{self.indTube}.getTimeVec();
-                        if ((timeVec(iTime)<=probTimeVec(1))&&(timeVec(iTime)>=probTimeVec(end)))
-                            curProbDynObj=self.probDynamicsList{iSwitch}{self.indTube};
-                            curGoodDirSetObj=self.goodDirSetList{iSwitch}{self.indTube};
-                            break;
-                        end
+                probTimeVec=self.probDynamicsList{1}.getTimeVec(); % what is probDynamicList? probTimeVec is the time vector for the system before first switch
+                for iSwitch = 1:length(self.probDynamicsList)
+                    probTimeVec = self.probDynamicsList{iSwitch}.getTimeVec();
+                    if ( ( curControlTime <= probTimeVec(1) ) && ...
+                            ( curControlTime >= probTimeVec(end) ) )
+                        curProbDynObj = self.probDynamicsList{iSwitch};
+                        curGoodDirSetObj = self.goodDirSetList{iSwitch};
+                        break;
                     end
-                end;
+                end
      
                 % now we got the needed objects corresponding to the time
                 % moment we interested in
@@ -52,8 +45,8 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
                 tFin = max(probTimeVec);  
                 tStart = min(probTimeVec);
                 
-                pVec = curProbDynObj.getBptDynamics.evaluate(tFin-timeVec(iTime-1)); % ellipsoid center
-                pMat = curProbDynObj.getBPBTransDynamics.evaluate(tFin-timeVec(iTime-1));   % ellipsoid shape matrix
+                pVec = curProbDynObj.getBptDynamics.evaluate(timeVec(iTime)); % ellipsoid center
+                pMat = curProbDynObj.getBPBTransDynamics.evaluate(timeVec(iTime));   % ellipsoid shape matrix
                     
                 ellTubeTimeVec = self.properEllTube.timeVec{:};
                                 
@@ -68,8 +61,8 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
                     for iDim=1:nDim
                             qVec(iDim)=interp1(ellTubeTimeVec,self.properEllTube.aMat{:}(iDim,:),timeVec(iTime));
                     end;
-                    nDimRow=size(self.properEllTube.QArray{:},1);
-                    nDimCol=size(self.properEllTube.QArray{:},2);
+                    nDimRow=size(self.properEllTube.QArray{1},1);
+                    nDimCol=size(self.properEllTube.QArray{1},2);
                     qMat=zeros(nDimRow,nDimCol);
                     for iDim=1:nDimRow                       
                         for jDim=1:nDimCol
@@ -80,8 +73,8 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
                    
                 else
                     if (ellTubeTimeVec(indTime)==timeVec(iTime))
-                        qVec=self.properEllTube.aMat{:}(:,indTime);
-                        qMat=self.properEllTube.QArray{:}(:,:,indTime);                        
+                        qVec=self.properEllTube.aMat{1}(:,indTime);
+                        qMat=self.properEllTube.QArray{1}(:,:,indTime);                        
                     end
                 end                
                 l0Vec=((qMat)\(xVec-qVec));
@@ -100,9 +93,6 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
             
         end % of evaluate()
         
-        function indTube=getITube(self)
-            indTube=self.indTube;
-        end
         
     end
 end
