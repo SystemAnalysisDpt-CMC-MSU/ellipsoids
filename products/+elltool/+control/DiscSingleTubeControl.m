@@ -24,21 +24,16 @@ classdef DiscSingleTubeControl
             ERR_TOL=10^(-4);
             trajectory=[];
             switchTimeVecLenght=numel(switchSysTimeVec);
-            properTube=self.controlVectorFunct.getITube();
             self.properEllTube.scale(@(x)1/sqrt(self.downScaleKoeff),'QArray'); 
             for iSwitch=1:switchTimeVecLenght-1                 
-                iTube=1;
-                iSwitchBack=switchTimeVecLenght-iSwitch;
-                if (iSwitchBack>1)
-                    iTube=properTube;
-                end
+                iSwitchBack = switchTimeVecLenght - iSwitch;
                 
                 tStart=switchSysTimeVec(iSwitch);
                 tFin=switchSysTimeVec(iSwitch+1);
                
                 indFin=find(self.properEllTube.timeVec{1}==tFin);
-                AtMat=self.probDynamicsList{iSwitch}.getAtDynamics();    
-                curProbDynObj=self.probDynamicsList{iSwitch};
+                AtMat=self.probDynamicsList{iSwitchBack}.getAtDynamics();    
+                curProbDynObj=self.probDynamicsList{iSwitchBack};
                 
                 CRel = 10000;
                 timeVec = fliplr(tStart:(tFin-tStart)/CRel:tFin);

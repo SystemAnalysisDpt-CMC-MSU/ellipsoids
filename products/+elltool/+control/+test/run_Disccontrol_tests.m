@@ -19,6 +19,7 @@ crm = elltool.control.test.conf.ConfRepoMgr();
 crmSys = elltool.control.test.conf.sysdef.ConfRepoMgr();
 %
 confCMat = {
+    'ellDemo3test',[1 1],[1 1];
     'discrFirstTest',[1 1],[1 1];
     'discrSecondTest',[1 1],[1 1];
     'onedir',[1 1],[1 0 0 1 -4 7 -7 6; 1 0.627918422222137 0.627918422222137 1 -0.860407888889313...

@@ -59,7 +59,7 @@ classdef DiscreteControlBuilder
              properProbDynList = getProperProbDynList(indTube);
             properGoodDirSetList = getProperGoodDirSetList(indTube);
             
-            controlFuncObj = elltool.control.DiscrSingleTubeControl(properEllTube,...
+            controlFuncObj = elltool.control.DiscSingleTubeControl(properEllTube,...
                 properProbDynList, properGoodDirSetList,indWithoutX);  
                  
             

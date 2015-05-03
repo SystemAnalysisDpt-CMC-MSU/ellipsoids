@@ -27,7 +27,7 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
 
             % next step is to find curProbDynObj, curGoodDirSetObj corresponding to that time period                       
    
-            
+                curControlTime = timeVec(iTime); 
                 probTimeVec=self.probDynamicsList{1}.getTimeVec(); % what is probDynamicList? probTimeVec is the time vector for the system before first switch
                 for iSwitch = 1:length(self.probDynamicsList)
                     probTimeVec = self.probDynamicsList{iSwitch}.getTimeVec();
@@ -78,16 +78,8 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction
                     end
                 end                
                 l0Vec=((qMat)\(xVec-qVec));
-                if (dot((xVec-qVec),l0Vec) <= 1)
-                    resMat = pVec;
-                else
-               
+              
                 resMat = pVec-(pMat*l0Vec)/sqrt(dot(l0Vec,pMat*l0Vec));
-                end;
-                if (dot(bpVec-resMat,bpbMat\(bpVec-resMat)) > 1.05)
-                    disp('error');
-                    disp(dot(bpVec-resMat,bpbMat\(bpVec-resMat)));
-                end;
 
             % go to next moment in timeVec
             
