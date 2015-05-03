@@ -5,27 +5,30 @@ classdef AMatrixFunctionComparable < gras.mat.IMatrixFunction
     end
     
     methods     
-        function isOk = isequal(FirstMatObj,SecMatObj)
-            isOk = FirstMatObj.isEqual(SecMatObj);
+        function isOk = isequal(self,SecMatObj)
+            isOk = self.isEqual(SecMatObj);
+        end
+        function SData = toStruct(self,isPropIncluded)
+            SData = self.toStructInternal(isPropIncluded);
         end
     end
     
     methods
-        function [isOk, reportStr] = isEqual(FirstObj,SecObj)
+        function [isOk, reportStr] = isEqual(firstObj,secObj)
             import modgen.common.throwerror;
             import modgen.struct.structcomparevec;
             import gras.la.sqrtmpos;
 
-            nFirstElems = numel(FirstObj);
-            nSecElems = numel(SecObj);
+            nFirstElems = numel(firstObj);
+            nSecElems = numel(secObj);
 
-            firstSizeVec = size(FirstObj);
-            secSizeVec = size(SecObj);
+            firstSizeVec = size(firstObj);
+            secSizeVec = size(secObj);
             isnFirstScalar = nFirstElems > 1;
             isnSecScalar = nSecElems > 1;
             
-            SEll1Array = FirstObj.toStructInternal(); % add param 'true' for absTol and relTol
-            SEll2Array = SecObj.toStructInternal(); % add param 'true' for absTol and relTol
+            SEll1Array = firstObj.toStructInternal(); % add param 'true' for absTol and relTol
+            SEll2Array = secObj.toStructInternal(); % add param 'true' for absTol and relTol
             
             if isnFirstScalar&&isnSecScalar
                 
@@ -52,7 +55,7 @@ classdef AMatrixFunctionComparable < gras.mat.IMatrixFunction
         end
     end
     
-    methods(Abstract)
+    methods(Abstract, Access=protected)
         SData = toStructInternal(self,isPropIncluded);
     end
     

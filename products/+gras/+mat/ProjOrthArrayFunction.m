@@ -38,7 +38,7 @@ classdef ProjOrthArrayFunction<gras.mat.AMatrixFunctionComparable
             mArray = self.mArray;
         end
         function projArrayFunc = getprojArrayFunc(self)
-            projArrayFunc = self.projArrayFunc;
+            projArrayFunc = func2str(self.projArrayFunc);
         end
     end
     methods
@@ -46,13 +46,10 @@ classdef ProjOrthArrayFunction<gras.mat.AMatrixFunctionComparable
             self.projArrayFunc = projArrayFunc;
             self.evaluate(timeVec);
         end
-        function SData = toStructInternal(self,isPropIncluded)
-            SData = toStructInternalProjOrthArray(self,isPropIncluded);
-        end
     end
-    methods
+    methods (Access=protected)
         function [SDataArr, SFieldNiceNames, SFieldDescr] =...
-                toStructInternalProjOrthArray(MatObj,isPropIncluded)
+                toStructInternal(MatObj,isPropIncluded)
             
             if (nargin < 2)
                 isPropIncluded = false;
@@ -60,7 +57,8 @@ classdef ProjOrthArrayFunction<gras.mat.AMatrixFunctionComparable
             
             SEll = struct('mArray', MatObj.getmArray(),...
                 'projArrayFunc',MatObj.getprojArrayFunc());
-            if (isPropIncluded)
+            
+            if isPropIncluded
                 SEll.absTol = MatObj.getAbsTol();
                 SEll.relTol = MatObj.getRelTol();
             end
@@ -69,7 +67,7 @@ classdef ProjOrthArrayFunction<gras.mat.AMatrixFunctionComparable
             SFieldNiceNames = struct('mArray','mA','projArrayFunc','pAF');
             SFieldDescr = struct('mArray','mArray','projArrayFunc','projArrayFunc');
             
-            if (isPropIncluded)
+            if isPropIncluded
                 SFieldNiceNames.absTol = 'absTol';
                 SFieldNiceNames.relTol = 'relTol';
                 

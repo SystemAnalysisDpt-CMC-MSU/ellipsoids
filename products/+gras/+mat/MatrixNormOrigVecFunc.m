@@ -42,27 +42,26 @@ classdef MatrixNormOrigVecFunc<gras.mat.AMatrixFunctionComparable
             self.dimProj = dimProj;
             self.evaluate(timeVec);
         end
-        function SData = toStructInternal(self,isPropIncluded)
-            SData = toStructInternalMatrixNormOrigVecFunc(self,isPropIncluded);
-        end
     end
-    methods
+    methods (Access=protected)
          function [SDataArr, SFieldNiceNames, SFieldDescr] = ...
-                toStructInternalMatrixNormOrigVecFunc(MatObj, isPropIncluded)
+                toStructInternal(MatObj, isPropIncluded)
             
             if (nargin < 2)
                 isPropIncluded = false;
             end
-            
-            SEll = struct('ltGoodDirNormVecInterObj', MatObj.getltGoodDirNormVecInterObj());
+            MatrixNormOrigVec = MatObj.getltGoodDirNormVecInterObj();
+            [dataArray,timeVec]=MatrixNormOrigVec.getKnotDataArray();
+            SEll = struct('dataArray', dataArray, 'timeVec', timeVec);
             if (isPropIncluded)
                 SEll.absTol = MatObj.getAbsTol();
                 SEll.relTol = MatObj.getRelTol();
             end
             
             SDataArr = SEll;
-            SFieldNiceNames = struct('ltGoodDirNormVecInterObj','ltGoodDirNormVecInterObj');
-            SFieldDescr = struct('dimProj','dimProj');
+            SFieldNiceNames = struct('dataArray','dA','timeVec','tV','dimProj','dP');
+            SFieldDescr = struct('data Array', 'Array of data', 'timeVec',...
+                'Vector of time moments', 'dimProj', 'Dimensionality of projection');
             
             if (isPropIncluded)
                 SFieldNiceNames.absTol = 'absTol';

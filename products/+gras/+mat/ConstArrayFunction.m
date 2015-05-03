@@ -35,29 +35,24 @@ classdef ConstArrayFunction<gras.mat.AMatrixFunctionComparable
             self.nRows = self.mSizeVec(1);
             self.nCols = self.mSizeVec(2);
         end
-        function SData = toStructInternal(self,isPropIncluded)
-            SData = toStructInternalConst(self,isPropIncluded);
-        end
     end
-    methods
-        function [SDataArr, SFieldNiceNames, SFieldDescr] = ...
-                toStructInternalConst(ConstMat, isPropIncluded)
-            
+    methods (Access=protected)
+        function [SDataArr, SFieldNiceNames, SFieldDescr] = toStructInternal(self,isPropIncluded)
             if (nargin < 2)
                 isPropIncluded = false;
             end
             
-            SEll = struct('matrix', ConstMat);
-            if (isPropIncluded)
-                SEll.absTol = ConstMat.getAbsTol();
-                SEll.relTol = ConstMat.getRelTol();
+            SEll = struct('mArray', ConstArray);
+            if isPropIncluded
+                SEll.absTol = ConstArray.getAbsTol();
+                SEll.relTol = ConstArray.getRelTol();
             end
             
             SDataArr = SEll;
-            SFieldNiceNames = struct('matrix','M');
-            SFieldDescr = struct('matrix','Matrix');
+            SFieldNiceNames = struct('mArray','mAr');
+            SFieldDescr = struct('mArray','mArray');
             
-            if (isPropIncluded)
+            if isPropIncluded
                 SFieldNiceNames.absTol = 'absTol';
                 SFieldNiceNames.relTol = 'relTol';
                 
@@ -66,6 +61,5 @@ classdef ConstArrayFunction<gras.mat.AMatrixFunctionComparable
             end
             
         end
-
     end
 end

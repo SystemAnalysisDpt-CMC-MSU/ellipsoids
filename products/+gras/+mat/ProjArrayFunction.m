@@ -38,6 +38,9 @@ classdef ProjArrayFunction<gras.mat.AMatrixFunctionComparable
         function mArray = getmArray(self)
             mArray = self.mArray;
         end
+        function fProjFunction = getfProjFunction(self)
+            fProjFunction = func2str(self.fProjFunction);
+        end
     end
     methods
         function self=ProjArrayFunction(projMat,timeVec,sTime,dim,...
@@ -53,35 +56,34 @@ classdef ProjArrayFunction<gras.mat.AMatrixFunctionComparable
             self.fProjFunction = fProjFunction;
             self.evaluate(timeVec);
         end
-        function SData = toStructInternal(self,isPropIncluded)
-            SData = toStructInternalProjArray(self,isPropIncluded);
-        end
     end
-    methods
+    methods (Access=protected)
         function [SDataArr, SFieldNiceNames, SFieldDescr] = ...
-                toStructInternalProjArray(matObj, isPropIncluded)
+                toStructInternal(matObj, isPropIncluded)
             
             if (nargin < 2)
                 isPropIncluded = false;
             end
             
-            SEll = struct('mArray',matObj.getmArray(),'projMat', matObj.getprojMat(),...
+            SEll = struct('fProjFunction',matObj.getfProjFunction(),...
+                'mArray',matObj.getmArray(),'projMat', matObj.getprojMat(),...
                 'sTime',matObj.getSTime(),'dim', matObj.getDim(),...
                 'indsTime', matObj.getIndsTime());
             
-            if (isPropIncluded)
+            if isPropIncluded
                 SEll.absTol = matObj.getAbsTol();
                 SEll.relTol = matObj.getRelTol();
             end
             
             SDataArr = SEll;
-            SFieldNiceNames = struct('mArray','mA','projMat','pM', 'sTime',...
+            SFieldNiceNames = struct('fProjFunction','fPF','mArray','mA','projMat','pM', 'sTime',...
                 'sT', 'dim', 'd', 'indsTime', 'iT');
-            SFieldDescr = struct('projMat','Matrix of projection',...
+            SFieldDescr = struct('fProjFunction','fProjFunction','mArray',...
+                'mArray','projMat','Matrix of projection',...
                 'sTime', 'Time s', 'dim', 'Dimensionality',...
                 'indsTime', 'Index of sTime within timeVec');
             
-            if (isPropIncluded)
+            if isPropIncluded
                 SFieldNiceNames.absTol = 'absTol';
                 SFieldNiceNames.relTol = 'relTol';
                 
