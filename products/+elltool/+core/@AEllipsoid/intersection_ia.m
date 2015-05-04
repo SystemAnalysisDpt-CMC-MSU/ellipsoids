@@ -115,7 +115,7 @@ else
     nAmount = numel(objArr);
     sizeCVec = num2cell(size(objArr));
 end
-outEllArr(sizeCVec{:}) = myEllArr(1).create;
+outEllArr(sizeCVec{:}) = myEllArr(1).create();
 indexVec = 1:nAmount;
 
 if ~(isEllScal || isObjScal )
@@ -168,7 +168,7 @@ if isMe(secObj)
     if fstEll == secObj
         outEll = fstEll;
     elseif ~intersect(fstEll, secObj)
-        outEll = fstEll.create;
+        outEll = fstEll.create();
     else
         outEll = ellintersection_ia([fstEll secObj]);
     end
@@ -195,7 +195,7 @@ if (normHypVec'*fstEllCentVec > hypScalar) ...
 end
 if (normHypVec'*fstEllCentVec < hypScalar) ...
         && ~(intersect(fstEll, secObj))
-        outEll = fstEll.create;
+        outEll = fstEll.create();
     return;
 end
 

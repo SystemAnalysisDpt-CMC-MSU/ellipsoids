@@ -85,13 +85,13 @@ end
 
 sizeCVec = num2cell(size(inpEllArr));
 if isempty(inpEllArr)
-    outEllArr = inpEllArr.create.empty(sizeCVec{:});
+    outEllArr = inpEllArr.create().empty(sizeCVec{:});
 else    
     dimArr = dimension(inpEllArr);
     
     checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimArr,...
         'errorMessage','dimensions mismatch');
-    outEllArr(sizeCVec{:})=inpEllArr(1).create;
+    outEllArr(sizeCVec{:})=inpEllArr(1).create();
     arrayfun(@(x) fSinglePlus(x),1:numel(inpEllArr));
 end        
     function fSinglePlus(index)

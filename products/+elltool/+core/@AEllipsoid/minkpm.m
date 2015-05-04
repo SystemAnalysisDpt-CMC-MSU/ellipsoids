@@ -213,7 +213,7 @@ centVec =zeros(nDims,1);
 arrayfun(@(x) fAddCenter(x),inpEllArr);
 absTolArr = getAbsTol(inpEllArr);
 % extApprEllVec(1,nCols) = ellipsoid;
-extApprEllVec(1,nCols) = inpEllArr(1).create;
+extApprEllVec(1,nCols) = inpEllArr(1).create();
 arrayfun(@(x) fSingleDirection(x),1:nCols);
 
     function fAddCenter(singEll)

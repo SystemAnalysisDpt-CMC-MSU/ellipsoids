@@ -88,7 +88,7 @@ else
     nAmount = numel(myHypArr);
     sizeCVec = num2cell(size(myHypArr));
 end
-intEllArr(sizeCVec{:}) = myEllArr(1).create;
+intEllArr(sizeCVec{:}) = myEllArr(1).create();
 isnIntersectedArr = false(sizeCVec{:});
 indexVec = 1:nAmount;
 
@@ -117,7 +117,7 @@ end
         myHyp = myHypArr(hypIndex);
         index = max(ellIndex,hypIndex);
         if distance(myEll, myHyp) > absTol
-           intEllArr(index) = myEll.create;
+           intEllArr(index) = myEll.create();
            isnIntersectedArr(index) = true;
         else
             intEllArr(index)=l_compute1intersection(myEll,myHyp,maxEllDim);

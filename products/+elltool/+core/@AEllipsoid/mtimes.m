@@ -70,7 +70,7 @@ if isFstScal
     multMatSq = multMat*multMat;
 end
 sizeCVec = num2cell(size(inpEllVec)); 
-outEllVec(sizeCVec{:}) = inpEllVec(1).create;
+outEllVec(sizeCVec{:}) = inpEllVec(1).create();
 arrayfun(@(x) fSingleMtimes(x), 1:numel(inpEllVec));
     function fSingleMtimes(index)
         singEll = inpEllVec(index);

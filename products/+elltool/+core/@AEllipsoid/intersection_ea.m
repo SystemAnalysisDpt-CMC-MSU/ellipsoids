@@ -103,7 +103,7 @@ else
     nAmount = numel(objArr);
     sizeCVec = num2cell(size(objArr));
 end
-outEllArr(sizeCVec{:}) = myEllArr(1).create;
+outEllArr(sizeCVec{:}) = myEllArr(1).create();
 indexVec = 1:nAmount;
 
 if ~(isEllScal || isObjScal)
@@ -170,7 +170,7 @@ if isa(secObj, 'hyperplane')
     end
     if (normHypVec'*fstEllCentVec < hypScalar) ...
             && ~(intersect(fstEll, secObj))
-          outEll = fstEll.create;
+          outEll = fstEll.create();
         return;
     end
     hEig  = 2*realsqrt(maxeig(fstEll));
@@ -185,7 +185,7 @@ else
         return;
     end
     if ~intersect(fstEll, secObj)
-          outEll = fstEll.create;
+          outEll = fstEll.create();
         return;
     end
     qSecVec = secObj.centerVec;

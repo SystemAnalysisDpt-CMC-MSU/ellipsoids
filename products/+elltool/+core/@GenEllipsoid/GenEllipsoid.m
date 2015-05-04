@@ -70,11 +70,11 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             ellSecChangedArr = ellSecArr;
             for i = 1 : nFirstElems
                 ellFirstChangedArr(i) = ...
-                    elltool.core.GenEllipsoid.reDecomposition(ellFirstChangedArr(i));
+                    getCopyWithDecomposition(ellFirstChangedArr(i));
             end
             for i = 1 : nSecElems
                 ellSecChangedArr(i) = ...
-                    elltool.core.GenEllipsoid.reDecomposition(ellSecChangedArr(i));
+                    getCopyWithDecomposition(ellSecChangedArr(i));
             end
             
             [~, absTol] = ellFirstChangedArr.getAbsTol;
@@ -196,9 +196,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     curDirVec,absTol);
             end
         end
-    end
-    methods (Static)
-        function ellObj = reDecomposition(obj)
+        
+        function ellObj = getCopyWithDecomposition(obj)
             ellCenterVec = obj.getCenter;
             ellDiagMat = obj.getDiagMat;
             ellWMat = obj.getEigvMat;
@@ -255,9 +254,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             ellObj.eigvMat=eigvResMat;
             ellObj.centerVec=ellCenterVec;
         end
-    end
-
-    methods
+        
         function ellObj = GenEllipsoid(varargin)
             import modgen.common.throwerror
             import elltool.core.GenEllipsoid;

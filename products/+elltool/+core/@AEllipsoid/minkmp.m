@@ -183,7 +183,7 @@ end
         end
     end
     function ellsVec = getEllArr(ellsArr)
-            ellsVec = ellsArr(1).create;
+            ellsVec = ellsArr(1).create();
         if isMe(ellsArr)
             cnt    = numel(ellsArr);
             ellsVec = reshape(ellsArr, cnt, 1);

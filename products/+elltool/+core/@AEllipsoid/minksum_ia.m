@@ -104,7 +104,7 @@ else
     rotArr = zeros(nDims,nDims,nNumel,nCols);
     arrayfun(@(x) fSetRotArr(x), 1:nNumel);
     %
-    intApprEllVec(1,nCols) = inpEllArr(1).create;
+    intApprEllVec(1,nCols) = inpEllArr(1).create();
     arrayfun(@(x) fSingleDirection(x),1:nCols);
 end
 
