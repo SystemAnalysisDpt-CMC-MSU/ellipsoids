@@ -18,12 +18,9 @@ classdef GoodDirsContinuousLTI<gras.ellapx.lreachplain.AGoodDirs
             %
             logger=Log4jConfigurator.getLogger();
             
-            
-            
             interpObj = MatrixNearestInterp(...
                 AtDynamics.evaluate(STimeData.timeVec),STimeData.timeVec);
             compMatrixOprs = CompositeMatrixOperations();
-            
             %
             tStart=tic;
             %

@@ -1,16 +1,24 @@
 classdef MatrixODE45InterpFunc < gras.mat.IMatrixFunction
     properties(Access=private)
         objMatrixSysReshapeOde45RegInterp
+        countdown
     end
     methods
         function self = MatrixODE45InterpFunc(interpObj)
             self.objMatrixSysReshapeOde45RegInterp = interpObj;
+            self.countdown = false;
         end
         function [varargout] = evaluate(self,timeVec)
             resList = cell(1,nargout);
+            if self.countdown
+                timeVec = -flipdim(timeVec, 2);
+            end
             [~,resList{:}] = ...
              self.objMatrixSysReshapeOde45RegInterp.evaluate(timeVec);
             varargout = resList;
+        end
+        function self = setCountDown(self, countdown)
+            self.countdown = countdown;
         end
         function mSize = getMatrixSize(self)
             sizeEqList = ...
