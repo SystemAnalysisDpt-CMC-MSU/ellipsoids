@@ -13,7 +13,7 @@ classdef GoodDirsContinuousLTI<gras.ellapx.lreachplain.AGoodDirs
             %
             import gras.mat.MatrixOperationsFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
-            import gras.interp.MatrixNearestInterp;
+            import gras.mat.interp.MatrixNearestInterp;
             import gras.mat.CompositeMatrixOperations;
             %
             logger=Log4jConfigurator.getLogger();

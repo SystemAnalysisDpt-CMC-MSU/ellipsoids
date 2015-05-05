@@ -3,7 +3,7 @@
 import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
 import gras.ellapx.gen.RegProblemDynamicsFactory;
 import gras.ellapx.lreachplain.GoodDirsDiscrete;
-%
+% 
 At = [{'1'}, {'1'}, {'1'};
       {'0'}, {'1'}, {'0'};
       {'1'}, {'t'}, {'1'}];

@@ -140,10 +140,9 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                     sRstExtInitialMat{:});
 
                 dataRstHalfInterpArray = MatrixODE45InterpFunc(...
-                    matrixReshapeInterpObj);
+                    matrixReshapeInterpObj, true);
                 %
                 timeRstHalfVec = - timeRstHalfVec;
-                dataRstHalfInterpArray.setCountDown(true);
                 %
                 dataRstHalfInterpArray = compMatrixOprs.reshape(...
                     dataRstHalfInterpArray, [size(sRstInitialMat), ...
@@ -166,7 +165,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                     sRstExtInitialMat{:});
                 %
                 dataRstHalfInterpArray = MatrixODE45InterpFunc(...
-                    matrixReshapeInterpObj);
+                    matrixReshapeInterpObj, false);
                 %
                 dataRstHalfInterpArray = compMatrixOprs.reshape(...
                     dataRstHalfInterpArray, [size(sRstInitialMat), ...

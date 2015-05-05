@@ -7,9 +7,9 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
         end
     end
     methods (Access = protected)
-        function [XstDynamics, RstDynamics, XstNormDynamics] = ...
-                calcTransMatDynamics(self, matOpFactory, STimeData, ...
-                AtDynamics, relTol, absTol)
+        function [XstDynamics, RstDynamics, XstNormDynamics, ...
+                RstInterpObj] = calcTransMatDynamics(self, matOpFactory, ...
+                STimeData, AtDynamics, relTol, absTol)
             %
             import gras.mat.interp.MatrixInterpolantFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
@@ -64,6 +64,7 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
                 'column', dataRtt0Arr, timeVec);
             XstNormDynamics = MatrixInterpolantFactory.createInstance(...
                 'scalar', dataXtt0NormVec, timeVec);
+            RstInterpObj = XstDynamics;
             %
             tStart = tic;
             %
