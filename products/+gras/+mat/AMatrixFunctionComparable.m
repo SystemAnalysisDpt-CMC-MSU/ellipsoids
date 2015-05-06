@@ -56,7 +56,26 @@ classdef AMatrixFunctionComparable < gras.mat.IMatrixFunction
     end
     
     methods(Abstract, Access=protected)
-        SData = toStructInternal(self,isPropIncluded);
+        function [SData,SFieldNiceNames,SFieldDescr] = toStructInternal(self,isPropIncluded)            
+            if (nargin < 2)
+                isPropIncluded = false;
+            end
+            SEll = struct;
+            SFieldNiceNames = struct;
+            SFieldDescr = struct;
+            if (isPropIncluded)
+                SEll.absTol = self.getAbsTol();
+                SEll.relTol = self.getRelTol();
+            end
+            SData = SEll;
+            if (isPropIncluded)
+                SFieldNiceNames.absTol = 'absTol';
+                SFieldNiceNames.relTol = 'relTol';
+                
+                SFieldDescr.absTol = 'Absolute tolerance.';
+                SFieldDescr.relTol = 'Relative tolerance.';
+            end
+        end
     end
     
     methods

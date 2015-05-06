@@ -32,9 +32,6 @@ classdef MatrixNormOrigVecFunc<gras.mat.AMatrixFunctionComparable
         function dimProj = getdimProj(self)
             dimProj = self.dimProj;
         end
-        function ltGoodDirNormVecInterObj = getltGoodDirNormVecInterObj(self)
-            ltGoodDirNormVecInterObj = self.ltGoodDirNormVecInterObj;
-        end
     end
     methods
         function self=MatrixNormOrigVecFunc(ltGoodDirNormVecInterObj,dimProj,timeVec)
@@ -44,33 +41,23 @@ classdef MatrixNormOrigVecFunc<gras.mat.AMatrixFunctionComparable
         end
     end
     methods (Access=protected)
-         function [SDataArr, SFieldNiceNames, SFieldDescr] = ...
-                toStructInternal(MatObj, isPropIncluded)
+         function [SData, SFieldNiceNames, SFieldDescr] = ...
+                toStructInternal(self, varargin)
             
-            if (nargin < 2)
-                isPropIncluded = false;
-            end
-            MatrixNormOrigVec = MatObj.getltGoodDirNormVecInterObj();
-            [dataArray,timeVec]=MatrixNormOrigVec.getKnotDataArray();
-            SEll = struct('dataArray', dataArray, 'timeVec', timeVec);
-            if (isPropIncluded)
-                SEll.absTol = MatObj.getAbsTol();
-                SEll.relTol = MatObj.getRelTol();
-            end
+            [SData,SFieldNiceNames,SFieldDescr]=toStructInternal@gras.mat.AMatrixComparable(varargin{:});
+
+            MatrixNormOrigVec = self.ltGoodDirNormVecInterObj;
+            [dataArray,timeVec] = MatrixNormOrigVec.getKnotDataArray();
+            SData.dataArray = dataArray;
+            SData.tiveVec = timeVec;
             
-            SDataArr = SEll;
-            SFieldNiceNames = struct('dataArray','dA','timeVec','tV','dimProj','dP');
-            SFieldDescr = struct('data Array', 'Array of data', 'timeVec',...
-                'Vector of time moments', 'dimProj', 'Dimensionality of projection');
+            SFieldNiceNames.dataArray = 'dArray';
+            SFieldNiceNames.timeVec = 'tVec';
+            SFieldNiceNames.dimProj = 'dProj';
             
-            if (isPropIncluded)
-                SFieldNiceNames.absTol = 'absTol';
-                SFieldNiceNames.relTol = 'relTol';
-                
-                SFieldDescr.absTol = 'Absolute tolerance.';
-                SFieldDescr.relTol = 'Relative tolerance.';
-            end
-            
+            SFieldDescr.dataArray = 'Array of data';
+            SFieldDescr.timeVec = 'Vector of time moments';
+            SFieldDescr.dimProj = 'Dimensionality of projection';            
         end
     end
 end

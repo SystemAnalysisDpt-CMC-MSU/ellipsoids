@@ -7,7 +7,6 @@ classdef ProjArrayFunction<gras.mat.AMatrixFunctionComparable
         dim
         indSTime
         %
-        mArray
         mSizeVec
         nDims
         nRows
@@ -21,7 +20,6 @@ classdef ProjArrayFunction<gras.mat.AMatrixFunctionComparable
             [projArray,~] = self.fProjFunction(self.projMat,timeVec,...
                 self.sTime,self.dim,self.indSTime);
             sizeArray = size(projArray);
-            self.mArray = projArray;
             self.mSizeVec = sizeArray(1:2);
             self.nRows = self.mSizeVec(1);
             self.nCols = self.mSizeVec(2);
@@ -34,9 +32,6 @@ classdef ProjArrayFunction<gras.mat.AMatrixFunctionComparable
         end
         function nRows=getNRows(self)
             nRows = self.nRows;
-        end
-        function mArray = getmArray(self)
-            mArray = self.mArray;
         end
         function fProjFunction = getfProjFunction(self)
             fProjFunction = func2str(self.fProjFunction);
@@ -58,38 +53,28 @@ classdef ProjArrayFunction<gras.mat.AMatrixFunctionComparable
         end
     end
     methods (Access=protected)
-        function [SDataArr, SFieldNiceNames, SFieldDescr] = ...
-                toStructInternal(matObj, isPropIncluded)
+        function [SData, SFieldNiceNames, SFieldDescr] = ...
+                toStructInternal(self, varargin)
+            [SData,SFieldNiceNames,SFieldDescr]=toStructInternal@gras.mat.AMatrixComparable(varargin{:});
+
+            SData.fProjFunction = func2str(self.fProjFunction);
+            SData.projMat = self.getprojMat();
+            SData.sTime = self.getSTime();
+            SData.dim =  self.getDim();
+            SData.indsTime = self.getIndsTime();
+
+            SFieldNiceNames.fProjFunction = 'fProjFunc';
+            SFieldNiceNames.projMat = 'pMat';
+            SFieldNiceNames.sTime = 'sTime';
+            SFieldNiceNames.dim = 'dim';
+            SFieldNiceNames.indsTime = 'iTime';
             
-            if (nargin < 2)
-                isPropIncluded = false;
-            end
-            
-            SEll = struct('fProjFunction',matObj.getfProjFunction(),...
-                'mArray',matObj.getmArray(),'projMat', matObj.getprojMat(),...
-                'sTime',matObj.getSTime(),'dim', matObj.getDim(),...
-                'indsTime', matObj.getIndsTime());
-            
-            if isPropIncluded
-                SEll.absTol = matObj.getAbsTol();
-                SEll.relTol = matObj.getRelTol();
-            end
-            
-            SDataArr = SEll;
-            SFieldNiceNames = struct('fProjFunction','fPF','mArray','mA','projMat','pM', 'sTime',...
-                'sT', 'dim', 'd', 'indsTime', 'iT');
-            SFieldDescr = struct('fProjFunction','fProjFunction','mArray',...
-                'mArray','projMat','Matrix of projection',...
-                'sTime', 'Time s', 'dim', 'Dimensionality',...
-                'indsTime', 'Index of sTime within timeVec');
-            
-            if isPropIncluded
-                SFieldNiceNames.absTol = 'absTol';
-                SFieldNiceNames.relTol = 'relTol';
-                
-                SFieldDescr.absTol = 'Absolute tolerance.';
-                SFieldDescr.relTol = 'Relative tolerance.';
-            end     
+            SFieldDescr.fProjFunction = 'Function';
+            SFieldDescr.projMat = 'Matrix of projection';
+            SFieldDescr.sTime = 'Time s';
+            SFieldDescr.dim = 'Dimensionality';
+            SFieldDescr.indsTime = 'Index of sTime within timeVec';
+    
         end
     end
 end

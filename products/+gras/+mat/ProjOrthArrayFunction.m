@@ -2,7 +2,6 @@ classdef ProjOrthArrayFunction<gras.mat.AMatrixFunctionComparable
     properties (Access=protected)
         projArrayFunc
         %
-        mArray
         mSizeVec
         nDims
         nRows
@@ -19,7 +18,6 @@ classdef ProjOrthArrayFunction<gras.mat.AMatrixFunctionComparable
                         @(x)transpose(gras.la.matorthcol(transpose(x))),...
                         projArray,'keepSize',true);
             sizeArray = size(projOrthArray);
-            self.mArray = projOrthArray;
             self.mSizeVec = sizeArray(1:2);
             self.nRows = self.mSizeVec(1);
             self.nCols = self.mSizeVec(2);
@@ -34,12 +32,6 @@ classdef ProjOrthArrayFunction<gras.mat.AMatrixFunctionComparable
         function nRows=getNRows(self)
             nRows = self.nRows;
         end
-        function mArray = getmArray(self)
-            mArray = self.mArray;
-        end
-        function projArrayFunc = getprojArrayFunc(self)
-            projArrayFunc = func2str(self.projArrayFunc);
-        end
     end
     methods
         function self=ProjOrthArrayFunction(projArrayFunc,timeVec)
@@ -48,32 +40,12 @@ classdef ProjOrthArrayFunction<gras.mat.AMatrixFunctionComparable
         end
     end
     methods (Access=protected)
-        function [SDataArr, SFieldNiceNames, SFieldDescr] =...
-                toStructInternal(MatObj,isPropIncluded)
-            
-            if (nargin < 2)
-                isPropIncluded = false;
-            end
-            
-            SEll = struct('mArray', MatObj.getmArray(),...
-                'projArrayFunc',MatObj.getprojArrayFunc());
-            
-            if isPropIncluded
-                SEll.absTol = MatObj.getAbsTol();
-                SEll.relTol = MatObj.getRelTol();
-            end
-            
-            SDataArr = SEll;
-            SFieldNiceNames = struct('mArray','mA','projArrayFunc','pAF');
-            SFieldDescr = struct('mArray','mArray','projArrayFunc','projArrayFunc');
-            
-            if isPropIncluded
-                SFieldNiceNames.absTol = 'absTol';
-                SFieldNiceNames.relTol = 'relTol';
-                
-                SFieldDescr.absTol = 'Absolute tolerance.';
-                SFieldDescr.relTol = 'Relative tolerance.';
-            end
+        function [SData, SFieldNiceNames, SFieldDescr] =...
+                toStructInternal(self,varargin)
+            [SData,SFieldNiceNames,SFieldDescr]=toStructInternal@gras.mat.AMatrixComparable(varargin{:});
+            SData.projArrayFunc = func2str(self.projArrayFunc);
+            SFieldNiceNames.projArrayFunc = 'pArrayFunc';
+            SFieldDescr.projArrayFunc = 'Array of functions';
 
         end
     end

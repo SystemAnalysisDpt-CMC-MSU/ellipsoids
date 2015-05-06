@@ -1,6 +1,5 @@
 classdef ConstArrayFunction<gras.mat.AMatrixFunctionComparable
     properties (Access=protected)
-        mArray
         mSizeVec
         nDims
         nRows
@@ -9,9 +8,6 @@ classdef ConstArrayFunction<gras.mat.AMatrixFunctionComparable
     methods
         function mSizeVec = getMatrixSize(self)
             mSizeVec = self.mSizeVec;
-        end
-        function res=evaluate(self,timeVec)
-            res = self.mArray;
         end
         function nDims=getDimensionality(self)
             nDims = self.nDims;
@@ -30,35 +26,18 @@ classdef ConstArrayFunction<gras.mat.AMatrixFunctionComparable
                 'isnumeric(x)&&~isempty(x)');
             %
             sizeArray = size(mArray);
-            self.mArray = mArray;
             self.mSizeVec = sizeArray(1:2);
             self.nRows = self.mSizeVec(1);
             self.nCols = self.mSizeVec(2);
         end
     end
     methods (Access=protected)
-        function [SDataArr, SFieldNiceNames, SFieldDescr] = toStructInternal(self,isPropIncluded)
-            if (nargin < 2)
-                isPropIncluded = false;
-            end
+        function [SData, SFieldNiceNames, SFieldDescr] = toStructInternal(self,varargin)
             
-            SEll = struct('mArray', ConstArray);
-            if isPropIncluded
-                SEll.absTol = ConstArray.getAbsTol();
-                SEll.relTol = ConstArray.getRelTol();
-            end
-            
-            SDataArr = SEll;
-            SFieldNiceNames = struct('mArray','mAr');
-            SFieldDescr = struct('mArray','mArray');
-            
-            if isPropIncluded
-                SFieldNiceNames.absTol = 'absTol';
-                SFieldNiceNames.relTol = 'relTol';
-                
-                SFieldDescr.absTol = 'Absolute tolerance.';
-                SFieldDescr.relTol = 'Relative tolerance.';
-            end
+            [SData,SFieldNiceNames,SFieldDescr]=toStructInternal@gras.mat.AMatrixComparable(varargin{:});
+            SData.constArray = self;
+            SFieldNiceNames.constArray ='cArray';
+            SFieldDescr.constArray = 'The constant array';
             
         end
     end

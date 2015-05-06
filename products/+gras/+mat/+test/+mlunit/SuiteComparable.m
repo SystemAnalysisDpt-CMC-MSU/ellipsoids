@@ -10,70 +10,70 @@ classdef SuiteComparable < mlunitext.test_case
         
         function testMatrixFunctionComparableConstMatrix(self)
             %
-            m1 = [1 2; 3 0];
-            m2 = [1 2; 3 0];
-            actSolution = isequal(m1,m2);
-            expSolution = 1;
-            mlunitext.assert_equals(actSolution,expSolution);
+            mMat = [1 2; 3 0];
+            otherMat = [1 2; 3 0];
+            isOk = isequal(mMat,otherMat);
+            expSolution = true;
+            mlunitext.assert_equals(isOk,expSolution);
             %
-            m1 = [1 3; 9 1];
-            m2 = [2 6; 3 1];
-            actSolution = isequal(m1,m2);
-            expSolution = 0;
-            mlunitext.assert_equals(actSolution,expSolution);
+            mMat = [1 3; 9 1];
+            otherMat = [2 6; 3 1];
+            isOk = isequal(mMat,otherMat);
+            expSolution = false;
+            mlunitext.assert_equals(isOk,expSolution);
             %
-            m1 = ones(3);
-            m2 = ones(2);
-            actSolution = isequal(m1,m2);
-            expSolution = 0;
-            mlunitext.assert_equals(actSolution,expSolution);            
+            mMat = ones(3);
+            otherMat = ones(2);
+            isOk = isequal(mMat,otherMat);
+            expSolution = false;
+            mlunitext.assert_equals(isOk,expSolution);            
             
         end
         
         function testMatrixFunctionComparableConstArray(self)
             %
-            a1 = [1 3 4 6 20 183];
-            a2 = [1 3 4 6 20 183];
-            actSolution = isequal(a1,a2);
-            expSolution = 1;
-            mlunitext.assert_equals(actSolution,expSolution);
+            aVec = [1 3 4 6 20 183];
+            otherVec = [1 3 4 6 20 183];
+            isOk = isequal(aVec,otherVec);
+            expSolution = true;
+            mlunitext.assert_equals(isOk,expSolution);
             
             %
-            s1 = ['s' 'a'];
-            s2 = ['s' 'a'];
-            actSolution = isequal(a1,a2);
-            expSolution = 1;
-            mlunitext.assert_equals(actSolution,expSolution);
+            sVec = ['s' 'a'];
+            otherVec = ['s' 'a'];
+            isOk = isequal(sVec,otherVec);
+            expSolution = true;
+            mlunitext.assert_equals(isOk,expSolution);
         end
         
         function testProjArrayFunction(self)
             import gras.mat.ProjArrayFunction;
             timeVec = 0:0.1:2;
-            fProjFunction = @(x) x.^2;
+            fProjFunc = @(x) x.^2;
             projMat = ones(2);
             sTime = 1;
-            dim = 2;
+            dimNum = 2;
             indSTime = 1;
             
-            m1 = ProjArrayFunction(projMat,timeVec,sTime,dim,...
-                indSTime,fProjFunction);
-            m2 = ProjArrayFunction(projMat,timeVec,sTime,dim,...
-                indSTime,fProjFunction);
-            actSolution = isequal(m1,m2);
-            expSolution = 1;
-            mlunitext.assert_equals(actSolution,expSolution);
+            mMat = ProjArrayFunction(projMat,timeVec,sTime,dimNum,...
+                indSTime,fProjFunc);
+            otherMat = ProjArrayFunction(projMat,timeVec,sTime,dimNum,...
+                indSTime,fProjFunc);
+            isOk = isequal(mMat,otherMat);
+            expSolution = true;
+            mlunitext.assert_equals(isOk,expSolution);
             
         end
         
         function testProjOrthArrayFunction(self)
             import gras.mat.ProjOrthArrayFunction;
-            timeVec1 = 0:0.1:2;
+            timeVec = 0:0.1:2;
             projArrayFunc1 = @(x) x.^2;
-            m1 = ProjOrthArrayFunction(projArrayFunc1,timeVec1);
-            m2 = ProjOrthArrayFunction(projArrayFunc1,timeVec1);
-            actSolution = isequal(m1,m2);
-            expSolution = 1;
-            mlunitext.assert_equals(actSolution,expSolution);
+            mMat = ProjOrthArrayFunction(projArrayFunc1,timeVec);
+            otherMat = ProjOrthArrayFunction(projArrayFunc1,timeVec);
+            isOk = isequal(mMat,otherMat);
+            expSolution = true;
+            mlunitext.assert_equals(isOk,expSolution);
         end
         
         function testMatrixLtGoodDirNormFunc(self)
@@ -85,11 +85,11 @@ classdef SuiteComparable < mlunitext.test_case
            timeVec=[-1 3 7]+0.1;
            intObj=gras.mat.interp.MatrixInterpolantFactory.createInstance(...
                 'linear',inpArray,timeVec);
-           m1 = MatrixLtGoodDirNormFunc(intObj,absTol);
-           m2 = MatrixLtGoodDirNormFunc(intObj,absTol);
-           actSolution = isequal(m1,m2);
-           expSolution = 1;
-           mlunitext.assert_equals(actSolution,expSolution);
+           mMat = MatrixLtGoodDirNormFunc(intObj,absTol);
+           otherMat = MatrixLtGoodDirNormFunc(intObj,absTol);
+           isOk = isequal(mMat,otherMat);
+           expSolution = true;
+           mlunitext.assert_equals(isOk,expSolution);
         end
     end
     

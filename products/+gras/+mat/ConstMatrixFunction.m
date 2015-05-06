@@ -1,6 +1,5 @@
 classdef ConstMatrixFunction<gras.mat.AMatrixFunctionComparable
     properties (Access=protected)
-        mMat
         mSizeVec
         nDims
         nRows
@@ -29,7 +28,6 @@ classdef ConstMatrixFunction<gras.mat.AMatrixFunctionComparable
             modgen.common.type.simple.checkgen(mMat,...
                 'isnumeric(x)&&ismat(x)&&~isempty(x)');
             %
-            self.mMat = mMat;
             self.mSizeVec = size(mMat);
             self.nRows = self.mSizeVec(1);
             self.nCols = self.mSizeVec(2);
@@ -37,31 +35,14 @@ classdef ConstMatrixFunction<gras.mat.AMatrixFunctionComparable
         
     end
     methods (Access=protected)
-        function [SDataArr, SFieldNiceNames, SFieldDescr] = ...
-                toStructInternal(ConstMat, isPropIncluded)
-            
-            if (nargin < 2)
-                isPropIncluded = false;
-            end
-            
-            SEll = struct('mMat', ConstMat);
-            if isPropIncluded
-                SEll.absTol = ConstMat.getAbsTol();
-                SEll.relTol = ConstMat.getRelTol();
-            end
-            
-            SDataArr = SEll;
-            SFieldNiceNames = struct('mMat','mM');
-            SFieldDescr = struct('mMat','mMat');
-            
-            if isPropIncluded
-                SFieldNiceNames.absTol = 'absTol';
-                SFieldNiceNames.relTol = 'relTol';
-                
-                SFieldDescr.absTol = 'Absolute tolerance.';
-                SFieldDescr.relTol = 'Relative tolerance.';
-            end
-            
+        function [SData, SFieldNiceNames, SFieldDescr] = ...
+                toStructInternal(self,varargin)
+
+            [SData,SFieldNiceNames,SFieldDescr]=toStructInternal@gras.mat.AMatrixComparable(varargin{:});
+            SData.constMat = self;
+            SFieldNiceNames.constMat = 'cMat';
+            SFieldDescr.cMat = 'The constant matrix';
+           
         end
 
     end

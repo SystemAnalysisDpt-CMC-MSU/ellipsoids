@@ -32,9 +32,6 @@ classdef MatrixSubArrayCauseNormFunc<gras.mat.AMatrixComparable
         function nRows=getNRows(self)
             nRows = self.nRows;
         end
-        function ltGoodDirMatInterObj = getltGoodDirMatInterObj(self)
-            ltGoodDirMatInterObj = self.ltGoodDirMatInterObj;
-        end
     end
     methods
         function self=MatrixSubArrayCauseNormFunc(ltGoodDirMatInterObj,absTol)
@@ -44,21 +41,21 @@ classdef MatrixSubArrayCauseNormFunc<gras.mat.AMatrixComparable
     end
     methods (Access=protected)
          function [SDataArr, SFieldNiceNames, SFieldDescr] = ...
-                toStructInternal(MatObj, isPropIncluded)
+                toStructInternal(self, isPropIncluded)
             
             if (nargin < 2)
                 isPropIncluded = false;
             end
-            MatInterObj = MatObj.getltGoodDirMatInterObj();
+            MatInterObj =  self.ltGoodDirMatInterObj;
             [dataArray,timeVec]=MatInterObj.getKnotDataArray();
             SEll = struct('dataArray', dataArray, 'timeVec', timeVec);
             if (isPropIncluded)
-                SEll.absTol = MatObj.getAbsTol();
-                SEll.relTol = MatObj.getRelTol();
+                SEll.absTol = self.getAbsTol();
+                SEll.relTol = self.getRelTol();
             end
             
             SDataArr = SEll;
-            SFieldNiceNames = struct('dataArray','dA','timeVec','tV');
+            SFieldNiceNames = struct('dataArray','dArray','timeVec','tVec');
             SFieldDescr = struct('data Array', 'Array of data', 'timeVec',...
                 'Vector of time moments');
             
