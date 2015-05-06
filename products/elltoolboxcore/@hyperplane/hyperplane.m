@@ -224,6 +224,77 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
             end
         end
     end
+    methods (Access = protected)
+        function [isEqualArr, reportStr] = isEqualInternal(hypFirstArr,...
+                hypSecArr, isPropIncluded)
+            import modgen.struct.structcomparevec;
+            import gras.la.sqrtmpos;
+            import elltool.conf.Properties;
+            import modgen.common.throwerror;
+            %
+            nFirstElems = numel(hypFirstArr);
+            nSecElems = numel(hypSecArr);
+            if (nFirstElems == 0 && nSecElems == 0)
+                isEqualArr = true;
+                reportStr = '';
+                return;
+            elseif (nFirstElems == 0 || nSecElems == 0)
+                throwerror('wrongInput:emptyArray',...
+                    'input hyperplane arrays should be empty at the same time');
+            end
+            
+            [~, absTol] = hypFirstArr.getAbsTol();
+            firstSizeVec = size(hypFirstArr);
+            secSizeVec = size(hypSecArr);
+            isnFirstScalar=nFirstElems > 1;
+            isnSecScalar=nSecElems > 1;
+            
+            if isnFirstScalar&&isnSecScalar
+                if ~isequal(firstSizeVec, secSizeVec)
+                    throwerror('wrongSizes',...
+                        'sizes of ellipsoidal arrays do not match');
+                end;
+                compare();
+                isEqualArr = reshape(isEqualArr, firstSizeVec);
+            elseif isnFirstScalar
+                hypSecArr=repmat(hypSecArr, firstSizeVec);
+                compare();
+                
+                isEqualArr = reshape(isEqualArr, firstSizeVec);
+            else
+                hypFirstArr=repmat(hypFirstArr, secSizeVec);
+                compare();
+                isEqualArr = reshape(isEqualArr, secSizeVec);
+            end
+            reportStr = '';
+            function compare()
+                fstHypAbsTolArr = getAbsTol(hypFirstArr);
+                isEqualArr = arrayfun(@(x, y, z) singCompare(x, y, z), ...
+                    hypFirstArr, hypSecArr, fstHypAbsTolArr, ...
+                    'UniformOutput', true);
+            end
+            function isEqual = ...
+                    singCompare(hypFirstObj, hypSecObj, fstHypAbsTol)
+                [normalFirst, constFirst] = parameters(hypFirstObj);
+                [normalSec, constSec] = parameters(hypSecObj);
+                
+                if size(normalFirst) ~= size(normalSec)
+                    isEqual = false;
+                    return;
+                end
+                
+                constFirst = constFirst / norm(normalFirst);
+                normalFirst = normalFirst / norm(normalFirst);
+                constSec = constSec / norm(normalSec);
+                normalSec = normalSec / norm(normalSec);
+
+                isEqual = max(abs(normalFirst - normalSec)) < fstHypAbsTol && ...
+                    abs(constFirst - constSec) < fstHypAbsTol || ...
+                    max(abs(normalFirst + normalSec)) < fstHypAbsTol &&...
+                    abs(constFirst + constSec) < fstHypAbsTol;
+            end
+        end
+    end
     methods (Static)
         checkIsMe(someObj)
         hpArr = fromRepMat(varargin)

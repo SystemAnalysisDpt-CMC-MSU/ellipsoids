@@ -142,7 +142,7 @@ classdef HyperplaneTestCase < elltool.core.test.mlunit.EllFactoryTC
         end
         %
         function self = testEqAndNe(self)
-            SInpData =  self.auxReadFile(self);
+            SInpData = self.auxReadFile(self);
             testHyperplanesVec = SInpData.testHyperplanesVec;
             compareHyperplanesVec = SInpData.compareHyperplanesVec;
             addRelTol = @(S)hyperplane(S.normal, S.shift);
@@ -162,23 +162,26 @@ classdef HyperplaneTestCase < elltool.core.test.mlunit.EllFactoryTC
             isOk = all(isEqVec == testedIsEqVec);
             mlunitext.assert(isOk);
             %
-            isOk =  all(isEqVec ~= testedNeVec);
+            isOk = all(isEqVec ~= testedNeVec);
             mlunitext.assert(isOk);
             %
             testHypHighDimFst = hyperplane([1:1:75]', 1);
             testHypHighDimSec = hyperplane([1:1:75]', 2);
-            checkHypEqual(testHypHighDimFst, testHypHighDimSec, false, ...
-                '\(1).shift-->.*\(2.64027.*e\-03).*tolerance.\(1.00000.*e\-05)',...
-                '\(1).shift-->.*\(0.00264027.*).*tolerance.\(1.00000.*e\-05)');
+            mlunitext.assert_equals( ...
+                isEqual(testHypHighDimFst, testHypHighDimSec), ...
+                false);
             %
             testFstHyp = hyperplane([1; 0], 0);
             testSecHyp = hyperplane([1; 0], 0);
             testThrHyp = hyperplane([2; 1], 0);
-            str = '\(1).shift-->.*\(2.64027.*e\-03).*tolerance.\(1.00000.*e\-05)\n\(3).normal-->.*\(4.47213.*e\-01).*tolerance.\(1.00000.*e\-05)';
-            altStr = '\(1).shift-->.*\(0.0026402.*).*tolerance.\(1.00000.*e\-05)\n\(3).normal-->.*\(0.447213.*).*tolerance.\(1.00000.*e\-05)';
-            checkHypEqual([testHypHighDimFst testFstHyp testFstHyp], ...
-                [testHypHighDimSec testSecHyp testThrHyp], ...
-                [false true false], str,altStr);
+            testFrhHyp = hyperplane([2; 0], 0);
+            testFfhHyp = hyperplane([-1; 0], 0);
+            mlunitext.assert_equals( ...
+                isEqual([testHypHighDimFst testFstHyp ...
+                        testFstHyp testFstHyp testFstHyp], ...
+                    [testHypHighDimSec testSecHyp ...
+                        testThrHyp testFrhHyp testFfhHyp]), ...
+                [false true false true true]);
         end
         %
         function self = testIsEmpty(self)
@@ -235,20 +238,29 @@ classdef HyperplaneTestCase < elltool.core.test.mlunit.EllFactoryTC
             testHplane2DVec = SInpData.testHplane2DVec;
             STestOptions = SInpData.STestOptions;
             %
+            fHandle = figure();
             pHandle = plot(testHplane3D1Vec);
-            close(pHandle);
+            close(fHandle);
+            fHandle = figure();
             pHandle = plot(testHplane2DVec);
-            close(pHandle);
-            pHandle = plot(testHplane3D1Vec,STestOptions);
-            close(pHandle);
+            close(fHandle);
+            fHandle = figure();
+            self.runAndCheckError( ...
+                ['pHandle=plot(testHplane3D1Vec,' ...
+                '''newFigure'',STestOptions.newfigure,' ...
+                '''color'',STestOptions.color,' ...
+                '''shade'',STestOptions.shade)'], ...
+                'wrongColorVec');
+            close(fHandle);
+            fHandle = figure();
             pHandle = plot(testHplane3D1Vec,'g',testHplane3D2Vec,'r');
-            close(pHandle);
+            close(fHandle);
         end
         function testPlotSimple(~)
             HA = hyperplane([1 0; 1 -2]'', [4 -2]);
             o.width = 2; o.size = [3 6.6]; o.center = [0 -2; 0 0];
             hFig = figure();
-            h = plot(HA, 'r', o);
+            h = plot(HA, 'r');
             hold off;
             close(hFig);
         end

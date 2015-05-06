@@ -93,12 +93,10 @@ isPos = false;
 if (min(size(fstHypNormVec) == size(secHypNormVec)) >= 1)
     fstHypNormVec = fstHypNormVec/norm(fstHypNormVec);
     secHypNormVec = secHypNormVec/norm(secHypNormVec);
-    if (min(size(fstHypNormVec) == size(secHypNormVec)) >= 1)
-        if max(abs(fstHypNormVec - secHypNormVec)) < fstHypAbsTol
-            isPos = true;
-        elseif max(abs(fstHypNormVec + secHypNormVec)) < fstHypAbsTol
-            isPos = true;
-        end
+    if max(abs(fstHypNormVec - secHypNormVec)) < fstHypAbsTol
+        isPos = true;
+    elseif max(abs(fstHypNormVec + secHypNormVec)) < fstHypAbsTol
+        isPos = true;
     end
 end
 end
