@@ -1,4 +1,5 @@
-classdef ControlVectorFunct < elltool.control.IControlVectFunction
+classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
+        modgen.common.obj.HandleObjectCloner
     properties (Constant = true)
         FSOLVE_TOL = 1e-5;
     end

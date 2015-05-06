@@ -5,7 +5,7 @@ classdef ReachContTC < elltool.control.test.mlunit.SintTC
             self = self@elltool.control.test.mlunit.SintTC(varargin{:});
         end
 
-        function controlObj = getControlObj(self)
+        function controlObj = getControlBuilder(self)
             controlObj = elltool.control.ContControlBuilder(self.reachObj);
         end
         

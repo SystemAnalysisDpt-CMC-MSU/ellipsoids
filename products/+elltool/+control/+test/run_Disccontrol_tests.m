@@ -13,8 +13,6 @@ import elltool.reach.ReachFactory;
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
-% crm = gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-% crmSys = gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 crm = elltool.control.test.conf.ConfRepoMgr();
 crmSys = elltool.control.test.conf.sysdef.ConfRepoMgr();
 %

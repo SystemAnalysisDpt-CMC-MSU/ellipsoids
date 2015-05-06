@@ -14,9 +14,27 @@ classdef SintTC < mlunitext.test_case
    end
  
    methods (Abstract, Access = public)
-       controlObj = getControlObj(self)
+       controlObj = getControlBuilder(self)
        % GETCONTROLLOBJ() - returns a ControlBuilder object
 
+   end
+   
+   methods (Access = protected)
+       function self = setUpReachObj(self)
+            methodName = modgen.common.getcallernameext(1);
+            resMap = modgen.containers.ondisk.HashMapMatXML(...
+                'storageLocationRoot',self.testDataRootDir,...
+                'storageBranchKey',[methodName,'_out'],...
+                'storageFormat','mat',...
+                'useHashedPath',false,'useHashedKeys',false);
+            inpKey = self.marker;
+            if self.isReCache||~resMap.isKey(inpKey);
+                self.reachObj = self.reachFactoryObj.createInstance();
+                resMap.put(inpKey,self.reachObj);
+            else
+                self.reachObj = resMap.get(inpKey);
+            end
+        end
    end
    
     methods
@@ -32,7 +50,7 @@ classdef SintTC < mlunitext.test_case
         function self = set_up_param(self, reachFactObj,inPointVecList,outPointVecList,isReCache)
             self.isReCache = isReCache;
             self.reachFactoryObj = reachFactObj;
-            self.set_up_reachObj();
+            self.setUpReachObj();
             self.linSys = reachFactObj.getLinSys();
             self.expDim = reachFactObj.getDim();
             self.tVec = reachFactObj.getTVec();
@@ -40,22 +58,6 @@ classdef SintTC < mlunitext.test_case
             self.l0Mat = reachFactObj.getL0Mat();
             self.inPointList =inPointVecList;
             self.outPointList=outPointVecList;
-        end
- 
-        function self = set_up_reachObj(self)
-            methodName = modgen.common.getcallernameext(1);
-            resMap = modgen.containers.ondisk.HashMapMatXML(...
-                'storageLocationRoot',self.testDataRootDir,...
-                'storageBranchKey',[methodName,'_out'],...
-                'storageFormat','mat',...
-                'useHashedPath',false,'useHashedKeys',false);
-            inpKey = self.marker;
-            if self.isReCache||~resMap.isKey(inpKey);
-                self.reachObj = self.reachFactoryObj.createInstance();
-                resMap.put(inpKey,self.reachObj);
-            else
-                self.reachObj = resMap.get(inpKey);
-            end
         end
         
     end
@@ -77,7 +79,7 @@ classdef SintTC < mlunitext.test_case
                 x0Vec=transpose(x0Vec);
                 isX0inSet=false;
   
-                controlBuilderObj = self.getControlObj();
+                controlBuilderObj = self.getControlBuilder();
                 controlObj = controlBuilderObj.getControlObj(x0Vec);
                 if (~all(size(x0Vec)==size(intEllTube.aMat{1}(:,1))))
                     self.runAndCheckError('controlObj.getControl(x0Vec)',...

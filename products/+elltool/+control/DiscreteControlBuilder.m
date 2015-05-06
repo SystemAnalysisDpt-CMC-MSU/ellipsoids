@@ -61,25 +61,18 @@ classdef DiscreteControlBuilder
             
             controlFuncObj = elltool.control.DiscSingleTubeControl(properEllTube,...
                 properProbDynList, properGoodDirSetList,indWithoutX);  
-                 
+
             
             function properProbDynList = getProperProbDynList(indTube)
-                probDynListLength = length(self.probDynamicsList);
-                properProbDynList = cell(1,probDynListLength);
-                properProbDynList{1} = self.probDynamicsList{1}{1};
-                for iSwitch = 2:probDynListLength
-                    properProbDynList{iSwitch} = self.probDynamicsList{iSwitch}{indTube};
-                end
+                properProbDynList = cellfun(@(x)(x{min(indTube,numel(x))}),...
+                        self.probDynamicsList,'UniformOutput',false);    
             end
             
             function properGoodDirSetList = getProperGoodDirSetList(indTube)
-                goodDirSetListLength = length(self.goodDirSetList);
-                properGoodDirSetList = cell(1,goodDirSetListLength);
-                properGoodDirSetList{1} = self.goodDirSetList{1}{1};
-                for iSwitch = 2:goodDirSetListLength
-                    properGoodDirSetList{iSwitch} = self.goodDirSetList{iSwitch}{indTube};
-                end
+                properGoodDirSetList = cellfun(@(x)(x{min(indTube,numel(x))}),...
+                        self.goodDirSetList,'UniformOutput',false);
             end
+            
             function iWithoutX=findEllWithoutX(qVec, qMat, x0Vec)
                 iWithoutX=1;
                 if (dot(x0Vec-qVec,qMat\(x0Vec-qVec))<=1)

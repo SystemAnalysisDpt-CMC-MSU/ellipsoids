@@ -118,12 +118,12 @@ classdef ContSingleTubeControl
                 
                 if (isX0inSet)&&(currentScalProd > 1 + ERR_TOL)
                     throwerror('TestFails', ['the result of test does not',...
-                        'corresponds with theory, current scalar production is ',...
+                        'correspond with theory, current scalar production is ',...
                         num2str(currentScalProd), ' while isX0inSet is ', num2str(isX0inSet), ',', num2str(iSwitchBack) ]);
                 end
                 if (~isX0inSet)&&(currentScalProd < 1 - ERR_TOL)
                     throwerror('TestFails', ['the result of test does not',...
-                        'corresponds with theory, current scalar production is ',...
+                        'correspond with theory, current scalar production is ',...
                         num2str(currentScalProd), ' while isX0inSet is ', num2str(isX0inSet), ',', num2str(iSwitchBack) ]);
                 end
                 
@@ -140,12 +140,12 @@ classdef ContSingleTubeControl
         
         function controlFunc = getControlFunction(self)
             % GETCONTROLFUNCTION - returns controlVectorFunct from class
-            controlFunc = self.controlVectorFunct;
+            controlFunc = self.controlVectorFunct.clone();
         end
         
-        function properEllTube = getProperEllTube(self)
+        function properEllTube = getEllTube(self)
             % GETPROPERELLTUBE - returns properEllTube from class
-            properEllTube = self.properEllTube;
+            properEllTube = self.properEllTube.clone();
         end
         
     end
