@@ -212,7 +212,7 @@ end
 %
 %regularization function for ode45reg
 %
-function [isStrictViolation,yReg] = fOdeReg(t,y)
+function [isStrictViolation,yReg] = fOdeReg(t,yVec)
     isStrictViolation=false;
-    yReg=y;
+    yReg=yVec;
 end

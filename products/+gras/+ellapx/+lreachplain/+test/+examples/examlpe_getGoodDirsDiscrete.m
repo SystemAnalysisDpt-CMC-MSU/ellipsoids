@@ -4,9 +4,9 @@ import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
 import gras.ellapx.gen.RegProblemDynamicsFactory;
 import gras.ellapx.lreachplain.GoodDirsDiscrete;
 % 
-At = [{'1'}, {'1'}, {'1'};
+At = [{'1'}, {'0'}, {'t'};
       {'0'}, {'1'}, {'0'};
-      {'1'}, {'t'}, {'1'}];
+      {'0'}, {'t'}, {'1'}];
 Bt = [{'1'};
       {'1'};
       {'t'}];

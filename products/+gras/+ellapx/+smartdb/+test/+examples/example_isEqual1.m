@@ -1,5 +1,5 @@
 % An example ISEQUAL function usage. In it two ellipsoid tube objects are
-% created and compared. This is the example of the siplest usage of this
+% created and compared. This is the example of the sipmlest usage of this
 % function with the minimum of input arguments. These ellipsoid tubes are
 % not equal because of different lsGoodDirVec vectors.
 nPoints=10;
