@@ -94,12 +94,13 @@ checkmultvar('all(x2==x1)',2,nDim,nDimsArr(:), 'errorMessage',...
     'dimensions mismatch.');
 %
 if isOneEll % one ellipsoid, multiple directions
-    cenVec = ellArr.centerVec;
-    ellMat = ellArr.shapeMat;
-    [~, absTol] = getAbsTol(ellArr);
-    dirsMat=reshape(dirsArr,nDim,nDirs);
+%     cenVec = ellArr.centerVec;
+%     ellMat = ellArr.shapeMat;
+%     [~, absTol] = getAbsTol(ellArr);
+%     dirsMat=reshape(dirsArr,nDim,nDirs);
     %
-    [supArr bpArr] = gras.geom.ell.rhomat(ellMat, dirsMat,absTol, cenVec);
+%     [supArr bpArr] = gras.geom.ell.rhomat(ellMat, dirsMat,absTol, cenVec);
+    [supArr bpArr] = fRhoForDir(ellArr, dirsArr);
     if length(dirSizeVec)>2
         supArr=reshape(supArr,dirSizeVec(2:end));
         bpArr=reshape(bpArr,dirSizeVec);
@@ -173,6 +174,8 @@ end
             if numel(IndProjInfVec) > 0
                 bndPVec(IndProjInfVec) = Inf*sign(infVal(abs(infVal) > eps));
             end
+            supFun = resRho;
+            xVec = bndPVec;
         else
             [cenVec ellMat]=double(ellObj);
             absTol=ellObj.getAbsTol();

@@ -25,8 +25,8 @@ function poly = toPolytope(varargin)
 %
 import modgen.common.checkvar;
 %
-ell = varargin{1};
-checkvar(ell, @(x) isMe(x) && numel(x) == 1&&...
+ell = varargin{1};%replaced isMe(x) to isa(x, 'ellipsoid')
+checkvar(ell, @(x) isa(x, 'ellipsoid') && numel(x) == 1&&...
     (dimension(x) == 3 || dimension(x) == 2), 'errorTag', 'wrongInput',...
     'errorMessage','First argument must be ellipsoid in 3D or 2D');
 

@@ -164,7 +164,7 @@ function outEll = l_intersection_ia(fstEll, secObj)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
 
-if isMe(secObj)
+if isa(secObj, 'ellipsoid') %isMe(secObj)
     if fstEll == secObj
         outEll = fstEll;
     elseif ~intersect(fstEll, secObj)

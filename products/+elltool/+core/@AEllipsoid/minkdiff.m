@@ -104,7 +104,7 @@ else
     varargout(2) = {boundMat};
 end
     function ellsVec = getEllArr(ellsArr)
-        if isMe(ellsArr)
+        if isa(ellsArr, 'ellipsoid')%isMe(ellsArr)
             cnt    = numel(ellsArr);
             ellsVec = reshape(ellsArr, cnt, 1);
         end
