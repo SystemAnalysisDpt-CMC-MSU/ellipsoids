@@ -251,8 +251,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             eigvResMat=orthBasMat;
             [sortedDiagVec indSortedVec] = sort(diagResVec);
             ellObj.diagMat=diag(sortedDiagVec);
-            ellObj.eigvMat=eigvResMat(:, indSortedVec);
-            ellObj.centerVec=ellCenterVec(indSortedVec);
+            ellObj.eigvMat=eigvResMat;
+            ellObj.centerVec=ellCenterVec;
         end
         
         function ellObj = GenEllipsoid(varargin)
