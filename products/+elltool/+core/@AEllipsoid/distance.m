@@ -86,7 +86,7 @@ elseif isa(objArr, 'hyperplane')
         isFlagOn);
 elseif isa(objArr, 'polytope')
     [distValArray, statusArray] = computeEllPolytDist(ellObjArr,objArr,isFlagOn);
-elseif isa(objArr, 'ellipsoid')%isMe(objArr)
+elseif CheckIsMe(objArr)
     [distValArray, statusArray] = computeEllEllDist(ellObjArr,objArr,isFlagOn);
 else
     throwerror('wrongInput',strcat('second argument must be array of vectors, ',...

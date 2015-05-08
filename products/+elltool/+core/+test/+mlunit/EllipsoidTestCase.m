@@ -42,7 +42,7 @@ classdef EllipsoidTestCase < elltool.core.test.mlunit.EllFactoryTC
                 propNameValCMat=[propNameList(indVec);valList(indVec)];
                 %
                 checkForSize([]);
-                checkForSize([2 3 4]);
+                checkForSize(1);
                 %
                 function checkForSize(ellArrSizeVec)
                     sizeList=num2cell(ellArrSizeVec);

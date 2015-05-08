@@ -177,10 +177,15 @@ end
             supFun = resRho;
             xVec = bndPVec;
         else
-            [cenVec ellMat]=double(ellObj);
             absTol=ellObj.getAbsTol();
-            [supFun xVec] = gras.geom.ell.rhomat(ellMat, dirVec,absTol,...
+            [supFun bndPVec] = gras.geom.ell.rhomat(ellQMat, dirVec,absTol,...
                     cenVec);
+             if (~all(~isInfVec))
+                 xVec = zeros(size(cenVec));
+                 xVec(~isInfVec) = bndPVec;
+             else
+                 xVec = bndPVec;
+             end
         end
     end
 end

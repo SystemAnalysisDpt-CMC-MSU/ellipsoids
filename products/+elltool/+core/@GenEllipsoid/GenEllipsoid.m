@@ -196,7 +196,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     curDirVec,absTol);
             end
         end
-        
+        %This function return new ellipsoid with sorted eigen values
         function ellObj = getCopyWithDecomposition(obj)
             ellCenterVec = obj.getCenter;
             ellDiagMat = obj.getDiagMat;
@@ -249,10 +249,10 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             end
             diagResVec(infIndVec)=Inf;
             eigvResMat=orthBasMat;
-            
-            ellObj.diagMat=diag(sort(diagResVec));
-            ellObj.eigvMat=eigvResMat;
-            ellObj.centerVec=ellCenterVec;
+            [sortedDiagVec indSortedVec] = sort(diagResVec);
+            ellObj.diagMat=diag(sortedDiagVec);
+            ellObj.eigvMat=eigvResMat(:, indSortedVec);
+            ellObj.centerVec=ellCenterVec(indSortedVec);
         end
         
         function ellObj = GenEllipsoid(varargin)

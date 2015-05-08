@@ -250,7 +250,7 @@ resEllMat=0.5*sumPNum*(sumMat+sumMat.');
 nonZeroDimSpace=size(nonZeroBasMat,2);
 [resDiagVec, resFinMat]=GenEllipsoid.findConstruction(resEllMat,...
     zeroBasMat,nonZeroBasMat,zeroIndVec,nonZeroIndVec,...
-    Inf*ones(1,nonZeroDimSpace));
+    Inf(1,nonZeroDimSpace));
 resFinMat=resFinMat/norm(resFinMat);
 qCenVec=zeros(dimSpace,1);
 qCenVec(zeroIndVec)=cenVec;

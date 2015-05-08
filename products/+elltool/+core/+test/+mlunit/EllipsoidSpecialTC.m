@@ -38,7 +38,7 @@ classdef EllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
             [isEq, reportStr] = isEqual(self.createEll(test1Mat), self.createEll(test2Mat));
             mlunitext.assert_equals(false, isEq);
             ansStr = ...
-                '(1).Q-->Max. absolute difference (1.0099999999997759e-05) is greater than the specified tolerance (1.0000000000000001e-05)';
+                '\(1\)\.Q-->Max\. absolute difference \(1\.0099999999[0-9]*e-05\) is greater than the specified tolerance \(1.0000000000000001e-05\)';
             checkRep();
             %            
             test1Mat = eye(2);
@@ -57,7 +57,7 @@ classdef EllipsoidSpecialTC < elltool.core.test.mlunit.EllFactoryTC
                 self.createEll(test2Mat));
             mlunitext.assert_equals(false, isEq);
             ansStr = ...
-                '(1).Q-->Max. absolute difference (1.000000000006041e-05) is greater than the specified tolerance (1.0000000000000001e-05)';
+                '\(1\)\.Q-->Max\. absolute difference \(1\.0000000000[0-9]+e-05\) is greater than the specified tolerance \(1\.0000000000000001e-05\)';
             checkRep();
             function checkRep()
                 isRepEq = isequal(reportStr, ansStr);
