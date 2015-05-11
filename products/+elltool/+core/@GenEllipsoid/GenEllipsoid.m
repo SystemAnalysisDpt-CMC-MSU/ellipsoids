@@ -49,7 +49,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
     
     methods (Access = protected)
         function [isEqualArr, reportStr] = isEqualInternal(ellFirstArr,...
-                ellSecArr, isPropIncluded)
+                ellSecArr, ~)
             import modgen.struct.structcomparevec;
             import gras.la.sqrtmpos;
             import elltool.conf.Properties;
@@ -57,72 +57,94 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             %
             nFirstElems = numel(ellFirstArr);
             nSecElems = numel(ellSecArr);
+            
+            firstSizeVec = size(ellFirstArr);
+            secSizeVec = size(ellSecArr);
+            reportStr = '';
             if (nFirstElems == 0 && nSecElems == 0)
                 isEqualArr = true;
-                reportStr = '';
                 return;
-            elseif (nFirstElems == 0 || nSecElems == 0)
+            elseif (nFirstElems == 0 || nSecElems == 0)%why not just return false?
                 throwerror('wrongInput:emptyArray',...
                     'input ellipsoidal arrays should be empty at the same time');
             end
-            
-            
-            ellFirstChangedArr = ellFirstArr;
-            ellSecChangedArr = ellSecArr;
-            for i = 1 : nFirstElems
-                ellFirstChangedArr(i) = ...
-                    getCopyWithDecomposition(ellFirstChangedArr(i));
+            if nFirstElems ~= 1 && nSecElems ~= 1 ...
+                    && ~isequal(firstSizeVec, secSizeVec)
+                throwerror('wrongSizes',...
+                    'sizes of ellipsoidal arrays do not... match');
             end
-            for i = 1 : nSecElems
-                ellSecChangedArr(i) = ...
-                    getCopyWithDecomposition(ellSecChangedArr(i));
-            end
-            
-            [~, absTol] = ellFirstChangedArr.getAbsTol;
-            firstSizeVec = size(ellFirstChangedArr);
-            secSizeVec = size(ellSecChangedArr);
-            isnFirstScalar=nFirstElems > 1;
-            isnSecScalar=nSecElems > 1;
-            
-            [~, tolerance] = ellFirstChangedArr.getRelTol;
-            [SEll1Array, SFieldNiceNames, ~] = ...
-                ellFirstChangedArr.toStruct(isPropIncluded);
-            SEll2Array = ellSecChangedArr.toStruct(isPropIncluded);
-            %
-            SEll1Array = arrayfun(@(SEll)ellFirstChangedArr.formCompStruct(SEll,...
-                SFieldNiceNames, absTol, isPropIncluded), SEll1Array);
-            SEll2Array = arrayfun(@(SEll)ellSecChangedArr.formCompStruct(SEll,...
-                SFieldNiceNames, absTol, isPropIncluded), SEll2Array);
-            
-            if isnFirstScalar&&isnSecScalar
-                if ~isequal(firstSizeVec, secSizeVec)
-                    throwerror('wrongSizes',...
-                        'sizes of ellipsoidal arrays do not... match');
-                end;
-                compare();
-                isEqualArr = reshape(isEqualArr, firstSizeVec);
-            elseif isnFirstScalar
-                SEll2Array=repmat(SEll2Array, firstSizeVec);
-                compare();
-                
-                isEqualArr = reshape(isEqualArr, firstSizeVec);
+            if nFirstElems > 1 && nSecElems > 1 
+                compare()
+            elseif nFirstElems > 1
+                ellSecArr = repmat(ellSecArr, firstSizeVec);
+                compare()
             else
-                SEll1Array=repmat(SEll1Array, secSizeVec);
-                compare();
-                isEqualArr = reshape(isEqualArr, secSizeVec);
+                ellFirstArr = repmat(ellFirstArr, secSizeVec);
+                compare()
             end
             function compare()
-                [isEqualArr, reportStr] =...
-                    modgen.struct.structcomparevec(SEll1Array,...
-                    SEll2Array, tolerance);
+                absTol = ellFirstArr.getAbsTol;
+                isEqualArr = arrayfun(@(x, y, z) checkGenEq(x, y, z), ...
+                    ellFirstArr, ellSecArr, absTol, ...
+                    'UniformOutput', true);
             end
+            function isEqual = checkGenEq(ellFirstObj, ellSecObj, ...
+                    absTol)
+                fstCenVec = ellFirstObj.getCenter();
+                secCenVec = ellSecObj.getCenter();
+                if numel(fstCenVec) ~= numel(secCenVec)
+                    isEqual = false;
+                    reportStr = [reportStr, ...
+                        'Ellipsoids must have equal dimensions\n'];
+                    return;
+                end
+                maxDifCen = max(abs(fstCenVec - secCenVec));
+                if maxDifCen > absTol
+                    isEqual = false;
+                    reportStr = [reportStr, 'Max. dff. of Centers matrices(', ...
+                        num2str(maxDifCen), ') is greater than absTol(', ...
+                        num2str(absTol), ').\n'];
+                    return;
+                end
+                fstShapeMat = ellFirstObj.getShapeMat();
+                secShapeMat = ellSecObj.getShapeMat();
+                maxDifShape = max(abs(fstShapeMat(:) - secShapeMat(:)));
+                if maxDifShape > absTol
+                    isEqual = false;
+                    reportStr = [reportStr, 'Max. diff. of Shape matrices(', ...
+                        num2str(maxDifShape), ') is greater than absTol(', ...
+                        num2str(absTol), ').\n'];
+                    return;
+                end
+                isEqual = checkBasisEq(ellFirstObj.getInfProj, ...
+                    ellSecObj.getInfProj, absTol);
+                if ~isEqual
+                    reportStr = [reportStr, ...
+                        'Linear spaces along Inf directions are not equal\n'];
+                    return;
+                end
+            end
+            function isEqual = checkBasisEq(basFirstMat, basSecMat, absTol)
+                nFirstRank = rank(basFirstMat, absTol);
+                nSecRank = rank(basSecMat, absTol);
+                nTogetherRank = rank([basFirstMat, basSecMat], absTol);
+                isEqual = nFirstRank == nSecRank ...
+                    && nSecRank == nTogetherRank;
+            end            
         end
     end
     
     methods
         function shapeMat=get.shapeMat(self)
-            shapeMat=self.eigvMat*self.diagMat*transpose(self.eigvMat);
-            shapeMat = (shapeMat + transpose(shapeMat)) * 0.5;
+            % function return configuration matrix corresponded only to 
+            % finit values in diagMat
+            finDiagVec = diag(self.diagMat);
+            isInfDiagVec = finDiagVec == Inf;
+            finDiagVec(isInfDiagVec) = 0;
+            finEigvMat = self.eigvMat;
+            finEigvMat(:, isInfDiagVec) = 0;
+            shapeMat = finEigvMat * diag(finDiagVec) * finEigvMat.';
+            shapeMat = 0.5 * (shapeMat + shapeMat.');
         end
         
         function obj = set.shapeMat(self, shMat)
@@ -305,7 +327,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 
                 %
                 if isPar2Vector
-                    if any(ellMat < 0)
+                    if any(ellMat < absTol)
                         throwerror('wrongInput', ...
                             'Input vector must be non-negative.');
                     end
@@ -314,13 +336,13 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 elseif ~isMatSquare
                     throwerror('wrongInput',...
                                'Input matrix must be square');
-                elseif ~isMatSymm(ellMat)
+                elseif ~ismatsymm(ellMat, absTol)
                     throwerror('wrongInput',...
                                'Input matrix must be symmetric.');
                 else
                     isDiagonalMat = all(all(ellMat == diag(diag(ellMat))));
                     if all(isDiagonalMat(:))
-                        if any(diag(ellMat) < 0)
+                        if any(diag(ellMat) < -absTol)
                             throwerror('wrongInput', ...
                                 'Input matrix must be non-negative!');
                         end
@@ -331,11 +353,11 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                             'Non diagonal Matrix must be finit.');
                     else %ordinary square matrix 
                         [eigvCheckMat, evalCheckVec] = eig(ellMat, 'vector');
-                        if ~all(evalCheckVec >= 0) ...
-                                && ~all(evalCheckVec <= 0)
+                        if ~all(evalCheckVec > -absTol) ...
+                                && ~all(evalCheckVec < absTol)
                             throwerror('wrongInput', ...
                                 'Input Matrix must be non-negative.');
-                        elseif any(evalCheckVec < 0)
+                        elseif any(evalCheckVec < -absTol)
                             eigvCheckMat = -eigvCheckMat;
                             evalCheckVec = -evalCheckVec;
                         end
@@ -383,7 +405,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                         'be the same as matrix']);
                 end
                 if isPar2Vector
-                    if any(ellMat < 0)
+                    if any(ellMat < -absTol)
                         throwerror('wrongInput', ...
                             'Input vector must be non-negative.');
                     end
@@ -392,13 +414,13 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 elseif ~isMatSquare
                     throwerror('wrongInput',...
                         'Input matrix must be square.');
-                elseif ~isMatSymm(ellMat) 
+                elseif ~ismatsymm(ellMat, absTol) 
                     throwerror('wrongInput',...
                         'Input matrix must be symmetric.');
                 else
                     isDiagonalMat = all(all(ellMat == diag(diag(ellMat))));
                     if  all(isDiagonalMat(:))
-                        if any(diag(ellMat) < 0)
+                        if any(diag(ellMat) < -absTol)
                             throwerror('wrongInput', ...
                                 'Input matrix must be non-negative!');
                         end
@@ -409,11 +431,11 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                             'Non diagonal Matrix must be finit.');
                     else %ordinary square matrix 
                         [eigvCheckMat, evalCheckVec] = eig(ellMat, 'vector');
-                        if ~all(evalCheckVec >= 0) ...
-                                && ~all(evalCheckVec <= 0)
+                        if ~all(evalCheckVec > -absTol) ...
+                                && ~all(evalCheckVec < absTol)
                             throwerror('wrongInput', ...
                                 'Input Matrix must be non-negative.');
-                        elseif any(evalCheckVec < 0)
+                        elseif any(evalCheckVec < -absTol)
                             eigvCheckMat = -eigvCheckMat;
                             evalCheckVec = -evalCheckVec;
                         end
@@ -463,11 +485,11 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                         throwerror('wrongInput:wrongDiagonal',...
                             ['Second argument should be either ',...
                             'diagonal matrix or a vector']);
-                    elseif any(ellDiagVec < 0)
+                    elseif any(ellDiagVec < -absTol)
                         throwerror('wrongIput:wrongDiagonal', ...
                             'Second argument must not have negative elements.');
                     end
-                elseif any(ellDiagVec < 0)
+                elseif any(ellDiagVec < -absTol)
                     throwerror('wrongIput:wrongDiagonal', ...
                         'Second argument must not have negative elements.');
                 end
@@ -489,10 +511,10 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 elseif all(~isInfVec)
                     ellAuxMat = ellWMat * diag(diagVec) * ellWMat.';
                     [eigvResMat, diagResVec] = eig(ellAuxMat, 'vector');
-                    if ~all(diagResVec >=0 ) && ~all(diagResVec <= 0)
+                    if ~all(diagResVec > -absTol ) && ~all(diagResVec < absTol)
                         throwerror('wrongInput:NonNegativeRequiared', ...
                             'Resulting shape matrix must be non negative.');
-                    elseif any(diagResVec < 0)
+                    elseif any(diagResVec < -absTol)
                         diagResVec = -diagResVec;
                     end
                 elseif all(isInfVec)
@@ -502,7 +524,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     allFinMat = ellWMat(:,~isInfVec);
                     %L1 and L2 Basis
                     [orthBasMat, rBasVec] = qr(allFinMat, 'vector');
-                    isNegVec = rBasVec < 0;
+                    isNegVec = rBasVec < -absTol;
                     rBasVec(isNegVec) = -rBasVec(isNegVec);
                     finRank = numel(rBasVec);
                     diagResVec = zeros(mDSize, 1);
@@ -529,13 +551,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             ellObj.relTol = relTolVal;
             ellObj.nPlot2dPoints = nPlot2dPointsVal;
             ellObj.nPlot3dPoints = nPlot3dPointsVal;
-            function isSym = isMatSymm(ellMat)
-            isInf = ellMat == Inf;
-            finMat = ellMat;
-            finMat(isInf) = 0;
-            isSym = max(max(abs(finMat - finMat.'))) < absTol ...
-                && all(all(isInf == isInf.'));
-        end
         end
         
         function ellObj = create(self, varargin)
@@ -588,6 +603,20 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             
             diagMat = self.diagMat;
         end
+        function infProjMat = getInfProj (self)
+            % Example:
+            %   ellObj = elltool.core.GenEllipsoid([0; Inf]);
+            %   ellObj.getInfProj()
+            %
+            %   ans =
+            %
+            %            0         0
+            %            0         1
+            %
+            isInfDiagVec = diag(self.diagMat) == Inf;
+            infProjMat = zeros(size(self.eigvMat));
+            infProjMat(:, isInfDiagVec) = self.eigvMat(:, isInfDiagVec);
+        end
     end
     methods (Static)
         function tol = getCheckTol()
@@ -632,7 +661,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                         'input matrix is expected to be positive semi-definite');
                 end
                 %
-                isZeroVec = dVec <0;
+                isZeroVec = dVec < absTol;
                 dVec(isZeroVec) = 0;
                 dMat = diag(dVec);
                 dMat = realsqrt(dMat);
