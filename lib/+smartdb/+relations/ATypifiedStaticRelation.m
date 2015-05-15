@@ -1,5 +1,28 @@
 classdef ATypifiedStaticRelation<smartdb.relations.AStaticRelation&...
         smartdb.cubes.CubeStructReflectionHelper
+    
+    methods (Access=protected, Static,Hidden)
+        function outObj=loadObjViaConstructorFromStruct(className,SInp)
+            import modgen.common.throwwarn;
+            if isstruct(SInp)
+                if isfield(SInp,'SData')&&...
+                        isfield(SInp,'SIsNull')&&...
+                        isfield(SInp,'SIsValueNull')
+                    throwwarn('badMatFile:wrongState',...
+                        ['Apparently relation loaded from ',...
+                        'the file has a legacy format \n',...
+                        'and was loaded as a structure. ',...
+                        'Calling %s constructor on loaded data.'],className);                
+                    %                
+                    outObj=feval(className,...
+                        SInp.SData,SInp.SIsNull,SInp.SIsValueNull);
+                end
+            else
+                throwerror('wrongInput','this methods expects a structure');
+            end
+        end
+    end    
+    
     methods (Access=protected)
         function [nameCVec,propDefCVec]=getFieldDefsByRegExp(self,regExpStr)
             mcObj=metaclass(self);

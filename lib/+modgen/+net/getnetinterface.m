@@ -2,15 +2,18 @@ function netStruct=getnetinterface(varargin)
 % GETNETINTERFACE returns information about all network interfaces
 % connected to this computer and their addresses
 %
-% input:
+% Input:
 %   properties:
-%     IPv4Only: logical [1,1] - return only IPv4 addresses. Default = false
-%     noLoopback: logical [1,1] - do not return loopback addresses.
-%       Default = false
-%     mustHaveAddress: logical [1,1] - return only interfaces that have at
-%       least one address. This filter is applied after all address filters
-%       are applied
-% output:
+%       IPv4Only: logical [1,1] - return only IPv4 addresses. Default = false
+%       noLoopback: logical [1,1] - do not return loopback addresses.
+%           Default = false
+%       mustHaveAddress: logical [1,1] - return only interfaces that have at
+%           least one address. This filter is applied after all address filters
+%           are applied
+%       mustHaveHwAddress: logical[1,1] - if true, only interfaces with non-empty
+%           hardware address are returned, the rest are filtered out
+%           
+% Output:
 %   regular:
 %     netStruct: struct [,1] - each element of this structure vector is an
 %       interface description with the following fields:
@@ -19,20 +22,19 @@ function netStruct=getnetinterface(varargin)
 %         hardwareAddress: char [1,] - hardware address (usually MAC
 %           address)
 %         ipAddresses: struct [,1] - IP addresses for this interface
-%       The struct vector ipAddresses has the following fields:
-%         hostName: char [1,] - qualified host name, if available,
-%           otherwise the same as ipAddress
-%         ipVersion: char [1,] - IP version (IPv4 or IPv6)
-%         ipAddress: char [1,] - IP address
-%         networkPrefixLength: double [1,1] - network prefix length (number
-%           of 1-bits in the subnet mask)
-%         netMask: char [1,] - subnet mask (IPv4 only)
-%         broadcastAddress: char [1,] - broadcast address (IPv4 only)
-%         isLoopbackAddress: logical [1,1] - true if the address is a
-%           loopback address
+%           The struct vector ipAddresses has the following fields:
+%               hostName: char [1,] - qualified host name, if available,
+%                   otherwise the same as ipAddress
+%               ipVersion: char [1,] - IP version (IPv4 or IPv6)
+%               ipAddress: char [1,] - IP address
+%               networkPrefixLength: double [1,1] - network prefix length (number
+%                   of 1-bits in the subnet mask)
+%               netMask: char [1,] - subnet mask (IPv4 only)
+%               broadcastAddress: char [1,] - broadcast address (IPv4 only)
+%               isLoopbackAddress: logical [1,1] - true if the address is a
+%                   loopback address
 %
-%
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2015-05-07 $ 
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
@@ -45,6 +47,7 @@ persistent netInterfaceCVec inetAddressCArray
 isIPv4Only = false;
 isNoLoopback = false;
 isMustHaveAddress = false;
+isMustHaveHwAddress=false;
 %
 [reg,prop]=modgen.common.parseparams(varargin,[],0);
 if ~isempty(reg)
@@ -59,6 +62,8 @@ for k=1:2:nProp-1
             isNoLoopback = prop{k+1};
         case 'musthaveaddress',
             isMustHaveAddress = prop{k+1};
+        case 'musthavehwaddress',
+            isMustHaveHwAddress=prop{k+1};
         otherwise,
             error([upper(mfilename),':wrongInput'], ...
                 'unidentified property name: %s ',prop{k});
@@ -145,6 +150,9 @@ end
 %
 if isMustHaveAddress
     netStruct( arrayfun(@(x)isempty(x.ipAddresses),netStruct) ) = [];
+end
+if isMustHaveHwAddress
+    netStruct( arrayfun(@(x)isempty(x.hardwareAddress),netStruct) ) = [];
 end
 %
     function cVec = listToCell(list)
