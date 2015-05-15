@@ -24,7 +24,7 @@ function dataCell=toDispCell(self,varargin)
 %
 %
 NUM_TYPE_LIST={'int8','int16','int32','int64','uint8',...
-    'uint16','uint32','uint64','double','single'};
+    'uint16','uint32','uint64','double','single','logical','char'};
 N_MAX_DISP_ELEM=20;
 self=smartdb.relations.DynamicRelation(self);
 [~,~,fieldNameList]=modgen.common.parseparext(varargin,...
@@ -80,7 +80,14 @@ dataCell=self.toMat(varargin{:});
     function res=customMat2Str(x)
         nDims=ndims(x);
         if nDims==2&&numel(x)<=N_MAX_DISP_ELEM
-            res=mat2str(x);
+            if ischar(x),
+                res=x;
+            else
+                if islogical(x),
+                    x=single(x);
+                end
+                res=mat2str(x);
+            end
         else
             res=any2ClassStr(x);
         end
