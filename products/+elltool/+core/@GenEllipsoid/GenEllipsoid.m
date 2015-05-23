@@ -20,8 +20,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
     %       dMat: double[nDim,nDim] / dVec: double[nDim,1] - diagonal matrix or
     %           vector, may contain infinite or zero elements
     %       wMat: double[nDim,nDim] - square matrix contained orthogonal
-    %       basis with respect to eigen values provided by dMat
-    %
+    %       basis with respect to finite eigen values provided by dMat and
+    %       basis along Inf directions
     %
     % Output:
     %   self: GenEllipsoid[1,1] - created generalized ellipsoid
@@ -70,7 +70,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             end
             if nFirstElems ~= 1 && nSecElems ~= 1 ...
                     && ~isequal(firstSizeVec, secSizeVec)
-                throwerror('wrongSizes',...
+                throwerror('wrongInput:wrongSizes',...
                     'sizes of ellipsoidal arrays do not... match');
             end
             if nFirstElems > 1 && nSecElems > 1 
@@ -90,8 +90,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             end
             function isEqual = checkGenEq(ellFirstObj, ellSecObj, ...
                     absTol)
-                fstCenVec = ellFirstObj.getCenter();
-                secCenVec = ellSecObj.getCenter();
+                fstCenVec = ellFirstObj.getRegCenter();
+                secCenVec = ellSecObj.getRegCenter();
                 if numel(fstCenVec) ~= numel(secCenVec)
                     isEqual = false;
                     reportStr = [reportStr, ...
@@ -220,8 +220,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             end
         end
         %This function return new ellipsoid with sorted eigen values
+        %and regular center
         function ellObj = getCopyWithDecomposition(obj)
-            ellCenterVec = obj.getCenter;
             ellDiagMat = obj.getDiagMat;
             ellWMat = obj.getEigvMat;
             %
@@ -229,7 +229,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             ellObj = elltool.core.GenEllipsoid();
             ellObj.diagMat = diag(ellDiagSortedVec);
             ellObj.eigvMat = ellWMat(:, indSortedDiagVec);
-            ellObj.centerVec = ellCenterVec;
+            ellObj.centerVec = obj.getRegCenter();
         end
         function ellObj = getOldVertionCopyWithDecomposition(obj)
             ellCenterVec = obj.getCenter;
@@ -327,7 +327,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 
                 %
                 if isPar2Vector
-                    if any(ellMat < absTol)
+                    if any(ellMat < -absTol)
                         throwerror('wrongInput', ...
                             'Input vector must be non-negative.');
                     end
@@ -480,16 +480,16 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                             'diagonal matrix or a vector']);
                     end
                     isDiagonal = all(all(ellDiagMat == ...
-                        diag(ellDiagVec)));
+                        diag(diagVec)));
                     if ~isDiagonal
                         throwerror('wrongInput:wrongDiagonal',...
                             ['Second argument should be either ',...
                             'diagonal matrix or a vector']);
-                    elseif any(ellDiagVec < -absTol)
+                    elseif any(diagVec < -absTol)
                         throwerror('wrongIput:wrongDiagonal', ...
                             'Second argument must not have negative elements.');
                     end
-                elseif any(ellDiagVec < -absTol)
+                elseif any(diagVec < -absTol)
                     throwerror('wrongIput:wrongDiagonal', ...
                         'Second argument must not have negative elements.');
                 end
@@ -498,59 +498,69 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     throwerror('wrongInput:wrongParameters',...
                         'Third parameter must be a square matrix');
                 end
-                if det(ellWMat) < absTol * norm(ellWMat, 'fro')
-                    throwerror('wrongInput:degenerateMatrix', ...
-                        'Third parameter must be a non degenerative matrix');
-                end
+                
                 isInfVec = diagVec == Inf;
-                [~,wRMat] = qr(ellWMat);
-                if all(all(abs(abs(wRMat) - eye(size(wRMat))) < absTol))
-                    %W is orthogonal
+                if checkOrth(ellWMat)
+                    %ellWMat consists of orthogonal vectors
                     diagResVec = diagVec;
                     eigvResMat = ellWMat;
                 elseif all(~isInfVec)
                     ellAuxMat = ellWMat * diag(diagVec) * ellWMat.';
                     [eigvResMat, diagResVec] = eig(ellAuxMat, 'vector');
-                    if ~all(diagResVec > -absTol ) && ~all(diagResVec < absTol)
-                        throwerror('wrongInput:NonNegativeRequiared', ...
+                    if ~all(diagResVec > -absTol ) 
+                        throwerror('wrongInput:nonNegativeRequiared', ...
                             'Resulting shape matrix must be non negative.');
-                    elseif any(diagResVec < -absTol)
-                        diagResVec = -diagResVec;
+                    elseif any(diagResVec < absTol)
+                        diagResVec(diagResVec < absTol) = 0;
                     end
                 elseif all(isInfVec)
+                    %Whole space represented. Any basis is proper.
                     diagResVec = diagVec;
-                    [eigvResMat, ~] = qr(ellWMat);
+                    eigvResMat = eye(nDSize);
                 else
-                    allFinMat = ellWMat(:,~isInfVec);
+                    allInfMat=ellWMat(:,isInfVec);
                     %L1 and L2 Basis
-                    [orthBasMat, rBasVec] = qr(allFinMat, 'vector');
-                    isNegVec = rBasVec < -absTol;
-                    rBasVec(isNegVec) = -rBasVec(isNegVec);
-                    finRank = numel(rBasVec);
-                    diagResVec = zeros(mDSize, 1);
-                    diagResVec(1:finRank) = diagVec(~isInfVec) .* rBasVec;
-                    diagResVec(finRank+1:nWSize) = Inf;
-                    eigvResMat = orthBasMat;
-                end
-                nDiagInf = sum(isInfVec);
-                %now we put center into the closest position to origin if
-                %possible
-                if nDiagInf > 0
-                    infDirMat = eigvResMat(:, isInfVec);
-                    ellCenMat = repmat(ellCenterVec, 1, nDiagInf); 
-                    scalInfDirVec = dot(ellCenMat, infDirMat);
-                    scalInfDirMat = repmat(scalInfDirVec, mWSize, 1);
-                    projInfDirVec = sum(infDirMat .* scalInfDirMat, 2);
-                    ellCenterVec = ellCenterVec - projInfDirVec; 
+                    [orthBasMat rBasMat]=qr(allInfMat);
+                    if size(rBasMat,2)==1
+                        isNeg=rBasMat(1)<0;
+                        orthBasMat(:,isNeg)=-orthBasMat(:,isNeg);
+                    else
+                        isNegVec=diag(rBasMat)<0;
+                        orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
+                    end
+                    %Find rank L1, here rankL1>0
+                    tolerance = absTol*norm(allInfMat,'fro');
+                    rankL1 = sum(abs(diag(rBasMat)) > tolerance);
+                    rankL1 = rankL1(1);%for case where rBasMat is a vector.
+                    %L1 - first rankL1 columns of orthBasMat.
+                    infIndVec=1:rankL1;
+                    finIndVec=(rankL1+1):mWSize;
+                    nonInfBasMat = orthBasMat(:,finIndVec);
+                    %Projecton of directions on L2. Is finite then is finite
+                    diagResVec=zeros(mDSize,1);
+					projMat=nonInfBasMat.'*ellWMat;
+					isZeroProjVec=all(abs(projMat)<absTol,1);
+					if ~all(isZeroProjVec)
+						diagVec(isInfVec)=0;
+						ellAuxMat=projMat*diag(diagVec)*projMat.';
+						[~,nonInfDMat]=eig(ellAuxMat);
+						diagResVec(finIndVec)=diag(nonInfDMat);
+					end
+                    diagResVec(infIndVec)=Inf;
+                    eigvResMat=orthBasMat;
                 end
                 ellObj.diagMat = diag(diagResVec);
-                ellObj.eigvMat = ellWNormMat;
+                ellObj.eigvMat = eigvResMat;
                 ellObj.centerVec = ellCenterVec;
             end            
             ellObj.absTol = absTolVal;
             ellObj.relTol = relTolVal;
             ellObj.nPlot2dPoints = nPlot2dPointsVal;
             ellObj.nPlot3dPoints = nPlot3dPointsVal;
+            function isOrth = checkOrth(vecMat)
+                isOrth = max(max(abs(vecMat * vecMat.' - eye(size(vecMat))))) ...
+                    < absTol;
+            end
         end
         
         function ellObj = create(self, varargin)
@@ -616,6 +626,28 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             isInfDiagVec = diag(self.diagMat) == Inf;
             infProjMat = zeros(size(self.eigvMat));
             infProjMat(:, isInfDiagVec) = self.eigvMat(:, isInfDiagVec);
+        end
+        function regCenVec = getRegCenter (self)
+            % Example:
+            %   ellObj = elltool.core.GenEllipsoid([1; 4], [Inf; Inf]);
+            %   ellObj.getRegCenter()
+            %
+            %   ans =
+            %
+            %            0 
+            %            0         
+            %
+            isInfVec = diag(self.diagMat) == Inf;
+            regCenVec = self.centerVec;
+            if any(isInfVec)
+                nDiagInf = sum(isInfVec);
+                infDirMat = self.eigvMat(:, isInfVec);
+                regCenMat = repmat(regCenVec, 1, nDiagInf); 
+                scalInfDirVec = dot(regCenMat, infDirMat);
+                scalInfDirMat = repmat(scalInfDirVec, size(isInfVec, 1), 1);
+                projInfDirVec = sum(infDirMat .* scalInfDirMat, 2);
+                regCenVec = regCenVec - projInfDirVec; 
+            end
         end
     end
     methods (Static)

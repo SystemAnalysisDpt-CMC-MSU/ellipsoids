@@ -222,24 +222,24 @@ for iEll = 1:nEll
     if nDims == 1
         isBoundEllVec = check1d(testEllVec(iEll), cellPoints);
     elseif nDims == 2
-        if max(dMat(:)) == Inf
-            isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
-        elseif dMat(1, 1) == 0
+        if dMat(1, 1) == 0
             isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 1);
         elseif dMat(2, 2) == 0
             isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 2);            
+        elseif max(dMat(:)) == Inf
+            isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
         else
             isBoundEllVec = checkNorm(testEllVec(iEll), cellPoints);
         end
     elseif nDims == 3
-        if max(dMat(:)) == Inf
-            isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
-        elseif dMat(1, 1) == 0
+        if dMat(1, 1) == 0
             isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 1);
         elseif dMat(2, 2) == 0
             isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 2);
         elseif dMat(3, 3) == 0
             isBoundEllVec = check3dDimZero(testEllVec(iEll), cellPoints, 3);
+        elseif max(dMat(:)) == Inf
+            isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
         else
             isBoundEllVec = checkNorm(testEllVec(iEll), cellPoints);
         end

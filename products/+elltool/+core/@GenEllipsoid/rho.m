@@ -164,19 +164,19 @@ end
                 bndPFinVec = cenVec;
             end
             bndPVec = finBasMat*bndPFinVec;
-            IndProjInfVec = find(abs(infBasMat*dirInfProjVec) > eps);
+            indProjInfVec = find(abs(infBasMat*dirInfProjVec) > eps);
             infVal = infBasMat*dirInfProjVec;
-            if numel(IndProjInfVec) > 0
-                bndPVec(IndProjInfVec) = Inf*sign(infVal(abs(infVal) > eps));
+            if numel(indProjInfVec) > 0
+                bndPVec(indProjInfVec) = Inf*sign(infVal(abs(infVal) > eps));
             end
             supFun = resRho;
             xVec = bndPVec;
         else
             absTol=ellObj.getAbsTol();
-            [supFun bndPVec] = gras.geom.ell.rhomat(ellQMat, dirVec,absTol,...
+            [supFun, bndPVec] = gras.geom.ell.rhomat(ellQMat, dirVec,absTol,...
                     cenVec);
              if (~all(~isInfVec))
-                 xVec = zeros(size(cenVec));
+                 xVec = zeros(size(sDirVec));
                  xVec(~isInfVec) = bndPVec;
              else
                  xVec = bndPVec;

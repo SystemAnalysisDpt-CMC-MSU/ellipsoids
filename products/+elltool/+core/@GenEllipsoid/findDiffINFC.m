@@ -72,7 +72,7 @@ else
     else
         [diagQVec, resQMat]=GenEllipsoid.findConstruction(...
             finEllMat,finBasMat,infBasMat,finIndVec,...
-            infIndVec,Inf*ones(1,infDimSpace));
+            infIndVec,Inf(1,infDimSpace));
     end
 end
 end

@@ -38,16 +38,6 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             qMatStr='[1 1;0 1]';
             checkNeg(1);
             checkNeg(2);
-            self.runAndCheckError('elltool.core.GenEllipsoid(eye(3,2))',...
-                'wrongInputMat');
-            self.runAndCheckError('elltool.core.GenEllipsoid([1 1;0 1])',...
-                'wrongInputMat');
-            self.runAndCheckError(...
-                'elltool.core.GenEllipsoid([1;0],eye(3,2))',...
-                'wrongInputMat');
-            self.runAndCheckError(...
-                'elltool.core.GenEllipsoid([1;1],[1 1;0 1])',...
-                'wrongInputMat');
             %Tests#0.2. Negative test, not positive semi-definite matrix
             qMatStr='[1 2;3 4]';
             checkNeg(1);
@@ -63,7 +53,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             %
             check();
             %
-            % Test#2. GenEllipsoid(q,D,W)
+            % Test#2. GenEllipsoid(q,D,W) test incorrect.. anyway...
             wMat=[1 2;1 2];
             dMat=[1 Inf].';
             resEllipsoid=GenEllipsoid([0,0].',dMat,wMat);
@@ -73,7 +63,8 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             ansDMat=[0 Inf].';
             ansCenVec=[0 0].';
             %
-            check();
+            checkNeg(1);
+            checkNeg(2);
             % Test#3. GenEllipsoid(q,D,W)
             wMat=testOrth2Mat;
             dMat=[5 Inf].';
@@ -781,9 +772,11 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             d1Vec=[0 0 Inf 0 2 3];
             d2Vec=[1 Inf 0 0 2 Inf];
             nDims=numel(d1Vec);
-            lVec=rand(nDims,1);
-            [oMat,~]=qr(rand(nDims,nDims));
+            lVec=rand(nDims,1);%RANDOMIZE!
+            [oMat,~]=qr(rand(nDims,nDims));%RANDOMIZE!
             %
+            %save('oMat');
+            load('oMat');
             check(oMat,@minkSumIa,lVec);
             check(oMat,@minkSumEa,lVec);
             %
@@ -916,6 +909,60 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             %
             GenEllipsoidTestCase.auxCheckAllbV(nEllObj,nDim,...
                 test10x50DirMat,testOrth50Mat);
+        end
+        function testCompare(self)
+            import elltool.core.test.mlunit.GenEllipsoidTestCase;
+            import elltool.core.GenEllipsoid;
+            load(strcat(self.testDataRootDir,filesep,...
+                'testNewEllRandM.mat'),'testOrth50Mat',...
+                'testOrth20Mat','testOrth100Mat','testOrth3Mat',...
+                'testOrth2Mat');
+            %test all fin and not degenerate.
+            nDims = 50;
+            qCenVec = zeros(nDims, 1);
+            diagMat = eye(nDims);
+            ellTest1 = GenEllipsoid(qCenVec, diagMat, eye(nDims));
+            ellTest2 = GenEllipsoid(qCenVec, diagMat, testOrth50Mat);
+            [isEqual, reportStr] = ellTest1.isEqual(ellTest2);
+            mlunitext.assert_equals(true, isEqual, reportStr); 
+            %test all inf. Whole space represented
+            nDims = 100;
+            qCenVec = zeros(nDims, 1);
+            diagMat = diag(Inf(nDims, 1));
+            ellTest1 = GenEllipsoid(qCenVec, diagMat, eye(nDims));
+            ellTest2 = GenEllipsoid(qCenVec, diagMat, testOrth100Mat);
+            [isEqual, reportStr] = ellTest1.isEqual(ellTest2);
+            mlunitext.assert_equals(true, isEqual, reportStr); 
+            %test all degenerate. One point represented.
+            diagMat = zeros(nDims);
+            ellTest1 = GenEllipsoid(qCenVec, diagMat, eye(nDims));
+            ellTest2 = GenEllipsoid(qCenVec, diagMat, testOrth100Mat);
+            [isEqual, reportStr] = ellTest1.isEqual(ellTest2);
+            mlunitext.assert_equals(true, isEqual, reportStr); 
+            %test inf and fin. not degenerate.
+            diagVec = ones(nDims, 1);
+            infPosVec = 1 : nDims / 2;
+            diagVec(infPosVec) = Inf;
+            diagMat = diag(diagVec);
+            testOrthMat = [testOrth50Mat, zeros(nDims/2); ...
+                              zeros(nDims/2), testOrth50Mat];
+            ellTest1 = GenEllipsoid(qCenVec, diagMat, eye(nDims));
+            ellTest2 = GenEllipsoid(qCenVec, diagMat, testOrthMat);
+            [isEqual, reportStr] = ellTest1.isEqual(ellTest2);
+            mlunitext.assert_equals(true, isEqual, reportStr); 
+            %test Center vector movements along Inf dimentions
+            qMovedCenVec = qCenVec;
+            qMovedCenVec(infPosVec) = infPosVec; %left size is indices. right side is anything.
+            ellTest1 = GenEllipsoid(qCenVec, diagMat, eye(nDims));
+            ellTest2 = GenEllipsoid(qMovedCenVec, diagMat, eye(nDims));
+            [isEqual, reportStr] = ellTest1.isEqual(ellTest2);
+            mlunitext.assert_equals(true, isEqual, reportStr); 
+            %test Center cevtor movements along Inf dimentions. Eigv
+            %matrices are not equal.
+            ellTest1 = GenEllipsoid(qCenVec, diagMat, eye(nDims));
+            ellTest2 = GenEllipsoid(qMovedCenVec, diagMat, testOrthMat);
+            [isEqual, reportStr] = ellTest1.isEqual(ellTest2);
+            mlunitext.assert_equals(true, isEqual, reportStr); 
         end
     end
     methods(Static)
