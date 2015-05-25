@@ -745,7 +745,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                     cen2Vec=zeros(nDim,1);
                 else
                     cen1Vec=(1:nDim)';
-                    cen2Vec=(-floor(nDim/2)+1:floor(nDim/2)).';
+                    cen2Vec=(-floor(nDim/2) + 1:floor(nDim/2)).';
                 end
                 angle=pi/6;
                 dirsVec=[cos(angle);sin(angle);zeros(nDim-2,1)];
@@ -775,8 +775,6 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             lVec=rand(nDims,1);%RANDOMIZE!
             [oMat,~]=qr(rand(nDims,nDims));%RANDOMIZE!
             %
-            %save('oMat');
-            load('oMat');
             check(oMat,@minkSumIa,lVec);
             check(oMat,@minkSumEa,lVec);
             %

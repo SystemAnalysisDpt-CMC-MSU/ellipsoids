@@ -84,12 +84,13 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             end
             function compare()
                 absTol = ellFirstArr.getAbsTol;
-                isEqualArr = arrayfun(@(x, y, z) checkGenEq(x, y, z), ...
-                    ellFirstArr, ellSecArr, absTol, ...
+                relTol = ellFirstArr.getRelTol;
+                isEqualArr = arrayfun(@(x, y, z, r) checkGenEq(x, y, z, r), ...
+                    ellFirstArr, ellSecArr, absTol, relTol, ...
                     'UniformOutput', true);
             end
             function isEqual = checkGenEq(ellFirstObj, ellSecObj, ...
-                    absTol)
+                    absTol, relTol)
                 fstCenVec = ellFirstObj.getRegCenter();
                 secCenVec = ellSecObj.getRegCenter();
                 if numel(fstCenVec) ~= numel(secCenVec)
@@ -98,22 +99,21 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                         'Ellipsoids must have equal dimensions\n'];
                     return;
                 end
-                maxDifCen = max(abs(fstCenVec - secCenVec));
-                if maxDifCen > absTol
-                    isEqual = false;
-                    reportStr = [reportStr, 'Max. dff. of Centers matrices(', ...
-                        num2str(maxDifCen), ') is greater than absTol(', ...
-                        num2str(absTol), ').\n'];
+                [isEqual, ~, ~, ~, ~, reportStr] = ...
+                    modgen.common.absrelcompare(fstCenVec, secCenVec, ...
+                    absTol, relTol); 
+                if ~isEqual
+                    reportStr = [reportStr, 'Centers vectors', ...
+                        ' are not equal.\n'];
                     return;
                 end
                 fstShapeMat = ellFirstObj.getShapeMat();
                 secShapeMat = ellSecObj.getShapeMat();
-                maxDifShape = max(abs(fstShapeMat(:) - secShapeMat(:)));
-                if maxDifShape > absTol
-                    isEqual = false;
-                    reportStr = [reportStr, 'Max. diff. of Shape matrices(', ...
-                        num2str(maxDifShape), ') is greater than absTol(', ...
-                        num2str(absTol), ').\n'];
+                [isEqual, ~, ~, ~, ~, reportStr] = ...
+                    modgen.common.absrelcompare(fstCenVec, secCenVec, ...
+                    absTol, relTol); 
+                if ~isEqual
+                    reportStr = [reportStr, 'Shape matrices are not equal.\n'];
                     return;
                 end
                 isEqual = checkBasisEq(ellFirstObj.getInfProj, ...
@@ -352,7 +352,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                         throwerror('wrongInput', ...
                             'Non diagonal Matrix must be finit.');
                     else %ordinary square matrix 
-                        [eigvCheckMat, evalCheckVec] = eig(ellMat, 'vector');
+                        [eigvCheckMat, evalCheckMat] = eig(ellMat);
+                        evalCheckVec = diag(evalCheckMat);
                         if ~all(evalCheckVec > -absTol) ...
                                 && ~all(evalCheckVec < absTol)
                             throwerror('wrongInput', ...
@@ -430,7 +431,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                         throwerror('wrongInput', ...
                             'Non diagonal Matrix must be finit.');
                     else %ordinary square matrix 
-                        [eigvCheckMat, evalCheckVec] = eig(ellMat, 'vector');
+                        [eigvCheckMat, evalCheckMat] = eig(ellMat);
+                        evalCheckVec = diag(evalCheckMat);
                         if ~all(evalCheckVec > -absTol) ...
                                 && ~all(evalCheckVec < absTol)
                             throwerror('wrongInput', ...
@@ -506,7 +508,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     eigvResMat = ellWMat;
                 elseif all(~isInfVec)
                     ellAuxMat = ellWMat * diag(diagVec) * ellWMat.';
-                    [eigvResMat, diagResVec] = eig(ellAuxMat, 'vector');
+                    [eigvResMat, diagResMat] = eig(ellAuxMat);
+                    diagResVec = diag(diagResMat);
                     if ~all(diagResVec > -absTol ) 
                         throwerror('wrongInput:nonNegativeRequiared', ...
                             'Resulting shape matrix must be non negative.');
