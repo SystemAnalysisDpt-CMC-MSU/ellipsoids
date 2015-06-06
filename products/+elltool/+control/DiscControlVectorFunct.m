@@ -35,7 +35,6 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction&...
                     if ( ( curControlTime <= probTimeVec(1) ) && ...
                             ( curControlTime >= probTimeVec(end) ) )
                         curProbDynObj = self.probDynamicsList{iSwitch};
-                        curGoodDirSetObj = self.goodDirSetList{iSwitch};
                         break;
                     end
                 end
@@ -43,10 +42,9 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction&...
                 % now we got the needed objects corresponding to the time
                 % moment we interested in
                 
-                tFin = max(probTimeVec);  
-                tStart = min(probTimeVec);
+
                 
-                pVec = curProbDynObj.getBptDynamics.evaluate(timeVec(iTime)); % ellipsoid center
+               pVec = curProbDynObj.getBptDynamics.evaluate(timeVec(iTime)); % ellipsoid center
                 pMat = curProbDynObj.getBPBTransDynamics.evaluate(timeVec(iTime));   % ellipsoid shape matrix
                     
                 ellTubeTimeVec = self.properEllTube.timeVec{:};
@@ -77,10 +75,14 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction&...
                         qVec=self.properEllTube.aMat{1}(:,indTime);
                         qMat=self.properEllTube.QArray{1}(:,:,indTime);                        
                     end
-                end                
+                end      
                 l0Vec=((qMat)\(xVec-qVec));
-              
-                resMat = pVec-(pMat*l0Vec)/sqrt(dot(l0Vec,pMat*l0Vec));
+                if (dot((xVec-qVec),l0Vec) <= 1)
+                    resMat = pVec;
+                else
+               
+                resMat = pVec-(pMat*l0Vec)/sqrt(l0Vec.'*pMat*l0Vec);
+                end;
 
             % go to next moment in timeVec
             
