@@ -36,7 +36,7 @@ classdef DiscSingleTubeControl
                 curProbDynObj=self.probDynamicsList{iSwitchBack};
                 
                 CRel = 10000;
-                timeVec = fliplr(tStart:(tFin-tStart)/CRel:tFin);
+                timeVec = tStart:(tFin-tStart)/CRel:tFin;
                     
                 odeResMat = DiscrBackwardDynamics(AtMat,self.controlVectorFunct,x0Vec,timeVec,curProbDynObj);     
              
