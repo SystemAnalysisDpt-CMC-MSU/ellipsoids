@@ -41,6 +41,7 @@ confCMat = {
     'testAneNull',[1 0],[-20 10];
     'test2dbad', [1 0], [50 -10]; 
     'varTest', [1 1],[1 1];
+    'test2dbad', [1 1], [1 -1];
     };
 nConfs = size(confCMat, 1);
 suiteList = {};

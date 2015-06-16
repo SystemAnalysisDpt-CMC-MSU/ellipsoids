@@ -76,14 +76,14 @@ classdef DiscSingleTubeControl
                    aMat = AtMat.evaluate(timeVec(iTime));
                    bptVec = curProbDynObj.getBptDynamics.evaluate(timeVec(iTime)); 
                    if(rank(aMat)~= 0)
-                   xtArray1(:,iTime) = aMat \ (xtArray(:,iTime-1) - bptVec);
+                   xtArray1(:,iTime) = aMat * (xtArray(:,iTime-1) - bptVec);
                    else
                        xtArray1(:,iTime) =  - bptVec;
                    end;
                    bpVec = controlVectorFunct.evaluate(xtArray1(:,iTime),timeVec,iTime);
                    if(rank(aMat)~= 0)
                    xtArray(:,iTime) = ...
-                     aMat \ (xtArray(:,iTime-1) - bpVec);
+                     aMat * (xtArray(:,iTime-1) - bpVec);
                    else
                       xtArray(:,iTime) =  - bpVec;
                    end;
