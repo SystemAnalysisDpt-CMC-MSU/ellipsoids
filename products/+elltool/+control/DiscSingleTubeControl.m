@@ -76,7 +76,7 @@ classdef DiscSingleTubeControl
                    aMat = AtMat.evaluate(timeVec(iTime));
                    bptVec = curProbDynObj.getBptDynamics.evaluate(timeVec(iTime)); 
                    if(rank(aMat)~= 0)
-                   xtArray1(:,iTime) = aMat \ (xtArray1(:,iTime-1) - bptVec);
+                   xtArray1(:,iTime) = aMat \ (xtArray(:,iTime-1) - bptVec);
                    else
                        xtArray1(:,iTime) =  - bptVec;
                    end;
