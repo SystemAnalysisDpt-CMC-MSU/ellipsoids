@@ -3,6 +3,9 @@ classdef SuiteBasic < mlunitext.test_case
     end
     
     methods
+        function tear_down(~)
+            close all;
+        end
         function self = SuiteBasic(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
@@ -111,7 +114,7 @@ classdef SuiteBasic < mlunitext.test_case
                 cMat,'Parent',hAxes);
             view(3);
             hParent=get(h,'Parent');
-            mlunitext.assert_equals(hAxes,hParent);
+            mlunitext.assert(isequal(hAxes,hParent));
             delete(hFig);
         end
         function testPlottsForImageType(~)
@@ -134,7 +137,7 @@ classdef SuiteBasic < mlunitext.test_case
             h=unique(h);
             mlunitext.assert_equals(1,numel(h));
             hParent=get(h,'Parent');
-            mlunitext.assert_equals(hAxes,hParent);
+            mlunitext.assert(isequal(hAxes,hParent));
             delete(hFig);
         end
     end

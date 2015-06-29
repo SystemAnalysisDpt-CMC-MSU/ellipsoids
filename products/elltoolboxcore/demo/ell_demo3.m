@@ -16,6 +16,10 @@ plot2d_grid=Properties.getNPlot2dPoints();
 Properties.setIsVerbose(false);
 Properties.setNTimeGridPoints(100);
 %
-echodemo('s_ell_demo_reach');
+if usejava('desktop')
+    echodemo('s_ell_demo_reach');
+else
+    s_ell_demo_reach;
+end
 Properties.setIsVerbose(verbose);
 Properties.setNPlot2dPoints(plot2d_grid);

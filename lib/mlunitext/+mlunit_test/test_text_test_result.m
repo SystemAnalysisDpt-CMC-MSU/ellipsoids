@@ -96,8 +96,10 @@ classdef test_text_test_result < mlunitext.test_case&mlunit_test.AuxChecker
                 '^[^\n]* ... OK\n[^\n]* ... ERROR\n[^\n]* ... FAIL', 'once')));
             
             stdOut = evalc('print_errors(result);');
-            linesCVec = strsplit(stdOut);
-            iLine = 1;
+            stdOut=strrep(stdOut,sprintf('\n'),sprintf('\r'));
+            linesCVec = strsplit(stdOut,'\r',...
+                'CollapseDelimiters',true);
+            iLine = 2;
             assert_equals(false, isempty(regexp(linesCVec{iLine}, ...
                 '======================================================================$', 'once')));
             iLine = iLine + 1;

@@ -5,8 +5,154 @@ classdef ARelation<smartdb.cubes.CubeStruct
         MAX_TUPLES_TO_DISPLAY=15
     end
     %
+    methods (Static,Access=protected,Sealed)
+        %
+        function propCheckCMat=getRelOnlyIsEqualPropCheckCMat()
+            propCheckCMat={'checktupleorder';...
+                false;...
+                'isscalar(x)&&islogical(x)'};            
+        end
+        %
+        function propCheckCMat=getRelIsEqualPropCheckCMat(propNameList)
+            import modgen.common.throwerror;
+            propCheckCMat=[...
+                smartdb.relations.ARelation.getRelOnlyIsEqualPropCheckCMat(),...
+                smartdb.cubes.CubeStruct.getIsEqualPropCheckCMat()];
+            if nargin>0
+                [isThereVec,indThereVec]=ismember(lower(propNameList),...
+                    lower(propCheckCMat(1,:)));
+                if ~all(isThereVec)
+                    throwerror('wrongInput','not all properties are know');
+                end
+                propCheckCMat=propCheckCMat(:,indThereVec);
+            end            
+        end
+    end
     methods
-        function [isEq,reportStr]=isEqual(self,otherObj,varargin)
+        function [isEq,reportStr]=isEqual(varargin)
+        % ISEQUAL compares the specified CubeStruct object with other CubeStruct
+        % object and returns true if they are equal, otherwise it
+        % returns false
+        %
+        % Usage: isEq=obj1Arr.isEqual(,...,objNArr,varargin) or
+        %        [isEq,reportStr]=isequal(obj1Arr,...,objNArr,varargin)
+        %
+        % Input:
+        % 	regular:
+        %       obj1Arr: CubeStruct of any size - first object
+        %           array
+        %       obj2Arr: CubeStruct of any size - second object
+        %           array
+        %           ...
+        %       objNArr: CubeStruct of any size - N-th object
+        %           array
+        %
+        %   properties:
+        %       asHandle: logical[1,1] - if true, elements are compared
+        %           as handles ignoring content of the objects   
+        %       propEqScalarList: cell[1,] - list of properties passed
+        %           to isEqualScalarInternal method  
+        %
+        %       checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
+        %           compared relations are expected to be in the same order,
+        %           otherwise the order is not important (false by default)        
+        %       checkFieldOrder: logical [1,1] -
+        %           if true, then fields in compared objects must
+        %           be in the same order, otherwise the order is not
+        %           important (false by default)
+        %
+        %       compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        %           referenced from the meta data objects are also compared
+        %
+        %       maxTolerance: double [1,1] - maximum allowed tolerance
+        %
+        %       maxRelativeTolerance: double [1,1] - maximum allowed relative
+        %           tolerance
+        %
+        % Output:
+        %   isEq: logical[1,1] - result of comparison
+        %   reportStr: char[1,] - contains an additional information about the
+        %      differences (if any)
+        %
+        %
+        % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 10-June-2015 $ 
+        % $Copyright: Moscow State University,
+        %            Faculty of Computational Mathematics and Computer Science,
+        %            System Analysis Department 2015 $
+        %                
+            import modgen.common.parseparams;
+            %
+            [regArgList,propEqScalarList]=...
+                smartdb.relations.ARelation.parseEqScalarProps(...
+                smartdb.relations.ARelation.getRelOnlyIsEqualPropCheckCMat(),...
+                varargin);
+            %
+            [isEq,reportStr]=...
+                isEqual@smartdb.cubes.CubeStruct(...
+                regArgList{:},'propEqScalarList',propEqScalarList);
+        end
+        function [isEqArr,reportStr]=isEqualElem(varargin)
+        % ISEQUALELEM compares the specified CubeStruct object with other CubeStruct
+        % object and returns true if they are equal, otherwise it
+        % returns false
+        %
+        % Usage: isEqArr=isEqualElem(selfArr,otherArr,varargin)
+        %
+        % Input:
+        %   regular:
+        %       selfArr: ARelation [n_1,n_2,...,n_k] - calling
+        %           object
+        %       otherArr: ARelation [n_1,n_2,...,n_k] - other
+        %           object to compare with
+        %
+        %   properties:
+        %       asHandle: logical[1,1] - if true, elements are compared
+        %           as handles ignoring content of the objects   
+        %       propEqScalarList: cell[1,] - list of properties passed
+        %           to isEqualScalarInternal method  
+        %
+        %       checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
+        %           compared relations are expected to be in the same order,
+        %           otherwise the order is not important (false by default)        
+        %       checkFieldOrder: logical [1,1] -
+        %           if true, then fields in compared objects must
+        %           be in the same order, otherwise the order is not
+        %           important (false by default)
+        %
+        %       compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        %           referenced from the meta data objects are also compared
+        %
+        %       maxTolerance: double [1,1] - maximum allowed tolerance
+        %
+        %       maxRelativeTolerance: double [1,1] - maximum allowed relative
+        %           tolerance
+        %
+        % Output:
+        %   isEqArr: logical[n_1,n_2,...,n_k] - result of comparison
+        %   reportStr: char[1,] - contains an additional information about the
+        %      differences (if any)
+        %
+        %
+        % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 11-June-2015 $ 
+        % $Copyright: Moscow State University,
+        %            Faculty of Computational Mathematics and Computer Science,
+        %            System Analysis Department 2015 $
+        %                        
+            import modgen.common.parseparams;
+            %
+            [regArgList,propEqScalarList]=...
+                smartdb.relations.ARelation.parseEqScalarProps(...
+                smartdb.relations.ARelation.getRelOnlyIsEqualPropCheckCMat(),...
+                varargin);
+            %
+            [isEqArr,reportStr]=...
+                isEqualElem@smartdb.cubes.CubeStruct(...
+                regArgList{:},'propEqScalarList',propEqScalarList);
+        end        
+    end
+    methods (Access=protected)
+        function [isEq,reportStr]=isEqualScalarInternal(self,otherObj,...
+                varargin)
             % ISEQUAL - compares current relation object with other relation object and 
             %           returns true if they are equal, otherwise it returns false
             % 
@@ -19,9 +165,10 @@ classdef ARelation<smartdb.cubes.CubeStruct
             %     otherObj: ARelation [1,1] - other relation object
             %
             %   properties:
-            %     checkFieldOrder/isFieldOrderCheck: logical [1,1] - if true, then fields 
+            %     checkFieldOrder: logical [1,1] - if true, then fields 
             %         in compared relations must be in the same order, otherwise the 
-            %         order is not  important (false by default)        
+            %         order is not  important (false by default)  
+            %
             %     checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
             %         compared relations are expected to be in the same order,
             %         otherwise the order is not important (false by default)
@@ -29,10 +176,10 @@ classdef ARelation<smartdb.cubes.CubeStruct
             %     maxTolerance: double [1,1] - maximum allowed tolerance            
             %
             %     compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
-            %         referenced from the meta data objects are also compared
+            %     	referenced from the meta data objects are also compared
             %
             %     maxRelativeTolerance: double [1,1] - maximum allowed
-            %     relative tolerance
+            %       relative tolerance
             %
             % Output:
             %   isEq: logical[1,1] - result of comparison
@@ -45,45 +192,42 @@ classdef ARelation<smartdb.cubes.CubeStruct
             %            System Analysis Department 2012 $
             %
             %
-            isCompareCubeStructBackwardRef=true;
-            if nargin<2,
-                error([upper(mfilename),':wrongInput'],...
-                    'both object to be compared must be given');
-            end
+            import modgen.common.throwerror;
+            PROP_NAME_LIST={'checkfieldorder','checktupleorder',...
+                'comparemetadatabackwardref','maxtolerance',...
+                'maxrelativetolerance'};
+            SORT_DIM=1;
+            %
             if numel(self)~=1||numel(otherObj)~=1,
-                error([upper(mfilename),':wrongInput'],...
+                throwerror('wrongInput',...
                     'both object to be compared must be scalar');
             end
-            [~,prop]=modgen.common.parseparams(varargin,[],0);
-            nProp=length(prop);
-            isFieldOrderCheck=false;
-            isSortedBeforeCompare=true;
-            sortDim=1;
-            inpArgList={};
-            for k=1:2:nProp-1
-                switch lower(prop{k})
-                    case {'isfieldordercheck','checkfieldorder'},
-                        isFieldOrderCheck=prop{k+1};
-                    case 'checktupleorder',
-                        if prop{k+1}
-                            isSortedBeforeCompare=false;
-                        end
-                    case 'comparemetadatabackwardref',
-                        isCompareCubeStructBackwardRef=prop{k+1};
-                    case {'maxtolerance','maxrelativetolerance'},
-                        inpArgList=[inpArgList, prop([k,k+1])];
-                    otherwise,
-                        error([upper(mfilename),':wrongInput'],...
-                            'unidentified property name: %s ',prop{k});
-                end
+            propCheckMat=...
+                smartdb.relations.ARelation.getRelIsEqualPropCheckCMat(...
+                PROP_NAME_LIST);
+            [~,~,isFieldOrderCheck,isCheckTupleOrder,...
+                isCompareCubeStructBackwardRef,maxTolerance,...
+                maxRelTolerance]=modgen.common.parseparext(varargin,...
+                propCheckMat,0);
+            %
+            inpArgList={'compareMetaDataBackwardRef',...
+                isCompareCubeStructBackwardRef,...
+                'maxTolerance',maxTolerance,'maxRelativeTolerance',...
+                maxRelTolerance};
+            %
+            if ~isCheckTupleOrder
+                inpArgList=[inpArgList,{'sortDim',SORT_DIM}];
             end
-            inpArgList=[inpArgList,...
-                {'compareMetaDataBackwardRef',isCompareCubeStructBackwardRef}];
-            if isSortedBeforeCompare
-                inpArgList=[inpArgList,{'sortDim',sortDim}];
+            isEq=isequal(self.getMinDimensionSizeInternal(),...
+                otherObj.getMinDimensionSizeInternal());
+            if isEq,
+                [isEq,reportStr]=...
+                    isEqualScalarInternal@smartdb.cubes.CubeStruct(...
+                    self,otherObj,...
+                    'checkFieldOrder',isFieldOrderCheck,inpArgList{:});
+            else
+                reportStr='Number of tuples is different';
             end
-            [isEq,reportStr]=isEqual@smartdb.cubes.CubeStruct(self,otherObj,...
-                'checkFieldOrder',isFieldOrderCheck,inpArgList{:});
         end
         %
     end

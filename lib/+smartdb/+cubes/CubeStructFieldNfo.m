@@ -13,6 +13,10 @@ classdef CubeStructFieldNfo<modgen.common.obj.HandleObjectCloner
                     'should be of smartdb.cubes.CubeStructFieldInfo type']);
             end
         end
+        function [isPositive,reportStr]=isEqualScalarInternal(self,obj,varargin)
+            [isPositive,reportStr]=self.fieldMetaData.isEqual(...
+                obj.fieldMetaData,'propEqScalarList',varargin);
+        end        
     end
     methods 
         function set.fieldMetaData(self,value)
@@ -99,17 +103,6 @@ classdef CubeStructFieldNfo<modgen.common.obj.HandleObjectCloner
             end
         end
         %
-%         function catWithByInd(self,otherObj,indLeftVec,indRightVec,newRef)
-%             isClone=nargin==5;
-%             if isClone
-%                 self.fieldMetaData=[self.fieldMetaData(indLeftVec),...
-%                     otherObj.fieldMetaData(indRightVec).clone(newRef)];
-%             else
-%                 self.fieldMetaData=[self.fieldMetaData(indLeftVec),...
-%                     otherObj.fieldMetaData(indRightVec)];
-%             end
-%         end
-        %
         function copyFrom(self,otherObj,fieldNameList)
             if nargin<3
                 self.fieldMetaData.copyFrom(otherObj.fieldMetaData);
@@ -117,19 +110,9 @@ classdef CubeStructFieldNfo<modgen.common.obj.HandleObjectCloner
                 self.fieldMetaData.filterByName(fieldNameList).copyFrom(otherObj.fieldMetaData);
             end
         end
-        function [isPositive,reportStr]=isEqual(self,obj,varargin)
-            [isPositive,reportStr]=self.fieldMetaData.isEqual(...
-                obj.fieldMetaData,varargin{:});
-        end
         %
         function isNullVec=getIsNullDefault(self,valueVec)
             isNullVec=self.fieldMetaData.getIsNullDefault(self,valueVec);
-        end
-        function [isPositiveMat,reportStr]=eq(self,obj)
-            [isPositiveMat,reportStr]=eq(self.fieldMetaData,obj.fieldMetaData);
-        end
-        function isPositiveMat=ne(self,obj)
-            isPositiveMat=ne(self.fieldMetaData,obj.fieldMetaData);
         end
         function display(self)
             display(self.fieldMetaData);

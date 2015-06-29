@@ -15,12 +15,12 @@ function varargout=toArray(self,varargin)
 %     fieldNameList: cell[1,] - list of filed names to return
 %
 %     structNameList: cell[1,]/char[1,], data structure list
-%        for which the data is to be taken from, can consist of the 
+%        for which the data is to be taken from, can consist of the
 %        following values
 %
 %       SData - data itself
 %       SIsNull - contains is-null indicator information for data values
-%       SIsValueNull - contains is-null indicators for CubeStruct cells 
+%       SIsValueNull - contains is-null indicators for CubeStruct cells
 %          (not for cell values)
 %
 %     groupByColumns: logical[1,1], if true, each column is returned in a
@@ -29,8 +29,8 @@ function varargout=toArray(self,varargin)
 %     outputType: char[1,] - method of formign an output array, the
 %        following methods are supported:
 %            'uniformMat' - the field values are concatenated without any
-%                    type/size transformations. As a result, this method 
-%                    will fail if the specified fields have different types 
+%                    type/size transformations. As a result, this method
+%                    will fail if the specified fields have different types
 %                    or/and sizes along any dimension apart from catDim
 %
 %            'uniformCell' - not-cell fields are converted to cells
@@ -39,18 +39,18 @@ function varargout=toArray(self,varargin)
 %                    different sizes along any dimension apart from catDim
 %
 %            'notUniform' - this method doesn't make any assumptions about
-%                    size or type of the fields. Each field value is wrapped 
-%                    into cell in a such way that a size of resulting cell 
+%                    size or type of the fields. Each field value is wrapped
+%                    into cell in a such way that a size of resulting cell
 %                    is minDimensionSizeVec for each field. Thus if for
 %                    instance is size of cube object is [2,3,4] and a field
 %                    size is [2,4,5,10,30] its value is splitted into 2*4*5
 %                    pieces with each piece of size [1,1,1,10,30] put it
 %                    its separate cell
 %            'adaptiveCell' - functions similarly to 'nonUniform' except for
-%                    the cases when a field value size equals 
-%                    minDimensionSizeVec exactly i.e. the field takes only 
-%                    scalar values. In such cases no wrapping into cell is 
-%                    performed which allows to get a more transparent  
+%                    the cases when a field value size equals
+%                    minDimensionSizeVec exactly i.e. the field takes only
+%                    scalar values. In such cases no wrapping into cell is
+%                    performed which allows to get a more transparent
 %                    output.
 %
 %     catDim: double[1,1] - dimension number for
@@ -65,8 +65,8 @@ function varargout=toArray(self,varargin)
 %       the corresponding column type if UniformOutput=true.
 %
 %       Note!: this parameter is disregarded for any dataStructure different
-%          from 'SData'. 
-%       
+%          from 'SData'.
+%
 %       Note!: the main difference between this parameter and the following
 %          parameters is that nullTopReplacement can violate field type
 %          constraints thus allowing to replace doubles with strings for
@@ -80,7 +80,7 @@ function varargout=toArray(self,varargin)
 %        which the nulls are to be replaced with the specified values,
 %        if not specified it is assumed that all fields are to be replaced
 %
-%        NOTE!: all fields not listed in this parameter are replaced with 
+%        NOTE!: all fields not listed in this parameter are replaced with
 %        the default values
 %
 %
@@ -91,19 +91,19 @@ function varargout=toArray(self,varargin)
 %         fields selected by optional arguments) for all CubeStruct
 %         data cells
 %
-%   Case2 (multiple outputs are requested and their number = 
-%     length(structNameList) each output is assigned resCMat for the 
+%   Case2 (multiple outputs are requested and their number =
+%     length(structNameList) each output is assigned resCMat for the
 %     corresponding struct
 %
 %   Case3 (2 outputs is requested or length(structNameList)+1 outputs is
 %   requested). In this case the last output argument is
 %
-%        isConvertedToCell: logical[nFields,nStructs] -  matrix with true 
-%           values on the positions which correspond to fields converted to 
+%        isConvertedToCell: logical[nFields,nStructs] -  matrix with true
+%           values on the positions which correspond to fields converted to
 %           cells
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-05-25 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-05-25 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
@@ -221,6 +221,7 @@ else
     end
 end
 [isSpecified,indLoc]=ismember(self.completeStructNameList,structNameList);
+nStructs=numel(structNameList);
 %
 if ~ExistanceChecker.isVar('outputType')
     if ~isSpecified(1)&&~isSpecified(2)&&isSpecified(3)
@@ -236,8 +237,9 @@ if isGroupedByColumns&&isCatDimSpecified
 end
 %
 if nFields==0
-    if strcmpi(outputType,'uniformMat')||(nargout>1)||...
-            ~isequal(isSpecified,[true false false])
+    if ~isGroupedByColumns&&...
+            (strcmpi(outputType,'uniformMat')||(nargout>1)||...
+            ~isequal(isSpecified,[true false false]))
         error([upper(mfilename),':noFields'],...
             ['cannot produce an array representation as ',...
             'the object contain no fields']);
@@ -246,19 +248,10 @@ if nFields==0
             resArray=cell([minDimSizeVec,0]);
         else
             resArray=cell(1,0);
-        end
-        if nargout==0
-            if ~isGroupedByColumns
-                showcell(resArray,'printVarName',false);
-            else
-                %do nothing
-            end
-        elseif nargout==1
-            varargout{1}=resArray;
-        end
+        end        
+        resCVec=repmat({resArray},1,nStructs);
     end
 else
-
     if ~ExistanceChecker.isVar('nullTopReplacement')
         nullTopReplacement='NULL';
     end
@@ -374,16 +367,16 @@ else
             resCVec=cellfun(@(x)cat(catDim,x{:}),resCVec,'UniformOutput',false);
             %if a number of Cube elements is zero we redefine an output to make
             %sure that it is of a proper size
-%             if self.getNElems==0&&~strcmpi(outputType,'uniformMat')
-%                 for iStruct=1:2
-%                     if isSpecified(iStruct)
-%                         nMaxDim=max(self.getMinDimensionality,catDim);
-%                         sizeVec=zeros(1,nMaxDim);
-%                         sizeVec(catDim)=length(fieldNameList);
-%                         resCVec{indLoc(iStruct)}=cell(sizeVec);
-%                     end
-%                 end
-%             end
+            %             if self.getNElems==0&&~strcmpi(outputType,'uniformMat')
+            %                 for iStruct=1:2
+            %                     if isSpecified(iStruct)
+            %                         nMaxDim=max(self.getMinDimensionality,catDim);
+            %                         sizeVec=zeros(1,nMaxDim);
+            %                         sizeVec(catDim)=length(fieldNameList);
+            %                         resCVec{indLoc(iStruct)}=cell(sizeVec);
+            %                     end
+            %                 end
+            %             end
         catch meObj
             if strcmpi(outputType,'notUniform')||strcmpi(outputType,'adaptive')
                 newMeObj=MException([upper(mfilename),':cannotDoCat'],...
@@ -400,43 +393,43 @@ else
         end
         %
     end
-    if nargout==0
-        if ~isGroupedByColumns
-            resArray=cat(catDim,resCVec{:});
-            if ~iscell(resArray)
-                resArray=num2cell(resArray);
-            end
-            showcell(resArray,'printVarName',false);
-        else
-            %do nothing
-        end
-    elseif nargout==1
-        if ~isGroupedByColumns
-            varargout{1}=cat(catDim,resCVec{:});
-        else
-            varargout{1}=cat(2,resCVec{:});
-        end
-        %
-    elseif nargout==length(structNameList)
-        varargout=resCVec;
-        %
-    elseif nargout==2
-        if ~isGroupedByColumns
-            varargout{1}=cat(catDim,resCVec{:});
-        else
-            varargout{1}=cat(2,resCVec{:});
-        end
-        varargout{2}=isConvertedToCellMat;
-        %
-    elseif nargout==(length(structNameList)+1)
-        varargout=[resCVec,{isConvertedToCellMat}];
-        %
-    else
-        error([upper(mfilename),':wrongInput'],...
-            'a number of output arguments is incompatible with structNameList');
-    end
-    warning(s);
 end
+if nargout==0
+    if ~isGroupedByColumns
+        resArray=cat(catDim,resCVec{:});
+        if ~iscell(resArray)
+            resArray=num2cell(resArray);
+        end
+        showcell(resArray,'printVarName',false);
+    else
+        %do nothing
+    end
+elseif nargout==1
+    if ~isGroupedByColumns
+        varargout{1}=cat(catDim,resCVec{:});
+    else
+        varargout{1}=cat(2,resCVec{:});
+    end
+    %
+elseif nargout==nStructs
+    varargout=resCVec;
+    %
+elseif nargout==2
+    if ~isGroupedByColumns
+        varargout{1}=cat(catDim,resCVec{:});
+    else
+        varargout{1}=cat(2,resCVec{:});
+    end
+    varargout{2}=isConvertedToCellMat;
+    %
+elseif nargout==(nStructs+1)
+    varargout=[resCVec,{isConvertedToCellMat}];
+    %
+else
+    error([upper(mfilename),':wrongInput'],...
+        'a number of output arguments is incompatible with structNameList');
+end
+warning(s);
     function inpArgList=getMat2CellArgList(x)
         maxDim=max(minDim,ndims(x));
         sizeVec=modgen.common.getfirstdimsize(x,maxDim+1);

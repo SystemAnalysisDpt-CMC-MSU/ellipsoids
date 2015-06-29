@@ -1,4 +1,4 @@
-function run_tests_remotely(markerStr,confName)
+function resultVec=run_tests_remotely(markerStr,confName)
 import elltool.test.logging.Log4jConfigurator;
 %
 if nargin<1
@@ -21,11 +21,11 @@ try
     confRepoMgr=elltool.test.configuration.AdaptiveConfRepoManager();
     confRepoMgr.selectConf(confName);
 
-    modgen.mlunit.run_tests_remotely({},confRepoMgr,...
+    resultVec=modgen.mlunit.run_tests_remotely({},confRepoMgr,...
     log4jConfiguratorName,markerStr,runnerName,...
-    fTempDirGetter,SCRIPT_NAME);
+    fTempDirGetter,SCRIPT_NAME,'isConsoleOutputCollected',false);
 catch meObj
-    disp(errst2str(meObj));
+    disp(modgen.exception.me.obj2plainstr(meObj));
     rethrow(meObj);
 end
     

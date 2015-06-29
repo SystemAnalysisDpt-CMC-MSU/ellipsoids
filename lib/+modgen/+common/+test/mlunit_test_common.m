@@ -780,7 +780,57 @@ classdef mlunit_test_common < mlunitext.test_case
             modgen.common.parseparams(...
                 {1,2,'prop1',1,'prop2',2,'prop2',3});
             end            
-        end        
+        end    
+        function test_parseparext_isdefspecvec(self)
+            self.runAndCheckError(@check,...
+                'wrongInput:defPropSpecVecNotInListMode');
+            self.runAndCheckError(@check2,...
+                'wrongInput:defPropSpecVecNoDefValues');            
+            %
+            [regList,isRegSpecVec,propList,isPropSpecVec]=check3();
+            disp(1);
+            expPropList={'prop1',1,'prop3',2};
+            expRegList={1,2};
+            isExpRegSpecVec=[true,true];
+            isExpPropSpecVec=[false,false,false];
+            %
+            expCompare();
+            %
+            [regList,isRegSpecVec,propList,isPropSpecVec]=check4();
+            %
+            expPropList={'prop1',1,'prop2',1,'prop3',2};
+            %
+            expCompare();
+            function expCompare()
+                mlunitext.assert(true,isequal(expRegList,regList));
+                mlunitext.assert(true,isequal(expPropList,propList));
+                mlunitext.assert(true,isequal(isExpRegSpecVec,isRegSpecVec));
+                mlunitext.assert(true,isequal(isExpPropSpecVec,isPropSpecVec));
+            end
+            function check()
+            modgen.common.parseparext(...
+                {1,2,'prop1',1},...
+                {'prop1','prop2','prop3';...
+                [],1,2},'isDefaultPropSpecVec',[false,false,true],'propRetMode','separate');
+            end  
+            function check2()
+            modgen.common.parseparext(...
+                {1,2,'prop1',1},...
+                {'prop1','prop2','prop3'},'isDefaultPropSpecVec',[false,false,true],'propRetMode','list');
+            end
+            function [regList,isRegSpec,propList,isPropSpec]=check3()
+            [regList,isRegSpec,propList,isPropSpec]=modgen.common.parseparext(...
+                {1,2,'prop1',1},...
+                {'prop1','prop2','prop3';...
+                [],1,2},'isDefaultPropSpecVec',[false,false,true],'propRetMode','list');
+            end
+            function [regList,isRegSpec,propList,isPropSpec]=check4()
+                [regList,isRegSpec,propList,isPropSpec]=modgen.common.parseparext(...
+                {1,2,'prop1',1},...
+                {'prop1','prop2','prop3';...
+                [],1,2},'propRetMode','list');
+            end                
+        end
         function test_parseparext_duplicate(self)
             self.runAndCheckError(@check,...
                 'wrongInput:duplicatePropertiesSpec');
@@ -1354,7 +1404,8 @@ classdef mlunit_test_common < mlunitext.test_case
         end        
         function self=test_uniquejoint_ext(self)
             pathStr=fileparts(mfilename('fullpath'));
-            StData=load([pathStr '\+aux\uniquejoint_testdata.mat']);
+            StData=load([pathStr ...
+                strrep('\+aux\uniquejoint_testdata.mat','\',filesep)]);
             inputCell=cellfun(@(x)x(:),struct2cell(StData),'UniformOutput',false);
             [~,~,~,isSorted]=uniquejoint(inputCell,1);
             mlunitext.assert_equals(true,isSorted);

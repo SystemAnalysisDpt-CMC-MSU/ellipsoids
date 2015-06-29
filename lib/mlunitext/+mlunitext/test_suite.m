@@ -297,7 +297,7 @@ classdef test_suite<handle
                     end
                     % Default configuration
                     if isempty(self.hConfFunc)
-                        self.hConfFunc = @(x)modgen.logging.log4j.Log4jConfigurator.configureSimply;
+                        self.hConfFunc = @configureSimplyIfNotLocked;
                     end
                 end
                 %
@@ -576,4 +576,9 @@ classdef test_suite<handle
             end
         end
     end
+end
+function configureSimplyIfNotLocked(varargin)
+if ~modgen.logging.log4j.Log4jConfigurator.isLocked()
+    modgen.logging.log4j.Log4jConfigurator.configureSimply();
+end
 end

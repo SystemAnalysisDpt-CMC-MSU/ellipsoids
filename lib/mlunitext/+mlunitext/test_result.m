@@ -29,6 +29,7 @@ classdef test_result<handle
     properties (Access=private)
         runTimeMap
         curTicId
+        isConsolidateMarkedResults
     end
     %
     methods (Access=protected)
@@ -41,6 +42,26 @@ classdef test_result<handle
         end
     end
     methods
+        function self=test_result(varargin)
+            % TEST_RESULT class constructor
+            %
+            % Inputs:
+            %   properties:
+            %     isConsolidateMarkedResults: logical [1,1] - When set,
+            %         this flag signals to the getXmlReports method to
+            %         consolidate test results with different markers in
+            %         the same report, rather than producing a separate
+            %         report for each unique mark (default behavior). See
+            %         getXmlReports.
+            
+            [~,~,self.isConsolidateMarkedResults]=...
+                modgen.common.parseparext(varargin,...
+                {'isConsolidateMarkedResults';false;'islogical(x)'},...
+                [0,1]);
+            %
+            self.runTimeMap=modgen.containers.MapExtended(...
+                'KeyType','char','ValueType','any');
+        end
         function set.errors(self,value)
             import modgen.common.throwerror;
             if ~isempty(value)&&(size(value,2)~=2)
@@ -182,10 +203,6 @@ classdef test_result<handle
         function mapObj=getRunTimeMap(self)
             self.checkIfScalar();
             mapObj=self.runTimeMap.getCopy();
-        end
-        function self=test_result(varargin)
-            self.runTimeMap=modgen.containers.MapExtended(...
-                'KeyType','char','ValueType','any');
         end
         function add_error(self, testName, meObj)
             % ADD_ERROR_WITH_STACK adds an error to the test result
@@ -410,5 +427,182 @@ classdef test_result<handle
                 failCount=failCount+self(iRes).getNFailures();
             end
         end
+    end
+    methods
+        function saveXMLReport(self,reportDir)
+            % SAVEXMLREPORT generates an Ant-style XML reports for each
+            % test case in a specified folder
+            %
+            % The method can be called on a single test_result containing
+            % one or more results or on an array of test_result. Test
+            % results are aggregated by test case and a separate XML
+            % document is created for each test case. Document format is
+            % modeled after the 'xml' formatter in Ant JUnit task.
+            % 
+            % Input:
+            %   regular:
+            %       self: mlunitext.test_result[1,1]
+            %       reportDir: char[1,] - destination folder in 
+            %           which reports will be created      
+            %
+            % Output:
+            %   ReportVec: struct[1,] - structure array containing
+            %         XML reports. Each structure has two fields:
+            %           name: char[1,] - test case name
+            %           reportDoc: DOMnode [1,1] - XML report
+            % 
+            % Note: 
+            %   If a test has a marker set, the outcome depends on the
+            %   setting of isConsolidateMarkedResults in its result:
+            %       isConsolidateMarkedResults=false (default):
+            %           The result is included in a report named as
+            %           maker-testCase. Results from the same test case 
+            %           but with different markers are placed in separate
+            %           reports.
+            %       isConsolidateMarkedResults=true:
+            %           The result is included in a report named after 
+            %           the test case, and within the report the test name 
+            %           is rendered as name[marker].
+            %
+            % Example: Test method 'testOne' with a marker 'ABC' from a
+            %   test class 'com.test.MyTest'.
+            %
+            %   isConsolidateMarkedResults=false
+            %   Report name='ABC-com.test.MyTest'
+            %   Test name='testOne'
+            %
+            %   isConsolidateMarkedResults=true
+            %   Report name='com.test.MyTest'
+            %   Test name='testOne[ABC]'
+            %
+            if ~exist(reportDir,'dir')
+                mkdir(reportDir);
+            end
+            ReportVec = self.getXMLReports();
+            nElems=numel(ReportVec);
+            for iElem=1:nElems
+                reportFileName=[reportDir,filesep,ReportVec(iElem).name,...
+                    '.xml'];
+                domNode=ReportVec(iElem).reportDoc;
+                xmlwrite(reportFileName,domNode);
+            end
+        end
+    end
+    methods (Access=protected)
+        function ReportVec = getXMLReports(self)
+             %% Collect test results for each test case
+            testCaseMap=containers.Map('KeyType','char','ValueType','any');
+            % Iterate over an array of test_result
+            for iRes=1:length(self)
+                % Index failure and error messages using the same key as in
+                % runTimeMap
+                if isempty(self(iRes).errors)
+                    errorMap=containers.Map();
+                else
+                    errorMap=containers.Map(self(iRes).errors(:,1),...
+                        self(iRes).errors(:,2));
+                end
+                if isempty(self(iRes).failures)
+                    failureMap=containers.Map();
+                else
+                    failureMap=containers.Map(self(iRes).failures(:,1),...
+                        self(iRes).failures(:,2));
+                end
+                % Iterate over tests within this test_result
+                for testKeyC = self(iRes).runTimeMap.keys()
+                    testKey=testKeyC{1};
+                    testRes=self(iRes).runTimeMap(testKey);
+                    error='';
+                    failure='';
+                    if errorMap.isKey(testKey)
+                        error=errorMap(testKey);
+                    elseif failureMap.isKey(testKey)
+                        failure=failureMap(testKey);
+                    end
+                    testRes.error=error;
+                    testRes.failure=failure;
+                    testCaseKey=testRes.testCaseName{1};
+                    % Deal with result marker according to isConsolidateMarkedResults
+                    if ~isempty(testRes.marker{1})...
+                            && ~self(iRes).isConsolidateMarkedResults
+                        testCaseKey=[testCaseKey,'[',testRes.marker{1},']']; %#ok<AGROW>
+                        testRes.marker{1}='';
+                        testRes.testCaseName{1}=testCaseKey;
+                    end
+                    if testCaseMap.isKey(testCaseKey)
+                        results=testCaseMap(testCaseKey);
+                    else
+                        results=[];
+                    end
+                    testCaseMap(testCaseKey)=[results,testRes];
+                end
+            end
+            %% Create XML report for each test case
+            ReportVec=struct('name',testCaseMap.keys());
+            for iRep=1:length(ReportVec)
+                reportDoc=com.mathworks.xml.XMLUtils.createDocument('testsuite');
+                ReportVec(iRep).reportDoc=reportDoc;
+                suiteNode=reportDoc.getDocumentElement;
+                % test suite (test case) attributes
+                reports=testCaseMap(ReportVec(iRep).name);
+                testCaseName=reports(1).testCaseName{1};
+                suiteNode.setAttribute('name',testCaseName);
+                suiteNode.setAttribute('hostname',...
+                    char(java.net.InetAddress.getLocalHost().getHostName()));
+                suiteNode.setAttribute('timestamp',datestr(clock,'yyyy-mm-ddTHH:MM:SS'));
+                suiteNode.setAttribute('tests',int2str(length(reports)));
+                suiteNode.setAttribute('errors',...
+                    int2str(sum(arrayfun(@(x)~isempty(x.error),reports))));
+                suiteNode.setAttribute('failures',...
+                    int2str(sum(arrayfun(@(x)~isempty(x.failure),reports))));
+                suiteNode.setAttribute('time',num2str(sum([reports.runTime])));
+                % properties (empty)
+                suiteNode.appendChild(reportDoc.createElement('properties'));
+                % tests
+                for report = reports
+                    testNode=reportDoc.createElement('testcase');
+                    testNode.setAttribute('classname',testCaseName);
+                    testName=report.testName{1};
+                    if ~isempty(report.marker{1})
+                        testName=[testName,'[',report.marker{1},']']; %#ok<AGROW>
+                    end
+                    testNode.setAttribute('name',testName);
+                    testNode.setAttribute('time',num2str(report.runTime));
+                    if ~isempty(report.error)
+                        testNode.appendChild(formatError(report.error));
+                    elseif ~isempty(report.failure)
+                        testNode.appendChild(formatFailure(report.failure));
+                    end
+                    suiteNode.appendChild(testNode);
+                end
+                % TODO stdout and stderr are not captured
+                suiteNode.appendChild(reportDoc.createElement('system-out'));
+                suiteNode.appendChild(reportDoc.createElement('system-err'));
+            end
+            %%
+            function errorNode=formatError(errorText)
+                errorText=stripHtmlTags(errorText);
+                % The last line of the error text is the message, the rest
+                % is the stack trace
+                eolInds=strfind(errorText,char(10));
+                errorNode=addErrorNode('error',errorText(eolInds(end)+1:end),...
+                    errorText(1:eolInds(end)-1));
+            end
+            function errorNode=formatFailure(failureText)
+                failureText=stripHtmlTags(failureText);
+                % The first line of the failure text is the message, the
+                % rest is the stack trace
+                [message,trace]=strtok(failureText,char(10));
+                errorNode=addErrorNode('failure',message,trace);
+            end
+            function text=stripHtmlTags(text)
+                text=regexprep(text,'<.*?>','');
+            end
+            function errorNode=addErrorNode(errorType,message,trace)
+                errorNode=reportDoc.createElement(errorType);
+                errorNode.setAttribute('message',message);
+                errorNode.appendChild(reportDoc.createTextNode(trace));
+            end
+        end        
     end
 end

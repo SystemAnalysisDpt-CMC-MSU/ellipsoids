@@ -105,6 +105,7 @@ classdef CubeStructFieldExtendedInfo<smartdb.cubes.CubeStructFieldInfo
         resArray=buildArrayByProp(self,cubeStructRefList,varargin)
         % BUILDARRAYBYPROP is a helper method for filling an object arrays
         % with the specified properties        
+        [isEq,reportStr]=isEqualScalarInternal(self,otherObj,varargin)        
     end
     methods (Static)
         resArray=customArray(cubeStructRef,nameList,descriptionList,...

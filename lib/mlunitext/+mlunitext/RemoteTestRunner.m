@@ -4,40 +4,73 @@ classdef RemoteTestRunner<handle
     properties
         emailLogger
         fTempDirGetter
+        isConsoleOutputCollected
     end
     methods
-        function self=RemoteTestRunner(emailLogger,fTempDirGetter)
+        function self=RemoteTestRunner(emailLogger,fTempDirGetter,...
+                varargin)
+            import modgen.common.parseparext;
             self.emailLogger=emailLogger;
             self.fTempDirGetter=fTempDirGetter;
+            [~,~,self.isConsoleOutputCollected]=parseparext(varargin,...
+                {'isConsoleOutputCollected';...
+                true;...
+                'islogical(x)&&isscalar(x)'},0);
         end
-        function runTestPack(self,testPackName,varargin)
+        function resultVec=runTestPack(self,testPackName,varargin)
             import modgen.common.throwerror;
             import modgen.logging.log4j.Log4jConfigurator;
+            %
+            [testPackArgList,~,isAntXMLReportEnabled,antXMLReportDir,...
+                isAntReportEnabledSpec,isAntXMLReportDirSpec]=...
+                modgen.common.parseparext(varargin,...
+                {'isAntXMLReportEnabled','antXMLReportDir';...
+                false,'';...
+                'islogical(x)','isstring(x)'});
+            if isAntReportEnabledSpec&&~isAntXMLReportDirSpec
+                throwerror('wrongInput',['antXMLReportDir property',...
+                    'is obligatory when isAntXMLReportEnabled=true']);
+            end
+            %
             self.emailLogger.sendMessage('STARTED','');
             tmpDirName=self.fTempDirGetter(testPackName);
             resultVec=[];
             logger=Log4jConfigurator.getLogger();
+            isConsoleOutputCollected=self.isConsoleOutputCollected;
             try
-                consoleOutStr=evalc(...
-                    'resultVec=feval(testPackName,varargin{:});');
+                if isConsoleOutputCollected
+                    consoleOutStr=evalc(...
+                        'resultVec=feval(testPackName,testPackArgList{:});');
+                else
+                    resultVec=feval(testPackName,testPackArgList{:});
+                end
+                if isAntXMLReportEnabled
+                    resultVec.saveXMLReport(antXMLReportDir);
+                end
                 errorFailStr=resultVec.getErrorFailMessage();
                 errorHyperStr=errorFailStr;
                 isFailed=~resultVec.isPassed();
                 %
                 subjectStr=resultVec.getReport('minimal');
                 %
-                consoleOutFileName=writeMessageToFile('console_output',...
-                    consoleOutStr);
-                consoleOutZipFileName=[tmpDirName,filesep,'cosoleOutput.zip'];
-                zip(consoleOutZipFileName,consoleOutFileName);
+                if isConsoleOutputCollected
+                    consoleOutFileName=writeMessageToFile('console_output',...
+                        consoleOutStr);
+                    consoleOutZipFileName=[tmpDirName,filesep,'cosoleOutput.zip'];
+                    zip(consoleOutZipFileName,consoleOutFileName);
+                    attachFileNameList={consoleOutZipFileName};
+                else
+                    attachFileNameList={};
+                end
+                %
                 topsFileName=getFullFileName('perf_tops','.csv');
                 topsTCFileName=getFullFileName(...
                     'perf_tops_tc','.csv');
                 resultVec.getRunStatRel().writeToCSV(topsFileName);
                 resultVec.getRunStatRel('topsTestCase').writeToCSV(...
                     topsTCFileName);
-                attachFileNameList={consoleOutZipFileName,...
-                    topsFileName,topsTCFileName};
+                attachFileNameList=[attachFileNameList,...
+                    topsFileName,topsTCFileName];
             catch meObj
                 subjectStr='ERROR';
                 errorFailStr=modgen.exception.me.obj2plainstr(meObj);

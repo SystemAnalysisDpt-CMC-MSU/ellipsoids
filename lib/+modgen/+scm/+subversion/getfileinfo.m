@@ -13,7 +13,7 @@ function [SInfo,isVersioned]=getfileinfo(fullFileName)
 %
 % Example:
 %
-% SInfo=modgen.subversion.getfileinfo('C:\MySVNWorkingCopy\myfile.m')
+% SInfo=modgen.scm.subversion.getfileinfo('C:\MySVNWorkingCopy\myfile.m')
 %
 %        returns
 %
@@ -39,8 +39,8 @@ function [SInfo,isVersioned]=getfileinfo(fullFileName)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-import modgen.subversion.svncall;
-import modgen.subversion.getrevisionbypath;
+import modgen.scm.subversion.svncall;
+import modgen.scm.subversion.getrevisionbypath;
 rev=getrevisionbypath(fullFileName);
 if strcmp(rev,'unversioned')
     SInfo=struct();

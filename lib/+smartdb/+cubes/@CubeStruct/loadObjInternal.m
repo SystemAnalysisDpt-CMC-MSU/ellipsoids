@@ -34,7 +34,7 @@ import modgen.common.throwerror;
     {},false},0);
 if ~isfield(SObjectData,'minDimensionality')
     if isempty(self.minDimensionality)
-        error([mfilename,':wrongInput'],...
+        throwerror('wrongInput',...
             'minDimensionality field is obligatory');
     end
 else

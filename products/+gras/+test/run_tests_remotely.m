@@ -27,7 +27,7 @@ try
     log4jConfiguratorName,emailSubjSuffName,runnerName,...
     fTempDirGetter,SCRIPT_NAME);
 catch meObj
-    disponoff([],errst2str(meObj));
+    disp(modgen.exception.me.obj2plainstr(meObj));
     rethrow(meObj);
 end
     

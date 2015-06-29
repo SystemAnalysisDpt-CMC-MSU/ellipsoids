@@ -1,4 +1,4 @@
-function [gitMsg, varargout]=gitcall(ParamStr,pathStr)
+function [gitMsgLineList, varargout]=gitcall(ParamStr,pathStr)
 isPath=nargin>1;
 
 Msg=struct([]);
@@ -9,35 +9,40 @@ if isPath,
 end
 gitDirStr=pwd();
 callStr=sprintf('git %s',ParamStr);
+if isunix
+    callStr=['TERM=ansi ',callStr];
+end
+%
 [gitErr,gitMsg]=system(callStr);
 if isPath,
     cd(curDirStr);
 end
 
 % create cellstring with one row per line
-gitMsg=strread(gitMsg,'%s','delimiter','\n','whitespace','');
+gitMsgLineList=strsplit(gitMsg,sprintf('\r\n'));
+%
 % check for an error reported by the operating system
 if gitErr~=0
     % an error is reported
-    if isempty(gitMsg),
+    if isempty(gitMsgLineList),
         Msg(1).identifier='GIT:versioningProblem';
         Msg(1).message=['Problem using version control system:' 10 ...
             ' Git could not be executed! Error code is ' ...
             num2str(gitErr) 10 ' Path is ' gitDirStr];
-    elseif strncmp('''git',gitMsg{1},4),
+    elseif strncmp('''git',gitMsgLineList{1},4),
         Msg(1).identifier='GIT:installationProblem';
         Msg(1).message=['Problem using version control system:' 10 ...
             ' Git could not be executed!' 10 'Path is ' gitDirStr];
     else
         Msg(1).identifier='GIT:versioningProblem';
         Msg(1).message=['Problem using version control system:' 10 ...
-            modgen.string.cell2str(gitMsg,' ') 10 ' Path is ' gitDirStr];
+            modgen.string.cell2str(gitMsgLineList,' ') 10 ' Path is ' gitDirStr];
     end
-elseif ~isempty(gitMsg)
-    if strncmp('git:',gitMsg{1},4),
+elseif ~isempty(gitMsgLineList)
+    if strncmp('git:',gitMsgLineList{1},4),
         Msg(1).identifier='GIT:versioningProblem';
         Msg(1).message=['Problem using version control system:' 10 ...
-            modgen.string.cell2str(gitMsg,' ') 10 ...
+            modgen.string.cell2str(gitMsgLineList,' ') 10 ...
             ' Path is ' gitDirStr];
     end
 end

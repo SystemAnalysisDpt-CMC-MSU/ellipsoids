@@ -1,6 +1,5 @@
 /*.asv
-/cvx
-/tbxmanager
+/externals
 /install/pathdef.m
 /install/javaclasspath.txt
 /products/+elltool/+logging/Logs

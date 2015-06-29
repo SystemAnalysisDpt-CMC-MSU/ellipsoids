@@ -30,6 +30,7 @@ function typeSpecList=getFieldTypeSpecList(self,varargin)
 %            System Analysis Department 2012 $
 %
 %
+import modgen.common.throwerror;
 self.checkIfObjectScalar();
 %
 isUniformOutput=false;
@@ -40,22 +41,25 @@ for k=1:2:nProp-1
         case 'uniformoutput',
             isUniformOutput=prop{k+1};
         otherwise
-            error([upper(mfilename),':unknownProp'],...
+            throwerror('unknownProp',...
                 'property %s is not supported',prop{k});
     end
 end
 if numel(reg)>1
-    error([upper(mfilename),':wrongInput'],...
-        'too many input arguments');
-elseif numel(reg)==0
-    fieldNameList=self.getFieldNameList;
+    throwerror('wrongInput','too many input arguments');
 else
-    fieldNameList=reg{1};
-    if ischar(fieldNameList)
-        fieldNameList={fieldNameList};
+    fullFieldNameList=self.getFieldNameList();    
+    %
+    if numel(reg)==0
+        fieldNameList=fullFieldNameList;
+    else
+        fieldNameList=reg{1};
+        if ischar(fieldNameList)
+            fieldNameList={fieldNameList};
+        end
     end
 end
-fullFieldNameList=self.getFieldNameList();
+
 fieldTypeSpecList=self.fieldMetData.getTypeSpecList();
 if ~isempty(fieldNameList)
     [isThereVec,indLoc]=ismember(fieldNameList,fullFieldNameList);

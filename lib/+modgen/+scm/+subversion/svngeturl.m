@@ -6,7 +6,7 @@ URL=[];
 % call subversion with the given parameter string to get a list of all
 % properties
 ParamStr=sprintf('info "%s"',WorkingCopy);
-svnMsg=modgen.subversion.svncall(ParamStr);
+svnMsg=modgen.scm.subversion.svncall(ParamStr);
 
 URL_Idx=strmatch('URL:',svnMsg);
 if isempty(URL_Idx)

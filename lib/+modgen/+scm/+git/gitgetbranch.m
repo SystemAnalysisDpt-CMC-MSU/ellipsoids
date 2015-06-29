@@ -9,10 +9,10 @@ else
     if nargin==0,
         pathStr=fileparts(mfilename('fullpath'));
     end
-    [hashStr,StMsg]=modgen.git.gitcall('rev-parse --abbrev-ref HEAD',...
+    [hashStr,StMsg]=modgen.scm.git.gitcall('rev-parse --abbrev-ref HEAD',...
         pathStr);
     if isempty(StMsg),
-        hashStr=[hashStr{:}];
+        hashStr=strtrim([hashStr{:}]);
     else
         if iscell(hashStr)&&isempty(hashStr),
             error(StMsg);

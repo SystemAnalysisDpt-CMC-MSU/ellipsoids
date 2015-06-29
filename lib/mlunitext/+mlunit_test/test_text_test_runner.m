@@ -50,7 +50,7 @@ classdef test_text_test_runner < mlunitext.test_case
             suite.add_test(...
                 mlunit_test.test_test_case('test_broken_method'));
             stdOut = evalc('run(self.runner, suite);');
-            linesCVec = strsplit(stdOut);
+            linesCVec = strsplit(stdOut,'\n');
             iLine = 1;
             
             while iLine <= numel(linesCVec) && isempty(findstr('Test case(s):',linesCVec{iLine}))
@@ -113,7 +113,10 @@ classdef test_text_test_runner < mlunitext.test_case
             % verbosity = 0
             test = mlunit_test.test_test_case('test_template_method');
             stdOut = evalc('run(self.runner, test);');
-            linesCVec = strsplit(stdOut);
+            
+            stdOut=strrep(stdOut,sprintf('\n'),sprintf('\r'));
+            linesCVec = strsplit(stdOut,'\r',...
+                'CollapseDelimiters',true);
             iLine = 1;
                 
             assert(strfind(fliplr(linesCVec{iLine}),...
@@ -125,7 +128,7 @@ classdef test_text_test_runner < mlunitext.test_case
                 assert(0);
             end
             iLine = iLine + 1;
-            pos = findstr('ran 1 test(s) in ', linesCVec{iLine});
+            pos = findstr('ran 1 test(s) in ', strtrim(linesCVec{iLine}));
             if (~isempty(pos))
                 assert(pos(1) == 1);
             else

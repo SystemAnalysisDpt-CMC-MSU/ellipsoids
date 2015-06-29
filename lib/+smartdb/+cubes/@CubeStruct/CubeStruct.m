@@ -1,5 +1,6 @@
 classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
-        smartdb.cubes.IDynamicCubeStructInternal
+        smartdb.cubes.IDynamicCubeStructInternal&...
+        smartdb.cubes.CubeStructEqualAppliance
     % CUBESTRUCT provides a basic functionality for implementing both
     % ARelation and Cube classes
     %
@@ -29,17 +30,57 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
     %
     properties (Access=private, Hidden)
         fieldMetData
-        %
     end
+    %
+    methods (Sealed)
+        function checkBackRefs(self)
+            import modgen.common.throwerror;
+            nElems=numel(self);
+            for iElem=1:nElems
+                fieldMetaDataObj=self(iElem).fieldMetData;
+                nSetFields=fieldMetaDataObj.getNFields();
+                if nSetFields>0
+                    isOk=isequal(self(iElem),...
+                        fieldMetaDataObj.getCubeStructRefList{:},...
+                        'asHandle',true);
+                    if ~isOk
+                        throwerror('wrongInput',...
+                            ['element #%d has inconsistent ',...
+                            'back-references'],iElem);
+                    end
+                end
+            end
+        end
+    end
+    %
     methods
         function set.fieldMetData(self,value)
+            import modgen.common.throwerror;
             if ~isa(value,'smartdb.cubes.CubeStructFieldNfo')
                 modgen.common.throwerror('wrongInput',...
                     'bad type of fieldMetData field');
             end
+            % check that back-references specified in fieldMetData 
+            % coincide with self
+            %
+            nSetFields=value.getNFields();
+            if nSetFields>0
+                isDebugMode=...
+                    smartdb.cubes.CubeStructConfigurator.getIsDebugMode();
+                if isDebugMode
+                    isOk=isequal(self,value.getCubeStructRefList{:},...
+                        'asHandle',true);
+                    if ~isOk
+                        throwerror('wrongInput',['an attempt to create ',...
+                            'CubeStruct with inconsistent back-referenes']);
+                    end
+                end
+            end
+            %
             self.fieldMetData=value;
         end
     end
+    %
     properties(Access=private,Hidden)
         SData=struct()
         SIsNull=struct()
@@ -56,15 +97,20 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
             self.minDimensionality=minDimensionality;
         end
     end
+    %
     methods (Abstract,Access=protected)
         initialize(self,varargin)
         % INITIALIZE method is to be implemented by derived classes and
         % serves for setting values of fieldNameList and fieldDescrList
         % fields
     end
+    %
     methods (Access=protected)
         displayInternal(self,typeStr,varargin)
+        [isEq,reportStr]=isEqualScalarInternal(self,otherObj,varargin)
+        %
     end
+    %
     methods
         function display(self,varargin)
             % DISPLAY - puts some textual information about CubeStruct object in screen
@@ -76,6 +122,7 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
             self.displayInternal('CubeStruct',varargin{:});
         end
     end
+    %
     methods
         function self=CubeStruct(varargin)
             % CUBESTRUCT - constructor for CubeStruct class
@@ -133,6 +180,7 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
             %   self: CubeStruct[1,1] - created object
             %
             %
+            import modgen.common.throwerror;
             minDimensionality=...
                 smartdb.cubes.CubeStruct.DEFAULT_MIN_DIMENSIONALITY;
             sizeVec=[1 1];
@@ -153,7 +201,7 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
                             sizeVec>=0&isfinite(sizeVec));
                     end
                     if ~isnWrong,
-                        error([upper(mfilename),':wrongInput'],...
+                        throwerror('wrongInput',...
                             'unsupported way to construct CubeStruct');
                     end
                     reg={};
@@ -165,25 +213,20 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
             nObjs=prod(sizeVec);
             %
             if ~isCubeObjectOnInput && nReg>3
-                error([upper(mfilename),':wrongInput'],...
+                throwerror('wrongInput',...
                     'incorrect number of regular arguments');
             end
             %
             if nObjs==0,
                 self=self.empty(sizeVec);
             elseif isSize,
-                className=class(self);
-                self(nObjs)=feval(className);
-                refByteVec=getByteStreamFromArray(self(nObjs));
-                for iObj=(nObjs-1):-1:1,
-                    self(iObj)=getArrayFromByteStream(refByteVec);%feval(className,'checkConsistency',false);
-                end
-                self=reshape(self,sizeVec);
+                self=repmatAuxInternal(self.createInstance(),sizeVec);
+                %
             elseif isCubeObjectOnInput
                 if ~(numel(prop)==0||numel(prop)==2&&...
                         strcmpi(prop{1},'minDimensionality'))
                     %
-                    error([upper(mfilename),':wrongInput'],...
+                    throwerror('wrongInput',...
                         ['when CubeStruct object is on input ',...
                         'no properties apart from minDimensionality ',...
                         '(which is ignored) is allowed']);
@@ -192,7 +235,8 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
                 if isempty(reg{1})
                     self=self.empty(size(reg{1}));
                 else
-                    self=repmatAuxInternal(self,size(reg{1}));
+                    self=repmatAuxInternal(self.createInstance(),...
+                        size(reg{1}));
                     self.copyFromInternal(reg{:});
                 end
             else
@@ -213,8 +257,9 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
                         case 'mindimensionality',
                             minDimensionality=prop{k+1};
                             if ~isnumeric(minDimensionality)||minDimensionality<0
-                                error([mfilename,':wrongInput'],...
-                                    'minDimension is expected to be a non-negative number');
+                                throwerror('wrongInput',...
+                                    ['minDimension is expected to be ',...
+                                    'a non-negative number']);
                             end
                             indPropDelVec=[indPropDelVec,[k,k+1]];
                         case 'checkstruct',
@@ -293,12 +338,13 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
             isPositive=isa(inpObj,curClassName);
         end
         function prohibitProperty(propNameList,inpList)
+            import modgen.common.throwerror;
             if ischar(propNameList)
                 propNameList={propNameList};
             end
             for iProp=1:numel(propNameList)
                 if any(strcmpi(propNameList{iProp},inpList))
-                    error([upper(mfilename),':wrongInput'],...
+                    throwerror('wrongInput',...
                         'property %s is not supported in this context',...
                         propNameList{iProp});
                 end
@@ -314,7 +360,12 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         % GETMINDIMENSIONSIZE returns a size vector for the specified
         % dimensions. If no dimensions are specified, a size vector for
         % all dimensions up to minimum CubeStruct dimension is returned
-        function changeDataPostHook(~)
+        function changeDataPostHook(self)
+            isDebugMode=...
+                smartdb.cubes.CubeStructConfigurator.getIsDebugMode();
+            if isDebugMode
+                self.checkBackRefs();
+            end
         end
         copyFromInternal(self,obj,varargin)
     end
@@ -354,8 +405,9 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         %for redefinition. To protect them we use Sealed access modifier.
         %
         function checkIfObjectScalar(self)
+            import modgen.common.throwerror;
             if numel(self)~=1
-                error([upper(mfilename),':noScalarObj'],...
+                throwerror('noScalarObj',...
                     'only scalar objects are supported');
             end
         end        
@@ -459,7 +511,7 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         % REMOVEDUPLICATESALONGDIM removes duplicates in CubeStruct object
         % along a specified dimension
         varargout=getUniqueDataAlongDimInternal(self,catDim,varargin) 
-        [isThere indTheres]=isMemberAlongDimInternal(self,other,dimNum,varargin)
+        [isThere,indTheres]=isMemberAlongDimInternal(self,other,dimNum,varargin)
         % ISMEMBERALONGDIM - performs ismember operation of CubeStruct data slices
         %                    along the specified dimension        
         permuteDimInternal(self,dimOrderVec,isInvPermute)        
@@ -475,12 +527,29 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
         setFieldInternal(self,fieldName,varargin)
         %
         % SETFIELD sets values of all cells for given field
-        function self=repmatAuxInternal(self,sizeVec)
-            nElem=prod(sizeVec);
-            if nElem>1
-                self(nElem)=self.createInstance();
-                for iElem=2:nElem-1
-                    self(iElem).defineFieldsAsProps();
+        function self=repmatAuxInternal(self,sizeVec,isLegacyMode)
+            import modgen.common.throwerror;
+            if nargin<3
+                isLegacyMode=false;
+            end
+            nElems=prod(sizeVec);
+            if nElems>1
+                if ~isLegacyMode
+                    if ~isscalar(self)
+                        throwerror('wrongInput',['repmatAux cannot be ',...
+                            'applied to a non-scalar object']);
+                    end
+                    outList=cell(1,nElems);
+                    outList{1}=self;
+                    for iElem=2:nElems
+                        outList{iElem}=self.clone();
+                    end
+                    self=[outList{:}];
+                else
+                    self(nElems)=self.createInstance();
+                    for iElem=2:nElems-1
+                        self(iElem).defineFieldsAsProps();
+                    end
                 end
                 self=reshape(self,sizeVec);
             end

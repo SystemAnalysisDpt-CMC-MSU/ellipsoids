@@ -51,26 +51,28 @@ classdef text_test_result < mlunitext.test_result
             %                       displayed
             %
             %
-            %
+            
             import modgen.common.throwerror;
             import modgen.common.type.simple.checkgen;
-            if nargin == 1
-                if ~isa(varargin{1},class(self))
+            [reg,prop]=modgen.common.parseparams(varargin);
+            self=self@mlunitext.test_result(prop{:});
+            if length(reg) == 1
+                if ~isa(reg{1},class(self))
                     throwerror('wrongInput',...
                         'Invalid number or type of arguments');
                 end
                 %
                 %% Copy constructor
                 %
-                self.textOutFid = varargin{1}.textOutFid;
-                self.verbosityLevel = varargin{1}.verbosityLevel;
-                self.isDotDispMode = varargin{1}.isDotDispMode;
-                self.isAllShown = varargin{1}.isAllShown;
-            elseif nargin == 2
+                self.textOutFid = reg{1}.textOutFid;
+                self.verbosityLevel = reg{1}.verbosityLevel;
+                self.isDotDispMode = reg{1}.isDotDispMode;
+                self.isAllShown = reg{1}.isAllShown;
+            elseif length(reg) == 2
                 %% Regular constructor
                 %
-                textOutFid = varargin{1};
-                verbosityLevel = varargin{2};
+                textOutFid = reg{1};
+                verbosityLevel = reg{2};
                 %
                 checkgen(textOutFid,...
                     @(x)isscalar(x)&&isa(x,'double')&&(x>0)&&(fix(x)==x));

@@ -9,7 +9,7 @@ else
     if nargin==0,
         pathStr=fileparts(mfilename('fullpath'));
     end
-    res=~strcmp(modgen.git.gitgethash(pathStr),'unversioned');
+    res=~strcmp(modgen.scm.git.gitgethash(pathStr),'unversioned');
     mp(pathStr)=res;
 end
 end

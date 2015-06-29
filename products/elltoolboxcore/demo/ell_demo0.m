@@ -16,7 +16,12 @@ plot2d_grid=Properties.getNPlot2dPoints();
 Properties.setIsVerbose(false);
 Properties.setNPlot2dPoints(300);
 %
-echodemo('s_ell_demo_ellbasic');
+if usejava('desktop')
+    s_ell_demo_ellbasic;
+else
+    echodemo('s_ell_demo_ellbasic');
+end
+%
 Properties.setIsVerbose(verbose);
 Properties.setNPlot2dPoints(plot2d_grid);
 

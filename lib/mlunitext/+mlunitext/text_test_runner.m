@@ -41,7 +41,7 @@ classdef text_test_runner
             self.verbosityLevel = verbosityLevel;
         end
         %
-        function result=run(self, test)
+        function result=run(self, test, varargin)
             % RUN executes the test and writes the results
             % to a textOutFid in textual form (using text_test_result).
             %
@@ -52,6 +52,13 @@ classdef text_test_runner
             %           mlunitext.test_suite[1,1] - test suite to run
             %           mlunitext.test_case[1,1] - test case to run
             %           char[1,] - name of test case to run
+            %   properties:
+            %     isConsolidateMarkedResults: logical [1,1] - When set,
+            %         this flag signals to the getXmlReports method of
+            %         test_result to consolidate test results with
+            %         different markers in the same report, rather than
+            %         producing a separate report for each unique mark
+            %         (default behavior). See getXmlReports.
             %
             % Output:
             %   result: mlunitext.test_result[1,1] - result of the test run
@@ -65,13 +72,16 @@ classdef text_test_runner
             import mlunitext.*;
             import modgen.common.throwerror;
             
+            [~,~,isConsolidateMarkedResults]=modgen.common.parseparext(...
+                varargin,{'isConsolidateMarkedResults';false;'islogical(x)'},0);
             if ischar(test)
                 % This will throw an exception (:noSuchClass) if there is
                 % no such class
                 test = load_tests_from_test_case(test_loader, test);
             end
             %
-            result = text_test_result(self.textOutFid,self.verbosityLevel);
+            result = text_test_result(self.textOutFid,self.verbosityLevel,...
+                'isConsolidateMarkedResults',isConsolidateMarkedResults);
             tStart = clock;
             run(test, result);
             tElapsed = etime(clock, tStart);

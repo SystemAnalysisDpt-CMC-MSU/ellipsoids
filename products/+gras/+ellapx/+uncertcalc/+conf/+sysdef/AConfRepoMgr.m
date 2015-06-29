@@ -23,6 +23,8 @@ classdef AConfRepoMgr<handle
             %
             if nCols==1
                 if iscellstr(val)
+                    val=cellfun(@strtrim,val,'UniformOutput',false);
+                    %
                     val=modgen.string.sepcellstrbysep(val,...
                         AConfRepoMgr.COL_SEP);
                 elseif iscellnumeric(val)
@@ -30,5 +32,5 @@ classdef AConfRepoMgr<handle
                 end
             end
         end
-    end    
+    end
 end

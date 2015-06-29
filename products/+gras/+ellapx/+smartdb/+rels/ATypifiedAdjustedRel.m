@@ -6,7 +6,195 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
             self=self@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(varargin{:});
         end
         %
-        function [isOk,reportStr]=isEqual(self,otherRel,varargin)
+        function sortDetermenistically(self,varargin)
+            self.sortDetermenisticallyInternal(varargin{:});
+        end
+    end
+    methods (Static,Access=protected,Sealed)
+        %
+        function propCheckCMat=getEllOnlyIsEqualPropCheckCMat()
+            import gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel;
+            %checkTupleOrder=true for EllTube classes by default
+            propCheckCMat=...
+                TypifiedByFieldCodeRel.getRelIsEqualPropCheckCMat(...
+                {'checkTupleOrder'});
+            propCheckCMat{2}=true;
+            %
+            propCheckCMat=[{'notComparedFieldList','areTimeBoundsCompared';...
+                cell(1,0),false;...
+                'isrow(x)&&iscellofstrvec(x)','isscalar(x)&&islogical(x)'},...
+                propCheckCMat];
+        end
+    end
+    methods (Static,Sealed)
+        %
+        function propCheckCMat=getEllIsEqualPropCheckCMat(propNameList)
+            import modgen.common.throwerror;
+            import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;
+            propCheckCMat=[...
+                ATypifiedAdjustedRel.getEllOnlyIsEqualPropCheckCMat(),...
+                smartdb.relations.ARelation.getRelIsEqualPropCheckCMat()];
+            if nargin>0
+                [isThereVec,indThereVec]=ismember(lower(propNameList),...
+                    lower(propCheckCMat(1,:)));
+                if ~all(isThereVec)
+                    throwerror('wrongInput','not all properties are know');
+                end
+                propCheckCMat=propCheckCMat(:,indThereVec);
+            end            
+        end
+    end    
+    methods
+        function [isEq,reportStr]=isEqual(varargin)
+        % ISEQUAL compares the specified CubeStruct object with other CubeStruct
+        % object and returns true if they are equal, otherwise it
+        % returns false
+        %
+        % Usage: isEq=obj1Arr.isEqual(,...,objNArr,varargin) or
+        %        [isEq,reportStr]=isequal(obj1Arr,...,objNArr,varargin)
+        %
+        % Input:
+        % 	regular:
+        %       obj1Arr: CubeStruct of any size - first object
+        %           array
+        %       obj2Arr: CubeStruct of any size - second object
+        %           array
+        %           ...
+        %       objNArr: CubeStruct of any size - N-th object
+        %           array
+        %
+        %   properties:
+        %       asHandle: logical[1,1] - if true, elements are compared
+        %           as handles ignoring content of the objects   
+        %       propEqScalarList: cell[1,] - list of properties passed
+        %           to isEqualScalarInternal method  
+        %
+        %       checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
+        %           compared relations are expected to be in the same order,
+        %           otherwise the order is not important (false by default)        
+        %       checkFieldOrder: logical [1,1] -
+        %           if true, then fields in compared objects must
+        %           be in the same order, otherwise the order is not
+        %           important (false by default)
+        %
+        %       compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        %           referenced from the meta data objects are also compared
+        %
+        %       maxTolerance: double [1,1] - maximum allowed tolerance
+        %
+        %       maxRelativeTolerance: double [1,1] - maximum allowed relative
+        %           tolerance
+        %       notComparedFieldList: cell[1,nFields] of char[1,] - list
+        %       	of fields that are not compared
+        %
+        %       areTimeBoundsCompared: logical[1,1] - if false,
+        %           ellipsoidal tubes are compared on intersection of
+        %           definition domains        
+        %
+        % Output:
+        %   isEq: logical[1,1] - result of comparison
+        %   reportStr: char[1,] - contains an additional information about the
+        %      differences (if any)
+        %
+        %
+        % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 21-June-2015 $ 
+        % $Copyright: Moscow State University,
+        %            Faculty of Computational Mathematics and Computer Science,
+        %            System Analysis Department 2015 $
+        %                
+            import modgen.common.parseparams;
+            import modgen.common.parseparext;
+            import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;            
+            %
+            [regArgList,propEqScalarList]=...
+                ATypifiedAdjustedRel.parseEqScalarProps(...
+                ATypifiedAdjustedRel.getEllOnlyIsEqualPropCheckCMat(),...
+                varargin);
+            %
+            [isEq,reportStr]=...
+                isEqual@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
+                regArgList{:},'compareClass',false,'propEqScalarList',...
+                propEqScalarList);
+        end
+        function [isEqArr,reportStr]=isEqualElem(varargin)
+        % ISEQUALELEM compares the specified CubeStruct object with other CubeStruct
+        % object and returns true if they are equal, otherwise it
+        % returns false
+        %
+        % Usage: isEqArr=isEqualElem(selfArr,otherArr,varargin)
+        %
+        % Input:
+        %   regular:
+        %       selfArr: ARelation [n_1,n_2,...,n_k] - calling
+        %           object
+        %       otherArr: ARelation [n_1,n_2,...,n_k] - other
+        %           object to compare with
+        %
+        %   properties:
+        %       asHandle: logical[1,1] - if true, elements are compared
+        %           as handles ignoring content of the objects   
+        %       propEqScalarList: cell[1,] - list of properties passed
+        %           to isEqualScalarInternal method  
+        %
+        %       checkTupleOrder: logical[1,1] -  if true, then the tuples in the 
+        %           compared relations are expected to be in the same order,
+        %           otherwise the order is not important (false by default)        
+        %       checkFieldOrder: logical [1,1] -
+        %           if true, then fields in compared objects must
+        %           be in the same order, otherwise the order is not
+        %           important (false by default)
+        %
+        %       compareMetaDataBackwardRef: logical[1,1] if true, the CubeStruct's
+        %           referenced from the meta data objects are also compared
+        %
+        %       maxTolerance: double [1,1] - maximum allowed tolerance
+        %
+        %       maxRelativeTolerance: double [1,1] - maximum allowed relative
+        %           tolerance
+        %       notComparedFieldList: cell[1,nFields] of char[1,] - list
+        %       	of fields that are not compared
+        %
+        %       areTimeBoundsCompared: logical[1,1] - if false,
+        %           ellipsoidal tubes are compared on intersection of
+        %           definition domains        
+        %
+        % Output:
+        %   isEqArr: logical[n_1,n_2,...,n_k] - result of comparison
+        %   reportStr: char[1,] - contains an additional information about the
+        %      differences (if any)
+        %
+        %
+        % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 21-June-2015 $ 
+        % $Copyright: Moscow State University,
+        %            Faculty of Computational Mathematics and Computer Science,
+        %            System Analysis Department 2015 $
+        %                        
+            import modgen.common.parseparams;
+            import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;    
+            %
+            [regArgList,propEqScalarList]=...
+                ATypifiedAdjustedRel.parseEqScalarProps(...
+                ATypifiedAdjustedRel.getEllOnlyIsEqualPropCheckCMat(),...
+                varargin);
+            %
+            classComparePropCMat=...
+                ATypifiedAdjustedRel.getHandleClonerIsEqualPropCheckCMat(...
+                {'compareClass'});
+            classComparePropCMat{2}=false;
+            %
+            [regArgList,~,propValList]=...
+                        modgen.common.parseparext(regArgList,...
+                        classComparePropCMat,...
+                        'propRetMode','list');
+            %
+            [isEqArr,reportStr]=...
+                isEqualElem@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
+                regArgList{:},propValList{:},'propEqScalarList',...
+                propEqScalarList);
+        end        
+    end    
+    methods (Access=protected)
+        function [isOk,reportStr]=isEqualScalarInternal(self,otherRel,varargin)
             self.checkIfObjectScalar();
             otherRel.checkIfObjectScalar();
             [reg,prop]=modgen.common.parseparams(varargin,...
@@ -14,11 +202,8 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
             self.sortDetermenisticallyInternal(prop{2:end});
             otherRel.sortDetermenisticallyInternal(prop{2:end});
             %
-            [isOk,reportStr]=self.isEqualAdjustedInternal(otherRel,...
+            [isOk,reportStr]=self.isEqualScalarAdjustedInternal(otherRel,...
                 reg{:},prop{:});
-        end
-        function sortDetermenistically(self,varargin)
-            self.sortDetermenisticallyInternal(varargin{:});
         end
     end
     methods (Access=protected,Static,Hidden)
@@ -114,7 +299,7 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
     methods (Abstract,Access=protected)
         propNameList=getPostDataHookPropNameList(self)
         SData=postGetDataHook(self,SData,varargin)
-        [isOk,reportStr]=isEqualAdjustedInternal(self,varargin)
+        [isOk,reportStr]=isEqualScalarAdjustedInternal(self,varargin)
         fieldList=getDetermenisticSortFieldList(self)
     end
 end

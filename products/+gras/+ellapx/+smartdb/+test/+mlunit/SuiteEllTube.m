@@ -1068,10 +1068,16 @@ classdef SuiteEllTube < mlunitext.test_case
                 approxSchemaDescr, ABS_TOL, REL_TOL);
             % nonscalar input
             myEllTubeArr = [nonMixedEllTube,nonMixedEllTube];
-            self.runAndCheckError(...
-                'myEllTubeArr.isEqual(nonMixedEllTube)','noScalarObj');
-            self.runAndCheckError(...
-                'nonMixedEllTube.isEqual(myEllTubeArr)','noScalarObj');
+            %
+            isOkVec=myEllTubeArr.isEqualElem(nonMixedEllTube);
+            mlunitext.assert(all(isOkVec));
+            isOk=myEllTubeArr.isEqual(nonMixedEllTube);
+            mlunitext.assert(~isOk);
+            %
+            isOkVec=nonMixedEllTube.isEqualElem(myEllTubeArr);
+            mlunitext.assert(all(isOkVec));
+            isOk=nonMixedEllTube.isEqual(myEllTubeArr);
+            mlunitext.assert(~isOk);
             % self equal
             fCheckIsEqual(mixedExtIntEllTube, mixedExtIntEllTube);
             fCheckIsEqual(nonMixedEllTube, nonMixedEllTube);
@@ -1134,7 +1140,8 @@ classdef SuiteEllTube < mlunitext.test_case
                 projSpaceList, @fGetProjMat);
             self.runAndCheckError(...
                 ['projEllTube.isEqual('...
-                'mixedExtIntEllTube)'],'wrongInput');
+                'mixedExtIntEllTube)'],'wrongInput');            
+            %
             proj2EllTube = interpMixedEllTube.project(projType,...
                 projSpaceList, @fGetProjMat);
             fCheckIsEqual(projEllTube, proj2EllTube);
