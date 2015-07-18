@@ -30,7 +30,7 @@ classdef MPTController < elltool.exttbx.IExtTBXController
         %
         function isPositive=isOnPath(self)
             isPositive=modgen.system.ExistanceChecker.isFile(...
-                self.MPT_SETUP_FUNC_NAME);
+                which(self.MPT_SETUP_FUNC_NAME));
         end
         %
         function checkIfSetUp(self)
