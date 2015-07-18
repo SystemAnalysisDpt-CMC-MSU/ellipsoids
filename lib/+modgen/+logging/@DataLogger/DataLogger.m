@@ -104,7 +104,7 @@ classdef DataLogger<modgen.common.obj.StaticPropStorage
             end
             %% preprocess data storage
             if ~modgen.system.ExistanceChecker.isDir(storageLocation),
-                mkdir(storageLocation);
+                modgen.io.mkdir(storageLocation);
             end
             if isfinite(nMaxDatesOnDisk)&&isEnabled,
                 % delete files that are more than nMaxDatesOnDisk dates on

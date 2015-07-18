@@ -40,7 +40,7 @@ classdef mlunit_test_disp < mlunitext.test_case
         %
         function self = tear_down(self)
             close all;
-            rmdir(self.resTmpDir,'s');
+            modgen.io.rmdir(self.resTmpDir,'s');
         end
         %
         function self = test_plotts(self)

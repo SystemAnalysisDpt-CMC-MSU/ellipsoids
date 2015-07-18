@@ -5,24 +5,28 @@ classdef TmpDataManager<modgen.common.obj.StaticPropStorage
     methods (Static)
         function setRootDir(dirName)
             % SETROOTDIR sets up a root of temporary folders directory tree
+            %
+            % Note: By default, is setRootDir is not called a directory 
+            %   returned by built-in function 'tempdir' is used
+            %
             modgen.io.TmpDataManager.setPropInternal('rootDir',dirName);
         end
         function resDir=getDirByCallerKey(keyName,nStepsUp)
-            % GETDIRBYCALLERKEY returns a unique temporary directory name 
+            % GETDIRBYCALLERKEY returns a unique temporary directory name
             % based on caller name and optionally based on a specified key
             % and makes sure that this directory is empty
             %
             % Input:
             %   optional:
             %       keyName: char[1,] key name
-            %       nStepsUp: numeric[1,1] - number of steps 
+            %       nStepsUp: numeric[1,1] - number of steps
             %           up in the call stacks,  =1 by default
             %
             % Output:
-            %   resDir: char[1,] - resulting directory name 
+            %   resDir: char[1,] - resulting directory name
             %
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-05-18 $ 
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-05-18 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
@@ -41,8 +45,8 @@ classdef TmpDataManager<modgen.common.obj.StaticPropStorage
             end
             callerName=modgen.common.getcallername(nStepsUp,'full');
             resDir=modgen.io.TmpDataManager.getDirByKey(...
-                [callerName,'.',keyName]);            
-        end         
+                [callerName,'.',keyName]);
+        end
         function resDir=getDirByKey(keyName)
             % GETDIRBYKEY returns a unique temporary directory name based on
             % specified key and makes sure that this directory is empty
@@ -52,25 +56,39 @@ classdef TmpDataManager<modgen.common.obj.StaticPropStorage
             %       keyName: char[1,] key name
             %
             % Output:
-            %   resDir: char[1,] - resulting directory name 
+            %   resDir: char[1,] - resulting directory name
             %
             %
+            import modgen.common.throwerror;
             modgen.common.type.simple.checkgen(keyName,'isstring(x)');
             [rootDir,isThere]=...
                 modgen.io.TmpDataManager.getPropInternal('rootDir',true);
             if ~isThere
-                error([upper(mfilename),':wrongInput'],...
-                    'root directory is not set');
+                modgen.io.TmpDataManager.setDefaultRootDir();
             end
             curTaskName=modgen.system.getpidhost();
             keyDirName=hash({curTaskName,keyName});
             resDir=[rootDir,filesep,keyDirName];
+            %
             if modgen.system.ExistanceChecker.isDir(resDir)
-                rmdir(resDir,'s');
+                try
+                    modgen.io.rmdir(resDir,'s');
+                catch meObj
+                    newMeObj=modgen.common.throwerror('failedToRemoveDir',...
+                        'could not remove directory %s',resDir);
+                    newMeObj=addCause(newMeObj,meObj);
+                    throw(newMeObj);
+                end
             end
-            mkdir(resDir);
+            try
+                modgen.io.mkdir(resDir);
+            catch meObj
+                newMeObj=modgen.common.throwerror('failedToCreatedDir',...
+                    'could not create directory %s',resDir);
+                newMeObj=addCause(newMeObj,meObj);
+                throw(newMeObj);
+            end
         end
-        
     end
     %
     methods (Access=protected,Static)
@@ -120,6 +138,12 @@ classdef TmpDataManager<modgen.common.obj.StaticPropStorage
             modgen.common.obj.StaticPropStorage.setPropInternal(...
                 branchName,propName,propVal);
         end
+        function setDefaultRootDir()
+            tmpDirName=tempdir;
+            if strcmpi(tmpDirName(end),filesep)
+                tmpDirName(end)=[];
+            end
+            modgen.io.TmpDataManager.setRootDir(tmpDirName);  
+        end
     end
-    
 end

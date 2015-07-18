@@ -36,7 +36,7 @@ else
 end
 
 if ~exist(fullDirname,'dir')
-    [success, message] = mkdir(fullDirname);
+    [success, message] = modgen.io.mkdir(fullDirname);
     if ~success
         error(message)
         return
@@ -45,7 +45,7 @@ end
 if ~isempty(subdirname),
     fullDirname=fullfile(fullDirname,subdirname);
     if ~exist(fullDirname,'dir')
-        [success, message] = mkdir(fullDirname);
+        [success, message] = modgen.io.mkdir(fullDirname);
         if ~success
             error(message)
             return

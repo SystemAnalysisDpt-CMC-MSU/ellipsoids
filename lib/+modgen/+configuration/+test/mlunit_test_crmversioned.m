@@ -7,7 +7,7 @@ classdef mlunit_test_crmversioned < mlunitext.test_case
     end
     methods (Access=private)
         function self=initData(self)
-            import modgen.configuration.test.*;   
+            import modgen.configuration.test.*;
             
             self.cm=self.factory.getInstance();
             self.cm.removeAll();
@@ -29,7 +29,7 @@ classdef mlunit_test_crmversioned < mlunitext.test_case
         function self=test_update(self)
             self.cm.updateConf('testConfA');
             self.aux_checkUpdate(self.cm);
-        end        
+        end
         function aux_checkUpdate(~,cm)
             [SConfB,confVersionB]=cm.getConf('testConfB');
             [SConfA,confVersionA]=cm.getConf('testConfA');
@@ -39,20 +39,27 @@ classdef mlunit_test_crmversioned < mlunitext.test_case
             mlunitext.assert_equals(11,SConfB.beta);
             mlunitext.assert_equals(0,confVersionB);
             mlunitext.assert_equals('testConfB',SConfB.confName);
-        end          
+        end
         function self=test_updateAll(self)
             self.cm.updateAll();
             self.aux_checkUpdateAll(self.cm);
-        end        
-        function aux_checkUpdateAll(~,cm)
+        end
+        function aux_checkUpdateAll(~,cm,isOkExp)
+            if nargin<3
+                isOkExp=true;
+            end
             [SConfA,confVersionA]=cm.getConf('testConfA');
             [SConfB,confVersionB]=cm.getConf('testConfB');
-            mlunitext.assert_equals(2,SConfA.beta);
-            mlunitext.assert_equals(103,confVersionA);
-            mlunitext.assert_equals('testConfA',SConfA.confName);
-            mlunitext.assert_equals(2,SConfB.beta);
-            mlunitext.assert_equals(103,confVersionB);
-            mlunitext.assert_equals('testConfB',SConfB.confName);
-        end        
+            mlunitext.assert_equals(isOkExp,isequal(2,SConfA.beta));
+            mlunitext.assert_equals(isOkExp,isequal(103,confVersionA));
+            mlunitext.assert_equals(true,...
+                isequal('testConfA',SConfA.confName));
+            mlunitext.assert_equals(isOkExp,...
+                isequal(2,SConfB.beta));
+            mlunitext.assert_equals(isOkExp,...
+                isequal(103,confVersionB));
+            mlunitext.assert_equals(true,...
+                isequal('testConfB',SConfB.confName));
+        end
     end
 end

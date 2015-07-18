@@ -1,4 +1,3 @@
-@echo off
 setlocal
 :: Runs all Matlab unit tests for the latest GIT revision and e-mails results
 ::
@@ -25,29 +24,26 @@ if "%~4"=="" (
 ) else (
     set runMarker=%4
 )
+::remove double quotes if any
+set runMarker=%runMarker:"=%
+
 set matlabFunc=%2
 set deploymentDir=%1
 
 echo ===== run_tests_remotely started: %date% %time% =====
-@echo off
+
 setlocal
 
 set confName=%4
 if defined confName (
-	set mFile=%matlabFunc%('%runMarker%','%confName%')
+	set matlabCmd=%matlabFunc%('%runMarker%','%confName%')
 ) else (
-	set mFile=%matlabFunc%('%runMarker%')
-)
-echo mFile=%mFile%
-echo %logDir%
-echo deploymentDir=%deploymentDir%
-
-if %ERRORLEVEL% NEQ 0 (
-	echo %0: update failed 1>&2
-	exit /b 1
+	set matlabCmd=%matlabFunc%('%runMarker%')
 )
 
-echo %0: Launching Matlab from %matlabBin%
-cd %deploymentDir%
-%matlabBin% -nodesktop -nosplash -singleCompThread -r "try, s_install, cd .., resVec=%mFile%, exit(0), catch meObj, disp(meObj.getReport()), exit(1), end"
- echo ==== %0: %date% %time% Done! =====
+SET curDir=%~dp0
+
+echo just start and close matlab
+call %curDir%run_matlab_cmd.bat %deploymentDir% %matlabBin%
+echo just start matlab and run tests
+call %curDir%run_matlab_cmd.bat %deploymentDir% %matlabBin% "%matlabCmd%"

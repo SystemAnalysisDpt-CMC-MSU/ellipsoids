@@ -223,18 +223,6 @@ else
                 nErrors=length(indErrorVec);
                 for iError=1:nErrors
                     indCurError=indErrorVec(iError);
-                    % Note: the following block of code is excluded because it
-                    % is impossible to establish where error occured in child
-                    % code, replace of '\' to '/' is moved to errst2str
-                    % function
-                    %
-                    % identifierStr=ErrorCell{indCurError}.identifier;
-                    % messageStr=ErrorCell{indCurError}.message;
-                    % %the following string is only for fixing a bug on PC platform where file
-                    % %separator is recognized as escape symbol
-                    % messageStr=strrep(messageStr,'\','/');
-                    %
-                    % childException=MException(identifierStr,messageStr);
                     parentException=addCause(parentException,errorList{indCurError});
                 end
                 throw(parentException);

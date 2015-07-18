@@ -1,6 +1,7 @@
 function resultVec=run_tests_remotely(inpArgList,confRepoMgr,...
     log4jConfiguratorName,emailSubjSuffixName,runnerName,fTempDirGetter,...
     scriptName,varargin)
+import modgen.common.throwerror;
 import(log4jConfiguratorName);
 %
 try
@@ -34,6 +35,13 @@ try
             'reporting.antXMLReport.dirNameByTheFollowingFile');
         dirNameSuffix=confRepoMgr.getParam(...
             'reporting.antXMLReport.dirNameSuffix');
+        antXMLReportRootDir=fileparts(which(dirNameByTheFollowingFile));
+        if isempty(antXMLReportRootDir)
+            throwerror('notExistentRefFile',['file %s by which the ',...
+                'directory for Ant XML reports is build doesn''t exist'],...
+                dirNameByTheFollowingFile);
+        end
+        %
         antXMLReportDir=[fileparts(which(dirNameByTheFollowingFile)),filesep,...
             dirNameSuffix];
         %

@@ -111,7 +111,7 @@ classdef FunctionNamed<modgen.common.func.AFunction
                 error([upper(mfilename),':wrongInput'],...
                     'self must be scalar object');
             end
-            isnWrong=isnumeric(inpValMat)&&ndims(inpValMat)==2;
+            isnWrong=isnumeric(inpValMat)&&ismatrix(inpValMat);
             if isnWrong,
                 isnWrong=size(inpValMat,2)<=self.getNInpArgs();
             end

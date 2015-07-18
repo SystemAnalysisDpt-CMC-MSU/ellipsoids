@@ -14,7 +14,7 @@ classdef SuiteBasic < mlunitext.test_case
             self.resTmpDir=modgen.test.TmpDataManager.getDirByCallerKey();
         end
         function self = tear_down(self)
-            rmdir(self.resTmpDir,'s');
+            modgen.io.rmdir(self.resTmpDir,'s');
         end
         function testInMemoryMgr_copyFile(self)
             resTmpDir = self.resTmpDir;

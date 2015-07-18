@@ -263,7 +263,7 @@ classdef Log4jConfigurator<handle
                 logLocPath=self.getMainLogFilePathInternal();
                 %
                 if ~ExistanceChecker.isDir(logLocPath)
-                    mkdir(logLocPath);
+                    modgen.io.mkdir(logLocPath);
                 end
                 %
                 java.lang.System.setProperty(...

@@ -11,39 +11,34 @@ classdef HashMapXMLMetaData<modgen.containers.ondisk.AHashMap
     methods
         function self=HashMapXMLMetaData(varargin)
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08-06 $ 
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08-06 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
             %
             %
-            import modgen.*;
             import modgen.containers.DiskBasedHashMap;
             import modgen.system.ExistanceChecker;
+            import modgen.common.throwerror;
+            import modgen.common.checkvar;
+            import modgen.common.parseparext;
             %
-            storageFormat='verxml';
-            [~,prop]=parseparams(varargin);
-            nProp=length(prop);
-            for k=1:2:nProp-1
-                switch lower(prop{k})
-                    case 'storageformat'
-                        storageFormat=prop{k+1};
-                        prop([k,k+1])=[];
-                        break;
-                end
-            end
+            [regArgList,~,storageFormat]=parseparext(varargin,...
+                {'storageFormat';'verxml';...
+                'isstring(x)&&ismember(x,{''verxml'',''none''})'});
             %
             if ~ismember(storageFormat,{'verxml','none'})
-                error([upper(mfilename),':wrongInput'],...
-                    'unknown storage format');
+                throwerror('wrongInput','storage format %s unknown',...
+                    storageFormat);
             end
             %
-            self=self@modgen.containers.ondisk.AHashMap(prop{:},...
+            self=self@modgen.containers.ondisk.AHashMap(regArgList{:},...
                 'storageFormat',storageFormat);
             %
             switch lower(self.storageFormat)
                 case 'verxml',
-                    self.saveFunc=@modgen.containers.ondisk.HashMapXMLMetaData.saveFunc;
+                    self.saveFunc=...
+                        @modgen.containers.ondisk.HashMapXMLMetaData.saveFunc;
                     self.loadKeyFunc=@xmlload;
                     self.loadValueFunc=@xmlload;
                     self.fileExtension=self.XML_EXTENSION;
@@ -54,8 +49,8 @@ classdef HashMapXMLMetaData<modgen.containers.ondisk.AHashMap
                     self.loadValueFunc=@(x)1;
                     self.isMissingKeyBlamed=true;
                 otherwise,
-                    error([upper(mfilename),':wrongInput'],...
-                        'unknown storage format');
+                    throwerror('wrongInput',...
+                        'storage format %s is unknown',self.storageFormat);
             end
         end
         %
@@ -83,6 +78,7 @@ classdef HashMapXMLMetaData<modgen.containers.ondisk.AHashMap
         end
         function putOne(self,keyStr,valueObj,varargin)
             import modgen.system.ExistanceChecker;
+            import modgen.common.throwwarn;
             fullFileName=self.genfullfilename(keyStr);
             try
                 self.saveFunc(fullFileName,'valueObj','keyStr',varargin{:});
@@ -92,7 +88,7 @@ classdef HashMapXMLMetaData<modgen.containers.ondisk.AHashMap
                 end
                 %
                 if self.isPutErrorIgnored
-                    warning([upper(mfilename),':saveFailure'],...
+                    throwwarn('saveFailure',...
                         'cannot save the key value: %s',...
                         meObj.message);
                     return;

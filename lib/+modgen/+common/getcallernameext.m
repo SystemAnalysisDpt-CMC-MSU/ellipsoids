@@ -58,7 +58,8 @@ else
     end
     isnWrong=numel(indStack)==1&&isreal(indStack);
     if isnWrong,
-        isnWrong=floor(indStack)==indStack&&indStack>=0&&indStack<=numel(StFunc)-1;
+        isnWrong=floor(indStack)==indStack&&indStack>=0&&...
+            indStack<=numel(StFunc)-1;
     end
     if ~isnWrong,
         error([upper(mfilename),':wrongInput'],'indStack is incorrect');

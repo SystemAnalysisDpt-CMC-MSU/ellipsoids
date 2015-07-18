@@ -476,7 +476,7 @@ classdef test_result<handle
             %   Test name='testOne[ABC]'
             %
             if ~exist(reportDir,'dir')
-                mkdir(reportDir);
+                modgen.io.mkdir(reportDir);
             end
             ReportVec = self.getXMLReports();
             nElems=numel(ReportVec);
