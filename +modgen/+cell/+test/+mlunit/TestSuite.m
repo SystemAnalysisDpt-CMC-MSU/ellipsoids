@@ -66,7 +66,9 @@ classdef TestSuite < mlunitext.test_case
                 resStrList=strsplit(resStr,sprintf('\n'));
                 resStrExpList={...
                     '[4-D modgen.cell.test.ShowCellTestEnum]    [1]    [Internal]',...
-                    '[]                                         [2]    [2x1 modgen.cell.test.ShowCellTestEnum]'};
+                    '[]                                         [2]    [2x1 modgen.cell.test.ShowCellTestEnum]',...
+                    '',''};
+                resStrList=cellfun(@strtrim,resStrList,'UniformOutput',false);
                 mlunitext.assert_equals(true,isequal(resStrList,resStrExpList));
             end
         end

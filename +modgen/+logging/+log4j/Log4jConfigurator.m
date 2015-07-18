@@ -53,11 +53,21 @@ classdef Log4jConfigurator<handle
             res = isLockedPersistent;
         end
         function res = getSetLogPropStr(varargin)
+            import modgen.common.throwerror;
             persistent logPropStrPersistent;
-            if ~isempty(varargin)
+            if (nargin==0)
+                if isempty(logPropStrPersistent)
+                    logPropStrPersistent = char(logPropStrPersistent);
+                end
+            else
+                inpLogPropStr=varargin{1};
+                if ~ischar(inpLogPropStr)
+                    throwerror('wrongInput',['logPropStr is expected ',...
+                        'to be a character array']);
+                end
                 logPropStrPersistent = varargin{1};
             end
-            res = logPropStrPersistent;
+            res=logPropStrPersistent;
         end
     end
     methods (Static)
@@ -196,6 +206,7 @@ classdef Log4jConfigurator<handle
             import org.apache.log4j.Logger;
             import org.apache.log4j.PropertyConfigurator;
             import modgen.common.throwerror;
+            import modgen.common.throwwarn;
             %
             [~,prop]=modgen.common.parseparams(varargin,[],0);
             nProp=length(prop);
@@ -238,40 +249,45 @@ classdef Log4jConfigurator<handle
                 throwerror('wrongInput',...
                     'configuration source should be a property string');
             end
-            self.getSetLogPropStr(logPropStr);
-            logPropStr=java.lang.String(logPropStr);
-            %
-            java.lang.System.setProperty(...
-                self.SP_MAIN_LOG_FILE_NAME,...
-                self.getShortMainLogFileNameInternal);
-            %
-            logLocPath=self.getMainLogFilePathInternal();
-            %
-            if ~ExistanceChecker.isDir(logLocPath)
-                mkdir(logLocPath);
-            end
-            %
-            java.lang.System.setProperty(...
-                self.SP_CUR_PROCESS_NAME,...
-                self.getCurProcessNameInternal);
-            java.lang.System.setProperty(...
-                self.SP_LOG_DIR_WITH_SEP,...
-                logLocPath);
-            %
-            java.lang.System.setProperty(...
-                self.SP_LOG_FILE_EXP,...
-                self.LOG_FILE_EXT);
-            %
-            confStream=java.io.ByteArrayInputStream(logPropStr.getBytes());
-            logProp=java.util.Properties();
-            logProp.load(confStream);
-            PropertyConfigurator.configure(logProp);
-            logger=Logger.getLogger(loggerName);
-            logger.info('Log4j is successfully configured');
-            %
-            self.getSetConfStatus(true);
-            if isLock
-                self.lockConfiguration();
+            if isempty(logPropStr)
+                throwwarn('emptyConfStr',['configuration property ',...
+                    'string is empty, doing nothing...']);
+            else
+                self.getSetLogPropStr(logPropStr);
+                logPropStr=java.lang.String(logPropStr);
+                %
+                java.lang.System.setProperty(...
+                    self.SP_MAIN_LOG_FILE_NAME,...
+                    self.getShortMainLogFileNameInternal);
+                %
+                logLocPath=self.getMainLogFilePathInternal();
+                %
+                if ~ExistanceChecker.isDir(logLocPath)
+                    modgen.io.mkdir(logLocPath);
+                end
+                %
+                java.lang.System.setProperty(...
+                    self.SP_CUR_PROCESS_NAME,...
+                    self.getCurProcessNameInternal);
+                java.lang.System.setProperty(...
+                    self.SP_LOG_DIR_WITH_SEP,...
+                    logLocPath);
+                %
+                java.lang.System.setProperty(...
+                    self.SP_LOG_FILE_EXP,...
+                    self.LOG_FILE_EXT);
+                %
+                confStream=java.io.ByteArrayInputStream(logPropStr.getBytes());
+                logProp=java.util.Properties();
+                logProp.load(confStream);
+                PropertyConfigurator.configure(logProp);
+                logger=Logger.getLogger(loggerName);
+                logger.info('Log4j is successfully configured');
+                %
+                self.getSetConfStatus(true);
+                if isLock
+                    self.lockConfiguration();
+                end
             end
         end
     end

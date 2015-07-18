@@ -186,7 +186,7 @@ logger.info(sprintf([statusString,'\n file: %s'],fullFileName));
         fprintf(fidSwap,'%s',EOL_SYMBOL);
     end
     function writeRecord(leadCharSeqVec)
-        [SInfo,isVersioned]=modgen.subversion.getfileinfo(fullFileName);
+        [SInfo,isVersioned]=modgen.scm.subversion.getfileinfo(fullFileName);
         if isVersioned
             authorName=authorNick2Name(SInfo.lastChangedAuthor);
             lastChangedTime=SInfo.lastChangedDate;

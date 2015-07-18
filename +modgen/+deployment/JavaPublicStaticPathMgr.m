@@ -4,7 +4,7 @@ classdef JavaPublicStaticPathMgr<modgen.java.AJavaStaticPathMgr
             self=self@modgen.java.AJavaStaticPathMgr(varargin{:});
         end
         function fileNameList=getJarFileNameList(~)
-            fileNameList={};
+            fileNameList={'modgenfileutils.jar'};
         end
     end
 end

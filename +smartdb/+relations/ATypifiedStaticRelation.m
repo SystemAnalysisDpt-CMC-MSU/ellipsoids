@@ -82,6 +82,7 @@ classdef ATypifiedStaticRelation<smartdb.relations.AStaticRelation&...
             %            System Analysis Department 2012 $
             %
             %
+            import modgen.common.throwerror;
             [reg,prop]=modgen.common.parseparams(varargin);
             nReg=length(reg);
             %
@@ -93,10 +94,9 @@ classdef ATypifiedStaticRelation<smartdb.relations.AStaticRelation&...
                 ~isa(reg{1},curClassNameObj.getValue());
             %
             if ~isForeignRelObjectOnInput && nReg>3
-                error([upper(mfilename),':wrongInput'],...
+                throwerror('wrongInput',...
                     'incorrect number of regular arguments');
             end
-            %
             %
             if isForeignRelObjectOnInput
                 %if relation on input, we pass the data via constructor

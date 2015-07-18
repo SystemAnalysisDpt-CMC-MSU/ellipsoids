@@ -40,46 +40,6 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
             isNullVec=self.type.generateIsNull(valueVec);
             %
         end        
-        function [isPositiveMat,reportStr]=eq(self,obj)
-            reportStr='';
-            [self,obj]=adjustSizesForEq(self,obj);
-            isPositiveMat=true(size(self));
-            if isempty(self),
-                return
-            end
-            nElems=numel(self);
-            reportStrList=cell(1,nElems);
-            for iElem=1:nElems,
-                if nargout>1,
-                    [isPositiveMat(iElem),reportStrCur]=isEqual(self(iElem),obj(iElem));
-                    if ~isempty(reportStrCur),
-                        reportStrList{iElem}=...
-                            sprintf('(%d-th elements):%s',iElem,reportStrCur);
-                    end
-                else
-                    isPositiveMat(iElem)=isEqual(self(iElem),obj(iElem));
-                end
-            end
-            if nargout>1,
-                reportStrList(cellfun('isempty',reportStrList))=[];
-                if numel(reportStrList)>1,
-                    reportStr=modgen.string.catwithsep(reportStrList,sprintf('\n'));
-                elseif ~isempty(reportStrList),
-                    reportStr=reportStrList{:};
-                end
-            end
-        end
-        function isPositiveMat=ne(self,obj)
-            [self,obj]=adjustSizesForEq(self,obj);
-            isPositiveMat=false(size(self));
-            if isempty(self),
-                return
-            end
-            nElems=numel(self);
-            for iElem=1:nElems,
-                isPositiveMat(iElem)=~isEqual(self(iElem),obj(iElem));
-            end
-        end
         function display(self)
             SRes=self.saveObjInternal();
             strucdisp(SRes(:));
@@ -186,6 +146,7 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
         resArray=buildArrayByProp(self,cubeStructRefList,varargin)
         % BUILDARRAYBYPROP is a helper method for filling an object arrays
         % with the specified properties        
+        [isEq,reportStr]=isEqualScalarInternal(self,otherObj,varargin)
     end
     methods (Static)
         function isPositive=isMe(inpObj)

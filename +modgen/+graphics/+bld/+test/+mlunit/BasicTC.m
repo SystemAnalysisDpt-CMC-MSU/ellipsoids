@@ -5,11 +5,14 @@ classdef BasicTC<mlunitext.test_case
     end
     %
     methods
+        function tear_down(~)
+            close all;
+        end
         function self=BasicTC(varargin)
             self=self@mlunitext.test_case(varargin{:});
         end
         function set_up_param(self,varargin)
-            [~,~,self.isReCache]=modgen.common.parseparext(varargin{1},...
+            [~,~,self.isReCache]=modgen.common.parseparext(varargin,...
                 {'reCache';false;'islogical(x)'});
             %
             [~,className]=modgen.common.getcallernameext(1);

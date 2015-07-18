@@ -20,7 +20,7 @@ classdef CubeStructFieldExtNfo<smartdb.cubes.CubeStructFieldNfo
         function self=CubeStructFieldExtNfo(varargin)
             if nargin>0
                 if (nargin==1)&&isa(varargin{1},...
-                        'smartdb.cubes.CubeStructFieldExtInfo')
+                        'smartdb.cubes.CubeStructFieldExtendedInfo')
                     self.fieldMetaData=varargin{1};
                 elseif (nargin>=1)&&smartdb.cubes.CubeStructFieldExtNfo.isMe(varargin{1})
                     self.fieldMetaData=smartdb.cubes.CubeStructFieldExtendedInfo(...

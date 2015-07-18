@@ -1,4 +1,4 @@
-classdef ConfRepoManagerAnyStorage<handle
+classdef ConfRepoManagerAnyStorage<modgen.common.obj.HandleObjectCloner
     % CONFREPOMANAGER provides a functionality for storing, reading,
     % copying and very simplistic version tracking of application
     % configurations represented by structures
@@ -14,9 +14,24 @@ classdef ConfRepoManagerAnyStorage<handle
         storage
         cache
         curConfName='';
-        confPatchRepo
         getStorageHook
         putStorageHook
+    end
+    properties (SetAccess=private,GetAccess=protected)
+        confPatchRepo
+    end
+    methods
+        function storageDir=getStorageBranchKey(self)
+            storageDir=self.storage.getStorageBranchKey();
+        end
+        %
+        function storageDir=getStorageLocation(self)
+            storageDir=self.storage.getStorageLocation();
+        end
+        %
+        function storageRootDir=getStorageLocationRoot(self)
+            storageRootDir=self.storage.getStorageLocationRoot();
+        end        
     end
     %
     methods (Access=private)
@@ -87,7 +102,7 @@ classdef ConfRepoManagerAnyStorage<handle
             %   
             % Input:
             %   regular:
-            %       storage: modgen.containers.ondisk.AHashMap[1,1] -
+            %       storage: modgen.containers.ondisk.IOnDiskBranchedStorage[1,1] -
             %          object reposible for maintaining a configuration
             %          storage
             %
@@ -143,7 +158,10 @@ classdef ConfRepoManagerAnyStorage<handle
             %
             import modgen.*;
             import modgen.common.parseparext;
-   
+            modgen.common.checkvar(storage,...
+                @(x)isa(x,...
+                'modgen.containers.ondisk.IOnDiskBranchedStorage'));
+                
             self.initCache();
             %
             [reg,isRegSpec,self.putStorageHook,...
@@ -151,9 +169,11 @@ classdef ConfRepoManagerAnyStorage<handle
                 varargin,{...
                 'putStorageHook','getStorageHook';...
                 @(x,y)x,@(x,y)x;...
-                @(x)isa(x,'function_handle'),@(x)isa(x,'function_handle')},...
+                @(x)isa(x,'function_handle'),...
+                @(x)isa(x,'function_handle')},...
                 'regCheckList',...
-                {@(x)isa(x,'modgen.struct.changetracking.AStructChangeTracker')});
+                {@(x)isa(x,...
+                'modgen.struct.changetracking.AStructChangeTracker')});
             
             if isRegSpec
                 self.confPatchRepo=reg{1};
@@ -195,11 +215,12 @@ classdef ConfRepoManagerAnyStorage<handle
             %           selected previously, true by default
             %   
             %
+            import modgen.common.throwerror;
             [~,prop]=modgen.common.parseparams(varargin,{'reloadIfSelected'},0);
             if ~isempty(prop)
                 isReloadedIfSelected=prop{2};
                 if ~(islogical(isReloadedIfSelected)&&numel(isReloadedIfSelected)==1)
-                    error([upper(mfilename),':wrongInput'],...
+                    throwerror('wrongInput',...
                         'reloadedIfSelected is expected to be a logical scalar');
                 end
             else
@@ -208,7 +229,7 @@ classdef ConfRepoManagerAnyStorage<handle
             %
             if isReloadedIfSelected||~(isReloadedIfSelected||self.isCachedConf(confName))
                 if ~self.storage.isKey(confName)
-                    error([upper(mfilename),':unknownConfig'],...
+                    throwerror('unknownConfig',...
                         'configuration %s does not exist in the repository',...
                         confName);
                 end
@@ -413,7 +434,7 @@ classdef ConfRepoManagerAnyStorage<handle
                     destFolderName=destFolderName(1:end-1);
                 end
                 if ~modgen.system.ExistanceChecker.isDir(destFolderName)
-                    mkdir(destFolderName);
+                    modgen.io.mkdir(destFolderName);
                 end
                 destFileName=[destFolderName,filesep,fileName,ext];
             end
@@ -457,8 +478,9 @@ classdef ConfRepoManagerAnyStorage<handle
             %      configuration
             %
             %
+            import modgen.common.throwerror;
             if isempty(self.curConfName)
-                error([upper(mfilename),':wrongActionSequence'],...
+                throwerror('wrongActionSequence',...
                     'Current configuration is not selected');
             end
             %
@@ -663,13 +685,14 @@ classdef ConfRepoManagerAnyStorage<handle
             %                 configuration is not found
             % 
             %
+            import modgen.common.throwerror;
             isCached=self.isCachedConf(confName);
             if isCached
                 res=self.cache(confName);
                 SConf=res{1};
                 metaData=res{2};
             else
-                error([upper(mfilename),':noKey'],...
+                throwerror('noKey',...
                     'configuration %s is not cached',confName);
             end
         end

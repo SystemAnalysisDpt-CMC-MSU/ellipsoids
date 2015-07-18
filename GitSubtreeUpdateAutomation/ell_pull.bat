@@ -1,3 +1,4 @@
+git fetch ellipsoids
 git checkout -B ellmaster ellipsoids/master
 git clean -f -d
 git pull

@@ -1,8 +1,8 @@
 classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
     % UDAPTIVECONFREPOMANAGER is an extension of the plain ConfRepoManager
     % that introduces a separation between template configurations and
-    % plain configurations. Template configuration is like default 
-    % configurations that is used in place of a plain configurations 
+    % plain configurations. Template configuration is like default
+    % configurations that is used in place of a plain configurations
     % when the plain configuration is not found for a given name. If
     % template configuration for the same name is not found as well, the
     % class throws an exception. Such a behavior is useful when the
@@ -11,20 +11,26 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
     %
     %
     %
-    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08-17 $ 
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08-17 $
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2011 $
     %
     %
-    properties (Access=protected)
-        templateStorageBranchKey='_templates';
+    properties (Constant,Access=protected)
+        DEFAULT_TEMPLATE_STORAGE_BRANCH_KEY='_templates';
     end
     properties (Access=private)
         templateRepoMgr
     end
+    properties (Access=protected)
+        templateStorageBranchKey
+    end
     %
-    methods 
+    methods
+        function storageDir=getTemplateBranchKey(self)
+            storageDir=self.templateStorageBranchKey;
+        end        
         function setConfPatchRepo(self,confPatchRepo)
             % SET
             setConfPatchRepo@modgen.configuration.ConfRepoManager(self,confPatchRepo);
@@ -32,81 +38,46 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
         end
         function self=AdaptiveConfRepoManager(varargin)
             %
-            import modgen.*;
+            import modgen.common.parseparext;
+            import modgen.configuration.AdaptiveConfRepoManager;
+            import modgen.common.throwerror;
             %
             %% parse input params
-            [~,prop]=modgen.common.parseparams(varargin,[],0);
-            nProp=length(prop);
-            %
-            isRepoSubfolderSpecified=false;
-            isRepoLocationSpecified=false;
-            %% continue parsing
-            for k=1:2:nProp-1
-                switch lower(prop{k})
-                    case 'templatestoragebranchkey',
-                        templateStorageBranchKey=prop{k+1};
-                        varargin([k,k+1])=[];
-                    case 'storagebranchkey',
-                        error([upper(mfilename),':wrongProperty'],...
-                            'property %s is not supported',prop{k});
-                    case 'repolocation',
-                        repoLocation=prop{k+1};
-                        isRepoLocationSpecified=true;
-                    case 'reposubfoldername',
-                        isRepoSubfolderSpecified=true;
-                        repoSubfolderName=prop{k+1};
-                    case 'confpatchrepo',
-                        confPatchRepo=prop{k+1};
-                end;
-            end;
             [~,hostName]=getuserhost();
-            %ignoring user name for now
             %
-			currentStorageBranchKey=hostName;
-            %
+            [restArgList,~,templateStorageBranchKey,confPatchRepo,...
+                currentStorageBranchKey,...
+                ~,isConfPatchRepoSpec]=parseparext(varargin,...
+                {'templateBranchKey',...
+                'confPatchRepo','currentBranchKey';...
+                AdaptiveConfRepoManager.DEFAULT_TEMPLATE_STORAGE_BRANCH_KEY,...
+                [],hostName;...
+                'isstring(x)',...
+                @(x)isa(x,'modgen.struct.changetracking.StructChangeTracker'),...
+                'isstring(x)'});
             %%
             self=self@modgen.configuration.ConfRepoManager(...
-                'storageBranchKey',currentStorageBranchKey,varargin{:});
-            if system.ExistanceChecker.isVar('templateStorageBranchKey')
-                self.templateStorageBranchKey=templateStorageBranchKey;
-            end
+                'storageBranchKey',currentStorageBranchKey,restArgList{:});
             %
-            inpArgList=varargin;
+            self.templateStorageBranchKey=templateStorageBranchKey;
             %
-            if ~isRepoLocationSpecified
-                metaClass=metaclass(self);
-                if ~isRepoSubfolderSpecified
-                    repoSubfolderName='confrepo';
-                end
-                repoLocation=[fileparts(which(metaClass.Name)),filesep,...
-                    repoSubfolderName];
-                inpArgList=[inpArgList,{'repoLocation',repoLocation}];
-                %
-            elseif isRepoSubfolderSpecified
-                %
-                [~,subFolderName]=fileparts(repoLocation);
-                %
-                if ~strcmp(subFolderName,repoSubfolderName)
-                    error([upper(mfilename),':wrongInput'],...
-                        ['repoSubfolderName is not the same as the ',...
-                        'subfolder specified as part of repoLocation']);
-                end
-            end
+            [restArgList,~,repoLocation]=parseparext(restArgList,...
+                {'repoLocation';self.getStorageLocationRoot()});
+            self.templateRepoMgr=modgen.configuration.ConfRepoManager(...
+                'storageBranchKey',self.templateStorageBranchKey,...
+                'repoLocation',repoLocation,restArgList{:});
             %
-            self.templateRepoMgr=configuration.ConfRepoManager(...
-                'storageBranchKey',self.templateStorageBranchKey,inpArgList{:});
-            %
-            if system.ExistanceChecker.isVar('confPatchRepo')
+            if isConfPatchRepoSpec
                 self.setConfPatchRepo(confPatchRepo);
-            end            
+            end
             %
         end
         function selectConf(self,confName,varargin)
             % SELECTCONF - selects the specified plain configuration. If
             %              the one does not exist it is created from the
-            %              template configuration. If the latter does not 
+            %              template configuration. If the latter does not
             %              exist an exception is thrown
-            % 
+            %
             %
             % Input:
             %   regular:
@@ -115,7 +86,7 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
             %
             %   properties:
             %       reloadIfSelected: logical[1,1] - if false,
-            %           configuration is loaded from disk only if it 
+            %           configuration is loaded from disk only if it
             %           wasn't selected previously.
             %
             %
@@ -133,9 +104,19 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
             selectConf@modgen.configuration.ConfRepoManager(self,...
                 confName,reg{:});
         end
-        function updateAll(self)
+        function updateAll(self,areAllBranchesUpdated)
             % UPDATEALL - updates both templates and plain configurations
             %
+            % Input:
+            %   regular:
+            %       self: modgen.configuration.AdaptiveConfRepoManager[1,1]
+            %       areAllBranchesUpdated: logical[1,1] - if true, all
+            %       branches are updated, not just a branch that
+            %          corresponds to a current host. (false by default)
+            %
+            if nargin<2
+                areAllBranchesUpdated=false;
+            end
             %
             confNameList=self.templateRepoMgr.getConfNameList;
             cellfun(@(x)updateConf(self.templateRepoMgr,x),confNameList);
@@ -143,20 +124,57 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
             confNameList=self.getConfNameList;
             cellfun(@(x)updateConf(self,x),confNameList);
             %
+            if areAllBranchesUpdated
+                branchKeyList=self.getBranchKeyList(false);
+                curBranchKey=self.getStorageBranchKey();
+                restBranchKeyList=setdiff(branchKeyList,curBranchKey);
+                %
+                storageRootDir=self.getStorageLocationRoot();                
+                %
+                nRestBranches=numel(restBranchKeyList);
+                for iBranch=1:nRestBranches
+                    branchName=restBranchKeyList{iBranch};
+                    branchConfRepoMgr=self.templateRepoMgr.createInstance(...
+                        'storageBranchKey',branchName,...
+                        'repoLocation',storageRootDir,'confPatchRepo',...
+                        self.confPatchRepo);
+                    confNameList=branchConfRepoMgr.getConfNameList;
+                    cellfun(@(x)updateConf(branchConfRepoMgr,x),...
+                        confNameList);
+                end
+            end
+        end
+        function branchKeyList=getBranchKeyList(self,...
+                isTemplateBranchIncluded)
+            NOT_BRANCH_FOLDER_LIST={'.','..'};
+            if nargin<2
+                isTemplateBranchIncluded=false;
+            end
+            storageRootDir=self.getStorageLocationRoot();
+            SFileVec=dir([storageRootDir,filesep,'*']);
+            %
+            if isTemplateBranchIncluded
+                excludeBranchList=NOT_BRANCH_FOLDER_LIST;
+            else
+                excludeBranchList=[NOT_BRANCH_FOLDER_LIST,...
+                    self.templateStorageBranchKey];
+            end
+            %
+            branchKeyList=setdiff({SFileVec.name},excludeBranchList);
         end
         function updateConfTemplate(self,confName)
             % UPDATECONFTEMPLATE - updates template configuration
             %
             %
             self.templateRepoMgr.updateConf(confName);
-        end        
+        end
         %
         function [SConf,confVersion,metaData]=getConf(self,confName)
-            % GETCONF - returns a configuration by its name. In case the 
+            % GETCONF - returns a configuration by its name. In case the
             %           specified configuration is not found , the class
             %           tries to create one from a template
-            % 
-            % 
+            %
+            %
             self.deployConfTemplate(confName);
             [SConf,confVersion,metaData]=getConfInternal(self,confName);
             
@@ -170,46 +188,35 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
         end
         %
         function confNameList=deployConfTemplate(self,inpConfName,varargin)
-            % DEPLOYCONFTEMPLATE - deploys (i.e. transforms templates to 
+            % DEPLOYCONFTEMPLATE - deploys (i.e. transforms templates to
             %                      plain configurations) the specified
-            %                      onfiguration(s)) 
+            %                      onfiguration(s))
             %
-            % Input: 
+            % Input:
             %   regular:
             %       self: the object itself
             %       inpConfName: char[1,] configuration name, can be '*'
             %          which means "all configurations"
-            %       
+            %
             %   properties:
             %       overwrite: logical[1,1] - if true, the template(s)
             %          is(are) copied over the plain configurations if the
-            %          latter exist(s) 
+            %          latter exist(s)
             %               (false by default)
             %       forceUpdate: logical[1,1] - if true, the configuration
             %          is updated even if it is already exists for the
-            %          local computer, 
+            %          local computer,
             %               (false by default)
-            %       
             %
-            [reg,prop]=parseparams(varargin);
-            nProp=length(prop);
-            if ~isempty(reg)
-                error([mfilename,':incorrectInput'],'badly formed property list');
-            end
             %
-            isOverwrite=false;
-            isUpdateForced=false;
-            %% continue parsing
-            for k=1:2:nProp-1
-                switch lower(prop{k})
-                    case 'overwrite',
-                        isOverwrite=prop{k+1};
-                    case 'forceupdate',
-                        isUpdateForced=prop{k+1};
-                end
-            end
+            import modgen.common.parseparext;
+            import modgen.common.throwerror;
+            [~,~,isOverwrite,isUpdateForced]=parseparext(varargin,...
+                {'overwrite','forceUpdate';false,false;...
+                'islogscalar(x)','islogscalar(x)'},0);
+            %
             if strcmp(inpConfName,'*')
-               confNameList=self.templateRepoMgr.getConfNameList();
+                confNameList=self.templateRepoMgr.getConfNameList();
             else
                 confNameList={inpConfName};
             end
@@ -218,20 +225,30 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
                 confName=confNameList{iConf};
                 try
                     if isOverwrite||~self.isConf(confName)
-                        [SConf,confVersion,metaData]=self.templateRepoMgr.getConfInternal(confName);
-                        [SConf,confVersion,metaData]=self.updateConfStructInternal(SConf,confVersion,metaData);
-                        self.putConfInternal(confName,SConf,confVersion,metaData);
+                        [SConf,confVersion,metaData]=...
+                            self.templateRepoMgr.getConfInternal(...
+                            confName);
+                        [SConf,confVersion,metaData]=...
+                            self.updateConfStructInternal(SConf,...
+                            confVersion,metaData);
+                        self.putConfInternal(confName,SConf,confVersion,...
+                            metaData);
                     elseif isUpdateForced
-                        [SConf,confVersion,metaData]=self.getConfInternal(confName);
+                        [SConf,confVersion,metaData]=...
+                            self.getConfInternal(confName);
                         lastVersion=self.getLastConfVersion();
                         if (confVersion<lastVersion)||isnan(confVersion)
-                            [SConf,confVersion,metaData]=self.updateConfStructInternal(SConf,confVersion,metaData);
-                            self.putConfInternal(confName,SConf,confVersion,metaData);
+                            [SConf,confVersion,metaData]=...
+                                self.updateConfStructInternal(SConf,...
+                                confVersion,metaData);
+                            self.putConfInternal(confName,SConf,...
+                                confVersion,metaData);
                         end
                     end
                 catch meObj
-                    newMeObj=MException([upper(mfilename),':wrongInput'],...
-                        'deployment of configuration %s has failed',confName);
+                    newMeObj=throwerror('wrongInput',...
+                        'deployment of configuration %s has failed',...
+                        confName);
                     newMeObj=addCause(newMeObj,meObj);
                     throw(newMeObj);
                 end

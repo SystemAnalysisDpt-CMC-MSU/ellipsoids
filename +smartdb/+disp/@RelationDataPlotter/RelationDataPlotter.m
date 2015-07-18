@@ -142,45 +142,17 @@ classdef RelationDataPlotter<handle
             %           "saveas" function, default value is 'fig';
             %
             %
-            import modgen.logging.log4j.Log4jConfigurator;
-            import modgen.common.type.simple.checkcellofstr;
-            import modgen.common.genfilename;
+            mp=self.figHMap;
+            hFigureVec=cell2mat(mp.values);
+            fileNameList=cellfun(@modgen.common.genfilename,...
+                mp.keys,'UniformOutput',false);
+            %
             if nargin<3
                 formatNameList={'fig'};
             end
-            %refresh figures
-            drawnow expose;
             %
-            logger=Log4jConfigurator.getLogger();
-            mp=self.figHMap;
-            handleVec=cell2mat(mp.values);
-            figureKeyList=mp.keys;
-            nFigures=length(figureKeyList);
-            formatNameList=checkcellofstr(formatNameList);
-            nFormats=length(formatNameList);
-            for iFigure=1:nFigures
-                hFigure=handleVec(iFigure);
-                if ~ishandle(hFigure)
-                    logger.warn(sprintf(...
-                        ['Handle %d doesn''t exists, probably figure ',...
-                        'has been closed manually'],hFigure));
-                else
-                    shortFigFileName=genfilename(figureKeyList{iFigure});
-                    for iFormat=1:nFormats
-                        formatName=formatNameList{iFormat};
-                        figFileName=[resFolderName,filesep,...
-                            shortFigFileName,'.',formatName];
-                        msgStr=['saving file ',figFileName,' to disk'];
-                        logger.debug([msgStr,'...']);
-                        saveas(hFigure,figFileName,formatName);
-                        if ~modgen.system.ExistanceChecker.isFile(figFileName)
-                            error([upper(mfilename),':wrongInput'],...
-                                'file %s was not created',figFileName);
-                        end
-                        logger.debug([msgStr,': done']);
-                    end
-                end
-            end
+            modgen.graphics.savefigures(hFigureVec,resFolderName,...
+                formatNameList,fileNameList)
         end
         %%
         function plotGeneric(self,rel,...
@@ -510,7 +482,7 @@ classdef RelationDataPlotter<handle
                 figureSetPropFunc(hFigure,figureKey,indFigureSubGroup,...
                     figurePropValList{:});
                 logger.debug(['Figure ',figureKey,...
-                    ' is created, hFigure=',num2str(hFigure)]);
+                    ' is created, hFigure=',num2str(double(hFigure))]);
                 mp(figureKey)=hFigure;
                 
                 self.checkIfValueUnique(mp,'wrongFigureHandle',...

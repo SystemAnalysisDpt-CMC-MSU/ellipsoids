@@ -12,7 +12,8 @@ classdef EmailLoggerBuilder
                 {'emailAttachmentNameList';...
                 {};...
                 'iscellofstring(x)'},0);
-            [urlCodeStr,urlStr,branchName,revisionStr]=getRepoParams();
+            [urlCodeStr,urlStr,branchName,revisionStr]=...
+                modgen.scm.getrepoparams();
             %
             tmpDirName=fTempDirGetter(appName);
             %zip log file name
@@ -53,40 +54,4 @@ classdef EmailLoggerBuilder
                 'dryRun',~confRepoMgr.getParam('emailNotification.isEnabled'));
         end
     end
-end
-function [urlCodeStr,urlStr,branchName,revisionStr]=getRepoParams()
-curClassName=modgen.common.getcallername;
-curDirStr=fileparts(which(curClassName));
-urlCodeStr='';
-try
-    isSvn=modgen.subversion.issvn(curDirStr);
-    if isSvn,
-        isGit=false;
-        urlCodeStr='svnURL';
-        urlStr=modgen.subversion.svngeturl(curDirStr);
-    else
-        isGit=modgen.git.isgit(curDirStr);
-        if isGit,
-            urlCodeStr='gitURL';
-            urlStr=modgen.git.gitgeturl(curDirStr);
-        else
-            throwerror('wrongObjState',...
-                'Files with code should be under either SVN or Git');
-        end
-    end
-catch
-    isSvn=false;
-    isGit=false;
-    urlCodeStr='unknownURL';
-    urlStr='unknown';
-end
-if isSvn,
-    revisionStr=modgen.subversion.getrevision('ignoreErrors',true);
-    branchName='unknown';
-elseif isGit,
-    revisionStr=modgen.git.gitgethash(curDirStr);
-    branchName=modgen.git.gitgetbranch(curDirStr);
-else
-    revisionStr='unversioned';
-end
 end

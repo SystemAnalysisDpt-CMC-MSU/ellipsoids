@@ -11,7 +11,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
     %
     methods
         function self = tear_down(self)
-            rmdir(self.resTmpDir,'s');
+            modgen.io.rmdir(self.resTmpDir,'s');
         end
         function self = mlunit_test_xmlloadsave(varargin)
             self = self@mlunitext.test_case(varargin{:});

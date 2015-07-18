@@ -2,12 +2,12 @@ classdef ConfRepoManager<modgen.configuration.ConfRepoManagerAnyStorage&...
         modgen.reflection.ReflectionHelper
     properties (Constant)
         DEFAULT_STORAGE_BRANCH_KEY='_default';
-    end    
+    end
     methods
         function self=ConfRepoManager(varargin)
             % CONFREPOMANAGER is the class constructor with the following
             % parameters
-            %   
+            %
             % Input:
             %   properties:
             %       repoLocation: char[1,] - configuration repository location
@@ -19,27 +19,28 @@ classdef ConfRepoManager<modgen.configuration.ConfRepoManagerAnyStorage&...
             %
             %       confPatchRepo: modgen.struct.changetracking.AStructChangeTracker[1,1] -
             %          configuration version tracker
-            %       
+            %
             %       repoSubfolderName: char[1,] - if not specified
-            %       'confrepo' name is used, otherwise, when specified
-            %       along with repoLocation, it should be the same as the
-            %       deepest subfolder in repoLocation. Finally, when
-            %       repoSubfolderName is specified and repoLocation is not
-            %       the location is chosen automatically with the deepest subfolder
-            %       name equal to repoSubfolderName
+            %           'confrepo' name is used, otherwise, when specified
+            %           along with repoLocation, it should be the same as the
+            %           deepest subfolder in repoLocation. Finally, when
+            %           repoSubfolderName is specified and repoLocation is not
+            %           the location is chosen automatically with the deepest subfolder
+            %           name equal to repoSubfolderName
             %
             % Output:
             %   self: the constructed object
-            % 
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08-05 $ 
+            %
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-08-05 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2011 $
             %
             %
-            import modgen.*;
+            import modgen.common.throwerror;
             import modgen.common.parseparext;
+            import modgen.configuration.ConfRepoManager;
             %
             %% parse input params
             [reg,~,...
@@ -49,7 +50,12 @@ classdef ConfRepoManager<modgen.configuration.ConfRepoManagerAnyStorage&...
                 isConfPathRepoSpec,isRepoSubfolderSpecified]=...
                 modgen.common.parseparext(varargin,...
                 {'storagebranchkey','repolocation','confpatchrepo',...
-                'reposubfoldername'});
+                'reposubfoldername';...
+                'ConfRepoManager.DEFAULT_STORAGE_BRANCH_KEY',[],...
+                [],'confrepo';...
+                'isstring(x)','isstring(x)',...
+                @(x)isa(x,'modgen.struct.changetracking.StructChangeTracker'),...
+                'isstring(x)'});
             %
             if ~isStorageBranchKeySpec
                 storageBranchKey=...
@@ -65,22 +71,19 @@ classdef ConfRepoManager<modgen.configuration.ConfRepoManagerAnyStorage&...
             self=self@modgen.reflection.ReflectionHelper(metaClassBoxedObj);
             metaClass=metaClassBoxedObj.getValue();
             if ~isRepoLocationSpec
-                if ~isRepoSubfolderSpecified
-                    repoSubfolderName='confrepo';
-                end
                 repoLocation=[fileparts(which(metaClass.Name)),filesep,...
                     repoSubfolderName];
             elseif isRepoSubfolderSpecified
                 [~,subFolderName]=fileparts(repoLocation);
                 if ~strcmp(subFolderName,repoSubfolderName)
-                    error([upper(mfilename),':wrongInput'],...
+                    throwerror('wrongInput',...
                         ['repoSubfolderName is not the same as the ',...
                         'subfolder specified as part of repoLocation']);
                 end
             end
             %
             %%
-            storage=containers.ondisk.HashMapXMLMetaData(...
+            storage=modgen.containers.ondisk.HashMapXMLMetaData(...
                 'storageLocationRoot',repoLocation,...
                 'storageBranchKey',storageBranchKey,...
                 'storageFormat','verxml',...
@@ -90,10 +93,10 @@ classdef ConfRepoManager<modgen.configuration.ConfRepoManagerAnyStorage&...
             %
         end
         function resObj=createInstance(self,varargin)
-            % CREATEINSTANCE - returns an object of the same class by 
-            %                  calling a default constructor (with no 
+            % CREATEINSTANCE - returns an object of the same class by
+            %                  calling a default constructor (with no
             %                  arameters)
-            % 
+            %
             %
             % Usage: resObj=getInstance(self)
             %

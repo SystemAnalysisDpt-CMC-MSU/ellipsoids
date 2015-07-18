@@ -26,11 +26,15 @@ classdef mlunit_test_string < mlunitext.test_case
         function self=test_splitpart(self)
             inpStr='aaa..bbb..';
             try
-                modgen.string.splitpart(inpStr,'..',3);
+                modgen.string.splitpart(inpStr,'..',4);
                 mlunitext.assert_equals(true,false);
             catch meObj
                 mlunitext.assert_equals(~isempty(strfind(meObj.identifier,':wrongInput')),true);
             end
+            %
+            resStr=modgen.string.splitpart(inpStr,'..',3);
+            mlunitext.assert_equals('',resStr);
+            %
             mlunitext.assert_equals(modgen.string.splitpart(inpStr,'..',2),'bbb');
             mlunitext.assert_equals(modgen.string.splitpart(inpStr,'..','first'),'aaa');
             inpStr='aaa';

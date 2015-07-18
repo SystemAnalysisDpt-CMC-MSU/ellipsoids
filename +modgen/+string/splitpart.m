@@ -22,16 +22,20 @@ function resStr=splitpart(inpStr,delimStr,fieldNum)
 %
 %
 %
+import modgen.common.throwerror;
+%
 if ~(ischar(fieldNum)||isnumeric(fieldNum))
-    error([upper(mfilename),':wrongInput'],...
-        'fieldNum parameter is expected to be either string or a value of a numeric type');
+    throwerror(':wrongInput',...
+        ['fieldNum parameter is expected to be either string or a ',...
+        'value of a numeric type']);
 end
     
 strSplitList=strsplit(inpStr,delimStr);
 nFound=length(strSplitList);
 if nFound==0
-    error([upper(mfilename),':wrongInput'],...
-        'Opps, we shouldn''t be here - the number of splitted strings is zero');
+    throwerror('wrongInput',...
+        ['Opps, we shouldn''t be here - the number of ',...
+        'splitted strings is zero']);
 end
 %
 if ischar(fieldNum)
@@ -44,8 +48,9 @@ if ischar(fieldNum)
 end
 %
 if nFound<fieldNum
-    error([upper(mfilename),':wrongInput'],...
-        'a number of splitted strings (%d) is too small for a specified position (%d)',...
+    throwerror('wrongInput',...
+        ['a number of splitted strings (%d) is too small for a ',...
+        'specified position (%d)'],...
         nFound,fieldNum);
 end
 %

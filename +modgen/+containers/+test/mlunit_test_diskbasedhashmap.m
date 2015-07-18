@@ -15,7 +15,7 @@ classdef mlunit_test_diskbasedhashmap < mlunitext.test_case
         end
         %
         function self = tear_down(self)
-            rmdir(self.resTmpDir,'s');
+            modgen.io.rmdir(self.resTmpDir,'s');
         end
         function self = set_up_param(self,mapFactory,varargin)
             import modgen.*;

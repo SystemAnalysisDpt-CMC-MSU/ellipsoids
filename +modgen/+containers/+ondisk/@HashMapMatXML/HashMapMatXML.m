@@ -19,14 +19,14 @@ classdef HashMapMatXML<modgen.containers.ondisk.AHashMap
             % Input:
             %   properties:
             %       optional:
-            %            storageLocationRoot: char[1,nChars1] - storage location 
+            %            storageLocationRoot: char[1,nChars1] - storage location
             %
             %            storageBranchKey: char[1,nChars2] - a key used for
             %               generating a final storageLocation
             %
             %            ignorePutErrors: logical[1,1] - if true all put
             %               errors are ignored (default is false)
-            %                   
+            %
             %            ignoreBrokenStoredValues: logical [1,1] - if true
             %               all broken stored values are considered to be
             %               absent (default is false)
@@ -35,7 +35,7 @@ classdef HashMapMatXML<modgen.containers.ondisk.AHashMap
             %               values
             %                   'mat' (default) - use mat files for storing
             %                       the values
-            %                   'xml' - use xml files 
+            %                   'xml' - use xml files
             %
             %                   'none' - do not store files at all i.e.
             %                      skip all put operations
@@ -53,19 +53,18 @@ classdef HashMapMatXML<modgen.containers.ondisk.AHashMap
             %
             %
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-02-18 $ 
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-02-18 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
             %            System Analysis Department 2012 $
             %
             %
-            import modgen.*;
             import modgen.containers.DiskBasedHashMap;
             import modgen.system.ExistanceChecker;
-
+            import modgen.common.throwerror;
             %
             self=self@modgen.containers.ondisk.AHashMap(varargin{:});
-            [~,prop]=parseparams(varargin);     
+            [~,prop]=parseparams(varargin);
             nProp=length(prop);
             for k=1:2:nProp-1
                 switch lower(prop{k})
@@ -93,8 +92,7 @@ classdef HashMapMatXML<modgen.containers.ondisk.AHashMap
                     self.isMissingKeyBlamed=true;
                 case 'none',
                 otherwise,
-                    error([upper(mfilename),':wrongInput'],...
-                        'unknown storage format');
+                    throwerror('wrongInput','unknown storage format');
             end
         end
         %
@@ -102,7 +100,7 @@ classdef HashMapMatXML<modgen.containers.ondisk.AHashMap
     methods (Access=protected)
         function valueObj=getOne(self,keyStr)
             import modgen.common.throwerror;
-            WARN_TO_CATCH='badMatFile:wrongState';            
+            WARN_TO_CATCH='badMatFile:wrongState';
             lastwarn('');
             valueObj=getOne@modgen.containers.ondisk.AHashMap(self,keyStr);
             [lastWarnMsg,lastWarnId]=lastwarn();
@@ -111,18 +109,18 @@ classdef HashMapMatXML<modgen.containers.ondisk.AHashMap
             indStart=max(1,nWarnChars-nChars)+1;
             if strcmp(lastWarnId(indStart:end),WARN_TO_CATCH)
                 throwerror('wrongState',lastWarnMsg);
-            end            
-        end          
+            end
+        end
         function [isPositive,keyStr]=checkKey(self,fileName)
             import modgen.system.ExistanceChecker;
             isPositive=ExistanceChecker.isFile(fileName);
-            if (strcmp(self.fileExtension,self.XML_EXTENSION))&&(nargout<2)
-                return;
-            end
-            if isPositive
-               [isPositive,keyStr]=...
-                   checkKey@modgen.containers.ondisk.AHashMap(...
-                   self,fileName);
+            if ~((strcmp(self.fileExtension,self.XML_EXTENSION))&&...
+                    (nargout<2))
+                if isPositive
+                    [isPositive,keyStr]=...
+                        checkKey@modgen.containers.ondisk.AHashMap(...
+                        self,fileName);
+                end
             end
         end
     end

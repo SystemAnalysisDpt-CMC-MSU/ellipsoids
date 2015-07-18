@@ -99,7 +99,8 @@ classdef EmailLogger<handle
                 %
                 emailSubjectPrefix=['[',self.loggerName,']:'];
                 emailSubjectSuffix=[self.subjectSuffix ,...
-                    ', running on ',self.hostName,'(',self.userName,')'];
+                    ', running on host:',self.hostName,'(user:',self.userName,'),',...
+                    'matlab:',version('-release'),'(arch:',computer,')'];
                 emailSubject=[emailSubjectPrefix,subjectMessage,...
                     emailSubjectSuffix];
                 emailAttachNameList=self.emailAttachmentNameList;

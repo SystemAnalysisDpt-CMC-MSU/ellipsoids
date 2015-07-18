@@ -25,7 +25,7 @@ classdef StructDispTC < mlunitext.test_case %#ok<*NASGU>
             self.resTmpDir=modgen.test.TmpDataManager.getDirByCallerKey();
         end
         function self = tear_down(self)
-            rmdir(self.resTmpDir,'s');
+            modgen.io.rmdir(self.resTmpDir,'s');
         end
         %
         function self = test_strucdisp(self)

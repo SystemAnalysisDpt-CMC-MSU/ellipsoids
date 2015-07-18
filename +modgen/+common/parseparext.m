@@ -40,6 +40,11 @@ function [reg,isRegSpecVec,varargout]=parseparext(args,propNameValMat,varargin)
 %           corresponding property from propNameValMat is obligatory. This
 %           property can only be used when propNameValMat is not empty
 %
+%       isDefaultPropSpecVec: logical[1,nExpProp] - indicates whetehr a 
+%           corresponding property has a default value. This property can
+%           only be used when propRetMode='list'. Properties without
+%           default values are not included into the resulting list
+%
 % Output:
 %   reg: cell[1,nRegs] - list of regular parameters
 %
@@ -84,10 +89,10 @@ function [reg,isRegSpecVec,varargout]=parseparext(args,propNameValMat,varargin)
 % isPropVal3 =false
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-07-27 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 08-June-2015 $ 
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2011 $
+%            System Analysis Department 2015 $
 %
 %
 import modgen.common.type.simple.*;
@@ -123,7 +128,8 @@ else
     isCheckSpec=false;
 end
 [inpReg,inpProp]=modgen.common.parseparams(varargin,...
-    {'regCheckList','regDefList','propRetMode','isObligatoryPropVec'});
+    {'regCheckList','regDefList','propRetMode','isObligatoryPropVec',...
+    'isDefaultPropSpecVec'});
 %
 if ~isempty(inpReg)&&~isempty(inpReg{1})
     isNRegExpSpec=true;
@@ -141,6 +147,7 @@ nRegs=length(reg);
 isRegDefListSpec=false;
 isPropRetModeSpec=false;
 isObligatoryPropVecSpec=false;
+isDefPropIndicatorSpec=false;
 if ~isempty(inpProp)
     nInpProps=length(inpProp);
     for iInpProp=1:2:nInpProps-1
@@ -180,6 +187,15 @@ if ~isempty(inpProp)
                 end
                 isObligatoryPropVecSpec=true;
                 %
+            case 'isdefaultpropspecvec',
+                isDefaultPropSpecVec=inpProp{iInpProp+1};
+                checkgen(isDefaultPropSpecVec,'islogical(x)&&isrow(x)');
+                if ~isDefSpec
+                    throwerror('wrongInput:defPropSpecVecNoDefValues',...
+                        ['isDefaultPropSpecVec property is allowed only ',...
+                        'when default property values are specified']);
+                end
+                isDefPropIndicatorSpec=true;
             otherwise 
                 throwerror('wrongInput','Oops, we shouldn''t be here');
         end
@@ -192,8 +208,13 @@ if ~isPropRetModeSpec
         propRetMode='list';
     end
 end
+if isDefPropIndicatorSpec&&strcmp(propRetMode,'separate')
+    throwerror('wrongInput:defPropSpecVecNotInListMode',...
+        'isDefaultPropSpecVec is not supported when propRetMode=separate');
+    
+end
 if ~isPropNameSpec&&strcmp(propRetMode,'separate')
-    throwerror([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'propRetMode=separate is not supported for empty propNameValMat');
 end
 %
@@ -266,7 +287,14 @@ switch propRetMode
         end
         if nOut>0
             if isPropNameSpec
-                isPropFilledVec=isPropSpecVec|isDefSpec;
+                if isDefPropIndicatorSpec
+                    isPropFilledVec=isPropSpecVec|...
+                        isDefSpec&isDefaultPropSpecVec;
+                else
+                    isPropFilledVec=isPropSpecVec|...
+                        isDefSpec;
+                end
+                %
                 prop=[propNameList(isPropFilledVec);...
                     propValList(isPropFilledVec)];
                 varargout{1}=transpose(prop(:));

@@ -85,8 +85,13 @@ fieldXList=sort(fieldnames(SX).');
 fieldYList=sort(fieldnames(SY).');
 isEqual=isequal(fieldXList,fieldYList);
 if ~isEqual,
-    reportStrList={['Field names are different, left:',...
-        cell2sepstr('',fieldXList,'|'),', right: ',cell2sepstr('',fieldYList,'|')]};
+    %
+    fieldXMinusYList=setdiff(fieldXList,fieldYList);
+    fieldYMinusXList=setdiff(fieldYList,fieldXList);
+    %
+    reportStrList={['Field names are different, left-right:',...
+        cell2sepstr('',fieldXMinusYList,'|'),...
+        ', right-left: ',cell2sepstr('',fieldYMinusXList,'|')]};
     return;
 end
 %

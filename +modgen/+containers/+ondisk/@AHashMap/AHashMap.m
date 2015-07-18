@@ -1,4 +1,4 @@
-classdef AHashMap<handle
+classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
     %DISKBASEDHASHMAP represents a hash map for the arbitrary objects on disk
     % with a high level of persistency when the object state can be
     % restored based only on a storage location
@@ -8,8 +8,9 @@ classdef AHashMap<handle
         ALLOWED_EXTENSIONS
         
     end
-    properties (Access=protected, Hidden)
+    properties (Access=protected,Hidden)
         storageLocation
+        storageLocationRoot
         isPutErrorIgnored=false
         isBrokenStoredValuesIgnored=false
         fileExtension
@@ -21,6 +22,7 @@ classdef AHashMap<handle
         storageFormat='none'
         isMissingKeyBlamed=false
         isStorageContentChecked=true;
+        storageBranchKey
     end
     methods
         function isHashedPath=getIsHashedPath(self)
@@ -39,40 +41,33 @@ classdef AHashMap<handle
             %            System Analysis Department 2012 $
             %
             %
-            import modgen.*;
+            import modgen.common.parseparext;
             import modgen.containers.DiskBasedHashMap;
             import modgen.system.ExistanceChecker;
             %
-            [~,prop]=parseparams(varargin);
-            nProp=length(prop);
-            isStorageBranchKeySkipped=false;
-            for k=1:2:nProp-1
-                switch lower(prop{k})
-                    case 'skipstoragebranchkey',
-                        isStorageBranchKeySkipped=prop{k+1};
-                    case 'storagelocationroot'
-                        storageLocation=prop{k+1};
-                    case 'storagebranchkey',
-                        storageBranchKey=prop{k+1};
-                    case 'ignoreputerrors',
-                        self.isPutErrorIgnored=true;
-                    case 'ignorebrokenstoredvalues',
-                        self.isBrokenStoredValuesIgnored=true;
-                    case 'storageformat'
-                        self.storageFormat=prop{k+1};
-                    case 'usehashedpath',
-                        self.isHashedPath=prop{k+1};
-                    case 'usehashedkeys',
-                        self.isHashedKeys=prop{k+1};
-                    case 'checkstoragecontent',
-                        self.isStorageContentChecked=prop{k+1};
-                    otherwise,
-                        error([upper(mfilename),':wrongProperty'],...
-                            'unidentified property name: %s ',prop{k});
-                end;
-            end;
+            [~,~,isStorageBranchKeySkipped,storageLocationRoot,...
+                storageBranchKey,self.isPutErrorIgnored,...
+                self.isBrokenStoredValuesIgnored,self.storageFormat,...
+                self.isHashedPath,self.isHashedKeys,...
+                self.isStorageContentChecked,...
+                ~,isStorageLocSpec,isStorageBranchKeySpec]=...
+                modgen.common.parseparext(varargin,...
+                {'skipStorageBranchKey','storageLocationRoot',...
+                'storagebranchkey','ignoreputerrors',...
+                'ignorebrokenstoredvalues','storageformat',...
+                'usehashedpath','usehashedkeys',...
+                'checkstoragecontent';...
+                false,char(1,0),'default',self.isPutErrorIgnored,...
+                self.isBrokenStoredValuesIgnored,self.storageFormat,...
+                self.isHashedPath,self.isHashedKeys,...
+                self.isStorageContentChecked;...
+                'islogscalar(x)','isstring(x)',...
+                'isstring(x)','islogscalar(x)',...
+                'islogscalar(x)','isstring(x)',...
+                'islogscalar(x)','islogscalar(x)',...
+                'islogscalar(x)'},[0 1]);
             %
-            if ~ExistanceChecker.isVar('storageBranchKey')
+            if ~isStorageBranchKeySpec
                 storageBranchKey='default';
             end
             %
@@ -80,23 +75,28 @@ classdef AHashMap<handle
                 storageBranchKey=hash(storageBranchKey);
             end
             %
-            if ~ExistanceChecker.isVar('storageLocation')
+            if ~isStorageLocSpec
                 metaClass=metaclass(self);
-                storageLocation=fileparts(which(metaClass.Name));
+                storageLocationRoot=fileparts(which(metaClass.Name));
             end
             %
             %
             if isStorageBranchKeySkipped
-                self.storageLocation=storageLocation;
+                self.storageLocation=storageLocationRoot;
+                storageBranchKey='';
             else
-                self.storageLocation=[storageLocation,filesep,...
+                self.storageLocation=[storageLocationRoot,filesep,...
                     storageBranchKey];
             end
+            %
+            self.storageLocationRoot=storageLocationRoot;
+            %
+            self.storageBranchKey=storageBranchKey;
             %
             if ~strcmpi(self.storageFormat,'none')
                 if ~ExistanceChecker.isDir(self.storageLocation)
                     %check that a directory if exists, containts only mat files
-                    mkdir(self.storageLocation);
+                    modgen.io.mkdir(self.storageLocation);
                 else
                     self.checkStorageDir(self.storageLocation);
                 end
@@ -176,6 +176,35 @@ classdef AHashMap<handle
             
         end
         %
+        function branchKey=getStorageBranchKey(self)
+            % GETSTORAGEBRANCHKEY
+            % Input:
+            %   regular:
+            %       self:
+            % Output:
+            %   branchKey: char[1,] - current branch key
+            %
+            branchKey=self.storageBranchKey;
+        end
+        %
+        function storageLocationRoot=getStorageLocationRoot(self)
+            % GETSTORAGELOCATION returns a storage location root
+            %  for the object in question
+            %
+            % Usage: self.getStorageLocation()
+            %
+            % Input:
+            %   regular:
+            %       self: DiskBasedHashMap[1,1] - the object itself
+            % Output:
+            %   regular:
+            %       storageLocationRoot: char[1,nChars] - storage location
+            %           directory on a disk (includes a branch key)
+            %
+            
+            storageLocationRoot=self.storageLocationRoot;
+        end        
+        %
         function storageLocation=getStorageLocation(self)
             % GETSTORAGELOCATION returns a storage location for the object
             % in question
@@ -187,8 +216,8 @@ classdef AHashMap<handle
             %       self: DiskBasedHashMap[1,1] - the object itself
             % Output:
             %   regular:
-            %       storageLocation: char[1,nChars] - storage location on
-            %       the disk
+            %       storageLocation: char[1,nChars] - storage location
+            %           directory on a disk (includes a branch key)
             %
             
             storageLocation=self.storageLocation;

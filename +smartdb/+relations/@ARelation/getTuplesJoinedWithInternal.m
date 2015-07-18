@@ -33,7 +33,6 @@ function [resRel,resOtherRel]=getTuplesJoinedWithInternal(self,otherRel,...
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-%
 import modgen.common.throwerror;
 import modgen.common.type.simple.*;
 %
