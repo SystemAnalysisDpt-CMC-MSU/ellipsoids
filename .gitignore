@@ -12,6 +12,7 @@
 /lib/+modgen/+configuration/+test/@ConfigurationRMTest/confrepo/
 /products/+elltool/+test/+logging/Logs/
 /ell_*.bat
+/matlinq_*.bat
 /products/+gras/+ellapx/+uncertcalc/+conf/+sysdef/+test/confrepo/_default/test2.xml
 /products/+gras/+ellapx/+uncertcalc/+test/+regr/+conf/+sysdef/confrepo/*
 !/products/+gras/+ellapx/+uncertcalc/+test/+regr/+conf/+sysdef/confrepo/_templates
