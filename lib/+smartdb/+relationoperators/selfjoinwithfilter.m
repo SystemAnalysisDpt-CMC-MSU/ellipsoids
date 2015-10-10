@@ -1,7 +1,7 @@
 function resRelObj = selfjoinwithfilter(inpRelObj,joinByFieldList,...
     filterField,filterToFieldRel,varargin)
 % SELFJOINWITHFILTER performs self join of given relation and returns the
-% result as new relation
+%   result as new relation
 %
 % Usage: resRelObj=selfjoinwithfilter(inpRelObj,joinByFieldList,...
 %            filterField,filterToFieldRel,varargin)
@@ -44,9 +44,8 @@ function resRelObj = selfjoinwithfilter(inpRelObj,joinByFieldList,...
 %        used for ordering the fields in the resulting relation
 %
 % Output:
-%   regular:
-%     resRelObj: ARelation [1,1] - class object obtained from inpRelObj as
-%        result of self joining
+%   resRelObj: ARelation [1,1] - class object obtained from inpRelObj as
+%       result of self joining
 %
 % Note: 1) All fields in inpRelObj are divided on three groups: fields from
 %          joinByFieldList, single field filterField and value fields not
@@ -67,7 +66,7 @@ function resRelObj = selfjoinwithfilter(inpRelObj,joinByFieldList,...
 %
 %
 import smartdb.relations.*;
-import modgen.common.*;
+import modgen.common.throwerror;
 %% Input parameters
 [reg,prop]=parseparams(varargin);
 if ~isempty(reg)

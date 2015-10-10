@@ -10,13 +10,12 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
             self.sortDetermenisticallyInternal(varargin{:});
         end
     end
-    methods (Static,Access=protected,Sealed)
+    methods (Access=protected,Sealed)
         %
-        function propCheckCMat=getEllOnlyIsEqualPropCheckCMat()
+        function propCheckCMat=getEllOnlyIsEqualPropCheckCMat(self)
             import gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel;
             %checkTupleOrder=true for EllTube classes by default
-            propCheckCMat=...
-                TypifiedByFieldCodeRel.getRelIsEqualPropCheckCMat(...
+            propCheckCMat=self.getRelIsEqualPropCheckCMat(...
                 {'checkTupleOrder'});
             propCheckCMat{2}=true;
             %
@@ -26,14 +25,13 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
                 propCheckCMat];
         end
     end
-    methods (Static,Sealed)
+    methods (Sealed)
         %
-        function propCheckCMat=getEllIsEqualPropCheckCMat(propNameList)
+        function propCheckCMat=getEllIsEqualPropCheckCMat(self,propNameList)
             import modgen.common.throwerror;
-            import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;
             propCheckCMat=[...
-                ATypifiedAdjustedRel.getEllOnlyIsEqualPropCheckCMat(),...
-                smartdb.relations.ARelation.getRelIsEqualPropCheckCMat()];
+                self.getEllOnlyIsEqualPropCheckCMat(),...
+                self.getRelIsEqualPropCheckCMat()];
             if nargin>0
                 [isThereVec,indThereVec]=ismember(lower(propNameList),...
                     lower(propCheckCMat(1,:)));
@@ -65,7 +63,12 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
         %
         %   properties:
         %       asHandle: logical[1,1] - if true, elements are compared
-        %           as handles ignoring content of the objects   
+        %           as handles ignoring content of the objects 
+        %       asBlob: logical[1,1] - if true, objects are compared as
+        %           binary sequencies aka BLOBs
+        %         Note: you cannot set both asBlob and asHandle to true
+        %           at the same time
+        %
         %       propEqScalarList: cell[1,] - list of properties passed
         %           to isEqualScalarInternal method  
         %
@@ -106,9 +109,11 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
             import modgen.common.parseparext;
             import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;            
             %
+            indObj=find(cellfun(@(x)isa(x,mfilename('class')),varargin),...
+                1,'first');            
             [regArgList,propEqScalarList]=...
-                ATypifiedAdjustedRel.parseEqScalarProps(...
-                ATypifiedAdjustedRel.getEllOnlyIsEqualPropCheckCMat(),...
+                varargin{indObj}.parseEqScalarProps(...
+                varargin{indObj}.getEllOnlyIsEqualPropCheckCMat(),...
                 varargin);
             %
             [isEq,reportStr]=...
@@ -116,7 +121,7 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
                 regArgList{:},'compareClass',false,'propEqScalarList',...
                 propEqScalarList);
         end
-        function [isEqArr,reportStr]=isEqualElem(varargin)
+        function [isEqArr,varargout]=isEqualElem(varargin)
         % ISEQUALELEM compares the specified CubeStruct object with other CubeStruct
         % object and returns true if they are equal, otherwise it
         % returns false
@@ -133,6 +138,10 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
         %   properties:
         %       asHandle: logical[1,1] - if true, elements are compared
         %           as handles ignoring content of the objects   
+        %       asBlob: logical[1,1] - if true, objects are compared as
+        %           binary sequencies aka BLOBs
+        %         Note: you cannot set both asBlob and asHandle to true
+        %           at the same time        
         %       propEqScalarList: cell[1,] - list of properties passed
         %           to isEqualScalarInternal method  
         %
@@ -162,6 +171,14 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
         %   isEqArr: logical[n_1,n_2,...,n_k] - result of comparison
         %   reportStr: char[1,] - contains an additional information about the
         %      differences (if any)
+        %   signOfDiffArr: double[n_1,n_2,...,n_k] - array of signs of
+        %       differences:
+        %           -1: if left element < right element
+        %            0: if elements are equal
+        %           +1: if left element > right element
+        %        Note: current implementation defines this sign
+        %           only for asBlob=true mode, for the rest of the
+        %           comparison modes it is NaN        
         %
         %
         % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 21-June-2015 $ 
@@ -172,13 +189,15 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
             import modgen.common.parseparams;
             import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;    
             %
+            indObj=find(cellfun(@(x)isa(x,mfilename('class')),varargin),...
+                1,'first');                 
             [regArgList,propEqScalarList]=...
-                ATypifiedAdjustedRel.parseEqScalarProps(...
-                ATypifiedAdjustedRel.getEllOnlyIsEqualPropCheckCMat(),...
+                varargin{indObj}.parseEqScalarProps(...
+                varargin{indObj}.getEllOnlyIsEqualPropCheckCMat(),...
                 varargin);
             %
             classComparePropCMat=...
-                ATypifiedAdjustedRel.getHandleClonerIsEqualPropCheckCMat(...
+                varargin{indObj}.getHandleClonerIsEqualPropCheckCMat(...
                 {'compareClass'});
             classComparePropCMat{2}=false;
             %
@@ -187,14 +206,15 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
                         classComparePropCMat,...
                         'propRetMode','list');
             %
-            [isEqArr,reportStr]=...
+            varargout=cell(1,max(nargout-1,0));            
+            [isEqArr,varargout{:}]=...
                 isEqualElem@gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel(...
                 regArgList{:},propValList{:},'propEqScalarList',...
                 propEqScalarList);
         end        
     end    
     methods (Access=protected)
-        function [isOk,reportStr]=isEqualScalarInternal(self,otherRel,varargin)
+        function [isOk,varargout]=isEqualScalarInternal(self,otherRel,varargin)
             self.checkIfObjectScalar();
             otherRel.checkIfObjectScalar();
             [reg,prop]=modgen.common.parseparams(varargin,...
@@ -202,7 +222,8 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
             self.sortDetermenisticallyInternal(prop{2:end});
             otherRel.sortDetermenisticallyInternal(prop{2:end});
             %
-            [isOk,reportStr]=self.isEqualScalarAdjustedInternal(otherRel,...
+            varargout=cell(1,max(nargout-1,0));                     
+            [isOk,varargout{:}]=self.isEqualScalarAdjustedInternal(otherRel,...
                 reg{:},prop{:});
         end
     end
@@ -235,6 +256,7 @@ classdef ATypifiedAdjustedRel<gras.ellapx.smartdb.rels.TypifiedByFieldCodeRel
     methods (Access=protected)
         function sortDetermenisticallyInternal(self,maxTolerance)
             import modgen.common.checkvar;
+            import modgen.common.roundn;
             MAX_PREC_DEFAULT=1e-6;
             if nargin<2
                 maxTolerance=MAX_PREC_DEFAULT;

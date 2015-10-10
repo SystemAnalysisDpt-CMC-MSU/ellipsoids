@@ -22,7 +22,6 @@ function relDataObj=fromStructList(catDim,className,structList)
 %            System Analysis Department 2012 $
 %
 %
-
 %% Check which fields are specified by each of the structures
 N_UNIQUE_BLOCK_SIZE=1000;
 nStructs=numel(structList);
@@ -52,7 +51,8 @@ if nFields>0
     end
     %% Find unique combinations specified field lists
     isFieldSpecCVec=mat2cell(isFieldSpecMat,ones(1,nStructs),nFields);
-    [isFieldUniqueCombCVec,indForwardVec,indBackwardVec]=uniqueobj(isFieldSpecCVec);
+    [isFieldUniqueCombCVec,indForwardVec,indBackwardVec]=...
+        modgen.common.unique(isFieldSpecCVec);
     isAnyFieldsVec=cellfun(@any,isFieldUniqueCombCVec);
     nUniqueFieldCombs=length(indForwardVec);
     grStructList=cell(1,nUniqueFieldCombs);
@@ -88,7 +88,7 @@ if nFields>0
         end
     end
     %
-    if nFields>1&&~isequalwithequalnans(catDimSizeCVec{:})
+    if nFields>1&&~isequaln(catDimSizeCVec{:})
         error([upper(mfilename),':wrongInput'],...
             ['cannot concatenate along the specified dimension ',...
             'as different fields have different sizes']);

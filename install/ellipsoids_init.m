@@ -3,8 +3,7 @@ function ellipsoids_init()
 % ELLIPSOIDS_INIT - initializes Ellipsoidal Toolbox.
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
-%Options initialisation
-warning('on','all');
+%Options initialization
 Properties.init();
 logger=Log4jConfigurator.getLogger();
 %

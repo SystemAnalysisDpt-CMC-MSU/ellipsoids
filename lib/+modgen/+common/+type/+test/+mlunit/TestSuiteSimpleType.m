@@ -33,15 +33,15 @@ classdef TestSuiteSimpleType < mlunitext.test_case
         end
         function test_checkcellofstrorfunc(self)
             fHandle=@modgen.common.type.simple.lib.iscellofstrorfunc;
-            checkP({@(x)x,'isstring(x)'});
+            checkP({@(x)x,'ischarstring(x)'});
             checkP({@(x)x,@(x)x});
-            checkP({'isstring(x)','isstring(x)'});
-            checkP({'isstring(x)','isstring(x)'}.');
-            checkP({@(x)x,'isstring(x)'}.');
+            checkP({'ischarstring(x)','ischarstring(x)'});
+            checkP({'ischarstring(x)','ischarstring(x)'}.');
+            checkP({@(x)x,'ischarstring(x)'}.');
             checkP({@(x)x,@(x)x}.');
             checkN({@(x)x,@(x)x,1});
-            checkN({'isstring(x)','isstring(x)',2});
-            checkN({'isstring(x)','isstring(x)'.'});
+            checkN({'ischarstring(x)','ischarstring(x)',2});
+            checkN({'ischarstring(x)','ischarstring(x)'.'});
             function checkP(inpArray)
                 mlunitext.assert_equals(true,fHandle(inpArray));
             end
@@ -86,11 +86,12 @@ classdef TestSuiteSimpleType < mlunitext.test_case
             
         end
         function self=test_checkgenext(self)
+            import modgen.common.type.simple.lib.*;
             a='sdfadf';
             b='asd';
             %
-            checkP('isstring(x1)',1,a,'alpha');
-            checkP('isstring(x1)',1,a);
+            checkP(@ischarstring,1,a,'alpha');
+            checkP(@ischarstring,1,a);
             checkP('numel(x1)==numel(x2)',2,a,a);
             checkP('numel(x1)==numel(x2)',2,a,a,'alpha');
             checkP('numel(x1)==numel(x2)',2,a,a,'alpha','beta');
@@ -135,34 +136,39 @@ classdef TestSuiteSimpleType < mlunitext.test_case
             %
             function fHandle=typeSpec2Handle(typeSpec,nPlaceHolders)
                 import modgen.common.type.simple.lib.*;                
-                switch nPlaceHolders
-                    case 1,
-                        fHandle=eval(['@(x1)(',typeSpec,')']);
-                    case 2,
-                        fHandle=eval(['@(x1,x2)(',typeSpec,')']);
-                    case 3,
-                        fHandle=eval(['@(x1,x2,x3)(',typeSpec,')']);
-                    otherwise,
-                        throwerror('wrongInput',...
-                            'unsupported number of arguments');
+                if ischar(typeSpec)
+                    switch nPlaceHolders
+                        case 1,
+                            fHandle=eval(['@(x1)(',typeSpec,')']);
+                        case 2,
+                            fHandle=eval(['@(x1,x2)(',typeSpec,')']);
+                        case 3,
+                            fHandle=eval(['@(x1,x2,x3)(',typeSpec,')']);
+                        otherwise,
+                            throwerror('wrongInput',...
+                                'unsupported number of arguments');
+                    end
+                else
+                    fHandle=typeSpec;
                 end
             end
         end
         function self=test_check(self)
+            import modgen.common.type.simple.lib.*;
             a='sdfadf';
-            modgen.common.type.simple.checkgen(a,'isstring(x)');
-            modgen.common.type.simple.checkgen(a,'isstring(x)','aa');
+            modgen.common.type.simple.checkgen(a,@ischarstring);
+            modgen.common.type.simple.checkgen(a,@ischarstring,'aa');
             a=1;
-            checkN(a,'isstring(x)');
-            checkN(a,'iscelloffunc(x)');
+            checkN(a,@ischarstring);
+            checkN(a,@iscelloffunc);
             %
-            checkP(a,'isstring(x)||isrow(x)');
+            checkP(a,@(x)(ischarstring(x)||isrow(x)));
             %
-            checkP(a,'isstring(x)||isrow(x)||isabrakadabra(x)');
+            checkP(a,@(x)(ischarstring(x)||isrow(x)||isabrakadabra(x)));
             %
             a=1;
-            checkN(a,'isstring(x)&&isvec(x)');
-            checkN(a,'isstring(x)&&isabrakadabra(x)');
+            checkN(a,@(x)(ischarstring(x)&&isvec(x)));
+            checkN(a,@(x)(ischarstring(x)&&isabrakadabra(x)));
             %
             a=true;
             checkP(a,'islogical(x)&&isscalar(x)');
@@ -170,20 +176,20 @@ classdef TestSuiteSimpleType < mlunitext.test_case
             checkP(a,'isstruct(x)&&isscalar(x)');
             %
             a={'a','b'};
-            checkP(a,'iscellofstrvec(x)');
+            checkP(a,@(x)(iscellofstrvec(x)));
             a={'a','b';'d','e'};
-            checkP(a,'iscellofstrvec(x)');
+            checkP(a,@(x)(iscellofstrvec(x)));
             a={'a','b'};
-            checkP(a,'iscellofstring(x)');
+            checkP(a,@(x)(iscellofstring(x)));
             a={'a','b';'d','e'};
-            checkP(a,'iscellofstring(x)');  
+            checkP(a,@(x)(iscellofstring(x)));
             a={'a','b';'d','esd'.'};
-            checkN(a,'iscellofstring(x)');  
+            checkN(a,@(x)(iscellofstring(x)));
             %
             a={@(x)1,@(x)2};
-            checkP(a,'iscelloffunc(x)');
+            checkP(a,@(x)(iscelloffunc(x)));
             a={@(x)1,'@(x)2'};
-            checkN(a,'iscelloffunc(x)');
+            checkN(a,@(x)(iscelloffunc(x)));
             %
             function checkN(x,typeSpec,varargin)
                 import modgen.common.type.simple.lib.*;
@@ -191,7 +197,11 @@ classdef TestSuiteSimpleType < mlunitext.test_case
                     ['modgen.common.type.simple.checkgen(x,',...
                     'typeSpec,varargin{:})'],...
                     ':wrongInput');
-                fHandle=eval(['@(x)(',typeSpec,')']);
+                if ischar(typeSpec)
+                    fHandle=eval(['@(x)(',typeSpec,')']);
+                else
+                    fHandle=typeSpec;
+                end
                 self.runAndCheckError(...
                     ['modgen.common.type.simple.checkgen(x,',...
                     'fHandle,varargin{:})'],...
@@ -201,7 +211,11 @@ classdef TestSuiteSimpleType < mlunitext.test_case
             function checkP(x,typeSpec,varargin)
                 import modgen.common.type.simple.lib.*;
                 modgen.common.type.simple.checkgen(x,typeSpec,varargin{:});
-                fHandle=eval(['@(x)(',typeSpec,')']);
+                if ischar(typeSpec)
+                    fHandle=eval(['@(x)(',typeSpec,')']);
+                else
+                    fHandle=typeSpec;
+                end
                 modgen.common.type.simple.checkgen(x,fHandle,varargin{:});
             end
             

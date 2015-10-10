@@ -1,4 +1,5 @@
-function [isPositive,reportStr]=isEqualScalarInternal(self,obj,varargin)
+function [isPositive,reportStr,signOfDiff]=isEqualScalarInternal(self,...
+    obj,varargin)
 % ISEQUAL compares a given object with a specified one
 import modgen.common.throwerror;
 if ~(isscalar(self)&&isscalar(obj))
@@ -8,6 +9,9 @@ if nargout>1,
     [isPositive,reportStr]=...
         isEqualScalarInternal@smartdb.cubes.CubeStructFieldInfo(...
         self,obj,varargin{:});
+    if nargout>2
+        signOfDiff=nan;
+    end
 else
     isPositive=isEqualScalarInternal@smartdb.cubes.CubeStructFieldInfo(...
         self,obj,varargin{:});

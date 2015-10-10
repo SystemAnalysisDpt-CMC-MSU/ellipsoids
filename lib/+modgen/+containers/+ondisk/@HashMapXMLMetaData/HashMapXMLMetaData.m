@@ -25,7 +25,7 @@ classdef HashMapXMLMetaData<modgen.containers.ondisk.AHashMap
             %
             [regArgList,~,storageFormat]=parseparext(varargin,...
                 {'storageFormat';'verxml';...
-                'isstring(x)&&ismember(x,{''verxml'',''none''})'});
+                'ischarstring(x)&&ismember(x,{''verxml'',''none''})'});
             %
             if ~ismember(storageFormat,{'verxml','none'})
                 throwerror('wrongInput','storage format %s unknown',...
@@ -39,8 +39,8 @@ classdef HashMapXMLMetaData<modgen.containers.ondisk.AHashMap
                 case 'verxml',
                     self.saveFunc=...
                         @modgen.containers.ondisk.HashMapXMLMetaData.saveFunc;
-                    self.loadKeyFunc=@xmlload;
-                    self.loadValueFunc=@xmlload;
+                    self.loadKeyFunc=@modgen.xml.xmlload;
+                    self.loadValueFunc=@modgen.xml.xmlload;
                     self.fileExtension=self.XML_EXTENSION;
                     self.isMissingKeyBlamed=true;
                 case 'none',
@@ -57,7 +57,7 @@ classdef HashMapXMLMetaData<modgen.containers.ondisk.AHashMap
     end
     methods (Access=protected, Static)
         function saveFunc(fileName,valueObjName,keyObjName,varargin)
-            xmlsave(fileName,struct(...
+            modgen.xml.xmlsave(fileName,struct(...
                 'valueObj',{evalin('caller',valueObjName)},...
                 'keyStr',{evalin('caller',keyObjName)}),...
                 'on',varargin{:},'insertTimestamp',false);

@@ -5,20 +5,20 @@ classdef ARelation<smartdb.cubes.CubeStruct
         MAX_TUPLES_TO_DISPLAY=15
     end
     %
-    methods (Static,Access=protected,Sealed)
+    methods (Access=protected,Sealed)
         %
-        function propCheckCMat=getRelOnlyIsEqualPropCheckCMat()
+        function propCheckCMat=getRelOnlyIsEqualPropCheckCMat(~)
             propCheckCMat={'checktupleorder';...
                 false;...
                 'isscalar(x)&&islogical(x)'};            
         end
         %
-        function propCheckCMat=getRelIsEqualPropCheckCMat(propNameList)
+        function propCheckCMat=getRelIsEqualPropCheckCMat(self,propNameList)
             import modgen.common.throwerror;
             propCheckCMat=[...
-                smartdb.relations.ARelation.getRelOnlyIsEqualPropCheckCMat(),...
-                smartdb.cubes.CubeStruct.getIsEqualPropCheckCMat()];
-            if nargin>0
+                self.getRelOnlyIsEqualPropCheckCMat(),...
+                self.getIsEqualPropCheckCMat()];
+            if nargin>1
                 [isThereVec,indThereVec]=ismember(lower(propNameList),...
                     lower(propCheckCMat(1,:)));
                 if ~all(isThereVec)
@@ -29,7 +29,7 @@ classdef ARelation<smartdb.cubes.CubeStruct
         end
     end
     methods
-        function [isEq,reportStr]=isEqual(varargin)
+        function [isEq,varargout]=isEqual(varargin)
         % ISEQUAL compares the specified CubeStruct object with other CubeStruct
         % object and returns true if they are equal, otherwise it
         % returns false
@@ -50,6 +50,10 @@ classdef ARelation<smartdb.cubes.CubeStruct
         %   properties:
         %       asHandle: logical[1,1] - if true, elements are compared
         %           as handles ignoring content of the objects   
+        %       asBlob: logical[1,1] - if true, objects are compared as
+        %           binary sequencies aka BLOBs
+        %         Note: you cannot set both asBlob and asHandle to true
+        %           at the same time
         %       propEqScalarList: cell[1,] - list of properties passed
         %           to isEqualScalarInternal method  
         %
@@ -73,6 +77,14 @@ classdef ARelation<smartdb.cubes.CubeStruct
         %   isEq: logical[1,1] - result of comparison
         %   reportStr: char[1,] - contains an additional information about the
         %      differences (if any)
+        %   signOfDiffArr: double[n_1,n_2,...,n_k] - array of signs of
+        %       differences:
+        %           -1: if left element < right element
+        %            0: if elements are equal
+        %           +1: if left element > right element
+        %        Note: current implementation defines this sign
+        %           only for asBlob=true mode, for the rest of the
+        %           comparison modes it is NaN
         %
         %
         % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 10-June-2015 $ 
@@ -82,16 +94,19 @@ classdef ARelation<smartdb.cubes.CubeStruct
         %                
             import modgen.common.parseparams;
             %
+            indObj=find(cellfun(@(x)isa(x,mfilename('class')),varargin),...
+                1,'first');
             [regArgList,propEqScalarList]=...
-                smartdb.relations.ARelation.parseEqScalarProps(...
-                smartdb.relations.ARelation.getRelOnlyIsEqualPropCheckCMat(),...
+                varargin{indObj}.parseEqScalarProps(...
+                varargin{indObj}.getRelOnlyIsEqualPropCheckCMat(),...
                 varargin);
             %
-            [isEq,reportStr]=...
+            varargout=cell(1,max(nargout-1,0));
+            [isEq,varargout{:}]=...
                 isEqual@smartdb.cubes.CubeStruct(...
                 regArgList{:},'propEqScalarList',propEqScalarList);
         end
-        function [isEqArr,reportStr]=isEqualElem(varargin)
+        function [isEqArr,varargout]=isEqualElem(varargin)
         % ISEQUALELEM compares the specified CubeStruct object with other CubeStruct
         % object and returns true if they are equal, otherwise it
         % returns false
@@ -107,7 +122,11 @@ classdef ARelation<smartdb.cubes.CubeStruct
         %
         %   properties:
         %       asHandle: logical[1,1] - if true, elements are compared
-        %           as handles ignoring content of the objects   
+        %           as handles ignoring content of the objects  
+        %       asBlob: logical[1,1] - if true, objects are compared as
+        %           binary sequencies aka BLOBs
+        %         Note: you cannot set both asBlob and asHandle to true
+        %           at the same time
         %       propEqScalarList: cell[1,] - list of properties passed
         %           to isEqualScalarInternal method  
         %
@@ -140,19 +159,22 @@ classdef ARelation<smartdb.cubes.CubeStruct
         %                        
             import modgen.common.parseparams;
             %
+            indObj=find(cellfun(@(x)isa(x,mfilename('class')),varargin),...
+                1,'first');            
             [regArgList,propEqScalarList]=...
-                smartdb.relations.ARelation.parseEqScalarProps(...
-                smartdb.relations.ARelation.getRelOnlyIsEqualPropCheckCMat(),...
+                varargin{indObj}.parseEqScalarProps(...
+                varargin{indObj}.getRelOnlyIsEqualPropCheckCMat(),...
                 varargin);
             %
-            [isEqArr,reportStr]=...
+            varargout=cell(1,max(nargout-1,0));
+            [isEqArr,varargout{:}]=...
                 isEqualElem@smartdb.cubes.CubeStruct(...
                 regArgList{:},'propEqScalarList',propEqScalarList);
         end        
     end
     methods (Access=protected)
-        function [isEq,reportStr]=isEqualScalarInternal(self,otherObj,...
-                varargin)
+        function [isEq,reportStr,signOfDiff]=isEqualScalarInternal(self,...
+                otherObj,varargin)
             % ISEQUAL - compares current relation object with other relation object and 
             %           returns true if they are equal, otherwise it returns false
             % 
@@ -202,9 +224,12 @@ classdef ARelation<smartdb.cubes.CubeStruct
                 throwerror('wrongInput',...
                     'both object to be compared must be scalar');
             end
-            propCheckMat=...
-                smartdb.relations.ARelation.getRelIsEqualPropCheckCMat(...
+            if nargout>2
+                signOfDiff=nan;
+            end
+            propCheckMat=self.getRelIsEqualPropCheckCMat(...
                 PROP_NAME_LIST);
+            %
             [~,~,isFieldOrderCheck,isCheckTupleOrder,...
                 isCompareCubeStructBackwardRef,maxTolerance,...
                 maxRelTolerance]=modgen.common.parseparext(varargin,...

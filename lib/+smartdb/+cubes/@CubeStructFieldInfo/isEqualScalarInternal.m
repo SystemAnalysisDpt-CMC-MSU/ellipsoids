@@ -1,5 +1,5 @@
-function [isPositive,reportStr]=isEqualScalarInternal(self,obj,...
-    isCubeStructCompared,cubeStructCompareParamList)
+function [isPositive,reportStr,signOfDiff]=isEqualScalarInternal(self,...
+    obj,isCubeStructCompared,cubeStructCompareParamList)
 % isEqualScalarInternal compares a given object with a specified one
 import modgen.common.throwerror;
 if (numel(self)~=1)||(numel(obj)~=1)
@@ -12,6 +12,9 @@ if nargin<3
     isCubeStructCompared=false;
 end
 reportStr='';
+if nargout>2
+    signOfDiff=nan;
+end
 if ~strcmp(self.name,obj.name)
     reportStr='Field name is different';
     isPositive=false;

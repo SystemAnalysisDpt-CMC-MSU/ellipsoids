@@ -29,6 +29,8 @@ function sortInd=getSortIndexInternal(self,sortFieldNameList,sortDim,varargin)
 %
 %
 %
+import modgen.common.uniquejoint;
+import modgen.common.throwerror;
 %% Get properties
 Direction={'asc'};
 [~,prop]=modgen.common.parseparams(varargin,[],0);
@@ -38,13 +40,13 @@ for k=1:2:nProp-1
         case 'direction'
             Direction=prop{k+1};
         otherwise,
-            error([upper(mfilename),':wrongInput'],...
+            throwerror('wrongInput',...
                 'Unidentified property name: %s ',prop{k});
     end
 end
 %% Initial actions
 if nargin<3,
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'sortDim must be given for grouping');
 end
 if ischar(sortFieldNameList),
@@ -52,16 +54,16 @@ if ischar(sortFieldNameList),
 end
 sortFieldNameList=sortFieldNameList(:).';
 if ~iscellstr(sortFieldNameList),
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'sortFieldNameList must be array of strings');
 end
-[isField indField]=ismember(sortFieldNameList,self.fieldNameList);
+[isField, indField]=ismember(sortFieldNameList,self.fieldNameList);
 if ~all(isField),
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'sortFieldNameList must contain names of given object fields');
 end
 if any(diff(sort(indField))==0),
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'sortFieldNameList must contain unique names');
 end
 nSortFields=length(indField);
@@ -69,23 +71,23 @@ if ischar(Direction),
     Direction={Direction};
 end
 if ~iscellstr(Direction),
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'Direction must be array of strings');
 end
-[isDir indDir]=ismember(lower(Direction),{'asc','desc'});
+[isDir,indDir]=ismember(lower(Direction),{'asc','desc'});
 if ~all(isDir),
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'Direction must be ''asc'' or ''desc'' for each field');
 end
 if numel(indDir)==1,
     indDir=repmat(indDir,1,nSortFields);
 elseif numel(indDir)~=nSortFields,
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'sortFieldNameList and Direction must be consistent');
 end
 minDimensionality=self.getMinDimensionality();
 if sortDim>minDimensionality||sortDim<1
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'sortDim is expected to be in range [1,minDimensionality]=[1,%d]',...
         minDimensionality);
 end

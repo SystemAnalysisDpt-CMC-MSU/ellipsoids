@@ -52,10 +52,12 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             [~, handleVecList] = modgen.struct.getleavelist(SFigHandles);
             [~, axesVecList] = modgen.struct.getleavelist(SAxesHandles);
             for iHandleVec = 1: size(handleVecList,1)
-                mlunitext.assert(handleVecList{iHandleVec},...
-                    axesVecList{2*iHandleVec-1});
-                mlunitext.assert(handleVecList{iHandleVec},...
-                    axesVecList{2*iHandleVec});
+                isOk=isequal(handleVecList{iHandleVec},...
+                    get(axesVecList{2*iHandleVec-1},'Parent'));
+                mlunitext.assert(isOk);
+                isOk=isequal(handleVecList{iHandleVec},...
+                    get(axesVecList{2*iHandleVec},'Parent'));
+                mlunitext.assert(isOk);
             end
         end		
          function testDifferentProjTypes(self)

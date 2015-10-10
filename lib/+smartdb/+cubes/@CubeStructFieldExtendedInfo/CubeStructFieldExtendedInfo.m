@@ -227,6 +227,7 @@ classdef CubeStructFieldExtendedInfo<smartdb.cubes.CubeStructFieldInfo
         %
         function checkFieldValue(self,varargin)
             import modgen.common.throwerror;
+            import modgen.common.uniquejoint;
             checkFieldValue@smartdb.cubes.CubeStructFieldInfo(self,varargin{:});
             isSpecifiedVec=varargin{end-1};
             if ~isSpecifiedVec(1)

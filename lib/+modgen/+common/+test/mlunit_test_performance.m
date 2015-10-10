@@ -1,7 +1,4 @@
 classdef mlunit_test_performance < mlunitext.test_case
-    properties
-    end
-    
     methods
         function self = mlunit_test_performance(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -10,7 +7,7 @@ classdef mlunit_test_performance < mlunitext.test_case
         function self = set_up_param(self,varargin)
             
         end
-         function self=test_parseparext_simple(self)
+        function self=test_parseparext_simple(self)
             %
             inpReg={1};
             inpFirstProp={'aa',1};
@@ -22,16 +19,16 @@ classdef mlunit_test_performance < mlunitext.test_case
                 'propRetMode','list');
             mlunitext.assert_equals(3,length(isPropSpec));
             mlunitext.assert_equals(true,all(isPropSpec));
-            mlunitext.assert_equals(true,isRegSpec);            
+            mlunitext.assert_equals(true,isRegSpec);
             mlunitext.assert_equals(true,isequal(reg,inpReg));%
             mlunitext.assert_equals(true,isequal(prop,inpProp));%
             %
             [reg,isRegSpec,prop,isPropSpec]=...
                 modgen.common.parseparext([inpReg,inpProp],{'bb','cc'},...
                 'propRetMode','list');
-            mlunitext.assert_equals([true,true,true],isRegSpec);            
+            mlunitext.assert_equals([true,true,true],isRegSpec);
             mlunitext.assert_equals(true,isequal(reg,[inpReg,inpFirstProp]));%
-            mlunitext.assert_equals(true,isequal(prop,inpSecProp));%  
+            mlunitext.assert_equals(true,isequal(prop,inpSecProp));%
             mlunitext.assert_equals(true,all(isPropSpec));
             mlunitext.assert_equals(2,length(isPropSpec));
             %
@@ -49,7 +46,7 @@ classdef mlunit_test_performance < mlunitext.test_case
                 'propRetMode','list');
             mlunitext.assert_equals(true,isempty(reg));
             mlunitext.assert_equals(true,isempty(prop));
-            mlunitext.assert_equals(true,isempty(isRegSpec));            
+            mlunitext.assert_equals(true,isempty(isRegSpec));
             mlunitext.assert_equals(true,isempty(isPropSpec));
             %
             nRegs=1;
@@ -70,7 +67,7 @@ classdef mlunit_test_performance < mlunitext.test_case
                 checkP('regCheckList',{'true'});
                 checkP('regCheckList',{@true});
                 checkP('regCheckList',{'true','true'});
-                checkP('regCheckList',{@true,@true});                
+                checkP('regCheckList',{@true,@true});
             end
             function checkP(varargin)
                 [reg1,isRegSpec1Vec]=checkPInt(varargin{:});
@@ -84,7 +81,7 @@ classdef mlunit_test_performance < mlunitext.test_case
                 mlunitext.assert_equals(true,isequal(1,length(reg1)));
                 mlunitext.assert_equals(true,isequal(2,length(reg2)));
                 mlunitext.assert_equals(true,isequal(3,reg2{2}));
-                % 
+                %
                 function [reg,isRegSpecVec]=checkPInt(varargin)
                     [reg,isRegSpecVec,isJoinByInst,isJoinIdKept]=...
                         modgen.common.parseparext(initInpArgList,...
@@ -290,13 +287,13 @@ classdef mlunit_test_performance < mlunitext.test_case
                 ':wrongInput');
             %
         end
-        function self=test_auxchecksize(self)
-            mlunitext.assert_equals(true,auxchecksize(rand(2,3),[2,3,1]));
-            mlunitext.assert_equals(true,auxchecksize(rand(2,3),[2,3]));
-            mlunitext.assert_equals(false,auxchecksize(rand(2,4),[2,3]));
-            mlunitext.assert_equals(false,auxchecksize(rand(2,4,5),[2,4]));
-            mlunitext.assert_equals(true,auxchecksize([],[]));
-            mlunitext.assert_equals(false,auxchecksize(1,[]));
+        function self=test_checksize(self)
+            mlunitext.assert_equals(true,modgen.common.checksize(rand(2,3),[2,3,1]));
+            mlunitext.assert_equals(true,modgen.common.checksize(rand(2,3),[2,3]));
+            mlunitext.assert_equals(false,modgen.common.checksize(rand(2,4),[2,3]));
+            mlunitext.assert_equals(false,modgen.common.checksize(rand(2,4,5),[2,4]));
+            mlunitext.assert_equals(true,modgen.common.checksize([],[]));
+            mlunitext.assert_equals(false,modgen.common.checksize(1,[]));
         end
         function self=test_cat(self)
             typeList={'int8','double','logical','struct'};

@@ -14,11 +14,13 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             modgen.io.rmdir(self.resTmpDir,'s');
         end
         function self = mlunit_test_xmlloadsave(varargin)
+            import modgen.xml.*;
             self = self@mlunitext.test_case(varargin{:});
             metaClass=metaclass(self);
             self.locDir=fileparts(which(metaClass.Name));            
         end
         function self=set_up_param(self,varargin)
+            import modgen.xml.*;
             self.resTmpDir=modgen.test.TmpDataManager.getDirByCallerKey();
             self.fileName=[self.resTmpDir,filesep,'tmp.xml'];
             Data.a=[1 2 3];
@@ -38,6 +40,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             Data.vega=zeros(2,3,4);
             check();
             function check()
+                import modgen.xml.*;
                 reg=modgen.common.parseparams(self.xmlsaveParams);
                 ResData=xmlparse(xmlformat(Data,reg{:}));
                 mlunitext.assert_equals(true,isequal(Data,ResData));
@@ -50,16 +53,19 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             expVar=zeros(1,0);
             check();
             function check()
+                import modgen.xml.*;                
                 resVar=xmlparse(xmlformat(expVar));
                 mlunitext.assert_equals(true,isequal(resVar,expVar));
             end
         end
         function self=testMultidimStructField(self)
+            import modgen.xml.*;
             SData.alpha(2,3).a=1;
             SRes=xmlparse(xmlformat(SData,'on'));
             mlunitext.assert_equals(isequalwithequalnans(SRes,SData),true);
         end
         function self = testInteger(self)
+            import modgen.xml.*;
             SData.a=int32([1,2,3]);
             SData.b=int64([1,2,3]);
             SData.c=uint64([1,2,3;2 3 3]);
@@ -75,6 +81,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             mlunitext.assert_equals(isequalwithequalnans(SRes,SData),true);
         end
         function testNegative(self)
+            import modgen.xml.*;
             checkN(handle([1,2]));
             checkN(complex([1,2],[1,2]));
             checkN(complex(int32([1,2]),int32([1,2])));
@@ -87,6 +94,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             end
         end
         function xmlsave(self,filePath,data,varargin)
+            import modgen.xml.*;
             [reg1,prop1]=modgen.common.parseparams(varargin,{'insertTimestamp'});
             [reg2,prop2]=modgen.common.parseparams(self.xmlsaveParams);
             nReg1=numel(reg1);
@@ -99,6 +107,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             xmlsave(filePath,data,reg{:},prop1{:},prop2{:});
         end
         function self = test_complexstructure(self)
+            import modgen.xml.*;
             Data(1)=modgen.common.genteststruct(1);
             Data(2)=modgen.common.genteststruct(2);
             self.xmlsave(self.fileName,Data);
@@ -113,6 +122,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             delete(self.fileName);
         end
         function self = test_complexstructure_backwardcompatibility(self)
+            import modgen.xml.*;
             file1ElemName=[self.locDir,filesep,'test_complexstructure_1elem.xml'];
             file1ElemTmpName=[self.locDir,filesep,'test_complexstructure_1elem_tmp.xml'];
             fileArrayName=[self.locDir,filesep,'test_complexstructure_array.xml'];
@@ -131,6 +141,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             delete(fileArrayTmpName);
         end
         function self = test_simple(self)
+            import modgen.xml.*;
             self.xmlsave(self.fileName,self.simpleData);
             SRes=xmlload(self.fileName);
             mlunitext.assert_equals(isequalwithequalnans(SRes,...
@@ -138,6 +149,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             delete(self.fileName);
         end
         function self=test_simple_metadata(self)
+            import modgen.xml.*;
             self.xmlsave(self.fileName,self.simpleData,'on',self.simpleMetaData);
             [SRes,SMetaData]=xmlload(self.fileName);
             mlunitext.assert_equals(isequalwithequalnans(SRes,...
@@ -146,6 +158,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
                 self.simpleMetaData,true)
         end
         function self=test_simple_metadata_negative(self)
+            import modgen.xml.*;
             try
                 metaData=self.simpleMetaData;
                 metaData.badParam=zeros(1,3);
@@ -157,6 +170,7 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
             end
         end
         function self = test_parseFormatEmptyStruct(self)
+            import modgen.xml.*;
             mlunitext.assert_equals(true,isequal(....
                 struct(),...
                 xmlparse(xmlformat(struct()),'on')));

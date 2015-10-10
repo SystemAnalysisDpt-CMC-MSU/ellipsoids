@@ -57,7 +57,7 @@ classdef FunctionLinear<modgen.common.func.AFunction
             if isCoeffVec,
                 coeffList=double(varargin{1});
                 % check list of coefficients
-                if isempty(coeffList)||~(ndims(coeffList)==2&&...
+                if isempty(coeffList)||~(ismatrix(coeffList)&&...
                         numel(coeffList)==length(coeffList)),
                     error([upper(mfilename),':wrongInput'],...
                         'coeffVec must be vector with finite numeric values');
@@ -136,9 +136,9 @@ classdef FunctionLinear<modgen.common.func.AFunction
                 error([upper(mfilename),':wrongInput'],...
                     'self must be scalar object');
             end
-            isnWrong=isnumeric(inpValMat)&&ndims(inpValMat)==2;
+            isnWrong=isnumeric(inpValMat)&&ismatrix(inpValMat);
             if isnWrong,
-                [nRows nCols]=size(inpValMat);
+                [nRows, nCols]=size(inpValMat);
                 isnWrong=nCols==self.getNInpArgs();
             end
             if ~isnWrong,
@@ -182,7 +182,7 @@ classdef FunctionLinear<modgen.common.func.AFunction
                 return;
             end
             %% compare functions
-            isEq=isequalwithequalnans(self.getCoeffVec(),otherObj.getCoeffVec());
+            isEq=isequaln(self.getCoeffVec(),otherObj.getCoeffVec());
         end
     end
     

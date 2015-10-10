@@ -19,7 +19,7 @@ function isFaceVec=isface(vMat,fMat,fToCheckMat)
 %            System Analysis Department 2011 $
 
 %
-tr=TriRep(fMat,vMat);
+tr=triangulation(fMat,vMat);
 f12NumCVec=tr.edgeAttachments(fToCheckMat(:,[1,2]));
 f23NumCVec=tr.edgeAttachments(fToCheckMat(:,[2,3]));
 f13NumCVec=tr.edgeAttachments(fToCheckMat(:,[1,3]));
@@ -32,7 +32,7 @@ isFaceVec=intersectmat(f12NumMat,f23NumMat,f13NumMat);
 end
 %
 function isPosRes=intersectmat(oneMat,twoMat,threeMat)
-combMat=combvec([0,1],[0,1],[0,1]).';
+combMat=modgen.common.combvec([0,1],[0,1],[0,1]).';
 nCombs=size(combMat,1);
 isPosRes=false(size(oneMat,1),1);
 for iComb=1:nCombs

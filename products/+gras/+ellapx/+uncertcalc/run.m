@@ -138,5 +138,6 @@ convertConf2Text(SSysDefConf,sysDefFileName);
     end
 end
 function convertConf2Text(SConf,varargin)
+import modgen.struct.strucdisp;
 strucdisp(SConf,varargin{:},'depth',-1,'maxArrayLength',1000);
 end

@@ -220,7 +220,7 @@ if isSIsValueNullSetterUsed
         nFields=length(fieldNameList);
         for iField=1:nFields
             fieldName=fieldNameList{iField};
-            if ~auxchecksize(reg{1}.(fieldName),sizeVec)
+            if ~modgen.common.checksize(reg{1}.(fieldName),sizeVec)
                 throwerror('wrongInput',...
                     ['size of field %s of input SIsValueNull structure ',...
                     'is inconsistent with minimal cube size'],fieldName);

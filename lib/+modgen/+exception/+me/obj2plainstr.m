@@ -59,7 +59,7 @@ for iElem=1:nElem
                 % PC platform where file separator is recognized as
                 % escape symbol
                 S1=strrep(S1,'\','/');
-                res=strlinedivide(S1);
+                res=strsplit(S1,char(10)).';
                 nCells=length(res);
                 if nCells
                     str{end}=[str{end} res{1}];

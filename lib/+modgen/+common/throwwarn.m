@@ -19,7 +19,7 @@ function throwwarn(msgTag,varargin)
 %            System Analysis Department 2012 $
 %
 %
-import modgen.common.*;
+import modgen.common.getcallername;
 callerName=getcallername(2,'full');
 callerName=strrep(callerName,'.',':');
 warnMsg=[upper(callerName),':',msgTag];

@@ -63,6 +63,7 @@ function applySetFuncInternal(self,hFunc,toFieldNameList,varargin)
 %            System Analysis Department 2011 $
 %
 %
+import modgen.common.throwerror;
 import modgen.system.ExistanceChecker;
 if nargin<3
     toFieldNameList=self.getFieldNameList();
@@ -70,27 +71,27 @@ end
 if ischar(toFieldNameList)
     toFieldNameList={toFieldNameList};
 end
-if ~auxchecksize(toFieldNameList,[1 nan])
-    error([upper(mfilename),':wrongInput'],...
+if ~modgen.common.checksize(toFieldNameList,[1 nan])
+    throwerror('wrongInput',...
         'toFieldNameList is expected to be of size [1,]');
 end
 %
 if isempty(toFieldNameList)
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'toFieldNameList is expected to contain at least 1 element');
 end
 %
 if length(toFieldNameList)>1
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'currently only single-argument functions are supported');
 end
 %
 if ~all(cellfun('isclass',toFieldNameList,'char'))
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'all elements of fieldNameList are expected to be of char type');
 end
 if ~all(ismember(toFieldNameList,self.fieldNameList))
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'not all inputs correspond to field names');
 end
 [~,prop]=modgen.common.parseparams(varargin,[],0);
@@ -111,7 +112,7 @@ for k=1:2:nProp
             inputType=prop{k+1};
             isInputTypeSpecified=true;
         otherwise,
-            error([upper(mfilename),':wrongInput'],...
+            throwerror('wrongInput',...
                 'unknown property: %s',prop{k});
     end
 end
@@ -120,13 +121,13 @@ if ischar(structNameList)
     structNameList={structNameList};
 end
 %
-if ~auxchecksize(structNameList,[1 nan])
-    error([upper(mfilename),':wrongInput'],...
+if ~modgen.common.checksize(structNameList,[1 nan])
+    throwerror('wrongInput',...
         'structNameList is expected to be of size [1,]');
 end
 %
 if isempty(structNameList)
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'structNameList is expected to contain at least 1 element');
 end
 %

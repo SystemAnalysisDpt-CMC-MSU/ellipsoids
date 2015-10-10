@@ -37,7 +37,7 @@ classdef SuiteRegression < mlunitext.test_case
                 self.crmSys=...
                     gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
             end
-            confNameList=reg{1};
+            confNameList=reg{1}; %#ok<*PROPLC>
             if strcmp(confNameList,'*')
                 self.crm.deployConfTemplate('*');
                 confNameList=self.crm.getConfNameList();
@@ -48,6 +48,7 @@ classdef SuiteRegression < mlunitext.test_case
             self.confNameList=confNameList;
         end
         function testRegression(self)
+            import modgen.struct.pathfilterstruct;
             NOT_COMPARED_FIELD_LIST={'resDir','plotterObj'};
             %
             %

@@ -28,7 +28,7 @@ classdef SuiteCompare < mlunitext.test_case
                 self.crmSys=...
                     gras.ellapx.uncertcalc.test.comp.conf.sysdef.ConfRepoMgr();
             end
-            confNameList=varargin{1};
+            confNameList=varargin{1}; %#ok<*PROPLC>
             if strcmp(confNameList,'*')
                 self.crm.deployConfTemplate('*');
                 confNameList=self.crm.getConfNameList();
@@ -39,6 +39,8 @@ classdef SuiteCompare < mlunitext.test_case
             self.confNameList=confNameList;
         end
         function testCompare(self)
+            import modgen.common.roundn;
+            import modgen.struct.pathfilterstruct;
             NOT_COMPARED_FIELD_LIST={'resDir','plotterObj'};
             MAX_TOL=1e-6;
             SSORT_KEYS.ellTubeProjRel={'projSTimeMat','projType',...
@@ -52,7 +54,7 @@ classdef SuiteCompare < mlunitext.test_case
             %
             nRoundDigits=-fix(log(MAX_TOL)/log(10));
             %
-            crm=self.crm;
+            crm=self.crm; %#ok<*PROP>
             crmSys=self.crmSys;
             confNameList=self.confNameList;
             nConfs=length(confNameList);

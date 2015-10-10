@@ -8,13 +8,14 @@ function testResVec=runtestcase(testCaseNameList,varargin)
 %
 % Input:
 %   regular:
-%       testCaseNameList: char[1,] (or char cell [1,nTestCases]) - name(s)
-%          of testcase class (or classes)
-%          ('smartdb.relations.test.mlunit_test_dynamicrelation' for
-%          instance)
+%       testCaseMethodNameList: char[1,]/cell[1,nTestCase] of char[1,nTestCases]
+%           - name(s) of testcase class (or classes)
+%          ('modgen.common.test.mlunit_test_common' for instance). Test
+%          case name can contain a test name as well - like
+%          'modgen.common.test.mlunit_test_common.testAbsRelCompare'
 %
 %   optional:
-%       testName: char[1,] - name of a concrete test within a specified
+%       testNameList: char[1,] - name of a concrete test within a specified
 %           test case (test cases, respectively) ('test_toCell' for
 %           instance)
 %
@@ -38,72 +39,93 @@ function testResVec=runtestcase(testCaseNameList,varargin)
 %
 %
 import modgen.common.throwerror;
-[reg,prop]=modgen.common.parseparams(varargin);
-nProp=length(prop);
-if rem(nProp,2)~=0
-    reg=[reg,prop(1)];
-    prop(1)=[];
-    nProp=nProp-1;
-end
-%
-if ~isempty(reg)
-    if length(reg)>1
-        throwerror('wrongInput',...
-            'at maximum 2 regular input arguments are expected');
-    else
-        testName=reg{1};
-    end
-end
-testArgList={};
-suiteArgList={};
-for k=1:2:nProp-1
-    switch lower(prop{k})
-        case 'testparams',
-            if ~iscell(prop{k+1})
-                throwerror('wrongInput',...
-                    'propety %s is expected to be a cell array',prop{k});
-            end
-            testArgList=prop{k+1};
-        case 'suiteparams',
-            if ~iscell(prop{k+1})
-                throwerror('wrongInput',...
-                    'propety %s is expected to be a cell array',prop{k});
-            end
-            suiteArgList=prop{k+1};
-        otherwise,
-            throwerror('wrongInput',...
-                'unknown property %s',prop{k});
-    end
-end
+[regArgList,isTestNameSpec,testArgList,suiteArgList]=modgen.common.parseparext(varargin,...
+    {'testParams','suiteParams';...
+    {},{};...
+    @iscell,@iscell},[0 1]);
 %
 if ischar(testCaseNameList),
     testCaseNameList={testCaseNameList};
 end
 nTestCases=numel(testCaseNameList);
-%
-if ~modgen.system.ExistanceChecker.isVar('testName')
-    runner = mlunitext.text_test_runner(1, 1);
-    loader = mlunitext.test_loader;
-    testCVec=cell(1,nTestCases);
-    for iTestCase=1:nTestCases,
-        testCaseName=testCaseNameList{iTestCase};
-        test_suite = loader.load_tests_from_test_case(testCaseName,...
-            testArgList{:});
-        testCVec{iTestCase}=test_suite.tests;
+if isTestNameSpec
+    testNameList=regArgList{1};
+    if ischar(testNameList)
+        testNameList={testNameList};
     end
-    test_suite = mlunitext.test_suite(horzcat(testCVec{:}),suiteArgList{:});
-    testResVec=runner.run(test_suite);
 else
-    runner = mlunitext.text_test_runner(1, 1);
-    test_suite=mlunitext.test_suite(suiteArgList{:});
-    for iTestCase=1:nTestCases,
-        testCaseName=testCaseNameList{iTestCase};
-        constructorName=modgen.string.splitpart(testCaseName,'.','last');
-        metaClass=meta.class.fromName(testCaseName);
-        if isempty(metaClass)
-            throwerror('noSuchClass',...
-                'test case %s not found', testCaseName);
+    testNameList=cell(1,nTestCases);
+end
+%
+nTestNames=numel(testNameList);
+if nTestCases~=nTestNames
+    throwerror('wrongInput',['if more than one test name specified ',...
+        'in testNameList the number of test names should match the ',...
+        'number of test cases']);
+end
+%
+%
+for iTestCase=1:nTestCases,
+    testCaseAndMethodName=testCaseNameList{iTestCase};
+    testName=testNameList{iTestCase};
+    if isempty(testName)
+        isnClass=isempty(meta.class.fromName(testCaseAndMethodName));
+        if isnClass
+            indLastDot=find(testCaseAndMethodName=='.',1,'last');
+            indSlashVec=find(testCaseAndMethodName=='/');
+            nSlashes=numel(indSlashVec);
+            if nSlashes>1
+                throwerror('wrongInput',['%s can only contain up to one ',...
+                    'right slash separating class and method names'],...
+                    testCaseName);
+            elseif nSlashes==1
+            %
+                indSlash=indSlashVec;
+                if indSlash<indLastDot
+                    throwerror('wrongInput',['%s cannot contain any dots',...
+                        'after a right slash'],...
+                        testCaseName);
+                end
+                indSep=indSlash;
+            else
+                if isempty(indLastDot)
+                    indLastDot=numel(testCaseAndMethodName)+1;
+                end
+                indSep=indLastDot;
+            end
+            %
+            testName=testCaseAndMethodName(indSep+1:end);
+            testCaseName=testCaseAndMethodName(1:indSep-1);
+            isnClass=isempty(meta.class.fromName(testCaseName));
+            if isnClass
+                throwerror('wrongInput:noSuchClass',...
+                    '%s is neither method nor class name',...
+                    testCaseName);
+            end
+            testCaseNameList{iTestCase}=testCaseName;
+            testNameList{iTestCase}=testName;
         end
+    end
+end
+%
+testRunner = mlunitext.text_test_runner(1, 1);
+testSuite=mlunitext.test_suite(suiteArgList{:});
+%
+for iTestCase=1:nTestCases,
+    testCaseName=testCaseNameList{iTestCase};
+    testName=testNameList{iTestCase};
+    %
+    constructorName=modgen.string.splitpart(testCaseName,'.','last');
+    metaClass=meta.class.fromName(testCaseName);
+    if isempty(metaClass)
+        throwerror('wrongInput:noSuchClass',...
+            'test case %s not found', testCaseName);
+    end
+    if isempty(testName)
+        tempTestSuite = mlunitext.test_suite.fromTestCaseNameList(...
+            {testCaseName},testArgList{:});
+        testSuite.add_tests(tempTestSuite.tests);
+    else
         %
         methodList=...
             cellfun(@(x)x.Name,metaClass.Methods,'UniformOutput',false);
@@ -112,17 +134,17 @@ else
             ~strcmp(x,constructorName)),methodList);
         testList=methodList(isMatchedVec);
         if isempty(testList)
-            throwerror('wrongInput',...
+            throwerror('wrongInput:noSuchMethod',...
                 ['no test methods matching the pattern ',...
                 '"%s" were found in test case %s'],testName, testCaseName);
         end
         %
         for iTest=1:length(testList)
             curTestName=testList{iTest};
-            test_suite.add_test(feval(testCaseName,curTestName,...
+            testSuite.add_test(feval(testCaseName,curTestName,...
                 testCaseName,testArgList{:}));
         end
     end
-    %
-    testResVec=runner.run(test_suite);
 end
+%
+testResVec=testRunner.run(testSuite);

@@ -255,7 +255,8 @@ classdef ConfRepoManagerAnyStorage<modgen.common.obj.HandleObjectCloner
             if paramName(1)~='.'
                 paramName=['.',paramName];
             end
-            isPositive=structcheckpath(self.getCurConf(),paramName);
+            isPositive=modgen.struct.structcheckpath(...
+                self.getCurConf(),paramName);
         end
         %    
         function resVal=getParam(self,paramName,varargin)
@@ -285,7 +286,9 @@ classdef ConfRepoManagerAnyStorage<modgen.common.obj.HandleObjectCloner
                 self.reCacheCurConf();
             end
             try
-                resVal=structgetpath(self.getCurConf(),paramName);
+                resVal=modgen.struct.structgetpath(self.getCurConf(),...
+                    paramName);
+                %
             catch meObj
                 newMeObj=MException([upper(mfilename),':invalidParam'],...
                     'the requested parameter does not exist');
@@ -325,7 +328,9 @@ classdef ConfRepoManagerAnyStorage<modgen.common.obj.HandleObjectCloner
             %
             curConfName=self.getCurConfName(); %#ok<*PROP>
             [curConf,metaData]=self.getCurConf();
-            SConf=structapplypath(curConf,paramName,paramValue);
+            SConf=modgen.struct.structapplypath(curConf,paramName,...
+                paramValue);
+            %
             self.cacheAndSelectConf(curConfName,SConf,metaData);
             if isWriteToDisk
                 self.putConfToStorage(curConfName,SConf,metaData);
@@ -420,7 +425,7 @@ classdef ConfRepoManagerAnyStorage<modgen.common.obj.HandleObjectCloner
             %
             [reg,~,isDestFile]=modgen.common.parseparext(varargin,...
                 {'destIsFile';false;'isscalar(x)&&islogical(x)'},...
-                'regCheckList',{'isstring(x)'},...
+                'regCheckList',{'ischarstring(x)'},...
                 'regDefList',{self.getCurConfName()});
             confName=reg{1};
                 

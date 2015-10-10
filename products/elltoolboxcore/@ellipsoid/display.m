@@ -26,6 +26,7 @@ function display(ellArr)
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright: The Regents of the University of California
 %             2004-2008 $
+import modgen.struct.strucdisp;
 MAX_DISP_ELEM = 15;
 DEFAULT_NAME = 'ellArr';
 

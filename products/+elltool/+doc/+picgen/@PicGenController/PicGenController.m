@@ -7,7 +7,6 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Cybernetics,
     %            System Analysis Department 2013 $
-    
     methods(Static, Access = public)
         
         function picDestDir = getPicDestDir
@@ -16,21 +15,21 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
                 modgen.common.obj.StaticPropStorage.getPropInternal(...
                 branchName, 'picDestDir');
         end
-        
+        %
         function setPicDestDir(picDestDir)
             branchName=mfilename('class');
             modgen.common.obj.StaticPropStorage.setPropInternal(...
                 branchName,'picDestDir',picDestDir);
         end
-        
+        %
         function flush()
             branchName=mfilename('class');
             modgen.common.obj.StaticPropStorage.flushInternal(branchName);
         end
     end
-    
+    %
     methods(Static, Access = private)
-        
+        %
         function hcombinedFig = createCombinedFigure(hFigHandleVec,...
                 nFigRows, nFigCols, figRegExpList,...
                 cameraPositionsList, viewAngleList)
@@ -65,7 +64,7 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
             iElemVec = 1:nFigRows*nFigCols;
             axesTitlesVec(iElemVec) = char(96+iElemVec);
             labelPropVec = ['X' 'Y' 'Z'];
-            
+            %
             for iElem = 1:nFigRows*nFigCols
                 axesVec(iElem) = subplot(nFigRows, nFigCols, iElem);
                 grid on
@@ -93,11 +92,8 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
                     end
                 end
             end
-            
         end
-        
-        
-        
+        %
         function fullPicFileName = getPicFileNameByCaller()
             
             % GETPICFILENAMEBYCALLER - generates the full name for a picture
@@ -117,14 +113,11 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
                 [elltool.doc.picgen.PicGenController.getPicDestDir()...
                 filesep picFileName];
         end
-        
     end
-    
+    %
     methods(Static)
-        
         function savePicFileNameByCaller(hFigHandleVec, figWidth,...
                 figHeight, nFigRows, nFigCols, varargin)
-            
             % SAVEPICFILENAMEBYCALLER - combines figures from hFigHandleVec
             %  in one, changes combined figure's size and then saves it.
             % Input:
@@ -171,14 +164,11 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
             set(hfigHandle, 'Units','normalized');
             set(hfigHandle,'WindowStyle','normal');
             set(hfigHandle, 'Position', [0 0 figWidth figHeight]);
-            drawnow
+            drawnow;
             picFileName =...
                 elltool.doc.picgen.PicGenController.getPicFileNameByCaller();
             print(hfigHandle,'-dpng', picFileName);
-            
         end
-        
-        
+
     end
-    
 end

@@ -91,7 +91,7 @@ end
             if nDim == 1
                 [plotEll,nDim] = rebuildOneDim2TwoDim(plotEll);
             end
-            vCenterMat = plotEll.centerVec();
+            vCenterMat = plotEll.centerVec;
             fCenterMat = [1 1];
         end
     end

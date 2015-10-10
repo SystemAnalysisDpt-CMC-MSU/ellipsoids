@@ -297,7 +297,8 @@ classdef CreateArraySuite < modgen.common.type.test.mlunit.ArrayTestPropForSuite
                         
                     %
                     mlunitext.assert_equals(true,...
-                        auxchecksize(resArray,sizeCVec{iSize}),errorMsg);
+                        modgen.common.checksize(resArray,...
+                        sizeCVec{iSize}),errorMsg);
                     %
                     mlunitext.assert_equals(true,...
                         isa(resArray,className),errorMsg);

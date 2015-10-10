@@ -910,10 +910,11 @@ if fDim(dim,timeVec) == 2
     if ~patchIsFill
         patchAlpha = 0;
     end
-    h1 = fPatch('Vertices',vMat','Faces',fMat,'Parent',hAxes);
-    set(h1, 'EdgeColor', patchColorVec, 'LineWidth', patchWidth,'FaceAlpha',patchAlpha,...
+    hPatch = fPatch('Vertices',vMat','Faces',fMat,'Parent',hAxes);
+    set(hPatch, 'EdgeColor', patchColorVec, 'LineWidth', patchWidth,...
+        'FaceAlpha',patchAlpha,...
         'FaceColor',patchColorVec,'DisplayName',graphObjectName);
-    hVec = h1;
+    hVec = hPatch;
     view(hAxes,[90 0 0]);
 else
     hVec = fPatch('Vertices',vMat', 'Faces', fMat, ...

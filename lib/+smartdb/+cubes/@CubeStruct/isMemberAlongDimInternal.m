@@ -34,6 +34,7 @@ function [isThere indTheres]=isMemberAlongDimInternal(self,other,dimNum,varargin
 %
 %
 import modgen.common.throwerror;
+import modgen.common.ismemberjoint;
 [reg,prop]=modgen.common.parseparams(varargin);
 isKeyFieldNameListSpec=false;
 if ~isempty(reg)

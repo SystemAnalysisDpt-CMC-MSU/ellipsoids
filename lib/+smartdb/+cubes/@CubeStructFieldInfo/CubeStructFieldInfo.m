@@ -42,7 +42,7 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
         end        
         function display(self)
             SRes=self.saveObjInternal();
-            strucdisp(SRes(:));
+            modgen.struct.strucdisp(SRes(:));
         end
         function copyFrom(self,obj)
             nElem=numel(self);
@@ -146,7 +146,8 @@ classdef CubeStructFieldInfo<modgen.common.obj.HandleObjectCloner
         resArray=buildArrayByProp(self,cubeStructRefList,varargin)
         % BUILDARRAYBYPROP is a helper method for filling an object arrays
         % with the specified properties        
-        [isEq,reportStr]=isEqualScalarInternal(self,otherObj,varargin)
+        [isEq,reportStr,signOfDiff]=isEqualScalarInternal(self,otherObj,...
+            varargin)
     end
     methods (Static)
         function isPositive=isMe(inpObj)

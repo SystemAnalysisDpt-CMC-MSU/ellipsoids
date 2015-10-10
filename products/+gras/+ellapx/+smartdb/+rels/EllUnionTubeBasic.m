@@ -149,7 +149,7 @@ classdef EllUnionTubeBasic<handle
             SData.ellUnionTimeDirection=repmat(...
                 EEllUnionTimeDirection.Ascending,nTubes,1);
             %
-            TOUCH_TOL=1e-14;
+            TOUCH_TOL=1.5e-13;
             %
             for iTube=1:nTubes
                 if SData.approxType(iTube)==EApproxType.External

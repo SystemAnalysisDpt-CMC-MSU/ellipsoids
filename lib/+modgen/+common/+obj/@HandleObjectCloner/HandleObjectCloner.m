@@ -1,21 +1,70 @@
 classdef HandleObjectCloner<handle
-    % HANDLEOBJECTCLONER provides some simples functionality for clonable
+    % HANDLEOBJECTCLONER provides some simple functionality for clonable
     % objects
-    % 
     %
-    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-07-07 $ 
+    %
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-07-07 $
     % $Copyright: Moscow State University,
     %            Faculty of Computational Mathematics and Computer Science,
     %            System Analysis Department 2011 $
     %
-    methods (Access=protected,Static)
-        function propCheckCMat=getHandleClonerIsEqualPropCheckCMat(propNameList)
-            propCheckCMat={'asHandle','propEqScalarList','compareClass';...
-                false,cell(1,0),true;...
-                'isscalar(x)&&islogical(x)',...
+    properties (Access=private)
+        comparisonMode=modgen.common.obj.ObjectComparisonMode.UserDefined;
+    end
+    %
+    methods (Access=protected)
+        function blobComparisonHook(~)
+        end
+    end
+    methods (Access=protected, Sealed)
+        function prevMode=setComparisonMode(self,comparisonMode)
+            if nargout>0
+                prevMode=self.getComparisonMode();
+            end
+            [self.comparisonMode]=deal(comparisonMode);
+        end
+        %
+        function comparisonMode=getComparisonMode(self)
+            import modgen.common.throwerror;
+            if numel(self)==1
+                comparisonMode=self.comparisonMode;
+            elseif isempty(self)
+                comparisonMode=...
+                    modgen.common.obj.ObjectComparisonMode.UserDefined;
+            else
+                isAllCompModeEq=isequal(self.comparisonMode);
+                if ~isAllCompModeEq
+                    throwerror('wrongInput',['all elements of an object',...
+                        'array are expected to have the same value',...
+                        'of comparisonMode']);
+                end
+                comparisonMode=self(1).comparisonMode;
+            end
+        end
+    end
+    %
+    methods (Access=protected)
+        function propCheckCMat=getHandleClonerIsEqualPropCheckCMat(self,...
+                propNameList)
+            import modgen.common.obj.ObjectComparisonMode;
+            switch self.getComparisonMode
+                case ObjectComparisonMode.UserDefined
+                    isAsHandleDefault=false;
+                    isAsBlobDefault=false;
+                case ObjectComparisonMode.Blob
+                    isAsBlobDefault=true;
+                    isAsHandleDefault=false;
+                case ObjectComparisonMode.Handle
+                    isAsBlobDefault=false;
+                    isAsHandleDefault=true;
+            end
+            %
+            propCheckCMat={'asHandle','asBlob','propEqScalarList','compareClass';...
+                isAsHandleDefault,isAsBlobDefault,cell(1,0),true;...
+                'isscalar(x)&&islogical(x)','isscalar(x)&&islogical(x)',...
                 'iscell(x)&&(isrow(x)||(max(size(x))<=1))',...
                 'isscalar(x)&&islogical(x)'};
-            if nargin>0
+            if nargin>1
                 [isThereVec,indThereVec]=ismember(lower(propNameList),...
                     lower(propCheckCMat(1,:)));
                 if ~all(isThereVec)
@@ -32,23 +81,21 @@ classdef HandleObjectCloner<handle
             isPositive=isa(inpObj,curClassName);
         end
     end
-    methods (Access=protected,Static,Sealed)
+    methods (Access=protected,Sealed)
         function [regArgList,propEqScalarList]=...
-                parseEqScalarProps(eqPropCheckCMat,...
+                parseEqScalarProps(self,eqPropCheckCMat,...
                 propListToParse)
             import modgen.common.parseparams;
             import modgen.common.parseparext;
             %
-            import modgen.common.obj.HandleObjectCloner;            
-            %
-            propCheckCMat=...
-                HandleObjectCloner.getHandleClonerIsEqualPropCheckCMat(...
-                'propEqScalarList');            
+            propCheckCMat=self.getHandleClonerIsEqualPropCheckCMat(...
+                'propEqScalarList');
             nProps=size(eqPropCheckCMat,2);
             [regArgList,~,eqRelatedPropValList]=...
-            modgen.common.parseparext(propListToParse,...
-            eqPropCheckCMat,...
-            'propRetMode','list','isDefaultPropSpecVec',false(1,nProps));            
+                modgen.common.parseparext(propListToParse,...
+                eqPropCheckCMat,...
+                'propRetMode','list','isDefaultPropSpecVec',...
+                false(1,nProps));
             %
             [regArgList,~,propEqScalarList]=...
                 parseparext(regArgList,propCheckCMat);
@@ -58,17 +105,71 @@ classdef HandleObjectCloner<handle
     end
     %
     methods (Sealed)
+        function varargout=ismember(leftObjVec,rightObjVec,varargin)
+            import modgen.common.obj.ObjectComparisonMode;
+            import modgen.common.ismembersortableobj;
+            prevLeftMode=...
+                leftObjVec.setComparisonMode(ObjectComparisonMode.Blob);
+            prevRightMode=...
+                rightObjVec.setComparisonMode(ObjectComparisonMode.Blob);
+            %
+            try
+                if nargout==0
+                    ismembersortableobj(leftObjVec,rightObjVec,varargin{:});
+                else
+                    varargout=cell(1,nargout);
+                    [varargout{:}]=ismembersortableobj(leftObjVec,...
+                        rightObjVec,varargin{:});
+                end
+                leftObjVec.setComparisonMode(prevLeftMode);
+                rightObjVec.setComparisonMode(prevRightMode);
+            catch meObj
+                leftObjVec.setComparisonMode(prevLeftMode);
+                rightObjVec.setComparisonMode(prevRightMode);
+                rethrow(meObj);
+            end
+        end
+        function varargout=unique(inpObjVec,varargin)
+            import modgen.common.obj.ObjectComparisonMode;
+            import modgen.common.uniquesortableobj;
+            prevMode=inpObjVec.setComparisonMode(ObjectComparisonMode.Blob);
+            try
+                if nargout==0
+                    uniquesortableobj(inpObjVec,varargin{:});
+                else
+                    varargout=cell(1,nargout);
+                    [varargout{:}]=uniquesortableobj(inpObjVec,varargin{:});
+                end
+                inpObjVec.setComparisonMode(prevMode);
+            catch meObj
+                inpObjVec.setComparisonMode(prevMode);
+                rethrow(meObj);
+            end
+        end
+        function [resObjVec,indVec]=sort(inpObjVec)
+            import modgen.common.obj.ObjectComparisonMode;
+            prevMode=inpObjVec.setComparisonMode(ObjectComparisonMode.Blob);
+            try
+                [resObjVec,indVec]=modgen.algo.sort.mergesort(inpObjVec);
+                inpObjVec.setComparisonMode(prevMode);
+            catch meObj
+                inpObjVec.setComparisonMode(prevMode);
+                rethrow(meObj);
+            end
+        end
+        %
         function isEqArr=ne(varargin)
             isEqArr=eq(varargin{:});
             isEqArr=~isEqArr;
         end
+        %
         function isEqArr=eq(varargin)
-            % EQ - same as isEqualElem from below but without reportStr
-            %   output
+            % EQ - same as isEqualElem from below with a few exceptions:
+            %   1) doesn't have reportStr output
+            %   2) only supports "asHandle" property
             import modgen.common.parseparext;
-            import modgen.common.obj.HandleObjectCloner;
             propCheckCMat=...
-                HandleObjectCloner.getHandleClonerIsEqualPropCheckCMat(...
+                varargin{1}.getHandleClonerIsEqualPropCheckCMat(...
                 'asHandle');
             [regArgList,~,isAsHandle]=parseparext(varargin,...
                 propCheckCMat,2);
@@ -78,17 +179,105 @@ classdef HandleObjectCloner<handle
                 isEqArr=isEqualElem(regArgList{:});
             end
         end
+        function isLeArr=le(varargin)
+            % LE - "<=" operator defined based on the 3rd output of 
+            %   isEqualElem method described below and it
+            %
+            %   1) doesn't have reportStr output
+            %   2) only supports "asHandle" property  
+            %
+            import modgen.common.parseparext;
+            propCheckCMat=...
+                varargin{1}.getHandleClonerIsEqualPropCheckCMat(...
+                'asHandle');
+            [regArgList,~,isAsHandle]=parseparext(varargin,...
+                propCheckCMat,2);
+            if isAsHandle
+                isLeArr=le@handle(regArgList{:});
+            else
+                [~,~,signOfDiffArr]=isEqualElem(regArgList{:});
+                isLeArr=signOfDiffArr<=0;
+            end
+        end
+        %
+        function isGeArr=ge(varargin)
+            % GE - ">=" operator defined based on the 3rd output of 
+            %   isEqualElem method described below and it
+            %
+            %   1) doesn't have reportStr output
+            %   2) only supports "asHandle" property    
+            %
+            import modgen.common.parseparext;
+            propCheckCMat=...
+                varargin{1}.getHandleClonerIsEqualPropCheckCMat(...
+                'asHandle');
+            [regArgList,~,isAsHandle]=parseparext(varargin,...
+                propCheckCMat,2);
+            if isAsHandle
+                isGeArr=ge@handle(regArgList{:});
+            else
+                [~,~,signOfDiffArr]=isEqualElem(regArgList{:});
+                isGeArr=signOfDiffArr>=0;
+            end
+        end
+        %
+        function isLtArr=lt(varargin)
+            % LT - "<" operator defined based on the 3rd output of 
+            %   isEqualElem method described below and it
+            %
+            %   1) doesn't have reportStr output
+            %   2) only supports "asHandle" property    
+            %            
+            import modgen.common.parseparext;
+            propCheckCMat=...
+                varargin{1}.getHandleClonerIsEqualPropCheckCMat(...
+                'asHandle');
+            [regArgList,~,isAsHandle]=parseparext(varargin,...
+                propCheckCMat,2);
+            if isAsHandle
+                isLtArr=lt@handle(regArgList{:});
+            else
+                [~,~,signOfDiffArr]=isEqualElem(regArgList{:});
+                isLtArr=signOfDiffArr<0;
+            end
+        end
+        %
+        function isGtArr=gt(varargin)
+            % GT - ">" operator defined based on the 3rd output of 
+            %   isEqualElem method described below and it
+            %
+            %   1) doesn't have reportStr output
+            %   2) only supports "asHandle" property    
+            %              
+            import modgen.common.parseparext;
+            propCheckCMat=...
+                varargin{1}.getHandleClonerIsEqualPropCheckCMat(...
+                'asHandle');
+            [regArgList,~,isAsHandle]=parseparext(varargin,...
+                propCheckCMat,2);
+            if isAsHandle
+                isGtArr=gt@handle(regArgList{:});
+            else
+                [~,~,signOfDiffArr]=isEqualElem(regArgList{:});
+                isGtArr=signOfDiffArr>0;
+            end
+        end
+        %
         function isEq=isequal(varargin)
             % ISEQUAL - same as isEqual but without reportStr output
             isEq=isEqual(varargin{:});
         end
         function isEq=isequaln(varargin)
             % ISEQUALN - same as isEqual but without reportStr output
-            isEq=~isequal(varargin{:});
+            isEq=isequal(varargin{:});
+        end
+        function isEq=isequalwithequalnans(varargin)
+            % ISEQUALNWITHEQUALNANS - same as isEqual but without reportStr output
+            isEq=isequal(varargin{:});
         end
     end
+    %
     methods
-        %
         function [isEq,reportStr]=isEqual(varargin)
             % ISEQUAL compares objects and returns true if they are found
             % equal
@@ -112,6 +301,10 @@ classdef HandleObjectCloner<handle
             %           performed up to the first difference
             %       asHandle: logical[1,1] - if true, elements are compared
             %           as handles ignoring content of the objects
+            %       asBlob: logical[1,1] - if true, objects are compared as
+            %           binary sequencies aka BLOBs
+            %         Note: you cannot set both asBlob and asHandle to true
+            %           at the same time            
             %       propEqScalarList: cell[1,] - list of properties passed
             %           to isEqualScalarInternal method
             % Output:
@@ -128,41 +321,61 @@ classdef HandleObjectCloner<handle
             import modgen.common.throwerror;
             import modgen.common.parseparext;
             import modgen.common.parseparams;
-            import modgen.common.obj.HandleObjectCloner;            
             NOT_EQ_STR='(object arrays #%d and #%d):%s';
             %
+            indObj=find(cellfun(@(x)isa(x,mfilename('class')),varargin),...
+                1,'first');
             propCheckCMat=...
-                HandleObjectCloner.getHandleClonerIsEqualPropCheckCMat();
+                varargin{indObj}.getHandleClonerIsEqualPropCheckCMat();
             %
-            reportStr='';
-            [objList,~,isFullCheck,isAsHandle,propEqScalarList,...
+            isReportRequired=nargout>1;
+            %
+            [objList,~,isFullCheck,isAsHandle,isAsBlob,propEqScalarList,...
                 isClassCompared]=...
                 parseparext(varargin,...
                 [{'isfullcheck';false;'isscalar(x)&&islogical(x)'},...
                 propCheckCMat]);
+            %
+            checkIsHandleIsBlob(isAsHandle,isAsBlob);
+            if isAsBlob&&~isClassCompared
+                throwerror('wrongInput',['isClassCompared cannot be ',...
+                    'set to false when isAsBlob is true']);
+            end
             %
             nObj=length(objList);
             if nObj==1,
                 throwerror('wrongInput','Not enough input arguments');
             end
             %
-            reportStrList=cell(1,nObj-1);
+            if isReportRequired
+                reportStr='';
+                reportStrList=cell(1,nObj-1);
+                curReportCell=cell(1,1);
+            else
+                curReportCell={};
+            end
             isEq=true;
             for iObj=1:nObj-1,
                 obj1=objList{iObj};
                 obj2=objList{iObj+1};
                 if isequal(size(obj1),size(obj2)),
                     if ~isClassCompared||isequal(class(obj1),class(obj2))
-                        if nargout>1,
-                            if isAsHandle
-                                isEqCur=obj1.eq(obj2,'asHandle',true);
+                        if isAsHandle
+                            isEqCur=obj1.eq(obj2,'asHandle',true);
+                            if isReportRequired
                                 if ~isEqCur
                                     reportStrCur='handles are different';
                                 else
                                     reportStrCur='';
                                 end
+                            end
+                        else
+                            if isAsBlob
+                                [isEqCur,curReportCell{:}]=...
+                                    obj1.isEqualScalarAsBlobInternal(...
+                                    obj2,propEqScalarList{:});
                             else
-                                [isEqCurMat,reportStrCur]=...
+                                [isEqCurMat,curReportCell{:}]=...
                                     obj1.isEqualElem(...
                                     obj2,'propEqScalarList',...
                                     propEqScalarList,'compareClass',...
@@ -170,16 +383,16 @@ classdef HandleObjectCloner<handle
                                 %
                                 isEqCur=all(isEqCurMat(:));
                             end
-                            %
-                            isEqCur=all(isEqCur(:));
-                            if ~isempty(reportStrCur),
-                                reportStrList{iObj}=sprintf(...
-                                    NOT_EQ_STR,...
-                                    iObj,iObj+1,reportStrCur);
+                            if isReportRequired
+                                reportStrCur=curReportCell{1};
                             end
-                        else
-                            isEqCurArr=(eq(obj1,obj2));
-                            isEqCur=all(isEqCurArr(:));
+                        end
+                        %
+                        isEqCur=all(isEqCur(:));
+                        if isReportRequired&&~isempty(reportStrCur),
+                            reportStrList{iObj}=sprintf(...
+                                NOT_EQ_STR,...
+                                iObj,iObj+1,reportStrCur);
                         end
                     else
                         isEqCur=false;
@@ -202,7 +415,7 @@ classdef HandleObjectCloner<handle
                     break;
                 end
             end
-            if nargout>1,
+            if isReportRequired
                 reportStrList(cellfun('isempty',reportStrList))=[];
                 if length(reportStrList)>1,
                     reportStr=modgen.string.catwithsep(reportStrList,...
@@ -211,10 +424,11 @@ classdef HandleObjectCloner<handle
                     reportStr=reportStrList{:};
                 end
             end
-        end   
+        end
         %
-        function [isEqArr,reportStr]=isEqualElem(selfArr,otherArr,varargin)
-            % ISEQUALELEM returns true if HandleObjectCloner objects are 
+        function [isEqArr,reportStr,signOfDiffArr]=isEqualElem(selfArr,...
+                otherArr,varargin)
+            % ISEQUALELEM returns true if HandleObjectCloner objects are
             % equal and false otherwise
             %
             % Usage: isEqArr=eq(selfArr,otherArr,varargin)
@@ -227,29 +441,46 @@ classdef HandleObjectCloner<handle
             %           object to compare with
             %   properties:
             %       asHandle: logical[1,1] - if true, elements are compared
-            %           as handles ignoring content of the objects   
+            %           as handles ignoring content of the objects
+            %       asBlob: logical[1,1] - if true, objects are compared as
+            %           binary sequencies aka BLOBs
+            %         Note: you cannot set both asBlob and asHandle to true
+            %           at the same time
             %       propEqScalarList: cell[1,] - list of properties passed
-            %           to isEqualScalarInternal method            
+            %           to isEqualScalarInternal method
             % Output:
             %   	isEqMat: logical[n_1,n_2,...,n_k] - the element is true if the
             %           corresponding objects are equal, false otherwise
             %       reportStr: char[1,] - report about the found differences
-            %            
+            %       signOfDiffArr: double[n_1,n_2,...,n_k] - array of signs of
+            %           differences: 
+            %               -1: if left element < right element
+            %                0: if elements are equal
+            %               +1: if left element > right element
+            %            Note: current implementation defines this sign
+            %               only for asBlob=true mode, for the rest of the
+            %               comparison modes it is NaN
             %
-            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 05-June-2015 $ 
+            %
+            % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 09-Sep-2015 $
             % $Copyright: Moscow State University,
             %            Faculty of Computational Mathematics and Computer Science,
-            %            System Analysis Department 2015 $   
+            %            System Analysis Department 2015 $
             %
             import modgen.common.throwerror;
             import modgen.common.parseparext;
-            import modgen.common.obj.HandleObjectCloner;            
             %
             propCheckCMat=...
-                HandleObjectCloner.getHandleClonerIsEqualPropCheckCMat();            
-            [~,~,isAsHandle,propEqScalarList,isClassCompared]=...
+                selfArr.getHandleClonerIsEqualPropCheckCMat();
+            %
+            [~,~,isAsHandle,isAsBlob,propEqScalarList,isClassCompared]=...
                 parseparext(varargin,propCheckCMat,0);
-            reportStr='';
+            %
+            checkIsHandleIsBlob(isAsHandle,isAsBlob);
+            %
+            isReportRequired=nargout>1;
+            isSignOfDiffRequired=nargout>2;
+            %
             sizeVec=size(selfArr);
             if ~isequal(sizeVec,size(otherArr)),
                 if numel(selfArr)==1,
@@ -262,9 +493,24 @@ classdef HandleObjectCloner<handle
                         'Matrix dimensions must agree.');
                 end
             end
+            nElems=numel(selfArr);
+            if isReportRequired
+                reportStr='';
+                reportStrList=cell(1,nElems);
+                curExtraOutArgList=cell(1,nargout-1);
+            else
+                curExtraOutArgList={};
+            end
+            
             isEqHandleMat=selfArr.eq(otherArr,'asHandle',true);
+            %
+            if isSignOfDiffRequired
+                signOfDiffArr=nan(size(isEqHandleMat));
+                signOfDiffArr(isEqHandleMat)=0;
+            end
+            %
             if ~all(isEqHandleMat(:))
-                isEqArr=true(sizeVec);                
+                isEqArr=true(sizeVec);
                 if isClassCompared&&(~isa(otherArr,class(selfArr))),
                     isEqArr(:)=false;
                     if nargout>1,
@@ -272,20 +518,35 @@ classdef HandleObjectCloner<handle
                     end
                 else
                     if ~isempty(isEqArr),
-                        nElems=numel(selfArr);
-                        reportStrList=cell(1,nElems);
                         for iElem=1:nElems,
-                            if isAsHandle
-                                isEqCur=isEqHandleMat(iElem);
-                                if ~isEqCur
-                                    reportStrCur='handles are different';
+                            
+                            isEqCur=isEqHandleMat(iElem);
+                            %
+                            if ~isEqCur
+                                if isAsHandle
+                                    if isReportRequired
+                                        reportStrCur='handles are different';
+                                    end
+                                else
+                                    if isAsBlob
+                                        [isEqCur,curExtraOutArgList{:}]=...
+                                            selfArr(iElem).isEqualScalarAsBlobInternal(...
+                                            otherArr(iElem),propEqScalarList{:});
+                                        %
+                                        if isSignOfDiffRequired
+                                            signOfDiffArr(iElem)=curExtraOutArgList{2};
+                                        end
+                                    else
+                                        [isEqCur,curExtraOutArgList{:}]=...
+                                            selfArr(iElem).isEqualScalarInternal(...
+                                            otherArr(iElem),propEqScalarList{:});
+                                    end
+                                    if isReportRequired
+                                        reportStrCur=curExtraOutArgList{1};
+                                    end
                                 end
-                            else
-                                [isEqCur,reportStrCur]=...
-                                    selfArr(iElem).isEqualScalarInternal(...
-                                    otherArr(iElem),propEqScalarList{:});
                             end
-                                %
+                            %
                             if (nargout>1)&&~isempty(reportStrCur)
                                 reportStrList{iElem}=sprintf(...
                                     '(element #%d):%s',iElem,...
@@ -308,17 +569,95 @@ classdef HandleObjectCloner<handle
             else
                 isEqArr=isEqHandleMat;
             end
+            if isSignOfDiffRequired
+                if any(isnan(signOfDiffArr(:)))
+                    throwerror('wrongInput:signNotDefForAllElems',...
+                        ['sign of difference is ',...
+                        'not assigned for all elements']);
+                end
+            end
+        end
+    end
+    methods (Access=private)
+        function [isEq,reportStr,signOfDiff]=...
+                isEqualScalarAsBlobInternal(leftObj,rightObj)
+            %
+            leftObj.blobComparisonHook();
+            if nargout<=2
+                isEq=false;
+                isEqSize=isequal(size(leftObj),size(rightObj));
+                if isEqSize
+                    isEqClass=isequal(class(leftObj),class(rightObj));
+                    if ~isEqClass
+                        reportStr='classes are different';
+                    else
+                        isEq=true;
+                    end
+                else
+                    if nargout>1
+                        reportStr='sizes are different';
+                    end
+                end
+            else
+                isEq=true;
+            end
+            %
+            if isEq
+                leftBlobVec=getByteStreamFromArray(leftObj);
+                rightBlobVec=getByteStreamFromArray(rightObj);
+                nLeftElems=numel(leftBlobVec);
+                nRightElems=numel(rightBlobVec);
+                %
+                isEqBlobSize=nLeftElems==nRightElems;
+                isEq=isEqBlobSize&&isequal(leftBlobVec,rightBlobVec);
+                if nargout>1
+                    if isEq
+                        reportStr='';
+                    else
+                        if isEqBlobSize
+                            reportStr='blobs are different';
+                        else
+                            reportStr='blob sizes are different';
+                        end
+                    end
+                    if nargout>2
+                        if ~isEq
+                            if ~isEqBlobSize
+                                if nLeftElems<nRightElems
+                                    leftBlobVec=[leftBlobVec,...
+                                        zeros(1,nRightElems-nLeftElems)];
+                                else
+                                    leftBlobVec=[rightBlobVec,...
+                                        zeros(1,nLeftElems)-nRightElems];
+                                end
+                            end
+                            [~,indSortedVec]=sortrows([leftBlobVec;rightBlobVec]);
+                            signOfDiff=indSortedVec(2)-indSortedVec(1);
+                        else
+                            signOfDiff=0;
+                        end
+                    end
+                end
+            end
         end
     end
     %
     methods (Access=protected)
-        function [isOk,reportStr]=isEqualScalarInternal(self,otherObj,...
-                varargin)
+        function [isOk,reportStr,signOfDiff]=...
+                isEqualScalarInternal(self,otherObj,varargin)
             %
-            isOk=self.eq(self,otherObj,'asHandle',true);
-            reportStr='';
+            isOk=self.eq(otherObj,'asHandle',true);
+            if nargout>1
+                if isOk
+                    reportStr='';
+                else
+                    reportStr='handles are different';
+                end
+                if nargout>2
+                    signOfDiff=nan;
+                end
+            end
         end
-        
     end
     methods
         function obj=clone(self,varargin)
@@ -358,5 +697,11 @@ classdef HandleObjectCloner<handle
             resObj=feval(p.Name,varargin{:});
         end
     end
-    
+end
+function checkIsHandleIsBlob(isAsHandle,isAsBlob)
+import modgen.common.throwerror;
+if isAsBlob&&isAsHandle
+    throwerror('wrongInput:blobAndHandleIncompatible',['isAsBlob and isAsHandle ',...
+        'cannot both be true']);
+end
 end

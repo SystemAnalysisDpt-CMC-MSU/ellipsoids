@@ -112,6 +112,7 @@ function varargout=toArray(self,varargin)
 import modgen.system.ExistanceChecker;
 import modgen.common.num2cell;
 import modgen.common.throwwarn;
+import modgen.cell.showcell;
 %
 s = warning('off', 'MATLAB:mat2cell:TrailingUnityVectorArgRemoved');
 self.checkIfObjectScalar();

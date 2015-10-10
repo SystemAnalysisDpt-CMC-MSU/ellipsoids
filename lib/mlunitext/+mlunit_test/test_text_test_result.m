@@ -104,7 +104,7 @@ classdef test_text_test_result < mlunitext.test_case&mlunit_test.AuxChecker
                 '======================================================================$', 'once')));
             iLine = iLine + 1;
             assert_equals(false, isempty(regexp(linesCVec{iLine}, ...
-                [regexptranslate('escape','ERROR: mlunit_test.mock_test[a](''test_method'')'),'$'], 'once')));
+                [regexptranslate('escape','ERROR: mlunit_test.mock_test[a]/test_method'),'$'], 'once')));
             iLine = iLine + 1;
             assert_equals(false, isempty(regexp(linesCVec{iLine}, ...
                 '----------------------------------------------------------------------$', 'once')));
@@ -116,7 +116,7 @@ classdef test_text_test_result < mlunitext.test_case&mlunit_test.AuxChecker
                 '======================================================================$', 'once')));
             iLine = iLine + 1;
             assert_equals(false, isempty(regexp(linesCVec{iLine}, ...
-                [regexptranslate('escape','FAIL: mlunit_test.mock_test[b](''test_method'')'),'$'], 'once')));
+                [regexptranslate('escape','FAIL: mlunit_test.mock_test[b]/test_method'),'$'], 'once')));
             iLine = iLine + 1;
             assert_equals(false, isempty(regexp(linesCVec{iLine}, ...
                 '----------------------------------------------------------------------$', 'once')));

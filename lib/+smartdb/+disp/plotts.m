@@ -2,18 +2,18 @@ function plotts(rel,varargin)
 % PLOTTS plots a content of ARelation object as a set of time series
 % grouping them by certain attributes of an input relation
 
-% 
+%
 % smartdb.disp.plotts(vaMetricTSObj,'xfieldname', 'time_stamp_ts', 'yfieldname','metric_value_ts',...
 %  'figuregroupby','inst_id', 'figurenameby','inst_name',...
 % 'axesgroupby','vametric_configured_id','axesnameby','vametric_configured_name', 'graphnameby','vametric_configured_name');
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-03-29 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
-
+import modgen.common.throwerror;
 [~,prop]=modgen.common.parseparams(varargin,[],0);
 nProp=length(prop);
 figureGroupBy=[];
@@ -29,7 +29,7 @@ isDryRun=false;
 linkAxesSpec='none';
 nTuples=rel.getNTuples();
 if nTuples==0
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'no data, nothing to plot');
 end
 isLegendDisplayed=false;
@@ -63,10 +63,8 @@ for k=1:2:nProp-1
             linkAxesSpec=prop{k+1};
         case 'displaylegend',
             isLegendDisplayed=prop{k+1};
-%         case 'colorby',
-%             color
         otherwise,
-            error([upper(mfilename),':unknownProperty'],...
+            throwerror('unknownProperty',...
                 'property %s is not supported',prop{k});
     end
 end
@@ -87,9 +85,11 @@ else
     figureNameList=rel.(figureNameBy);
     if isnumeric(figureNameList)
         figureNameList=num2cell(figureNameList);
-        figureNameList=cellfun(@num2str,figureNameList,'UniformOutput',false);        
+        figureNameList=cellfun(@num2str,figureNameList,'UniformOutput',false);
     elseif ~iscellstr(figureNameList)
-        error([mfilename,':wrongInput'],'numeric or cell of strings is expected in field %s',figureNameBy);
+        throwerror('wrongInput',...
+            'numeric or cell of strings is expected in field %s',...
+            figureNameBy);
     end
 end
 if isempty(axesGroupBy)
@@ -110,9 +110,11 @@ else
         axesNameList=num2cell(axesNameList);
         axesNameList=cellfun(@num2str,axesNameList,'UniformOutput',false);
     elseif ~iscellstr(axesNameList)
-        error([mfilename,':wrongInput'],'numeric or cell of strings is expected in field %s',axesNameBy);
+        throwerror('wrongInput',...
+            'numeric or cell of strings is expected in field %s',...
+            axesNameBy);
     end
-        
+    
 end
 %
 if ischar(xFieldNameList)
@@ -192,17 +194,17 @@ else
     end
     %
     if ~iscellstr(graphNameMat)
-        error([mfilename,':wrongInput'],...
+        throwerror('wrongInput',...
             'numeric or cell of strings is expected in field %s',...
             graphNameByList);
-    end    
+    end
     %
 end
 %
-if ~auxchecksize(colorByList,yFieldNameList,...
+if ~modgen.common.checksize(colorByList,yFieldNameList,...
         plotSpecByList,graphNameByList,lineWidthByList,markerSizeByList,...
         size(xFieldNameList))
-    error([upper(mfilename),':wrongInput'],['xFieldName, yFieldName,',...
+    throwerror('wrongInput',['xFieldName, yFieldName,',...
         'colorBy, plotSpecBy, lineWidthByList, markerSizeByList ',...
         'and graphNameBy properties ',...
         'are expected to be of the same size']);
@@ -211,13 +213,13 @@ end
 xVecCMat=rel.toCell(xFieldNameList{:});
 yVecCMat=rel.toCell(yFieldNameList{:});
 %
-%    
+%
 [figureGroupVec,indForward,indBackward]=unique(figureGroupByVec);
 indVecCVec=accumarray(indBackward,transpose(1:nTuples),[],@(x){x});
 xGroupedCVec=cellfun(@(x)(reshape(xVecCMat(x,:),1,[])),indVecCVec,'UniformOutput',false);
 yGroupedCVec=cellfun(@(x)(reshape(yVecCMat(x,:),1,[])),indVecCVec,'UniformOutput',false);
 %
-[tmp,indAxesCVec,indGroupCVec]=cellfun(@(x)(unique(indAxesVec(x))),indVecCVec,'UniformOutput',false);
+[~,indAxesCVec,indGroupCVec]=cellfun(@(x)(unique(indAxesVec(x))),indVecCVec,'UniformOutput',false);
 %
 axesNameListCVec=cellfun(@(x,y)axesNameList(x(y)),indVecCVec,indAxesCVec,'UniformOutput',false);
 %
@@ -232,14 +234,19 @@ indGroupCVec=cellfun(@(x)repmat(x,1,nTs),indGroupCVec,'UniformOutput',false);
 figureNameList=figureNameList(indForward);
 %
 if ~isDryRun;
-    hFigureCVec=cellfun(@(x)(prepivfigure(...
-        'Name',x,'Visible','off','WindowStyle','docked')),...
-        figureNameList,'UniformOutput',false);    
+    
+    propValList={'Name',x,'Visible','off'};
+    if usejava('swing')
+        propValList=[propValList,'WindowStyle','docked'];
+    end
+    hFigureCVec=cellfun(@(x)(prepivfigure(propValList{:})),...
+        figureNameList,'UniformOutput',false);
     %
     hAxesCVec=cellfun(@(hFig,figureName,xCell,yCell,groupMembership,...
         groupTitles,graphLegends,graphPlotSpecs,graphColorSpecs,...
         graphLineWidth,graphMarkerSize)...
-        plotts('fHandle',hFig,'figureName',figureName,'xCell',xCell,'yCell',yCell,...
+        modgen.graphics.plotts('fHandle',hFig,'figureName',figureName,...
+        'xCell',xCell,'yCell',yCell,...
         'groupMembership',groupMembership,'groupTitles',...
         groupTitles,'graphLegends',graphLegends,...
         'isSortByXAxis',true,'dateFormat','dd/mm/yy',...
@@ -253,21 +260,14 @@ if ~isDryRun;
         'UniformOutput',false);
     %%
     drawnow;
-    %hBrowserCVec=cellfun(@(x)plotbrowser(x),hFigureCVec,'UniformOutput',false);
     cellfun(@(x)set(x,'Selected','off','Visible','on'),hFigureCVec);
 end
 
 end
-
-
+%
 function hFigure=prepivfigure(varargin)
-% p=inputParser();
-% p.addParamValue('Name','MSFT');
-% p.parse(varargin{:});
 hFigure=figure();
 set(hFigure,'NumberTitle','off',varargin{:});
-
-%set(hFigure,'menubar','none');
 end
 function isA=iscellnum(inpCell)
 isA=iscell(inpCell)&&all(reshape(cellfun(@isnumeric,inpCell),1,[]));

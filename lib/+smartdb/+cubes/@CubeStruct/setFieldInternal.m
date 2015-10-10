@@ -75,7 +75,7 @@ else
         structNameList={structNameList};
     end
     %
-    if ~auxchecksize(structNameList,[1,nReg])
+    if ~modgen.common.checksize(structNameList,[1,nReg])
         throwerror('wrongInput',...
             'structNameList is expected to be of size [1,%d]',nReg);
     end

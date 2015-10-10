@@ -73,7 +73,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
                         resMat=eye(nDims)+randMat*randMat.';
                     end
                     function checkCenter()
-                        isOkArr=arrayfun(@(x,y)isequal(x.getCenterVec(),...
+                        isOkArr=arrayfun(@(x,y)isequal(x.getCenterVec,...
                             y{1}),ellArr,centCArr);
                         mlunitext.assert(all(isOkArr(:)));
                     end

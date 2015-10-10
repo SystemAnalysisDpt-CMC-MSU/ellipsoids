@@ -15,7 +15,7 @@ classdef AElementWithPropsMap<handle
     methods (Abstract,Access=protected,Static)
         [isValueVec,valueVec]=getValueVec(sizeVec,varargin)
     end
-    
+    %
     methods
         function self=AElementWithPropsMap(keyCVec,varargin)
             [keyCVec,classNameCVec,indClassVec]=self.checkKeyCVec(keyCVec);
@@ -67,24 +67,7 @@ classdef AElementWithPropsMap<handle
             end
         end
         
-%         function len=length(self)
-%             if self.isempty(),
-%                 len=0;
-%             else
-%                 len=sum(cellfun('size',self.classMap.values,1));
-%             end
-%         end
-%         
-%         function varargout=size(self)
-%             nDims=nargout;
-%             if nDims>1,
-%                 varargout{1}=self.length();
-%                 varargout(2:nDims)={1};
-%             else
-%                 varargout={[self.length() 1]};
-%             end
-%         end
-        
+      
         function keyCVec=getKeysForType(self,className)
             keyCVec=self.keys();
             if ~isempty(keyCVec),
@@ -99,22 +82,7 @@ classdef AElementWithPropsMap<handle
                     'Given object is not in the map as a key');
             end
         end
-        
-%         function varargout=subsref(self,StSubs)
-%             [isKeyGiven,keyObj]=self.checkStSubs(StSubs);
-%             if isKeyGiven,
-%                 varargout=cell(1,1);
-%                 [isOk,varargout{1}]=self.getInternal(class(keyObj),{keyObj});
-%                 if ~isOk,
-%                     modgen.common.throwerror('wrongInput',...
-%                         'Given object is not in the map as a key');
-%                 end
-%             else
-%                 varargout=cell(1,nargout);
-%                 [varargout{:}] = builtin('subsref',self,StSubs);
-%             end
-%         end
-        
+        %
         function valueVec=values(self)
             if self.isempty(),
                 if strcmp(self.valueType,'cell'),
@@ -167,6 +135,7 @@ classdef AElementWithPropsMap<handle
     
     methods (Access=protected,Sealed)
         function varargout=getInternal(self,className,keyCVec)
+            import modgen.common.ismemberbyfunc;
             varargout=cell(1,nargout);
             isValueVec=nargout>1;
             if isValueVec&&isempty(self.valueType),
@@ -179,14 +148,13 @@ classdef AElementWithPropsMap<handle
                 if strcmp(self.valueType,'cell'),
                     valueVec=cell(sizeVec);
                 else
-                    valueVec=modgen.common.type.createarray(...
-                        self.valueType,sizeVec);
+                    valueVec=gobjects(sizeVec);
                 end
             end
             if self.classMap.isKey(className),
                 mapCMat=self.classMap(className);
                 if isValueVec,
-                    [isVec(:),indVec]=ismemberobjinternal(keyCVec(:),...
+                    [isVec(:),indVec]=ismemberbyfunc(keyCVec(:),...
                         mapCMat(:,1));
                     if iscell(valueVec),
                         valueVec(isVec)=mapCMat(indVec(isVec),2);
@@ -195,7 +163,7 @@ classdef AElementWithPropsMap<handle
                     end
                     varargout{2}=valueVec;
                 else
-                    isVec(:)=ismemberobjinternal(keyCVec(:),mapCMat(:,1));
+                    isVec(:)=ismembercellbyfunc(keyCVec(:),mapCMat(:,1));
                 end
             end
             varargout{1}=isVec;

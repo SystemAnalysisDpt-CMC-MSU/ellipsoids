@@ -23,7 +23,8 @@ function meObj=throwerror(msgTag,varargin)
 % Faculty of Computational Mathematics and Cybernetics, System Analysis
 % Department, 7-October-2012, <pgagarinov@gmail.com>$
 %
-import modgen.common.*;
+import modgen.common.getcallername;
+import modgen.common.parseparext;
 [reg,~,nCallerStackStepsUp]=parseparext(varargin,...
     {'nCallerStackStepsUp';1},'propRetMode','separate');
 callerName=getcallername(1+nCallerStackStepsUp,'full');

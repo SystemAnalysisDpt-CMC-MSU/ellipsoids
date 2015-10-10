@@ -17,10 +17,10 @@ function valueArray=createarraybytypeinfo(STypeInfo,sizeVec)
 %            System Analysis Department 2011 $
 %
 %
-import modgen.common.*
+import modgen.common.throwerror;
+import modgen.common.repmat;
 if isempty(STypeInfo.type)
-    error([upper(mfilename),':wrongInput'],...
-        'type field cannot be empty');
+    throwerror('wrongInput','type field cannot be empty');
 end
 %    
 if numel(sizeVec)==1

@@ -22,6 +22,7 @@ function callerName=getcallername(nStepsUp,mode)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
+import modgen.common.type.simple.lib.*;
 if nargin<1
     nStepsUp=1;
 elseif isnumeric(nStepsUp)
@@ -42,7 +43,8 @@ end
 if nargin<2,
     mode='default';
 else
-    modgen.common.type.simple.checkgen(mode,'isstring(x)&&~isempty(x)');
+    modgen.common.type.simple.checkgen(mode,...
+        @(x)(ischarstring(x)&&~isempty(x)));
 end
 %
 [methodName,className]=modgen.common.getcallernameext(nStepsUp+1);

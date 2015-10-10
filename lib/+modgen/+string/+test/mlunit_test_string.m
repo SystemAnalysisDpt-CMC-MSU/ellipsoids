@@ -15,6 +15,7 @@ classdef mlunit_test_string < mlunitext.test_case
             check('one2oneContr','o2oC');
             check('plainIV','pIV');
             check('one2oneContr_plainIV','o2oC_pIV');
+            check('vertical spread','vs');
             %
             function check(inpStr,expStr)
                 import modgen.string.shortcapstr;

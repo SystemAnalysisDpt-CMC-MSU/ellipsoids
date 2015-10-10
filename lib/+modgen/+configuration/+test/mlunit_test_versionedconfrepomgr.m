@@ -45,7 +45,6 @@ classdef mlunit_test_versionedconfrepomgr < modgen.configuration.test.mlunit_tes
             self.aux_test_updateConf('testConfC');
         end
         function self=test_updateAll(self)
-%            self.cm1.updateConf('testConfC');
             self.cm1.updateAll();
             self.aux_test_updateConf('testConfK');
             self.aux_test_updateConf('testConfC');
@@ -57,7 +56,7 @@ classdef mlunit_test_versionedconfrepomgr < modgen.configuration.test.mlunit_tes
                 mlunitext.assert_equals(false,true);
             catch meObj
                  mlunitext.assert_equals(false,...
-                     isempty(findstr(meObj.identifier,':badConfRepo')));
+                     isempty(strfind(meObj.identifier,':badConfRepo')));
             end
         end
     end

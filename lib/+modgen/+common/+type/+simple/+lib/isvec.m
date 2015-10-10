@@ -1,2 +1,2 @@
-function isPositive=vector(inpArray)
+function isPositive=isvec(inpArray)
 isPositive=modgen.common.isvec(inpArray);

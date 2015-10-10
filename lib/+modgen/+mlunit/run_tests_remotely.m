@@ -2,6 +2,7 @@ function resultVec=run_tests_remotely(inpArgList,confRepoMgr,...
     log4jConfiguratorName,emailSubjSuffixName,runnerName,fTempDirGetter,...
     scriptName,varargin)
 import modgen.common.throwerror;
+import modgen.struct.strucdisp;
 import(log4jConfiguratorName);
 %
 try

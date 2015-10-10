@@ -1,68 +1,67 @@
-function [isMemberVec,indMemberVec]=ismemberrows(inpMat1,inpMat2,isInteger,forceMode)
-% ISMEMBERROWS finds indices of rows first matrix in the second matrix,
-% i.e. it is the more effective version of ISMEMBER(...,'rows')
-
+function [isMemberVec,indMemberVec]=ismemberrows(inpLeftMat,inpRightMat,...
+    isInteger,forceMode)
+% ISMEMBERROWS finds indices of rows from the first matrix in 
+%   the second matrix, i.e. it is the more efficient version 
+%   of ISMEMBER(...,'rows')
 %
-% Usage: [isMemberVec,indMemberVec]=ismemberrows(inpMat1,inpMat2)
+% Usage: [isMemberVec,indMemberVec]=ismemberrows(inpLeftMat,inpRightMat)
 %
-% input:
+% Input:
 %   regular:
-%     inpMat1: double/logical/char [nRows1,nCols] - first matrix
-%     inpMat2: double/logical/char [nRows2,nCols] - second matrix
+%       inpLeftMat: double/logical/char[nLeftRows,nCols] - first matrix
+%       inpRightMat: double/logical/char[nRightRows,nCols] - second matrix
 %   optional:
-%     isInteger: logical [1,1] - if true then no checks that inpMat1 and
-%         inpMat2 contain finite integer values are performed
-%     forceMode: char [1,] - if given, then determines mode to be used,
-%         may be 'standard' (in this case built-in version is forced to
+%   	isInteger: logical[1,1] - if true then no checks that inpLeftMat and
+%           inpRightMat contain finite integer values are performed
+%       forceMode: char[1,] - if given, then determines mode to be used,
+%           may be 'standard' (in this case built-in version is forced to
 %         be used) or 'optimized' (then optimized version is to be used
 %         instead of built-in one in the case it is possible)
-% output:
-%   regular:
-%     isMemberVec: logical [nRows1,1] - whether corresponding row from
-%         inpMat1 equals to some row in matrix inpMat2
-%     indMemberVec: double [nRows1,1] - indices of corresponding rows
-%         from inpMat1 in matrix inpMat2 (0 if there is no equal row in b)
+% Output:
+%   isMemberVec: logical [nLeftRows,1] - whether corresponding row from
+%       inpLeftMat equals to some row in matrix inpRightMat
+%   indMemberVec: double [nLeftRows,1] - indices of corresponding rows
+%       from inpLeftMat in matrix inpRightMat (0 if there is no equal row in b)
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-06-19 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-06-19 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-%   the situation when nCols==0 is fixed
 %
-
+import modgen.common.throwerror;
 persistent maxVal sqMaxVal logMaxVal;
-
+%
 if nargin<3,
     isInteger=false;
 end
-[nRows1 nCols]=size(inpMat1);
-if size(inpMat2,2)~=nCols,
-    error([upper(mfilename),':wrongInput'],...
-        'Number of columns in inpMat1 and inpMat2 must be the same');
+[nLeftRows,nCols]=size(inpLeftMat);
+if size(inpRightMat,2)~=nCols,
+    throwerror('wrongInput',...
+        'Number of columns in inpLeftMat and inpRightMat must be the same');
 end
-nRows2=size(inpMat2,1);
+nRightRows=size(inpRightMat,1);
 isInd=nargout>1;
-if nRows1==0||nRows2==0||nCols==0,
+if nLeftRows==0||nRightRows==0||nCols==0,
     if nCols==0,
-        isMemberVec=true(nRows1,1);
-        indMemberVec=repmat(nRows2,nRows1,1);
+        isMemberVec=true(nLeftRows,1);
+        indMemberVec=repmat(nRightRows,nLeftRows,1);
     else
-        isMemberVec=false(nRows1,1);
-        indMemberVec=zeros(nRows1,1);
+        isMemberVec=false(nLeftRows,1);
+        indMemberVec=zeros(nLeftRows,1);
     end
     return;
 end
 if ~isInteger,
-    isNum=isnumeric(inpMat1)&&isnumeric(inpMat2);
+    isNum=isnumeric(inpLeftMat)&&isnumeric(inpRightMat);
     if isNum,
-        if ~(isreal(inpMat1)&&isreal(inpMat2)),
+        if ~(isreal(inpLeftMat)&&isreal(inpRightMat)),
             % transform complex numbers to real ones separating them on real
             % and imaginery parts
             nCols=2*nCols;
-            inpMat1=[real(inpMat1) imag(inpMat1)];
-            inpMat2=[real(inpMat2) imag(inpMat2)];
+            inpLeftMat=[real(inpLeftMat) imag(inpLeftMat)];
+            inpRightMat=[real(inpRightMat) imag(inpRightMat)];
         end
     end
 end
@@ -70,52 +69,52 @@ if nCols<2,
     % for simple situation use ismember
     if ~isInteger,
         % find nans
-        isMat1=isnan(inpMat1);
-        isMat2=isnan(inpMat2);
-        isNan1=any(isMat1);
-        isNan2=any(isMat2);
-        isInteger=~(isNan1||isNan2);
+        isLeftMat=isnan(inpLeftMat);
+        isRightMat=isnan(inpRightMat);
+        isLeftNan=any(isLeftMat);
+        isRightNan=any(isRightMat);
+        isInteger=~(isLeftNan||isRightNan);
     end
     if isInteger,
         % perform ismember
         if isInd,
-            [isMemberVec,indMemberVec]=ismember(inpMat1,inpMat2,'legacy');
+            [isMemberVec,indMemberVec]=ismember(inpLeftMat,inpRightMat,'legacy');
         else
-            isMemberVec=ismember(inpMat1,inpMat2,'legacy');
+            isMemberVec=ismember(inpLeftMat,inpRightMat,'legacy');
         end
     else
-        isMemberVec=false(nRows1,1);
-        indMemberVec=zeros(nRows1,1);
+        isMemberVec=false(nLeftRows,1);
+        indMemberVec=zeros(nLeftRows,1);
         % perform ismember for NaNs
-        if isNan1,
-            if isNan2,
-                isMemberVec(isMat1)=true;
-                indMemberVec(isMat1)=find(isMat2,1,'last');
+        if isLeftNan,
+            if isRightNan,
+                isMemberVec(isLeftMat)=true;
+                indMemberVec(isLeftMat)=find(isRightMat,1,'last');
             end
         end
-        if isNan1||isNan2,
-            isMat1=~isMat1;
-            isMat2=~isMat2;
+        if isLeftNan||isRightNan,
+            isLeftMat=~isLeftMat;
+            isRightMat=~isRightMat;
         end
         % peform ismember for non-NaNs
         if isInd,
-            [isCurMemberVec,indCurMemberVec]=ismember(inpMat1(isMat1),inpMat2(isMat2),'legacy');
-            if isNan2&&any(isCurMemberVec),
-                inpMat2=find(isMat2);
-                indCurMemberVec(isCurMemberVec)=inpMat2(indCurMemberVec(isCurMemberVec));
+            [isCurMemberVec,indCurMemberVec]=ismember(inpLeftMat(isLeftMat),inpRightMat(isRightMat),'legacy');
+            if isRightNan&&any(isCurMemberVec),
+                inpRightMat=find(isRightMat);
+                indCurMemberVec(isCurMemberVec)=inpRightMat(indCurMemberVec(isCurMemberVec));
             end
-            isMemberVec(isMat1)=isCurMemberVec;
-            indMemberVec(isMat1)=indCurMemberVec;
+            isMemberVec(isLeftMat)=isCurMemberVec;
+            indMemberVec(isLeftMat)=indCurMemberVec;
         else
-            isMemberVec(isMat1)=ismember(inpMat1(isMat1),inpMat2(isMat2),'legacy');
+            isMemberVec(isLeftMat)=ismember(inpLeftMat(isLeftMat),inpRightMat(isRightMat),'legacy');
         end
     end
 else
     % initial actions
     isForceMode=nargin>=4;
-    if ~strcmp(class(inpMat1),class(inpMat2)),
-        error([upper(mfilename),':wrongInput'],...
-            'Classes of inpMat1 and inpMat2 differ');
+    if ~strcmp(class(inpLeftMat),class(inpRightMat)),
+        throwerror('wrongInput',...
+            'Classes of inpLeftMat and inpRightMat differ');
     end
     if isempty(maxVal)||isempty(sqMaxVal)||isempty(logMaxVal),
         maxVal=1/eps('double');
@@ -123,27 +122,27 @@ else
         logMaxVal=log2(maxVal);
     end
     isnOptimized=true;
-    isIntType=isinteger(inpMat1);
-    isLogicalType=islogical(inpMat1);
-    isCharType=ischar(inpMat1);
+    isIntType=isinteger(inpLeftMat);
+    isLogicalType=islogical(inpLeftMat);
+    isCharType=ischar(inpLeftMat);
     isInteger=isInteger||isIntType||isLogicalType||isCharType;
     isReshape=~isInteger;
     if isReshape,
         if ~isNum,
-            error([upper(mfilename),':wrongInput'],...
-                'Type of inpMat1 and inpMat2 is wrong');
+            throwerror(':wrongInput',...
+                'Type of inpLeftMat and inpRightMat is wrong');
         end
         % reshape matrices into column vectors
-        inpMat1=inpMat1(:);
-        inpMat2=inpMat2(:);
-        isMat1=isfinite(inpMat1);
-        isMat2=isfinite(inpMat2);
-        if (all(isMat1)&&all(isMat2)),
-            minInpVal=min(min(inpMat1),min(inpMat2));
-            maxInpVal=max(max(inpMat1),max(inpMat2));
+        inpLeftMat=inpLeftMat(:);
+        inpRightMat=inpRightMat(:);
+        isLeftMat=isfinite(inpLeftMat);
+        isRightMat=isfinite(inpRightMat);
+        if (all(isLeftMat)&&all(isRightMat)),
+            minInpVal=min(min(inpLeftMat),min(inpRightMat));
+            maxInpVal=max(max(inpLeftMat),max(inpRightMat));
         else
             % replace non-finite numbers by finite ones
-            inpMat=[inpMat1(isMat1);inpMat2(isMat2)];
+            inpMat=[inpLeftMat(isLeftMat);inpRightMat(isRightMat)];
             % determine range of finite values
             if isempty(inpMat),
                 minInpVal=0;
@@ -152,9 +151,9 @@ else
                 minInpVal=min(inpMat);
                 maxInpVal=max(inpMat);
             end
-            isMat1=~isMat1;
-            isMat2=~isMat2;
-            inpMat=[inpMat1(isMat1);inpMat2(isMat2)];
+            isLeftMat=~isLeftMat;
+            isRightMat=~isRightMat;
+            inpMat=[inpLeftMat(isLeftMat);inpRightMat(isRightMat)];
             % replace -Inf
             isMat=inpMat==-Inf;
             if any(isMat),
@@ -182,8 +181,9 @@ else
             if any(isMat),
                 curVal=maxInpVal;
                 if curVal==Inf,
-                    error([upper(mfilename),':wrongInput'],...
-                        'Range of values in inpMat1 and inpMat2 is too large to process it correctly');
+                    throwerror('wrongInput',...
+                        ['Range of values in inpLeftMat and inpRightMat is ',...
+                        'too large to process it correctly']);
                 end
                 nextVal=curVal+1;
                 if nextVal==curVal,
@@ -193,13 +193,14 @@ else
                 inpMat(isMat)=nextVal;
             end
             % update non-finite values
-            curVal=sum(isMat1);
-            inpMat1(isMat1)=inpMat(1:curVal);
-            inpMat2(isMat2)=inpMat(curVal+1:end);
+            curVal=sum(isLeftMat);
+            inpLeftMat(isLeftMat)=inpMat(1:curVal);
+            inpRightMat(isRightMat)=inpMat(curVal+1:end);
         end
         rangeVal=maxInpVal-minInpVal+1;
         if rangeVal<=sqMaxVal,
-            isInteger=all(fix(inpMat1)==inpMat1)&&all(fix(inpMat2)==inpMat2);
+            isInteger=all(fix(inpLeftMat)==inpLeftMat)&&...
+                all(fix(inpRightMat)==inpRightMat);
             isnOptimized=~isInteger;
         end
     end
@@ -214,27 +215,27 @@ else
         else
             if ~isReshape,
                 isReshape=true;
-                inpMat1=inpMat1(:);
-                inpMat2=inpMat2(:);
+                inpLeftMat=inpLeftMat(:);
+                inpRightMat=inpRightMat(:);
             end
-            minInpVal=double(min(min(inpMat1),min(inpMat2)));
-            maxInpVal=double(max(max(inpMat1),max(inpMat2)));
+            minInpVal=double(min(min(inpLeftMat),min(inpRightMat)));
+            maxInpVal=double(max(max(inpLeftMat),max(inpRightMat)));
         end
         % determine whether optimized version may be performed or not
         rangeVal=maxInpVal-minInpVal+1;
         isnOptimized=rangeVal>sqMaxVal;
     end
-    % reshape inpMat1 and inpMat2 from column vectors into matrices if
+    % reshape inpLeftMat and inpRightMat from column vectors into matrices if
     % necessary
     if isReshape,
-        inpMat1=reshape(inpMat1,nRows1,nCols);
-        inpMat2=reshape(inpMat2,nRows2,nCols);
+        inpLeftMat=reshape(inpLeftMat,nLeftRows,nCols);
+        inpRightMat=reshape(inpRightMat,nRightRows,nCols);
     end
     if isForceMode,
         isnOptimized=isnOptimized||~strcmpi(forceMode,'optimized');
     elseif ~isnOptimized,
         % determine what version (standard or optimized) is to be used
-        nRows=nRows1+nRows2;
+        nRows=nLeftRows+nRightRows;
         if rangeVal<=pow2(logMaxVal/nCols),
             isOptimized=nRows>=3;
         elseif nCols>=250&&nRows>=100,
@@ -247,48 +248,50 @@ else
     if isnOptimized,
         % perform built-in version of ismember
         if isInd,
-            [isMemberVec,indMemberVec]=ismember(inpMat1,inpMat2,'rows');
+            [isMemberVec,indMemberVec]=ismember(inpLeftMat,inpRightMat,...
+                'rows');
         else
-            isMemberVec=ismember(inpMat1,inpMat2,'rows');
+            isMemberVec=ismember(inpLeftMat,inpRightMat,'rows');
         end
         return;
     end
     % unite all values in single matrix
-    inpMat1=[inpMat1;inpMat2];
-    clear inpMat2;
-    inpMat1=double(inpMat1)+(1-minInpVal);
+    inpLeftMat=[inpLeftMat;inpRightMat];
+    clear inpRightMat;
+    inpLeftMat=double(inpLeftMat)+(1-minInpVal);
     % calculate codes for rows
-    allSizeVec=max(inpMat1,[],1);
+    allSizeVec=max(inpLeftMat,[],1);
     while nCols>1,
         iCol=0;
         lenVec=[];
         % break all columns on segments
         while iCol<nCols,
-            curInd=max(find(cumprod(allSizeVec(iCol+1:end))<=maxVal,1,'last'),2);
+            curInd=max(find(cumprod(allSizeVec(iCol+1:end))<=maxVal,1,...
+                'last'),2);
             if isempty(curInd),
                 curInd=2;
             end
             lenVec=horzcat(lenVec,curInd); %#ok<AGROW>
             iCol=iCol+curInd;
         end
-        % perform num2cell(inpMat1,1)
+        % perform num2cell(inpLeftMat,1)
         auxCell=cell(1,nCols);
         for iCol=1:nCols,
-            auxCell{iCol}=inpMat1(:,iCol);
+            auxCell{iCol}=inpLeftMat(:,iCol);
         end
         nCurCols=nCols;
         nCols=numel(lenVec);
         if nCols==1,
             % get column vector with codes
-            inpMat1=sub2ind(allSizeVec,auxCell{:});
+            inpLeftMat=sub2ind(allSizeVec,auxCell{:});
         else
-            inpMat1=inpMat1(:,1:nCols);
+            inpLeftMat=inpLeftMat(:,1:nCols);
             sizeVec=nan(1,nCols);
             % adjust lenVec
             lenVec(end)=lenVec(end)+nCurCols-sum(lenVec);
             % if necessary, process last segment with single column
             if lenVec(end)==1,
-                inpMat1(:,nCols)=auxCell{nCurCols};
+                inpLeftMat(:,nCols)=auxCell{nCurCols};
                 sizeVec(nCols)=allSizeVec(nCurCols);
                 nCurCols=nCols-1;
             else
@@ -298,7 +301,7 @@ else
             leftIndVec=[1 cumsum(lenVec(1:nCurCols-1))+1];
             for iCol=1:nCurCols,
                 curInd=leftIndVec(iCol)+(0:lenVec(iCol)-1);
-                [uniqueLinInd,~,inpMat1(:,iCol)]=unique(...
+                [uniqueLinInd,~,inpLeftMat(:,iCol)]=unique(...
                     sub2ind(allSizeVec(curInd),auxCell{curInd}),'legacy');
                 sizeVec(iCol)=length(uniqueLinInd);
             end
@@ -307,13 +310,15 @@ else
     end
     % perform built-in ismember for codes
     if nCols==0,
-        isMemberVec=true(nRows1,1);
-        indMemberVec=nRows2*ones(nRows1,1);
+        isMemberVec=true(nLeftRows,1);
+        indMemberVec=nRightRows*ones(nLeftRows,1);
     else
         if isInd,
-            [isMemberVec,indMemberVec]=ismember(inpMat1(1:nRows1),inpMat1(nRows1+1:end),'legacy');
+            [isMemberVec,indMemberVec]=ismember(inpLeftMat(1:nLeftRows),...
+                inpLeftMat(nLeftRows+1:end),'legacy');
         else
-            isMemberVec=ismember(inpMat1(1:nRows1),inpMat1(nRows1+1:end),'legacy');
+            isMemberVec=ismember(inpLeftMat(1:nLeftRows),...
+                inpLeftMat(nLeftRows+1:end),'legacy');
         end
     end
 end

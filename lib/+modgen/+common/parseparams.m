@@ -36,7 +36,8 @@ function [reg, prop]=parseparams(args,propNameList,nRegExpected,nPropExpected)
 %            System Analysis Department 2011 $
 %
 %
-import modgen.common.*;
+import modgen.common.throwerror;
+import modgen.common.ismembercellstr;
 isUsePropNamesUsed=false;
 if nargin>=2
     if ~(isempty(propNameList)&&isnumeric(propNameList))
@@ -108,7 +109,8 @@ if nargin>=3
             if numel(reg)~=nRegExpected
                 throwerror('wrongParamList',...
                     ['a number of extracted regular parameters (%d) does ',...
-                    'not much an expected number(%d)'],numel(reg),nRegExpected);
+                    'not much an expected number(%d)'],numel(reg),...
+                    nRegExpected);
             end
         elseif numel(nRegExpected)==2&&nRegExpected(1)>=0&&...
                 nRegExpected(2)>=nRegExpected(1)&&...
@@ -143,7 +145,8 @@ if nargin==4
         end
     else
         throwerror('wrongInput',...
-            'nPropExpected is expected to be a numeric non-negative integer scalar');
+            ['nPropExpected is expected to be a numeric non-negative ',...
+            'integer scalar']);
     end
 end
 end

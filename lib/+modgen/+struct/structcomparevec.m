@@ -21,7 +21,6 @@ function [isEqualVec,reportStr]= structcomparevec(SX,SY,absTol,relTol)
 %            System Analysis Department 2012 $
 %
 %
-
 if nargin<3
     absTol=0;
 end
@@ -37,7 +36,8 @@ end
 [isEqualVec,reportStrList]=structcompare1darray(SX(:),SY(:),absTol,relTol);
 nReports=length(reportStrList);
 if nReports>1
-    reportStrList(1:end-1)=cellfun(@(x)horzcat(x,sprintf('\n')),reportStrList(1:end-1),'UniformOutput',false);
+    reportStrList(1:end-1)=cellfun(@(x)horzcat(x,sprintf('\n')),...
+        reportStrList(1:end-1),'UniformOutput',false);
 end
 if nReports>0
     reportStr=[reportStrList{:}];
@@ -45,8 +45,7 @@ else
     reportStr='';
 end
 end
-
-
+%
 function [isEqualVec,reportStrList]= structcompare1darray(SX,SY,absTol,relTol)
 % STRUCTCOMPARE1D compares 1-dimentional structural arrays
 %
@@ -60,7 +59,6 @@ nReports=sum([nReportsList{:}]);
 reportStrList=[reportStrList{:}];
 itemIndVec=[itemIndList{:}];
 isnEqualVec=~[isEqualList{:}];
-isEqual=~any(isnEqualVec);
 for iReport=1:nReports
     if isnEqualVec(iReport)
         reportStrList{iReport}=sprintf('(%d)%s',itemIndVec(iReport),reportStrList{iReport});
@@ -68,16 +66,17 @@ for iReport=1:nReports
 end
 %
 end
-
+%
 function [isEqual,reportStrList]= structcomparescalar(SX,SY,absTol,relTol)
 % STRUCTCOMPARE1D compares the scalar structures
-
-if ~auxchecksize(SX,SY,[1 1])
-    error([upper(mfilename),':wrongInput'],'both inputs are expected to be of size [1,1]');
+import modgen.cell.cell2sepstr;
+import modgen.common.throwerror;
+if ~modgen.common.checksize(SX,SY,[1 1])
+    throwerror('wrongInput','both inputs are expected to be of size [1,1]');
 end
 %
 if ~(isstruct(SX)&&isstruct(SY))
-    error([upper(mfilename),':wrongInput'],'both inputs are expected to be structures');
+    throwerror('wrongInput','both inputs are expected to be structures');
 end
 %
 reportStrList={};
@@ -128,7 +127,8 @@ if isnumeric(x)
     xSizeVec=size(x);
     ySizeVec=size(y);
     if ~isequal(xSizeVec,ySizeVec)
-        reportStr=sprintf('Different sizes (left: %s, right: %s)',mat2str(xSizeVec),mat2str(ySizeVec));
+        reportStr=sprintf('Different sizes (left: %s, right: %s)',...
+            mat2str(xSizeVec),mat2str(ySizeVec));
         return;
     end
     x=toNumericSupportingMinus(x);

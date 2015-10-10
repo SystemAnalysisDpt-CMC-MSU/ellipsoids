@@ -802,27 +802,21 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         %
         function isBound = isBoundary(ellShiftVec,ellConstrMat,poly)
             import modgen.common.absrelcompare;
+            ABS_TOL=1e-7;
             if isa(poly,'ellipsoid')
                 poly = poly.toPolytope();
             end
             pointsArray=poly.V;
             nPoints = size(pointsArray,1);
             isBound = true;
-            nDims = size(pointsArray,2);
-            for i = 1:nPoints
-                if nDims == 3
-                    [isEqual, absDiff] = absrelcompare(((pointsArray(i,1) - ellShiftVec(1))^2/ellConstrMat(1,1))...
-                        +((pointsArray(i,2)-ellShiftVec(2))^2/ellConstrMat(2,2))...
-                        +((pointsArray(i,3)-ellShiftVec(3))^2/ellConstrMat(3,3)),...
-                        1,1e-7,[],@abs);
-                else
-                    [isEqual, absDiff] = absrelcompare(((pointsArray(i,1)-ellShiftVec(1))^2/ellConstrMat(1,1))...
-                        +((pointsArray(i,2)-ellShiftVec(2))^2/ellConstrMat(2,2)),...
-                        1,1e-7,[],@abs);
-                end
+            for iPoint = 1:nPoints
+                ellNorm=getEllNorm(ellConstrMat,ellShiftVec,...
+                    pointsArray(iPoint,:).');
+                [isEqual, ~] = absrelcompare(ellNorm,...
+                    1,ABS_TOL,[],@abs);
                 if ~isEqual
                     isBound = false;
-                    i = nPoints + 1;
+                    break;
                 end
             end
         end
@@ -884,4 +878,8 @@ function [my1EllArray, my2EllArray]=construct2EllArraysForTests(dimsEllArrayVec)
         myEllVec(iElem) = [cos(iElem*alpha);sin(iElem*alpha)] + ellipsoid(eye(2));
     end
     my2EllArray=reshape(myEllVec, dimsEllArrayVec);
+end
+function ellNorm=getEllNorm(qMat,cVec,xVec)
+diffVec=xVec-cVec;
+ellNorm=realsqrt(diffVec.'/qMat*diffVec);
 end

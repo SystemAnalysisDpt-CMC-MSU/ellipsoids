@@ -34,8 +34,6 @@ checkvar(vMat,@(x) isa(x,'double')&&(size(x,2) == 3 || size(x,2) == 2),...
     'errorTag','wrongInput','errorMessage',...
     'Matrix of vertices must be matrix from R^nx3.');
 %
-
-
 nDims = size(vMat,2);
 nFaces = size(fMat,1);
 normMat = zeros(nDims,nFaces);
@@ -68,9 +66,8 @@ for iFaces = 1:nFaces
     %
 end
 %
-poly = Polyhedron(normMat',constVec');
-
-
+poly = Polyhedron(normMat.',constVec.');
+%
 function num = getNumNotIn(numVec)
 if all(numVec ~= 1)
     num = 1;

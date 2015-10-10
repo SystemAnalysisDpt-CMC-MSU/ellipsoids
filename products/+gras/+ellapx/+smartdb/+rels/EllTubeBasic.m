@@ -1065,7 +1065,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import gras.ellapx.enums.EApproxType;
             import elltool.logging.Log4jConfigurator;
             import modgen.common.throwerror;
-            import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;
             persistent logger;
             %
             self.checkIfObjectScalar();
@@ -1086,7 +1085,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 'checkTupleOrder'};
             %
             propCheckMat=...
-                ATypifiedAdjustedRel.getEllIsEqualPropCheckCMat(...
+                self.getEllIsEqualPropCheckCMat(...
                 PROP_NAME_LIST);
             [reg,~,maxCompareTol,maxRelCompareTol,...
                 notComparedFieldList,areTimeBoundsCompared,...

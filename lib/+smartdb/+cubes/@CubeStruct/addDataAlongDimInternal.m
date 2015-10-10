@@ -1,7 +1,6 @@
 function addDataAlongDimInternal(self,catDimension,varargin)
 % ADDDATAALONGDIMINTERNAL - adds a set of field values to existing data 
-%                           using a concatenation along a specified    
-%                           dimension
+%   using a concatenation along a specified dimension
 %
 % Usage: addDataAlongDimInternal(self,catDimension,varargin)
 %
@@ -51,24 +50,25 @@ function addDataAlongDimInternal(self,catDimension,varargin)
 %            System Analysis Department 2012 $
 %
 %
-import modgen.struct.*;
-import modgen.common.*;
+import modgen.common.throwerror;
 import modgen.cell.cellstr2expression;
+import modgen.common.throwerror;
+import modgen.common.cat;
 %
 if ~(isnumeric(catDimension)&&numel(catDimension)==1)
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'catDimension is expected to be a numeric scalar');
 end
 %
 if catDimension>self.minDimensionality||catDimension<0
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'catDim is expected to be in range [1,minDimensionality] =[1,%d]',...
         self.minDimensionality);
 end
 %
 [reg,prop]=modgen.common.parseparams(varargin);
 if ~all(cellfun('isclass',reg,'struct'))
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'all regular parameters are expected to be structures');
 end
 %
@@ -92,13 +92,13 @@ for k=1:2:nProp
         case 'datachangeiscomplete'
             isDataChangeComplete=prop{k+1};
         otherwise,
-            error([upper(mfilename),':wrongInput'],...
+            throwerror('wrongInput',...
                 'unknown property %s',prop{k});
     end
 end
 %
 if nReg==0
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'at least one input argument is required');
 end
 %
@@ -109,8 +109,8 @@ else
         structNameList={structNameList};
     end
     %
-    if ~auxchecksize(structNameList,[1,nReg])
-        error([upper(mfilename),':wrongInput'],...
+    if ~modgen.common.checksize(structNameList,[1,nReg])
+        throwerror('wrongInput',...
             'structNameList is expected to be of size [1,%d]',nReg);
     end
 end
@@ -211,12 +211,12 @@ for iField=1:nFields
                         self.SIsValueNull.(fieldName),...
                         reg{iStruct}.(fieldName));
                 else
-                    error([upper(mfilename),':wrongInput'],...
+                    throwerror('wrongInput',...
                         'Oops, we shouldn''t be here');
                 end
             catch meObj
                 if iStruct<=3
-                    newMeObj=MException([upper(mfilename),':badData'],...
+                    newMeObj=throwerror('badData',...
                         ['cannot concatenate field %s from %s along',...
                         ' dimension %d'],...
                         fieldName,self.completeStructNameList{iStruct},...

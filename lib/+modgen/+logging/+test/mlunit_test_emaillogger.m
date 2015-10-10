@@ -35,7 +35,7 @@ classdef mlunit_test_emaillogger < mlunitext.test_case
         function self = test_emaillogger_preferences(self)
             % E-mail settings that will be used to configure test EmailLogger
             testSmtpServer = 'some.server';
-            [userName,hostName]=getuserhost();
+            [userName,hostName]=modgen.system.getuserhost();
             if isempty(userName)
                 userName = 'unknown';
             end
