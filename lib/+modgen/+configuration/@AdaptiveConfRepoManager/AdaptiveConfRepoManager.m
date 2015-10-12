@@ -111,8 +111,8 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
             %   regular:
             %       self: modgen.configuration.AdaptiveConfRepoManager[1,1]
             %       areAllBranchesUpdated: logical[1,1] - if true, all
-            %       branches are updated, not just a branch that
-            %          corresponds to a current host. (false by default)
+            %           branches are updated, not just a branch that
+            %           corresponds to a current host. (false by default)
             %
             if nargin<2
                 areAllBranchesUpdated=false;
