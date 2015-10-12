@@ -1,5 +1,8 @@
 *.asv
+/*.mat
+/externals
 /install/pathdef.m
+/install/startlog.log
 /install/*.mat
 /install/javaclasspath.txt
 /products/+elltool/+logging/Logs
