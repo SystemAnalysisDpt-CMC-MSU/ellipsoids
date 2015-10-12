@@ -143,7 +143,13 @@ classdef RelationDataPlotter<handle
             %
             %
             mp=self.figHMap;
-            hFigureVec=cell2mat(mp.values);
+            hFigureList=mp.values;
+            if isempty(hFigureList)
+                hFigureVec=gobjects(1,0);
+            else
+                hFigureVec=[hFigureList{:}];
+            end
+            %
             fileNameList=cellfun(@modgen.common.genfilename,...
                 mp.keys,'UniformOutput',false);
             %
@@ -237,6 +243,7 @@ classdef RelationDataPlotter<handle
             import modgen.common.throwerror;
             import modgen.struct.updateleaves;
             import modgen.common.type.simple.checkcelloffunc;
+            import modgen.common.throwwarn;
             %
             [~,~,axesPostPlotFunc,isAutoHoldOn,isAxesPostPlotFuncSpec]=...
                 modgen.common.parseparext(...
@@ -329,7 +336,8 @@ classdef RelationDataPlotter<handle
                     for iAxes=1:nUAxis
                         axesKey=axisUKeyList{iAxes};
                         hAxes=axesMap(axesKey);
-                        axisToPlotMap(axesKey)=findobj('Parent',hAxes).';
+                        axisToPlotMap(axesKey)=findall(hAxes,'Parent',...
+                            hAxes).';
                     end
                 end
                 
@@ -382,15 +390,38 @@ classdef RelationDataPlotter<handle
                     for iAxes=1:nUAxis
                         plotHandleUKeyList{iAxes}=[plotHVecList{indUAVec==iAxes}];
                         axisKey=axisUKeyList{iAxes};
-                        axisToPlotMap(axisKey)=...
-                            [axisToPlotMap(axisKey),plotHandleUKeyList{iAxes}];
+                        existHandleVec=axisToPlotMap(axisKey);
+                        newHandleVec=plotHandleUKeyList{iAxes};
+                        catHandleVec=[existHandleVec,newHandleVec];
+                        [uniqueHandleVec,indUniqueVec]=unique(catHandleVec);
+                        nCatHandles=numel(catHandleVec);
+                        if nCatHandles>numel(indUniqueVec)
+                            indNotThereVec=setdiff(1:nCatHandles,indUniqueVec);
+                            for indNotThere=indNotThereVec
+                                notThereHandle=catHandleVec(indNotThere);
+                                if ~(ishghandle(notThereHandle)&&...
+                                        strcmp(get(notThereHandle,'Type'),'text'))
+                                    parentHandle=notThereHandle.Parent;
+                                    throwwarn('wrongInput',...
+                                        ['an existing graphic object %s:%s',...
+                                        ' with parent %s:%s has been ',...
+                                        'returned by one of plotting ',...
+                                        'functions'],evalc('disp(notThereHandle)'),...
+                                        class(notThereHandle),...
+                                        evalc('disp(parentHandle)'),...
+                                        class(parentHandle));
+                                end
+                            end
+                        end
+                        %
+                        axisToPlotMap(axisKey)=uniqueHandleVec;
                     end
                 end
                 %% Check that all plotting handlers were returned by
                 % plotCreate function
                 SFigToAxes=updateleaves(...
                     self.figToAxesToHMap.toStruct(),...
-                    @(x,y)sort(findobj('Parent',x).'));
+                    @(x,y)sort(findall(x,'Parent',x).'));
                 SExpFigToAxes=updateleaves(...
                     self.figToAxesToPlotHMap.toStruct(),@(x,y)sort(x));
                 [isOk,reportStr]=modgen.struct.structcompare(...

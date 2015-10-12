@@ -159,7 +159,7 @@ classdef GenEllipsoid < handle
         %      |-- QInf : |0|0|
         %      |          |0|0|
         %      |          -----
-            strucdisp(ellArr(:).toStruct());
+            modgen.struct.strucdisp(ellArr(:).toStruct());
         end
     end
     methods

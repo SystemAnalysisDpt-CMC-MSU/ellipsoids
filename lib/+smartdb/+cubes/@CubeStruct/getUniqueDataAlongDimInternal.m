@@ -51,6 +51,7 @@ function varargout=getUniqueDataAlongDimInternal(self,catDim,varargin)
 %
 import modgen.system.ExistanceChecker;
 import modgen.common.throwerror;
+import modgen.common.uniquejoint;
 %
 isNullReplaced=false;
 %

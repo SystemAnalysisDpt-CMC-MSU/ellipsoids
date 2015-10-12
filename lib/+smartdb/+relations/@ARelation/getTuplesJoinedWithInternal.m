@@ -37,7 +37,7 @@ import modgen.common.throwerror;
 import modgen.common.type.simple.*;
 %
 [~,~,joinType]=modgen.common.parseparext(varargin,...
-    {'joinType';'inner';@(x)(lib.isstring(x)&&any(strcmpi(x,...
+    {'joinType';'inner';@(x)(lib.ischarstring(x)&&any(strcmpi(x,...
     {'inner','leftOuter','rightOuter','fullOuter'})))},0);
 self.isFieldsCheck(keyFieldNameList);
 if ischar(keyFieldNameList)
@@ -91,7 +91,7 @@ indSelfCVec(isnOtherEmptyVec)=indSelfCVec(indIsNotOtherEmptyVec(indOtherSortVec)
 indOtherCVec(isnOtherEmptyVec)=indOtherCVec(indIsNotOtherEmptyVec(indOtherSortVec));
 %
 if numel(indSelfCVec)>0
-    indCombCVec=cellfun(@(x,y)combvec(x.',y.').',indSelfCVec,...
+    indCombCVec=cellfun(@(x,y)modgen.common.combvec(x.',y.').',indSelfCVec,...
         indOtherCVec,'UniformOutput',false);
 else
     indCombCVec=cell(1,0);

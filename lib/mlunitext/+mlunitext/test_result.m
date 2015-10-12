@@ -381,6 +381,7 @@ classdef test_result<handle
             %         results
             %
             import modgen.common.throwerror;
+            import modgen.cell.cell2sepstr;
             self.checkIfScalar();
             if nargin<2,
                 return;
@@ -581,19 +582,20 @@ classdef test_result<handle
             end
             %%
             function errorNode=formatError(errorText)
-                errorText=stripHtmlTags(errorText);
-                % The last line of the error text is the message, the rest
-                % is the stack trace
-                eolInds=strfind(errorText,char(10));
-                errorNode=addErrorNode('error',errorText(eolInds(end)+1:end),...
-                    errorText(1:eolInds(end)-1));
+                % The error message follows the stack trace after two
+                % carriage returns
+                eolInds=strfind(errorText,[char(10),char(10)]);
+                stackTrace=stripHtmlTags(errorText(1:eolInds(1)-1));
+                errorNode=addErrorNode('error',...
+                    errorText(eolInds(1)+2:end),stackTrace);
             end
             function errorNode=formatFailure(failureText)
-                failureText=stripHtmlTags(failureText);
-                % The first line of the failure text is the message, the
-                % rest is the stack trace
-                [message,trace]=strtok(failureText,char(10));
-                errorNode=addErrorNode('failure',message,trace);
+                % The failure message comes before the hyperlinked stack
+                % trace
+                eolInds=strfind(failureText,[char(10),'<a']);
+                stackTrace=stripHtmlTags(failureText(eolInds(1)+1:end));
+                errorNode=addErrorNode('failure',...
+                    failureText(1:eolInds(1)-1),stackTrace);
             end
             function text=stripHtmlTags(text)
                 text=regexprep(text,'<.*?>','');

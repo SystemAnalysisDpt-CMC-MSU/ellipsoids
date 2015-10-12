@@ -1,45 +1,44 @@
 function [isMemberVec,indMemberVec]=ismemberjointwithnulls(...
     leftCVec,leftIsNullCVec,rightCVec,rightIsNullCVec,dim)
 % ISMEMBERJOINTWITHNULLS perform joint ismember operation for two cell
-% arrays for which also cell arrays detemining positions of null values
-% are given
+%   arrays for which also cell arrays detemining positions of null values
+%   are given
 %
 % Usage: [isMemberVec,indMemberVec]=ismemberjointwithnulls(...
 %            leftCVec,leftIsNullCVec,rightCVec,rightIsNullCVec,dim)
 %
-% input:
+% Input:
 %   regular:
-%     leftCVec: cell [1,nElems], all cells should contain arrays of
-%        arbitrary types with size equal along dimension given by dim -
-%        values of elements on the left
-%     leftIsNullCVec: cell [1,nElems], i-th cell should contain logical
-%        array with number of dimensions nDims_i and of sizes equal with
-%        the ones for i-th cell within leftCVec along all dimensions
-%        1..max(nDims_i,dim) - logical arrays determining what values are
-%        null on the left
-%     rightCVec: cell [1,nElems], all cells should contain arrays of
-%        arbitrary types with size equal along dimension given by dim -
-%        values of elements on the right
-%     rightIsNullCVec: cell [1,nElems], i-th cell should contain logical
-%        array with number of dimensions nDims_i and of sizes equal with
-%        the ones for i-th cell within rightCVec along all dimensions
-%        1..max(nDims_i,dim) - logical arrays determining what values are
-%        null on the right
+%       leftCVec: cell [1,nElems], all cells should contain arrays of
+%           arbitrary types with size equal along dimension given by dim -
+%           values of elements on the left
+%       leftIsNullCVec: cell [1,nElems], i-th cell should contain logical
+%           array with number of dimensions nDims_i and of sizes equal with
+%           the ones for i-th cell within leftCVec along all dimensions
+%           1..max(nDims_i,dim) - logical arrays determining what values are
+%           null on the left
+%       rightCVec: cell [1,nElems], all cells should contain arrays of
+%           arbitrary types with size equal along dimension given by dim -
+%           values of elements on the right
+%       rightIsNullCVec: cell [1,nElems], i-th cell should contain logical
+%           array with number of dimensions nDims_i and of sizes equal with
+%           the ones for i-th cell within rightCVec along all dimensions
+%           1..max(nDims_i,dim) - logical arrays determining what values are
+%           null on the right
 %   optional:
-%     dim: double [1,1] - main dimension along which ismemberjointwithnulls
-%        is performed; if not given, dim is taken equal to 1
-% output:
-%   regular:
-%     isMemberVec: logical [nLeftElem,1] - array of membership indicators
-%         of all respective elements within leftCVec (with taking into
-%         account of leftIsNullCVec) to all respective elements within
-%         rightCVec (with taking into account of rightIsNullCVec),
-%         nLeftElem is size of arrays contained within leftCVec (and
-%         leftIsNullCVec) arrays for dimention dim
-%     indMemberVec: double [nLeftElem,1] - indices indicating location of
-%         respective elements within leftCVec (with taking into account of
-%         leftIsNullCVec) in rightCVec elements (with taking into account
-%         of rightIsNullCVec)
+%       dim: double[1,1] - main dimension along which ismemberjointwithnulls
+%           is performed; if not given, dim is taken equal to 1
+% Output:
+%   isMemberVec: logical [nLeftElem,1] - array of membership indicators
+%       of all respective elements within leftCVec (with taking into
+%       account of leftIsNullCVec) to all respective elements within
+%       rightCVec (with taking into account of rightIsNullCVec),
+%       nLeftElem is size of arrays contained within leftCVec (and
+%       leftIsNullCVec) arrays for dimention dim
+%   indMemberVec: double [nLeftElem,1] - indices indicating location of
+%       respective elements within leftCVec (with taking into account of
+%       leftIsNullCVec) in rightCVec elements (with taking into account
+%       of rightIsNullCVec)
 %
 % Example: [isMemberVec,indMemberVec]=ismemberjointwithnulls(...
 %              {[1;2;1;2],{'a';'b';'c';'a'}},...
@@ -48,7 +47,7 @@ function [isMemberVec,indMemberVec]=ismemberjointwithnulls(...
 %              {[true;true;false],[true;true;true]},1);
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-08-27 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-08-27 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
@@ -56,20 +55,24 @@ function [isMemberVec,indMemberVec]=ismemberjointwithnulls(...
 %   comparison may be done even if sizes of corresponding elements on left
 %   and right sides are not equal along additional dimensions
 %
-
 import modgen.common.type.simple.*;
+import modgen.common.ismemberjoint;
+import modgen.common.throwerror;
+import modgen.common.uniquejoint;
 %% initial actions
 if nargin<4||nargin>5,
-    error([mfilename,':wrongInput'],...
-        'Incorrect number of input arguments');
+    throwerror('wrongInput','Incorrect number of input arguments');
 end
 checkgen(leftCVec,'iscell(x)');
-checkgen(leftIsNullCVec,['iscell(x)&&isequal(size(x),' mat2str(size(leftCVec)) ')']);
+checkgen(leftIsNullCVec,['iscell(x)&&isequal(size(x),' ...
+    mat2str(size(leftCVec)) ')']);
 checkgen(rightCVec,'iscell(x)');
-checkgen(rightIsNullCVec,['iscell(x)&&isequal(size(x),' mat2str(size(rightCVec)) ')']);
+checkgen(rightIsNullCVec,['iscell(x)&&isequal(size(x),' ...
+    mat2str(size(rightCVec)) ')']);
 nElems=numel(leftCVec);
+%
 if nElems==0
-    error([mfilename,':wrongInput'],...
+    throwerror('wrongInput',...
         'First four arguments should be non-empty cell arrays');
 end
 checkgen(rightCVec,['numel(x)==' num2str(nElems)]);
@@ -114,7 +117,7 @@ else
     indMemberVec=zeros(nLeftElem,1);
 end
 if ~isequal(leftIsNullSizeCVec,rightIsNullSizeCVec),
-    error([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         'leftIsNullCVec and rightIsNullCVec are not consistent in size');
 end
 if nLeftElem==0||nRightElem==0,
@@ -138,10 +141,6 @@ isnSizeVec=~(isnLeftValueVec|isnRightValueVec);
 if any(isnSizeVec),
     isnSizeVec(isnSizeVec)=~cellfun(@isequal,...
         leftSizeCVec(isnSizeVec),rightSizeCVec(isnSizeVec));
-    %if any(isnSizeVec),
-    %    error([upper(mfilename),':wrongInput'],...
-    %        'leftCVec and rightCVec are not consistent in size');
-    %end
 end
 %% perform comparison
 leftIndMat=zeros(nLeftElem,nElems);
@@ -166,9 +165,12 @@ for iElem=1:nElems,
             return;
         end
     end
-    [leftIsNullMat,~,indLeftNullVec]=modgen.common.uniquerows(leftIsNullCVec{iElem},true);
-    [rightIsNullMat,~,indRightNullVec]=modgen.common.uniquerows(rightIsNullCVec{iElem},true);
-    [isLeft2RightNullVec,indLeft2RightNullVec]=modgen.common.ismemberrows(leftIsNullMat,rightIsNullMat,true);
+    [leftIsNullMat,~,indLeftNullVec]=modgen.common.uniquerows(...
+        leftIsNullCVec{iElem},true);
+    [rightIsNullMat,~,indRightNullVec]=modgen.common.uniquerows(...
+        rightIsNullCVec{iElem},true);
+    [isLeft2RightNullVec,indLeft2RightNullVec]=...
+        modgen.common.ismemberrows(leftIsNullMat,rightIsNullMat,true);
     if ~all(isLeft2RightNullVec),
         indLeft2RightNullVec=indLeft2RightNullVec(isLeft2RightNullVec);
         leftIsNullMat=leftIsNullMat(isLeft2RightNullVec,:);
@@ -216,28 +218,29 @@ if any(isnLeftValueVec),
 end
 %
 if nargout>1,
-    [isMemberVec(:),indMemberVec(:)]=modgen.common.ismemberrows(leftIndMat,rightIndMat,true);
+    [isMemberVec(:),indMemberVec(:)]=modgen.common.ismemberrows(...
+        leftIndMat,rightIndMat,true);
 else
     isMemberVec(:)=modgen.common.ismemberrows(leftIndMat,rightIndMat,true);
 end
-
     function [nElems,valueSizeCVec,isNullSizeCVec,...
             valueCVec,isNullCVec,isnValueVec]=...
             checkValueAndIsNullConsistency(...
             nameStr,valueCVec,isNullCVec,nDimsCVec,isnValueVec)
+        import modgen.common.throwerror;
         valueSizeCVec=cellfun(@(x,y)[size(x) ones(1,max(y-ndims(x),0))],...
             valueCVec,nDimsCVec,'UniformOutput',false);
         isNullSizeCVec=cellfun(@(x,y)[size(x) ones(1,max(y-ndims(x),0))],...
             isNullCVec,nDimsCVec,'UniformOutput',false);
         if ~all(cellfun(@(x,y,z)isequal(x(1:z),y(1:z)),...
                 valueSizeCVec,isNullSizeCVec,nDimsCVec)),
-            error([upper(mfilename),':wrongInput'],[...
-                nameStr 'CVec is not consitent with ' ...
+            throwerror('wrongInput',...
+                [nameStr 'CVec is not consitent with ' ...
                 nameStr 'IsNullCVec in size']);
         end
         nElems=sort(cellfun(@(x)x(dim),isNullSizeCVec));
         if any(diff(nElems)~=0),
-            error([upper(mfilename),':wrongInput'],[...
+            throwerror('wrongInput',[...
                 'Cells in ' nameStr 'CVec and ' nameStr 'IsNullCVec '...
                 'must have the same size along dimension dim=%d'],dim);
         end

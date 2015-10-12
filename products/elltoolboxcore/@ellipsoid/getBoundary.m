@@ -38,7 +38,7 @@ else
     dirMat = fGetGrid(nPoints);
 end
 %
-[cenVec qMat] = double(ellObj);
+[cenVec,qMat] = double(ellObj);
 bpMat = dirMat * gras.la.sqrtmpos(qMat, ellObj.getAbsTol());
 cenMat = repmat(cenVec.', size(dirMat, 1), 1);
 bpMat = bpMat + cenMat;

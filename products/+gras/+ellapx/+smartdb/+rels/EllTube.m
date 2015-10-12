@@ -75,16 +75,18 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
         end
         %
         function hVec=axesSetPropBasicFunc(~,hAxes,axesName,yLabel)
-            title(hAxes,axesName);
+            hTitle=get(hAxes,'Title');
+            set(hTitle,'String',axesName);
             xLabel='time';
             %
-            set(hAxes,'XLabel',...
-                text('String',xLabel,'Interpreter','tex','Parent',hAxes));
-            set(hAxes,'YLabel',...
-                text('String',yLabel,'Interpreter','tex','Parent',hAxes));
+            hXLabel=get(hAxes,'XLabel');
+            set(hXLabel,'String',xLabel,'Interpreter','tex');
+            hYLabel=get(hAxes,'YLabel');
+            set(hYLabel,'String',yLabel,'Interpreter','tex');
+            %
             set(hAxes,'xtickmode','auto',...
                 'ytickmode','auto','xgrid','on','ygrid','on');
-            hVec=[];
+            hVec=[hXLabel,hYLabel,hTitle];
         end
         function hVec=plotTubeTraceFunc(~,hAxes,...
                 approxType,timeVec,QArray,MArray)
@@ -259,7 +261,7 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %     approxSchemaName:cell[1,] - name of the schema
             %     approxSchemaDescr:cell[1,] - description of the schema
             %     absTol:double[1, 1] - absolute tolerance
-            %     relTol:double[1, 1] - relative tolerance            
+            %     relTol:double[1, 1] - relative tolerance
             % Output:
             %     ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation
             %         object
@@ -332,8 +334,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             %       approxSchemaName:cell[1,] - name of the schema
             %       approxSchemaDescr:cell[1,] - description of the schema
             %       absTol:double[1, 1] - absolute tolerance
-            %       relTol:double[1, 1] - relative tolerance  
-            %       scaleFactor:double[1, 1] - tube scale factor            
+            %       relTol:double[1, 1] - relative tolerance
+            %       scaleFactor:double[1, 1] - tube scale factor
             %
             % Output:
             %    ellTubeRel: smartdb.relation.StaticRelation[1, 1] - constructed relation

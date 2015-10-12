@@ -1,6 +1,9 @@
-/*.asv
+*.asv
+/*.mat
 /externals
 /install/pathdef.m
+/install/startlog.log
+/install/*.mat
 /install/javaclasspath.txt
 /products/+elltool/+logging/Logs
 /products/+elltool/+conf/confrepo
@@ -27,6 +30,9 @@
 !/products/+gras/+ellapx/+uncertcalc/+test/+comp/+conf/confrepo/_templates
 /products/+gras/+ellapx/+uncertcalc/+test/+comp/+conf/+sysdef/confrepo/*
 !/products/+gras/+ellapx/+uncertcalc/+test/+comp/+conf/+sysdef/confrepo/_templates
+/products/+elltool/+doc/+picgen/+test/+mlunit/**/*.png
+/lib/TTD
+
 
 
 

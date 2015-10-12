@@ -2,7 +2,7 @@ classdef EllTubeTouchCurveBasic<handle
     %TestRelation Summary of this class goes here
     %   Detailed explanation goes here
     properties (Constant,Hidden)
-        FCODE_DIM
+        FCODE_DIM %#ok<*MCCPI>
         FCODE_S_TIME
         FCODE_APPROX_SCHEMA_NAME
         FCODE_APPROX_SCHEMA_DESCR
@@ -288,6 +288,7 @@ classdef EllTubeTouchCurveBasic<handle
             end
             function throwError(tagName,fieldName,optMsg)
                 import modgen.common.throwerror;
+                import modgen.cell.cell2sepstr;
                 if nargin<3
                     optMsg='';
                 else

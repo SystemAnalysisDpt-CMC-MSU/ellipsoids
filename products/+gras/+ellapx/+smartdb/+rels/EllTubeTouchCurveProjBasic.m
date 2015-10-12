@@ -1,6 +1,6 @@
 classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
     properties (Constant,Hidden)
-        FCODE_PROJ_S_MAT
+        FCODE_PROJ_S_MAT %#ok<*MCCPI>
         FCODE_PROJ_ARRAY
         FCODE_PROJ_TYPE
         FCODE_LT_GOOD_DIR_NORM_ORIG_VEC
@@ -91,7 +91,9 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             import gras.ellapx.smartdb.RelDispConfigurator;
             import modgen.graphics.camlight;
             %
-            title(hAxes,axesName);
+            hTitle=get(hAxes,'Title');
+            set(hTitle,'String',axesName);
+            %
             if size(projSTimeMat,1) == 2
                 yLabel = self.projRow2str(projSTimeMat,1);
                 zLabel = self.projRow2str(projSTimeMat,2);
@@ -102,22 +104,25 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
                 zLabel = self.projRow2str(projSTimeMat,3);
             end
             %
-            set(hAxes,'XLabel',...
-                text('String',xLabel,'Interpreter','tex','Parent',hAxes));
-            set(hAxes,'YLabel',...
-                text('String',yLabel,'Interpreter','tex','Parent',hAxes));
-            set(hAxes,'ZLabel',...
-                text('String',zLabel,'Interpreter','tex','Parent',hAxes));
+            hXLabel=get(hAxes,'XLabel');
+            set(hXLabel,'String',xLabel,'Interpreter','tex');
+            %
+            hYLabel=get(hAxes,'YLabel');
+            set(hYLabel,'String',yLabel,'Interpreter','tex');
+            %
+            hZLabel=get(hAxes,'ZLabel');
+            set(hZLabel,'String',zLabel,'Interpreter','tex');            
+            %
             viewAngleVec=RelDispConfigurator.getViewAngleVec();
             view(hAxes,viewAngleVec);
             set(hAxes,'xtickmode','auto',...
                 'ytickmode','auto',...
                 'ztickmode','auto','xgrid','on','ygrid','on','zgrid','on');
-            hVec=[];
             %
             lightTypeList={{'left'},{40,65},{-20,25}};
-            hLightVec=cellfun(@(x)camlight(hAxes,x{:}),lightTypeList);
-            hVec=[hVec,hLightVec];
+            hLightList=cellfun(@(x)camlight(hAxes,x{:}),lightTypeList,...
+                'UniformOutput',false);
+            hVec=[hLightList{:},hXLabel,hYLabel,hZLabel,hTitle];
             axis(hAxes,'auto');
         end
         %
@@ -135,10 +140,10 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             import gras.ellapx.smartdb.RelDispConfigurator;
             isGoodCurvesSeparately=...
                 RelDispConfigurator.getIsGoodCurvesSeparately();
-            
+            %
             figureGroupKeyName=[groupName,'_',lower(char(projType)),...
                 '_sp',self.projMat2str(projSTimeMat)];
-            
+            %
             if isGoodCurvesSeparately
                 goodCurveStr=self.goodDirProp2Str(lsGoodDirOrigVec,sTime);
                 figureGroupKeyName=[figureGroupKeyName,', ',goodCurveStr];
@@ -165,7 +170,7 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
         function [cMat,cOpMat]=getGoodDirColor(self,hAxes,~,~,...
                 ~,~,~,~,...
                 ~,~,ltGoodDirNormOrigVec,...
-                ~,~,~,~,ltGoodDirNormOrigProjVec,varargin)
+                ~,~,~,~,ltGoodDirNormOrigProjVec,varargin) %#ok<INUSL>
             import modgen.common.throwerror;
             ABS_TOL = 1e-3;
             ONE_NORM_COLOR_RGB_VEC=[1 0 0];%RED

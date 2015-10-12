@@ -9,6 +9,7 @@ function displayInternal(self,typeStr)
 %            System Analysis Department 2012 $
 %
 %
+import modgen.cell.showcell;
 displayInternal@smartdb.cubes.CubeStruct(self,typeStr);
 if numel(self)==1
     fprintf('Data (first row contain field names):\n');

@@ -102,7 +102,7 @@ classdef MapExtended<containers.Map
             %
             if ~isempty(toHashStr)
                 if length(toHashStr)>32||~isvarname(toHashStr)
-                    hashedStr=hash(toHashStr,'md2');
+                    hashedStr=modgen.common.hash(toHashStr,'md2');
                 else
                     hashedStr=toHashStr;
                 end

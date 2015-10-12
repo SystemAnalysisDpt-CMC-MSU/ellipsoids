@@ -23,7 +23,6 @@ function NewStruct = unionstructsalongdim(catDimension, varargin)
 %            System Analysis Department 2011 $
 %
 %
-
 isEmp=cellfun('isempty',varargin);
 varargin=varargin(~isEmp);
 nArg=numel(varargin);
@@ -35,11 +34,7 @@ switch nArg
     otherwise
         NewStruct=varargin{1};
         for iArg=2:nArg
-            NewStruct=binaryunionstruct(NewStruct,varargin{iArg},...
-                @(x,y)cat(catDimension,x,y),@(x) x,@(x)x);
+            NewStruct=modgen.struct.binaryunionstruct(NewStruct,...
+                varargin{iArg},@(x,y)cat(catDimension,x,y),@(x) x,@(x)x);
         end
 end
-
-
-
-

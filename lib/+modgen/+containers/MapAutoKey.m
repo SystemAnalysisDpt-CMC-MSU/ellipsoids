@@ -41,7 +41,7 @@ classdef MapAutoKey<handle
                 modgen.common.parseparext(varargin,...
                 {'directPrefix','autoPrefix';
                 '','';
-                'isstring(x)','isstring(x)'});
+                'ischarstring(x)','ischarstring(x)'});
             %
             self.plainMap=containers.Map(restArgList{:});
         end

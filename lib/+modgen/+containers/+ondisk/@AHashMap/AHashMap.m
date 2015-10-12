@@ -61,9 +61,9 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
                 self.isBrokenStoredValuesIgnored,self.storageFormat,...
                 self.isHashedPath,self.isHashedKeys,...
                 self.isStorageContentChecked;...
-                'islogscalar(x)','isstring(x)',...
-                'isstring(x)','islogscalar(x)',...
-                'islogscalar(x)','isstring(x)',...
+                'islogscalar(x)','ischarstring(x)',...
+                'ischarstring(x)','islogscalar(x)',...
+                'islogscalar(x)','ischarstring(x)',...
                 'islogscalar(x)','islogscalar(x)',...
                 'islogscalar(x)'},[0 1]);
             %
@@ -72,7 +72,7 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
             end
             %
             if self.isHashedPath
-                storageBranchKey=hash(storageBranchKey);
+                storageBranchKey=modgen.common.hash(storageBranchKey);
             end
             %
             if ~isStorageLocSpec
@@ -154,10 +154,12 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
             %
             %
             import modgen.system.ExistanceChecker;
+            import modgen.common.throwwarn;
             if isa(keyList,'char')
                 keyList={keyList};
             end
-            fullFileNameCVec=cellfun(@self.genfullfilename,keyList,'UniformOutput',false);
+            fullFileNameCVec=cellfun(@self.genfullfilename,keyList,...
+                'UniformOutput',false);
             isKeyVec=false(1,length(fullFileNameCVec));
             nKeys=length(isKeyVec);
             for iKey=1:nKeys
@@ -165,7 +167,7 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
                     isKeyVec(iKey)=self.checkKey(fullFileNameCVec{iKey});
                 catch meObj
                     if self.isBrokenStoredValuesIgnored
-                        warning([upper(mfilename),':brokenKeyValue'],...
+                        throwarn('brokenKeyValue',...
                             'a value stored for a specified is broken: %s',...
                             meObj.message);
                     else
@@ -203,7 +205,7 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
             %
             
             storageLocationRoot=self.storageLocationRoot;
-        end        
+        end
         %
         function storageLocation=getStorageLocation(self)
             % GETSTORAGELOCATION returns a storage location for the object
@@ -236,9 +238,9 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
             %          any type
             %
             % Output:
-            %   
             %
-            
+            %
+            import modgen.common.throwerror;
             if ~iscell(valueObjList)
                 valueObjList={valueObjList};
             end
@@ -250,8 +252,8 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
             varargin(isnCellVec)=cellfun(@(x){x},varargin(isnCellVec),...
                 'UniformOutput',false);
             %
-            if ~auxchecksize(keyList,size(valueObjList))
-                error([upper(mfilename),':wrongInput'],...
+            if ~modgen.common.checksize(keyList,size(valueObjList))
+                throwerror('wrongInput',...
                     'keyList and valueObjList should be of the same size');
             end
             %
@@ -327,10 +329,12 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
             %       values
             %
             %
-            SFileProp=dir([self.storageLocation,filesep,['*.',self.fileExtension]]);
+            SFileProp=dir([self.storageLocation,filesep,...
+                ['*.',self.fileExtension]]);
             isDirVec=[SFileProp.isdir];
             fileNameList={SFileProp(~isDirVec).name};
-            fileNameList=cellfun(@(x)([self.storageLocation,filesep,x]),fileNameList,'UniformOutput',false);
+            fileNameList=cellfun(@(x)([self.storageLocation,filesep,x]),...
+                fileNameList,'UniformOutput',false);
             nFiles=length(fileNameList);
             keyList={};
             for iFile=1:nFiles
@@ -375,6 +379,8 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
     methods (Access=protected)
         function [isPositive,keyStr]=checkKey(self,fileName)
             import modgen.system.ExistanceChecker;
+            import modgen.common.throwerror;
+            import modgen.common.throwwarn;
             isPositive=ExistanceChecker.isFile(fileName);
             if isPositive
                 warnState=warning('off','MATLAB:load:variableNotFound');
@@ -391,13 +397,13 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
                     keyStr=S.keyStr;
                 else
                     keyStr='';
-                    warning([upper(mfilename),':incorrectKeyValueFile'],...
+                    throwarn('incorrectKeyValueFile',...
                         'key value file is invalid and will be updated');
                 end
                 supposedFileName=self.genfilename(keyStr);
                 [~,actualFileName]=fileparts(fileName);
                 if ~strcmp(supposedFileName,actualFileName)
-                    error([upper(mfilename),':badKeyValuePair'],...
+                    throwerror('badKeyValuePair',...
                         ['key %s assumes the key value file name to be %s ',...
                         'while the actual file name is %s'],...
                         keyStr,supposedFileName,actualFileName);
@@ -412,9 +418,9 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
             end
         end
         function fullFileName=genfullfilename(self,keyStr)
-            import modgen.*;
+            import modgen.common.throwerror;
             if ~modgen.common.isrow(keyStr)
-                error([upper(mfilename),':wrongInput'],...
+                throwerror('wrongInput',...
                     'keyStr is expected to be a row-string');
             end
             fullFileName=[self.storageLocation,filesep,...
@@ -422,6 +428,7 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
         end
         function putOne(self,keyStr,valueObj)
             import modgen.system.ExistanceChecker;
+            import modgen.common.throwwarn;
             fullFileName=self.genfullfilename(keyStr);
             try
                 self.saveFunc(fullFileName,'valueObj','keyStr');
@@ -431,7 +438,7 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
                 end
                 %
                 if self.isPutErrorIgnored
-                    warning([upper(mfilename),':saveFailure'],...
+                    throwwarn('saveFailure',...
                         'cannot save the key value: %s',...
                         meObj.message);
                     return;
@@ -461,8 +468,9 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
         end
         function checkStorageDir(self,dirName)
             import modgen.containers.DiskBasedHashMap;
+            import modgen.common.throwerror;
             if ~self.isStorageDir(dirName)
-                error([mfilename,':wrongLocation'],...
+                throwerror('wrongLocation',...
                     ['cannot create a storage at the specified location %s ',...
                     'as it contains some foreign files'],dirName);
             end
@@ -480,9 +488,9 @@ classdef AHashMap<modgen.containers.ondisk.IOnDiskBranchedStorage
         function fileName=genfilename(self,inpStr)
             %
             if self.isHashedKeys
-                inpStr=hash(inpStr);
+                inpStr=modgen.common.hash(inpStr);
             end
-            
+            %
             if ~isempty(inpStr)
                 nChars=length(inpStr);
                 nBlocks=fix(nChars/namelengthmax);

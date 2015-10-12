@@ -91,7 +91,7 @@ classdef mock_sec_test < mlunitext.test_case
             %
             %  See also MOCK_TEST, TEST_TEST_CASE.
             
-            error(' ');
+            error('Mock error');
         end
         
         function test_sec_broken_method(self) %#ok
@@ -107,7 +107,8 @@ classdef mock_sec_test < mlunitext.test_case
             %
             %  See also MOCK_TEST, TEST_TEST_CASE.
             
-            error(' ');
+            % multi-part error ID and multi-line error message
+            error('mlunit:test:mockError',sprintf('one\ntwo\nthree')); %#ok<SPERR>
         end 
         function test_sec_fail_method(self) %#ok
             % TEST_BROKEN_METHOD is a mock test method, that is
@@ -122,7 +123,8 @@ classdef mock_sec_test < mlunitext.test_case
             %
             %  See also MOCK_TEST, TEST_TEST_CASE.
             
-            mlunitext.assert(false);
+            % multi-line failure message
+            mlunitext.assert(false,sprintf('one\ntwo\nthree'));
         end          
         function test_method_no_return(self)
             % MOCK_TEST_TEST_METHOD_NO_RETURN is a mock test method that does

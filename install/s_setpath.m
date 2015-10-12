@@ -2,8 +2,12 @@ repoPath=rmlastnpathparts(fileparts(which(mfilename)),1);
 deploymentPath=[repoPath,filesep,'install'];
 %
 rootPathList{1}=repoPath;
-pathPatternToExclude='\.git';
+pathPatternToExclude='\.git|\externals';
 pathList=genpathexclusive(rootPathList,pathPatternToExclude);
+extPath=[repoPath,filesep,'externals'];
+extRootPathList={[extPath,filesep,'all'],...
+    [extPath,filesep,lower(computer)]};
+pathExtList=genpathexclusive(extRootPathList,'');
 restoredefaultpath;
-addpath(pathList{:});
+addpath(pathList{:},pathExtList{:});
 savepath([deploymentPath,filesep,'pathdef.m']);

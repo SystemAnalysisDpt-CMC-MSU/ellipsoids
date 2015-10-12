@@ -9,7 +9,6 @@
 :: Example:
 ::
 :: start_matlab_tests "C:\Program Files\MATLAB\R2013b\bin\win64\matlab.exe"
-@echo off
 setlocal ENABLEEXTENSIONS
 
 set matlabExe=%~1
@@ -43,8 +42,7 @@ echo ==== %script%: %date% %time% Started =====
 set matlabCommand=s_install, cd ..
 
 cd %scriptDir%
-start "" "%matlabExe%" %matlabArg% -singleCompThread -r "%matlabCommand%"
-
+"%matlabExe%" %matlabArg% -singleCompThread -r "%matlabCommand%" -logfile startlog.log
 
 
 set isFailed=%ERRORLEVEL%
@@ -52,4 +50,3 @@ cd %curDir%
 echo ==== %script%: %date% %time% Finished =====
 
 exit /B %isFailed%
-

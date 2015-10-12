@@ -1,6 +1,6 @@
 function resRelObj = selfjoin(inpRelObj,joinByFieldList,fieldNameListField,varargin)
 % SELFJOIN performs self join of given relation and returns the
-% result as new relation
+%   result as new relation
 %
 % Usage: resRelObj=selfjoinwithfilter(inpRelObj,joinByFieldList,...
 %            filterField,filterToFieldRel,varargin)
@@ -32,16 +32,14 @@ function resRelObj = selfjoin(inpRelObj,joinByFieldList,fieldNameListField,varar
 %           value fields in the resulting relation  
 %
 %   properties:
-%
 %     leadFieldList: cell[1,] of char[1,] - list of fields from the original
 %       inpRelObj relation that are kept in the resulting relation
 %     valueField: char[1,] - name of field value in inpRelObj, if not
 %        specified it is determined automatically
 %    
-% output:
-%   regular:
-%     resRelObj: ARelation [1,1] - class object obtained from inpRelObj as
-%        result of self joining
+% Output:
+%   resRelObj: ARelation [1,1] - class object obtained from inpRelObj as
+%       result of self joining
 %
 % Note: 1) All fields in inpRelObj are divided on three groups: fields from
 %          joinByFieldList, two fields fieldNameListField and fieldDescrListField
@@ -63,13 +61,14 @@ function resRelObj = selfjoin(inpRelObj,joinByFieldList,fieldNameListField,varar
 %
 %
 import smartdb.*;
-import modgen.common.*;
+import modgen.common.throwerror;
+import modgen.common.parseparext;
 import smartdb.relationoperators.*;
 %% Input parameters
 [reg,isRegSpecVec,prop,isPropSpecVec]=parseparext(varargin,...
     {'leadFieldList','valueField'},...
     [0 2],...
-    'regCheckList',{'isstring(x)','isstring(x)'},...
+    'regCheckList',{'ischarstring(x)','ischarstring(x)'},...
     'regDefList',{fieldNameListField},...
     'propRetMode','list');
 %
@@ -78,7 +77,7 @@ nRegs=length(reg);
 nProps=length(prop);
 if any(strcmpi(prop(1:2:nProps-1),'fieldNameListField')|...
         strcmpi(prop(1:2:nProps-1),'fieldDescrListField'))
-    throwerror([upper(mfilename),':wrongInput'],...
+    throwerror('wrongInput',...
         ['fieldNameListField and fieldDescrListField properties',...
         'are not supported']);
 end

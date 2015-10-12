@@ -18,19 +18,6 @@ function isPositive=isUniqueKey(self,fieldNameList)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
-%
-% if ischar(fieldNameList)
-%     fieldNameList={fieldNameList};
-% elseif ~iscellstr(fieldNameList)
-%     error([upper(mfilename),':wrongInput'],...
-%         'fieldNameList is expected to be a cell array of strings');
-% end
-% %
-% if ~auxchecksize(fieldNameList,[1,nan])
-%     error([upper(mfilename),':wrongInput'],...
-%         'fieldNameList is expected to be of size [1,]');
-% end
-%
 indForward=self.getUniqueDataAlongDimInternal(1,...
     'fieldNameList',fieldNameList,'structNameList',{});
 isPositive=(length(indForward)==self.getNTuples());

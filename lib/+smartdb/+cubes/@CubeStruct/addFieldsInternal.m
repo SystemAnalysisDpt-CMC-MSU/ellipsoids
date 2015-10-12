@@ -48,7 +48,7 @@ if ~iscellstr(addFieldNameList),
         'addFieldNameList must be char or char cell array');
 end
 %
-if ~auxchecksize(addFieldNameList,[1 nan])
+if ~modgen.common.checksize(addFieldNameList,[1 nan])
     throwerror('wrongInput',...
         ['addFieldNameList is expected to be of size [1, ]',...
         'i.e. vector-string']);
@@ -64,7 +64,7 @@ if ~isempty(reg)
     if ischar(addFieldDescrList),
         addFieldDescrList={addFieldDescrList};
     end
-    if ~auxchecksize(addFieldDescrList,[1 nan])
+    if ~modgen.common.checksize(addFieldDescrList,[1 nan])
         throwerror('wrongInput',...
             ['addFieldDescrList is expected to be of size [1, ]',...
             'i.e. vector-string']);

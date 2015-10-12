@@ -1,7 +1,7 @@
-function resArray=cellfunallelem(hFunc,inpCell,varargin)
+function resArr=cellfunallelem(hFunc,inpCell,varargin)
 % CELLFUNALLELEM applies the specified function to all elements 
-% in each cell of the specified cell array and returns array of results 
-% for each cell
+%   in each cell of the specified cell array and returns array of results 
+%   for each cell
 % 
 % 
 % Input:
@@ -43,4 +43,4 @@ for iRealDim=1:nRealDims-1
     inpCell=cellfun(hFunc,inpCell,'UniformOutput',false);
 end
 %
-resArray=cellfun(hFunc,inpCell,varargin{:});
+resArr=cellfun(hFunc,inpCell,varargin{:});

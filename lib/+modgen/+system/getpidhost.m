@@ -14,8 +14,8 @@ function [pidHostStr,pidVal,hostName]=getpidhost()
 %            System Analysis Department 2011 $
 %
 %
-pidHostStr=char(...
-    java.lang.management.ManagementFactory.getRuntimeMXBean().getName());
+mxBeanObj=java.lang.management.ManagementFactory.getRuntimeMXBean();
+pidHostStr=char(mxBeanObj.getName());
 if nargout>1
     resCell=strsplit(pidHostStr,'@');
     pidVal=str2double(resCell{1});

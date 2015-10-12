@@ -8,6 +8,9 @@ function displayInternal(self,typeStr,varargin)
 %            System Analysis Department 2011 $
 %
 %
+import modgen.cell.cell2sepstr;
+import modgen.common.throwerror;
+import modgen.cell.showcell;
 [~,prop]=modgen.common.parseparams(varargin,[],0);
 isMetaDataStrSpec=false;
 isPropertiesDisplayed=true;
@@ -22,7 +25,7 @@ for k=1:2:length(prop)
         case 'displayheader',
             isHeaderDisplayed=prop{k+1};
         otherwise,
-            error([upper(mfilename),':wrongInput'],...
+            throwerror('wrongInput',...
                 'property %s is not supported',prop{k});
     end
             
@@ -37,7 +40,7 @@ if isPropertiesDisplayed
     SDisp.size=sizeVec;
     SDisp.actualClass=class(self);
     disp('Properties:')
-    strucdisp(SDisp);
+    modgen.struct.strucdisp(SDisp);
     fprintf('\n');
     %
     if isMetaDataStrSpec

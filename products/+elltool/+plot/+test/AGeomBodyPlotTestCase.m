@@ -341,7 +341,8 @@ classdef AGeomBodyPlotTestCase < mlunitext.test_case
                 SHPlot = plotObj.getPlotStructure().figToAxesToHMap.toStruct();
                 SAxes = SHPlot.figure_g1;
                 axesHandle = SAxes.ax;
-                mlunitext.assert_equals(axesHandle, axesSubPlHandle);
+                isOk=isequal(axesHandle, axesSubPlHandle);
+                mlunitext.assert(isOk);
             end
             function checkNewAxisNewFig(testEllArr)
                 axesSubPlHandle = subplot(3,2,2);

@@ -1,4 +1,5 @@
-function [isEq,reportStr]=isEqualScalarInternal(self,otherObj,varargin)
+function [isEq,reportStr,signOfDiff]=isEqualScalarInternal(self,...
+    otherObj,varargin)
 % ISEQUALSCALARINTERNAL compares the specified CubeStruct object with other CubeStruct
 % object and returns true if they are equal, otherwise it
 % returns false
@@ -65,6 +66,7 @@ function [isEq,reportStr]=isEqualScalarInternal(self,otherObj,varargin)
 %
 import modgen.common.type.simple.checkgen;
 import modgen.common.throwerror;
+import modgen.common.ismemberjoint;
 reportStr='';
 if numel(self)~=1||numel(otherObj)~=1,
     throwerror('wrongInput',...
@@ -103,6 +105,10 @@ end
 %
 selfFieldNameList=self.getFieldNameList();
 isFieldOrderEq=isequal(selfFieldNameList,otherObj.getFieldNameList());
+%
+if nargout>2
+    signOfDiff=nan;
+end
 %
 isEq=(~isFieldOrderCheck||isFieldOrderEq);
 %

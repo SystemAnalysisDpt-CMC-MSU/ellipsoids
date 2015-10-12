@@ -107,7 +107,8 @@ classdef CubeStruct<dynamicprops&modgen.common.obj.HandleObjectCloner&...
     %
     methods (Access=protected)
         displayInternal(self,typeStr,varargin)
-        [isEq,reportStr]=isEqualScalarInternal(self,otherObj,varargin)
+        [isEq,reportStr,signOfDiff]=isEqualScalarInternal(self,otherObj,...
+            varargin)
         %
     end
     %

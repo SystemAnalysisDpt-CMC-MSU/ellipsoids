@@ -34,7 +34,7 @@ function display(hpArr)
 %             Faculty of Computational Mathematics
 %             and Computer Science,
 %             System Analysis Department 2012 $
-
+import modgen.struct.strucdisp;
 MAX_DISP_ELEM = 15;
 DEFAULT_NAME = 'hpArr';
 

@@ -29,12 +29,21 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 ~cellfun(@isempty, strfind(axesHMapKeysCVec, specStr));
             objectHandlesVec = axesHMap(axesHMapKeysCVec{isIndAxesVec});
             %
-            objectNamesCVec = get(objectHandlesVec, 'DisplayName');
+            objectNamesList = arrayfun(@getDispName,objectHandlesVec,...
+                'UniformOutput',false);
+            %
             isIndObjectVec = ~cellfun(@isempty,...
-                strfind(objectNamesCVec, findStr));
+                strfind(objectNamesList, findStr));
             object = objectHandlesVec(isIndObjectVec);
             %
             verticesCVec = get(object, 'Vertices');
+            function dispName=getDispName(hObj)
+                if isprop(hObj,'DisplayName')
+                    dispName=get(hObj,'DisplayName');
+                else
+                    dispName='';
+                end
+            end
         end
     end
     methods (Access=private)

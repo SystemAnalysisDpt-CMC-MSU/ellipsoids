@@ -95,7 +95,7 @@ classdef StructChangeTracker<modgen.struct.changetracking.AStructChangeTracker
                     'isInlcusiveVec is expected to be a vector with 2 elements');
             end
             metaClass=metaclass(self);
-            methodList=metaClass.Methods();
+            methodList=metaClass.Methods;
             %isPatchVec=cellfun(@(x,y)(x.Static),methodList);
             isPatchVec=true(size(methodList));
             if any(isPatchVec)
@@ -130,7 +130,13 @@ classdef StructChangeTracker<modgen.struct.changetracking.AStructChangeTracker
                 %
                 okRevNumVec=okRevNumVec(isNumOkSubVec);
                 %
-                funcHandleList=cellfun(@(x)eval(['@(y)self.',x,'(y)']),funcNameList(isNumOkVec),'UniformOutput',false);
+                nFuncHandles=sum(isNumOkVec);
+                funcHandleList=cell(1,nFuncHandles);
+                indNumOkVec=find(isNumOkVec);
+                for iFuncHandle=1:nFuncHandles
+                   funcHandleList{iFuncHandle}=eval(['@(y)self.',...
+                       funcNameList{indNumOkVec(iFuncHandle)},'(y)']);
+                end
                 %sort the patch names by the patch number
                 [revNumVec,ind]=sort(okRevNumVec);
                 funcHandleList=funcHandleList(ind);
@@ -140,5 +146,4 @@ classdef StructChangeTracker<modgen.struct.changetracking.AStructChangeTracker
             end
         end
     end
-    
 end

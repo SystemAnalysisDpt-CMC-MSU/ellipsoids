@@ -38,7 +38,7 @@ classdef TmpDataManager<modgen.common.obj.StaticPropStorage
                 if nargin<1
                     keyName='';
                 else
-                    checkgen(keyName,'isstring(x)');
+                    checkgen(keyName,'ischarstring(x)');
                 end
             else
                 checkgen(nStepsUp,'isnumeric(x)&&isscalar(x)');
@@ -60,14 +60,14 @@ classdef TmpDataManager<modgen.common.obj.StaticPropStorage
             %
             %
             import modgen.common.throwerror;
-            modgen.common.type.simple.checkgen(keyName,'isstring(x)');
+            modgen.common.type.simple.checkgen(keyName,'ischarstring(x)');
             [rootDir,isThere]=...
                 modgen.io.TmpDataManager.getPropInternal('rootDir',true);
             if ~isThere
                 modgen.io.TmpDataManager.setDefaultRootDir();
             end
             curTaskName=modgen.system.getpidhost();
-            keyDirName=hash({curTaskName,keyName});
+            keyDirName=modgen.common.hash({curTaskName,keyName});
             resDir=[rootDir,filesep,keyDirName];
             %
             if modgen.system.ExistanceChecker.isDir(resDir)

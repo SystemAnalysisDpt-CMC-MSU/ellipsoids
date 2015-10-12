@@ -18,6 +18,7 @@ classdef ExistanceChecker
     end
     methods (Static)
         function res=exist(varargin)
+            import modgen.cell.cell2sepstr;
             inpArg=['exist(''',cell2sepstr([],varargin,''','''),''')'];
             res=evalin('caller',inpArg);
         end

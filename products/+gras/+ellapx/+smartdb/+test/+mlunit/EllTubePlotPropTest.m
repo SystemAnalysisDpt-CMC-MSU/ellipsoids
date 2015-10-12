@@ -2,20 +2,20 @@ classdef EllTubePlotPropTest < mlunitext.test_case
     properties (Access = private)
         rel
     end
-    
+    %
     methods(Static)
         function checkPlotProp(rel, plObj, fColor, fLineWidth, fTrans,...
                 colorFieldList, lineWidthFieldList, transFieldList)
-            
+            %
             SHandle = plObj.getPlotStructure().figToAxesToPlotHMap.toStruct();
             [~, handleVecList] = modgen.struct.getleavelist(SHandle);
             handleVec = [handleVecList{:}];
-            
+            %
             isOkVec = arrayfun(@(x)checkPropsTuple(x),...
                 1 : numel(rel.lsGoodDirVec));
-            
+            %
             mlunitext.assert(all(isOkVec));
-            
+            %
             function isOk = checkPropsTuple(indTuple)
                 
                 lsGoodDirString = vecToStr(rel.lsGoodDirVec{indTuple});
@@ -48,24 +48,27 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                 isOk = all([isOkColor, isOkTrans, isOkLineWidth]);
                 
             end
-            
-            
-            
-            
-            
+            %
             function dirHandleVec = getDirHandle(handleVec,...
                     lsGoodDirString)
-                isDirHandleVec = cellfun(@(x)(~isempty(strfind(x,...
-                    lsGoodDirString))), get(handleVec, 'DisplayName'));
+                isDirHandleVec = arrayfun(@getIsDirHandle,handleVec);
                 dirHandleVec = handleVec(isDirHandleVec);
+                function isPos=getIsDirHandle(hObj)
+                    if isprop(hObj,'DisplayName')
+                        isPos=~isempty(strfind(get(hObj, 'DisplayName'),...
+                            lsGoodDirString));
+                    else
+                        isPos=false;
+                    end
+                end
             end
-            
+            %
             function lineWidthHandleVec = getLineWidthHandle(handleVec)
                 isLineWidthVec = cellfun(@(x)(~isempty(strfind(x,...
                     'curve'))), get(handleVec, 'DisplayName'));
                 lineWidthHandleVec = handleVec(isLineWidthVec);
             end
-            
+            %
             function colorAndAlphaHandleVec =...
                     getColorAndAlphaHandle(handleVec)
                 isColorAndAlphaVec = cellfun(@(x)((~isempty(strfind(x,...
@@ -78,6 +81,7 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                 lsGoodDirStr=['lsGoodDirVec=' mat2str(lsGoodDirVec, 5)];
             end
         end
+        %
         function isOk = checkOneProperty(rel,propNameString, fProp,...
                 propFieldList, handlePropVec, indTuple)
             argList = arrayfun(@(x)(rel.(propFieldList{x})),...
@@ -112,7 +116,7 @@ classdef EllTubePlotPropTest < mlunitext.test_case
             end
         end
     end
-    
+    %
     methods
         function self = EllTubePlotPropTest(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -180,7 +184,6 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                         approxSchemaName, approxSchemaDescr, ABS_TOL, REL_TOL);
                 end
             end
-            
         end
         function patchColor = getColorByApxType(~, approxType)
             import gras.ellapx.enums.EApproxType;
@@ -195,6 +198,7 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                         char(approxType));
             end
         end
+        %
         function patchAlpha = getAlphaByApxType(~, approxType)
             import gras.ellapx.enums.EApproxType;
             switch approxType
@@ -213,16 +217,14 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                 transFieldList, passedArgList)
             import gras.ellapx.enums.EApproxType;
             import modgen.common.parseparext;
-            
+            %
             plObj = smartdb.disp.RelationDataPlotter();
             rel.plot(plObj, passedArgList{:});
-            
+            %
             self.checkPlotProp(rel, plObj, fColor, fLineWidth, fTrans,...
                 colorFieldList, lineWidthFieldList, transFieldList)
-            
         end
-        
-        
+        %
         function testPlotAdvanced(self)
             fExpTrans = @fTransByParam;
             fExpColor = @fColorByParam;
@@ -253,10 +255,10 @@ classdef EllTubePlotPropTest < mlunitext.test_case
                 lineWidth = mod(round(sumNorm), 9) + 1;
             end
         end
-        
+        %
         function testPlotPropFieldListDefault(self)
             import gras.ellapx.enums.EApproxType;
-            
+            %
             fExpTrans = @(approxType)getAlphaByApxType(self, approxType);
             fExpColor = @(approxType)getColorByApxType(self, approxType);
             fExpLineWidth = @(approxType)(2);
@@ -264,7 +266,7 @@ classdef EllTubePlotPropTest < mlunitext.test_case
             expColorFieldList = {'approxType'};
             expLineWidthFieldList = {'approxType'};
             expTransFieldList = {'approxType'};
-            
+            %
             passedArgList = {'fGetColor', fExpColor, 'fGetLineWidth',...
                 fExpLineWidth, 'fGetAlpha', fExpTrans};
             
@@ -280,54 +282,54 @@ classdef EllTubePlotPropTest < mlunitext.test_case
             expColorFieldList={'approxType'};
             expTransFieldList={'approxType'};
             expLineWidthFieldList={'approxType'};
-            
+            %
             fExpTrans = @(approxType)getAlphaByApxType(self, approxType);
             fExpColor = @(approxType)getColorByApxType(self, approxType);
             fExpLineWidth = @(approxType)(2);
-            
+            %
             passedArgList = {'colorFieldList', expColorFieldList,...
                 'alphaFieldList', expTransFieldList,...
                 'lineWidthFieldList', expLineWidthFieldList};
-            
+            %
             auxCheckPlotProp(self, self.rel, fExpColor,...
                 fExpLineWidth, fExpTrans, expColorFieldList,...
                 expLineWidthFieldList, expTransFieldList,...
                 passedArgList);
         end
-        
+        %
         function  testPlotPropSemiDefault(self)
             import gras.ellapx.enums.EApproxType;
             
             expColorFieldList = {'aMat', 'QArray', 'timeVec'};
             expLineWidthFieldList = {'approxType'};
             expTransFieldList = {'approxType'};
-            
+            %
             fExpColor = @fColorByParam;
             fExpLineWidth = @(approxType)(2);
             fExpTrans = @(approxType)getAlphaByApxType(self, approxType);
             
             passedArgList = {'fGetColor', fExpColor, 'colorFieldList',...
                 expColorFieldList};
-            
+            %
             auxCheckPlotProp(self, self.rel, fExpColor,...
                 fExpLineWidth, fExpTrans, expColorFieldList,...
                 expLineWidthFieldList, expTransFieldList,...
                 passedArgList);
-            
+            %
         end
-        
+        %
         function  testPlotAllDefault(self)
-            
+            %
             fExpTrans = @(approxType)getAlphaByApxType(self, approxType);
             fExpColor = @(approxType)getColorByApxType(self, approxType);
             fExpLineWidth = @(approxType)(2);
-            
+            %
             expColorFieldList = {'approxType'};
             expLineWidthFieldList = {'approxType'};
             expTransFieldList = {'approxType'};
             
             passedArgList = {};
-            
+            %
             auxCheckPlotProp(self, self.rel, fExpColor, fExpLineWidth,...
                 fExpTrans, expColorFieldList, expLineWidthFieldList,...
                 expTransFieldList,...
@@ -335,7 +337,7 @@ classdef EllTubePlotPropTest < mlunitext.test_case
         end
     end
 end
-
+%
 function colorVec = fColorByParam(aMat, QArray, timeVec)
 sumNorm = norm(aMat) + norm(QArray(:, :, 1)) +...
     norm(timeVec);

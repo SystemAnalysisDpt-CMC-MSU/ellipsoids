@@ -5,6 +5,9 @@ classdef BasicTC<mlunitext.test_case
     end
     %
     methods
+        function tear_up(~)
+            close all;
+        end
         function tear_down(~)
             close all;
         end
@@ -21,6 +24,7 @@ classdef BasicTC<mlunitext.test_case
                 filesep,'TestData',filesep,shortClassName];
         end
         function testCompareWithPlotts(self)
+            import modgen.graphics.plotts;
             import modgen.graphics.bld.*;
             x=(1:10).';
             y=2*(x-5);
@@ -113,18 +117,30 @@ classdef BasicTC<mlunitext.test_case
                 %
                 handleMap=FigureBuilder.createFigure(figureObj);
                 hFig2=handleMap.getValue(figureObj);
-                mlunitext.assert_not_equals(true,isnan(hFig2));
+                mlunitext.assert_equals(true,...
+                    isOfSpecTypeOrDouble(hFig2,'matlab.ui.Figure'));
                 groupCVec=handleMap.getKeysForType(...
-                        'modgen.graphics.bld.GraphGroup');
-                hAxes2Vec=cellfun(@(x)handleMap.getValue(x),groupCVec);
-                mlunitext.assert_not_equals(true,any(isnan(hAxes2Vec)));
+                    'modgen.graphics.bld.GraphGroup');
+                hAxes2List=cellfun(@(x)handleMap.getValue(x),groupCVec,...
+                    'UniformOutput',false);
+                hAxes2Vec=[hAxes2List{:}];
+                %
+                mlunitext.assert_equals(true,...
+                    isOfSpecTypeOrDouble(hAxes2Vec,...
+                    'matlab.graphics.axis.Axes'));
+                %
                 hParentVec=getParentVec(hAxes2Vec);
                 mlunitext.assert_equals(true,all(hParentVec==hFig2));
                 graphCVec=cellfun(@(x)x.graphCVec,groupCVec,...
                     'UniformOutput',false);
                 graphCVec=horzcat(graphCVec{:});
-                hGraph2Vec=cellfun(@(x)handleMap.getValue(x),graphCVec);
-                mlunitext.assert_not_equals(true,any(isnan(hGraph2Vec)));
+                hGraph2List=cellfun(@(x)handleMap.getValue(x),graphCVec,...
+                    'UniformOutput',false);
+                hGraph2Vec=[hGraph2List{:}];
+                %
+                mlunitext.assert_equals(true,isOfSpecTypeOrDouble(...
+                    hGraph2Vec,'matlab.graphics.primitive.Data'));
+                %
                 hParentVec=getParentVec(hGraph2Vec);
                 [~,indMemb2Vec]=ismember(hParentVec,hAxes2Vec);
                 mlunitext.assert(isequal(sort(indMemb1Vec),indMemb2Vec));
@@ -132,7 +148,6 @@ classdef BasicTC<mlunitext.test_case
                 hFigVec=[hFig1 hFig2];
                 self.checkPlotting(hFigVec,markerStr);
                 close(hFigVec);
-                
                 function hVec=getParentVec(hVec)
                     hVec=get(hVec,'Parent');
                     if iscell(hVec),
@@ -165,17 +180,24 @@ classdef BasicTC<mlunitext.test_case
             figureObj=Figure({placeObj});
             handleMap=FigureBuilder.createFigure(figureObj);
             hFigure=handleMap.getValue(figureObj);
-            mlunitext.assert(~isnan(hFigure));
+            mlunitext.assert(isOfSpecTypeOrDouble(hFigure,...
+                'matlab.ui.Figure'));
+            %
             self.checkPlotting(hFigure,'1');
+            %plot second time using the same figure handle
+            FigureBuilder.createFigure(figureObj,...
+                'hFigure',hFigure);
+            %
             close(hFigure);
         end
     end
     methods (Access=protected)
         function checkPlotting(self,hFigVec,markerStr)
+            import modgen.struct.*;
             testName=modgen.common.getcallernameext(2);
             resMap=modgen.containers.ondisk.HashMapMatXML(...
                 'storageLocationRoot',self.testDataRootDir,...
-                'storageBranchKey',[testName,'_out'],...
+                'storageBranchKey',[testName,'_',version('-release'),'_out'],...
                 'storageFormat','mat',...
                 'useHashedPath',false,'useHashedKeys',true);
             %
@@ -185,14 +207,21 @@ classdef BasicTC<mlunitext.test_case
             for iFig=1:nFigs,
                 hFig=hFigVec(iFig);
                 SNextFigInfo=self.getFigInfo(hFig);
-                if iFig==1,
+                if iFig==1
+                    %
                     SFigInfo=SNextFigInfo;
                 else
+                    if isfield(SFigInfo,'Number')
+                        SFigInfo=rmfield(SFigInfo,'Number');
+                        SNextFigInfo=rmfield(SNextFigInfo,'Number');
+                    end
+                    %
                     [isOk,reportStr]=modgen.struct.structcompare(...
                         SFigInfo,SNextFigInfo);
                     mlunitext.assert(isOk,...
-                        ['Fig #%d does not coincide with Fig #%d: '...
-                        reportStr]);
+                        sprintf(...
+                        'Fig #1 does not coincide with Fig #%d: %s',...
+                        iFig,reportStr));
                 end
             end
             %
@@ -204,6 +233,11 @@ classdef BasicTC<mlunitext.test_case
                 resMap.put(keyName,SExpFigInfo);
             end
             SExpFigInfo=resMap.get(keyName);
+            commonFieldNameList=intersect(fieldnames(SExpFigInfo),...
+                fieldnames(SFigInfo));
+            SExpFigInfo=fieldfilterstruct(SExpFigInfo,commonFieldNameList);
+            SFigInfo=fieldfilterstruct(SFigInfo,commonFieldNameList);
+            %
             [isOk,reportStr]=modgen.struct.structcompare(SExpFigInfo,SFigInfo);
             mlunitext.assert(isOk,reportStr);
         end
@@ -269,4 +303,8 @@ classdef BasicTC<mlunitext.test_case
             end
         end
     end
+end
+function isOk=isOfSpecTypeOrDouble(valueVec,typeName)
+isOk=(all(isa(valueVec,'double'))&&...
+    ~any(isnan(valueVec)))||all(isa(valueVec,typeName));
 end

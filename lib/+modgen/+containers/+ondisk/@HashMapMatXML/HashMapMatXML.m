@@ -62,6 +62,7 @@ classdef HashMapMatXML<modgen.containers.ondisk.AHashMap
             import modgen.containers.DiskBasedHashMap;
             import modgen.system.ExistanceChecker;
             import modgen.common.throwerror;
+            import modgen.xml.*;
             %
             self=self@modgen.containers.ondisk.AHashMap(varargin{:});
             [~,prop]=parseparams(varargin);

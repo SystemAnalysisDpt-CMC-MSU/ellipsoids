@@ -48,4 +48,4 @@ function resStr=struct2str(SInp,varargin)
 %            System Analysis Department 2011 $
 %
 %
-resStr=strucdisp(SInp,varargin{:});
+resStr=modgen.struct.strucdisp(SInp,varargin{:});

@@ -31,8 +31,9 @@ classdef MatrixSysODESolver
         function [timeVec,varargout]=solve(self,fDerivFuncList,...
                 timeVec,varargin)
             import modgen.common.throwerror;
+            import modgen.common.checksize;
             %
-            if ~all(cellfun(@auxchecksize,varargin,self.sizeEqList))
+            if ~all(cellfun(@checksize,varargin,self.sizeEqList))
                 throwerror('wrongInput',['initial values should be ',...
                     'consistent with list of size vectors ',...
                     'specified in constructor']);
@@ -41,7 +42,7 @@ classdef MatrixSysODESolver
                 fDerivFuncList);
             nFuncs=length(fDerivFuncList);
             fMatrixDerivFuncList=cell(1,nFuncs);
-            indOutArgStartVec=self.indOutArgStartVec;
+            indOutArgStartVec=self.indOutArgStartVec; %#ok<*PROPLC>
             for iFunc=1:nFuncs
                 fMatrixDerivFuncList{iFunc}=@(t,y)reshapeInOut(self,t,y,...
                     fDerivFuncList{iFunc},indOutArgStartVec(iFunc));
@@ -56,6 +57,8 @@ classdef MatrixSysODESolver
             nEqs=self.nEquations;
             indEqList=self.indEqList;
             sizeEqList=self.sizeEqList;
+            varargout=cell(1,nFuncs*nEqs);
+            %
             for iFunc=1:nFuncs
                 indShift=(iFunc-1)*nEqs;
                 for iEq=1:nEqs

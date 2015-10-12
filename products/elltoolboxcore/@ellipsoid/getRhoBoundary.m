@@ -39,8 +39,8 @@ else
     throwerror('wrongDim','ellipsoid must be of dimension 2 or 3');
 end
 [dirMat, fMat] = fGetGrid(nPoints);
-
-[cenVec qMat] = double(ellObj);
+%
+[cenVec, qMat] = double(ellObj);
 bpMat = dirMat * gras.la.sqrtmpos(qMat, ellObj.getAbsTol());
 cenMat = repmat(cenVec.', size(dirMat, 1), 1);
 bpMat = bpMat + cenMat;
@@ -48,5 +48,3 @@ bpMat = [bpMat; bpMat(1, :)];
 cenMat = [cenMat; cenMat(1, :)];
 lGridMat = bpMat - cenMat;
 supVec = (rho(ellObj, lGridMat.')).';
-
-end

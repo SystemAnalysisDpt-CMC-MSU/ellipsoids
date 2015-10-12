@@ -28,7 +28,7 @@ classdef mlunit_test_runtestcase < mlunitext.test_case
                 'mlunitext.runtestcase(''wrongClass'',''someMethod'')',...
                 ':noSuchClass');
             self.runAndCheckError(['mlunitext.runtestcase(''', class(self),...
-                ''', ''wrongMethod'')'], ':wrongInput');
+                ''', ''wrongMethod'')'], ':noSuchMethod');
         end
         function test_marker(~)
             import mlunitext.*;

@@ -42,8 +42,8 @@ function checkmultvar(typeSpec,nPlaceHolders,varargin)
 %            System Analysis Department 2012 $
 %
 %
-import modgen.common.type.simple.lib.*;
 import modgen.common.throwerror;
+import modgen.common.type.simple.lib.*;
 %
 if isempty(varargin),
     reg=varargin;
@@ -89,23 +89,25 @@ if ~isOk
         {...
         'varNameList','errorTag','errorMessage';...
         {},'wrongInput',defaultErrorMessage;...
-        'iscellofstring(x)','isstring(x)','isstring(x)'...
+        @iscellofstring,@ischarstring,@ischarstring...
         },0);
     %
     nVarNames=length(varNameList);
     if nVarNames>nPlaceHolders
         throwerror('wrongInput',['Number of variable names exceeds ',...
-            'a number of place holders'],'nCallerStackStepsUp',1+nCallerStackStepsUp);
+            'a number of place holders'],'nCallerStackStepsUp',...
+            1+nCallerStackStepsUp);
     end
     varNameList=[varNameList,cell(1,nPlaceHolders-nVarNames)];
     %
     for iVar=nVarNames+1:nPlaceHolders
         varNameList{iVar}=inputname(2+iVar);
     end
-    errorMessage=sprintf(errorMessage,cell2sepstr([],varNameList,','),...
-        checkName);
+    errorMessage=sprintf(errorMessage,...
+        modgen.cell.cell2sepstr([],varNameList,','),checkName);
     %
-    throwerror(errorTag,errorMessage,'nCallerStackStepsUp',1+nCallerStackStepsUp);
+    throwerror(errorTag,errorMessage,'nCallerStackStepsUp',...
+        1+nCallerStackStepsUp);
 end
 end
 function assignIn(varName,varValue)

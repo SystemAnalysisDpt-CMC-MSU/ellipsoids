@@ -59,6 +59,11 @@ classdef UIDataGrid<modgen.gui.ADataGrid
             %
             if ~isTableTypeSpec
                 if ~isempty(meta.class.fromName('modgen.gui.JDataGrid'))
+                    if ~usejava('swing')
+                        throwerror('wrongState:noSwing',...
+                            ['Java-based table UI requires Swing ',...
+                            'which is not available']);
+                    end
                     tableType='sciJavaTable';
                 elseif ~isempty(meta.class.fromName('modgen.gui.MDataGrid'))
                     tableType='uitable';

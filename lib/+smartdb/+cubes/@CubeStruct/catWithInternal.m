@@ -19,12 +19,14 @@ function catWithInternal(self,other,varargin)
 %               relations, the one from the new relation is used
 %
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-02-16 $ 
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-02-16 $
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
 %
+import modgen.cell.cell2sepstr;
+import modgen.common.throwerror;
 dupFieldsTreatMode='exception';
 [~,prop]=modgen.common.parseparams(varargin,[],0);
 %
@@ -45,7 +47,7 @@ isSelfDuplicateVec(indThereVec(isDuplicateVec))=true;
 switch lower(dupFieldsTreatMode)
     case 'exception',
         if any(isDuplicateVec)
-            error([upper(mfilename),':wrongInput'],...
+            throwerror('wrongInput',...
                 ['fields %s present in both original and ',...
                 'source relations'],...
                 cell2sepstr([],otherFieldNameList(isDuplicateVec),...
@@ -56,16 +58,15 @@ switch lower(dupFieldsTreatMode)
     case 'useother',
         selfFieldNameList(isSelfDuplicateVec)=[];
     otherwise,
-        error([upper(mfilename),':wrongInput'],...
-            'field treat mode %s is unknown',...
-            dupFieldsTreatMode);
+        throwerror('wrongInput',...
+            'field treat mode %s is unknown',dupFieldsTreatMode);
 end
 %
 if ~isempty(otherFieldNameList)
     %check if cube sizes are the same
     if ~isequal(self.getMinDimensionSizeInternal(),...
             other.getMinDimensionSizeInternal())
-        error([upper(mfilename),':wrongInput'],...
+        throwerror('wrongInput',...
             ['concatenation is not possible as sizes along the first ',...
             '%d (minDimensionality) dimentions are different'],...
             self.getMinDimensionality());

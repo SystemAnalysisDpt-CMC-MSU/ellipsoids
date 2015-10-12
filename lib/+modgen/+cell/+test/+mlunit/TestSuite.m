@@ -42,6 +42,7 @@ classdef TestSuite < mlunitext.test_case
             end
         end
         function self=test_parseparams_negative(self)
+            import modgen.cell.showcell;
             inpVar={};
             resStr=evalc('showcell(inpVar);');
             mlunitext.assert_equals(true,...
@@ -53,6 +54,7 @@ classdef TestSuite < mlunitext.test_case
                 ~isempty(findstr(resStr,'inpVar')));
         end
         function testShowCellOnEnum(self)
+            import modgen.cell.showcell;
             if ~verLessThan('matlab','7.12')
                 inpCell=cell(2,3);
                 inpCell{1,2}=1;
@@ -73,6 +75,7 @@ classdef TestSuite < mlunitext.test_case
             end
         end
         function testShowCellOfCharCols(self)
+            import modgen.cell.showcell;
             inpCell={'a',1;'bb'.' 2};
             resStr=evalc('display(inpCell)');
             mlunitext.assert_equals(true,~isempty(findstr(resStr,'inpCell =')));
@@ -85,9 +88,11 @@ classdef TestSuite < mlunitext.test_case
             evalc('res');
         end
         function testShowCellOfStruct(~)
+            import modgen.cell.showcell;
             showcell({struct(),struct(),struct()});
         end
         function testShowCellOfSomeClass(~)
+            import modgen.cell.showcell;
             inpCell={modgen.cell.test.SomeClass()};
             evalc('showcell(inpCell)');
         end
@@ -98,7 +103,8 @@ classdef TestSuite < mlunitext.test_case
             fid=fopen(fileName);
             outCell=textscan(fid,'%s %s',-1,'delimiter',';');
             fclose(fid);
-            mlunitext.assert_equals(true,isequal(num2cell(strcat('"',inpCell,'"')),...
+            mlunitext.assert_equals(true,...
+                isequal(num2cell(strcat('"',inpCell,'"')),...
                 outCell));
             delete(fileName);
         end

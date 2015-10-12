@@ -1,6 +1,6 @@
 function resStr = cellstr2expression(inpCMat)
 % CELLSTR2EXPRESSION creates Matlab expression based on cell matrix of
-% expressions corresponding to the individual elements of the matrix
+%   expressions corresponding to the individual elements of the matrix
 %
 % Input:
 %   regular:

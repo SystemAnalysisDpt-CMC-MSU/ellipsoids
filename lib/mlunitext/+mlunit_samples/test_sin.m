@@ -1,5 +1,4 @@
 classdef test_sin < mlunitext.test_case
-
     methods
         function self = test_sin(varargin)
             self = self@mlunitext.test_case(varargin{:});

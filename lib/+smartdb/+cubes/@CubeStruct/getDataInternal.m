@@ -73,6 +73,7 @@ function varargout=getDataInternal(self,varargin)
 %
 %
 import modgen.system.ExistanceChecker;
+import modgen.struct.fieldfilterstruct;
 %% parse input params
 [reg,prop]=modgen.common.parseparams(varargin,[],[0 2]);
 nReg=length(reg);
@@ -313,11 +314,11 @@ else
     else
         if isFieldNameListSpec
             %
-            SData=orderfields(auxfieldfilterstruct(...
+            SData=orderfields(fieldfilterstruct(...
                 self.SData,fieldNameList),fieldNameList);
-            SIsNull=orderfields(auxfieldfilterstruct(...
+            SIsNull=orderfields(fieldfilterstruct(...
                 self.SIsNull,fieldNameList),fieldNameList);
-            SIsValueNull=orderfields(auxfieldfilterstruct(...
+            SIsValueNull=orderfields(fieldfilterstruct(...
                 self.SIsValueNull,fieldNameList),fieldNameList);
         else
             %

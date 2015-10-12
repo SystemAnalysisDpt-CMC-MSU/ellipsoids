@@ -13,6 +13,7 @@ classdef MPTController < elltool.exttbx.IExtTBXController
                 else
                     verbose = 1;
                 end
+                warning('off','optim:quadprog:WillBeRemoved');
                 mpt_init();
                 mptopt('abs_tol',absTol,'rel_tol',relTol,'verbose',verbose);
                 self.checkIfSetUp();

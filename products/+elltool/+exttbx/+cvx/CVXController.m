@@ -7,7 +7,7 @@ classdef CVXController < elltool.exttbx.IExtTBXController
     end
     %
     methods (Access=private)
-        function prepPrecVec=getPrepPrecision(self,absTol,relTol)
+        function prepPrecVec=getPrepPrecision(self,absTol,relTol) %#ok<INUSL>
             prepPrecVec=[0, 0, self.TOL_FACTOR*relTol];
         end
     end
@@ -33,12 +33,10 @@ classdef CVXController < elltool.exttbx.IExtTBXController
         end
         %
         function isPositive=isSetUp(self)
+            import elltool.exttbx.cvx.CVXController;
             if self.isOnPath()
-                cvxConfFileName=[modgen.path.rmlastnpathparts(prefdir,1),...
-                    filesep,self.CVX_PREF_FILE_NAME];
-                %
-                isPositive=modgen.system.ExistanceChecker.isFile(...
-                    cvxConfFileName);
+                cvxPrefFileName=CVXController.getCVXPrefFileName();
+                isPositive=modgen.io.isfile(cvxPrefFileName);
             else
                 isPositive=false;
             end
@@ -87,6 +85,11 @@ classdef CVXController < elltool.exttbx.IExtTBXController
     %
     %
     methods(Static)
+        function fileName=getCVXPrefFileName()
+            ellTbxInstallDir=fileparts(which('s_install'));            
+            fileName= [ellTbxInstallDir,filesep,...
+                sprintf('cvx_prefs_%s.mat',lower(computer))];
+        end
         function setSolver(solverName)
             cvx_solver(solverName);
         end

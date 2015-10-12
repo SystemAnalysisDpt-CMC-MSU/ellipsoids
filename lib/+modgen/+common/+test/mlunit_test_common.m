@@ -1,7 +1,4 @@
 classdef mlunit_test_common < mlunitext.test_case
-    properties
-    end
-    
     methods
         function self = mlunit_test_common(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -83,16 +80,16 @@ classdef mlunit_test_common < mlunitext.test_case
             end
         end        
         function self=testCheckMultVar(self)
+            import modgen.common.type.simple.lib.*;
+            %
             a='sdfadf';
             b='asd';
             %
-            checkP('isstring(x1)',1,a,'varNameList',{'alpha'});
-            checkP('isstring(x1)',1,a);
+            checkP(@(x1)ischarstring(x1),1,a,'varNameList',{'alpha'});
+            checkP(@(x1)ischarstring(x1)',1,a);
             checkP('numel(x1)==numel(x2)',2,a,a);
             checkP('numel(x1)==numel(x2)',2,a,a,'varNameList',{'alpha'});
             checkP('numel(x1)==numel(x2)',2,a,a,'varNameList',{'alpha','beta'});
-            
-            
             %
             checkNSuperMaster('');
             checkNSuperMaster('MyMessage','errorMessage','MyMessage');
@@ -162,69 +159,75 @@ classdef mlunit_test_common < mlunitext.test_case
             %
             function fHandle=typeSpec2Handle(typeSpec,nPlaceHolders)
                 import modgen.common.type.simple.lib.*;                
-                switch nPlaceHolders
-                    case 1,
-                        fHandle=eval(['@(x1)(',typeSpec,')']);
-                    case 2,
-                        fHandle=eval(['@(x1,x2)(',typeSpec,')']);
-                    case 3,
-                        fHandle=eval(['@(x1,x2,x3)(',typeSpec,')']);
-                    otherwise,
-                        throwerror('wrongInput',...
-                            'unsupported number of arguments');
+                if ischar(typeSpec)
+                    switch nPlaceHolders
+                        case 1,
+                            fHandle=eval(['@(x1)(',typeSpec,')']);
+                        case 2,
+                            fHandle=eval(['@(x1,x2)(',typeSpec,')']);
+                        case 3,
+                            fHandle=eval(['@(x1,x2,x3)(',typeSpec,')']);
+                        otherwise,
+                            throwerror('wrongInput',...
+                                'unsupported number of arguments');
+                    end
+                else
+                    fHandle=typeSpec;
                 end
             end
         end
         function self=testCheckVar(self)
+            import modgen.common.type.simple.lib.*;
             a='sdfadf';
-            modgen.common.checkvar(a,'isstring(x)');
-            modgen.common.checkvar(a,'isstring(x)','aa');
+            modgen.common.checkvar(a,@ischarstring);
+            modgen.common.checkvar(a,@ischarstring,'aa');
             a=1;
-            checkN(a,'isstring(x)');
-            checkN(a,'iscelloffunc(x)');
+            checkN(a,@(x)ischarstring(x));
+            checkN(a,@(x)iscelloffunc(x));
             %
-            checkP(a,'isstring(x)||isrow(x)');
+            checkP(a,@(x)(ischarstring(x)||isrow(x)));
             %
-            checkP(a,'isstring(x)||isrow(x)||isabrakadabra(x)');
+            checkP(a,@(x)(ischarstring(x)||isrow(x)||isabrakadabra(x)));
             %
             a=1;
-            checkN(a,'isstring(x)&&isvec(x)');
-            checkN(a,'isstring(x)&&isabrakadabra(x)');
+            checkN(a,@(x)(ischarstring(x)&&isvec(x)));
+            checkN(a,@(x)(ischarstring(x)&&isabrakadabra(x)));
             %
             a=true;
-            checkP(a,'islogical(x)&&isscalar(x)');
+            checkP(a,@(x)(islogical(x)&&isscalar(x)));
             a=struct();
-            checkP(a,'isstruct(x)&&isscalar(x)');
+            checkP(a,@(x)(isstruct(x)&&isscalar(x)));
             %
             a={'a','b'};
-            checkP(a,'iscellofstrvec(x)');
+            checkP(a,@(x)(iscellofstrvec(x)));
             a={'a','b';'d','e'};
-            checkP(a,'iscellofstrvec(x)');
+            checkP(a,@(x)(iscellofstrvec(x)));
             a={'a','b'};
-            checkP(a,'iscellofstring(x)');
+            checkP(a,@(x)(iscellofstring(x)));
             a={'a','b';'d','e'};
-            checkP(a,'iscellofstring(x)');  
+            checkP(a,@(x)iscellofstring(x));
             a={'a','b';'d','esd'.'};
-            checkN(a,'iscellofstring(x)');  
+            checkN(a,@(x)iscellofstring(x));
             %
             a={@(x)1,@(x)2};
-            checkP(a,'iscelloffunc(x)');
+            checkP(a,@(x)iscelloffunc(x));
             a={@(x)1,'@(x)2'};
-            checkN(a,'iscelloffunc(x)');
+            checkN(a,@iscelloffunc);
             %
-            checkNE('','myMessage',a,'iscelloffunc(x)',...
+            checkNE('','myMessage',a,@iscelloffunc,...
                 'errorMessage','myMessage');
             checkNE('wrongType:wrongSomething','myMessage',a,...
-                'iscelloffunc(x)',...
+                @iscelloffunc,...
                 'errorMessage','myMessage','errorTag',...
                 'wrongType:wrongSomething');
-            checkNE('wrongType:wrongSomething','',a,'iscelloffunc(x)',...
+            checkNE('wrongType:wrongSomething','',a,@iscelloffunc,...
                 'errorTag','wrongType:wrongSomething');
             %
             function checkN(x,typeSpec,varargin)
                 checkNE('','',x,typeSpec,varargin{:});
                 
             end
+            %
             function checkNE(errorTag,errorMessage,x,typeSpec,varargin)
                 import modgen.common.type.simple.lib.*;
                 if isempty(errorTag)
@@ -239,17 +242,26 @@ classdef mlunit_test_common < mlunitext.test_case
                     ['modgen.common.checkvar(x,',...
                     'typeSpec,varargin{:})'],...
                     errorTag,addArgList{:});
-                fHandle=eval(['@(x)(',typeSpec,')']);
+                if ischar(typeSpec)
+                    fHandle=eval(['@(x)(',typeSpec,')']);
+                else
+                    fHandle=typeSpec;
+                end
+                %
                 self.runAndCheckError(...
                     ['modgen.common.checkvar(x,',...
                     'fHandle,varargin{:})'],...
                     errorTag,addArgList{:});
             end
-            
+            %
             function checkP(x,typeSpec,varargin)
                 import modgen.common.type.simple.lib.*;
                 modgen.common.checkvar(x,typeSpec,varargin{:});
-                fHandle=eval(['@(x)(',typeSpec,')']);
+                if ischar(typeSpec)
+                    fHandle=eval(['@(x)(',typeSpec,')']);
+                else
+                    fHandle=typeSpec;
+                end
                 modgen.common.checkvar(x,fHandle,varargin{:});
             end
             
@@ -349,39 +361,12 @@ classdef mlunit_test_common < mlunitext.test_case
             check(1000,4,{'1000'});
             check(1000,3,{'1e+003','1e+03'});
             function check(value,numPrecision,expStr)
-                resStr=cell2sepstr([],num2cell(value),'_',...
+                resStr=modgen.cell.cell2sepstr([],num2cell(value),'_',...
                     'numPrecision',numPrecision);
                 mlunitext.assert_equals(true,any(strcmp(expStr,resStr)));
             end
         end
-        function self=test_ismemberjoint_simple(self)
-            leftCell{1,1}=[1 2 3];
-            leftCell{2,1}={'a','b','c'};
-            leftCell{2,2}={'aa','bc','cc'};
-            leftCell{1,2}=[3 4 2];
-            %
-            rightCell{1,1}=[1 2 3 1];
-            rightCell{2,1}={'a','d','c','a'};
-            rightCell{1,2}=[3 4 2 3];
-            rightCell{2,2}={'aa','dc','cc','aa'};
-            %
-            [isMember,indMember]=ismemberjoint(leftCell,rightCell);
-            
-            expIsMember=logical([1,0,1]);
-            expIndMember=[4,0,3];
-            
-            isOk=isequal(isMember,expIsMember) && isequal(indMember,expIndMember);
-            mlunitext.assert_equals(true,isOk);
-        end
-        function self=test_ismemberjoint_empty(self)
-            [isMember,indMember]=ismemberjoint({[],[]},{[],[]});
-            mlunitext.assert_equals(true,isempty(isMember));
-            mlunitext.assert_equals(true,isempty(indMember));
-            %
-            [isMember,indMember]=ismemberjoint({zeros(10,0),false(10,0)},{zeros(5,0),false(5,0)},1);
-            mlunitext.assert_equals(true,isequal(isMember,true(10,1)));
-            mlunitext.assert_equals(true,isequal(indMember,repmat(5,10,1)));
-        end
+
         function self = test_cellfunallelem(self)
             inpCell=repmat({rand(7,7,7)<10},4*500,2);
             %
@@ -434,249 +419,7 @@ classdef mlunit_test_common < mlunitext.test_case
             mlunitext.assert_equals(true,isequal(resCell,resCellEthalon));
             %
         end
-        function self=test_ismemberjoint(self)
-            %
-            leftCell={[1 2],{'a','b'};[3 4],{'c','d'}};
-            rightCell={[1 2 3],{'a','b','c'};[3 4 5],{'c','d','m'}};
-            isMemberVec=[];
-            indMemberVec=[];
-            %
-            isMemberExpVec=[true true];
-            indMemberExpVec=[1 2];
-            superCheck({},{2});
-            self.runAndCheckError(...
-                '[isMemberVec,indMemberVec]=ismemberjoint(leftCell,rightCell,1);',...
-                ':wrongInput');
-            %
-            leftCell={[1 2;11 22],...
-                {'a','b';'aa','bb'},...
-                [3 4;33 44],...
-                {'c','d';'cc','dd'}};
-            rightCell={...
-                [1 2 3;11 22 33],...
-                {'a','b','c';'aa','bb','cc'},...
-                [3 4 5;33 44 55],...
-                {'c','d','m';'cc','dd','mm'}};
-            superCheck({2});
-            for iElem=1:numel(leftCell)
-                leftCell{iElem}=transpose(leftCell{iElem});
-                rightCell{iElem}=transpose(rightCell{iElem});
-            end
-            isMemberExpVec=transpose(isMemberExpVec);
-            indMemberExpVec=transpose(indMemberExpVec);
-            superCheck({1});
-            %
-            ethRightCell=rightCell;
-            rightCell={nan(2,0),cell(2,0),nan(2,0),cell(2,0)};
-            isMemberExpVec=false(1,2);
-            indMemberExpVec=zeros(1,2);
-            superCheck({2});
-            rightCell={[],{},[],{}};
-            self.runAndCheckError(...
-                '[isMemberVec,indMemberVec]=ismemberjoint(leftCell,rightCell,2);',...
-                ':wrongInput');
-            %
-            rightCell=ethRightCell;
-            leftCell={nan(3,0),cell(3,0),nan(3,0),cell(3,0)};
-            isMemberExpVec=false(1,0);
-            indMemberExpVec=zeros(1,0);
-            superCheck({2});
-            leftCell={[],{},[],{}};
-            self.runAndCheckError(...
-                '[isMemberVec,indMemberVec]=ismemberjoint(leftCell,rightCell,2);',...
-                ':wrongInput');
-            %
-            function superCheck(varargin)
-                for iArg=1:nargin
-                    [isMemberVec,indMemberVec]=...
-                        ismemberjoint(leftCell,rightCell,varargin{iArg}{:});
-                    check();
-                end
-            end
-            function check()
-                mlunitext.assert_equals(true,...
-                    isequal(isMemberVec,isMemberExpVec));
-                %
-                mlunitext.assert_equals(true,...
-                    isequal(indMemberVec,indMemberExpVec));
-            end
-        end
-        function self=test_uniquejoint(self)
-            inpCell{1,1}=[1 2 1];
-            inpCell{2,1}={'a','b','a'};
-            inpCell{1,2}=[3 5 3];
-            inpCell{2,2}={'ddd','c','ddd'};
-            %
-            expResCell{1,1}=[1,2];
-            expResCell{1,2}=[3,5];
-            expResCell{2,1}={'a','b'};
-            expResCell{2,2}={'ddd','c'};
-            expIndShrink=[3,2];
-            expIndReplicate=[1,2,1];
-            %
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell);
-            check_results();
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,2);
-            check_results();
-            %
-            inpCell=cellfun(@transpose,inpCell,'UniformOutput',false);
-            expResCell=cellfun(@transpose,expResCell,'UniformOutput',false);
-            %
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell);
-            check_results();
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,1);
-            indShrink=indShrink.';
-            indReplicate=indReplicate.';
-            check_results();
-            %
-            inpCell{1,1}=[1 3;2 4;1 3];
-            inpCell{2,1}=cat(3,{'a','b';'b','a';'a','b'},{'c','d';'e','f';'c','d'});
-            inpCell{1,2}=cat(3,[3 4 2;5 6 7;3 4 2],[1 3 2;7 4 5;1 3 2]);
-            inpCell{2,2}={'ddd';'c';'ddd'};
-            inpCell{1,3}=zeros(3,0);
-            inpCell{2,3}=false(3,4,0,2);
-            %
-            expResCell{1,1}=[1 3;2 4];
-            expResCell{1,2}=cat(3,[3 4 2;5 6 7],[1 3 2;7 4 5]);
-            expResCell{1,3}=zeros(2,0);
-            expResCell{2,1}=cat(3,{'a','b';'b','a'},{'c','d';'e','f'});
-            expResCell{2,2}={'ddd';'c'};
-            expResCell{2,3}=false(2,4,0,2);
-            expIndShrink=[3,2];
-            expIndReplicate=[1,2,1];
-            %
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,1);
-            expIndShrink=expIndShrink(:);
-            expIndReplicate=expIndReplicate(:);
-            check_results();
-            %
-            inpCell=cellfun(@(x)permute(x,[2 1 3:ndims(x)]),...
-                inpCell,'UniformOutput',false);
-            expResCell=cellfun(@(x)permute(x,[2 1 3:ndims(x)]),...
-                expResCell,'UniformOutput',false);
-            %
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,2);
-            expIndShrink=reshape(expIndShrink,1,[]);
-            expIndReplicate=reshape(expIndReplicate,1,[]);
-            check_results();
-            
-            function check_results()
-                isOk= isequal(indShrink,expIndShrink) && isequal(indReplicate,expIndReplicate) ...
-                    && isequal(resCell,expResCell);
-                mlunitext.assert_equals(true,isOk);
-            end
-        end
-        function self=test_uniquejoint_empty(self)
-            expResCell={zeros(1,0),zeros(1,0)};
-            expIndShrink=1;
-            expIndReplicate=ones(1,10);
-            %
-            inpCell={zeros(10,0),zeros(10,0)};
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell);
-            check_results();
-            %
-            inpCell={zeros(10,0).',zeros(10,0).'};
-            expResCell={zeros(1,0).',zeros(1,0).'};
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell);
-            check_results();
-            %
-            inpCell={[],[]};
-            expResCell=inpCell;
-            expIndShrink=[];
-            expIndReplicate=[];
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell);
-            check_results();
-            %
-            inpCell={zeros(0,2,5,3),false(0,4)};
-            expResCell=inpCell;
-            expIndShrink=nan(0,1);
-            expIndReplicate=nan(0,1);
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,1);
-            %
-            inpCell={zeros(2,5,0,3),false(4,2,0)};
-            expResCell=inpCell;
-            expIndShrink=nan(1,0);
-            expIndReplicate=nan(1,0);
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,3);
-            check_results();
-            %
-            inpCell={zeros(1,0),false(1,0)};
-            expResCell=inpCell;
-            expIndShrink=1;
-            expIndReplicate=1;
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,1);
-            check_results();
-            %
-            inpCell={zeros(10,0),false(10,0)};
-            expIndShrink=10;
-            expIndReplicate=ones(10,1);
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,1);
-            check_results();
-            %
-            function check_results()
-                isOk= isequal(indShrink,expIndShrink)&&...
-                    isequal(indReplicate,expIndReplicate) ...
-                    && isequal(resCell,expResCell);
-                mlunitext.assert_equals(true,isOk);
-            end
-        end
-        function self=test_uniquejoint_funchandle(self)
-            inpCell={{@(x)ones(x),@sort,@(y)ones(y),@(x)ones(x)}};
-            %
-            expResCell={{@(x)ones(x),@(y)ones(y),@sort}};
-            expIndShrink=[4 3 2];
-            expIndReplicate=[1 3 2 1];
-            %
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell);
-            check_results();
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,2);
-            check_results();
-            %
-            inpCell=cellfun(@transpose,inpCell,'UniformOutput',false);
-            expResCell=cellfun(@transpose,expResCell,'UniformOutput',false);
-            %
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell);
-            check_results();
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,1);
-            indShrink=indShrink.';
-            indReplicate=indReplicate.';
-            check_results();
-            %
-            inpCell={{@(x)ones(x),@sort;@min,@(y)ones(y);@(x)ones(x),@sort}};
-            %
-            expResCell={{@(x)ones(x),@sort;@min,@(y)ones(y)}};
-            expIndShrink=[3,2];
-            expIndReplicate=[1,2,1];
-            %
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,1);
-            expIndShrink=expIndShrink(:);
-            expIndReplicate=expIndReplicate(:);
-            check_results();
-            %
-            inpCell=cellfun(@(x)permute(x,[2 1 3:ndims(x)]),...
-                inpCell,'UniformOutput',false);
-            expResCell=cellfun(@(x)permute(x,[2 1 3:ndims(x)]),...
-                expResCell,'UniformOutput',false);
-            %
-            [resCell,indShrink,indReplicate]=uniquejoint(inpCell,2);
-            expIndShrink=reshape(expIndShrink,1,[]);
-            expIndReplicate=reshape(expIndReplicate,1,[]);
-            check_results();
-            %
-            function check_results()
-                isOk= isequal(indShrink,expIndShrink) && isequal(indReplicate,expIndReplicate) ...
-                    && isequal(func2strForCell(resCell),func2strForCell(expResCell));
-                mlunitext.assert_equals(true,isOk);
-                
-                function inpVec=func2strForCell(inpVec)
-                    if iscell(inpVec),
-                        inpVec=cellfun(@func2strForCell,inpVec,'UniformOutput',false);
-                    elseif isa(inpVec,'function_handle')&&numel(inpVec)==1,
-                        inpVec=func2str(inpVec);
-                    end
-                end
-            end
-        end
+
         function self=test_iscelllogical(self)
             isTrue=modgen.common.iscelllogical({true,false});
             mlunitext.assert_equals(true,isTrue);
@@ -1180,13 +923,14 @@ classdef mlunit_test_common < mlunitext.test_case
                 ':wrongInput');
             %
         end
-        function self=test_auxchecksize(self)
-            mlunitext.assert_equals(true,auxchecksize(rand(2,3),[2,3,1]));
-            mlunitext.assert_equals(true,auxchecksize(rand(2,3),[2,3]));
-            mlunitext.assert_equals(false,auxchecksize(rand(2,4),[2,3]));
-            mlunitext.assert_equals(false,auxchecksize(rand(2,4,5),[2,4]));
-            mlunitext.assert_equals(true,auxchecksize([],[]));
-            mlunitext.assert_equals(false,auxchecksize(1,[]));
+        function self=test_checksize(self)
+            
+            mlunitext.assert_equals(true,modgen.common.checksize(rand(2,3),[2,3,1]));
+            mlunitext.assert_equals(true,modgen.common.checksize(rand(2,3),[2,3]));
+            mlunitext.assert_equals(false,modgen.common.checksize(rand(2,4),[2,3]));
+            mlunitext.assert_equals(false,modgen.common.checksize(rand(2,4,5),[2,4]));
+            mlunitext.assert_equals(true,modgen.common.checksize([],[]));
+            mlunitext.assert_equals(false,modgen.common.checksize(1,[]));
         end
         function self=test_cat(self)
             typeList={'int8','double','logical','struct'};
@@ -1386,370 +1130,6 @@ classdef mlunit_test_common < mlunitext.test_case
             mlunitext.assert_equals(true,...
                 isequal(methodName,'getcallernameexttest.getcallernameext_subfunction3/subfunction/subfunction2')&&...
                 isequal(className,''));
-        end
-        function self=test_uniquejoint_enum(self)
-            enumVal=modgen.common.test.aux.TestEnum.Alpha;
-            arrayList={[1;2],[enumVal;enumVal]};
-            [a,b,c]=uniquejoint(arrayList,1);
-            mlunitext.assert_equals(true,isequal(a,arrayList));
-            mlunitext.assert_equals(true,isequal(b,[1;2]));
-            mlunitext.assert_equals(true,isequal(c,[1;2]));
-        end
-        function self=test_ismemberjoint_enum(self)
-            enumVal=modgen.common.test.aux.TestEnum.Alpha;
-            arrayList={[1;2],[enumVal;enumVal]};
-            [a,b]=ismemberjoint(arrayList,arrayList,1);
-            mlunitext.assert_equals(true,isequal(a,[true;true]));
-            mlunitext.assert_equals(true,isequal(b,[1;2]));
-        end        
-        function self=test_uniquejoint_ext(self)
-            pathStr=fileparts(mfilename('fullpath'));
-            StData=load([pathStr ...
-                strrep('\+aux\uniquejoint_testdata.mat','\',filesep)]);
-            inputCell=cellfun(@(x)x(:),struct2cell(StData),'UniformOutput',false);
-            [~,~,~,isSorted]=uniquejoint(inputCell,1);
-            mlunitext.assert_equals(true,isSorted);
-            %
-            nRows=200;
-            inputCell=cellfun(@(x)x(1:nRows),inputCell,'UniformOutput',false);
-            [outputCell1,indForward1Vec,indBackward1Vec]=uniquejoint(inputCell,1);
-            nUniqueRows=numel(indForward1Vec);
-            nElems=numel(inputCell);
-            outputCell2=cell(1,nElems);
-            for iElem=1:nElems,
-                [~,~,outputCell2{iElem}]=uniqueobjinternal(inputCell{iElem});
-            end
-            [~,indForward2Vec,indBackward2Vec]=uniquejoint(outputCell2,1);
-            outputCell2=cellfun(@(x)x(indForward2Vec),inputCell,'UniformOutput',false);
-            mlunitext.assert_equals(nUniqueRows,numel(indForward2Vec));
-            indForwardVec=indBackward1Vec(indForward2Vec);
-            mlunitext.assert_equals(true,~any(diff(sort(indForwardVec))==0));
-            outputCell1=cellfun(@(x)x(indForwardVec),outputCell1,'UniformOutput',false);
-            for iElem=1:nElems,
-                mlunitext.assert_equals(true,...
-                    isequalwithequalnans(outputCell1{iElem},outputCell2{iElem}));
-            end
-            mlunitext.assert_equals(true,isequal(indBackward1Vec,indForwardVec(indBackward2Vec)));
-            mlunitext.assert_equals(true,isequal(indForwardVec(indBackward2Vec(indForward1Vec)),(1:nUniqueRows).'));
-        end
-        function self=test_ismemberjointwithnulls(self)
-            %
-            leftCell={[1 2],{'a','b'};[3 4],{'c','d'}};
-            rightCell={[1 2 3],{'a','b','c'};[3 4 5],{'c','d','m'}};
-            leftIsNullCell=repmat({false(1,2)},size(leftCell));
-            rightIsNullCell=repmat({false(1,3)},size(rightCell));
-            isMemberVec=[];
-            indMemberVec=[];
-            %
-            isMemberExpVec=[true true];
-            indMemberExpVec=[1 2];
-            superCheck(2);
-            self.runAndCheckError(...
-                '[isMemberVec,indMemberVec]=modgen.common.ismemberjointwithnulls(leftCell,leftIsNullCell,rightCell,rightIsNullCell,1);',...
-                ':wrongInput');
-            %
-            leftCell={[1 2],{'c','b'};[5 4],{'c','d'}};
-            rightCell={[1 2 3],{'a','b','c'};[3 4 5],{'c','d','m'}};
-            leftIsNullCell={[true,false],[false,false];[false,false],[true,false]};
-            rightIsNullCell={[false,false,true],[true,false,false];[false,false,false],[true,false,true]};
-            isMemberExpVec=[true true];
-            indMemberExpVec=[3 2];
-            superCheck(2);
-            self.runAndCheckError(...
-                '[isMemberVec,indMemberVec]=modgen.common.ismemberjointwithnulls(leftCell,leftIsNullCell,rightCell,rightIsNullCell,1);',...
-                ':wrongInput');
-            %
-            leftCell={[1 2;11 22],...
-                {'a','b';'aa','bb'},...
-                [3 4;33 44],...
-                {'c','d';'cc','dd'}};
-            rightCell={...
-                [1 2 3;11 22 33],...
-                {'a','b','c';'aa','bb','cc'},...
-                [3 4 5;33 44 55],...
-                {'c','d','m';'cc','dd','mm'}};
-            leftIsNullCell=repmat({false(2,2)},size(leftCell));
-            rightIsNullCell=repmat({false(2,3)},size(rightCell));
-            isMemberExpVec=[true true];
-            indMemberExpVec=[1 2];
-            superCheck(2);
-            for iElem=1:numel(leftCell)
-                leftCell{iElem}=transpose(leftCell{iElem});
-                leftIsNullCell{iElem}=transpose(leftIsNullCell{iElem});
-                rightCell{iElem}=transpose(rightCell{iElem});
-                rightIsNullCell{iElem}=transpose(rightIsNullCell{iElem});
-            end
-            isMemberExpVec=transpose(isMemberExpVec);
-            indMemberExpVec=transpose(indMemberExpVec);
-            superCheck(1);
-            %
-            leftCell={[1 2;11 22],...
-                {'a','b';'cc','bb'},...
-                [5 4;33 44],...
-                {'c','d';'cc','dd'}};
-            rightCell={...
-                [1 2 3;11 22 33],...
-                {'a','b','c';'aa','bb','cc'},...
-                [3 4 5;33 44 55],...
-                {'c','d','m';'cc','dd','mm'}};
-            leftIsNullCell={[true,false;true,false],...
-                [true,false;false,true],...
-                [false,true;true,false],...
-                [true,false;true,false]};
-            rightIsNullCell={[false,false,true;true,false,true],...
-                [false,false,true;true,true,false],...
-                [false,true,false;true,false,true],...
-                [true,false,true;true,false,true]};
-            isMemberExpVec=[true true];
-            indMemberExpVec=[3 2];
-            superCheck(2);
-            for iElem=1:numel(leftCell)
-                leftCell{iElem}=transpose(leftCell{iElem});
-                leftIsNullCell{iElem}=transpose(leftIsNullCell{iElem});
-                rightCell{iElem}=transpose(rightCell{iElem});
-                rightIsNullCell{iElem}=transpose(rightIsNullCell{iElem});
-            end
-            isMemberExpVec=transpose(isMemberExpVec);
-            indMemberExpVec=transpose(indMemberExpVec);
-            superCheck(1);
-            %
-            ethLeftCell=leftCell;
-            ethLeftIsNullCell=leftIsNullCell;
-            ethRightCell=rightCell;
-            ethRightIsNullCell=rightIsNullCell;
-            ethIsMemberExpVec=isMemberExpVec;
-            ethIndMemberExpVec=indMemberExpVec;
-            %
-            leftIsNullCell=cellfun(@(x)x(:,1),leftIsNullCell,'UniformOutput',false);
-            rightIsNullCell=cellfun(@(x)x(:,1),rightIsNullCell,'UniformOutput',false);
-            isMemberExpVec=[false;true];
-            indMemberExpVec=[0;2];
-            superCheck(1);
-            leftCell{3}(1,2)=55;
-            isMemberExpVec=ethIsMemberExpVec;
-            indMemberExpVec=ethIndMemberExpVec;
-            superCheck(1);
-            leftCell{3}(:,2)=[];
-            leftIsNullCell{3}(:)=true;
-            rightIsNullCell{3}(:)=true;
-            superCheck(1);
-            leftCell{3}=ethLeftCell{3};
-            rightCell{3}=nan(3,0);
-            superCheck(1);
-            %
-            leftCell=ethLeftCell;
-            leftIsNullCell=ethLeftIsNullCell;
-            rightCell={nan(2,0),cell(2,0),nan(2,0),cell(2,0)};
-            rightIsNullCell=repmat({false(2,0)},size(rightCell));
-            isMemberExpVec=false(1,2);
-            indMemberExpVec=zeros(1,2);
-            superCheck(2);
-            rightCell={[],{},[],{}};
-            rightIsNullCell=repmat({false(0,0)},size(rightCell));
-            self.runAndCheckError(...
-                '[isMemberVec,indMemberVec]=modgen.common.ismemberjointwithnulls(leftCell,rightCell,2);',...
-                ':wrongInput');
-            %
-            rightCell=ethRightCell;
-            rightIsNullCell=ethRightIsNullCell;
-            leftCell={nan(3,0),cell(3,0),nan(3,0),cell(3,0)};
-            leftIsNullCell=repmat({false(3,0)},size(leftCell));
-            isMemberExpVec=false(1,0);
-            indMemberExpVec=zeros(1,0);
-            superCheck(2);
-            leftCell={[],{},[],{}};
-            leftIsNullCell=repmat({false(0,0)},size(leftCell));
-            self.runAndCheckError(...
-                '[isMemberVec,indMemberVec]=modgen.common.ismemberjointwithnulls(leftCell,rightCell,2);',...
-                ':wrongInput');
-            %
-            leftCell=ethLeftCell;
-            leftIsNullCell=cellfun(@(x)true(size(x)),ethLeftIsNullCell,'UniformOutput',false);
-            rightCell=ethRightCell;
-            rightIsNullCell=cellfun(@(x)true(size(x)),ethRightIsNullCell,'UniformOutput',false);
-            isMemberExpVec=[true;true];
-            indMemberExpVec=[3;3];
-            superCheck(1);
-            %
-            StAsgn=substruct('()',{2,':'});
-            rightIsNullCell=cellfun(@(x)subsasgn(x,StAsgn,true),ethRightIsNullCell,'UniformOutput',false);
-            isMemberExpVec=[true;true];
-            indMemberExpVec=[2;2];
-            superCheck(1);
-            %
-            rightIsNullCell=ethRightIsNullCell;
-            isMemberExpVec=[false;false];
-            indMemberExpVec=[0;0];
-            superCheck(1);
-            %
-            leftIsNullCell=cellfun(@(x)subsasgn(x,StAsgn,true),ethLeftIsNullCell,'UniformOutput',false);
-            rightIsNullCell=cellfun(@(x)true(size(x)),ethRightIsNullCell,'UniformOutput',false);
-            isMemberExpVec=[false;true];
-            indMemberExpVec=[0;3];
-            superCheck(1);
-            %
-            leftCell={[1 2;11 22],...
-                {'a','b';'cc','bb'},...
-                [5 4;33 44],...
-                {'c','d';'cc','dd'}};
-            rightCell={...
-                [1 2 3;11 22 33],...
-                {'a','b','c';'aa','bb','cc'},...
-                [3 4 5;33 44 55],...
-                {'c','d','m';'cc','dd','mm'}};
-            leftIsNullCell={[true,true;true,false],...
-                [true,false;false,true],...
-                [false,true;true,false],...
-                [true,false;true,false]};
-            rightIsNullCell={[false,false,true;true,false,true],...
-                [false,false,true;true,true,false],...
-                [false,true,false;true,false,true],...
-                [true,false,true;true,false,true]};
-            isMemberExpVec=[true true];
-            indMemberExpVec=[3 2];
-            superCheck(2);
-            %
-            leftCell={[1 2;11 22],...
-                {'a','b';'cc','bb'},...
-                [5 4;33 44],...
-                {'c','d';'cc','dd'}};
-            rightCell={...
-                [1 2 3;11 22 33],...
-                {'d','b';'aa','b'},...
-                [3 4;5 44],...
-                {'c','d','m';'cc','dd','mm'}};
-            leftIsNullCell={[true;false],...
-                [true,false;false,true],...
-                [false,true;true,false],...
-                [true;false]};
-            rightIsNullCell={[false;true],...
-                [false,true;true,false],...
-                [true,false;false,true],...
-                [false;true]};
-            isMemberExpVec=[true;false];
-            indMemberExpVec=[2;0];
-            superCheck(1);
-            %
-            function superCheck(dim)
-                [isMemberVec,indMemberVec]=...
-                    modgen.common.ismemberjointwithnulls(leftCell,leftIsNullCell,rightCell,rightIsNullCell,dim);
-                check();
-            end
-            function check()
-                mlunitext.assert_equals(true,...
-                    isequal(isMemberVec,isMemberExpVec));
-                %
-                mlunitext.assert_equals(true,...
-                    isequal(indMemberVec,indMemberExpVec));
-            end
-        end
-        function self=test_ismemberjointwithnulls_enum(self)
-            enumVal=modgen.common.test.aux.TestEnum.Alpha;
-            arrayList={[1;2],[enumVal;enumVal]};
-            [a,b]=modgen.common.ismemberjointwithnulls(...
-                arrayList,{false(2,1),false(2,1)},...
-                arrayList,{false(2,1),false(2,1)},1);
-            mlunitext.assert_equals(true,isequal(a,[true;true]));
-            mlunitext.assert_equals(true,isequal(b,[1;2]));
-            %
-            [a,b]=modgen.common.ismemberjointwithnulls(...
-                arrayList,{[false;true],[true;false]},...
-                arrayList,{[false;true],[true;false]},1);
-            mlunitext.assert_equals(true,isequal(a,[true;true]));
-            mlunitext.assert_equals(true,isequal(b,[1;2]));
-            %
-            [a,b]=modgen.common.ismemberjointwithnulls(...
-                arrayList,{false(2,1),[true;true]},...
-                {[1;2],nan(2,0)},{false(2,1),[true;true]},1);
-            mlunitext.assert_equals(true,isequal(a,[true;true]));
-            mlunitext.assert_equals(true,isequal(b,[1;2]));
-        end
-        function self=test_uniquejoint_performance(self)
-            inpMat=randi([1 2],8500,4);
-            checkTime(inpMat,100);
-            inpMat=randi([1 2],300,10);
-            checkTime(inpMat,100);
-            inpMat=randi([1 20],1000,20);
-            checkTime(inpMat,100);
-            inpMat=randi([1 20],4000,500);
-            checkTime(inpMat,10);
-            inpMat=randi([1 20],1000,500);
-            checkTime(inpMat,100);
-            
-            function checkTime(inpMat,nRuns) %#ok<INUSL>
-                MAX_TOLERANCE=0.25;
-                outMat1=[];
-                indForwardVec1=[];
-                indBackwardVec1=[];
-                outMat2=[];
-                indForwardVec2=[];
-                indBackwardVec2=[];
-                time1=self.runAndCheckTime(...
-                    '[outMat1,indForwardVec1,indBackwardVec1]=uniquejoint({inpMat},1,''optimized'');',...
-                    'nRuns',nRuns,'useMedianTime',true);
-                time2=self.runAndCheckTime(...
-                    '[outMat2,indForwardVec2,indBackwardVec2]=uniquejoint({inpMat},1,''standard'');',...
-                    'nRuns',nRuns,'useMedianTime',true);
-                mlunitext.assert_equals(true,isequal(outMat1,outMat2));
-                mlunitext.assert_equals(true,isequal(indForwardVec1,indForwardVec2));
-                mlunitext.assert_equals(true,isequal(indBackwardVec1,indBackwardVec2));
-                time1=min(time1,time2);
-                time2=self.runAndCheckTime('[outMat2,indForwardVec2,indBackwardVec2]=uniquejoint({inpMat},1);',...
-                    'nRuns',nRuns,'useMedianTime',true);
-                mlunitext.assert_equals(true,isequal(outMat1,outMat2));
-                mlunitext.assert_equals(true,isequal(indForwardVec1,indForwardVec2));
-                mlunitext.assert_equals(true,isequal(indBackwardVec1,indBackwardVec2));
-                curTolerance=max(max(time1/time2,time2/time1)-1,0);
-                messageStr=sprintf('Ratio error %f between chosen and mininal exceeds maximal one %f',...
-                    curTolerance,MAX_TOLERANCE);
-                mlunitext.assert_equals(true,curTolerance<MAX_TOLERANCE,messageStr);
-            end
-        end
-        function self=test_ismemberjoint_performance(self)
-            inpMat1=randi([1 2],10000,10);
-            inpMat2=randi([1 2],100000,10);
-            checkTime(inpMat1,inpMat2,10);
-            inpMat1=randi([1 10],500,10);
-            inpMat2=randi([1 10],1000,10);
-            checkTime(inpMat1,inpMat2,100);
-            inpMat1=randi([1 100],400,100);
-            inpMat2=randi([1 100],800,100);
-            checkTime(inpMat1,inpMat2,100);
-            inpMat1=randi([1 100],2000,100);
-            inpMat2=randi([1 100],4000,100);
-            checkTime(inpMat1,inpMat2,10);
-            inpMat1=randi([1 10],20,500);
-            inpMat2=randi([1 10],40,500);
-            checkTime(inpMat1,inpMat2,100);
-            inpMat1=randi([1 100],1000,1000);
-            inpMat2=randi([1 100],2000,1000);
-            checkTime(inpMat1,inpMat2,10);
-            
-            function checkTime(inpMat1,inpMat2,nRuns) %#ok<INUSL>
-                MAX_TOLERANCE=0.3;
-                isMemberVec1=[];
-                indMemberVec1=[];
-                isMemberVec2=[];
-                indMemberVec2=[];
-                time1=self.runAndCheckTime(...
-                    '[isMemberVec1,indMemberVec1]=ismemberjoint({inpMat1},{inpMat2},1,''optimized'');',...
-                    'nRuns',nRuns,'useMedianTime',true);
-                time2=self.runAndCheckTime(...
-                    '[isMemberVec2,indMemberVec2]=ismemberjoint({inpMat1},{inpMat2},1,''standard'');',...
-                    'nRuns',nRuns,'useMedianTime',true);
-                mlunitext.assert_equals(true,isequal(isMemberVec1,isMemberVec2));
-                mlunitext.assert_equals(true,isequal(indMemberVec1,indMemberVec2));
-                time1=min(time1,time2);
-                time2=self.runAndCheckTime(...
-                    '[isMemberVec2,indMemberVec2]=ismemberjoint({inpMat1},{inpMat2},1);',...
-                    'nRuns',nRuns,'useMedianTime',true);
-                mlunitext.assert_equals(true,isequal(isMemberVec1,isMemberVec2));
-                mlunitext.assert_equals(true,isequal(indMemberVec1,indMemberVec2));
-                curTolerance=max(max(time1/time2,time2/time1)-1,0);
-                messageStr=sprintf('Ratio error %f between chosen and mininal exceeds maximal one %f',...
-                    curTolerance,MAX_TOLERANCE);
-                mlunitext.assert_equals(true,curTolerance<MAX_TOLERANCE,messageStr);
-            end
         end
     end
 end

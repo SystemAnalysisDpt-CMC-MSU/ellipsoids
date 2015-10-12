@@ -29,7 +29,6 @@ ell = varargin{1};
 checkvar(ell, @(x) isa(x,'ellipsoid') && numel(x) == 1&&...
     (dimension(x) == 3 || dimension(x) == 2), 'errorTag', 'wrongInput',...
     'errorMessage','First argument must be ellipsoid in 3D or 2D');
-
-
+%
 [vMat,fMat] = getBoundary(ell,varargin{2:end});
 poly = elltool.exttbx.mpt.gen.tri2polytope(vMat,fMat);

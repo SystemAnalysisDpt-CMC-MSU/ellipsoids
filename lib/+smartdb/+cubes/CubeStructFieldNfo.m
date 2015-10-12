@@ -13,8 +13,10 @@ classdef CubeStructFieldNfo<modgen.common.obj.HandleObjectCloner
                     'should be of smartdb.cubes.CubeStructFieldInfo type']);
             end
         end
-        function [isPositive,reportStr]=isEqualScalarInternal(self,obj,varargin)
-            [isPositive,reportStr]=self.fieldMetaData.isEqual(...
+        function [isPositive,varargout]=...
+                isEqualScalarInternal(self,obj,varargin)
+            varargout=cell(1,max(nargout-1,0));
+            [isPositive,varargout{:}]=self.fieldMetaData.isEqual(...
                 obj.fieldMetaData,'propEqScalarList',varargin);
         end        
     end

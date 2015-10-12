@@ -31,6 +31,8 @@ function typeSpecList=getFieldTypeSpecList(self,varargin)
 %
 %
 import modgen.common.throwerror;
+import modgen.cell.cell2sepstr;
+%
 self.checkIfObjectScalar();
 %
 isUniformOutput=false;

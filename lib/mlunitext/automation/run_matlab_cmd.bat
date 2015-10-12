@@ -1,10 +1,10 @@
 setlocal
-:: Runs all Matlab unit tests for the latest GIT revision and e-mails results
+:: Runs a specified Matlab command
 ::
 :: Parameters:
 :: 1. deploymentDir - string: name of deployment directory from where s_install script is called
-:: 2. matlabCmd - string: name of Matlab function to run
-:: 3. matlabBin - string: Matlab program path
+:: 2. matlabBin - string: Matlab program path
+:: 3. matlabCmd - string: name of Matlab function to run
 
 set deploymentDir=%1
 set matlabBin=%2

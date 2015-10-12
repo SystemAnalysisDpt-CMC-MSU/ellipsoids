@@ -22,6 +22,7 @@ function checkStruct(self,SData,isConsistencyChecked,selfFieldNameList)
 %
 import modgen.common.throwwarn;
 import modgen.common.throwerror;
+import modgen.cell.cell2sepstr;
 if numel(SData)>1
     throwerror('wrongInput','a scalar structure is expected');
 end
