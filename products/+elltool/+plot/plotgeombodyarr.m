@@ -14,10 +14,10 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(fIsObjClassName,fDim,...
 %
 % Input:
 %   regular:
-%       objClassName:string - class of objects
-%       calcBodyPoints: function with input
+%       objClassName: char[1,] - class of objects
+%       calcBodyPoints: function_handle[1,1] - function with input
 %           ellsArr,nDim,lGetGridMat,fGetGridMat and output [xMat,fMat]
-%       plotPatch: plotting function
+%       plotPatch: function_handle[1,1] - plotting function
 %       bodyArr:  objects: [dim11Size,dim12Size,...,dim1kSize] -
 %                array of 2D or 3D objects. All objects in bodyArr
 %                must be either 2D or 3D simutaneously.
@@ -64,9 +64,9 @@ function  [plObj,nDim,isHold] = plotgeombodyarr(fIsObjClassName,fDim,...
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2013 $
-
+%
 import modgen.common.throwerror;
-
+%
 DEFAULT_FILL = false;
 DEFAULT_LINE_WIDTH = 1;
 DEFAULT_SHAD = 0.4;
@@ -86,7 +86,7 @@ isObj = true;
     @(x)isa(x,'double'), @(x)isa(x,'logical'),@(x)isa(x,'logical'),...
     });
 checkIsWrongInput();
-
+%
 if ~isRelPlotterSpec
     if isNewFigure
         plObj=smartdb.disp.RelationDataPlotter();
@@ -95,19 +95,19 @@ if ~isRelPlotterSpec
             @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
     end
 end
+%
 [bodyArr, uColorVec, vColorVec, isCharColor] = getParams(reg);
 if isCharColor && isColorVec
     isColorVec = false;
 end
+%
 nDim = max(fDim(bodyArr));
 if nDim == 3 && isLineWidth
     throwerror('wrongProperty', 'LineWidth is not supported by 3D objects');
 end
 checkDimensions();
 prepareForPlot();
-
-
-
+%
 hFigure = get(0,'CurrentFigure');
 if isempty(hFigure)
     isHold=false;
@@ -116,7 +116,6 @@ else
     if isempty(hAx)
         isHold=false;
     else
-        
         if ~ishold(hAx)
             if priorHold
                 isHold = true;
@@ -144,7 +143,7 @@ else
         postFun = @axesSetPropDoNothing2Func;
     end
 end
-
+%
 if isObj
     rel=smartdb.relations.DynamicRelation(SData);
     if (nDim==2)||(nDim == 1)
@@ -157,7 +156,6 @@ if isObj
             'widVec','plotPatch'},...
             'axesPostPlotFunc',postFun,...
             'isAutoHoldOn',false);
-        
     elseif (nDim==3)
         plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
             @figureSetPropFunc,{},...
@@ -170,17 +168,12 @@ if isObj
             'isAutoHoldOn',false);
     end
 end
-
-
-
-
-
     function prepareForPlot()
-        
+        %
         [xCMat,fCMat] = calcBodyPoints(bodyArr);
-        
+        %
         if numel(cell2mat(xCMat)) > 0
-            
+            %
             bodyPlotNum = numel(xCMat);
             uColorVec = uColorVec(1:bodyPlotNum);
             vColorVec = vColorVec(1:bodyPlotNum,:);
@@ -197,12 +190,12 @@ end
                 SData.figureNameCMat=repmat({'figure'},bodyPlotNum,1);
                 SData.axesNameCMat = repmat({'ax'},bodyPlotNum,1);
             end
-            
+            %
             clrCVec = cellfun(@(x, y, z) getColor(x, y, z),...
                 num2cell(colorVec, 2), ...
                 num2cell(vColorVec, 2), num2cell(uColorVec),...
                 'UniformOutput', false);
-            
+            %
             SData.verCMat = xCMat;
             SData.xCMat = xCMat;
             SData.faceCMat = fCMat;
@@ -237,7 +230,7 @@ end
             SData.clrVec = colorVec;
         end
     end
-
+    %
     function checkDimensions()
         import elltool.conf.Properties;
         import modgen.common.throwerror;
@@ -259,6 +252,7 @@ end
             end
         end
     end
+    %
     function checkIsWrongParams()
         import modgen.common.throwerror;
         if any(lineWidth <= 0) || any(isnan(lineWidth)) || ...
@@ -279,6 +273,7 @@ end
                 'ColorVec is a vector of length 3');
         end
     end
+%
     function [colorVec, shade, lineWidth, isFill] = ...
             getPlotParams(colorVec, shade, lineWidth, isFill,bodyPlotNum)
         shade = getPlotInitParam(shade, isShad, DEFAULT_SHAD);
@@ -328,16 +323,14 @@ end
                     end
                 end
             end
-            
-            
         end
     end
-
+    %
     function checkIsWrongInput()
         import modgen.common.throwerror;
         cellfun(@(x)checkIfNoColorCharPresent(x),reg);
         cellfun(@(x)checkRightPropName(x),reg);
-        
+        %
         function checkIfNoColorCharPresent(value)
             import modgen.common.throwerror;
             if ischar(value)&&(numel(value)==1)&&~isColorDef(value)
@@ -351,6 +344,7 @@ end
                     eq(value, 'm') | eq(value, 'w')| eq(value, 'k');
             end
         end
+        %
         function checkRightPropName(value)
             import modgen.common.throwerror;
             if ischar(value)&&(numel(value)>1)
@@ -392,7 +386,7 @@ end
         uColorVec = vertcat(uColorCMat{:});
         vColorVec = vertcat(vColorCMat{:});
         ellsArr = vertcat(ellsCMat{:});
-        
+        %
         function [ellVec, uColorVec, vColorVec] = getParams(ellArr, ...
                 nextObjArr, isnLastElem)
             import modgen.common.throwerror;
@@ -422,6 +416,7 @@ end
         end
     end
 end
+%
 function hVec=plotCreateFillPlotFunc(hAxes,X,faces,clrVec,isFill,...
     shade,widVec,plotPatch,varargin)
 if ~isFill
@@ -433,12 +428,15 @@ set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec,'FaceAlpha',shade,...
 hVec = h1;
 view(hAxes,2);
 end
+%
 function figureSetPropFunc(hFigure,figureName,~)
 set(hFigure,'Name',figureName);
 end
+%
 function figureGroupName=figureGetGroupNameFunc(figureName)
 figureGroupName=figureName;
 end
+%
 function hVec=axesSetPropDoNothingFunc(hAxes,~)
 axis(hAxes,'on');
 axis(hAxes,'auto');
@@ -446,6 +444,7 @@ grid(hAxes,'on');
 hold(hAxes,'on');
 hVec=[];
 end
+%
 function hVec=axesSetPropDoNothing2Func(hAxes,~)
 axis(hAxes,'on');
 axis(hAxes,'auto');
@@ -453,9 +452,11 @@ grid(hAxes,'on');
 hold(hAxes,'off');
 hVec=[];
 end
+%
 function axesName=axesGetNameSurfFunc(name,~)
 axesName=name;
 end
+%
 function hVec=plotCreatePatchFunc(hAxes,vertices,faces,...
     faceVertexCData,faceAlpha,clrVec,plotPatch)
 import modgen.graphics.camlight;
