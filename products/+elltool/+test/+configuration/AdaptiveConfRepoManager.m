@@ -1,4 +1,5 @@
-classdef AdaptiveConfRepoManager<modgen.configuration.AdaptiveConfRepoManager
+classdef AdaptiveConfRepoManager<...
+        modgen.configuration.AdaptiveConfRepoManagerUpd
 % ADAPTIVECONFREPOMANAGER -  a simplistic extension of
 %                            AdaptiveConfRepoManager that
 %                            injects a configuration change
@@ -17,7 +18,8 @@ classdef AdaptiveConfRepoManager<modgen.configuration.AdaptiveConfRepoManager
 
     methods
         function self=AdaptiveConfRepoManager(varargin)
-            self=self@modgen.configuration.AdaptiveConfRepoManager(varargin{:});
+            self=self@modgen.configuration.AdaptiveConfRepoManagerUpd(...
+                varargin{:});
             confPatchRepo=elltool.test.configuration.ConfPatchRepo();
             self.setConfPatchRepo(confPatchRepo);
         end
