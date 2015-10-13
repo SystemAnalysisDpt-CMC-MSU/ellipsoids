@@ -341,7 +341,7 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             %             Faculty of Computational Mathematics and Cybernetics,
             %             Science, System Analysis Department 2012-2013 $
             self.checkIfScalar();
-            absTol = self.absTol;
+            absTol = self.absTol; %#ok<*PROPLC>
             if any(abs(aArr(:))>absTol) || any(abs(bArr(:))>absTol)
                 isArrEq = abs(2*(aArr-bArr)./(aArr+bArr));
                 isArrEq = all(isArrEq(:)<=self.relTol);

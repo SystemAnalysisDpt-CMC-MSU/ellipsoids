@@ -2,7 +2,7 @@ classdef AGenEllipsoid < handle
     methods (Access = protected, Abstract, Static)
         formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
     end
-    
+    %
     methods (Access = protected)
         function [isEqualArr, reportStr] = isEqualInternal(ellFirstArr,...
                 ellSecArr, isPropIncluded)

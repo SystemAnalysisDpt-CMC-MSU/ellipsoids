@@ -32,6 +32,7 @@ function doesContain = doesContainPoly(ellArr,poly,varargin)
 %   isPosArr: logical[nDims1,nDims2,...,nDimsN],
 %       resArr(iCount) = true - firstEllArr(iCount)
 %       contains secondObjArr(iCount), false - otherwise.
+%
 varargin = varargin{:};
 [~,~,compMode,isCompModeSpec] = modgen.common.parseparext(varargin,'computeMode');
 if ~isCompModeSpec || ~(ischar(compMode))||...
@@ -45,7 +46,7 @@ if ~isCompModeSpec || ~(ischar(compMode))||...
 else
     computeMode = compMode;
 end
-
+%
 isAnyEllDeg = any(isdegenerate(ellArr(:)));
 isPolyDeg = ~any(poly.isFullDim());
 isBnd = any(poly.isBounded());
