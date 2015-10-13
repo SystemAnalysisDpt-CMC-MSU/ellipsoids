@@ -104,11 +104,11 @@ for iDims = 1:2*nDims
         maximize( basisVec*x)
         subject to    
             for iConstraints = 1:nConstraints
-                constrMat(iConstraints,:)*x <= constrConstVec(iConstraints);
+                constrMat(iConstraints,:)*x <= constrConstVec(iConstraints); %#ok<VUNUS>
             end
             for iEll = 1:nEll
                 (x-cVecCArr{iEll})' * shMatCArr{nEll} * (x-cVecCArr{iEll})...
-                    <= 1;
+                    <= 1; %#ok<VUNUS>
             end
     cvx_end
     maxVecsMat(iDims,:) = x';
@@ -133,7 +133,7 @@ end
 %
 function [normMat,constVec] = findNormAndConst(pointsMat)
 normIndexes = convhulln(pointsMat);
-[nFacets nDims] = size(normIndexes);
+[nFacets, nDims] = size(normIndexes);
 normMat = zeros(nFacets,nDims);
 constVec = zeros(nFacets,1);
 inFacetVecsMat = zeros(nDims,nDims);
@@ -158,7 +158,7 @@ suppFuncVec = rho(polarEll,normalsMat');
 res = all(suppFuncVec' <= constVec+absTol);
 end
 function polar = getPolar(ell)
-[cVec shMat] = double(ell);
+[cVec, shMat] = double(ell);
 invShMat = inv(shMat);
 normConst = cVec'*(shMat\cVec);
 polarCVec = -(shMat\cVec)/(1-normConst);

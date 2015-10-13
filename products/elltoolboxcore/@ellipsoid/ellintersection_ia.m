@@ -1,12 +1,11 @@
 function outEll = ellintersection_ia(inpEllArr)
-%
 % ELLINTERSECTION_IA - computes maximum volume ellipsoid that is contained  
 %                     in the intersection of given ellipsoids.                      
 %
 % Input:
 %   regular:
 %       inpEllArr: ellipsoid [nDims1,nDims2,...,nDimsN] - array of  
-%           ellipsoids of the same dimentions.
+%           ellipsoids of the same dimention.
 %
 % Output:
 %   outEll: ellipsoid [1, 1] - resulting maximum volume ellipsoid.
@@ -45,68 +44,59 @@ function outEll = ellintersection_ia(inpEllArr)
 import modgen.common.throwerror
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
-
+import modgen.common.checkmultvar;
+%
 persistent logger;
-
+%
 dimsArr = dimension(inpEllArr);
 minEllDim   = min(dimsArr(:));
-
-
-
+%
 modgen.common.checkvar( inpEllArr , 'numel(x) > 0', 'errorTag', ...
     'wrongInput:emptyArray', 'errorMessage', ...
     'Each array must be not empty.');
-
 modgen.common.checkvar(inpEllArr,'all(~x(:).isEmpty())','errorTag', ...
     'wrongInput:emptyEllipsoid', 'errorMessage', ...
     'Array should not have empty ellipsoid.');
-
 modgen.common.checkvar(dimsArr,'all(x(:)==x(1))',...
     'errorTag','wrongSizes',...
     'errorMessage','all ellipsoids must be of the same dimension.');
-
-nEllipsoids = numel(inpEllArr);    
-inpEllVec = reshape(inpEllArr, 1, nEllipsoids);
-    
+%
+nElls = numel(inpEllArr);    
+inpEllVec = reshape(inpEllArr, 1, nElls);
+%    
 if is2EllEqCentre(inpEllVec)  
-    
     firstEllObj = inpEllVec(1);
     secEllObj = inpEllVec(2);
-    
-    EllCenterVec = firstEllObj.getCenterVec();
-
+    %
+    ellCenterVec = firstEllObj.getCenterVec();
+    %
     firstEllShMat = firstEllObj.getShapeMat();
     secEllShMat = secEllObj.getShapeMat();
     
     [~,absTol] = firstEllObj.getAbsTol();
-%     if ~(gras.la.ismatposdef(firstEllShMat, absTol))
-%         throwerror('errorMessage','shapeMat matrice must not be degenerate');
-%     end;
-    import modgen.common.checkmultvar;
     checkmultvar(@(aMat, aAbsTolVal)gras.la.ismatposdef(aMat,aAbsTolVal),...
     2, firstEllShMat, absTol,...
     'errorTag','wrongInput:shapeMat',...
     'errorMessage','shapeMat matrice must not be degenerate');
-
+    %
     sqrtFirstEllShMat = ...
         gras.la.sqrtmpos(firstEllShMat,firstEllObj.getAbsTol());
-
+    %
     intermFirstEllShMat = eye(minEllDim);
     intermSecEllShMat = sqrtFirstEllShMat \ secEllShMat / ...
         sqrtFirstEllShMat';
-
-    [vSecMat dSecMat] = eig(intermSecEllShMat);
-
+    %
+    [vSecMat, dSecMat] = eig(intermSecEllShMat);
+    %
     intermEllShMat = min(intermFirstEllShMat, dSecMat);
-
+    %
     ellMat = sqrtFirstEllShMat * vSecMat * ...
         intermEllShMat * vSecMat' * ...
              sqrtFirstEllShMat';
     ellMat = 0.5*(ellMat + ellMat');
-
-    outEll = ellipsoid(EllCenterVec, ellMat);
+    %
+    outEll = ellipsoid(ellCenterVec, ellMat);
 else
-
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
@@ -118,11 +108,11 @@ else
     variable cvxEllMat(minEllDim, minEllDim) symmetric
     variable cvxEllCenterVec(minEllDim)
     variable cvxDirVec(nEllipsoids)
-
-    maximize( det_rootn( cvxEllMat ) )
+    %
+    maximize( det_rootn( cvxEllMat ) ) %#ok<NODEF>
     subject to
-    -cvxDirVec <= 0;
-    for iEllipsoid = 1:nEllipsoids
+    -cvxDirVec <= 0; %#ok<VUNUS>
+    for iEllipsoid = 1:nElls
         [inpEllcenrVec, inpEllShMat] = double(inpEllVec(iEllipsoid));
         if rank(inpEllShMat) < minEllDim
             inpEllShMat = ...
@@ -133,44 +123,42 @@ else
         constraint     = inpEllcenrVec' * invShMat * inpEllcenrVec - 1;
         [ (-cvxDirVec(iEllipsoid)-constraint+bVec'*inpEllShMat*bVec), ...
             zeros(minEllDim,1)', (cvxEllCenterVec + inpEllShMat*bVec)' ;
-
             zeros(minEllDim,1), ...
             cvxDirVec(iEllipsoid)*eye(minEllDim), cvxEllMat;
             (cvxEllCenterVec + inpEllShMat*bVec), ...
-            cvxEllMat, inpEllShMat] >= 0;
+            cvxEllMat, inpEllShMat] >= 0; %#ok<VUNUS>
     end
-
     cvx_end
-
+    %
     if strcmp(cvx_status,'Infeasible') || ...
             strcmp(cvx_status,'Inaccurate/Infeasible') || ...
             strcmp(cvx_status,'Failed')
         throwerror('cvxError','Cvx cannot solve the system');
-    end;
-
+    end
+    %
     if rank(cvxEllMat) < minEllDim
         cvxEllMat = ...
             ellipsoid.regularize(cvxEllMat,absTol);
     end
-
+    %
     ellMat = cvxEllMat * cvxEllMat';
     ellMat = 0.5*(ellMat + ellMat');
-
+    %
     outEll = ellipsoid(cvxEllCenterVec, ellMat);
 end
 end
-
-function is2eq = is2EllEqCentre(inpEllVec)
-    is2eq = false;
-    
+%
+function isEq = is2EllEqCentre(inpEllVec)
+    isEq = false;
+    %
     if numel(inpEllVec) == 2
         firstEll = inpEllVec(1);
         secEll = inpEllVec(2);
         firstCenterVec = firstEll.getCenterVec();
         secCenterVec = secEll.getCenterVec();
-        
+        %
         if firstEll.isMatEqualInternal(firstCenterVec, secCenterVec)
-            is2eq = true;
+            isEq = true;
         end
     end
 end

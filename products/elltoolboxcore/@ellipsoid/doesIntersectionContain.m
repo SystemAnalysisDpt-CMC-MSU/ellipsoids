@@ -1,6 +1,5 @@
 function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
     varargin)
-%
 % DOESINTERSECTIONCONTAIN - checks if the intersection of ellipsoids
 %                           contains the union or intersection of given
 %                           ellipsoids or Polyhedrons.
@@ -107,17 +106,15 @@ import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
-
 persistent logger;
-
+%
 checkDoesContainArgs(fstEllArr,secObjArr);
-
-
+%
 if ~isa(secObjArr,'Polyhedron')
     nElem = numel(secObjArr);
     secObjVec  = reshape(secObjArr, 1, nElem);
 end
-
+%
 [~,modeNameAndVal] = modgen.common.parseparams(varargin,'mode');
 if isempty(modeNameAndVal) || ~(ischar(modeNameAndVal{2})) ||...
         ~(strcmp(modeNameAndVal{2},'u') || strcmp(modeNameAndVal{2},'i'))
@@ -125,7 +122,7 @@ if isempty(modeNameAndVal) || ~(ischar(modeNameAndVal{2})) ||...
 else
     mode = modeNameAndVal{2};
 end
-
+%
 if isa(secObjArr,'Polyhedron')
     isAnyEllDeg = any(isdegenerate(fstEllArr(:)));
     if mode == 'i'
@@ -159,56 +156,44 @@ if isa(secObjArr,'Polyhedron')
         end
         res = all(isInsideVec);
     end
-    
+    %
     if nargout < 2
         clear status;
     end
-    return;
-end
-
-
-if mode == 'u'
-    res = 1;
-    isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
-    if ~all( isContain(:) )
-        res=0;
-        return;
-    end
-elseif isscalar(secObjVec)
-    res = 1;
-    isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
-    if ~all( isContain(:) )
-        res = 0;
-    end
 else
-    if Properties.getIsVerbose()
-        if isempty(logger)
-            logger=Log4jConfigurator.getLogger();
+    if mode == 'u'
+        res = 1;
+        isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
+        if ~all( isContain(:) )
+            res=0;
         end
-        logger.info('Invoking CVX...');
-    end
-    res = 1;
-    resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
-    if any(resMat(:)<1)
-        res = 0;
-        if any(resMat(:)==-1)
-            res = -1;
-            status = 0;
+    elseif isscalar(secObjVec)
+        res = 1;
+        isContain = arrayfun(@(x) all(all(doesContain(x, secObjVec))), fstEllArr);
+        if ~all( isContain(:) )
+            res = 0;
         end
-        return;
+    else
+        if Properties.getIsVerbose()
+            if isempty(logger)
+                logger=Log4jConfigurator.getLogger();
+            end
+            logger.info('Invoking CVX...');
+        end
+        res = 1;
+        resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
+        if any(resMat(:)<1)
+            res = 0;
+            if any(resMat(:)==-1)
+                res = -1;
+                status = 0;
+            end
+        end
     end
 end
-
 end
-
-
-
-
-
-%%%%%%%%
-
-function [res, status] = qcqp(fstEllArr, secObj)
 %
+function [res, status] = qcqp(secEllArr, fstEll)
 % QCQP - formulate quadratically constrained quadratic programming
 %        problem and invoke external solver.
 %
@@ -225,15 +210,15 @@ function [res, status] = qcqp(fstEllArr, secObj)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
-
+%
 import modgen.common.throwerror;
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
-
+%
 persistent logger;
-[~, absTolScal] = getAbsTol(secObj);
-[qVec, paramMat] = parameters(secObj);
-if size(paramMat, 2) > rank(paramMat)
+[~, absTolScal] = getAbsTol(fstEll);
+[qVec, qMat] = parameters(fstEll);
+if size(qMat, 2) > rank(qMat)
     if Properties.getIsVerbose()
         if isempty(logger)
             logger=Log4jConfigurator.getLogger();
@@ -241,33 +226,32 @@ if size(paramMat, 2) > rank(paramMat)
         logger.info('QCQP: Warning! Degenerate ellipsoid.');
         logger.info('      Regularizing...');
     end
-    paramMat = ellipsoid.regularize(paramMat,absTolScal);
+    qMat = ellipsoid.regularize(qMat,absTolScal);
 end
-invQMat = ell_inv(paramMat);
+invQMat = ell_inv(qMat);
 invQMat = 0.5*(invQMat + invQMat');
-
-nNumel = numel(fstEllArr);
-
+%
+nNumel = numel(secEllArr);
+%
 cvx_begin sdp
 variable xVec(length(invQMat), 1)
-
+%
 minimize(xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
     (qVec'*invQMat*qVec - 1))
 subject to
 for iCount = 1:nNumel
-    [qiVec, invQiMat] = parameters(fstEllArr(iCount));
-    if isdegenerate(fstEllArr(iCount))
+    [qiVec, invQiMat] = parameters(secEllArr(iCount));
+    if isdegenerate(secEllArr(iCount))
         invQiMat = ...
-            ellipsoid.regularize(invQiMat,getAbsTol(fstEllArr(iCount)));
+            ellipsoid.regularize(invQiMat,getAbsTol(secEllArr(iCount)));
     end
     invQiMat = ell_inv(invQiMat);
     invQiMat = 0.5*(invQiMat + invQiMat');
     xVec'*invQiMat*xVec + 2*(-invQiMat*qiVec)'*xVec + ...
-        (qiVec'*invQiMat*qiVec - 1) <= 0;
+        (qiVec'*invQiMat*qiVec - 1) <= 0; %#ok<VUNUS>
 end
 cvx_end
-
-
+%
 status = 1;
 if strcmp(cvx_status,'Failed')
     throwerror('cvxError','Cvx failed');
@@ -277,14 +261,13 @@ if strcmp(cvx_status,'Infeasible') ...
     % problem is infeasible, or global minimum cannot be found
     res = -1;
     status = 0;
-    return;
-end
-
-[~, fstAbsTol] = fstEllArr.getAbsTol();
-if (xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
-        (qVec'*invQMat*qVec - 1)) < fstAbsTol
-    res = 1;
 else
-    res = 0;
+    [~, fstAbsTol] = secEllArr.getAbsTol();
+    if (xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
+            (qVec'*invQMat*qVec - 1)) < fstAbsTol
+        res = 1;
+    else
+        res = 0;
+    end
 end
 end

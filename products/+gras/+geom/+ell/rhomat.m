@@ -1,8 +1,6 @@
 function [supArr, bpMat] = rhomat(ellShapeMat, dirsMat,absTol,ellCenterVec)
-%
 % RHOMAT - computes the values of the support function for given
 % ellipsoid's shape matrix and center vector and given direction.
-%
 %
 %	[supArr, bpMat] = RHOMAT(ellShapeMat,  dirstMat,absTol,ellCenterVec)
 %       Computes the support function
@@ -40,8 +38,6 @@ function [supArr, bpMat] = rhomat(ellShapeMat, dirsMat,absTol,ellCenterVec)
 %             Faculty of Computational Mathematics and Cybernetics,
 %             Science, System Analysis Department 2013 $
 %
-
-
 if nargin < 4
     ellCenterVec = zeros(size(ellShapeMat,1),1);
     if nargin < 3
