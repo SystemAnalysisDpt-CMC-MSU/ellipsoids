@@ -1,5 +1,4 @@
 function plObj = plot(varargin)
-%
 % PLOT - plots ellipsoids in 2D or 3D.
 %
 %
@@ -12,12 +11,12 @@ function plObj = plot(varargin)
 % Input:
 %   regular:
 %       ellArr:  elltool.core.GenEllipsoid: [dim11Size,dim12Size,...,
-%                dim1kSize] - array of 2D or 3D GenEllipsoids objects. 
+%                dim1kSize] - array of 2D or 3D GenEllipsoids objects.
 %                All ellipsoids in ellArr  must be either 2D or 3D
 %                simutaneously.
 %   optional:
 %       color1Spec: char[1,1] - color specification code, can be 'r','g',
-%                               etc (any code supported by built-in Matlab 
+%                               etc (any code supported by built-in Matlab
 %                               function).
 %       ell2Arr: elltool.core.GenEllipsoid: [dim21Size,dim22Size,...,
 %                               dim2kSize] - second ellipsoid array...
@@ -30,16 +29,16 @@ function plObj = plot(varargin)
 %       'newFigure': logical[1,1] - if 1, each plot command will open a new .
 %                    figure window Default value is 0.
 %       'fill': logical[1,1]/logical[dim11Size,dim12Size,...,dim1kSize]  -
-%               if 1, ellipsoids in 2D will be filled with color. 
+%               if 1, ellipsoids in 2D will be filled with color.
 %               Default value is 0.
 %       'lineWidth': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
-%                line width for 1D and 2D plots. 
+%                line width for 1D and 2D plots.
 %                Default value is 1.
 %       'color': double[1,3]/double[dim11Size,dim12Size,...,dim1kSize,3] -
-%                sets default colors in the form [x y z]. 
+%                sets default colors in the form [x y z].
 %                Default value is [1 0 0].
 %       'shade': double[1,1]/double[dim11Size,dim12Size,...,dim1kSize]  -
-%                level of transparency between 0 and 1 (0 - transparent, 
+%                level of transparency between 0 and 1 (0 - transparent,
 %                1 - opaque).
 %                Default value is 0.4.
 %       'relDataPlotter' - relation data plotter object.
@@ -60,7 +59,7 @@ function plObj = plot(varargin)
 %   plot([ell1, ell2, ell3], 'shade', 0.5);
 %   plot([ell1, ell2, ell3], 'lineWidth', 1.5);
 %   plot([ell1, ell2, ell3], 'lineWidth', [1.5, 0.5, 3]);
-% 
+%
 %$Author: <Vadim Kaushanskiy>  <vkaushanskiy@gmail.com> $
 %$Date: 2012-12-21 $
 %$Copyright: Moscow State University,
@@ -70,18 +69,19 @@ function plObj = plot(varargin)
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Cybernetics,
 %            System Analysis Department 2013 $
+%
 import elltool.conf.Properties;
 import modgen.common.throwerror;
 import elltool.core.GenEllipsoid;
 import elltool.plot.plotgeombodyarr;
 import elltool.logging.Log4jConfigurator;
-
+%
 logger=Log4jConfigurator.getLogger();
 N_PLOT_POINTS = 80;
 SPHERE_TRIANG_CONST = 3;
 [plObj,nDim,isHold]= ...
     plotgeombodyarr(@(x)isa(x,'elltool.core.GenEllipsoid'),...
-        @(x)dimension(x),@fCalcBodyTriArr,@patch,varargin{:});
+    @(x)dimension(x),@fCalcBodyTriArr,@patch,varargin{:});
 if (nDim < 3)
     [reg]=...
         modgen.common.parseparext(varargin,...
@@ -93,10 +93,6 @@ if (nDim < 3)
         @(varargin)patch(varargin{:},'marker','*'),reg{:},...
         'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
 end
-
-
-
-
     function [xMat,fMat] = fCalcCenterTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
@@ -110,7 +106,7 @@ end
             fMat = [1 1];
         end
     end
-
+    %
     function [lGetGrid, fGetGrid] = calcGrid(nDim)
         if nDim == 2
             lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
@@ -121,6 +117,7 @@ end
         end
         lGetGrid(lGetGrid == 0) = eps;
     end
+    %
     function [xMat,fMat] = fCalcBodyTriArr(ellsArr)
         import elltool.core.GenEllipsoid;
         [minValVec, maxValVec] = findMinAndMaxInEachDim(ellsArr);
@@ -133,9 +130,7 @@ end
         [lGetGridMat, fGetGridMat] = calcGrid(nDim);
         [xMat, fMat] = arrayfun(@(x) fCalcBodyTri(x), ellsArr, ...
             'UniformOutput', false);
-        
-        
-        
+        %
         function [xMat, fMat] = fCalcBodyTri(plotEll)
             import elltool.core.GenEllipsoid;
             qVec = plotEll.getCenter();
@@ -148,7 +143,7 @@ end
             xMat = getRidOfInfVal(xMat, qVec);
             xMat = eigvMat.'*xMat + repmat(qVec, 1, nPoints);
         end
-        
+        %
         function xMat = getRidOfInfVal(xMat, qVec)
             maxVec = maxValVec - qVec;
             minVec=minValVec-qVec;
@@ -180,19 +175,8 @@ end
             end
         end
     end
-
-
-
-
-
-
-
-
-
-
 end
-
-
+%
 function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
 ellsCMat = arrayfun(@(x) oneDim2TwoDim(x), ellsArr, ...
     'UniformOutput', false);
@@ -207,17 +191,15 @@ nDim = 2;
             diag([ellDiagMat, 0]), diag([ellEigMat, 0]));
     end
 end
-
+%
 function [minValVec, maxValVec] = findMinAndMaxInEachDim(ellsArr)
-
 nDim = max(dimension(ellsArr));
 if nDim == 1
     [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
 end
 [minValVec, maxValVec] = arrayfun(@(x) findMinAndMaxDim(ellsArr, x, nDim),...
     1:nDim);
-
-
+%
     function [minValVec, maxValVec] = findMinAndMaxDim(ellVec, ...
             dirDim, nDims)
         import elltool.core.GenEllipsoid;
@@ -230,7 +212,7 @@ end
             ellVec);
         minValVec = min(minValVec);
         maxValVec = max(maxValVec);
-        
+        %
         function [minVal, maxVal] = findMinAndMaxDimEll(ell)
             import elltool.core.GenEllipsoid;
             qCenVec = ell.getCenter();
