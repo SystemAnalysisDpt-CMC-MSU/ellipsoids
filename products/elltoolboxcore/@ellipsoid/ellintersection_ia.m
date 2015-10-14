@@ -107,7 +107,7 @@ else
     cvx_begin sdp
     variable cvxEllMat(minEllDim, minEllDim) symmetric
     variable cvxEllCenterVec(minEllDim)
-    variable cvxDirVec(nEllipsoids)
+    variable cvxDirVec(nElls)
     %
     maximize( det_rootn( cvxEllMat ) ) %#ok<NODEF>
     subject to

@@ -69,7 +69,7 @@ absTolVec = getAbsTol(inpEllVec);
 cvx_begin sdp
 variable cvxEllMat(minEllDim, minEllDim) symmetric
 variable cvxEllCenterVec(minEllDim)
-variable cvxDirVec(nEllipsoids)
+variable cvxDirVec(nElls)
 maximize( det_rootn( cvxEllMat ) )
 subject to
 -cvxDirVec <= 0 %#ok<NOPRT>
