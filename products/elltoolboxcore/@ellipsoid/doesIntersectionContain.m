@@ -181,7 +181,7 @@ else
             logger.info('Invoking CVX...');
         end
         res = 1;
-        resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
+        resMat = cell2mat(arrayfun(@(x) arrayfun(@(y) x.doesContain(y), secObjVec) , fstEllArr, 'UniformOutput', false));
         if any(resMat(:)<1)
             res = 0;
             if any(resMat(:)==-1)
