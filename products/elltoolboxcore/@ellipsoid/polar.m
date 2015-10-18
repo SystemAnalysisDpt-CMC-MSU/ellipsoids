@@ -46,7 +46,7 @@ modgen.common.checkvar(ellArr,'~any(isdegenerate(x))',...
     'errorMessage','The resulting ellipsoid is not bounded');
 sizeCVec = num2cell(size(ellArr));
 polEllArr(sizeCVec{:}) = ellipsoid;
-arrayfun(@(x) fSinglePolar(x), 1:numel(ellArr));
+arrayfun(@(x) getScalarPolar(polEllArr(x), true), 1:numel(ellArr));
 %
     function fSinglePolar(index)
         import gras.geom.ell.quadmat;

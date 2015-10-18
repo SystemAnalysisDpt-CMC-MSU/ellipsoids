@@ -155,10 +155,11 @@ end
 end
 %
 function res = isEllPolInPolyPol(ell,normalsMat, constVec,internalPoint,absTol)
-polarEll = getPolar(ell-internalPoint);
-suppFuncVec = rho(polarEll,normalsMat');
-res = all(suppFuncVec' <= constVec+absTol);
+    polarEll = getScalarPolar(ell-internalPoint, false);
+    suppFuncVec = rho(polarEll,normalsMat');
+    res = all(suppFuncVec' <= constVec+absTol);
 end
+
 function polar = getPolar(ell)
 import gras.geom.ell.quadmat;
 [cVec, shMat] = double(ell);
