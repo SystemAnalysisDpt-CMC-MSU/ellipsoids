@@ -71,6 +71,13 @@ classdef EllSecTCMultiDim < mlunitext.test_case
             testCorrect(1, 'i', -1);
             testCorrect(3, [], 0);
             testCorrect(3, 'u', 0);
+            test1EllArray = createObjectArray(array1Size, @ellipsoid, ...
+                [0; 0], diag([5 2]), 2);
+            test1EllArray(1, 2, 1, 1, 2, 1) = ellipsoid([0; 0], diag([1.5 1.5]));
+            test2EllArray = createObjectArray(array2Size, @ellipsoid, ...
+                [-1; -1], diag([5 4]), 2);
+            test2EllArray(1, 2, 1, 1, 1, 2, 1) = ellipsoid([1; -1], diag([2 2]));
+            testCorrect(1, 'i', 0);
             testError(10);
             testError(11);
             testError(12);
