@@ -62,7 +62,36 @@ classdef AGenEllipsoid < handle
                     SEll2Array, tolerance);
             end
         end
-        
-        polar = getScalarPolar(self, isRobustMethod)
+
+        function polar = getScalarPolar(self, isRobustMethod)
+            import modgen.common.throwerror
+            modgen.common.checkvar(self, 'isscalar(self)', 'myVar',...
+               'errorTag','wrongInput:badType','errorMessage','Type is wrong')
+            if (isRobustMethod)
+                ingEll = self;
+                qVec = singEll.centerVec;
+                shMat = singEll.shapeMat;
+                isZeroInEll = qVec' * ell_inv(shMat) * qVec;
+
+                if isZeroInEll < 1
+                    auxMat  = ell_inv(shMat - qVec*qVec');
+                    auxMat  = 0.5*(auxMat + auxMat');
+                    polCVec  = -auxMat * qVec;
+                    polShMat  = (1 + qVec'*auxMat*qVec)*auxMat;
+                    polar = ellipsoid(polarCVec,polarShMat);
+                else
+                    throwerror('degenerateEllipsoid',...
+                        'The resulting ellipsoid is not bounded');
+                end
+            else
+                [cVec, shMat] = double(self);
+                invShMat = inv(shMat);
+                normConst = cVec'*(shMat\cVec);
+                polarCVec = -(shMat\cVec)/(1-normConst);
+                polarShMat = invShMat/(1-normConst) + polarCVec*polarCVec';
+                polar = ellipsoid(polarCVec,polarShMat);
+            end
+
+        end
     end
 end
