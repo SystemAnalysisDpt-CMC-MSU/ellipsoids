@@ -68,7 +68,7 @@ classdef AGenEllipsoid < handle
             modgen.common.checkvar(self, 'isscalar(self)', 'myVar',...
                'errorTag','wrongInput:badType','errorMessage','Type is wrong')
             if (isRobustMethod)
-                ingEll = self;
+                singEll = self;
                 qVec = singEll.centerVec;
                 shMat = singEll.shapeMat;
                 isZeroInEll = qVec' * ell_inv(shMat) * qVec;
@@ -76,8 +76,10 @@ classdef AGenEllipsoid < handle
                 if isZeroInEll < 1
                     auxMat  = ell_inv(shMat - qVec*qVec');
                     auxMat  = 0.5*(auxMat + auxMat');
-                    polCVec  = -auxMat * qVec;
-                    polShMat  = (1 + qVec'*auxMat*qVec)*auxMat;
+                    polarCVec  = -auxMat * qVec;
+                    polarShMat  = (1 + qVec'*auxMat*qVec)*auxMat;
+                    self.centerVec = polCenVec;
+                    self.shapeMat = polShapeMat;
                     polar = ellipsoid(polarCVec,polarShMat);
                 else
                     throwerror('degenerateEllipsoid',...
