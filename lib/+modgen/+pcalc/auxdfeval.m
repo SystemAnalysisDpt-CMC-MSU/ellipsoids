@@ -115,7 +115,7 @@ if isPCalcAltUsed
         [varargout{:}]=modgen.pcalcalt.auxdfeval(processorFunc,reg{:},...
             prop{:});
     end
-elseif isPCalcInstalled
+else
     %
     if nargout==0
         modgen.pcalc.auxdfevalpcomp(processorFunc,restArgList{:});
@@ -124,5 +124,4 @@ elseif isPCalcInstalled
         [varargout{:}]=modgen.pcalc.auxdfevalpcomp(processorFunc,...
             restArgList{:});
     end
-end
 end
