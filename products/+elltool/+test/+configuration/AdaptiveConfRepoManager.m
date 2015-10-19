@@ -15,12 +15,12 @@ classdef AdaptiveConfRepoManager<...
 %             and Computer Science,
 %             System Analysis Department 2011 $
 %
-
     methods
         function self=AdaptiveConfRepoManager(varargin)
             self=self@modgen.configuration.AdaptiveConfRepoManagerUpd(...
                 varargin{:});
             confPatchRepo=elltool.test.configuration.ConfPatchRepo();
+            self.deployConfTemplate('*','forceUpdate',true);            
             self.setConfPatchRepo(confPatchRepo);
         end
     end
