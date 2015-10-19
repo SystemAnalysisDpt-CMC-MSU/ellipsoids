@@ -29,7 +29,8 @@ elseif isParTbxInstalled
     %
     [taskName,SProp]=modgen.pcalc.gettasknamepcomp();
 else
+    taskName='master';
     SProp.isMain=true;
     SProp.taskId='';
-    SProp.taskName='master';
+    SProp.taskName=taskName;
 end
