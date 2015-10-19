@@ -2,8 +2,7 @@ function [userName,hostName]=getuserhost()
 persistent hostNameCached userNameCached
 if nargout>1
     if isempty(hostNameCached)
-        hostObj=java.net.InetAddress.getLocalHost();
-        hostNameCached=char(hostObj.getCanonicalHostName());
+        [~,~,hostNameCached]=modgen.system.getpidhost();
     end
     hostName=hostNameCached;
 end

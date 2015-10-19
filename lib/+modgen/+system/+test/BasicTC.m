@@ -22,6 +22,11 @@ classdef BasicTC < mlunitext.test_case
                 lastWarn=lastwarn();
                 mlunitext.assert(isempty(lastWarn),lastWarn);
             end
-        end        
+        end
+        function testCompareHostName(~)
+            [~,hostNameExp]=modgen.system.getuserhost();
+            [~,~,hostName]=modgen.system.getpidhost();
+            mlunitext.assert_equals(hostNameExp,hostName);
+        end
     end
 end

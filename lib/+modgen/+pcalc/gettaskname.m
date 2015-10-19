@@ -19,32 +19,14 @@ function [taskName,SProp]=gettaskname()
 %            System Analysis Department 2011 $
 %
 %
-
-if ~isempty(which('modgen.pcalcalt.gettaskname'))
+[isParTbxInstalled,isAltPartTbxInstalled]=...
+    modgen.pcalc.isparttbxinst();
+%
+if isAltPartTbxInstalled
     [taskName,SProp]=modgen.pcalcalt.gettaskname();
+elseif isParTbxInstalled
+    %
+    [taskName,SProp]=modgen.pcalc.gettasknamepcomp();
 else
-    isParToolboxInstalled=~isempty(which('getCurrentTask'));
-    %
-    if isParToolboxInstalled
-        curTaskObj=getCurrentTask();
-        isMain=isempty(curTaskObj);
-        taskId=get(curTaskObj,'ID');
-    else
-        isMain=true;
-        taskId='';
-    end
-    if isMain
-        taskName='master';
-    else
-        %on windows the task name has a form Job#/Task#, while on
-        %Linux - Task#. We need a unification so we remove the Job#
-        %part
-        curTaskName=['task',num2str(taskId)];
-        %
-        taskName=['child','.',curTaskName];
-    end
-    %
-    SProp.isMain=isMain;
-    SProp.taskId=taskId;
-    SProp.taskName=taskName;
+    throwerror('wrongInput','none of parallel toolboxes is installed');
 end

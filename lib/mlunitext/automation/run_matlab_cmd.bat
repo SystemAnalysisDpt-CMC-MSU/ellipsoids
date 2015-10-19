@@ -12,5 +12,5 @@ set matlabCmd=%~3
 
 echo %0: Launching Matlab from %matlabBin%
 cd %deploymentDir%
-%matlabBin% -nodesktop -nosplash -singleCompThread -r "try, s_install, cd .., %matlabCmd%, exit(0), catch meObj, disp(meObj.getReport()), exit(1), end"
+%matlabBin% -logfile matlab_cmwin_output.log -nodesktop -nosplash -singleCompThread -r "try, s_install, cd .., %matlabCmd%, exit(0), catch meObj, disp(meObj.getReport()), exit(1), end"
 echo ==== %0: %date% %time% Done! =====

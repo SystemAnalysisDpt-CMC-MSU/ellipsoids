@@ -116,6 +116,9 @@ classdef AdaptiveConfRepoManager<modgen.configuration.ConfRepoManager
             %
             if nargin<2
                 areAllBranchesUpdated=false;
+            else
+                modgen.common.checkvar(areAllBranchesUpdated,...
+                    'islogical(x)&&isscalar(x)');
             end
             %
             confNameList=self.templateRepoMgr.getConfNameList;
