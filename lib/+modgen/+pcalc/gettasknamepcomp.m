@@ -19,17 +19,10 @@ function [taskName,SProp]=gettasknamepcomp()
 %            System Analysis Department 2011 $
 %
 %
-isParTbxInstalled=...
-    modgen.pcalc.isparttbxinst();
+curTaskObj=getCurrentTask();
+isMain=isempty(curTaskObj);
+taskId=get(curTaskObj,'ID');
 %
-if isParTbxInstalled
-    curTaskObj=getCurrentTask();
-    isMain=isempty(curTaskObj);
-    taskId=get(curTaskObj,'ID');
-else
-    isMain=true;
-    taskId='';
-end
 if isMain
     taskName='master';
 else

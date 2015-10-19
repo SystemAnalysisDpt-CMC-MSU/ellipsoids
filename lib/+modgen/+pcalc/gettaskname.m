@@ -23,10 +23,13 @@ function [taskName,SProp]=gettaskname()
     modgen.pcalc.isparttbxinst();
 %
 if isAltPartTbxInstalled
+    %
     [taskName,SProp]=modgen.pcalcalt.gettaskname();
 elseif isParTbxInstalled
     %
     [taskName,SProp]=modgen.pcalc.gettasknamepcomp();
 else
-    throwerror('wrongInput','none of parallel toolboxes is installed');
+    SProp.isMain=true;
+    SProp.taskId='';
+    SProp.taskName='master';
 end
