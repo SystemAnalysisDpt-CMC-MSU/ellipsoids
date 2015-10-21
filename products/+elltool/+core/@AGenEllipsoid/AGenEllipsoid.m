@@ -62,11 +62,12 @@ classdef AGenEllipsoid < handle
                     SEll2Array, tolerance);
             end
         end
-
+        
         function polar = getScalarPolar(self, isRobustMethod)
-            import modgen.common.throwerror
-            modgen.common.checkvar(self, 'isscalar(self)', 'myVar',...
-               'errorTag','wrongInput:badType','errorMessage','Type is wrong')
+            modgen.common.checkvar(self, 'isscalar(x)', 'myVar',...
+               'errorTag','wrongInput:badType','errorMessage','Type is wrong');
+            disp('getScalarPolar is working');
+            dbstack
             if (isRobustMethod)
                 singEll = self;
                 qVec = singEll.centerVec;
@@ -78,8 +79,6 @@ classdef AGenEllipsoid < handle
                     auxMat  = 0.5*(auxMat + auxMat');
                     polarCVec  = -auxMat * qVec;
                     polarShMat  = (1 + qVec'*auxMat*qVec)*auxMat;
-                    self.centerVec = polCenVec;
-                    self.shapeMat = polShapeMat;
                     polar = ellipsoid(polarCVec,polarShMat);
                 else
                     throwerror('degenerateEllipsoid',...
