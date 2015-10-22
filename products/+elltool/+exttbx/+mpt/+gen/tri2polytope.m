@@ -42,16 +42,23 @@ constVec = zeros(1,nFaces);
 nVertices = size(vMat,1);
 for iFaces = 1:nFaces
     if nDims == 3
-        normalVec = (cross(vMat(fMat(iFaces,3),:) - ...
-            vMat(fMat(iFaces,2),:),vMat(fMat(iFaces,3),:) -...
-            vMat(fMat(iFaces,1),:)))';
+        firstVec = vMat(fMat(iFaces,3),:) - vMat(fMat(iFaces,2),:);
+        secondVec = vMat(fMat(iFaces,3),:) - vMat(fMat(iFaces,1),:);
+        normalVec = [firstVec(2) * secondVec(3) - firstVec(3) * secondVec(2) ...
+            firstVec(3) * secondVec(1) - firstVec(1) * secondVec(3) ...
+            firstVec(1) * secondVec(2) - firstVec(2) * secondVec(1)]';
         notInFacetNum = getNumNotIn(fMat(iFaces,:));
         
     else
         if (fMat(iFaces,2) > nVertices) || (fMat(iFaces,1) > nVertices)
             throwerror('wrongIndex','attemp to access nonexistent element');
         end
-        normalVec = null(vMat(fMat(iFaces,2),:)-vMat(fMat(iFaces,1),:));
+         firstVec  = vMat(fMat(iFaces,2),:)-vMat(fMat(iFaces,1),:);
+        if (firstVec(1) == 0)
+            normalVec = [-1 0]';
+        else
+            normalVec = ([-firstVec(2)/firstVec(1) 1] ./ sqrt((firstVec(2)/firstVec(1)).^2 + 1))';
+        end
         notInFacetNum = getNumNotIn(fMat(iFaces,:));
     end
     const = vMat(fMat(iFaces,1),:)*normalVec;
