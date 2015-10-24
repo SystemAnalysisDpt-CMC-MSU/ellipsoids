@@ -750,6 +750,33 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             isBound = self.isBoundary(ell3ShiftVec, ell3ConstrMat, poly3);
             mlunitext.assert(isBound);
         end
+        %
+        function self = testRuntimeGetBoundary(self)
+            ellConstrMat = eye(2);
+            ellShift1 = [0.05; 0];
+            ell3ConstrMat = eye(3);
+            ell3ShiftVec = [0.05; -0.1; 0];
+
+            ell1 = ellipsoid(ellConstrMat);
+            ell2 = ellipsoid(ellShift1,ellConstrMat);
+            ell3 = ellipsoid(ell3ShiftVec,ell3ConstrMat);
+            tic
+            for i = 1:100
+                poly1 = toPolytope(ell1);
+                poly2 = toPolytope(ell2);
+                poly3 = toPolytope(ell3);
+            end;
+            STimePol = toc;
+            tic
+            for i = 1:100
+                [vMat,fMat] = getBoundary(ell1);
+                [vMat,fMat] = getBoundary(ell2);
+                [vMat,fMat] = getBoundary(ell3);
+            end;
+            STimeBound = toc;
+            mlunitext.assert(STimeBound / STimePol < 0.28, 'Runtime of getBoundary function has gone beyond the possible.');
+        end
+        %
     end
     %
     methods(Static)
