@@ -523,8 +523,8 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %one more example for nDims
             nDims = 3;
             my4Mat = [1 3 1;...
-                7 5 7;...
-                1 3 0];
+                      7 5 7;...
+                      1 3 0];
             my4ShMat = my4Mat'*my4Mat;
             my41Ell = ellipsoid(my4ShMat);
             my42Ell = ellipsoid(0.5*eye(nDims));
@@ -764,16 +764,16 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ell3 = ellipsoid(ell3ShiftVec, ell3ConstrMat);
             tic
             for iElem = 1 : NUMBER_STEPS
-                [~] = toPolytope(ell1);
-                [~] = toPolytope(ell2);
-                [~] = toPolytope(ell3);
+                [~] = ell1.toPolytope();
+                [~] = ell2.toPolytope();
+                [~] = ell3.toPolytope();
             end;
             polTime = toc;
             tic
             for iElem = 1 : NUMBER_STEPS
-                [~, ~] = getBoundary(ell1);
-                [~, ~] = getBoundary(ell2);
-                [~, ~] = getBoundary(ell3);
+                [~, ~] = ell1.getBoundary();
+                [~, ~] = ell2.getBoundary();
+                [~, ~] = ell3.getBoundary();
             end;
             boundTime = toc;
             mlunitext.assert(boundTime / polTime < MAX_PORTION, ...
