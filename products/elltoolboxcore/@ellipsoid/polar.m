@@ -45,31 +45,8 @@ modgen.common.checkvar(ellArr,'~any(isdegenerate(x))',...
     'errorTag','degenerateEllipsoid',...
     'errorMessage','The resulting ellipsoid is not bounded');
 sizeCVec = num2cell(size(ellArr));
-%polEllArr(sizeCVec{:}) = ellipsoid;
-%arrayfun(@(x) fSinglePolar(x), 1:numel(ellArr));
+polEllArr(sizeCVec{:}) = ellipsoid;
 
-polEllArr = arrayfun(@(x) getScalarPolar(ellipsoid, true), 1:sizeCVec);
-
-%
-    function fSinglePolar(index)
-        disp('fSinglePolar is working');
-        dbstack
-        
-        singEll = ellArr(index);
-        qVec = singEll.centerVec;
-        shMat = singEll.shapeMat;
-        chk    = qVec' * ell_inv(shMat) * qVec;
-        %chk checks if zero belongs to singEll ellipsoid
-        if chk < 1
-            auxMat  = ell_inv(shMat - qVec*qVec');
-            auxMat  = 0.5*(auxMat + auxMat');
-            polCenVec  = -auxMat * qVec;
-            polShapeMat  = (1 + qVec'*auxMat*qVec)*auxMat;
-            polEllArr(index).centerVec = polCenVec;
-            polEllArr(index).shapeMat = polShapeMat;
-        else
-            throwerror('degenerateEllipsoid',...
-                'The resulting ellipsoid is not bounded');
-        end
-    end
+for index = 1:numel(ellArr)
+    polEllArr(index) = getScalarPolar(ellArr(index), true);
 end

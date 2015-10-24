@@ -63,36 +63,6 @@ classdef AGenEllipsoid < handle
             end
         end
         
-        function polar = getScalarPolar(self, isRobustMethod)
-            modgen.common.checkvar(self, 'isscalar(x)', 'myVar',...
-               'errorTag','wrongInput:badType','errorMessage','Type is wrong');
-            disp('getScalarPolar is working');
-            dbstack
-            if (isRobustMethod)
-                singEll = self;
-                qVec = singEll.centerVec;
-                shMat = singEll.shapeMat;
-                isZeroInEll = qVec' * ell_inv(shMat) * qVec;
-
-                if isZeroInEll < 1
-                    auxMat  = ell_inv(shMat - qVec*qVec');
-                    auxMat  = 0.5*(auxMat + auxMat');
-                    polarCVec  = -auxMat * qVec;
-                    polarShMat  = (1 + qVec'*auxMat*qVec)*auxMat;
-                    polar = ellipsoid(polarCVec,polarShMat);
-                else
-                    throwerror('degenerateEllipsoid',...
-                        'The resulting ellipsoid is not bounded');
-                end
-            else
-                [cVec, shMat] = double(self);
-                invShMat = inv(shMat);
-                normConst = cVec'*(shMat\cVec);
-                polarCVec = -(shMat\cVec)/(1-normConst);
-                polarShMat = invShMat/(1-normConst) + polarCVec*polarCVec';
-                polar = ellipsoid(polarCVec,polarShMat);
-            end
-
-        end
+        polar = getScalarPolar(self, isRobustMethod)
     end
 end
