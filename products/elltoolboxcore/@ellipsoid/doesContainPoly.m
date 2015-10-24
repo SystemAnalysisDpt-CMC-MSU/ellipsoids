@@ -90,7 +90,6 @@ doesContain = all(isInsideArr(:));
 end
 %
 function [isFeasible,internalPoint] = findInternal(ellArr,poly)
-import gras.geom.ell.quadmat;
 constrMat=poly.H(:,1:end-1);
 constrConstVec=poly.H(:,end);
 %
@@ -158,15 +157,4 @@ function res = isEllPolInPolyPol(ell,normalsMat, constVec,internalPoint,absTol)
 polarEll = getScalarPolar(ell-internalPoint, false);
 suppFuncVec = rho(polarEll,normalsMat');
 res = all(suppFuncVec' <= constVec+absTol);
-end
-
-
-function polar = getPolar(ell)
-import gras.geom.ell.quadmat;
-[cVec, shMat] = double(ell);
-invShMat = inv(shMat);
-normConst = quadmat(shMat, cVec, 0, 'inv');
-polarCVec = -(shMat\cVec)/(1-normConst);
-polarShMat = invShMat/(1-normConst) + polarCVec*polarCVec';
-polar = ellipsoid(polarCVec,polarShMat);
 end
