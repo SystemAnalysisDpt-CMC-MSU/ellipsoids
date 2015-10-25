@@ -73,7 +73,7 @@ classdef SintTC < mlunitext.test_case
                         gras.ellapx.enums.EApproxType.Internal);
             
             nTuples = intEllTube.getNTuples();           
-            x0Mat=self.inPointList;
+            x0Mat = self.inPointList;
             for iXCount=1:size(x0Mat,1)
                 x0Vec=x0Mat(iXCount,:);
                 x0Vec=transpose(x0Vec);
@@ -91,6 +91,7 @@ classdef SintTC < mlunitext.test_case
                     qMat=intEllTube.QArray{iTube}(:,:,1); 
                     if (dot(x0Vec-qVec,qMat\(x0Vec-qVec))<=1+TOL)
                         isX0inSet=true;
+                        break;
                     end
                 end
                 isCurrentEqual=true;
@@ -99,9 +100,17 @@ classdef SintTC < mlunitext.test_case
                 [isMemberTube, properTubeInd] = properTube.isMemberTuples(ellTubeRel,'lsGoodDirVec');
                 
                 if (isMemberTube)
-                    trajectory = controlObj.getTrajectory(x0Vec,switchSysTimeVec,isX0inSet);
-                    Y=trajectory(end,:);
-
+                    traj_struct = controlObj.getTrajectory(x0Vec,switchSysTimeVec,isX0inSet);
+                    trajectory = traj_struct.trajectory;
+                    Y = trajectory(end,:);
+                    
+%                     %----------------
+%                     tmp_obj = self.reachObj;
+%                     tmp_obj.plotByIa;
+%                     hold on;
+%                     plot3(traj_struct.trajectory_time,traj_struct.trajectory(:,1),traj_struct.trajectory(:,2));               
+%                     %----------------
+                    
                     q1Vec=ellTubeRel.aMat{properTubeInd}(:,end);
                     q1Mat=ellTubeRel.QArray{properTubeInd}(:,:,end);
                     currentScalProd = dot(Y(end,:)'-q1Vec,q1Mat\(Y(end,:)'-q1Vec));
@@ -115,7 +124,9 @@ classdef SintTC < mlunitext.test_case
                 else
                     isOk = false;
                 end
-                
+%              x0Vec
+%              isOk
+            
             end
             mlunitext.assert_equals(true, isOk);
 

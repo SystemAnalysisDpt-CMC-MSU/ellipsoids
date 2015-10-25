@@ -34,13 +34,18 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
 
                 % getting probDynmicsObject corresponding to correct tube
                 %   and time period
-
-                for iSwitch = 1:length(self.probDynamicsList)
+                
+                tEnd = self.probDynamicsList{1}.getTimeVec();
+                tEnd = tEnd(end);
+                
+                for iSwitch = length(self.probDynamicsList):-1:1
                     probTimeVec = self.probDynamicsList{iSwitch}.getTimeVec();
-                    if ( ( curControlTime <= probTimeVec(end) ) && ...
-                            ( curControlTime >= probTimeVec(1) ) )
+                    if ( ( curControlTime < probTimeVec(end) ) && ...
+                            ( curControlTime >= probTimeVec(1) ) || ( curControlTime ==  tEnd) )
                         curProbDynObj = self.probDynamicsList{iSwitch};
                         curGoodDirSetObj = self.goodDirSetList{iSwitch};
+                        t1 = max(probTimeVec);
+                        t0 = min(probTimeVec);
                         break;
                     end
                 end
@@ -50,13 +55,21 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 
                 xstTransMat = curGoodDirSetObj.getXstTransDynamics();
                 % X(t,t_0) = ( xstTransMat.evaluate(t)\xstTransMat.evaluate(t_0) )'
-                
-                tFin = max(probTimeVec);  
-                
-                xt1tMat = transpose(xstTransMat.evaluate(tFin)\xstTransMat.evaluate(curControlTime));
 
-                bpVec = -curProbDynObj.getBptDynamics.evaluate(tFin-timeVec(iTime)); % ellipsoid center           
-                bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(tFin-timeVec(iTime));   % ellipsoid shape matrix
+                
+                xt1tMat = transpose(xstTransMat.evaluate(t1)\xstTransMat.evaluate(curControlTime));
+
+                bpVec = -curProbDynObj.getBptDynamics.evaluate(t1-curControlTime+t0); % ellipsoid center           
+                bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(t1-curControlTime+t0);   % ellipsoid shape matrix
+                
+                
+%                 Bt = eye(8);
+%                 P = diag([.6 .6 .6 .6 .3 .3 .3 .3]);
+%                 p = @(t) [2*sin(2*t); 0.2*cos(3*t); 0; 0; 2*cos(2*t); 0.2*sin(3*t); 0; 0];
+%                 bpCheck = Bt*p(curControlTime);
+%                 bpbCheck = Bt*P*Bt';
+                
+%                 ~(isequal(abs(bpVec - bpCheck) <= 1e-5, ones(8,1)) && isequal(abs(bpbMat - bpbCheck) <= 1e-5, ones(8)))
                 pVec = xt1tMat*bpVec;
                 pMat = xt1tMat*bpbMat*transpose(xt1tMat);
                     
@@ -80,13 +93,14 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                     qVec = interp1(ellTubeTimeVec',transpose(self.properEllTube.aMat{1}),curControlTime);
                     qVec = qVec';
                     
+                    
                     nDimRow=size(self.properEllTube.QArray{1},1);
                     nDimCol=size(self.properEllTube.QArray{1},2);
                     qMat=zeros(nDimRow,nDimCol);
                     
                     for iDim=1:nDimRow                       
                         for jDim=1:nDimCol
-                            QArrayTime(1,:)=self.properEllTube.QArray{:}(iDim,jDim,:);
+                            QArrayTime(1,:)=self.properEllTube.QArray{1}(iDim,jDim,:);
                             qMat(iDim,jDim)=interp1(ellTubeTimeVec,QArrayTime,curControlTime);
                         end
                     end;
