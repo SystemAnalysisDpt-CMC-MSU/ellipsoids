@@ -140,7 +140,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             self.myTestIsCII(ell1, [poly1, poly3].', 'u',isExpVec(2),true,...
                 'no')
-            %            
+            %
             self.myTestIsCII(ell1, [poly1, poly2].', 'u',isExpVec(1),true,...
                 'no')
             %
@@ -200,7 +200,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         %
         %
         function self = testIntersectionIA(self)
-           import elltool.exttbx.mpt.gen.*;
+            import elltool.exttbx.mpt.gen.*;
             %ELLIPSOID AND Polyhedron
             %ellipsoid lies in Polyhedron
             my1Ell = ellipsoid(eye(2));
@@ -219,11 +219,11 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             %test if internal approximation is really internal
             my3EllVec =  [0.8913;0.7621;0.4565;0.0185;0.8214];
-            my3EllMat = [ 1.0863 0.4281 1.0085 1.4706 0.6325;...
-                       0.4281 0.5881 0.9390 1.1156 0.6908;...
-                       1.0085 0.9390 2.2240 2.3271 1.7218;...
-                       1.4706 1.1156 2.3271 2.9144 1.6438;...
-                       0.6325 0.6908 1.7218 1.6438 1.6557];    
+            my3EllMat = [1.0863 0.4281 1.0085 1.4706 0.6325;...
+                         0.4281 0.5881 0.9390 1.1156 0.6908;...
+                         1.0085 0.9390 2.2240 2.3271 1.7218;...
+                         1.4706 1.1156 2.3271 2.9144 1.6438;...
+                         0.6325 0.6908 1.7218 1.6438 1.6557];
             my3Ell = ellipsoid(my3EllVec, my3EllMat);
             my3Poly = Polyhedron(eye(5),my3EllVec);
             my3EllPolyIAObj = intersection_ia(my3Ell,my3Poly);
@@ -239,7 +239,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 isInside(my4EllPolyIAObj,my4Poly));
             %
             %test if internal approximation is a point, when
-            %the ellipsoid touches the Polyhedron 
+            %the ellipsoid touches the Polyhedron
             my5Ell = ellipsoid(eye(2));
             my5Poly = Polyhedron([1 1], -sqrt(2));
             my5EllPolyIAObj = intersection_ia(my5Ell,my5Poly);
@@ -271,14 +271,14 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         end
         
         
-         function self = testNegativeIntersectionEA(self)
+        function self = testNegativeIntersectionEA(self)
             my1Ell = ellipsoid(eye(2));
             my2Ell = ellipsoid;
             self.runAndCheckError('my1Ell.intersection_ea(my2Ell)',...
                 'wrongSizes');
             self.runAndCheckError('my2Ell.intersection_ea(my1Ell)',...
                 'wrongSizes');
-         end
+        end
         
         
         function self = testIntersectionIAForEll(self)
@@ -331,7 +331,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             [~,my6EllEllIAObjMat] = double(my6EllEllIAObj);
             mlunitext.assert(all(my6EllEllIAObjMat(:) == 0));
             %
-            %test when a shape matrix is a multidimensional array           
+            %test when a shape matrix is a multidimensional array
             checkIAShMatArrayEll([2,2,3]);
             checkIAShMatArrayEll([5,5,1,3]);
             %
@@ -393,7 +393,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             %test when a shape matrix is a multidimensional array
             checkIAShMatArrayEll([2,2]);
-            checkIAShMatArrayEll([2,2,1,4]); 
+            checkIAShMatArrayEll([2,2,1,4]);
             %
             %test for an array of ellipsoids
             checkIAEllArray([3,2]);
@@ -464,15 +464,15 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             mlunitext.assert(isOk, reportStr);
             %
             my5Mat =  [0.8913 0.1763 0.1389 0.4660 0.8318 0.1509 0.8180 0.3704 0.1730 0.2987;...
-                0.7621 0.4057 0.2028 0.4186 0.5028 0.6979 0.6602 0.7027 0.9797 0.6614;...
-                0.4565 0.9355 0.1987 0.8462 0.7095 0.3784 0.3420 0.5466 0.2714 0.2844;...
-                0.0185 0.9169 0.6038 0.5252 0.4289 0.8600 0.2897 0.4449 0.2523 0.4692;...
-                0.8214 0.4103 0.2722 0.2026 0.3046 0.8537 0.3412 0.6946 0.8757 0.0648;...
-                0.4447 0.8936 0.1988 0.6721 0.1897 0.5936 0.5341 0.6213 0.7373 0.9883;...
-                0.6154 0.0579 0.0153 0.8381 0.1934 0.4966 0.7271 0.7948 0.1365 0.5828;...
-                0.7919 0.3529 0.7468 0.0196 0.6822 0.8998 0.3093 0.9568 0.0118 0.4235;...
-                0.9218 0.8132 0.4451 0.6813 0.3028 0.8216 0.8385 0.5226 0.8939 0.5155;...
-                0.7382 0.0099 0.9318 0.3795 0.5417 0.6449 0.5681 0.8801 0.1991 0.3340];
+                       0.7621 0.4057 0.2028 0.4186 0.5028 0.6979 0.6602 0.7027 0.9797 0.6614;...
+                       0.4565 0.9355 0.1987 0.8462 0.7095 0.3784 0.3420 0.5466 0.2714 0.2844;...
+                       0.0185 0.9169 0.6038 0.5252 0.4289 0.8600 0.2897 0.4449 0.2523 0.4692;...
+                       0.8214 0.4103 0.2722 0.2026 0.3046 0.8537 0.3412 0.6946 0.8757 0.0648;...
+                       0.4447 0.8936 0.1988 0.6721 0.1897 0.5936 0.5341 0.6213 0.7373 0.9883;...
+                       0.6154 0.0579 0.0153 0.8381 0.1934 0.4966 0.7271 0.7948 0.1365 0.5828;...
+                       0.7919 0.3529 0.7468 0.0196 0.6822 0.8998 0.3093 0.9568 0.0118 0.4235;...
+                       0.9218 0.8132 0.4451 0.6813 0.3028 0.8216 0.8385 0.5226 0.8939 0.5155;...
+                       0.7382 0.0099 0.9318 0.3795 0.5417 0.6449 0.5681 0.8801 0.1991 0.3340];
             %
             my5Vec = [1; -1; zeros(nDims-2,1)];
             %
@@ -507,7 +507,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             my2CentVec = [1; 2];
             my21Ell = ellipsoid(my2CentVec, my2TransfMat*my2TransfMat');
             my22Ell = ellipsoid(my2TransfMat*my12CentVec + my2CentVec,...
-            my2TransfMat*my12ShMat*my2TransfMat');
+                my2TransfMat*my12ShMat*my2TransfMat');
             my2EllEllEAObj = my21Ell.intersection_ea(my22Ell);
             [isOk, reportStr] = my22Ell.isEqual(my2EllEllEAObj);
             mlunitext.assert(isOk, reportStr)
@@ -623,7 +623,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 [isOk, reportStr] = myEllArray.isEqual(myEllHyperArrayEAObj);
                 mlunitext.assert(isOk, reportStr);
             end
-
+            
         end
         %
         %
@@ -750,6 +750,36 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             isBound = self.isBoundary(ell3ShiftVec, ell3ConstrMat, poly3);
             mlunitext.assert(isBound);
         end
+        %
+        function self = testRuntimeGetBoundary(self)
+            MAX_PORTION = 0.28;
+            NUMBER_STEPS = 100;
+            ellConstrMat = eye(2);
+            shiftVec = [0.05; 0];
+            ell3ConstrMat = eye(3);
+            ell3ShiftVec = [0.05; -0.1; 0];
+            
+            ell1 = ellipsoid(ellConstrMat);
+            ell2 = ellipsoid(shiftVec, ellConstrMat);
+            ell3 = ellipsoid(ell3ShiftVec, ell3ConstrMat);
+            tic
+            for iElem = 1 : NUMBER_STEPS
+                [~] = ell1.toPolytope();
+                [~] = ell2.toPolytope();
+                [~] = ell3.toPolytope();
+            end;
+            polTime = toc;
+            tic
+            for iElem = 1 : NUMBER_STEPS
+                [~, ~] = ell1.getBoundary();
+                [~, ~] = ell2.getBoundary();
+                [~, ~] = ell3.getBoundary();
+            end;
+            boundTime = toc;
+            mlunitext.assert(boundTime / polTime < MAX_PORTION, ...
+                'Runtime of getBoundary has gone beyond the possible.');
+        end
+        %
     end
     %
     methods(Static)
@@ -825,59 +855,59 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
 end
 function [myMultiDimEllArray, mCount, nDelta]=constructEllForTests(dimsShMatArrayVec)
 %constructs a multi-dimensional array of ellipsoids
-    dimsCentVecArrayVec=dimsShMatArrayVec(2:end);
-    if numel(dimsShMatArrayVec)==2
-        dimsCentVecArrayVec(2)=1;
-    end
-    myVec=dimsShMatArrayVec(3:end);
-    mCount=dimsShMatArrayVec(1);
-    nCount=prod(myVec);
-    my2Vec=[];
-    my2Vec=zeros(1,prod(dimsShMatArrayVec));
-    jElem=1;
-    for iElem=1:mCount^2:mCount^2*nCount
-        myMat=jElem*eye(mCount);
-        my2Vec(iElem:iElem+mCount^2-1)=reshape(myMat, [1, mCount^2]);
-        jElem=jElem+1;
-    end
-    shMatArray=reshape(my2Vec, dimsShMatArrayVec);
-    my3Vec=[];
-    my3Vec=zeros(1,prod(dimsCentVecArrayVec));
-    jElem=1;
-    nDelta=2/(nCount+1);
-    for iElem=1:mCount:mCount*nCount
-        my3Vec(iElem) = -1+jElem*nDelta;
-        my3Vec(iElem+1:iElem+mCount-1) = 0;
-        jElem=jElem+1;
-    end
-    centVecArray = reshape(my3Vec, dimsCentVecArrayVec);
-    myMultiDimEllArray = ellipsoid(centVecArray, shMatArray);
+dimsCentVecArrayVec=dimsShMatArrayVec(2:end);
+if numel(dimsShMatArrayVec)==2
+    dimsCentVecArrayVec(2)=1;
+end
+myVec=dimsShMatArrayVec(3:end);
+mCount=dimsShMatArrayVec(1);
+nCount=prod(myVec);
+my2Vec=[];
+my2Vec=zeros(1,prod(dimsShMatArrayVec));
+jElem=1;
+for iElem=1:mCount^2:mCount^2*nCount
+    myMat=jElem*eye(mCount);
+    my2Vec(iElem:iElem+mCount^2-1)=reshape(myMat, [1, mCount^2]);
+    jElem=jElem+1;
+end
+shMatArray=reshape(my2Vec, dimsShMatArrayVec);
+my3Vec=[];
+my3Vec=zeros(1,prod(dimsCentVecArrayVec));
+jElem=1;
+nDelta=2/(nCount+1);
+for iElem=1:mCount:mCount*nCount
+    my3Vec(iElem) = -1+jElem*nDelta;
+    my3Vec(iElem+1:iElem+mCount-1) = 0;
+    jElem=jElem+1;
+end
+centVecArray = reshape(my3Vec, dimsCentVecArrayVec);
+myMultiDimEllArray = ellipsoid(centVecArray, shMatArray);
 end
 function myEllArray=constructEllArrayForTests(dimsEllArrayVec)
 %constructs an array of ellipsoids with dimensionality dimsVec
-    nCount = prod(dimsEllArrayVec);
-    alpha=2*pi/nCount;
-    myEllVec=[];
-    myEllVec=[cos(alpha);sin(alpha)] + ellipsoid(1.5*eye(2));
-    for iElem = 1:nCount
-        myEllVec(iElem) = [cos(iElem*alpha);sin(iElem*alpha)] + ellipsoid(1.5*eye(2));
-    end
-    myEllArray = reshape(myEllVec, dimsEllArrayVec);
+nCount = prod(dimsEllArrayVec);
+alpha=2*pi/nCount;
+myEllVec=[];
+myEllVec=[cos(alpha);sin(alpha)] + ellipsoid(1.5*eye(2));
+for iElem = 1:nCount
+    myEllVec(iElem) = [cos(iElem*alpha);sin(iElem*alpha)] + ellipsoid(1.5*eye(2));
+end
+myEllArray = reshape(myEllVec, dimsEllArrayVec);
 end
 function [my1EllArray, my2EllArray]=construct2EllArraysForTests(dimsEllArrayVec)
 %constructs two arrays of ellipsoids with the same dimensionality dimsVec
-    nCount = prod(dimsEllArrayVec);
-    alpha=2*pi/nCount;
-    myEllVec=[];
-    myEllVec=[cos(alpha);sin(alpha)] + ellipsoid(1.5*eye(2));
-    for iElem = 1:nCount
-        myEllVec(iElem) = [cos(iElem*alpha);sin(iElem*alpha)] + ellipsoid(1.5*eye(2));
-    end
-    my1EllArray = reshape(myEllVec, dimsEllArrayVec);
-    for iElem = 1:nCount
-        myEllVec(iElem) = [cos(iElem*alpha);sin(iElem*alpha)] + ellipsoid(eye(2));
-    end
-    my2EllArray=reshape(myEllVec, dimsEllArrayVec);
+nCount = prod(dimsEllArrayVec);
+alpha=2*pi/nCount;
+myEllVec=[];
+myEllVec=[cos(alpha);sin(alpha)] + ellipsoid(1.5*eye(2));
+for iElem = 1:nCount
+    myEllVec(iElem) = [cos(iElem*alpha);sin(iElem*alpha)] + ellipsoid(1.5*eye(2));
+end
+my1EllArray = reshape(myEllVec, dimsEllArrayVec);
+for iElem = 1:nCount
+    myEllVec(iElem) = [cos(iElem*alpha);sin(iElem*alpha)] + ellipsoid(eye(2));
+end
+my2EllArray=reshape(myEllVec, dimsEllArrayVec);
 end
 function ellNorm=getEllNorm(qMat,cVec,xVec)
 diffVec=xVec-cVec;
