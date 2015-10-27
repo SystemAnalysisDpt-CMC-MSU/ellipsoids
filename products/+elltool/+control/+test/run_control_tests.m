@@ -31,11 +31,7 @@ confCMat = {
     %
     'varTest', [1 1],[-3 4; -3 4.70281982421875; -3 5];
     
-    % %     'check', [1 1]; %     internal approximation should be within
-    % %                           external appproximation with tolerance 0.000000,
-    % %                           actual tolerance is 0.000002,
-    % %                           Identifier: GRAS:ELLAPX:SMARTDB:RELS:ELLTUBEBASIC:CHECKINTWITHINEXT:
-    % %                           wrongInput:internalWithinExternal
+        'check', [1 1],[0 0];; %     internal approximation should be within
     'testnull', [1 1],[0.5 0.5; 0.993 0.1208; 2 0.5];
     'testANull', [1 1],[8 -6; -10.0001 12.44415; -10 15];
     'testAneNull',[1 1],[2 5; -1.0999 8.4; -1 10];
