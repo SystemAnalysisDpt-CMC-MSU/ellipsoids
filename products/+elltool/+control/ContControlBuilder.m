@@ -144,7 +144,7 @@ classdef ContControlBuilder
                         lsGoodDirMat(:, iGoodDir) / ...
                         norm(lsGoodDirMat(:, iGoodDir));
                 end
-                lsGoodDirCMat = ellTube.lsGoodDirVec();
+                lsGoodDirCMat = ellTube.lsGoodDirVec;
                 for iTuple = 1 : nTuples
                     %
                     % good directions' indexes mapping
