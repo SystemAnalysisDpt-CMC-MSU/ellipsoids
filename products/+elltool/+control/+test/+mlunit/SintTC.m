@@ -125,7 +125,7 @@ classdef SintTC < mlunitext.test_case
                     isOk = false;
                 end
 %              x0Vec
-%              isOk
+%              isCurrentEqual
             
             end
             mlunitext.assert_equals(true, isOk);

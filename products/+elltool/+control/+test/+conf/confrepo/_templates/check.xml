@@ -33,7 +33,7 @@
 				<goodDirSpaceVec type="boolean" >1 1</goodDirSpaceVec>
 			</auto>
 		</methodProps>
-		<selectionTime type="double" >0</selectionTime>
+		<selectionTime type="double" >4</selectionTime>
 	</goodDirSelection>
 	<customResultDir type="struct" >
 		<isEnabled type="boolean" >0</isEnabled>

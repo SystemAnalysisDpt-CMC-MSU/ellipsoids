@@ -129,7 +129,7 @@ classdef ContControlBuilder
             function iWithoutX = findEllWithoutX(qVec, qMat, x0Vec)
                 iWithoutX = 1;
                 scalProd = dot(x0Vec-qVec,qMat\(x0Vec-qVec));
-                if (scalProd <= 1)
+                if (scalProd > 0 && scalProd <= 1)
                     iWithoutX = scalProd;
                 end                
             end            
