@@ -18,11 +18,11 @@ function oMat=orthtransl(srcVec,dstVec)
 import modgen.common.throwerror;
 ABS_TOL=1e-7;
 nDims = size(dstVec, 1);
-if ~isreal(trytreatasreal(srcVec))
+if ~isreal(srcVec)
     throwerror('wrongInput:srcComplex',...
         'source vector is expected to be real');
 end
-if ~isreal(trytreatasreal(dstVec))
+if ~isreal(dstVec)
     throwerror('wrongInput:dstComplex',...
         'destination vector is expected to be real');    
 end
