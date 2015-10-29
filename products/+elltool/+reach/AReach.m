@@ -986,6 +986,24 @@ classdef AReach < elltool.reach.IReach
         end
         %
         function [goodCurvesCVec timeVec] = get_goodcurves(self)
+            % GET_GOODCURVES returns a list of good curves, one for each
+            % ellipsoidal tube. Good curve is a trajectory of touch points
+            % between a real reachability tube and ellipsoidal tube. Each
+            % good curve x^{*}(t) corresponds to a good direction curve
+            % l(t) along which ellipsoidal tube touches reachability
+            % set. 
+            % 
+            % Input:
+            %   regular:
+            %       self: elltool.reach.AReach[1,1] - reachability tube
+            %           object
+            % Output:
+            %   goodCurvesCVec: cell[1,nTubes] of [nDims,nTimePoints] -
+            %       list of good curves 
+            %
+            %   timeVec: [1,nTimePoints] - time grid on [t_0,t_1] where
+            %       reachability tube is defined
+            %
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.F;
             APPROX_TYPE = F.APPROX_TYPE;
