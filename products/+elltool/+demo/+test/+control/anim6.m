@@ -1,6 +1,9 @@
 function anim6(varargin)
 import elltool.conf.Properties;
-
+REG_TOL=1e-3;
+N_FRAMES=15;
+TIME_LIM_VEC=[0 5];
+%
 if nargin == 1
     nDirs = varargin{1};
 else
@@ -13,33 +16,34 @@ bCMat = {'10' '0'; '0' '1/(2 + sin(t))'};
 SUBounds.center = {'10-t'; '1'};
 SUBounds.shape = {'4 - sin(t)' '-1'; '-1' '1 + (cos(t))^2'};
 sys = elltool.linsys.LinSysContinuous(aCMat, bCMat, SUBounds);
-
+%
 x0EllObj = Properties.getAbsTol()*ell_unitball(2);
-
-timeVec = [0 5];
+%
 phiVec = linspace(0,pi,nDirs);
 dirsMat  = [sin(phiVec); cos(phiVec)];
 rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat,...
-    timeVec,'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
-[gcCVec, gcTimeVec] = rsObj.get_goodcurves();
-gcVec = gcCVec{1};
+    TIME_LIM_VEC,'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+[xTouchGoodCurveMatList, timeVec] = rsObj.get_goodcurves();
+xTouchGoodCurveMat = xTouchGoodCurveMatList{1};
 
 %%%%%%%%%%%%%%%%%
 writerObj=getVideoWriter('anim6');
 %
-writerObj.FrameRate = 15;
+writerObj.FrameRate = N_FRAMES;
 open(writerObj);
-for iGc = 1:(size(gcVec,2)-1)
-    startTime = gcTimeVec(iGc);
+nTimePoints=numel(timeVec);
+for iTimePoint = 1:(nTimePoints-1)
+    startTime = timeVec(iTimePoint);
     endTime = startTime + timeVec(end);
-    x0 = gcVec(:, iGc);
-    x0EllObj = x0 + Properties.getAbsTol()*ell_unitball(2);
+    x0Vec = xTouchGoodCurveMat(:, iTimePoint);
+    x0EllObj = x0Vec + Properties.getAbsTol()*ell_unitball(2);
     rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat,...
-        [startTime endTime],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
-    
+        [startTime endTime],'isRegEnabled',true, 'isJustCheck', false ,...
+        'regTol',REG_TOL);
+    %
     ctObj = rsObj.cut(endTime);
     ctObj.plotByEa('r'); hold on;
-    ell_plot(x0, 'k*');
+    ell_plot(x0Vec, 'k*');
     axis([-25 70 -5 14]);
     hold off;
     set(gcf,'WindowStyle','normal');
@@ -48,10 +52,10 @@ for iGc = 1:(size(gcVec,2)-1)
     writeVideo(writerObj,videoFrameObj);
     closereq;
 end
-
+%
 close(writerObj);
-
 end
+%
 function writerObj=getVideoWriter(objName)
 profileNameList=arrayfun(@(x)x.Name,VideoWriter.getProfiles,...
     'UniformOutput',false);
