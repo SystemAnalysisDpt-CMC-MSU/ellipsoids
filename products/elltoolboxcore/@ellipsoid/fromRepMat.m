@@ -53,6 +53,7 @@ function ellArr = fromRepMat(varargin)
 %
 
 import modgen.common.checkvar;
+import gras.la.trytreatasreal;
 %
 if nargin > 3
     indVec = [1:2,4:nargin];
@@ -62,8 +63,9 @@ else
     indVec = [1:nargin-1];
 end
 %
-checkvar(sizeVec,@(x) isa(x,'double')&&all(isreal(x(:)))&&...
-    all(mod(x(:),1) == 0) && all(x(:) > 0) && (size(x,1) == 1),...
+checkvar(sizeVec,@(x) isa(x,'double')&&...
+	all(isreal(trytreatasreal(x(:))))&&...
+	all(mod(x(:),1) == 0) && all(x(:) > 0) && (size(x,1) == 1),...
     'errorTag','wrongInput','errorMessage',...
     'size array must contain positive integer values.');
 %
