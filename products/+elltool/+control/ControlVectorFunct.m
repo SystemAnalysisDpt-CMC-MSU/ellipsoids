@@ -22,21 +22,15 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
         
         function resMat = evaluate(self,xVec,timeVec)
             
-            resMat = zeros(size(xVec,1),size(timeVec,2));
-
-            % next step is to find curProbDynObj, curGoodDirSetObj corresponding to that time period                       
+            resMat = zeros(size(xVec,1),size(timeVec,2));                      
             
-            for iTime = 1:size(timeVec,2) % for every moment of time in timeVec
-                curControlTime = timeVec(iTime);                
-                probTimeVec = self.probDynamicsList{1}.getTimeVec();
-                % probDynamicsList{indSwitch}{indTube} returns dynamics for
-                %       indSwitch time period and indTube tube
-
-                % getting probDynmicsObject corresponding to correct tube
-                %   and time period
-                
-                tEnd = self.probDynamicsList{1}.getTimeVec();
-                tEnd = tEnd(end);
+            tEnd = self.probDynamicsList{1}.getTimeVec();                
+            % probDynamicsList{indSwitch}{indTube} returns dynamics for
+            %       indSwitch time period and indTube tube
+            tEnd = tEnd(end);
+            
+            for iTime = 1:size(timeVec,2)
+                curControlTime = timeVec(iTime);
                 
                 for iSwitch = length(self.probDynamicsList):-1:1
                     probTimeVec = self.probDynamicsList{iSwitch}.getTimeVec();
@@ -50,26 +44,13 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                     end
                 end
                 
-                % now we got the needed objects corresponding to the time
-                % moment we interested in
-                
                 xstTransMat = curGoodDirSetObj.getXstTransDynamics();
                 % X(t,t_0) = ( xstTransMat.evaluate(t)\xstTransMat.evaluate(t_0) )'
-
-                
                 xt1tMat = transpose(xstTransMat.evaluate(t1)\xstTransMat.evaluate(curControlTime));
 
                 bpVec = -curProbDynObj.getBptDynamics.evaluate(t1-curControlTime+t0); % ellipsoid center           
                 bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(t1-curControlTime+t0);   % ellipsoid shape matrix
-                
-                
-%                 Bt = eye(8);
-%                 P = diag([.6 .6 .6 .6 .3 .3 .3 .3]);
-%                 p = @(t) [2*sin(2*t); 0.2*cos(3*t); 0; 0; 2*cos(2*t); 0.2*sin(3*t); 0; 0];
-%                 bpCheck = Bt*p(curControlTime);
-%                 bpbCheck = Bt*P*Bt';
-                
-%                 ~(isequal(abs(bpVec - bpCheck) <= 1e-5, ones(8,1)) && isequal(abs(bpbMat - bpbCheck) <= 1e-5, ones(8)))
+
                 pVec = xt1tMat*bpVec;
                 pMat = xt1tMat*bpbMat*transpose(xt1tMat);
                     
@@ -78,26 +59,14 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 indVec = find(ellTubeTimeVec <= timeVec(iTime));
                 indTime = length(indVec);
               
-                %find proper ellipsoid which corresponds to current time
                 if ellTubeTimeVec(indTime) < timeVec(iTime)
                     
-% %                     nDim = size(self.properEllTube.aMat{1},1);
-% %                     qVec = zeros(nDim,1);
-
-                    % interpolation of ellipsoid center
-                    
-% %                     for iDim = 1:nDim
-% %                         qVec(iDim) = interp1(ellTubeTimeVec,self.properEllTube.aMat{:}(iDim,:),curControlTime);
-% %                     end;
-
                     qVec = interp1(ellTubeTimeVec',transpose(self.properEllTube.aMat{1}),curControlTime);
                     qVec = qVec';
-                    
                     
                     nDimRow=size(self.properEllTube.QArray{1},1);
                     nDimCol=size(self.properEllTube.QArray{1},2);
                     qMat=zeros(nDimRow,nDimCol);
-                    
                     for iDim=1:nDimRow                       
                         for jDim=1:nDimCol
                             QArrayTime(1,:)=self.properEllTube.QArray{1}(iDim,jDim,:);
@@ -106,8 +75,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                     end;
                     
                 else
-% %                     we need to implemet TRUE comparison between floats!!
-                    if (ellTubeTimeVec(indTime)==timeVec(iTime)) 
+                    if (ellTubeTimeVec(indTime) == timeVec(iTime)) 
                         qVec = self.properEllTube.aMat{1}(:,indTime);
                         qMat = self.properEllTube.QArray{1}(:,:,indTime);                        
                     end
@@ -129,7 +97,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 
             end 
             
-        end % of evaluate()
+        end
         
     end
 end

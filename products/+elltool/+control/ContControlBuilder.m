@@ -81,15 +81,12 @@ classdef ContControlBuilder
             end
             
             for iTube=1:nTuples
-                %check if x is in E(q,Q), x: <x-q,Q^(-1)(x-q)><=1
-                %if (dot(x-qVec,inv(qMat)*(x-qVec))<=1)
-                
                 qVec = self.intEllTube.aMat{iTube}(:,1);  
                 qMat = self.intEllTube.QArray{iTube}(:,:,1); 
                 if ( dot(x0Vec-qVec,qMat\(x0Vec-qVec)) <= 1 + ELL_INT_TOL)                    
                     isX0InSet = true;                    
                     properIndTube = iTube;
-                    break; % 'cause till this moment the proper tube is already found
+                    break;
                 end
             end
             
@@ -112,8 +109,6 @@ classdef ContControlBuilder
             
             controlFuncObj = elltool.control.ContSingleTubeControl(properEllTube,...
                 properProbDynList, properGoodDirSetList,indWithoutX);  
-            
-            
             
             
             function properProbDynList = getProperProbDynList(indTube)

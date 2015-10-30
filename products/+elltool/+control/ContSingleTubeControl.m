@@ -110,13 +110,8 @@ classdef ContSingleTubeControl
                 indFin = find(self.properEllTube.timeVec{1} == tFin);
                 AtMat = self.probDynamicsList{iSwitchBack}.getAtDynamics();
                 
-%                 At = [0 1 0 0 0 0 0 0; -1 0 0 0 0 0 0 0; 0 0 0 1 0 0 0 0; -1 0 -9 0 0 0 0 0; 0 0 0 0 0 1 0 0; 0 0 -1 0 -3 0 0 0; 0 0 0 0 0 0 0 1; 0 0 0 0 -1 0 -2 0];
-                
                 [cur_time,odeResMat] = ode45(@(t,y)ode(t,y,AtMat,self.controlVectorFunct,tFin,tStart),[tStart tFin],x0Vec',SOptions);
-%                 [~,odeCheckMat] = ode45(@(t,y)odeCheck(t,At,y,self.controlVectorFunct),[tStart tFin],x0Vec',SOptions);
-                
-%                 diff = sum(abs(odeResMat - odeCheckMat) >= 1e-4);
-                
+
                 q1Vec = self.properEllTube.aMat{1}(:,indFin);
                 q1Mat = self.properEllTube.QArray{1}(:,:,indFin);
                 
@@ -127,11 +122,6 @@ classdef ContSingleTubeControl
                         'correspond with theory, current scalar production is ',...
                         num2str(currentScalProd), ' while isX0inSet is ', num2str(isX0inSet), ';', num2str(iSwitchBack) ]);
                 end
-%                 if (~isX0inSet)&&(currentScalProd < 1 - ERR_TOL)
-%                     throwerror('TestFails', ['the result of test does not ',...
-%                         'correspond with theory, current scalar production is ',...
-%                         num2str(currentScalProd), ' while isX0inSet is ', num2str(isX0inSet), ';', num2str(iSwitchBack) ]);
-%                 end
                 
                 x0Vec = odeResMat(end,:);
                 trajectory = cat(1,trajectory,odeResMat);
@@ -143,12 +133,7 @@ classdef ContSingleTubeControl
             
             function dyMat = ode(time,yMat,AtMat,controlFuncVec,tFin,tStart)
                dyMat = -AtMat.evaluate(tFin-time+tStart)*yMat + controlFuncVec.evaluate(yMat,time);
-            end
-            
-            function dxMat = odeCheck(t,At,x,controlFuncVec)
-                dxMat = At*x + controlFuncVec.evaluate(x,t);
-            end
-            
+            end            
         end
         
         function controlFunc = getControlFunction(self)
