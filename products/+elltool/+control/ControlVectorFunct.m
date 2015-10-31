@@ -1,8 +1,5 @@
 classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
         modgen.common.obj.HandleObjectCloner
-    properties (Constant = true)
-        FSOLVE_TOL = 1e-5;
-    end
     
     properties
         properEllTube
@@ -12,17 +9,56 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
     end
     
     methods
-        function self=ControlVectorFunct(properEllTube,... % class constructor
+        function self=ControlVectorFunct(properEllTube,...
                 probDynamicsList, goodDirSetList,inDownScaleKoeff)
-            self.properEllTube=properEllTube;
-            self.probDynamicsList=probDynamicsList;
-            self.goodDirSetList=goodDirSetList;
-            self.downScaleKoeff=inDownScaleKoeff;
+            % CONTROLVECTORFUNCT provides evaluating control synthesis
+            % for predetermined position (t,x)
+            %
+            % Input:
+            %     regular:
+            %         properEllTube: gras.ellapx.smartdb.rels.EllTube
+            %         object - an ellipsoidal tube that is used for
+            %         constructing of contol synthesis
+            % 
+            %         probDynamicsList: cellArray of 
+            %         gras.ellapx.lreachplain.probdyn.LReachProblemLTIDynamics
+            %         objects - provides information about system's dynamics 
+            % 
+            %         goodDirSetList: cellArray of
+            %         gras.ellapx.lreachplain.GoodDirsContinuousLTI objects
+            %         - provides information about 'good directions'
+            % 
+            %         inDownScaleKoeff: scaling coefficient for internal
+            %         ellipsoid tube approximation
+            % $Author: Komarov Yuri <ykomarov94@gmail.com> $ 
+            % $Date: 2015-30-10 $
+            %
+            self.properEllTube = properEllTube;
+            self.probDynamicsList = probDynamicsList;
+            self.goodDirSetList = goodDirSetList;
+            self.downScaleKoeff = inDownScaleKoeff;
         end
         
         function resMat = evaluate(self,xVec,timeVec)
-            
-            resMat = zeros(size(xVec,1),size(timeVec,2));                      
+            % EVALUATE evaluates control synthesis for predetermined
+            % position (t,x)
+            % 
+            % Input:
+            %     regular:
+            %         xVec - double[n,1] where n is dimentionality
+            %         of the phase space - x coordinate for control
+            %         synthesis evaluation
+            %         
+            %         timeVec - double[1,] - vector of time moments
+            %         for control synthesis evaluation
+            % Output:
+            %     regular:
+            %         resMat - double[n,] - control synthesis values
+            %         evaluated for specified positions (xVec,timeVec)
+            % $Author: Komarov Yuri <ykomarov94@gmail.com> $ 
+            % $Date: 2015-30-10 $
+            %            
+            resMat = zeros(size(xVec,1),size(timeVec,2));    
             
             tEnd = self.probDynamicsList{1}.getTimeVec();                
             % probDynamicsList{indSwitch}{indTube} returns dynamics for
@@ -48,8 +84,8 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 % X(t,t_0) = ( xstTransMat.evaluate(t)\xstTransMat.evaluate(t_0) )'
                 xt1tMat = transpose(xstTransMat.evaluate(t1)\xstTransMat.evaluate(curControlTime));
 
-                bpVec = -curProbDynObj.getBptDynamics.evaluate(t1-curControlTime+t0); % ellipsoid center           
-                bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(t1-curControlTime+t0);   % ellipsoid shape matrix
+                bpVec = -curProbDynObj.getBptDynamics.evaluate(t1-curControlTime+t0);           
+                bpbMat = curProbDynObj.getBPBTransDynamics.evaluate(t1-curControlTime+t0);
 
                 pVec = xt1tMat*bpVec;
                 pMat = xt1tMat*bpbMat*transpose(xt1tMat);

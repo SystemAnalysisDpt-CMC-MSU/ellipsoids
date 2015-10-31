@@ -1,24 +1,4 @@
 classdef ContControlBuilder
-% ContControlBuilder - wrapper class for building control synthesis for
-%   continuous case
-% 
-% Properties:
-% 	intEllTube - an gras.ellapx.smartdb.rels.EllTube object containing
-%       internal approximations of solvability tube 
-% 
-%   probDynamicsList - cellArray of gras.ellapx.lreachplain.probdyn.LReachProblemLTIDynamics
-%       objects that provides information about system's dynamics
-% 
-%   goodDirSetList - cellArray of gras.ellapx.lreachplain.GoodDirsContinuousLTI
-%       objects that provides information about so-called 'good directions'
-% 
-% Methods:
-%   ContControlBuilder() - class constructor
-% 
-%   getControl() - returns the eltool.control.Control object that provides
-%       getting control synthesis for predetermined point (t,x) and
-%       corresponding trajectory
-%
 
     properties (Access = private)
         intEllTube
@@ -28,16 +8,20 @@ classdef ContControlBuilder
     
     methods        
         function self = ContControlBuilder(reachContObj)
-            % CONTCONTROLBUILDER is a class constructor. Creates an
-            %   instance of ContControlBuilder class defining its properies
-            %   required for constructing coltrol synthesis.
+            % CONTCONTROLBUILDER is a wrapper for building control
+            % synthesis for continuous-time case
             %
             % Input:
-            %   reachContObj: an elltool.reach.ReachContinuous object
-            %       containing required properties for control synthesis
-            %       construction. Notice that reachContObj is to be in
-            %       backward time.
-            
+            %   regular:
+            %      reachContObj: an elltool.reach.ReachContinuous object
+            %           containing required properties for control
+            %           synthesis construction.
+            %
+            %      Note:  reachContObj is to be in backward time
+            %
+            % $Author: Komarov Yuri <ykomarov94@gmail.com> $ 
+            % $Date: 2015-30-10 $
+            % 
             import modgen.common.throwerror;
             ellTubeRel = reachContObj.getEllTubeRel();
             self.intEllTube = ellTubeRel.getTuplesFilteredBy('approxType', ...
@@ -52,26 +36,27 @@ classdef ContControlBuilder
         end
         
         function controlFuncObj = getControlObj(self,x0Vec)
-            % GETCONTROL returns the eltool.control.Control object that
-            %   provides getting control synthesis for predetermined point
-            %   (t,x) and corresponding trajectory
+            % GETCONTROLOBJ returns an eltool.control.ContSingleTubeControl
+            % object
             %
             % Input:
-            %   x0Vec: double[n,1], where n is a dimentionality of phase
-            %       space - position from which the syntesis is to 
-            %       be constructed
-            %
+            %   regular:
+            %         x0Vec: double[n,1] where n is a dimentionality of
+            %             phase space - position from which the syntesis is 
+            %             to be constructed
+            % 
             % Output:
-            %   controlFuncObj: an elltool.control.Control object that
-            %       provides computing control synthesis for each point
-            %       (t,x) we interested in and getting the corresponding
-            %       trajectory
-            
+            %     regular:
+            %         controlFuncObj: an elltool.control.Control object
+            %             providing computing control synthesis and
+            %             getting the corresponding trajectory
+            % $Author: Komarov Yuri <ykomarov94@gmail.com> $ 
+            % $Date: 2015-30-10 $
+            %
             import modgen.common.throwerror;
             nTuples = self.intEllTube.getNTuples;
             ELL_INT_TOL = 10^(-5);
             
-            %Tuple selection
             properIndTube = 1;
             isX0InSet = false;
             
