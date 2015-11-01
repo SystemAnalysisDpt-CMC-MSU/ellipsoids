@@ -82,12 +82,18 @@ classdef BasicTestCase < mlunitext.test_case
             import gras.la.trytreatasreal;
             realMat = rand(3);
             imagMat = eye(3) .* (eps/2) .* 1i;
+            imagBadMat = eye(3) .* (eps*10) .* 1i;
             nullMat = zeros(3);
             gibVec = [0 eps*1i/2 0];
+            badVec = [1 0 4*1i];
             nullVec = [0 0 0];
             mlunitext.assert(~(trytreatasreal(realMat)-realMat),ERROR_MSG);
             mlunitext.assert(trytreatasreal(imagMat) == nullMat,ERROR_MSG);
             mlunitext.assert(trytreatasreal(gibVec) == nullVec,ERROR_MSG);
+            [~, isThrow] = trytreatasreal(imagBadMat);
+            mlunitext.assert(isThrow,ERROR_MSG);
+            [~, isThrow] = trytreatasreal(badVec);
+            mlunitext.assert(isThrow,ERROR_MSG);
         end
         %
         function self = testSqrtM(self)
