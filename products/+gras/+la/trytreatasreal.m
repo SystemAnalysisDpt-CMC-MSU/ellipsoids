@@ -7,6 +7,7 @@ function resMat = trytreatasreal( inpMat, tolVal )
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2015 $
 
+import modgen.common.throwerror;
 if nargin < 2
     tolVal = eps;
 end
@@ -19,7 +20,8 @@ else
     if (normValue < tolVal)
         resMat = real(inpMat);
     else
-        resMat = inpMat;
+        throwerror('wrongInput:inpMat',...
+        'Sourse object can not have large imaginary part');
     end
 end
 end
