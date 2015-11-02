@@ -1,5 +1,5 @@
 classdef ContSingleTubeControl
-
+    %
     properties
         properEllTube
         probDynamicsList
@@ -7,12 +7,14 @@ classdef ContSingleTubeControl
         downScaleKoeff
         controlVectorFunct
     end
-    
+    %
     methods
         function self = ContSingleTubeControl(properEllTube,...
                 probDynamicsList, goodDirSetList,inDownScaleKoeff)
-            % CONTSINGLETUBECONTROL allows to get control synthesis in 
-            % predetermined position (t,x) and corresponding trajectory
+            % CONTSINGLETUBECONTROL constructes an object for 
+            %  control synthesis for a continuous time system based on a
+            %  single ellipsoidal tube from any predetermined position 
+            %  (t,x) and corresponding trajectory
             %
             % Input:
             %     regular:
@@ -51,22 +53,22 @@ classdef ContSingleTubeControl
             % to constructed control synthesis 
             % 
             % Input:
-            %     regular:
-            %         x0Vec - double[n,1], where n is a dimentionality of
-            %         phase space - position the syntesis is to 
-            %         be constructed from
+            %   regular:
+            %       x0Vec - double[nDims,1], where nDims is 
+            %           a dimentionality of phase space - position 
+            %           the syntesis is to be constructed from
             % 
             %         switchSysTimeVec: double[1,] - system switch time
-            %         moments vector
+            %           moments vector
             % 
-            %         isX0inSet: bool expression showing whether given
-            %         x0Vec is in the solvability domain
+            %         isX0inSet: logical[1,1] showing whether given
+            %           x0Vec is in the solvability domain
             % 
             % Output:
-            %     regular:
-            %         trajectory - double[n,] where n is a dimentionality
-            %          of the phase space - trajectory, that corresponds
-            %         to constructed control synthesis
+            %   trajectoryMat - double[n,] where n is a dimentionality
+            %       of the phase space - trajectory, that corresponds
+            %       to constructed control synthesis
+            %
             % $Author: Komarov Yuri <ykomarov94@gmail.com> $ 
             % $Date: 2015-30-10 $
             %
