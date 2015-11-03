@@ -15,8 +15,7 @@ function regMat = regposdefmat(inpMat, regTol)
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2013 $
-import gras.la.trytreatasreal;
-regTol = trytreatasreal (regTol);
+regTol = gras.la.trytreatasreal (regTol);
 modgen.common.type.simple.checkgen(regTol,...
     'isscalar(x)&&isnumeric(x)&&(x>0)');
 modgen.common.checkvar(inpMat, 'gras.la.ismatsymm(x)',...

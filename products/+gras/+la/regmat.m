@@ -16,8 +16,7 @@ function regMat = regmat(inpMat, regTol)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2014 $
 %
-import gras.la.trytreatasreal;
-regTol = trytreatasreal (regTol);
+regTol = gras.la.trytreatasreal (regTol);
 modgen.common.type.simple.checkgen(regTol,...
     'isscalar(x)&&isnumeric(x)&&(x>0)');
 if regTol>0

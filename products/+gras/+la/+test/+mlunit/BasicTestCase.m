@@ -82,10 +82,10 @@ classdef BasicTestCase < mlunitext.test_case
             import gras.la.trytreatasreal;
             realMat = rand(3);
             imagMat = eye(3) .* (eps/2) .* 1i;
-            imagBadMat = eye(3) .* (eps*10) .* 1i;
+            imagBadMat = eye(3) .* (eps*10) .* 1i; %#ok<NASGU>
             nullMat = zeros(3);
             gibVec = [0 eps*1i/2 0];
-            badVec = [1 0 4*1i];
+            badVec = [1 0 4*1i]; %#ok<NASGU>
             nullVec = [0 0 0];
             mlunitext.assert(~(trytreatasreal(realMat)-realMat),ERROR_MSG);
             mlunitext.assert(trytreatasreal(imagMat) == nullMat,ERROR_MSG);
@@ -152,7 +152,7 @@ classdef BasicTestCase < mlunitext.test_case
             mlunitext.assert(norm(sqrtmpos(test1Mat, MAX_TOL) -...
                 sqrtmpos(test2Mat, MAX_TOL)) < MAX_TOL);
             %
-            testMat = [1, 0; 0, -1];
+            testMat = [1, 0; 0, -1]; %#ok<NASGU>
             self.runAndCheckError('gras.la.sqrtmpos(testMat)',...
                 'wrongInput');
         end
@@ -335,18 +335,28 @@ classdef BasicTestCase < mlunitext.test_case
             shMat = regposdefmat(shMat, REG_TOL);
             isOk = gras.la.ismatposdef(shMat, ABS_TOL);
             mlunitext.assert(isOk);
+            %test small imaginary part
+            begMat = [4 4 14; 4 4 14; 14 14 78];
+            imagMat = regposdefmat(begMat, REG_TOL + 1i*eps/10);
+            mlunitext.assert(imagMat == shMat, ...
+                'Incorrect work regposdefmat function');
             % negative tests
-            wrongRelTol = -REG_TOL;
+            wrongRelTol = -REG_TOL; %#ok<NASGU>
             self.runAndCheckError(...
                 'gras.la.regposdefmat(zeroMat, wrongRelTol)',...
                 'wrongInput');
             %
-            wrongRelTol = [REG_TOL REG_TOL];
+            wrongRelTol = [REG_TOL REG_TOL]; %#ok<NASGU>
             self.runAndCheckError(...
                 'gras.la.regposdefmat(zeroMat, wrongRelTol)',...
                 'wrongInput');
             %
-            nonSquareMat = zeros(2, 3);
+            wrongRelTol = REG_TOL + 1i*eps*2; %#ok<NASGU>
+            self.runAndCheckError(...
+                'gras.la.regposdefmat(zeroMat, wrongRelTol)',...
+                'wrongInput');
+            %
+            nonSquareMat = zeros(2, 3); %#ok<NASGU>
             self.runAndCheckError(...
                 'gras.la.regposdefmat(nonSquareMat, REG_TOL)',...
                 'wrongInput:nonSquareMat');

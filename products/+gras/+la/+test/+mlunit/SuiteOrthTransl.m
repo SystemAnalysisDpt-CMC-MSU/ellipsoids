@@ -17,7 +17,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
         function testOrthTransl(self)
             import gras.la.orthtransl;
             srcVec=[0 0];
-            dstVec=[1 0];
+            dstVec=[1 0]; %#ok<*NASGU>
             check('wrongInput:srcZero');
             srcVec=[1 0];
             dstVec=[0 0];
@@ -59,6 +59,14 @@ classdef SuiteOrthTransl < mlunitext.test_case
                 diffVec = abs(dstVec/dstVec(ind) - gotVec/gotVec(ind));
                 mlunitext.assert(all(diffVec < CALC_PRECISION));
             end
+            srcVec=[2 + 1i*eps/10; 5];
+            dstVec=[1; 2 + 1i*eps/2];
+            oimagMat = gras.la.orthtranslqr(srcVec,dstVec);
+            srcVec=[2; 5];
+            dstVec=[1; 2];
+            orealMat = gras.la.orthtranslqr(srcVec,dstVec);
+            mlunitext.assert(oimagMat == orealMat, ...
+                'Incorrect work orthtranslqr function');
         end
         function testMatOrth(self)
             inpMat=self.srcTlMat;

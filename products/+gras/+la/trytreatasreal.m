@@ -7,7 +7,6 @@ function resMat = trytreatasreal( inpMat, tolVal )
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2015 $
-
 import modgen.common.throwerror;
 if nargin < 2
     tolVal = eps;
