@@ -77,7 +77,7 @@ classdef BasicTestCase < mlunitext.test_case
             end
         end
         %
-        function [] = testTrytreat (~)
+        function self = testTrytreat (self)
             ERROR_MSG = 'Incorrect work a trytreatasreal function';
             import gras.la.trytreatasreal;
             realMat = rand(3);
@@ -90,10 +90,10 @@ classdef BasicTestCase < mlunitext.test_case
             mlunitext.assert(~(trytreatasreal(realMat)-realMat),ERROR_MSG);
             mlunitext.assert(trytreatasreal(imagMat) == nullMat,ERROR_MSG);
             mlunitext.assert(trytreatasreal(gibVec) == nullVec,ERROR_MSG);
-            [~, isThrow] = trytreatasreal(imagBadMat);
-            mlunitext.assert(isThrow,ERROR_MSG);
-            [~, isThrow] = trytreatasreal(badVec);
-            mlunitext.assert(isThrow,ERROR_MSG);
+            self.runAndCheckError('gras.la.trytreatasreal(imagBadMat)', ...
+                'wrongInput:inpMat');
+            self.runAndCheckError('gras.la.trytreatasreal(badVec)', ...
+                'wrongInput:inpMat');
         end
         %
         function self = testSqrtM(self)
