@@ -178,10 +178,10 @@ end
 fstEllCentVec = fstEll.centerVec;
 fstEllShMat = fstEll.shapeMat;
 if rank(fstEllShMat) < size(fstEllShMat, 1)
-    fstEllShMat = ell_inv(ellipsoid.regularize(fstEllShMat,...
+    fstEllShMat = gras.geom.ell.invmat(ellipsoid.regularize(fstEllShMat,...
         fstEll.absTol));
 else
-    fstEllShMat = ell_inv(fstEllShMat);
+    fstEllShMat = gras.geom.ell.invmat(fstEllShMat);
 end
 
 [normHypVec, hypScalar] = parameters(-secObj);
@@ -213,14 +213,14 @@ fstEllCoeff  = (1 - secCoeff)*coeffDenomin;
 secEllCoeff = (1 - fstCoeff)*coeffDenomin;
 intEllShMat      = fstEllCoeff*fstEllShMat + secEllCoeff*secMat;
 intEllShMat      = 0.5*(intEllShMat + intEllShMat');
-intEllCentVec      = ell_inv(intEllShMat)*...
+intEllCentVec      = gras.geom.ell.invmat(intEllShMat)*...
     (fstEllCoeff*fstEllShMat*fstEllCentVec + ...
     secEllCoeff*secMat*secCentVec);
 intEllShMat      = intEllShMat/(1 - ...
     (fstEllCoeff*fstEllCentVec'*fstEllShMat*fstEllCentVec + ...
     secEllCoeff*secCentVec'*secMat*secCentVec - ...
     intEllCentVec'*intEllShMat*intEllCentVec));
-intEllShMat      = ell_inv(intEllShMat);
+intEllShMat      = gras.geom.ell.invmat(intEllShMat);
 intEllShMat      = (1-fstEll.absTol)*0.5*(intEllShMat + intEllShMat');
 outEll      = ellipsoid(intEllCentVec, intEllShMat);
 

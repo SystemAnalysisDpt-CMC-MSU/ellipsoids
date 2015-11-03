@@ -256,7 +256,7 @@ if isdegenerate(secEll)
     secEllShMat = ...
         ellipsoid.regularize(secEllShMat,getAbsTol(secEll));
 end
-secEllShMat = ell_inv(secEllShMat);
+secEllShMat = gras.geom.ell.invmat(secEllShMat);
 secEllShMat = 0.5*(secEllShMat + secEllShMat');
 secEllShDublMat = secEllShMat;
 secEllCentDublVec = secEllCentVec;
@@ -278,7 +278,7 @@ for iCount = 1:nNumel
             secEllShMat = ellipsoid.regularize(secEllShMat,...
                 absTolArr(iCount));
         end
-        invSecEllShMat = ell_inv(secEllShMat);
+        invSecEllShMat = gras.geom.ell.invmat(secEllShMat);
         invSecEllShMat = 0.5*(invSecEllShMat + invSecEllShMat');
         cvxExprVec'*invSecEllShMat*cvxExprVec +...
             2*(-invSecEllShMat*secEllCentVec)'*cvxExprVec + ...
@@ -351,7 +351,7 @@ for iCount = 1:nNumel
             ellShMat = ...
                 ellipsoid.regularize(ellShMat,absTolArr(iCount));
         end
-        invEllShMat  = ell_inv(ellShMat);
+        invEllShMat  = gras.geom.ell.invmat(ellShMat);
         cvxExprVec'*invEllShMat*cvxExprVec - ...
             2*ellCentVec'*invEllShMat*cvxExprVec + ...
             (ellCentVec'*invEllShMat*ellCentVec - 1) <= 0;
@@ -417,7 +417,7 @@ for iCount = 1:nNumel
             ellShMat = ...
                 ellipsoid.regularize(ellShMat,absTolArr(iCount));
         end
-        invEllShMat  = ell_inv(ellShMat);
+        invEllShMat  = gras.geom.ell.invmat(ellShMat);
         invEllShMat  = 0.5*(invEllShMat + invEllShMat');
         cvxExprVec'*invEllShMat*cvxExprVec - ...
             2*ellCentVec'*invEllShMat*cvxExprVec + ...

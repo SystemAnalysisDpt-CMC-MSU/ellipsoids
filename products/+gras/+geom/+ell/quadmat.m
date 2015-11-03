@@ -1,0 +1,57 @@
+function res = quadmat(varargin)
+%QUADMAT -- calculate quadratic functions
+%   (x-c,Q^{-1}(x-c)),(x-c,Q(x-c)),(x,Q^{-1}x),(x,Qx)
+%
+%   Input:
+%       regular
+%           qMat: double[nDim, nDim] - the square matrix itself
+%           xVec: double[1, nDim] - x vector
+%       optional
+%           cVec: double[1, nDim] - center vector,  if not specified - zero is assumed
+%           mode: regime specifier, can take the following values
+%                   plain - use Q
+%                   invadv - use Q^{-1} and calculate it using gras.geom.ell.invmat function
+%                   inv - use Q^{-1} but instead of calculating Q^{-1} use the algorithm from getPolar
+%   Output:
+%           res: double - result of calculation
+%
+[reg, ~] = modgen.common.parseparext(varargin, {},...
+    [2 4], 'regDefList', {0, 0, 0, 'plain'},...
+    'regCheckList', {'isnumeric(x)', 'isnumeric(x)', 'isnumeric(x)',...
+    'any(ismember(x, {''plain'', ''inv'', ''invadv''}))'});
+qMat = reg{1};
+xVec = reg{2};
+cVec = reg{3};
+mode = reg{4};
+[qMatmElems, qMatnElems] = size(qMat);
+[xVecmElems, xVecnElems] = size(xVec);
+[cVecmElems, cVecnElems] = size(cVec);
+if (qMatmElems ~= qMatnElems)
+    modgen.common.throwerror('wrongInput', 'qMat must be square');
+end
+if (xVecmElems ~= 1)
+    modgen.common.throwerror('wrongInput', 'xVec must be row vector');
+end
+if (xVecnElems ~= qMatnElems)
+    modgen.common.throwerror('wrongInput',...
+        'Dimensions of qMat and xVec must be coordinated');
+end
+if (cVecmElems ~= 1)
+    modgen.common.throwerror('wrongInput',...
+        'cVec must be row vector');
+end
+if (cVecnElems ~= qMatnElems)
+    modgen.common.throwerror('wrongInput',...
+        'Dimensions of qMat and cVec must be coordinated');
+end
+if (strcmp(mode, 'plain'))
+    res = dot(xVec - cVec, qMat*(xVec - cVec).');
+else if (strcmp(mode, 'invadv'))
+        res = dot(xVec - cVec, gras.geom.ell.invmat(qMat) * ...
+            (xVec - cVec).');
+    else if (strcmp(mode, 'inv'))
+            res = (xVec - cVec) * (qMat\(xVec - cVec)');
+        end
+    end
+end
+end

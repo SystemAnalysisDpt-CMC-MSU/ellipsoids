@@ -52,7 +52,7 @@ arrayfun(@(x) fSingleInv(x),myEllArr);
         else
             regShMat = ellObj.shapeMat;
         end
-        regShMat = ell_inv(regShMat);
+        regShMat = gras.geom.ell.invmat(regShMat);
         ellObj.shapeMat = 0.5*(regShMat + regShMat');
     end
 end

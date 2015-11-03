@@ -145,8 +145,8 @@ if isdegenerate(secondEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secondEll.absTol);
 end
 %
-invFstEllShMat = ell_inv(fstEllShMat);
-invSecEllShMat = ell_inv(secEllShMat);
+invFstEllShMat = gras.geom.ell.invmat(fstEllShMat);
+invSecEllShMat = gras.geom.ell.invmat(secEllShMat);
 %
 aMat = [invFstEllShMat -invFstEllShMat*fstEllCentVec;...
     (-invFstEllShMat*fstEllCentVec)' ...

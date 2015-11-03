@@ -178,11 +178,11 @@ if rank(myEllShMat) < maxEllDim
     myEllShMat = ellipsoid.regularize(myEllShMat,myEll.absTol);
 end
 
-invMyEllShMat   = ell_inv(myEllShMat);
+invMyEllShMat   = gras.geom.ell.invmat(myEllShMat);
 invMyEllShMat   = 0.5*(invMyEllShMat + invMyEllShMat');
 invShMatrixVec   = invMyEllShMat(2:maxEllDim, 1);
 invShMatrixElem = invMyEllShMat(1, 1);
-invMyEllShMat   = ell_inv(invMyEllShMat(2:maxEllDim, 2:maxEllDim));
+invMyEllShMat   = gras.geom.ell.invmat(invMyEllShMat(2:maxEllDim, 2:maxEllDim));
 invMyEllShMat   = 0.5*(invMyEllShMat + invMyEllShMat');
 hCoefficient   = (myEllCentVec(1, 1))^2 * (invShMatrixElem - ...
     invShMatrixVec'*invMyEllShMat*invShMatrixVec);
@@ -191,5 +191,5 @@ intEllCentVec   = myEllCentVec + myEllCentVec(1, 1)*...
 intEllShMat   = (1 - hCoefficient) * [0 zeros(1, maxEllDim-1); ...
     zeros(maxEllDim-1, 1) invMyEllShMat];
 intEll   = ellipsoid(intEllCentVec, intEllShMat);
-intEll   = ell_inv(tMat)*(intEll + rotVec);
+intEll   = gras.geom.ell.invmat(tMat)*(intEll + rotVec);
 end

@@ -1498,9 +1498,9 @@ maxDim   = max(max(dims1Mat));
 %maxDim2   = max(max(dims2Mat));
 [cen1Vec, q1Mat] = double(ellObj1);
 [cen2Vec, q2Mat] = double(ellObj2);
-qi1Mat     = ell_inv(q1Mat);
+qi1Mat     = gras.geom.ell.invmat(q1Mat);
 qi1Mat     = 0.5*(qi1Mat + qi1Mat');
-qi2Mat     = ell_inv(q2Mat);
+qi2Mat     = gras.geom.ell.invmat(q2Mat);
 qi2Mat     = 0.5*(qi2Mat + qi2Mat');
 cvx_begin sdp
 variable x(maxDim, 1)

@@ -175,7 +175,7 @@ end
         end
         function fCase2(index)
             eaShMat = extApprEllVec(index).shapeMat;
-            invShMat = ell_inv(eaShMat);
+            invShMat = gras.geom.ell.invmat(eaShMat);
             valVec = sum((invShMat*dirMat).*dirMat,1);
             mValVec = max(valVec, mValVec);
         end

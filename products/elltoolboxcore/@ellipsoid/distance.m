@@ -259,7 +259,7 @@ tic;
 if rank(ellQMat) < size(ellQMat, 2)
     ellQMat = ellipsoid.regularize(ellQMat,absTol);
 end
-ellQMat=ell_inv(ellQMat);
+ellQMat=gras.geom.ell.invmat(ellQMat);
 vectorVec=vectorVec-ellCenterVec;
 vectorEllVal=realsqrt(vectorVec'*ellQMat*vectorVec);
 if ( vectorEllVal < (1-absTol) )
@@ -611,7 +611,7 @@ bVec=polObj.H(:,end);
 if size(QPar, 2) > rank(QPar)
     QPar = ellipsoid.regularize(QPar,absTol);
 end
-QPar  = ell_inv(QPar);
+QPar  = gras.geom.ell.invmat(QPar);
 QPar  = 0.5*(QPar + QPar');
 mx1=dimension(ellObj); %#ok<NASGU>
 %

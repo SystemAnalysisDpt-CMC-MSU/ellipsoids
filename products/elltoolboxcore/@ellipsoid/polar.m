@@ -52,10 +52,10 @@ arrayfun(@(x) fSinglePolar(x), 1:numel(ellArr));
         singEll = ellArr(index);
         qVec = singEll.centerVec;
         shMat = singEll.shapeMat;
-        chk    = qVec' * ell_inv(shMat) * qVec;
+        chk    = qVec' * gras.geom.ell.invmat(shMat) * qVec;
         %chk checks if zero belongs to singEll ellipsoid
         if chk < 1
-            auxMat  = ell_inv(shMat - qVec*qVec');
+            auxMat  = gras.geom.ell.invmat(shMat - qVec*qVec');
             auxMat  = 0.5*(auxMat + auxMat');
             polCenVec  = -auxMat * qVec;
             polShapeMat  = (1 + qVec'*auxMat*qVec)*auxMat;

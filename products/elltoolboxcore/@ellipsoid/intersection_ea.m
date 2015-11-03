@@ -154,9 +154,9 @@ fstEllShMat = fstEll.shapeMat;
 if ~all(fstEllShMat(:) == 0)
     if rank(fstEllShMat) < size(fstEllShMat, 1)
         fstEllShMat = ...
-            ell_inv(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
+            gras.geom.ell.invmat(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
     else
-        fstEllShMat = ell_inv(fstEllShMat);
+        fstEllShMat = gras.geom.ell.invmat(fstEllShMat);
     end
 end
 if isa(secObj, 'hyperplane')
@@ -200,9 +200,9 @@ else
         return;
     end;
     if rank(seqQMat) < size(seqQMat, 1)
-        seqQMat = ell_inv(ellipsoid.regularize(seqQMat,secObj.absTol));
+        seqQMat = gras.geom.ell.invmat(ellipsoid.regularize(seqQMat,secObj.absTol));
     else
-        seqQMat = ell_inv(seqQMat);
+        seqQMat = gras.geom.ell.invmat(seqQMat);
     end
 end
 
@@ -210,7 +210,7 @@ lambda = l_get_lambda(fstEllCentVec, fstEllShMat, qSecVec, ...
     seqQMat, isa(secObj, 'hyperplane'), fstEll.getAbsTol);
 xMat = lambda*fstEllShMat + (1 - lambda)*seqQMat;
 xMat = 0.5*(xMat + xMat');
-invXMat = ell_inv(xMat);
+invXMat = gras.geom.ell.invmat(xMat);
 invXMat = 0.5*(invXMat + invXMat');
 const = 1 - lambda*(1 - lambda)*(qSecVec - ...
     fstEllCentVec)'*seqQMat*invXMat*fstEllShMat*(qSecVec - fstEllCentVec);

@@ -118,7 +118,7 @@ else
             inpEllShMat = ...
                 ellipsoid.regularize(inpEllShMat,absTolVec(iEllipsoid));
         end
-        invShMat     = ell_inv(inpEllShMat);
+        invShMat     = gras.geom.ell.invmat(inpEllShMat);
         bVec     = -invShMat * inpEllcenrVec;
         constraint     = inpEllcenrVec' * invShMat * inpEllcenrVec - 1;
         [ (-cvxDirVec(iEllipsoid)-constraint+bVec'*inpEllShMat*bVec), ...

@@ -228,7 +228,7 @@ if size(qMat, 2) > rank(qMat)
     end
     qMat = ellipsoid.regularize(qMat,absTolScal);
 end
-invQMat = ell_inv(qMat);
+invQMat = gras.geom.ell.invmat(qMat);
 invQMat = 0.5*(invQMat + invQMat');
 %
 nNumel = numel(secEllArr);
@@ -245,7 +245,7 @@ for iCount = 1:nNumel
         invQiMat = ...
             ellipsoid.regularize(invQiMat,getAbsTol(secEllArr(iCount)));
     end
-    invQiMat = ell_inv(invQiMat);
+    invQiMat = gras.geom.ell.invmat(invQiMat);
     invQiMat = 0.5*(invQiMat + invQiMat');
     xVec'*invQiMat*xVec + 2*(-invQiMat*qiVec)'*xVec + ...
         (qiVec'*invQiMat*qiVec - 1) <= 0; %#ok<VUNUS>

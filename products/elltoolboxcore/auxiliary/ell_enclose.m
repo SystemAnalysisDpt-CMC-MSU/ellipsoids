@@ -73,7 +73,7 @@ end;
 sqrtEllMat = cvxEllMat;
 ellCenterVec = cvxEllCenterVec;
 
-ellMat  = ell_inv(sqrtEllMat' * sqrtEllMat);
+ellMat  = gras.geom.ell.invmat(sqrtEllMat' * sqrtEllMat);
 ellMat  = 0.5 * (ellMat' + ellMat);
 ellCenterVec  = -inv(sqrtEllMat) * ellCenterVec;
 

@@ -1,4 +1,4 @@
-function I = ell_inv(A)
+function I = invmat(qMat)
 %
 % ELL_INV - computes matrix inverse treating 
 %           ill-conditioned matrices properly.
@@ -30,11 +30,11 @@ function I = ell_inv(A)
 %    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
 
-[m, n] = size(A);
-
-if m ~= n
-    error('ELL_INV: matrix must be square.');
+    [m, n] = size(qMat);
+    if m ~= n
+        error('ELL_INV: matrix must be square.');
+    end
+    B = inv(qMat);
+    I = inv(B*qMat) * B;
 end
-%
-B = inv(A);
-I = inv(B*A) * B;
+
