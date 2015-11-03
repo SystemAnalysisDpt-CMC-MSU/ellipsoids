@@ -47,6 +47,6 @@ modgen.common.checkvar(ellArr,'~any(isdegenerate(x))',...
 sizeCVec = num2cell(size(ellArr));
 polEllArr(sizeCVec{:}) = ellipsoid;
 
-for index = 1:numel(ellArr)
-    polEllArr(index) = getScalarPolar(ellArr(index), true);
+for iElem = 1:numel(ellArr)
+    polEllArr(iElem) = getScalarPolar(ellArr(iElem), true);
 end
