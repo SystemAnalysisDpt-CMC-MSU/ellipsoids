@@ -2,7 +2,8 @@ function resMat = trytreatasreal( inpMat, tolVal )
 %trytreatasreal check if inpMat is real - if positive - resMat = inpMat,
 %else - calculate an imaginary part of inpMat and compare its norm(x,Inf)
 %with tolVal.
-%If our norm < tolVal then we thrown away imaginary part of inpMat.
+%If our norm < tolVal then we thrown away imaginary part of inpMat else
+%we throw exeption with identifier = 'wrongInput:inpMat'.
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2015 $

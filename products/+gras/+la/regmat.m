@@ -16,8 +16,10 @@ function regMat = regmat(inpMat, regTol)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2014 $
 %
+import gras.la.trytreatasreal;
+regTol = trytreatasreal (regTol);
 modgen.common.type.simple.checkgen(regTol,...
-    'isscalar(x)&&isreal(x)&&isnumeric(x)&&(x>0)');
+    'isscalar(x)&&isnumeric(x)&&(x>0)');
 if regTol>0
     [uMat,sMat,vMat] = svd(inpMat);
     sMat = diag(max(diag(sMat), regTol));

@@ -23,10 +23,18 @@ classdef SuiteOrthTransl < mlunitext.test_case
             dstVec=[0 0];
             check('wrongInput:dstZero');
             srcVec=[1 0]+1i*[1 0];
-            check('wrongInput:srcComplex');
+            check('wrongInput:inpMat');
             srcVec=[1 0];
             dstVec=[1 0]+1i*[1 0];
-            check('wrongInput:dstComplex');
+            check('wrongInput:inpMat');
+            %
+            srcVec=[2; 5];
+            dstVec=[1; 2 + 1i*eps/2];
+            oimagMat = orthtransl(srcVec,dstVec);
+            dstVec=[1; 2];
+            orealMat = orthtransl(srcVec,dstVec);
+            mlunitext.assert(oimagMat == orealMat, ...
+                'Incorrect work orthtransl function');
             %
             function check(expErrorTag)
             self.runAndCheckError('gras.la.orthtransl(srcVec,dstVec)',...

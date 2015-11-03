@@ -16,16 +16,11 @@ function oMat=orthtransl(srcVec,dstVec)
 %            System Analysis Department 2013 $
 %
 import modgen.common.throwerror;
+import gras.la.trytreatasreal;
 ABS_TOL=1e-7;
 nDims = size(dstVec, 1);
-if ~isreal(srcVec)
-    throwerror('wrongInput:srcComplex',...
-        'source vector is expected to be real');
-end
-if ~isreal(dstVec)
-    throwerror('wrongInput:dstComplex',...
-        'destination vector is expected to be real');    
-end
+srcVec = trytreatasreal(srcVec);
+dstVec = trytreatasreal(dstVec);
 dstSquaredNorm=sum(dstVec.*dstVec);
 srcSquaredNorm=sum(srcVec.*srcVec);
 if dstSquaredNorm==0

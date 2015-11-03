@@ -17,14 +17,9 @@ function oMat = orthtranslqr(srcVec, dstVec)
 %            System Analysis Department 2013 $
 %
 import modgen.common.throwerror;
-if ~isreal(srcVec)
-    throwerror('wrongInput:srcComplex',...
-        'source vector is expected to be real');
-end
-if ~isreal(dstVec)
-    throwerror('wrongInput:dstComplex',...
-        'destination vector is expected to be real');
-end
+import gras.la.trytreatasreal;
+srcVec = trytreatasreal(srcVec);
+dstVec = trytreatasreal(dstVec);
 srcSquaredNorm=sum(srcVec.*srcVec);
 dstSquaredNorm=sum(dstVec.*dstVec);
 if srcSquaredNorm==0
