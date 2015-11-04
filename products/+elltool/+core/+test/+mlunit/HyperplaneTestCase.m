@@ -132,6 +132,35 @@ classdef HyperplaneTestCase < mlunitext.test_case
             mlunitext.assert(isOk);
         end
         %
+        function self = testFromRepMat (self)
+            sizeArr = [2, 3, 3, 5];
+            hypArr = hyperplane.fromRepMat(sizeArr);
+            isOkArr = hypArr.isEmpty();
+            mlunitext.assert(all(isOkArr(:)));
+            %
+            sizeArr = [2, 3, 3 + 1i * eps / 10, 5];
+            hypArr = hyperplane.fromRepMat(sizeArr);
+            isOkArr = hypArr.isEmpty();
+            mlunitext.assert(all(isOkArr(:)));
+            %
+            sizeArr = [1 3+1i*eps/2 5];
+            hypConst = 3;
+            hypNormVec = [2; 3];
+            absTol = 1e-10;
+            hyp = hyperplane(hypNormVec, hypConst, ...
+                'absTol', absTol);
+            hypArr = hyperplane.fromRepMat(hypNormVec,hypConst,sizeArr,'absTol',absTol);
+            isOkArr = eq(hyp,hypArr);
+            mlunitext.assert(all(isOkArr(:)));
+            isOkArr = hypArr.getAbsTol() == absTol;
+            mlunitext.assert(all(isOkArr));
+            %
+            self.runAndCheckError('ellipsoid.fromRepMat([2 3+1i*eps*2 3 5])', ...
+                'wrongInput:inpMat');
+            self.runAndCheckError('ellipsoid.fromRepMat(eye(5))', ...
+                'wrongInput');
+        end
+        %
         function self = testDimensions(self)
             SInpData =  self.auxReadFile(self);
             testHyperplanesVec = SInpData.testHyperplanesVec;

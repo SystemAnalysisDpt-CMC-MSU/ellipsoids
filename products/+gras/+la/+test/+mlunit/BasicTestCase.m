@@ -96,6 +96,19 @@ classdef BasicTestCase < mlunitext.test_case
                 'wrongInput:inpMat');
         end
         %
+        function self = testRegmat (self)
+            import gras.la.regmat;
+            ERROR_MSG = 'Incorrect work a regmat function';
+            diagMat = eye(3) * 3;
+            mlunitext.assert( regmat(diagMat, 5) == 5 * eye(3), ERROR_MSG);
+            mlunitext.assert( regmat(3, 1) == 3, ERROR_MSG);
+            mlunitext.assert( regmat(3, 1 + 1i*eps/5) == 3, ERROR_MSG);
+            self.runAndCheckError('gras.la.regmat(diagMat, -1)', ...
+                'wrongInput');
+            self.runAndCheckError('gras.la.regmat(diagMat, 2+1i*eps*2)', ...
+                'wrongInput:inpMat');
+        end
+        %
         function self = testSqrtM(self)
             import gras.la.sqrtmpos;
             MAX_TOL = 1e-6;
