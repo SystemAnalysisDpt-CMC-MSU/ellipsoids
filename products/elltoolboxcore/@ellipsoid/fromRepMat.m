@@ -62,10 +62,13 @@ else
     indVec = [1:nargin-1];
 end
 %
-checkvar(sizeVec,@(x) isa(x,'double')&&all(isreal(x(:)))&&...
-    all(mod(x(:),1) == 0) && all(x(:) > 0) && (size(x,1) == 1),...
-    'errorTag','wrongInput','errorMessage',...
-    'size array must contain positive integer values.');
+if (~isa(sizeVec,'double'))
+    modgen.common.throwerror('wrongInput','Size array is not double');
+end
+sizeVec = gras.la.trytreatasreal(sizeVec);
+checkvar(sizeVec,@(x) all(mod(x(:),1) == 0) && all(x(:) > 0) ...
+    && (size(x,1) == 1), 'errorTag', 'wrongInput', ...
+    'errorMessage','size array must contain positive integer values.');
 %
 nEllipsoids = prod(sizeVec);
 ellArr(nEllipsoids) = ellipsoid();

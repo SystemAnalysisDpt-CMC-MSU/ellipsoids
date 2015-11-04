@@ -1283,6 +1283,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             isOk1Arr = ellArr1.isEmpty();
             mlunitext.assert(all(isOk1Arr(:)));
             %
+            sizeArr = [2, 3, 3 + 1i * eps / 10, 5];
+            ellArr1 = ellipsoid.fromRepMat(sizeArr);
+            isOk1Arr = ellArr1.isEmpty();
+            mlunitext.assert(all(isOk1Arr(:)));
+            %
             shMat = eye(2);
             cVec = [2; 3];
             absTol = 1e-10;
@@ -1302,6 +1307,10 @@ classdef EllipsoidTestCase < mlunitext.test_case
             self.runAndCheckError(strcat('ellipsoid.fromRepMat',...
                 '([1; 1], eye(2), [2; 2; 3.5])'),...
                 'wrongInput');
+            %
+            sizeArr = [2, 3 + 1i*eps*2, 3, 5]; %#ok<NASGU>
+            self.runAndCheckError('ellipsoid.fromRepMat (sizeArr)', ...
+                'wrongInput:inpMat');
         end
         %
         function self = testMultiDimensionalConstructor(self)
