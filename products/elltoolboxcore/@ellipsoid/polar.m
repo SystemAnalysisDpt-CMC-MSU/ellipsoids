@@ -40,7 +40,6 @@ function polEllArr = polar(ellArr)
 %            System Analysis Department 2012 $
 %
 import modgen.common.throwerror
-import gras.geom.ell.invmat;
 ellipsoid.checkIsMe(ellArr);
 modgen.common.checkvar(ellArr,'~any(isdegenerate(x))',...
     'errorTag','degenerateEllipsoid',...
@@ -50,16 +49,18 @@ polEllArr(sizeCVec{:}) = ellipsoid;
 arrayfun(@(x) fSinglePolar(x), 1:numel(ellArr));
 %
     function fSinglePolar(index)
+        import gras.geom.ell.quadmat;
+        import gras.geom.ell.invmat;
         singEll = ellArr(index);
         qVec = singEll.centerVec;
         shMat = singEll.shapeMat;
-        chk    = qVec' * invmat(shMat) * qVec;
+        chk = quadmat(shMat, qVec, 0, 'invadv');
         %chk checks if zero belongs to singEll ellipsoid
         if chk < 1
             auxMat  = invmat(shMat - qVec*qVec');
             auxMat  = 0.5*(auxMat + auxMat');
             polCenVec  = -auxMat * qVec;
-            polShapeMat  = (1 + qVec'*auxMat*qVec)*auxMat;
+            polShapeMat  = (1 + quadmat(auxMat, qVec, 0, 'plain'))*auxMat;
             polEllArr(index).centerVec = polCenVec;
             polEllArr(index).shapeMat = polShapeMat;
         else

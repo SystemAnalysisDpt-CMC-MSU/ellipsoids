@@ -42,10 +42,10 @@ classdef SuiteBasic < mlunitext.test_case
         function testQuadMat(~)
             import gras.geom.ell.quadmat;
             qMat = [2, 5, 7; 6, 3, 4; 5, -2, -3];
-            xVec = [7, 8, 9];
+            xVec = [7, 8, 9].';
             cVec = [1, 0, 1];
-            mode = 'plain';
-            quadRes = quadmat(qMat, xVec, cVec, mode);
+            calcMode = 'plain';
+            quadRes = quadmat(qMat, xVec, cVec, calcMode);
             isOk = (abs(quadRes - 1304) < eps);
             mlunitext.assert_equals(true,isOk);
             %
@@ -57,13 +57,13 @@ classdef SuiteBasic < mlunitext.test_case
             isOk = (abs(quadRes - 1563) < eps);
             mlunitext.assert_equals(true,isOk);
             %
-            mode = 'invadv';
-            quadRes = quadmat(qMat, xVec, cVec, mode);
+            calcMode = 'InvAdv';
+            quadRes = quadmat(qMat, xVec, cVec, calcMode);
             isOk = (abs(quadRes - (-364)) < 1e-10);
             mlunitext.assert_equals(true,isOk);
             %
-            mode = 'inv';
-            quadRes = quadmat(qMat, xVec, cVec, mode);
+            calcMode = 'INV';
+            quadRes = quadmat(qMat, xVec, cVec, calcMode);
             isOk = (abs(quadRes - (-364)) < 1e-10);
             mlunitext.assert_equals(true,isOk);
         end
@@ -79,12 +79,12 @@ classdef SuiteBasic < mlunitext.test_case
             %
             check(@()quadmat(qMatNotSquare, xVecGoodDim,...
                 cVecGoodDim, mode));
-            check(@()quadmat(qMatSquare, xVecGoodDim.',...
-                cVecGoodDim, mode));
+            %check(@()quadmat(qMatSquare, xVecGoodDim.',...
+            %    cVecGoodDim, mode));
             check(@()quadmat(qMatSquare, xVecBadDim,...
                 cVecGoodDim, mode));
-            check(@()quadmat(qMatSquare, xVecGoodDim,...
-                cVecGoodDim.', mode));
+            %check(@()quadmat(qMatSquare, xVecGoodDim,...
+            %    cVecGoodDim.', mode));
             check(@()quadmat(qMatSquare, xVecGoodDim,...
                 cVecBadDim, mode));
             function check(fFail)
