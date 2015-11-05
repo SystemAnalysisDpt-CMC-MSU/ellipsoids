@@ -1308,7 +1308,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 '([1; 1], eye(2), [2; 2; 3.5])'),...
                 'wrongInput');
             %
-            sizeArr = [2, 3 + 1i*eps*2, 3, 5]; %#ok<NASGU>
+            sizeArr = [2, 3 + 1i*eps*2, 3, 5];
             self.runAndCheckError('ellipsoid.fromRepMat (sizeArr)', ...
                 'wrongInput:inpMat');
         end

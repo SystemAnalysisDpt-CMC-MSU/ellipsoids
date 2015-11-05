@@ -214,11 +214,11 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
                 ellMat.nPlot3dPoints = nPlot3dPointsVal;
             else
                 if nReg == 1
-                    regParamList{1} = gras.la.trytreatasreal (regParamList{1});
-                    checkvar(regParamList{1},@(x) isa(x,'double'),...
+                    shMatArray = regParamList{1};
+                    shMatArray = gras.la.trytreatasreal (shMatArray);
+                    checkvar(shMatArray,@(x) isa(x,'double'),...
                         'errorTag', 'errorMessage',...
                         'shapeMat matrix must be real.');
-                    shMatArray = regParamList{1};
                     nShDims = ndims(shMatArray);
                     shDimsVec(1:nShDims) = size(shMatArray);
                     nShRows = shDimsVec(1);
@@ -232,14 +232,14 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
                     end
                     %
                 else
-                    regParamList{1} = gras.la.trytreatasreal(regParamList{1});
-                    regParamList{2} = gras.la.trytreatasreal(regParamList{2});
-                    checkmultvar(@(x,y) isa(x,'double') && isa(y,'double'), ...
-                        2,regParamList{1},regParamList{2},...
-                        'errorTag', 'errorMessage', ...
-                        'centerVec and shapeMat matrix must be real.');
                     centVecArray = regParamList{1};
                     shMatArray = regParamList{2};
+                    centVecArray = gras.la.trytreatasreal(centVecArray);
+                    shMatArray = gras.la.trytreatasreal(shMatArray);
+                    checkmultvar(@(x,y) isa(x,'double') && isa(y,'double'), ...
+                        2,centVecArray,shMatArray,...
+                        'errorTag', 'errorMessage', ...
+                        'centerVec and shapeMat matrix must be real.');
                     nShDims = ndims(shMatArray);
                     nCentDims = ndims(centVecArray);
                     checkmultvar(...

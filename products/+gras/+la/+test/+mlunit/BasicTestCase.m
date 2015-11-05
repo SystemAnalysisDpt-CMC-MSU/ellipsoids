@@ -87,9 +87,12 @@ classdef BasicTestCase < mlunitext.test_case
             gibVec = [0 eps*1i/2 0];
             badVec = [1 0 4*1i]; %#ok<NASGU>
             nullVec = [0 0 0];
-            mlunitext.assert(~(trytreatasreal(realMat)-realMat),ERROR_MSG);
-            mlunitext.assert(trytreatasreal(imagMat) == nullMat,ERROR_MSG);
-            mlunitext.assert(trytreatasreal(gibVec) == nullVec,ERROR_MSG);
+            mlunitext.assert(isequal (trytreatasreal(realMat), realMat), ...
+                ERROR_MSG);
+            mlunitext.assert(isequal (trytreatasreal(imagMat), nullMat), ...
+                ERROR_MSG);
+            mlunitext.assert(isequal (trytreatasreal(gibVec), nullVec), ...
+                ERROR_MSG);
             self.runAndCheckError('gras.la.trytreatasreal(imagBadMat)', ...
                 'wrongInput:inpMat');
             self.runAndCheckError('gras.la.trytreatasreal(badVec)', ...
@@ -100,7 +103,8 @@ classdef BasicTestCase < mlunitext.test_case
             import gras.la.regmat;
             ERROR_MSG = 'Incorrect work a regmat function';
             diagMat = eye(3) * 3;
-            mlunitext.assert( regmat(diagMat, 5) == 5 * eye(3), ERROR_MSG);
+            mlunitext.assert( isequal(regmat(diagMat, 5), 5 * eye(3)), ...
+                ERROR_MSG);
             mlunitext.assert( regmat(3, 1) == 3, ERROR_MSG);
             mlunitext.assert( regmat(3, 1 + 1i*eps/5) == 3, ERROR_MSG);
             self.runAndCheckError('gras.la.regmat(diagMat, -1)', ...
@@ -351,7 +355,7 @@ classdef BasicTestCase < mlunitext.test_case
             %test small imaginary part
             begMat = [4 4 14; 4 4 14; 14 14 78];
             imagMat = regposdefmat(begMat, REG_TOL + 1i*eps/10);
-            mlunitext.assert(imagMat == shMat, ...
+            mlunitext.assert(isequal (imagMat, shMat), ...
                 'Incorrect work regposdefmat function');
             % negative tests
             wrongRelTol = -REG_TOL; %#ok<NASGU>

@@ -17,7 +17,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
         function testOrthTransl(self)
             import gras.la.orthtransl;
             srcVec=[0 0];
-            dstVec=[1 0]; %#ok<*NASGU>
+            dstVec=[1 0];
             check('wrongInput:srcZero');
             srcVec=[1 0];
             dstVec=[0 0];
@@ -33,7 +33,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
             oimagMat = orthtransl(srcVec,dstVec);
             dstVec=[1; 2];
             orealMat = orthtransl(srcVec,dstVec);
-            mlunitext.assert(oimagMat == orealMat, ...
+            mlunitext.assert(isequal (oimagMat, orealMat), ...
                 'Incorrect work orthtransl function');
             %
             function check(expErrorTag)
@@ -65,7 +65,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
             srcVec=[2; 5];
             dstVec=[1; 2];
             orealMat = gras.la.orthtranslqr(srcVec,dstVec);
-            mlunitext.assert(oimagMat == orealMat, ...
+            mlunitext.assert(isequal (oimagMat, orealMat), ...
                 'Incorrect work orthtranslqr function');
         end
         function testMatOrth(self)

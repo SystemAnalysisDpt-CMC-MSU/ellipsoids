@@ -149,15 +149,18 @@ classdef HyperplaneTestCase < mlunitext.test_case
             absTol = 1e-10;
             hyp = hyperplane(hypNormVec, hypConst, ...
                 'absTol', absTol);
-            hypArr = hyperplane.fromRepMat(hypNormVec,hypConst,sizeArr,'absTol',absTol);
+            hypArr = hyperplane.fromRepMat(hypNormVec,hypConst,sizeArr, ...
+                'absTol',absTol);
             isOkArr = eq(hyp,hypArr);
             mlunitext.assert(all(isOkArr(:)));
             isOkArr = hypArr.getAbsTol() == absTol;
             mlunitext.assert(all(isOkArr));
             %
-            self.runAndCheckError('ellipsoid.fromRepMat([2 3+1i*eps*2 3 5])', ...
+            sizeArr = [2 3+1i*eps*2 3 5];
+            eyeMat = eye(5);
+            self.runAndCheckError('ellipsoid.fromRepMat(sizeArr)', ...
                 'wrongInput:inpMat');
-            self.runAndCheckError('ellipsoid.fromRepMat(eye(5))', ...
+            self.runAndCheckError('ellipsoid.fromRepMat(eyeMat)', ...
                 'wrongInput');
         end
         %
