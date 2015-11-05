@@ -254,12 +254,13 @@ function [ distEllVec,timeOfComputation ] = computeEllVecDistance(ellObj,...
 %
 %
 import modgen.common.throwerror
+import gras.geom.ell.invmat;
 tic;
 [ellCenterVec, ellQMat] = double(ellObj);
 if rank(ellQMat) < size(ellQMat, 2)
     ellQMat = ellipsoid.regularize(ellQMat,absTol);
 end
-ellQMat=gras.geom.ell.invmat(ellQMat);
+ellQMat=invmat(ellQMat);
 vectorVec=vectorVec-ellCenterVec;
 vectorEllVal=realsqrt(vectorVec'*ellQMat*vectorVec);
 if ( vectorEllVal < (1-absTol) )
@@ -604,6 +605,7 @@ end
 
 %%%%%%%%
 function [ distVal, cvxStat] = findEllPolDist(ellObj,polObj,isFlagOn)
+import gras.geom.ell.invmat;
 absTol=ellObj.getAbsTol();
 [qPar, QPar] = parameters(ellObj);
 aMat=polObj.H(:,1:end-1);
@@ -611,7 +613,7 @@ bVec=polObj.H(:,end);
 if size(QPar, 2) > rank(QPar)
     QPar = ellipsoid.regularize(QPar,absTol);
 end
-QPar  = gras.geom.ell.invmat(QPar);
+QPar  = invmat(QPar);
 QPar  = 0.5*(QPar + QPar');
 mx1=dimension(ellObj); %#ok<NASGU>
 %

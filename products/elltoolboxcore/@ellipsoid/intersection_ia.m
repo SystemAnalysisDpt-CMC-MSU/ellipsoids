@@ -163,7 +163,9 @@ function outEll = l_intersection_ia(fstEll, secObj)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
-
+%
+import gras.geom.ell.invmat;
+%
 if isa(secObj, 'ellipsoid')
     if fstEll == secObj
         outEll = fstEll;
@@ -178,10 +180,10 @@ end
 fstEllCentVec = fstEll.centerVec;
 fstEllShMat = fstEll.shapeMat;
 if rank(fstEllShMat) < size(fstEllShMat, 1)
-    fstEllShMat = gras.geom.ell.invmat(ellipsoid.regularize(fstEllShMat,...
+    fstEllShMat = invmat(ellipsoid.regularize(fstEllShMat,...
         fstEll.absTol));
 else
-    fstEllShMat = gras.geom.ell.invmat(fstEllShMat);
+    fstEllShMat = invmat(fstEllShMat);
 end
 
 [normHypVec, hypScalar] = parameters(-secObj);
@@ -213,14 +215,14 @@ fstEllCoeff  = (1 - secCoeff)*coeffDenomin;
 secEllCoeff = (1 - fstCoeff)*coeffDenomin;
 intEllShMat      = fstEllCoeff*fstEllShMat + secEllCoeff*secMat;
 intEllShMat      = 0.5*(intEllShMat + intEllShMat');
-intEllCentVec      = gras.geom.ell.invmat(intEllShMat)*...
+intEllCentVec      = invmat(intEllShMat)*...
     (fstEllCoeff*fstEllShMat*fstEllCentVec + ...
     secEllCoeff*secMat*secCentVec);
 intEllShMat      = intEllShMat/(1 - ...
     (fstEllCoeff*fstEllCentVec'*fstEllShMat*fstEllCentVec + ...
     secEllCoeff*secCentVec'*secMat*secCentVec - ...
     intEllCentVec'*intEllShMat*intEllCentVec));
-intEllShMat      = gras.geom.ell.invmat(intEllShMat);
+intEllShMat      = invmat(intEllShMat);
 intEllShMat      = (1-fstEll.absTol)*0.5*(intEllShMat + intEllShMat');
 outEll      = ellipsoid(intEllCentVec, intEllShMat);
 

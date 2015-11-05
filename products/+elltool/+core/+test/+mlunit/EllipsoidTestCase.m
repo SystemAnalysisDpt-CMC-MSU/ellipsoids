@@ -1492,15 +1492,16 @@ distEll = sqrt(fDist);
 end
 %
 function distEllEll=ellEllDistanceCVX(ellObj1,ellObj2,flag)
+import gras.geom.ell.invmat;
 dims1Mat = dimension(ellObj1);
 %dims2Mat = dimension(ellObj2);
 maxDim   = max(max(dims1Mat));
 %maxDim2   = max(max(dims2Mat));
 [cen1Vec, q1Mat] = double(ellObj1);
 [cen2Vec, q2Mat] = double(ellObj2);
-qi1Mat     = gras.geom.ell.invmat(q1Mat);
+qi1Mat     = invmat(q1Mat);
 qi1Mat     = 0.5*(qi1Mat + qi1Mat');
-qi2Mat     = gras.geom.ell.invmat(q2Mat);
+qi2Mat     = invmat(q2Mat);
 qi2Mat     = 0.5*(qi2Mat + qi2Mat');
 cvx_begin sdp
 variable x(maxDim, 1)

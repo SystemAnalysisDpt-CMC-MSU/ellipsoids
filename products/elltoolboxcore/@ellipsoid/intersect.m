@@ -238,6 +238,7 @@ function [res, status] = qcqp(fstEllArr, secEll)
 import modgen.common.throwerror;
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
+import gras.geom.ell.invmat;
 
 persistent logger;
 
@@ -256,7 +257,7 @@ if isdegenerate(secEll)
     secEllShMat = ...
         ellipsoid.regularize(secEllShMat,getAbsTol(secEll));
 end
-secEllShMat = gras.geom.ell.invmat(secEllShMat);
+secEllShMat = invmat(secEllShMat);
 secEllShMat = 0.5*(secEllShMat + secEllShMat');
 secEllShDublMat = secEllShMat;
 secEllCentDublVec = secEllCentVec;
@@ -278,7 +279,7 @@ for iCount = 1:nNumel
             secEllShMat = ellipsoid.regularize(secEllShMat,...
                 absTolArr(iCount));
         end
-        invSecEllShMat = gras.geom.ell.invmat(secEllShMat);
+        invSecEllShMat = invmat(secEllShMat);
         invSecEllShMat = 0.5*(invSecEllShMat + invSecEllShMat');
         cvxExprVec'*invSecEllShMat*cvxExprVec +...
             2*(-invSecEllShMat*secEllCentVec)'*cvxExprVec + ...
@@ -329,6 +330,7 @@ function [res, status] = lqcqp(myEllArr, hyp)
 
 import modgen.common.throwerror;
 import elltool.conf.Properties;
+import gras.geom.ell.invmat;
 status = 1;
 [normHypVec, hypScalar] = parameters(hyp);
 if hypScalar < 0
@@ -351,7 +353,7 @@ for iCount = 1:nNumel
             ellShMat = ...
                 ellipsoid.regularize(ellShMat,absTolArr(iCount));
         end
-        invEllShMat  = gras.geom.ell.invmat(ellShMat);
+        invEllShMat  = invmat(ellShMat);
         cvxExprVec'*invEllShMat*cvxExprVec - ...
             2*ellCentVec'*invEllShMat*cvxExprVec + ...
             (ellCentVec'*invEllShMat*ellCentVec - 1) <= 0;
@@ -399,6 +401,7 @@ function [res, status] = lqcqp2(myEllArr, polyt)
 
 import modgen.common.throwerror;
 import elltool.conf.Properties;
+import gras.geom.ell.invmat;
 status = 1;
 hMat = polyt.H;
 aMat=hMat(:,1:end-1);
@@ -417,7 +420,7 @@ for iCount = 1:nNumel
             ellShMat = ...
                 ellipsoid.regularize(ellShMat,absTolArr(iCount));
         end
-        invEllShMat  = gras.geom.ell.invmat(ellShMat);
+        invEllShMat  = invmat(ellShMat);
         invEllShMat  = 0.5*(invEllShMat + invEllShMat');
         cvxExprVec'*invEllShMat*cvxExprVec - ...
             2*ellCentVec'*invEllShMat*cvxExprVec + ...

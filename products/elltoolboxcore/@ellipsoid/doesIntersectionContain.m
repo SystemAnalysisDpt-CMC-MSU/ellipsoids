@@ -214,6 +214,7 @@ function [res, status] = qcqp(secEllArr, fstEll)
 import modgen.common.throwerror;
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
+import gras.geom.ell.invmat;
 %
 persistent logger;
 [~, absTolScal] = getAbsTol(fstEll);
@@ -228,7 +229,7 @@ if size(qMat, 2) > rank(qMat)
     end
     qMat = ellipsoid.regularize(qMat,absTolScal);
 end
-invQMat = gras.geom.ell.invmat(qMat);
+invQMat = invmat(qMat);
 invQMat = 0.5*(invQMat + invQMat');
 %
 nNumel = numel(secEllArr);
@@ -245,7 +246,7 @@ for iCount = 1:nNumel
         invQiMat = ...
             ellipsoid.regularize(invQiMat,getAbsTol(secEllArr(iCount)));
     end
-    invQiMat = gras.geom.ell.invmat(invQiMat);
+    invQiMat = invmat(invQiMat);
     invQiMat = 0.5*(invQiMat + invQiMat');
     xVec'*invQiMat*xVec + 2*(-invQiMat*qiVec)'*xVec + ...
         (qiVec'*invQiMat*qiVec - 1) <= 0; %#ok<VUNUS>

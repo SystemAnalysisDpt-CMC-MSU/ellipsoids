@@ -132,6 +132,7 @@ function res = l_check_containment(firstEll, secondEll)
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
 import modgen.common.throwerror;
+import gras.geom.ell.invmat;
 %
 persistent logger;
 TRY_SOLVER_LIST={'SeDuMi','SDPT3'};
@@ -145,8 +146,8 @@ if isdegenerate(secondEll)
     secEllShMat = ellipsoid.regularize(secEllShMat,secondEll.absTol);
 end
 %
-invFstEllShMat = gras.geom.ell.invmat(fstEllShMat);
-invSecEllShMat = gras.geom.ell.invmat(secEllShMat);
+invFstEllShMat = invmat(fstEllShMat);
+invSecEllShMat = invmat(secEllShMat);
 %
 aMat = [invFstEllShMat -invFstEllShMat*fstEllCentVec;...
     (-invFstEllShMat*fstEllCentVec)' ...
