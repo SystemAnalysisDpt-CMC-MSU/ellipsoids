@@ -1,14 +1,14 @@
 function res = quadmat(varargin)
-%QUADMAT -- calculate quadratic functions
+% QUADMAT -- calculate quadratic functions
 %   (x-c,Q^{-1}(x-c)),(x-c,Q(x-c)),(x,Q^{-1}x),(x,Qx)
 %
-%   Input:
-%       regular
-%           qMat: double[nDim, nDim] - the square matrix itself
-%           xVec: double[1, nDim] - x vector
-%       optional
+% Input:
+%   regular
+%       qMat: double[nDim, nDim] - the square matrix itself
+%       xVec: double[1, nDim] - x vector
+%   optional
 %           cVec: double[1, nDim] - center vector,  if not specified - zero is assumed
-%           mode: regime specifier, can take the following values
+%           mode: char[1,] - regime specifier, can take the following values
 %                   plain - use Q
 %                   invadv - use Q^{-1} and calculate it using gras.geom.ell.invmat function
 %                   inv - use Q^{-1} but instead of calculating Q^{-1} use the algorithm from getPolar
