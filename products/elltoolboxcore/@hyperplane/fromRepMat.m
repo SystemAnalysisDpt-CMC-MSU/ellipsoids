@@ -55,7 +55,7 @@ else
     indVec = [1:nargin-1];
 end
 %
-if (~isa(sizeVec,'double'))
+if ~isa(sizeVec,'double')
     modgen.common.throwerror('wrongInput','Size array is not double');
 end
 sizeVec = gras.la.trytreatasreal(sizeVec);

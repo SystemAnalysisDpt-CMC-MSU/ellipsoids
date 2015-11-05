@@ -29,11 +29,11 @@ elseif ~(isnumeric(tolVal)&&isscalar(tolVal)&&(tolVal > 0))
         'tolVal must be a positive numeric scalar');
 end
 %
-if (isreal(inpMat))
+if isreal(inpMat)
     resMat = inpMat;
 else
     imagInpMat=imag (inpMat);
-    normValue = norm (imagInpMat, Inf);
+    normValue = norm (imagInpMat,Inf);
     if (normValue < tolVal)
         resMat = real(inpMat);
     else
