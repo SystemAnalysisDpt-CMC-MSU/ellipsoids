@@ -507,17 +507,19 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllipsoid=ellipsoid(diag([1 4 9 16]));
             [testCenterVec, testShapeMat]=double(testEllipsoid);
             isTestDiagMat=testShapeMat==diag([1 4  9 16]);
-            isTestRes=(numel(testCenterVec)==4) && all(testCenterVec(:)==0)&& all(isTestDiagMat(:));
+            isTestRes=(numel(testCenterVec)==4) && ...
+                all(testCenterVec(:)==0)&& all(isTestDiagMat(:));
             mlunitext.assert_equals(true, isTestRes);
-            
             %Two arguments
-            fCheckForTestEllipsoidAndDouble([1; 2; -1],[2.5 -1.5 0; -1.5 2.5 0; 0 0 9]);
+            fCheckForTestEllipsoidAndDouble([1; 2; -1],...
+                [2.5 -1.5 0; -1.5 2.5 0; 0 0 9]);
             fCheckForTestEllipsoidAndDouble(-2*ones(5,1),9*eye(5,5));
             
             %High-dimensional ellipsoids
             fCheckForTestEllipsoidAndDouble(diag(1:12));
             fCheckForTestEllipsoidAndDouble((0:0.1:2).',diag(0:10:200));
-            fCheckForTestEllipsoidAndDouble(10*rand(100,1), diag(50*rand(1,100)));
+            fCheckForTestEllipsoidAndDouble(10*rand(100,1), ...
+                diag(50*rand(1,100)));
             
             %Check wrong inputs
             self.runAndCheckError('ellipsoid([1 1],eye(2,2))','wrongInput');
@@ -525,9 +527,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
             self.runAndCheckError('ellipsoid([-1 0;0 -1])','wrongInput');
             self.runAndCheckError('ellipsoid([1;1],eye(3,3))','wrongInput');
             
-            self.runAndCheckError('ellipsoid([1 -i;-i 1])','wrongInput:imagArgs');
-            self.runAndCheckError('ellipsoid([1+i;1],eye(2,2))','wrongInput:imagArgs');
-            self.runAndCheckError('ellipsoid([1;0],(1+i)*eye(2,2))','wrongInput:imagArgs');
+            self.runAndCheckError('ellipsoid([1 -i;-i 1])', ...
+                'wrongInput:inpMat');
+            self.runAndCheckError('ellipsoid([1+i;1],eye(2,2))',...
+                'wrongInput:inpMat');
+            self.runAndCheckError('ellipsoid([1;0],(1+i)*eye(2,2))', ...
+                'wrongInput:inpMat');
         end
         %
         function self = testDouble(self)
@@ -1278,6 +1283,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
             isOk1Arr = ellArr1.isEmpty();
             mlunitext.assert(all(isOk1Arr(:)));
             %
+            sizeArr = [2, 3, 3 + 1i * eps / 10, 5];
+            ellArr1 = ellipsoid.fromRepMat(sizeArr);
+            isOk1Arr = ellArr1.isEmpty();
+            mlunitext.assert(all(isOk1Arr(:)));
+            %
             shMat = eye(2);
             cVec = [2; 3];
             absTol = 1e-10;
@@ -1297,6 +1307,10 @@ classdef EllipsoidTestCase < mlunitext.test_case
             self.runAndCheckError(strcat('ellipsoid.fromRepMat',...
                 '([1; 1], eye(2), [2; 2; 3.5])'),...
                 'wrongInput');
+            %
+            sizeArr = [2, 3 + 1i*eps*2, 3, 5];
+            self.runAndCheckError('ellipsoid.fromRepMat (sizeArr)', ...
+                'wrongInput:inpMat');
         end
         %
         function self = testMultiDimensionalConstructor(self)

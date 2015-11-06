@@ -23,10 +23,18 @@ classdef SuiteOrthTransl < mlunitext.test_case
             dstVec=[0 0];
             check('wrongInput:dstZero');
             srcVec=[1 0]+1i*[1 0];
-            check('wrongInput:srcComplex');
+            check('wrongInput:inpMat');
             srcVec=[1 0];
             dstVec=[1 0]+1i*[1 0];
-            check('wrongInput:dstComplex');
+            check('wrongInput:inpMat');
+            %
+            srcVec=[2; 5];
+            dstVec=[1; 2 + 1i*eps/2];
+            oimagMat = orthtransl(srcVec,dstVec);
+            dstVec=[1; 2];
+            orealMat = orthtransl(srcVec,dstVec);
+            mlunitext.assert(isequal(oimagMat,orealMat), ...
+                'Incorrect work orthtransl function');
             %
             function check(expErrorTag)
             self.runAndCheckError('gras.la.orthtransl(srcVec,dstVec)',...
@@ -51,6 +59,14 @@ classdef SuiteOrthTransl < mlunitext.test_case
                 diffVec = abs(dstVec/dstVec(ind) - gotVec/gotVec(ind));
                 mlunitext.assert(all(diffVec < CALC_PRECISION));
             end
+            srcVec=[2 + 1i*eps/10; 5];
+            dstVec=[1; 2 + 1i*eps/2];
+            oimagMat = gras.la.orthtranslqr(srcVec,dstVec);
+            srcVec=[2; 5];
+            dstVec=[1; 2];
+            orealMat = gras.la.orthtranslqr(srcVec,dstVec);
+            mlunitext.assert(isequal(oimagMat,orealMat), ...
+                'Incorrect work orthtranslqr function');
         end
         function testMatOrth(self)
             inpMat=self.srcTlMat;

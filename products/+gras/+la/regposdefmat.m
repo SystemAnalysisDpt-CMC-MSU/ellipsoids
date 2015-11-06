@@ -16,7 +16,8 @@ function regMat = regposdefmat(inpMat, regTol)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2013 $
 modgen.common.type.simple.checkgen(regTol,...
-    'isscalar(x)&&isreal(x)&&isnumeric(x)&&(x>0)');
+    'isscalar(x)&&isnumeric(x)&&(x>0)');
+regTol = gras.la.trytreatasreal (regTol);
 modgen.common.checkvar(inpMat, 'gras.la.ismatsymm(x)',...
     'errorMessage', 'matrix must be symmetric.');
 [vMat, dMat] = eig(inpMat, 'nobalance');
