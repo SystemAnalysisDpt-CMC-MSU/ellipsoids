@@ -4,7 +4,7 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction&...
     FSOLVE_TOL = 1.0e-5;
     end
     
-    properties
+    properties (Access = private)
         properEllTube
         probDynamicsList
         goodDirSetList
@@ -23,13 +23,13 @@ classdef DiscControlVectorFunct < elltool.control.IControlVectFunction&...
         
         function resMat=evaluate(self,xVec,timeVec,iTime)
             
-            resMat=zeros(size(xVec,1),size(timeVec,2));
+            resMat = zeros(size(xVec,1),size(timeVec,2));
 %             import ; % <- I don't think we need it because the argument is void
 
             % next step is to find curProbDynObj, curGoodDirSetObj corresponding to that time period                       
    
                 curControlTime = timeVec(iTime); 
-                probTimeVec=self.probDynamicsList{1}.getTimeVec(); % what is probDynamicList? probTimeVec is the time vector for the system before first switch
+                probTimeVec = self.probDynamicsList{1}.getTimeVec(); % what is probDynamicList? probTimeVec is the time vector for the system before first switch
                 for iSwitch = 1:length(self.probDynamicsList)
                     probTimeVec = self.probDynamicsList{iSwitch}.getTimeVec();
                     if ( ( curControlTime <= probTimeVec(1) ) && ...

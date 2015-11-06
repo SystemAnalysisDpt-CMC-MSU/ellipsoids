@@ -56,8 +56,8 @@ classdef SintTC < mlunitext.test_case
             self.tVec = reachFactObj.getTVec();
             self.x0Ell = reachFactObj.getX0Ell();
             self.l0Mat = reachFactObj.getL0Mat();
-            self.inPointList =inPointVecList;
-            self.outPointList=outPointVecList;
+            self.inPointList = inPointVecList;
+            self.outPointList = outPointVecList;
         end
         
     end
@@ -65,21 +65,20 @@ classdef SintTC < mlunitext.test_case
     methods 
                  
         function isOk = testReachControl(self)
-            isOk=1;
-            TOL=10^(-5);
-            ellTubeRel=self.reachObj.getEllTubeRel();
-            switchSysTimeVec=self.reachObj.getSwitchTimeVec();                
-            intEllTube=ellTubeRel.getTuplesFilteredBy('approxType',...
+            isOk = 1;
+            TOL = 1e-5;
+            ellTubeRel = self.reachObj.getEllTubeRel();               
+            intEllTube = ellTubeRel.getTuplesFilteredBy('approxType',...
                         gras.ellapx.enums.EApproxType.Internal);
-            
+            %
             nTuples = intEllTube.getNTuples();           
             x0Mat = [self.inPointList; self.outPointList];
-            
+            %
             for iXCount=1:size(x0Mat,1)
                 x0Vec=x0Mat(iXCount,:);
                 x0Vec=transpose(x0Vec);
                 isX0inSet=false;
-  
+                %
                 controlBuilderObj = self.getControlBuilder();
                 controlObj = controlBuilderObj.getControlObj(x0Vec);
                 if (~all(size(x0Vec)==size(intEllTube.aMat{1}(:,1))))
@@ -96,32 +95,31 @@ classdef SintTC < mlunitext.test_case
                     end
                 end
                 isCurrentEqual=true;
-                
+                %
                 properTube = controlObj.getProperEllTube();
                 [isMemberTube, properTubeInd] = properTube.isMemberTuples(ellTubeRel,'lsGoodDirVec');
-                
+                %
                 if (isMemberTube)
-                    traj_struct = controlObj.getTrajectory(x0Vec,switchSysTimeVec,isX0inSet);
-                    trajectory = traj_struct.trajectory;
-                    Y = trajectory(end,:);
-                    
-                    q1Vec=ellTubeRel.aMat{properTubeInd}(:,end);
-                    q1Mat=ellTubeRel.QArray{properTubeInd}(:,:,end);
-                    currentScalProd = dot(Y(end,:)'-q1Vec,q1Mat\(Y(end,:)'-q1Vec));
+                    [~,trajectory] = controlObj.getTrajectory(x0Vec);
+                    trajEnd = trajectory(end,:);
+                    %
+                    q1Vec = ellTubeRel.aMat{properTubeInd}(:,end);
+                    q1Mat = ellTubeRel.QArray{properTubeInd}(:,:,end);
+                    currentScalProd = dot(trajEnd(end,:)'-q1Vec, ...
+                        q1Mat\(trajEnd(end,:)'-q1Vec));
                     if (isX0inSet)&&(currentScalProd > 1+TOL)
-                        isCurrentEqual=false;
+                        isCurrentEqual = false;
                     end
                     if (~isX0inSet)&&(currentScalProd < 1-TOL)
-                        isCurrentEqual=false;
+                        isCurrentEqual = false;
                     end
-                    isOk=isOk&&isCurrentEqual;
+                    isOk = isOk&&isCurrentEqual;
                 else
                     isOk = false;
                 end
                 
             end
             mlunitext.assert_equals(true, isOk);
-
         end
     end
 end

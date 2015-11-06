@@ -4,16 +4,18 @@ classdef DiscreteControlBuilder
         probDynamicsList
         goodDirSetList
         isBackward
+        switchSysTimeVec
     end
     methods        
-        function self=DiscreteControlBuilder(reachDisObj)
+        function self = DiscreteControlBuilder(reachDiscObj)
             import modgen.common.throwerror;
-            ellTubeRel=reachDisObj.getEllTubeRel();
-            self.intEllTube=ellTubeRel.getTuplesFilteredBy('approxType', ...
+            self.switchSysTimeVec = reachDiscObj.getSwitchTimeVec();
+            ellTubeRel = reachDiscObj.getEllTubeRel();
+            self.intEllTube = ellTubeRel.getTuplesFilteredBy('approxType', ...
                 gras.ellapx.enums.EApproxType.Internal);
-            self.probDynamicsList=reachDisObj.getIntProbDynamicsList();
-            self.goodDirSetList=reachDisObj.getGoodDirSetList();
-            self.isBackward=reachDisObj.isbackward();
+            self.probDynamicsList = reachDiscObj.getIntProbDynamicsList();
+            self.goodDirSetList = reachDiscObj.getGoodDirSetList();
+            self.isBackward = reachDiscObj.isbackward();
             if (~self.isBackward)
                 throwerror('wrongInput',...
                     'System is in the forward time while should be backward system');                
@@ -60,7 +62,8 @@ classdef DiscreteControlBuilder
             properGoodDirSetList = getProperGoodDirSetList(indTube);
             
             controlFuncObj = elltool.control.DiscSingleTubeControl(properEllTube,...
-                properProbDynList, properGoodDirSetList,indWithoutX);  
+                properProbDynList, properGoodDirSetList,...
+                self.switchSysTimeVec, indWithoutX);  
 
             
             function properProbDynList = getProperProbDynList(indTube)

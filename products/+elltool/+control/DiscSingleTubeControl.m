@@ -1,43 +1,51 @@
 classdef DiscSingleTubeControl
-    properties
+    properties (Access = private)
         properEllTube
         probDynamicsList
         goodDirSetList
         downScaleKoeff
         controlVectorFunct
         isBackward
+        switchSysTimeVec
     end
     methods
-        function self=DiscSingleTubeControl(properEllTube,...
-                probDynamicsList, goodDirSetList,inDownScaleKoeff)
+        function self = DiscSingleTubeControl(properEllTube,...
+                probDynamicsList, goodDirSetList,switchSysTimeVec,inDownScaleKoeff)
             self.properEllTube=properEllTube;
             self.probDynamicsList=probDynamicsList;
             self.goodDirSetList=goodDirSetList;
+            self.switchSysTimeVec = switchSysTimeVec;
             self.downScaleKoeff=inDownScaleKoeff;
             self.controlVectorFunct=elltool.control.DiscControlVectorFunct(properEllTube,...
                 self.probDynamicsList, self.goodDirSetList,inDownScaleKoeff);
         end
 
 
-        function trajectory=getTrajectory(self,x0Vec,switchSysTimeVec,isX0inSet)
+        function [trajEvalTime, trajectory] = getTrajectory(self,x0Vec)
             import modgen.common.throwerror;
-            ERR_TOL=10^(-4);
-            trajectory=[];
-            switchTimeVecLenght=numel(switchSysTimeVec);
-            self.properEllTube.scale(@(x)1/sqrt(self.downScaleKoeff),'QArray'); 
+            ERR_TOL = 1e-4;
+            trajEvalTime = [];
+            trajectory = [];
+            switchTimeVecLenght=numel(self.switchSysTimeVec);
+            self.properEllTube.scale(@(x)1/sqrt(self.downScaleKoeff),'QArray');
+            %
+            q0Vec = self.properEllTube.aMat{1}(:,1);
+            q0Mat = self.properEllTube.QArray{1}(:,:,1);
+            isX0inSet = dot(x0Vec-q0Vec,q0Mat\(x0Vec-q0Vec));
+            %
             for iSwitch=1:switchTimeVecLenght-1                 
                 iSwitchBack = switchTimeVecLenght - iSwitch;
-                
-                tStart=switchSysTimeVec(iSwitch);
-                tFin=switchSysTimeVec(iSwitch+1);
-               
+                %
+                tStart = self.switchSysTimeVec(iSwitch);
+                tFin = self.switchSysTimeVec(iSwitch+1);
+                %
                 indFin=find(self.properEllTube.timeVec{1}==tFin);
                 AtMat=self.probDynamicsList{iSwitchBack}.getAtDynamics();    
                 curProbDynObj=self.probDynamicsList{iSwitchBack};
-                
+                %
                 CRel = 10000;
                 timeVec = tStart:(tFin-tStart)/CRel:tFin;
-                    
+                %   
                 odeResMat = DiscrBackwardDynamics(AtMat,self.controlVectorFunct,x0Vec,timeVec,curProbDynObj);     
              
                 q1Vec=self.properEllTube.aMat{1}(:,indFin);
@@ -46,17 +54,17 @@ classdef DiscSingleTubeControl
                 currentScalProd = dot(odeResMat(end,:)'-q1Vec,q1Mat\(odeResMat(end,:)'-q1Vec));
                 
                 if (isX0inSet)&&(currentScalProd > 1 + ERR_TOL)
-                    throwerror('TestFails', ['the result of test does not',...
-                        'correspond with theory, current scalar production is ',...
-                        num2str(currentScalProd), ' while isX0inSet is ', num2str(isX0inSet), ',', num2str(iSwitchBack) ]);
+                    throwerror('TestFails', ['the result of test does '...
+                        'not correspond with theory, current scalar ' ...
+                        'production at the end of system switch ' ...
+                        'interval number ', num2str(iSwitchBack), ' is '...
+                        num2str(currentScalProd), ', while the original'...
+                        ' solvability domain actually contains x(t0)']);
                 end
-                if (~isX0inSet)&&(currentScalProd < 1 - ERR_TOL)
-                    throwerror('TestFails', ['the result of test does not',...
-                        'correspond with theory, current scalar production is ',...
-                        num2str(currentScalProd), ' while isX0inSet is ', num2str(isX0inSet), ',', num2str(iSwitchBack) ]);
-                end
-                x0Vec=odeResMat(end,:);
-                trajectory=cat(1,trajectory,odeResMat);
+                %
+                x0Vec = odeResMat(end,:);
+                trajEvalTime = vertcat(trajEvalTime, timeVec);
+                trajectory = vertcat(trajectory, odeResMat);
             end
              
             

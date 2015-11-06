@@ -4,6 +4,7 @@ classdef ContControlBuilder
         intEllTube
         probDynamicsList
         goodDirSetList
+        switchSysTimeVec
     end
     %
     methods
@@ -24,6 +25,7 @@ classdef ContControlBuilder
             % $Date: 2015-30-10 $
             %
             import modgen.common.throwerror;
+            self.switchSysTimeVec =  reachContObj.getSwitchTimeVec();
             ellTubeRel = reachContObj.getEllTubeRel();
             self.intEllTube = ellTubeRel.getTuplesFilteredBy('approxType', ...
                 gras.ellapx.enums.EApproxType.Internal);
@@ -99,7 +101,7 @@ classdef ContControlBuilder
             %
             controlFuncObj = elltool.control.ContSingleTubeControl(...
                 properEllTube,properProbDynList, properGoodDirSetList,...
-                indWithoutX);
+                self.switchSysTimeVec, indWithoutX);
             %
             function properProbDynList = getProperProbDynList(indTube)
                 properProbDynList = cellfun(@(x)(x{min(indTube,numel(x))}),...
