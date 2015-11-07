@@ -32,7 +32,7 @@ classdef ContControlBuilder
             self.probDynamicsList = reachContObj.getIntProbDynamicsList();
             self.goodDirSetList = reachContObj.getGoodDirSetList();
             isBackward = reachContObj.isbackward();
-            if (~isBackward)
+            if ~isBackward
                 throwerror('wrongInput',...
                     ['System is in a forward time while it should',...
                     'be in a backward time']);
@@ -58,7 +58,7 @@ classdef ContControlBuilder
             % $Date: 2015-30-10 $
             %
             import modgen.common.throwerror;
-            ELL_INT_TOL = 1e-5;
+            ellIntTol = elltool.conf.Properties.getAbsTol();
             %
             nEllTubes = self.intEllTube.getNTuples;
             %
@@ -74,7 +74,7 @@ classdef ContControlBuilder
             for iTube=1:nEllTubes
                 qVec = self.intEllTube.aMat{iTube}(:,1);
                 qMat = self.intEllTube.QArray{iTube}(:,:,1);
-                if ( dot(x0Vec-qVec,qMat\(x0Vec-qVec)) <= 1 + ELL_INT_TOL)
+                if ( dot(x0Vec-qVec,qMat\(x0Vec-qVec)) <= 1 + ellIntTol)
                     isX0InSet = true;
                     indProperTube = iTube;
                     break;
@@ -116,14 +116,15 @@ classdef ContControlBuilder
             function indWithoutX = findEllWithoutX(qVec, qMat, x0Vec)
                 indWithoutX = 1;
                 scalProd = dot(x0Vec-qVec,qMat\(x0Vec-qVec));
-                if (scalProd > 0 && scalProd <= 1)
+                %
+                if (scalProd > 0)&&(scalProd <= 1)
                     indWithoutX = scalProd;
                 end
             end
             %
             function goodDirOrderedVec = mapGoodDirInd(goodDirSetObj,ellTube)
                 import modgen.common.throwerror;
-                CMP_TOL=1e-10;
+                cmpTol=elltool.conf.Properties.getAbsTol;
                 %
                 nEllTubes = ellTube.getNTuples;
                 goodDirOrderedVec = zeros(1,nEllTubes);
@@ -135,7 +136,7 @@ classdef ContControlBuilder
                 end
                 %
                 lsGoodDirCMat = ellTube.lsGoodDirVec;
-                for iEllTube = 1 : nEllTubes
+                for iEllTube = 1:nEllTubes
                     %
                     % good directions' indexes mapping
                     %
@@ -143,7 +144,7 @@ classdef ContControlBuilder
                     curGoodDirVec = curGoodDirVec / norm(curGoodDirVec);
                     for iGoodDir = 1:size(lsGoodDirMat, 2)
                         isFound = norm(curGoodDirVec - ...
-                            lsGoodDirMat(:, iGoodDir)) <= CMP_TOL;
+                            lsGoodDirMat(:, iGoodDir)) <= cmpTol;
                         if isFound
                             break;
                         end

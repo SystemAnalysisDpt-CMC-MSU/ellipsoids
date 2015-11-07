@@ -1,5 +1,5 @@
 classdef SintTC < mlunitext.test_case
-   properties (Access=protected)
+    properties (Access=protected)
         testDataRootDir
         linSys
         reachObj
@@ -8,19 +8,18 @@ classdef SintTC < mlunitext.test_case
         l0Mat
         expDim
         reachFactoryObj
-        inPointList 
+        inPointList
         outPointList
         isReCache
-   end
- 
-   methods (Abstract, Access = public)
-       controlObj = getControlBuilder(self)
-       % GETCONTROLLOBJ() - returns a ControlBuilder object
-
-   end
-   
-   methods (Access = protected)
-       function self = setUpReachObj(self)
+    end
+    %
+    methods (Abstract, Access = public)
+        controlObj = getControlBuilder(self)
+    end
+    %
+    methods (Access = protected)
+        function self = setUpReachObj(self)
+            %
             methodName = modgen.common.getcallernameext(1);
             resMap = modgen.containers.ondisk.HashMapMatXML(...
                 'storageLocationRoot',self.testDataRootDir,...
@@ -35,8 +34,8 @@ classdef SintTC < mlunitext.test_case
                 self.reachObj = resMap.get(inpKey);
             end
         end
-   end
-   
+    end
+    %
     methods
         function self = SintTC(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -45,10 +44,12 @@ classdef SintTC < mlunitext.test_case
             self.testDataRootDir = [fileparts(which(className)),...
                 filesep, 'TestData', filesep, shortClassName];
         end
-        
-        
-        function self = set_up_param(self, reachFactObj,inPointVecList,outPointVecList,isReCache)
-            self.isReCache = isReCache;
+        %
+        function self = set_up_param(self, reachFactObj,inPointVecList,...
+                outPointVecList,varargin)
+            [~,~,self.isReCache]=modgen.common.parseparext(varargin,...
+                {'reCache';false;'islogical(x)'},0);
+            %
             self.reachFactoryObj = reachFactObj;
             self.setUpReachObj();
             self.linSys = reachFactObj.getLinSys();
@@ -59,19 +60,19 @@ classdef SintTC < mlunitext.test_case
             self.inPointList = inPointVecList;
             self.outPointList = outPointVecList;
         end
-        
     end
-    
-    methods 
-                 
+    %
+    methods
         function isOk = testReachControl(self)
-            isOk = 1;
+            TIMEOUT_SEC=600;
+            tStart=tic;
+            isOk = true;
             TOL = 1e-5;
-            ellTubeRel = self.reachObj.getEllTubeRel();               
+            ellTubeRel = self.reachObj.getEllTubeRel();
             intEllTube = ellTubeRel.getTuplesFilteredBy('approxType',...
-                        gras.ellapx.enums.EApproxType.Internal);
+                gras.ellapx.enums.EApproxType.Internal);
             %
-            nTuples = intEllTube.getNTuples();           
+            nTuples = intEllTube.getNTuples();
             x0Mat = [self.inPointList; self.outPointList];
             %
             for iXCount=1:size(x0Mat,1)
@@ -81,14 +82,14 @@ classdef SintTC < mlunitext.test_case
                 %
                 controlBuilderObj = self.getControlBuilder();
                 controlObj = controlBuilderObj.getControlObj(x0Vec);
-                if (~all(size(x0Vec)==size(intEllTube.aMat{1}(:,1))))
+                if ~all(size(x0Vec)==size(intEllTube.aMat{1}(:,1)))
                     self.runAndCheckError('controlObj.getControl(x0Vec)',...
-                                                            'wrongInput');
-                    return; 
-                end   
+                        'wrongInput');
+                    return;
+                end
                 for iTube=1:nTuples
-                    qVec=intEllTube.aMat{iTube}(:,1);  
-                    qMat=intEllTube.QArray{iTube}(:,:,1); 
+                    qVec=intEllTube.aMat{iTube}(:,1);
+                    qMat=intEllTube.QArray{iTube}(:,:,1);
                     if (dot(x0Vec-qVec,qMat\(x0Vec-qVec))<=1+TOL)
                         isX0inSet=true;
                         break;
@@ -97,7 +98,8 @@ classdef SintTC < mlunitext.test_case
                 isCurrentEqual=true;
                 %
                 properTube = controlObj.getProperEllTube();
-                [isMemberTube, properTubeInd] = properTube.isMemberTuples(ellTubeRel,'lsGoodDirVec');
+                [isMemberTube, properTubeInd] =...
+                    properTube.isMemberTuples(ellTubeRel,'lsGoodDirVec');
                 %
                 if (isMemberTube)
                     [~,trajectory] = controlObj.getTrajectory(x0Vec);
@@ -117,7 +119,6 @@ classdef SintTC < mlunitext.test_case
                 else
                     isOk = false;
                 end
-                
             end
             mlunitext.assert_equals(true, isOk);
         end

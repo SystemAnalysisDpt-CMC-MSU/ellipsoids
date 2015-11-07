@@ -1,20 +1,50 @@
-function results = run_Disccontrol_tests(varargin)
-
-[~,~,isReCache] = modgen.common.parseparext(varargin,...
-    {'reCache';false;'islogical(x)'});
-
-if ~exist('isReCache','var')
-    isReCache = 0;
-end
-
-
-import elltool.reach.ReachFactory;
+function resObj = run_disc_tests(varargin)
+% RUN_DISC_TESTS runs control synthesis tests for discrete systems  
+% based on specified patters for markers, test cases, tests names
 %
-runner = mlunitext.text_test_runner(1, 1);
-loader = mlunitext.test_loader;
+% Input:
+%   optional:
+%       confNameList: cell[1,nTestConfs] of char[1,] - list of
+%           configurations to test, if not specified, all configurations
+%           are tested
+%   properties:
+%       nParallelProcesses: double[1,1] - if nParallelProcesses>1 then
+%           tests are run in parallel in the corresponding number of parallel
+%           processes (Parallel Toolbox is required)
+%       reCache: logical[1,1] - if true, test results are rechaced on disk
+%       filter: cell[1,3] with the following elements
+%           markerRegExp: char[1,] - regexp for marker AND/OR configuration
+%               names, default is '.*' which means 'all cofigs'
+%           testCaseRegExp: char[1,] - regexp for test case names, same 
+%               default
+%           testRegExp: char[1,] - regexp for test names, same default
 %
-crm = elltool.control.test.conf.ConfRepoMgr();
-crmSys = elltool.control.test.conf.sysdef.ConfRepoMgr();
+% Output:
+%   resObj: mlunitext.text_test_run[1,1] - test result object
+%
+% Example:
+%
+%   elltool.control.test.run_cont_tests('filter',{'rot2dAnull',...
+%       'elltool.control.test.mlunit.ReachContTC','testReachControl'})
+%
+%   elltool.control.test.run_cont_tests({'rot2d','rot2dAnull'},...
+%       'filter',{'.*',...
+%       'elltool.control.test.mlunit.ReachContTC','testReachControl'})
+%
+%   elltool.control.test.run_cont_tests('nParallelProcesses',12,...
+%       'reCache',true,'filter',{'.*',...
+%       'elltool.control.test.mlunit.ReachContTC','testReachControl'})
+%
+%   elltool.control.test.run_cont_tests('filter',{'_IsBackTrueIsEvolveFalse',...
+%       '.*','testReachControl'})
+%
+% $Author: Komarov Yuri <ykomarov94@gmail.com> $
+% $Author: Peter Gagarinov <pgagarinov@gmail.com> $
+% $Date: 2015-30-10 $
+% $Copyright: Moscow State University,
+%             Faculty of Computational Mathematics
+%             and Computer Science,
+%             System Analysis Department 2012-2015$
 %
 confCMat = {
     'rot2d', [1 0], [5 -7; 0 -11];%failed
@@ -53,34 +83,8 @@ confCMat = {
     'varTest', [1 1],[1 1];
     'test2dbad', [1 1], [1 -1];
     };
-nConfs = size(confCMat, 1);
-suiteList = {};
-outPointVecList=[];
+confCMat=[confCMat,cell(size(confCMat,1),1)];%empty list of outer points
 % 
-for iConf = 1:nConfs
-    confName = confCMat{iConf, 1};
-    confTestsVec = confCMat{iConf, 2};
-    inPointVecList  = confCMat{iConf, 3};
-    if confTestsVec(1)
-        suiteList{end + 1} = loader.load_tests_from_test_case(...
-            'elltool.control.test.mlunit.ReachDiscTC',...
-            ReachFactory(confName, crm, crmSys, true, false,true),...
-            inPointVecList , outPointVecList,isReCache,...
-            'marker',[confName,'_IsBackTrueIsEvolveFalse_disc']);
-    end 
-    if confTestsVec(2)
-        suiteList{end + 1} = loader.load_tests_from_test_case(...
-            'elltool.control.test.mlunit.ReachDiscTC',...
-            ReachFactory(confName, crm, crmSys, true, true,true),...
-            inPointVecList , outPointVecList,isReCache,...
-            'marker',[confName,'_IsBackTrueIsEvolveTrue_disc']);
-    end 
-
-end
-
-testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
-testList=horzcat(testLists{:});
-suite = mlunitext.test_suite(testList);
-suiteFilteredObj = suite.getCopyFiltered('discrFirstTest'); 
-results = runner.run(suiteFilteredObj);
-
+testCaseName='elltool.control.test.mlunit.ReachDiscTC';
+resObj=elltool.control.test.run_generic_tests(testCaseName,confCMat,...
+    varargin{:});

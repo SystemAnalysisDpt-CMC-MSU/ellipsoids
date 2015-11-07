@@ -24,18 +24,18 @@ classdef ContSingleTubeControl
             %           - an object containing ellipsoidal tube that is
             %           used for contol synthesis constructing
             %
-            %       probDynamicsList:  
+            %       probDynamicsList: cell[1,nSysSwitches] - 
             %           gras.ellapx.lreachplain.probdyn.LReachProblemLTIDynamics[1,]
-            %           - cellArray providing information about system's
-            %           dynamics 
+            %           - list of objects containing an information about
+            %           the system dynamics
             %
-            %       goodDirSetList: 
+            %       goodDirSetList: cell[1,nSysSwitches] -
             %           gras.ellapx.lreachplain.GoodDirsContinuousLTI[1,]
             %           - cellArray provides information about
             %           'good directions'
             %
-            %       switchSysTimeVec: double[1,] - system switch time
-            %           moments vector
+            %       switchSysTimeVec: double[1,nSysSwitches-1] - 
+            %           system switch time moments vector
             %
             %       inDownScaleKoeff: double[1,1] - scaling coefficient for
             %           internal ellipsoid tube approximation
