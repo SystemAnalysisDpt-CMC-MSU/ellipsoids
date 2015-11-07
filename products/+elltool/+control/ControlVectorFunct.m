@@ -131,17 +131,17 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                     end
                 end                
                 
-                qVec=xt1tMat*qVec;
-                qMat=xt1tMat*qMat*transpose(xt1tMat); 
-                xVec=xt1tMat*xVec;
+                qVec = xt1tMat*qVec;
+                qMat = xt1tMat*qMat*transpose(xt1tMat); 
+                xVec = xt1tMat*xVec;
                 
-                ml1Vec=sqrt(dot(xVec-qVec,qMat\(xVec-qVec)));
-                l0Vec=(qMat\(xVec-qVec))/ml1Vec;
+                ml1Vec = sqrt(dot(xVec-qVec,qMat\(xVec-qVec)));
+                l0Vec = (qMat\(xVec-qVec))/ml1Vec;
                 if (dot(-l0Vec,xVec)-dot(-l0Vec,qVec) > ...
                         dot(l0Vec,xVec)-dot(l0Vec,qVec))
-                    l0Vec=-l0Vec;
+                    l0Vec = -l0Vec;
                 end
-                l0Vec=l0Vec/norm(l0Vec);
+                l0Vec = l0Vec/norm(l0Vec);
                 
                 resMat(:,iTime) = pVec - (pMat*l0Vec) / ...
                     sqrt(l0Vec'*pMat*l0Vec);

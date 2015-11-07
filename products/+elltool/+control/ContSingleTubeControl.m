@@ -67,9 +67,12 @@ classdef ContSingleTubeControl
             %           the syntesis is to be constructed from
             %
             % Output:
-            %   trajectoryMat - double[n,] where n is a dimentionality
-            %       of the phase space - trajectory, that corresponds
-            %       to constructed control synthesis
+            %   trajEvalTime: double[1,] - time vector, corresponding to
+            %       constructed trajectory
+            %
+            %   trajectory: double[nDims,] where nDims is a
+            %       dimentionality of the phase space - trajectory, that
+            %       corresponds to constructed control synthesis
             %
             % $Author: Komarov Yuri <ykomarov94@gmail.com> $ 
             % $Date: 2015-30-10 $

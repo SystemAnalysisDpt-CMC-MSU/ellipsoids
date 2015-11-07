@@ -89,9 +89,9 @@ classdef ContControlBuilder
             qVec = properEllTube.aMat{1}(:,1);
             qMat = properEllTube.QArray{1}(:,:,1);
             if (isX0InSet)
-                indWithoutX=findEllWithoutX(qVec, qMat, x0Vec);
+                indWithoutX = findEllWithoutX(qVec, qMat, x0Vec);
             else
-                indWithoutX=1;
+                indWithoutX = 1;
             end
             properEllTube.scale(@(x)sqrt(indWithoutX),'QArray');
             % scale multiplies QArray*(k^2)
@@ -100,7 +100,7 @@ classdef ContControlBuilder
             properGoodDirSetList = getProperGoodDirSetList(indTube);
             %
             controlFuncObj = elltool.control.ContSingleTubeControl(...
-                properEllTube,properProbDynList, properGoodDirSetList,...
+                properEllTube, properProbDynList, properGoodDirSetList,...
                 self.switchSysTimeVec, indWithoutX);
             %
             function properProbDynList = getProperProbDynList(indTube)
