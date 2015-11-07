@@ -1,12 +1,16 @@
-function resObj = run_generic_tests(testCaseName,confCMat,varargin)
+function resObj = run_generic_tests(fConstructFactory,testCaseName,...
+    confCMat,testMarker,varargin)
 % RUN_CONT_TESTS runs most of the tests based on specified patters
 % for markers, test cases, tests names
 %
 % Input:
 %   regular:
+%       fConstructFactory: function_handle[1,1] - function that is
+%           responsible for constructing the reachability factories
 %       testCaseName: char[1,] - test case name 
 %       confCMat: cell[nConfs,3] - test configuration matrix
-%       
+%       testMarker: char[1,] - marker for the tests (for instance to
+%          distinguish tests for discrete and continuous systems)
 %   optional:
 %       confNameList: cell[1,nTestConfs] of char[1,] - list of
 %           configurations to test, if not specified, all configurations
@@ -60,7 +64,7 @@ isSelVec=ismember(confCMat(:,1),confNameList);
 confCMat=confCMat(isSelVec,:);
 %
 nConfs = size(confCMat, 1);
-suiteList = [];
+suiteCMat = cell(2,nConfs);
 %
 for iConf = 1:nConfs
     confName = confCMat{iConf, 1};
@@ -68,22 +72,25 @@ for iConf = 1:nConfs
     inPointVecList = confCMat{iConf, 3};
     outPointVecList = confCMat{iConf, 4};
     if confTestsVec(1)
-        suiteList{end + 1} = loader.load_tests_from_test_case(...
+        suiteCMat{1,iConf} = loader.load_tests_from_test_case(...
             testCaseName,...
-            ReachFactory(confName,crm,crmSys,true,false),...
+            fConstructFactory(confName,crm,crmSys,true,false),...
             inPointVecList,outPointVecList,testCasePropList{:},...
-            'marker', [confName,'_IsBackTrueIsEvolveFalse']); %#ok<AGROW>
+            'marker', [confName,'_IsBackTrueIsEvolveFalse',testMarker]);
     end
     if confTestsVec(2)
-        suiteList{end + 1} = loader.load_tests_from_test_case(...
+        suiteCMat{2,iConf} = loader.load_tests_from_test_case(...
             testCaseName,...
-            ReachFactory(confName,crm,crmSys,true,true),...
+            fConstructFactory(confName,crm,crmSys,true,true),...
             inPointVecList,outPointVecList,testCasePropList{:},...
-            'marker',[confName,'_IsBackTrueIsEvolveTrue']); %#ok<AGROW>
+            'marker',[confName,'_IsBackTrueIsEvolveTrue',testMarker]);
     end
 end
 %%
-testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
+isnEmptyMat=~cellfun('isempty',suiteCMat);
+testLists = cellfun(@(x)x.tests,suiteCMat(isnEmptyMat),...
+    'UniformOutput',false);
+%
 testVec = horzcat(testLists{:});
 suite = mlunitext.test_suite(testVec,suitePropList{:});
 suiteFilteredObj = suite.getCopyFiltered(filterProp{:});

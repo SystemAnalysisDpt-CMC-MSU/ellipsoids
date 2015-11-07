@@ -46,6 +46,8 @@ function resObj = run_cont_tests(varargin)
 %             and Computer Science,
 %             System Analysis Department 2012-2015$
 %
+import elltool.reach.ReachFactory;
+%
 confCMat = {
     %     there are three points for each system: the first one is inner,
     %     the second is situated on the bound, the third is external
@@ -120,6 +122,10 @@ confCMat = {
     'x2dtest',[1 1],[-100 50;-97.0051956176758 94.9220657348633],[-80 350];
     };
 %
+fConstructFactory=...
+    @(confName, crm, crmSys, isBack, isEvolve)ReachFactory(...
+    confName, crm, crmSys, isBack, isEvolve,false);
+%
 testCaseName='elltool.control.test.mlunit.ReachContTC';
-resObj=elltool.control.test.run_generic_tests(testCaseName,confCMat,...
-    varargin{:});
+resObj=elltool.control.test.run_generic_tests(fConstructFactory,...
+    testCaseName,confCMat,'',varargin{:});

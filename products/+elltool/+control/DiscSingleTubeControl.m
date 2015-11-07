@@ -1,10 +1,8 @@
-classdef DiscSingleTubeControl
+classdef DiscSingleTubeControl<elltool.control.ASingleTubeControl
     properties (Access = private)
-        properEllTube
         probDynamicsList
         goodDirSetList
         downScaleKoeff
-        controlVectorFunct
         isBackward
         switchSysTimeVec
     end
@@ -19,8 +17,7 @@ classdef DiscSingleTubeControl
             self.controlVectorFunct=elltool.control.DiscControlVectorFunct(properEllTube,...
                 self.probDynamicsList, self.goodDirSetList,inDownScaleKoeff);
         end
-
-
+        %
         function [trajEvalTime, trajectory] = getTrajectory(self,x0Vec)
             import modgen.common.throwerror;
             ERR_TOL = 1e-4;
@@ -46,12 +43,14 @@ classdef DiscSingleTubeControl
                 CRel = 10000;
                 timeVec = tStart:(tFin-tStart)/CRel:tFin;
                 %   
-                odeResMat = DiscrBackwardDynamics(AtMat,self.controlVectorFunct,x0Vec,timeVec,curProbDynObj);     
-             
+                odeResMat = DiscrBackwardDynamics(AtMat,...
+                    self.controlVectorFunct,x0Vec,timeVec,curProbDynObj);     
+                %
                 q1Vec=self.properEllTube.aMat{1}(:,indFin);
                 q1Mat=self.properEllTube.QArray{1}(:,:,indFin);
                 
-                currentScalProd = dot(odeResMat(end,:)'-q1Vec,q1Mat\(odeResMat(end,:)'-q1Vec));
+                currentScalProd = dot(odeResMat(end,:)'-q1Vec,q1Mat\...
+                    (odeResMat(end,:)'-q1Vec));
                 
                 if (isX0inSet)&&(currentScalProd > 1 + ERR_TOL)
                     throwerror('TestFails', ['the result of test does '...

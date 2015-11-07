@@ -46,6 +46,7 @@ function resObj = run_disc_tests(varargin)
 %             and Computer Science,
 %             System Analysis Department 2012-2015$
 %
+import elltool.reach.ReachFactory;
 confCMat = {
     'rot2d', [1 0], [5 -7; 0 -11];%failed
     'test3d',[1 1],[0.5 -0.5 0];%failed
@@ -79,12 +80,15 @@ confCMat = {
           1.51661133766174 1.10332226753235 -0.0676634311676025 0.965559244155884...
         -0.0676634311676025;1 1 1 1 1 1 1 1];
     'testAneNull',[1 0],[-20 10];
-    'test2dbad', [1 0], [50 -10]; 
     'varTest', [1 1],[1 1];
-    'test2dbad', [1 1], [1 -1];
+    'test2dbad', [1 1;1 0], [1 -1;50 -10];
     };
 confCMat=[confCMat,cell(size(confCMat,1),1)];%empty list of outer points
 % 
 testCaseName='elltool.control.test.mlunit.ReachDiscTC';
-resObj=elltool.control.test.run_generic_tests(testCaseName,confCMat,...
-    varargin{:});
+fConstructFactory=...
+    @(confName, crm, crmSys, isBack, isEvolve)ReachFactory(...
+    confName, crm, crmSys, isBack, isEvolve,true);
+%
+resObj=elltool.control.test.run_generic_tests(fConstructFactory,...
+    testCaseName,confCMat,'_discr',varargin{:});
