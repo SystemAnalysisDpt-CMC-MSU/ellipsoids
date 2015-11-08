@@ -1,10 +1,10 @@
 classdef AMatrixFunctionComparable < gras.mat.IMatrixFunction
-    properties (Access=private) 
+    properties (Access=private)
         absTol
         relTol;
     end
     
-    methods     
+    methods
         function isOk = isequal(self,SecMatObj)
             isOk = self.isEqual(SecMatObj);
         end
@@ -18,10 +18,10 @@ classdef AMatrixFunctionComparable < gras.mat.IMatrixFunction
             import modgen.common.throwerror;
             import modgen.struct.structcomparevec;
             import gras.la.sqrtmpos;
-
+            
             nFirstElems = numel(firstObj);
             nSecElems = numel(secObj);
-
+            
             firstSizeVec = size(firstObj);
             secSizeVec = size(secObj);
             isnFirstScalar = nFirstElems > 1;
@@ -56,26 +56,8 @@ classdef AMatrixFunctionComparable < gras.mat.IMatrixFunction
     end
     
     methods(Abstract, Access=protected)
-        function [SData,SFieldNiceNames,SFieldDescr] = toStructInternal(self,isPropIncluded)            
-            if (nargin < 2)
-                isPropIncluded = false;
-            end
-            SEll = struct;
-            SFieldNiceNames = struct;
-            SFieldDescr = struct;
-            if (isPropIncluded)
-                SEll.absTol = self.getAbsTol();
-                SEll.relTol = self.getRelTol();
-            end
-            SData = SEll;
-            if (isPropIncluded)
-                SFieldNiceNames.absTol = 'absTol';
-                SFieldNiceNames.relTol = 'relTol';
-                
-                SFieldDescr.absTol = 'Absolute tolerance.';
-                SFieldDescr.relTol = 'Relative tolerance.';
-            end
-        end
+        [SData,SFieldNiceNames,SFieldDescr] = toStructInternal(self,...
+            isPropIncluded)
     end
     
     methods

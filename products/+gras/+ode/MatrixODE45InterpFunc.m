@@ -12,9 +12,6 @@ classdef MatrixODE45InterpFunc < gras.mat.IMatrixFunction
         end
         function [varargout] = evaluate(self,timeVec)
             resList = cell(1,nargout);
-            if self.countdown
-                timeVec = -flipdim(timeVec, 2);
-            end
             [~,resList{:}] = ...
              self.objMatrixSysReshapeOde45RegInterp.evaluate(timeVec);
             varargout = resList;

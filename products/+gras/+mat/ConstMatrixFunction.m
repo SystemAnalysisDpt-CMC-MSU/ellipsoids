@@ -1,5 +1,6 @@
 classdef ConstMatrixFunction<gras.mat.AMatrixFunctionComparable
     properties (Access=protected)
+		mMat
         mSizeVec
         nDims
         nRows
@@ -28,6 +29,7 @@ classdef ConstMatrixFunction<gras.mat.AMatrixFunctionComparable
             modgen.common.type.simple.checkgen(mMat,...
                 'isnumeric(x)&&ismat(x)&&~isempty(x)');
             %
+			self.mMat = mMat;
             self.mSizeVec = size(mMat);
             self.nRows = self.mSizeVec(1);
             self.nCols = self.mSizeVec(2);

@@ -16,10 +16,9 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                 'RelTol', relTol*self.CALC_PRECISION_FACTOR, ...
                 'AbsTol', absTol*self.CALC_PRECISION_FACTOR};
         end
-        function [XstDynamics, RstDynamics, XstNormDynamics, RstInterp] = ...
+        function [XstDynamics, RstDynamics, XstNormDynamics, RstInterp]=...
                 calcTransMatDynamics(self, matOpFactory, STimeData, ...
-                AtDynamics, relTol, absTol)
-            %
+                AtDynamics, relTol, absTol) %#ok<INUSL>
             import gras.gen.matdot;
             import gras.mat.interp.MatrixInterpolantFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
@@ -95,7 +94,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                 'column', dataRstArray .* repmat(dataXstNormArray, ...
                 [sizeSysVec, 1]), timeRstVec);
             RstDynamics = MatrixInterpolantFactory.createInstance(...
-                'column', dataRstArray, timeRstVec);            
+                'column', dataRstArray, timeRstVec);
             %
             logger.info(...
                 sprintf(['calculating transition matrix spline ' ...
@@ -127,7 +126,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
             %
             solverObj = MatrixSysODERegInterpSolver(sizeSysVec,...
                 @(varargin)ode45reg(varargin{:}, odeset(odeArgList{:})),...
-                 'outArgStartIndVec',[1 2]);
+                'outArgStartIndVec',[1 2]);
             %
             if nargin > 7
                 timeVec = -timeVec;
@@ -138,7 +137,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                     matrixReshapeInterpObj] = ...
                     solverObj.solve(fDerivFuncList, timeVec, ...
                     sRstExtInitialMat{:});
-
+                
                 dataRstHalfInterpArray = MatrixODE45InterpFunc(...
                     matrixReshapeInterpObj, true);
                 %
@@ -184,35 +183,35 @@ function [timeRstOutVec, dataRstOutArray, dataXstNormOutArray, ...
     dataRstHalfInterpArray] = fPostProcLeftFunc(timeRstInVec, ...
     dataRstInArray, dataXstNormInArray, dataRstHalfInterpArray, ...
     compMatrixOprs)
-    %
-    timeRstOutVec = flipdim(timeRstInVec, 2);
-    dataXstNormOutArray = flipdim(dataXstNormInArray, 2);
-    dataRstOutArray = flipdim(dataRstInArray, 3);
-    dataRstHalfInterpArray = compMatrixOprs.flipdim(...
-        dataRstHalfInterpArray, 2);
+%
+timeRstOutVec = flip(timeRstInVec, 2);
+dataXstNormOutArray = flip(dataXstNormInArray, 2);
+dataRstOutArray = flip(dataRstInArray, 3);
+dataRstHalfInterpArray = compMatrixOprs.flipdim(...
+    dataRstHalfInterpArray, 2);
 end
 %
 % equations for R(s, t)
 %
 function dxMat = fRstExtFunc(t, xMat, fAtMat)
-    import gras.gen.matdot;
-    %
-    atMat = fAtMat(t);
-    rstMat = reshape(xMat(1:end-1), size(atMat));
-    xstNorm = xMat(end);
-    %
-    cachedMat = -rstMat * atMat;
-    arstNorm = matdot(rstMat, cachedMat);
-    %
-    drstMat = cachedMat - rstMat * arstNorm;
-    dxstNorm = arstNorm .* xstNorm;
-    %
-    dxMat = [drstMat(:); dxstNorm];
+import gras.gen.matdot;
+%
+atMat = fAtMat(t);
+rstMat = reshape(xMat(1:end-1), size(atMat));
+xstNorm = xMat(end);
+%
+cachedMat = -rstMat * atMat;
+arstNorm = matdot(rstMat, cachedMat);
+%
+drstMat = cachedMat - rstMat * arstNorm;
+dxstNorm = arstNorm .* xstNorm;
+%
+dxMat = [drstMat(:); dxstNorm];
 end
 %
 %regularization function for ode45reg
 %
-function [isStrictViolation,yReg] = fOdeReg(t,yVec)
-    isStrictViolation=false;
-    yReg=yVec;
+function [isStrictViolation,yReg] = fOdeReg(t,yVec) %#ok<INUSL>
+isStrictViolation=false;
+yReg=yVec;
 end

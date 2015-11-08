@@ -42,7 +42,8 @@ classdef ProjOrthArrayFunction<gras.mat.AMatrixFunctionComparable
     methods (Access=protected)
         function [SData, SFieldNiceNames, SFieldDescr] =...
                 toStructInternal(self,varargin)
-            [SData,SFieldNiceNames,SFieldDescr]=toStructInternal@gras.mat.AMatrixComparable(varargin{:});
+            [SData,SFieldNiceNames,SFieldDescr]=toStructInternal@...
+                gras.mat.AMatrixComparable(varargin{:});
             SData.projArrayFunc = func2str(self.projArrayFunc);
             SFieldNiceNames.projArrayFunc = 'pArrayFunc';
             SFieldDescr.projArrayFunc = 'Array of functions';
