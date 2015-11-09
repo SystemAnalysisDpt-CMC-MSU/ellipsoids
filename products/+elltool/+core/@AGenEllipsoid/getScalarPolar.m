@@ -1,13 +1,30 @@
 function polarObj = getScalarPolar(self, isRobustMethod)
 % GETSCALARPOLAR - calculating polar of a single ellipsoid,
-%                       method of AGenEllipsod class
+%                       method of AGenEllipsoid class.
+%
+%   Given ellipsoid E(q, Q) where q is its center, and Q - its shape matrix,
+%   the polar set to E(q, Q) is defined as follows:
+%   P = { l in R^n  | <l, q> + sqrt(<l, Q l>) <= 1 }
+%   If the origin is an interior point of ellipsoid E(q, Q),
+%   then its polar set P is an ellipsoid.
+%
 % Input:
 %   regular:
-%       self: ellipsoid: the object of class
-%       isRobustMethod: logical: = true for default, 
-%                                  determine method to use                  
+%       self: ellipsoid - the object of class
+%       isRobustMethod: logical[1,1] - if true, then
+%           robust method uses, else non-robust. Default value is true.
+%
+%
 % Output:
-%   polar: ellipsoid
+%   polar: ellipsoid - polar ellipsoid
+%
+% Example:
+%   ellObj = ellipsoid([4 -1; -1 1]);
+%   getScalarPolar(ellObj, true) == ellObj.inv()
+%
+%   ans =
+% 
+%       1
 %
 % $Author: Alexandr Timchenko  <timchenko.alexandr@gmail.com> $    
 % $Date: Oct-2015$

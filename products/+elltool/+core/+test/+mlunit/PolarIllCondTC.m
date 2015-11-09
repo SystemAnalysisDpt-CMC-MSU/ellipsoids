@@ -13,8 +13,10 @@ classdef PolarIllCondTC < mlunitext.test_case &...
             self =...
                self@elltool.core.test.mlunit.TestEllipsoid(varargin{:});
         end
-        
-        function self = testGetScalarPolar(self)
+        function self = testGetScalatPolar(self)
+            
+        end
+        function self = testGetScalarPolarMethodsDifference(self)
             K_TOL = 1e-2;
             check(5, true);
             check(11, false);   
@@ -29,7 +31,7 @@ classdef PolarIllCondTC < mlunitext.test_case &...
             end
         end
        
-        function testNegative(self)
+            function self = testNegative(self)
             self.runAndCheckError(@run,'degenerateEllipsoid');
             function run()
                 ell1 = ellipsoid(ones(2,1),eye(2));
