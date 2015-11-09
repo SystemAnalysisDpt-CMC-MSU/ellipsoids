@@ -21,21 +21,22 @@ modgen.common.checkmultvar('isscalar(x1)&&islogical(x2)&&isscalar(x2)',...
 if nargin<2 
     isRobustMethod = true;
 end
+    dbstack
 if isRobustMethod
-    [cVec, shMat] = double(self);
+    [cVec,shMat] = double(self);
     isZeroInEll = cVec' * ell_inv(shMat) * cVec;
     if isZeroInEll < 1
-        auxMat  = ell_inv(shMat - cVec*cVec');
-        auxMat  = 0.5*(auxMat + auxMat');
-        polarCVec  = -auxMat * cVec;
-        polarShMat  = (1 + cVec'*auxMat*cVec)*auxMat;
+        auxMat = ell_inv(shMat - cVec*cVec');
+        auxMat = 0.5*(auxMat + auxMat');
+        polarCVec = -auxMat * cVec;
+        polarShMat = (1 + cVec'*auxMat*cVec)*auxMat;
         polarObj = ellipsoid(polarCVec,polarShMat);
     else
-        throwerror('degenerateEllipsoid',...
+        modgen.common.throwerror('degenerateEllipsoid',...
             'The resulting ellipsoid is not bounded');
     end
 else
-    [cVec, shMat] = double(self);
+    [cVec,shMat] = double(self);
     invShMat = inv(shMat);
     normConst = cVec'*(shMat\cVec);
     polarCVec = -(shMat\cVec)/(1-normConst);

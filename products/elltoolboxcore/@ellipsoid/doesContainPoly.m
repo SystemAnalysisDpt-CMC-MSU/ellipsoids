@@ -153,8 +153,8 @@ for iFacets = 1:nFacets
 end
 end
 %
-function res = isEllPolInPolyPol(ell,normalsMat, constVec,internalPoint,absTol)
-polarEll = getScalarPolar(ell-internalPoint, true);
+function res = isEllPolInPolyPol(ell,normalsMat,constVec,internalPoint,absTol)
+polarEll = getScalarPolar(ell-internalPoint,true);
 suppFuncVec = rho(polarEll,normalsMat');
 res = all(suppFuncVec' <= constVec+absTol);
 end

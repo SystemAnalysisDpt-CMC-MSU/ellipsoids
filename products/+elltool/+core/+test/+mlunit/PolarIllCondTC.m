@@ -15,24 +15,26 @@ classdef PolarIllCondTC < mlunitext.test_case &...
         end
         
         function self = testGetScalarPolar(self)
-            kTol = 1e-2;
+            K_TOL = 1e-2;
+            check(5, true);
+            check(11, false);   
             %
-            nDims = 5;
-            ell1 = ellipsoid(0.01 * ones(nDims, 1), hilb(nDims));
-            polarObj1 = self.getScalarPolarTest(ell1, true);
-            polarObj2 = self.getScalarPolarTest(ell1, false);
-            [~, shMat1] = double(polarObj1);
-            [~, shMat2] = double(polarObj2);
-            mlunitext.assert(norm(shMat1 - shMat2) < kTol);
-            %
-            nDims = 11;
-            ell1 = ellipsoid(0.01 * ones(nDims, 1), hilb(nDims));
-            polarObj1 = self.getScalarPolarTest(ell1, true);
-            polarObj2 = self.getScalarPolarTest(ell1, false);
-            [~, shMat1] = double(polarObj1);
-            [~, shMat2] = double(polarObj2);
-            mlunitext.assert(norm(shMat1 - shMat2) > kTol);
+            function check(N_DIMS,expVal)                
+                ell1 = ellipsoid(0.01 * ones(N_DIMS,1),hilb(N_DIMS));
+                polarObj1 = self.getScalarPolarTest(ell1,true);
+                polarObj2 = self.getScalarPolarTest(ell1,false);
+                [~,shMat1] = double(polarObj1);
+                [~,shMat2] = double(polarObj2);
+                mlunitext.assert((norm(shMat1 - shMat2) < K_TOL) == expVal);
+            end
         end
        
+        function testNegative(self)
+            self.runAndCheckError(@run,'degenerateEllipsoid');
+            function run()
+                ell1 = ellipsoid(ones(2,1),eye(2));
+                self.getScalarPolarTest(ell1,true);
+            end
+        end
     end
 end
