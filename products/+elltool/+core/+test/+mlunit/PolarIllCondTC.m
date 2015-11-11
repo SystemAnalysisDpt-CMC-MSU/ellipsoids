@@ -13,9 +13,17 @@ classdef PolarIllCondTC < mlunitext.test_case &...
             self =...
                self@elltool.core.test.mlunit.TestEllipsoid(varargin{:});
         end
-        function self = testGetScalatPolar(self)
-            
-        end
+        function self = testGetScalarPolar(self)
+            N_DIMS = 11;
+            Q = hilb(N_DIMS);
+            expShMat = invhilb(N_DIMS);
+            ell1 = ellipsoid(Q);
+            polarObj1 = self.getScalarPolarTest(ell1,true);
+            polarObj2 = self.getScalarPolarTest(ell1,false);
+            [~,shMat1] = double(polarObj1);
+            [~,shMat2] = double(polarObj2);
+            mlunitext.assert(norm(expShMat - shMat1) <= norm(expShMat - shMat2));
+        end 
         function self = testGetScalarPolarMethodsDifference(self)
             K_TOL = 1e-2;
             check(5, true);

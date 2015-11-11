@@ -10,13 +10,13 @@ function polarObj = getScalarPolar(self, isRobustMethod)
 %
 % Input:
 %   regular:
-%       self: ellipsoid - the object of class
+%       self: ellipsoid[1,1] - the object of class
 %       isRobustMethod: logical[1,1] - if true, then
 %           robust method uses, else non-robust. Default value is true.
 %
 %
 % Output:
-%   polar: ellipsoid - polar ellipsoid
+%   polar: ellipsoid[1,1] - polar ellipsoid
 %
 % Example:
 %   ellObj = ellipsoid([4 -1; -1 1]);
@@ -38,7 +38,7 @@ modgen.common.checkmultvar('isscalar(x1)&&islogical(x2)&&isscalar(x2)',...
 if nargin<2 
     isRobustMethod = true;
 end
-    dbstack
+
 if isRobustMethod
     [cVec,shMat] = double(self);
     isZeroInEll = cVec' * ell_inv(shMat) * cVec;
