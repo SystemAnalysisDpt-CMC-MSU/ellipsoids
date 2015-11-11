@@ -1,6 +1,6 @@
 function polarObj = getScalarPolar(self, isRobustMethod)
-% GETSCALARPOLAR - calculating polar of a single ellipsoid,
-%                       method of AGenEllipsoid class.
+% GETSCALARPOLAR - calculating polar of a single ellipsoid, method of 
+% AGenEllipsoid class.
 %
 %   Given ellipsoid E(q, Q) where q is its center, and Q - its shape matrix,
 %   the polar set to E(q, Q) is defined as follows:
@@ -9,7 +9,7 @@ function polarObj = getScalarPolar(self, isRobustMethod)
 %   then its polar set P is an ellipsoid.
 %
 % Input:
-%   regular:
+%	regular:
 %       self: ellipsoid[1,1] - the object of class
 %       isRobustMethod: logical[1,1] - if true, then
 %           robust method uses, else non-robust. Default value is true.
@@ -29,8 +29,8 @@ function polarObj = getScalarPolar(self, isRobustMethod)
 % $Author: Alexandr Timchenko  <timchenko.alexandr@gmail.com> $    
 % $Date: Oct-2015$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2015 $
+%           Faculty of Computational Mathematics and Computer Science,
+%           System Analysis Department 2015 $
 %
 modgen.common.checkmultvar('isscalar(x1)&&islogical(x2)&&isscalar(x2)',...
     2, self, isRobustMethod, 'errorTag', 'wrongInput');
@@ -40,6 +40,13 @@ if nargin<2
 end
 
 if isRobustMethod
+    [cVec,shMat] = double(self);
+    invShMat = inv(shMat);
+    normConst = cVec'*(shMat\cVec);
+    polarCVec = -(shMat\cVec)/(1-normConst);
+    polarShMat = invShMat/(1-normConst) + polarCVec*polarCVec';
+    polarObj = ellipsoid(polarCVec,polarShMat);
+else
     [cVec,shMat] = double(self);
     isZeroInEll = cVec' * ell_inv(shMat) * cVec;
     if isZeroInEll < 1
@@ -52,12 +59,5 @@ if isRobustMethod
         modgen.common.throwerror('degenerateEllipsoid',...
             'The resulting ellipsoid is not bounded');
     end
-else
-    [cVec,shMat] = double(self);
-    invShMat = inv(shMat);
-    normConst = cVec'*(shMat\cVec);
-    polarCVec = -(shMat\cVec)/(1-normConst);
-    polarShMat = invShMat/(1-normConst) + polarCVec*polarCVec';
-    polarObj = ellipsoid(polarCVec,polarShMat);
 end
 end
