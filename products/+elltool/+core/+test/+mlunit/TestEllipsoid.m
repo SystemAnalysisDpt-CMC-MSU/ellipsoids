@@ -3,7 +3,7 @@ classdef TestEllipsoid < elltool.core.AGenEllipsoid
        function self=TestEllipsoid(varargin)    
        end
        function polarObj = getScalarPolarTest(~, ell, isRobustMethod)
-           polarObj = getScalarPolar(ell, isRobustMethod);
+           polarObj = getScalarPolarInternal(ell, isRobustMethod);
        end
    end
    methods (Access = protected, Static)
