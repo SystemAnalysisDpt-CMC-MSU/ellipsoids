@@ -6,8 +6,8 @@ classdef hyperplane < elltool.core.AGenEllipsoid
         absTol
         relTol
     end
+    %
     methods
-        
         function hypObjArr = hyperplane(hypNormArr, hypConstArr, varargin)
             %
             % HYPERPLANE - creates hyperplane structure

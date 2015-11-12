@@ -8,7 +8,7 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
         nPlot2dPoints
         nPlot3dPoints
     end
-    
+    %
     methods
         function set.shapeMat(self,shMat)
             import modgen.common.throwerror;
