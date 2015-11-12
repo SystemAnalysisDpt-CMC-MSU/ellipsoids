@@ -1,36 +1,36 @@
 function polarObj = getScalarPolar(self, isRobustMethod)
-% GETSCALARPOLAR - calculating polar of a single ellipsoid, method of 
-% AGenEllipsoid class.
+% GETSCALARPOLAR - calculating polar of a single ellipsoid,
+%                       method of AGenEllipsoid class.
 %
-%   Given ellipsoid E(q, Q) where q is its center, and Q - its shape matrix,
-%   the polar set to E(q, Q) is defined as follows:
-%   P = { l in R^n  | <l, q> + sqrt(<l, Q l>) <= 1 }
-%   If the origin is an interior point of ellipsoid E(q, Q),
-%   then its polar set P is an ellipsoid.
+%	Given ellipsoid E(q, Q) where q is its center, and Q - its shape matrix,
+%	the polar set to E(q, Q) is defined as follows:
+%	P = { l in R^n  | <l, q> + sqrt(<l, Q l>) <= 1 }
+%	If the origin is an interior point of ellipsoid E(q, Q),
+%	then its polar set P is an ellipsoid.
 %
 % Input:
 %	regular:
-%       self: ellipsoid[1,1] - the object of class
-%       isRobustMethod: logical[1,1] - if true, then
-%           robust method uses, else non-robust. Default value is true.
+%		self: ellipsoid[1,1] - the object of class
+%		isRobustMethod: logical[1,1] - if true, then
+%			robust method uses, else non-robust. Default value is true.
 %
 %
 % Output:
-%   polar: ellipsoid[1,1] - polar ellipsoid
+%	polar: ellipsoid[1,1] - polar ellipsoid
 %
 % Example:
-%   ellObj = ellipsoid([4 -1; -1 1]);
-%   getScalarPolar(ellObj, true) == ellObj.inv()
+%	ellObj = ellipsoid([4 -1; -1 1]);
+%	getScalarPolar(ellObj, true) == ellObj.inv()
 %
-%   ans =
+%	ans =
 % 
-%       1
+%		1
 %
 % $Author: Alexandr Timchenko  <timchenko.alexandr@gmail.com> $    
 % $Date: Oct-2015$
 % $Copyright: Moscow State University,
-%           Faculty of Computational Mathematics and Computer Science,
-%           System Analysis Department 2015 $
+%			Faculty of Computational Mathematics and Computer Science,
+%			System Analysis Department 2015 $
 %
 modgen.common.checkmultvar('isscalar(x1)&&islogical(x2)&&isscalar(x2)',...
     2, self, isRobustMethod, 'errorTag', 'wrongInput');
