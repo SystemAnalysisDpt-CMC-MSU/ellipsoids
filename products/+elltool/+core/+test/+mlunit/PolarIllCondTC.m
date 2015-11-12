@@ -1,5 +1,4 @@
-classdef PolarIllCondTC < mlunitext.test_case &...
-        elltool.core.test.mlunit.TestEllipsoid
+classdef PolarIllCondTC < mlunitext.test_case
     %$Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $
     %$Date: 2015-11-09 $
     %$Copyright: Moscow State University,
@@ -7,11 +6,14 @@ classdef PolarIllCondTC < mlunitext.test_case &...
     %            and Computer Science,
     %            System Analysis Department 2015 $
 
+    methods (Access=private)
+        function test = getTest(self)
+            test = elltool.core.test.mlunit.aux.TestPolarEllipsoid();
+        end
+    end
     methods
         function self = PolarIllCondTC(varargin)
             self = self@mlunitext.test_case(varargin{:});
-            self =...
-               self@elltool.core.test.mlunit.TestEllipsoid(varargin{:});
         end
         function self = testGetScalarPolar(self)
             N_DIMS = 11;
@@ -34,9 +36,10 @@ classdef PolarIllCondTC < mlunitext.test_case &...
         end
        
         function [sh1Mat, sh2Mat] = auxGetTestPolars(self,ell)
-            polar1Obj = self.getScalarPolarTest(ell,true);
+            obj = self.getTest();
+            polar1Obj = obj.getScalarPolarTest(ell,true);
             [~, sh1Mat] = double(polar1Obj);
-            polar2Obj = self.getScalarPolarTest(ell,false);
+            polar2Obj = obj.getScalarPolarTest(ell,false);
             [~, sh2Mat] = double(polar2Obj);
         end
 
@@ -44,7 +47,8 @@ classdef PolarIllCondTC < mlunitext.test_case &...
             self.runAndCheckError(@run,'degenerateEllipsoid');
             function run()
                 ell1 = ellipsoid(ones(2,1),eye(2));
-                self.getScalarPolarTest(ell1,false);
+                obj = self.getTest();
+                obj.getScalarPolarTest(ell1,false);
             end
         end
     end
