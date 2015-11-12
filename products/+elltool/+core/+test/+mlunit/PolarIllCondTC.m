@@ -45,6 +45,7 @@ classdef PolarIllCondTC < mlunitext.test_case
 
         function self = testNegative(self)
             self.runAndCheckError(@run,'degenerateEllipsoid');
+            %
             function run()
                 ell1 = ellipsoid(ones(2,1),eye(2));
                 obj = self.getTest();
