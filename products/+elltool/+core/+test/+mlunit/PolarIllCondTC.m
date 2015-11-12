@@ -18,7 +18,7 @@ classdef PolarIllCondTC < mlunitext.test_case &...
             shMat = hilb(N_DIMS);
             expShMat = invhilb(N_DIMS);
             ell1 = ellipsoid(shMat);
-            [sh1Mat, sh2Mat] = auxGetTestPolars(ell1);
+            [sh1Mat, sh2Mat] = self.auxGetTestPolars(ell1);
             mlunitext.assert(norm(expShMat - sh1Mat) <= norm(expShMat - sh2Mat));
         end 
         function self = testGetScalarPolarMethodsDifference(self)
@@ -28,12 +28,12 @@ classdef PolarIllCondTC < mlunitext.test_case &...
             %
             function check(N_DIMS,expVal)                
                 ell1 = ellipsoid(0.01 * ones(N_DIMS,1),hilb(N_DIMS));
-                [sh1Mat, sh2Mat] = auxGetTestPolars(ell1);
+                [sh1Mat, sh2Mat] = self.auxGetTestPolars(ell1);
                 mlunitext.assert((norm(sh1Mat - sh2Mat) < K_TOL) == expVal);
             end
         end
        
-        function [sh1Mat, sh2Mat] = auxGetTestPolars(ell)
+        function [sh1Mat, sh2Mat] = auxGetTestPolars(self,ell)
             polar1Obj = self.getScalarPolarTest(ell,true);
             [~, sh1Mat] = double(polar1Obj);
             polar2Obj = self.getScalarPolarTest(ell,false);
@@ -44,7 +44,7 @@ classdef PolarIllCondTC < mlunitext.test_case &...
             self.runAndCheckError(@run,'degenerateEllipsoid');
             function run()
                 ell1 = ellipsoid(ones(2,1),eye(2));
-                self.getScalarPolarTest(ell1,true);
+                self.getScalarPolarTest(ell1,false);
             end
         end
     end
