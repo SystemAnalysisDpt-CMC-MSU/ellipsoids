@@ -89,7 +89,7 @@ classdef test_suite<handle
                 testCaseConstrArgList={};
             else
                 modgen.common.checkvar(testCaseConstrArgList,...
-                    'iscell(x)&&isrow(x)');
+                    'iscell(x)&&(isrow(x)||isempty(x))');
             end
             %
             if nTestCases<1
