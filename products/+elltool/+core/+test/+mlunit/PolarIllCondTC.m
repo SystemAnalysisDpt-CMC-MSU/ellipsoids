@@ -15,14 +15,11 @@ classdef PolarIllCondTC < mlunitext.test_case &...
         end
         function self = testGetScalarPolar(self)
             N_DIMS = 11;
-            Q = hilb(N_DIMS);
+            shMat = hilb(N_DIMS);
             expShMat = invhilb(N_DIMS);
-            ell1 = ellipsoid(Q);
-            polarObj1 = self.getScalarPolarTest(ell1,true);
-            polarObj2 = self.getScalarPolarTest(ell1,false);
-            [~,shMat1] = double(polarObj1);
-            [~,shMat2] = double(polarObj2);
-            mlunitext.assert(norm(expShMat - shMat1) <= norm(expShMat - shMat2));
+            ell1 = ellipsoid(shMat);
+            [sh1Mat, sh2Mat] = auxGetTestPolars(ell1);
+            mlunitext.assert(norm(expShMat - sh1Mat) <= norm(expShMat - sh2Mat));
         end 
         function self = testGetScalarPolarMethodsDifference(self)
             K_TOL = 1e-2;
@@ -31,15 +28,19 @@ classdef PolarIllCondTC < mlunitext.test_case &...
             %
             function check(N_DIMS,expVal)                
                 ell1 = ellipsoid(0.01 * ones(N_DIMS,1),hilb(N_DIMS));
-                polarObj1 = self.getScalarPolarTest(ell1,true);
-                polarObj2 = self.getScalarPolarTest(ell1,false);
-                [~,shMat1] = double(polarObj1);
-                [~,shMat2] = double(polarObj2);
-                mlunitext.assert((norm(shMat1 - shMat2) < K_TOL) == expVal);
+                [sh1Mat, sh2Mat] = auxGetTestPolars(ell1);
+                mlunitext.assert((norm(sh1Mat - sh2Mat) < K_TOL) == expVal);
             end
         end
        
-            function self = testNegative(self)
+        function [sh1Mat, sh2Mat] = auxGetTestPolars(ell)
+            polar1Obj = self.getScalarPolarTest(ell,true);
+            [~, sh1Mat] = double(polar1Obj);
+            polar2Obj = self.getScalarPolarTest(ell,false);
+            [~, sh2Mat] = double(polar2Obj);
+        end
+
+        function self = testNegative(self)
             self.runAndCheckError(@run,'degenerateEllipsoid');
             function run()
                 ell1 = ellipsoid(ones(2,1),eye(2));
