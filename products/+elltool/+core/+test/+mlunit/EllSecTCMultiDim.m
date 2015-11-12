@@ -426,7 +426,7 @@ testError(13);
         end
     end
     function testError(flag)
-        [test1EllArray, ~, errorStr] = createTypicalArray(flag);
+        [test1EllArray, ~, errorStr] = createTypicalArray(flag); %#ok<ASGLU>
         if isMinksumEa
             self.runAndCheckError...
                 ('test1EllArray.minksum_ea(eye(3))', errorStr);
@@ -532,7 +532,7 @@ testError(13);
     end
     function testError(flag)
         [test1EllArray, test2EllArray, errorStr] = ...
-            createTypicalArray(flag);
+            createTypicalArray(flag); %#ok<ASGLU>
         if isMinkpmEa
             self.runAndCheckError...
                 ('test2EllArray.minkpm_ea(test1EllArray, eye(3))', ...

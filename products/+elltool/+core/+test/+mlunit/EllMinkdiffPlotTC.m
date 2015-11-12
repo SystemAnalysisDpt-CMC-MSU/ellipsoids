@@ -42,8 +42,6 @@ classdef EllMinkdiffPlotTC < elltool.core.test.mlunit.EllMinkBTC
             testForthEll=ellipsoid(diag([0.8 0.1 0.1]));
             check(testFirEll,testSecEll);
             check(testThirdEll,testForthEll);
-
-            
             function check(testFirEll,testSecEll)
                 ABS_TOL = 10^(-2);
                 [~,boundPoints] = minkdiff(testFirEll,testSecEll);

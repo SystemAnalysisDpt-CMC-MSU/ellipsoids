@@ -19,8 +19,6 @@ classdef EllMinkpmPlotTC < elltool.core.test.mlunit.EllMinkDTC
                 rhoDiffVec = gras.geom.sup.supgeomdiff2d(supp1Mat...
                     +supp2Mat,supp3Mat,lGridMat.');
             end
-            
-            
             function rhoDiffVec=...
                     fRhoDiff3d(supp1Mat,supp2Mat,supp3Mat,lGridMat)
                 rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Mat...
@@ -30,6 +28,5 @@ classdef EllMinkpmPlotTC < elltool.core.test.mlunit.EllMinkDTC
         function self = tear_down(self,varargin)
             close all;
         end
-        
     end
 end

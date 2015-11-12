@@ -6,9 +6,6 @@ classdef EllMinkBTC < mlunitext.test_case &...
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
-    properties (Access=protected)
-
-    end
     methods
         function self = EllMinkBTC(varargin)
             self = self@mlunitext.test_case(varargin{:});

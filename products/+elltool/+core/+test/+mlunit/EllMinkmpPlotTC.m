@@ -5,7 +5,6 @@ classdef EllMinkmpPlotTC <  elltool.core.test.mlunit.EllMinkDTC
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
-    
     methods
         function self = EllMinkmpPlotTC(varargin)
             self =...
@@ -19,8 +18,6 @@ classdef EllMinkmpPlotTC <  elltool.core.test.mlunit.EllMinkDTC
                 rhoDiffVec = gras.geom.sup.supgeomdiff2d(supp1Mat,...
                     supp2Mat,lGridMat.')+supp3Mat;
             end
-            
-            
             function rhoDiffVec=...
                     fRhoDiff3d(supp1Mat,supp2Mat,supp3Mat,lGridMat)
                 rhoDiffVec = gras.geom.sup.supgeomdiff3d(supp1Mat,...
@@ -30,8 +27,5 @@ classdef EllMinkmpPlotTC <  elltool.core.test.mlunit.EllMinkDTC
         function self = tear_down(self,varargin)
             close all;
         end
-        
-        
-        
     end
 end

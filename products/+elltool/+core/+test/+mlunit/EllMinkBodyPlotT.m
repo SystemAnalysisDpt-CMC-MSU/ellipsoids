@@ -86,10 +86,6 @@ classdef EllMinkBodyPlotT < handle
                 'fill', true, 'shade', 0.1, ...
                 'color', [0, 1, 1]);
             checkParams(plObj, [], 1, 0.1, [0, 1, 1]);
-            
-            
-            
-            
             function checkParams(plObj, linewidth, fill, shade, colorVec)
                 SHPlot=plObj.getPlotStructure().figToAxesToHMap.toStruct();
                 plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');

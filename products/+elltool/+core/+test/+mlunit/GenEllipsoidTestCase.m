@@ -17,7 +17,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             ell1=elltool.core.GenEllipsoid([1;1],eye(2));
             ell2=elltool.core.GenEllipsoid([1;0],eye(2));
             ell3=elltool.core.GenEllipsoid([0;1],eye(2));
-            ellMat=[ell1,ell2,ell3;ell1,ell2,ell3];
+            ellMat=[ell1,ell2,ell3;ell1,ell2,ell3]; %#ok<NASGU>
             evalc('display(ellMat)');
         end
         %
@@ -38,25 +38,10 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             qMatStr='[1 1;0 1]';
             checkNeg(1);
             checkNeg(2);
-%             self.runAndCheckError('elltool.core.GenEllipsoid(eye(3,2))',...
-%                 'wrongInputMat');
-%             self.runAndCheckError('elltool.core.GenEllipsoid([1 1;0 1])',...
-%                 'wrongInputMat');
-%             self.runAndCheckError(...
-%                 'elltool.core.GenEllipsoid([1;0],eye(3,2))',...
-%                 'wrongInputMat');
-%             self.runAndCheckError(...
-%                 'elltool.core.GenEllipsoid([1;1],[1 1;0 1])',...
-%                 'wrongInputMat');
             %Tests#0.2. Negative test, not positive semi-definite matrix
             qMatStr='[1 2;3 4]';
             checkNeg(1);
             checkNeg(2);
-%             self.runAndCheckError('elltool.core.GenEllipsoid([1 2; 3 4])',...
-%                 'wrongInputMat');
-%             self.runAndCheckError(...
-%                 'elltool.core.GenEllipsoid([1;1],[1 2; 3 4])',...
-%                 'wrongInputMat');
             % Test#1. GenEllipsoid(q,D,W)
             wMat=[1 1;1 2];
             dMat=[Inf 1].';
@@ -160,7 +145,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             resInvEll=testEll.inv();
             ansEll=ellipsoid(cenVec,ellMat);
             ansInvEll=inv(ansEll);
-            [ansCenVec ansMat]=double(ansInvEll);
+            [ansCenVec,ansMat]=double(ansInvEll);
             %
             compEll(resInvEll,ansCenVec,ansMat);
             %Test#2.
@@ -174,7 +159,6 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 [isOk,reportStr]=eq(ellObj,ellSecObj);
                 mlunitext.assert_equals(true,isOk,reportStr);
             end
-            
         end
         %
         function self = testMinkSumEa(self)
@@ -233,7 +217,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             %Test#5. Two ellipsoids. Non-degenerate. Non-zero centers.
             % Random matrices.
             % Multiple various directions. Ellipses, not circles. 2D case.
-            q1Mat=testEll2x2Mat{1};
+            q1Mat=testEll2x2Mat{1}; %#ok<USENS>
             q2Mat=testEll2x2Mat{2};
             cen1Vec=[1,2].';
             cen2Vec=[-5,10].';
@@ -386,8 +370,6 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             end
         end
         %
-        %
-        %
         function self = testMinkDiffIa(self)
             import elltool.core.GenEllipsoid;
             %
@@ -440,8 +422,8 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             dirVec=[cos(phi);sin(phi);zeros(1,1)];
             resOldEllipsoid=minkdiff_ia(ellipsoid(test1Mat(1:2,1:2)),...
                 ellipsoid(test2Mat(1:2,1:2)),dirVec(1:2));
-            [oldCenVec oldQMat]=double(resOldEllipsoid);
-            [eigOMat diaOMat]=eig(oldQMat);
+            [oldCenVec, oldQMat]=double(resOldEllipsoid);
+            [eigOMat, diaOMat]=eig(oldQMat);
             ansWMat=zeros(3);
             ansWMat(1:2,1:2)=eigOMat;
             ansWMat(3,3)=1;
@@ -594,8 +576,8 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             auxEll2=ellipsoid(diag([3 4].'));
             dirAuxVec=dirVec(1:2);
             auxEll=minksum_ia([auxEll1,auxEll2],dirAuxVec);
-            [auxCenVec auxQMat]=double(auxEll);
-            [auxEigvMat auxDiagMat]=eig(auxQMat);
+            [auxCenVec, auxQMat]=double(auxEll);
+            [auxEigvMat, auxDiagMat]=eig(auxQMat);
             ansCenVec=[auxCenVec; 0];
             ansEigvMat=eye(nDim);
             ansDiagVec=zeros(nDim,1);
@@ -698,8 +680,8 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
             %
             resOldEllipsoid=minkdiff_ea(ellipsoid(test1Mat(1:2,1:2)),...
                 ellipsoid(test2Mat(1:2,1:2)),dirVec(1:2));
-            [oldCenVec oldQMat]=double(resOldEllipsoid);
-            [eigOMat diaOMat]=eig(oldQMat);
+            [oldCenVec,oldQMat]=double(resOldEllipsoid);
+            [eigOMat,diaOMat]=eig(oldQMat);
             ansWMat=zeros(3);
             ansWMat(1:2,1:2)=eigOMat;
             ansWMat(3,3)=1;
@@ -1101,7 +1083,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
         end
     end
 end
-
+%
 function resEllObj=rotateEll(ellObj,oMat)
 import elltool.core.GenEllipsoid;
 eigvMat=ellObj.getEigvMat();
@@ -1128,9 +1110,9 @@ eigvMat=resEllipsoid.getEigvMat();
 diagVec=diag(resEllipsoid.getDiagMat());
 cenVec=resEllipsoid.getCenter();
 %sort in increasing eigenvalue order
-[diagVec indVec]=sort(diagVec);
+[diagVec,indVec]=sort(diagVec);
 eigvMat=eigvMat(:,indVec);
-[ansDVec indVec]=sort(ansDVec);
+[ansDVec,indVec]=sort(ansDVec);
 ansVMat=ansVMat(:,indVec);
 isEqual=isEqV(diagVec,ansDVec,absTol)&&...
     isEqV(cenVec,ansCenVec,absTol)&&...
@@ -1139,7 +1121,7 @@ end
 %
 function [isEqual,reportStr]=isEllNewOldEqual(ellNewObj, ellOldObj)
 import elltool.core.GenEllipsoid;
-[cenOldVec qOldMat]=double(ellOldObj);
+[cenOldVec,qOldMat]=double(ellOldObj);
 [isEqual,reportStr]=ellNewObj.eq(GenEllipsoid(cenOldVec, qOldMat));
 end
 %

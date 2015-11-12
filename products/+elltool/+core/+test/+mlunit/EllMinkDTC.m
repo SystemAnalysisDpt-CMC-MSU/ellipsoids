@@ -67,7 +67,6 @@ classdef EllMinkDTC <   elltool.core.test.mlunit.EllMinkATC
                 supVec = max(lGridMat*boundPoints(:,1:end-1),[],2);
                 mlunitext.assert_equals(abs(supVec'-rhoDiffVec)...
                     < ABS_TOL,ones(1,size(supVec,1)));
-                
             end
         end
     end
