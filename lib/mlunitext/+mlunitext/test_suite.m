@@ -45,6 +45,26 @@ classdef test_suite<handle
     end
     %
     methods (Static)
+        function suiteObj=fromSuites(varargin)
+            % FROMSUITES unites mlunitext.test_suite objects into a single
+            % object
+            %
+            % Input:
+            %   regular:
+            %       suite1Obj: mlunitext.test_suite[1,1] - first suite obj
+            %   optional:
+            %       suite2Obj: mlunitext.test_suite[1,1] - second suite obj
+            %           ...
+            %       suiteNObj: mlunitext.test_suite[1,1] - Nth suite obj
+            %
+            % Output:
+            %   suiteObj:  mlunitext.test_suite[1,1] - resulting suite
+            %       object
+            %
+            testList=cellfun(@(x)x.tests,varargin,'UniformOutput',false);
+            testVec=[testList{:}];
+            suiteObj=mlunitext.test_suite(testVec);
+        end
         function suite=fromTestCaseNameList(testCaseNameList,...
                 testCaseConstrArgList)
             % FROMTESTCASENAMELIST creates a test suite from the test cases
@@ -56,21 +76,27 @@ classdef test_suite<handle
             %       testCaseNameList: cell[1,nTestCases] of char[1,] - list
             %           of test case names
             %   optional:
-            %       testCaseConstrArgList: any[1,] - an arbitrary list of
-            %           arguments passed into a test case constructor.
+            %       testCaseConstrArgList: cell[1,] of any[] - an arbitrary
+            %           list of arguments passed into a test case constructor.
             %
             import modgen.common.type.simple.checkcellofstr;
             import modgen.common.throwerror;
-            checkcellofstr(testCaseNameList);
+            testCaseNameList=checkcellofstr(testCaseNameList);
             loaderObj = mlunitext.test_loader;
-            nTestCases=length(testCaseNameList);
+            nTestCases=numel(testCaseNameList);
+            %
             if nargin<2
                 testCaseConstrArgList={};
+            else
+                modgen.common.checkvar(testCaseConstrArgList,...
+                    'iscell(x)&&isrow(x)');
             end
+            %
             if nTestCases<1
                 throwerror('wrongInput',...
                     'at least one test case name is expected');
             end
+            %
             suite = loaderObj.load_tests_from_test_case(...
                 testCaseNameList{1},testCaseConstrArgList{:});
             %

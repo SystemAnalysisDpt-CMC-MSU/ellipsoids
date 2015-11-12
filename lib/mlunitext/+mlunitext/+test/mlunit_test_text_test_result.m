@@ -11,12 +11,32 @@ classdef mlunit_test_text_test_result < mlunitext.test_case
             end
         end
         function [result,suite]=getSimpleTestResult(self,varargin)
-            [runner,suite]=self.getSimpleRunnerSuite(varargin{:}); %#ok<NASGU,ASGLU>
+            [runner,suite]=self.getSimpleRunnerSuite(varargin{:}); %#ok<ASGLU>
             result=[];
             evalc('result=runner.run(suite);');
         end
     end
     methods
+        function testSetUpParam(~)
+            evalc('check(22,2);');
+            evalc('check(247,0);');
+            %
+            function check(secretVal,nFails) %#ok<DEFNU>
+                suite1Obj=mlunitext.test_suite.fromTestCaseNameList(...
+                    'mlunitext.test.PrameterizedTC',...
+                    {secretVal,'marker','alpha'});
+                suite2Obj=mlunitext.test_suite.fromTestCaseNameList(...
+                    'mlunitext.test.PrameterizedTC',...
+                    {secretVal,'marker','beta'});
+                suiteObj=mlunitext.test_suite.fromSuites(suite1Obj,...
+                    suite2Obj);
+                %
+                runnerObj=mlunitext.text_test_runner(1,1);
+                resultObj=runnerObj.run(suiteObj);
+                mlunitext.assert_equals(resultObj.getErrorFailCount(),...
+                    nFails);
+            end
+        end
         function testReport(self)
             %
             result=self.getSimpleTestResult();
@@ -27,8 +47,8 @@ classdef mlunit_test_text_test_result < mlunitext.test_case
             checkMaster('tops');
             checkMaster('topsTestCase');
             function checkMaster(repType)
+                rel=[]; %#ok<NASGU>
                 check(repType);
-                rel=[];
                 str=['rel=resVec.getRunStatRel(''',repType,''')'];
                 evalc(str);
             end
@@ -64,15 +84,16 @@ classdef mlunit_test_text_test_result < mlunitext.test_case
             onCln=onCleanup(@()restoreConf(lastPropStr,isLocked));
             % Unlock and reconfigure
             Log4jConfigurator.unlockConfiguration();
-            mlunitext.assert_equals(false,Log4jConfigurator.isLocked());            
-            NL = sprintf('\n');            
-            appenderConfStr = ['log4j.appender.stdout=org.apache.log4j.ConsoleAppender',NL,...
+            mlunitext.assert_equals(false,Log4jConfigurator.isLocked());
+            NL = sprintf('\n');
+            appenderConfStr =...
+                ['log4j.appender.stdout=org.apache.log4j.ConsoleAppender',NL,...
                 'log4j.appender.stdout.layout=org.apache.log4j.PatternLayout',NL,...
-                'log4j.appender.stdout.layout.ConversionPattern=%5p %c - %m\\n'];            
-            confStr = ['log4j.rootLogger=WARN,stdout', NL, appenderConfStr];
-            evalc('Log4jConfigurator.configure(confStr)');            
+                'log4j.appender.stdout.layout.ConversionPattern=%5p %c - %m\\n'];
+            confStr = ['log4j.rootLogger=WARN,stdout', NL, appenderConfStr]; %#ok<NASGU>
+            evalc('Log4jConfigurator.configure(confStr)');
             %
-            [runner,suite]=self.getSimpleRunnerSuite(); %#ok<ASGLU,NASGU>
+            [runner,suite]=self.getSimpleRunnerSuite(); %#ok<ASGLU>
             stdOut=evalc('runner.run(suite);');
             linesCVec = strsplit(stdOut);
             isFound = false;
