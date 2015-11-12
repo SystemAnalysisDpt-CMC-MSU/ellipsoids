@@ -42,18 +42,18 @@ end
 if isRobustMethod
     [cVec,shMat] = double(self);
     invShMat = inv(shMat);
-    normConst = cVec'*(shMat\cVec);
+    normConst = cVec.'*(shMat\cVec);
     polarCVec = -(shMat\cVec)/(1-normConst);
-    polarShMat = invShMat/(1-normConst) + polarCVec*polarCVec';
+    polarShMat = invShMat/(1-normConst) + polarCVec*polarCVec.';
     polarObj = ellipsoid(polarCVec,polarShMat);
 else
     [cVec,shMat] = double(self);
-    isZeroInEll = cVec' * ell_inv(shMat) * cVec;
+    isZeroInEll = cVec.' * ell_inv(shMat) * cVec;
     if isZeroInEll < 1
-        auxMat = ell_inv(shMat - cVec*cVec');
-        auxMat = 0.5*(auxMat + auxMat');
+        auxMat = ell_inv(shMat - cVec*cVec.');
+        auxMat = 0.5*(auxMat + auxMat.');
         polarCVec = -auxMat * cVec;
-        polarShMat = (1 + cVec'*auxMat*cVec)*auxMat;
+        polarShMat = (1 + cVec.'*auxMat*cVec)*auxMat;
         polarObj = ellipsoid(polarCVec,polarShMat);
     else
         modgen.common.throwerror('degenerateEllipsoid',...
