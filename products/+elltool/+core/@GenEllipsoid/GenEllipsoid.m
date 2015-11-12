@@ -1,40 +1,6 @@
 classdef GenEllipsoid < handle
     % GENELLIPSOID - class of generalized ellipsoids
     %
-    % Input:
-    %   Case1:
-    %     regular:
-    %       qVec: double[nDim,1] - ellipsoid center
-    %       qMat: double[nDim,nDim] / qVec: double[nDim,1] - ellipsoid matrix
-    %           or diagonal vector of eigenvalues, that may contain infinite
-    %           or zero elements
-    %
-    %   Case2:
-    %     regular:
-    %       qMat: double[nDim,nDim] / qVec: double[nDim,1] - diagonal matrix or
-    %           vector, may contain infinite or zero elements
-    %
-    %   Case3:
-    %     regular:
-    %       qVec: double[nDim,1] - ellipsoid center
-    %       dMat: double[nDim,nDim] / dVec: double[nDim,1] - diagonal matrix or
-    %           vector, may contain infinite or zero elements
-    %       wMat: double[nDim,nDim] - any square matrix
-    %
-    %
-    % Output:
-    %   self: GenEllipsoid[1,1] - created generalized ellipsoid
-    %
-    % Example:
-    %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2));        
-    %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-    %
-    %$Author: Vitaly Baranov  <vetbar42@gmail.com> $    
-    %$Date: Nov-2012$
-    % $Copyright: Moscow State University,
-    %            Faculty of Computational Mathematics and Computer Science,
-    %            System Analysis Department 2012 $
-    %
     properties (Access = private)
         centerVec
         diagMat
@@ -51,16 +17,16 @@ classdef GenEllipsoid < handle
     end
     methods
         function isOk=getIsGoodDir(ellObj1,ellObj2,curDirVec)
-        % Example:
-        %   firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
-        %   secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
-        %   curDirMat = [1; 0];
-        %   isOk=getIsGoodDir(firstEllObj,secEllObj,dirsMat)
-        %
-        %   isOk =
-        % 
-        %        1
-        %
+            % Example:
+            %   firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
+            %   secEllObj = elltool.core.GenEllipsoid([0;0], [1 0; 0 0.1]);
+            %   curDirMat = [1; 0];
+            %   isOk=getIsGoodDir(firstEllObj,secEllObj,dirsMat)
+            %
+            %   isOk =
+            %
+            %        1
+            %
             import elltool.core.GenEllipsoid;
             absTol=GenEllipsoid.getCheckTol();
             eigv1Mat=ellObj1.getEigvMat();
@@ -71,7 +37,8 @@ classdef GenEllipsoid < handle
             if ~all(~isInf1Vec)
                 %Infinite case
                 allInfDirMat=eigv1Mat(:,isInf1Vec);
-                [orthBasMat rangInf]=ellObj1.findBasRank(allInfDirMat,absTol);
+                [orthBasMat,rangInf]=ellObj1.findBasRank(allInfDirMat,...
+                    absTol);
                 %    infIndVec=1:rangInf;
                 nDimSpace=length(diag1Vec);
                 finIndVec=(rangInf+1):nDimSpace;
@@ -87,7 +54,7 @@ classdef GenEllipsoid < handle
                 ellQ2Mat=finBasMat.'*curEllMat*finBasMat;
                 ellQ2Mat=0.5*(ellQ2Mat+ellQ2Mat.');
                 curDirVec=finBasMat.'*curDirVec;
-                [eigv1Mat diag1Mat]=eig(ellQ1Mat);
+                [eigv1Mat, diag1Mat]=eig(ellQ1Mat);
                 diag1Vec=diag(diag1Mat);
             else
                 ellQ1Mat=eigv1Mat*diag(diag1Vec)*eigv1Mat.';
@@ -101,7 +68,7 @@ classdef GenEllipsoid < handle
                 if ~all(~isZeroVec)
                     zeroDirMat=eigv1Mat(:,isZeroVec);
                     % Find basis in all space
-                    [orthBasMat rangZ]=ellObj1.findBasRank(zeroDirMat,absTol);
+                    [orthBasMat,rangZ]=ellObj1.findBasRank(zeroDirMat,absTol);
                     %rangZ>0 since there is at least one zero e.v. Q1
                     %zeroIndVec=1:rangZ;
                     nDimSpace=length(diag1Vec);
@@ -122,12 +89,11 @@ classdef GenEllipsoid < handle
         function SCompArr=toStruct(ellArr)
             SCompArr=arrayfun(@formStruct,ellArr);
             function SComp=formStruct(ellObj)
-                diagMat=ellObj.diagMat;
+                diagMat=ellObj.diagMat; %#ok<*PROP>
                 if isempty(diagMat)
                     qMat=[];
                     qInfMat=[];
                     centerVec=[];
-                    isnInfVec=logical.empty(0,0);
                 else
                     eigvMat=ellObj.eigvMat;
                     centerVec=ellObj.centerVec;
@@ -145,25 +111,60 @@ classdef GenEllipsoid < handle
         end
     end
     methods
-        function display(ellArr)
-        % Example:
-        %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-        %   ellObj.display()
-        %      |    
-        %      |----- q : [5 2]
-        %      |          -------
-        %      |----- Q : |10|19|
-        %      |          |19|41|
-        %      |          -------
-        %      |          -----
-        %      |-- QInf : |0|0|
-        %      |          |0|0|
-        %      |          -----
+        function disp(ellArr)
+            % Example:
+            %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+            %   ellObj.disp()
+            %      |
+            %      |----- q : [5 2]
+            %      |          -------
+            %      |----- Q : |10|19|
+            %      |          |19|41|
+            %      |          -------
+            %      |          -----
+            %      |-- QInf : |0|0|
+            %      |          |0|0|
+            %      |          -----
             modgen.struct.strucdisp(ellArr(:).toStruct());
         end
     end
     methods
         function ellObj = GenEllipsoid(varargin)
+            % GENELLIPSOID - class of generalized ellipsoids
+            %
+            % Input:
+            %   Case1:
+            %     regular:
+            %       qVec: double[nDim,1] - ellipsoid center
+            %       qMat: double[nDim,nDim] / qVec: double[nDim,1] - ellipsoid
+            %           matrix or diagonal vector of eigenvalues, that may
+            %           contain infinite or zero elements
+            %
+            %   Case2:
+            %     regular:
+            %       qMat: double[nDim,nDim] / qVec: double[nDim,1] - diagonal
+            %           matrix or vector, may contain infinite or zero elements
+            %
+            %   Case3:
+            %     regular:
+            %       qVec: double[nDim,1] - ellipsoid center
+            %       dMat: double[nDim,nDim] / dVec: double[nDim,1] - diagonal
+            %           matrix or vector, may contain infinite or zero elements
+            %       wMat: double[nDim,nDim] - any square matrix
+            %
+            %
+            % Output:
+            %   self: GenEllipsoid[1,1] - created generalized ellipsoid
+            %
+            % Example:
+            %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2));
+            %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+            %
+            %$Author: Vitaly Baranov  <vetbar42@gmail.com> $
+            %$Date: Nov-2012$
+            % $Copyright: Moscow State University,
+            %            Faculty of Computational Mathematics and Computer Science,
+            %            System Analysis Department 2012 $
             import modgen.common.throwerror
             import elltool.core.GenEllipsoid;
             import gras.la.ismatsymm;
@@ -177,7 +178,7 @@ classdef GenEllipsoid < handle
                     'Incorrect number of parameters');
             elseif nInput==1
                 ellMat=varargin{1};
-                [mSize nSize]=size(ellMat);
+                [mSize, nSize]=size(ellMat);
                 isPar2Vector = nSize==1;
                 isMatSquare = mSize == nSize;
                 %
@@ -196,16 +197,15 @@ classdef GenEllipsoid < handle
                         ellObj.diagMat=ellMat;
                         ellObj.eigvMat=eye(mSize);
                     else %ordinary square matrix
-                        [ellObj.eigvMat ellObj.diagMat]=eig(ellMat);
-                        
+                        [ellObj.eigvMat, ellObj.diagMat]=eig(ellMat);
                     end
                 end
                 ellObj.centerVec=zeros(mSize,1);
             elseif nInput==2
                 ellCenterVec=varargin{1};
                 ellMat=varargin{2};
-                [mCenSize nCenSize]=size(ellCenterVec);
-                [mSize nSize]=size(ellMat);
+                [mCenSize, nCenSize]=size(ellCenterVec);
+                [mSize, nSize]=size(ellMat);
                 isPar2Vector = nSize==1;
                 isMatSquare = mSize == nSize;
                 %
@@ -218,13 +218,13 @@ classdef GenEllipsoid < handle
                 elseif ~ismatsymm(ellMat)
                     throwerror('wrongInputMat',...
                         'Input matrix must be symmetric.');
-                else                 
+                else
                     isDiagonalMat=ellMat==(ellMat.*eye(mSize));
                     if  all(isDiagonalMat(:))
                         ellObj.diagMat=ellMat;
                         ellObj.eigvMat=eye(mSize);
                     else
-                        [ellObj.eigvMat ellObj.diagMat]=eig(ellMat);
+                        [ellObj.eigvMat,ellObj.diagMat]=eig(ellMat);
                     end
                 end
                 if nCenSize~=1
@@ -240,9 +240,9 @@ classdef GenEllipsoid < handle
                 ellCenterVec=varargin{1};
                 ellDiagMat=varargin{2};
                 ellWMat=varargin{3};
-                [mCenSize nCenSize]=size(ellCenterVec);
-                [mDSize nDSize]=size(ellDiagMat);
-                [mWSize nWSize]=size(ellWMat);
+                [mCenSize, nCenSize]=size(ellCenterVec);
+                [mDSize, nDSize]=size(ellDiagMat);
+                [mWSize, nWSize]=size(ellWMat);
                 %
                 if (nCenSize~=1)
                     throwerror('wrongCenter','Center must be a vector');
@@ -283,13 +283,13 @@ classdef GenEllipsoid < handle
                     eigvResMat=ellWMat;
                 elseif all(~isInfVec)
                     ellAuxMat=ellWMat*diag(diagVec)*ellWMat.';
-                    [eigvResMat diagResMat]=eig(ellAuxMat);
+                    [eigvResMat, diagResMat]=eig(ellAuxMat);
                     eigvResMat=-eigvResMat;
                     diagResVec=diag(diagResMat);
                 else
                     allInfMat=ellWMat(:,isInfVec);
                     %L1 and L2 Basis
-                    [orthBasMat rBasMat]=qr(allInfMat);
+                    [orthBasMat, rBasMat]=qr(allInfMat);
                     if size(rBasMat,2)==1
                         isNeg=rBasMat(1)<0;
                         orthBasMat(:,isNeg)=-orthBasMat(:,isNeg);
@@ -328,10 +328,10 @@ classdef GenEllipsoid < handle
                 isNotInfIndVec = ~(diag(ellObj.diagMat)==Inf);
                 if any(isNotInfIndVec)
                     if ~ismatposdef(ellObj.diagMat(isNotInfIndVec,...
-                        isNotInfIndVec),absTol,1)
-                    throwerror('wrongInputMat',...
-                        ['GenEllipsoid matrix should be positive ',...
-                        'semi-definite.'])
+                            isNotInfIndVec),absTol,1)
+                        throwerror('wrongInputMat',...
+                            ['GenEllipsoid matrix should be positive ',...
+                            'semi-definite.'])
                     end
                 end
             end
@@ -339,53 +339,53 @@ classdef GenEllipsoid < handle
     end
     methods
         function cVec=getCenter(self)
-        % Example:
-        %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-        %   ellObj.getCenter()
-        %
-        %   ans =
-        % 
-        %        5
-        %        2
-        %
+            % Example:
+            %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+            %   ellObj.getCenter()
+            %
+            %   ans =
+            %
+            %        5
+            %        2
+            %
             cVec=self.centerVec;
         end
         function eigMat=getEigvMat(self)
-        % Example:
-        %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-        %   ellObj.getEigvMat()
-        %
-        %   ans =
-        % 
-        %       0.9034   -0.4289
-        %      -0.4289   -0.9034
-        %
+            % Example:
+            %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+            %   ellObj.getEigvMat()
+            %
+            %   ans =
+            %
+            %       0.9034   -0.4289
+            %      -0.4289   -0.9034
+            %
             eigMat=self.eigvMat;
         end
         function diagMat=getDiagMat(self)
-        % Example:
-        %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-        %   ellObj.getDiagMat()
-        %         
-        %   ans =
-        % 
-        %       0.9796         0
-        %            0   50.0204
-        %
-                
+            % Example:
+            %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+            %   ellObj.getDiagMat()
+            %
+            %   ans =
+            %
+            %       0.9796         0
+            %            0   50.0204
+            %
+            
             diagMat=self.diagMat;
         end
     end
     methods (Static)
         function tol=getCheckTol()
-        % Example:
-        %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-        %   ellObj.getCheckTol()
-        %
-        %   ans =
-        %
-        %      1.0000e-09
-        %
+            % Example:
+            %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+            %   ellObj.getCheckTol()
+            %
+            %   ans =
+            %
+            %      1.0000e-09
+            %
             import elltool.core.GenEllipsoid;
             tol=GenEllipsoid.CHECK_TOL;
         end
@@ -394,8 +394,8 @@ classdef GenEllipsoid < handle
         [isOk, pPar] = getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,dirVec,absTol)
         sqMat = findSqrtOfMatrix(qMat,absTol)
         isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
-        [isInfVec infDirEigMat] = findAllInfDir(ellObj)
-        [orthBasMat rank]=findBasRank(qMat,absTol)
+        [isInfVec, infDirEigMat] = findAllInfDir(ellObj)
+        [orthBasMat, rank]=findBasRank(qMat,absTol)
         [ spaceBasMat,  oSpaceBasMat, spaceIndVec, oSpaceIndVec] =...
             findSpaceBas( dirMat,absTol )
         [ projQMat ] = findMatProj( eigvMat,diagMat,basMat )
@@ -404,7 +404,7 @@ classdef GenEllipsoid < handle
         resQMat=findDiffEaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
         [resEllMat ] = findDiffFC( fMethod, ellQ1Mat, ellQ2Mat,...
             curDirVec,absTol )
-        [ resQMat diagQVec ] = findDiffINFC(fMethod, ellObj1,...
+        [ resQMat, diagQVec ] = findDiffINFC(fMethod, ellObj1,...
             ellObj2,curDirVec,isInf1Vec,isInfForFinBas,absTol)
         resQMat=findDiffIaND(ellQ1Mat, ellQ2Mat,curDirVec,absTol)
     end
