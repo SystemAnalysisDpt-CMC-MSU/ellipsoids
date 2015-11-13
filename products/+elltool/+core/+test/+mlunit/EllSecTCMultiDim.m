@@ -25,7 +25,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
             array2Size = [1, 1];
             test2EllArray = createObjectArray(array2Size, @ell_unitball, ...
                 2, 1, 1);
-            testCorrect(0, 'i', 1);
+            testIncorrect(0);
             testCorrect(1, 'i', 0);
             testCorrect(1, [], 0);
             array1Size = [1, 1, 1, 1, 1, 3, 1, 1, 2];
@@ -36,7 +36,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                 3, 1, 1);
             test2EllArray(1, 2, 1, 1, 1, 3, 1) = ellipsoid([2; 1; 0], ...
                 myMat);
-            testCorrect(1, 'i', 1);
+            testIncorrect(1);
             testCorrect(1, 'u', 0);
             array1Size = [1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1];
             test1EllArray = createObjectArray(array1Size, @ellipsoid, ...
@@ -46,7 +46,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                 3, 1, 1);
             test2EllArray(1, 2, 1, 1, 1, 1, 1) = ellipsoid([5; 5; 5], ...
                 myMat, 2);
-            testCorrect(1, 'i', -1);
+            testIncorrect(1);
             testCorrect(1, 'u', 0);
             array1Size = [1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1];
             test1EllArray = createObjectArray(array1Size, @ellipsoid, ...
@@ -57,7 +57,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                 4, 1, 1);
             test2EllArray(1, 2, 1, 1, 1, 1, 1) = ellipsoid([5; 5; 5; 5], ...
                 [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6], 2);
-            testCorrect(2, 'i', 0);
+            testIncorrect(2);
             testCorrect(3, [], 0);
             array1Size = [1, 2, 1, 1, 2, 1];
             test1EllArray = createObjectArray(array1Size, @ellipsoid, ...
@@ -68,7 +68,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                 0.5 * ones(1, 50)]), 2);
             test2EllArray(1, 2, 1, 1, 1, 2, 1) = ellipsoid(-ones(100, 1), ...
                 diag([5 * ones(1, 50), 2 * ones(1, 50)]));
-            testCorrect(1, 'i', -1);
+            testIncorrect(1);
             testCorrect(3, [], 0);
             testCorrect(3, 'u', 0);
             test1EllArray = createObjectArray(array1Size, @ellipsoid, ...
@@ -77,7 +77,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
             test2EllArray = createObjectArray(array2Size, @ellipsoid, ...
                 -1 * ones(100,1), diag([5 * ones(1,50) 4 * ones(1,50)]), 2);
             test2EllArray(1, 2, 1, 1, 1, 2, 1) = ellipsoid([ones(50,1); -1 * ones(50,1)], diag(2 * ones(1,100)));
-            testCorrect(1, 'i', 0);
+            testIncorrect(1);
             test1EllArray = createObjectArray(array1Size, @ellipsoid, ...
                 zeros(90, 1), diag([5 * ones(1,30) 2 * ones(1,30) 3 * ones(1,30)]), 2);
             test1EllArray(1, 1:2, 1, 1, 2, 1) = ellipsoid([ones(30,1); -1*ones(30,1);ones(30,1)],...
@@ -85,7 +85,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
             test2EllArray = createObjectArray(array2Size, @ellipsoid, ...
                 [-1 * ones(60,1); ones(30,1)], diag([3 * ones(1,30) 2 * ones(1,60)]), 2);
             test2EllArray(1, 2, 1, 1, 1, 2, 1) = ellipsoid([ones(30,1); zeros(60,1)], diag(ones(1,90)));
-            testCorrect(1, 'i', 1);
+            testIncorrect(1);
             testError(10);
             testError(11);
             testError(12);
@@ -121,6 +121,27 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                     end
                 end
                 mlunitext.assert_equals(myResult, testRes);
+            end
+            function testIncorrect(flag)
+                switch flag
+                    case 0
+                        self.runAndCheckError(['doesIntersectionContain'...
+                            '(test1EllArray, test1EllArray, ''mode'','...
+                            '''i'')'], 'notSupportedMode');
+                    case 1
+                        self.runAndCheckError(['doesIntersectionContain'...
+                            '(test1EllArray, test2EllArray, ''mode'','...
+                            '''i'')'], 'notSupportedMode');
+                    case 2
+                        self.runAndCheckError(['doesIntersectionContain'...
+                            '(test2EllArray, test1EllArray, ''mode'','...
+                            '''i'')'], 'notSupportedMode');
+                    case 3
+                        self.runAndCheckError(['doesIntersectionContain'...
+                            '(test2EllArray, test2EllArray, ''mode'','...
+                            '''i'')'], 'notSupportedMode');
+                    otherwise
+                end
             end
             function testError(flag)
                 [test1EllArray, test2EllArray, errorStr] = ...
