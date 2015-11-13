@@ -136,7 +136,16 @@ else
         'UniformOutput',false),','),'})'];
     javaAddPathCallStr=strrep(javaAddPathCallStr,filesep,[filesep,filesep]);
     startupFileName=[tmpDir,filesep,'jobStartup.m'];
-    fidJobCreate = fopen(startupFileName,'w');
+    %
+    [fidJobCreate,errMsg] = fopen(startupFileName,'w');
+    if fidJobCreate<0
+        startupFileDispName=strrep(startupFileName,filesep,...
+            [filesep,filesep]);
+        throwerror('failedToOpenFile',sprintf(...
+            'failed to open file %s, \n reason: %s',...
+            startupFileDispName,errMsg));
+    end
+    %
     try
         fprintf(fidJobCreate,'function jobCreate(~)\n');
         fprintf(fidJobCreate,javaAddPathCallStr);
