@@ -48,5 +48,5 @@ sizeCVec = num2cell(size(ellArr));
 polEllArr(sizeCVec{:}) = ellipsoid;
 
 for iElem = 1:numel(ellArr)
-    polEllArr(iElem) = getScalarPolar(ellArr(iElem));
+    polEllArr(iElem) = getScalarPolarInternal(ellArr(iElem));
 end

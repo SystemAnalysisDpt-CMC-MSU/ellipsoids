@@ -32,12 +32,11 @@ function polarObj = getScalarPolarInternal(self, isRobustMethod)
 % 			Faculty of Computational Mathematics and Computer Science,
 % 			System Analysis Department 2015 $
 % 
-modgen.common.checkmultvar('isscalar(x1)&&islogical(x2)&&isscalar(x2)',...
-    2, self, isRobustMethod, 'errorTag', 'wrongInput');
-%
 if nargin<2 
     isRobustMethod = true;
 end
+modgen.common.checkmultvar('isscalar(x1)&&islogical(x2)&&isscalar(x2)',...
+    2, self, isRobustMethod, 'errorTag', 'wrongInput');
 %
 if isRobustMethod
     [cVec,shMat] = double(self);

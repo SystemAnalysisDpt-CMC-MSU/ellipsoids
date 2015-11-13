@@ -154,7 +154,7 @@ end
 end
 %
 function res = isEllPolInPolyPol(ell,normalsMat,constVec,internalPoint,absTol)
-polarEll = getScalarPolar(ell-internalPoint);
+polarEll = getScalarPolarInternal(ell-internalPoint);
 suppFuncVec = rho(polarEll,normalsMat');
 res = all(suppFuncVec' <= constVec+absTol);
 end
