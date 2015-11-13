@@ -72,12 +72,20 @@ classdef EllSecTCMultiDim < mlunitext.test_case
             testCorrect(3, [], 0);
             testCorrect(3, 'u', 0);
             test1EllArray = createObjectArray(array1Size, @ellipsoid, ...
-                [0; 0], diag([5 2]), 2);
-            test1EllArray(1, 2, 1, 1, 2, 1) = ellipsoid([0; 0], diag([1.5 1.5]));
+                zeros(100, 1), diag([5 * ones(1,50) 2 * ones(1,50)]), 2);
+            test1EllArray(1, 2, 1, 1, 2, 1) = ellipsoid(zeros(100,1), diag(1.5 * ones(1, 100)));
             test2EllArray = createObjectArray(array2Size, @ellipsoid, ...
-                [-1; -1], diag([5 4]), 2);
-            test2EllArray(1, 2, 1, 1, 1, 2, 1) = ellipsoid([1; -1], diag([2 2]));
+                -1 * ones(100,1), diag([5 * ones(1,50) 4 * ones(1,50)]), 2);
+            test2EllArray(1, 2, 1, 1, 1, 2, 1) = ellipsoid([ones(50,1); -1 * ones(50,1)], diag(2 * ones(1,100)));
             testCorrect(1, 'i', 0);
+            test1EllArray = createObjectArray(array1Size, @ellipsoid, ...
+                zeros(90, 1), diag([5 * ones(1,30) 2 * ones(1,30) 3 * ones(1,30)]), 2);
+            test1EllArray(1, 1:2, 1, 1, 2, 1) = ellipsoid([ones(30,1); -1*ones(30,1);ones(30,1)],...
+                diag([2 * ones(1,30) 3 * ones(1,30) 5 * ones(1,30)]));
+            test2EllArray = createObjectArray(array2Size, @ellipsoid, ...
+                [-1 * ones(60,1); ones(30,1)], diag([3 * ones(1,30) 2 * ones(1,60)]), 2);
+            test2EllArray(1, 2, 1, 1, 1, 2, 1) = ellipsoid([ones(30,1); zeros(60,1)], diag(ones(1,90)));
+            testCorrect(1, 'i', 1);
             testError(10);
             testError(11);
             testError(12);
