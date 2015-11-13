@@ -115,48 +115,6 @@ if isSharedPathMapSpec
     %
 end
 %
-if isStartupFileUsed
-    if ~isempty(startupFilePath)
-        startupFilePath=removeendfilesep(startupFilePath);
-        if length(startupFilePath)>=1
-            startupFilePath=removeendfilesep(startupFilePath);
-        end
-    else
-        throwerror('wrongInput',...
-            'startupFilePath cannot be empty');
-    end
-    startupFileName=[startupFilePath,filesep,'jobStartup.m'];
-else
-    %generate jobStartup.m file
-    tmpDir=modgen.io.TmpDataManager.getDirByCallerKey(...
-        modgen.system.getpidhost());
-    javaUserPath=modgen.java.AJavaStaticPathMgr.getUserPathList;
-    javaAddPathCallStr=['javaaddpath({',modgen.string.catwithsep(...
-        cellfun(@(x)['''',x,''''],javaUserPath,...
-        'UniformOutput',false),','),'})'];
-    javaAddPathCallStr=strrep(javaAddPathCallStr,filesep,[filesep,filesep]);
-    startupFileName=[tmpDir,filesep,'jobStartup.m'];
-    %
-    [fidJobCreate,errMsg] = fopen(startupFileName,'w');
-    if fidJobCreate<0
-        startupFileDispName=strrep(startupFileName,filesep,...
-            [filesep,filesep]);
-        throwerror('failedToOpenFile',sprintf(...
-            'failed to open file %s, \n reason: %s',...
-            startupFileDispName,errMsg));
-    end
-    %
-    try
-        fprintf(fidJobCreate,'function jobCreate(~)\n');
-        fprintf(fidJobCreate,javaAddPathCallStr);
-        fclose(fidJobCreate);
-    catch meObj
-        fclose(fidJobCreate);
-        rethrow(meObj);
-    end
-    %
-    isStartupFileUsed=true;
-end
 if (~isConfSpec)&&isParToolboxInstalled
     confName=parallel.defaultClusterProfile;
 end
@@ -208,15 +166,62 @@ if (nTasks>1&&clusterSize>1) || isFork
         pathList=newPathList;
     end
     %
-    dfevalArgList=[dfevalArgList,{'AdditionalPaths',pathList}];
-    if isStartupFileUsed
-        dfevalArgList=[dfevalArgList,{'AttachedFiles',{startupFileName}}];
-    end
     parClustObj=parcluster(confName);
     if ~isequal(clusterSize,Inf)
         parClustObj.NumWorkers=clusterSize;
     end
+    %%
     jobObj=createJob(parClustObj,dfevalArgList{:});
+    %%
+    if isStartupFileUsed
+        if ~isempty(startupFilePath)
+            startupFilePath=removeendfilesep(startupFilePath);
+            if length(startupFilePath)>=1
+                startupFilePath=removeendfilesep(startupFilePath);
+            end
+        else
+            throwerror('wrongInput',...
+                'startupFilePath cannot be empty');
+        end
+        startupFileName=[startupFilePath,filesep,'jobStartup.m'];
+    else
+        %generate jobStartup.m file
+        tmpDir=modgen.io.TmpDataManager.getDirByCallerKey(...
+            [modgen.system.getpidhost(),'_',jobObj.ID]);
+        javaUserPath=modgen.java.AJavaStaticPathMgr.getUserPathList;
+        javaAddPathCallStr=['javaaddpath({',modgen.string.catwithsep(...
+            cellfun(@(x)['''',x,''''],javaUserPath,...
+            'UniformOutput',false),','),'})'];
+        javaAddPathCallStr=strrep(javaAddPathCallStr,filesep,[filesep,filesep]);
+        startupFileName=[tmpDir,filesep,'jobStartup.m'];
+        %
+        [fidJobCreate,errMsg] = fopen(startupFileName,'w');
+        if fidJobCreate<0
+            startupFileDispName=strrep(startupFileName,filesep,...
+                [filesep,filesep]);
+            throwerror('failedToOpenFile',sprintf(...
+                'failed to open file %s, \n reason: %s',...
+                startupFileDispName,errMsg));
+        end
+        %
+        try
+            fprintf(fidJobCreate,'function jobCreate(~)\n');
+            fprintf(fidJobCreate,javaAddPathCallStr);
+            fclose(fidJobCreate);
+        catch meObj
+            fclose(fidJobCreate);
+            rethrow(meObj);
+        end
+        %
+        isStartupFileUsed=true;
+    end
+    %%
+    jobObj.AdditionalPaths=pathList;
+    if isStartupFileUsed
+        jobObj.AttachedFiles={startupFileName};
+    end    
+    %%
+    %
     jobObj.AutoAttachFiles=false;
     %
     inpArgCMat = transpose(vertcat(reg{:}));
