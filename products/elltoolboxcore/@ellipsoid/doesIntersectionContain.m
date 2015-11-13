@@ -174,21 +174,9 @@ else
             res = 0;
         end
     else
-        if Properties.getIsVerbose()
-            if isempty(logger)
-                logger=Log4jConfigurator.getLogger();
-            end
-            logger.info('Invoking CVX...');
-        end
-        res = 1;
-        resMat = cell2mat(arrayfun(@(x) arrayfun(@(y) x.doesContain(y), secObjVec) , fstEllArr, 'UniformOutput', false));
-        if any(resMat(:)<1)
-            res = 0;
-            if any(resMat(:)==-1)
-                res = -1;
-                status = 0;
-            end
-        end
+        throwerror('notSupportedMode',['ET for now do not support' ...
+            'solving non-convex QCQP problems.' ...
+            'This functionality will be implemented in the future']);
     end
 end
 end
