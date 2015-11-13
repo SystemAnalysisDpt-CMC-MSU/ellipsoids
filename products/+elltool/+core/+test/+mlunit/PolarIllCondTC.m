@@ -7,8 +7,8 @@ classdef PolarIllCondTC < mlunitext.test_case
     %            System Analysis Department 2015 $
 
     methods (Access=private)
-        function test = getTest(self)
-            test = elltool.core.test.mlunit.aux.TestPolarEllipsoid();
+        function testEllObj = getTest(self)
+            testEllObj = elltool.core.test.mlunit.aux.TestPolarEllipsoid();
         end
     end
     methods
@@ -21,8 +21,10 @@ classdef PolarIllCondTC < mlunitext.test_case
             expShMat = invhilb(N_DIMS);
             ell1 = ellipsoid(shMat);
             [sh1Mat, sh2Mat] = self.auxGetTestPolars(ell1);
-            mlunitext.assert(norm(expShMat - sh1Mat) <= norm(expShMat - sh2Mat));
-        end 
+            disp(norm(expShMat-sh1Mat));
+            disp(norm(expShMat-sh2Mat));
+            mlunitext.assert(norm(expShMat-sh1Mat)<=norm(expShMat-sh2Mat));
+        end     
         function self = testGetScalarPolarMethodsDifference(self)
             K_TOL = 1e-2;
             check(5, true);
@@ -31,15 +33,15 @@ classdef PolarIllCondTC < mlunitext.test_case
             function check(N_DIMS,expVal)                
                 ell1 = ellipsoid(0.01 * ones(N_DIMS,1),hilb(N_DIMS));
                 [sh1Mat, sh2Mat] = self.auxGetTestPolars(ell1);
-                mlunitext.assert((norm(sh1Mat - sh2Mat) < K_TOL) == expVal);
+                mlunitext.assert((norm(sh1Mat-sh2Mat) < K_TOL) == expVal);
             end
         end
        
         function [sh1Mat, sh2Mat] = auxGetTestPolars(self,ell)
-            obj = self.getTest();
-            polar1Obj = obj.getScalarPolarTest(ell,true);
+            testEllObj = self.getTest();
+            polar1Obj = testEllObj.getScalarPolarTest(ell,true);
             [~, sh1Mat] = double(polar1Obj);
-            polar2Obj = obj.getScalarPolarTest(ell,false);
+            polar2Obj = testEllObj.getScalarPolarTest(ell,false);
             [~, sh2Mat] = double(polar2Obj);
         end
 
@@ -48,8 +50,8 @@ classdef PolarIllCondTC < mlunitext.test_case
             %
             function run()
                 ell1 = ellipsoid(ones(2,1),eye(2));
-                obj = self.getTest();
-                obj.getScalarPolarTest(ell1,false);
+                testEllObj = self.getTest();
+                testEllObj.getScalarPolarTest(ell1,false);
             end
         end
     end
