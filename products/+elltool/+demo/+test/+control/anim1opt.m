@@ -12,7 +12,6 @@ import gras.geom.*;
 Properties.setNPlot2dPoints(1000)
 aCMat = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 bCMat = {'10' '0'; '0' '1/(2 + sin(t))'};
-SUBounds = struct();
 SUBounds.center = [0; 0];
 SUBounds.shape = {'4 - sin(t)' '-1'; '-1' '1 + (cos(t))^2'};
 
@@ -52,40 +51,59 @@ profileName=profileNameList{find(ismember(profileNameList,...
 writerObj = VideoWriter(objName,profileName);
 end
 
+
 function writerObj = getAnimation(rsObj,writerObj,timeVec,axisConfVec)
 cla;
+ORTHS_TO_PROJECT = [1 2];
+VIEW_ANGLE = [39 -35];
+N_SPOINTS = 2000;
+PATCH_ALPHA = 0.3;
+import gras.ellapx.enums.EApproxType;
+import gras.ellapx.enums.EProjType;
+import gras.ellapx.smartdb.F;
+import modgen.graphics.camlight;
+graphObjectName =  ['Reach Tube: by ', char(approxType(1))];
+approxType = gras.ellapx.enums.EApproxType.External;
+projType = gras.ellapx.enums.EProjType.Static;
 nTimeSteps = writerObj.FrameRate * (timeVec(2)-timeVec(1));
 timeStepsVec = linspace(timeVec(1),timeVec(2),nTimeSteps);
 timeStepsVec(1) = [];
 nTimeSteps = nTimeSteps - 1;
-ellTubeObj = rsObj.getEllTubeRel;
-timeFromEllTubeVec = ellTubeObj.timeVec{2};
-aMat = ellTubeObj.aMat{2};
-QArray = ellTubeObj.QArray{2};
+ellTubeObj = rsObj.getEllTubeRel.getTuplesFilteredBy(F.APPROX_TYPE, approxType).getTuplesFilteredBy('approxType', approxType);
+ellTubeProjObj =ellTubeObj.projectToOrths(ORTHS_TO_PROJECT).getTuplesFilteredBy('projType', projType);
+timeFromEllTubeVec = ellTubeProjObj.timeVec{1};
+aMat = ellTubeProjObj.aMat{1};
+qArr = cat(4, ellTubeProjObj.QArray{:});
 numEndPloting = 1;
 hold on;
-view(axes,[39.6 -35.6]);
+view(VIEW_ANGLE);
 axis(axisConfVec);
 while (timeFromEllTubeVec(numEndPloting) < timeVec(1))
     numEndPloting = numEndPloting + 1;
 end
-if (numEndPloting ~= 1)
-    [vMat,fMat] = gras.geom.tri.elltubetri(QArray(:,:,1:numEndPloting),aMat(:,1:numEndPloting),...
-                                           timeFromEllTubeVec(:,1:numEndPloting), 1000);
-    patch('FaceColor', 'b', 'EdgeColor', 'none', 'DisplayName', 'Picture','FaceAlpha', 0.3,...
-          'Faces',fMat,'Vertices',vMat, 'EdgeLighting','phong','FaceLighting','phong');
+if numEndPloting ~= 1
+    
+    [vMat,fMat] = calcPoints(N_SPOINTS, timeFromEllTubeVec(:, 1: numEndPloting),...
+        qArr(:, :, 1:numEndPloting, :),aMat(:, 1:numEndPloting));
+    vMat = vMat';
+    patch('FaceColor', 'b', 'EdgeColor', 'none', 'DisplayName', 'Picture',...
+        'FaceAlpha', PATCH_ALPHA, 'Faces',fMat,'Vertices',vMat,...
+        'EdgeLighting','phong','FaceLighting','phong');
     material('metal');
     set(gcf,'WindowStyle','normal');
 end
-for iTimeSteps = 1:nTimeSteps
+for iTimeStep = 1:nTimeSteps
     numStartPloting = numEndPloting;
-    while (timeFromEllTubeVec(numEndPloting) < timeStepsVec(iTimeSteps))
+    while (timeFromEllTubeVec(numEndPloting) < timeStepsVec(iTimeStep))
         numEndPloting = numEndPloting + 1;
     end
-    [vMat,fMat] = gras.geom.tri.elltubetri(QArray(:,:,numStartPloting:numEndPloting), aMat(:,numStartPloting:numEndPloting),...
-                                           timeFromEllTubeVec(:,numStartPloting:numEndPloting), 1000);
-    patch('FaceColor', 'b', 'EdgeColor', 'none', 'DisplayName', 'Picture','FaceAlpha', 0.3,...
-          'Faces',fMat,'Vertices',vMat, 'EdgeLighting','phong','FaceLighting','phong');
+    [vMat,fMat] = calcPoints(N_SPOINTS, timeFromEllTubeVec(:, numStartPloting:numEndPloting),...
+        qArr(:, :, numStartPloting:numEndPloting, :),...
+        aMat(:,numStartPloting:numEndPloting));
+    vMat = vMat';
+    patch('FaceColor', 'b', 'EdgeColor', 'none', 'DisplayName', 'Picture',...
+        'FaceAlpha', PATCH_ALPHA,'Faces',fMat,'Vertices',vMat,...
+        'EdgeLighting','phong','FaceLighting','phong');
     material('metal');
     set(gcf,'WindowStyle','normal');
     set(gcf,'units','normalized','outerposition',[0 0 1 1]);
@@ -94,3 +112,43 @@ for iTimeSteps = 1:nTimeSteps
 end
 close('gcf');
 end
+
+
+function [vMat,fMat] = calcPoints(nPlotPoints, timeVec,qArr, aMat)
+%
+nDims = 2;
+[lGridMat, fMat] = gras.geom.tri.spheretriext(nDims, nPlotPoints);
+lGridMat = lGridMat';
+nDir = size(lGridMat, 2);
+nTimePoints = size(timeVec, 2);
+fMat = gras.geom.tri.elltube2tri(nDir,nTimePoints);
+xMat = zeros(3,nDir*nTimePoints);
+for iTime = 1:nTimePoints
+    xSliceTimeVec = calcPointsExt(nDir,lGridMat,nDims, squeeze(qArr(:,:,iTime,:)), aMat(:,iTime));
+    xMat(:,(iTime-1)*nDir+1:iTime*nDir) = [timeVec(iTime)*ones(1,nDir); xSliceTimeVec];
+end
+vMat = xMat;
+end
+%
+function xMat = calcPointsExt(nDir,lGridMat,nDims,qArr, centerVec)
+xMat = zeros(nDims,nDir);
+nTubes = size(qArr,3);
+distAllMat = zeros(nTubes,nDir);
+boundaryPointsAllCMat = cell(nTubes,nDir);
+for iDir = 1:nDir
+    lVec = lGridMat(:,iDir);
+    distVec = gras.gen.SquareMatVector...
+        .lrDivideVec(qArr,...
+        lVec);
+    distAllMat(:,iDir) = distVec;
+    for iTube = 1:nTubes
+        boundaryPointsAllCMat{iTube,iDir} = lVec/realsqrt(distVec(iTube));
+    end
+end
+[~,xInd] = max(distAllMat,[],1);
+for iDir = 1:size(xInd,2)
+    xMat(:,iDir) = boundaryPointsAllCMat{xInd(iDir),iDir}...
+        +centerVec;
+end
+end
+
