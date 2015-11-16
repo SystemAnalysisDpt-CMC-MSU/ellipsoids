@@ -16,16 +16,17 @@ classdef PolarIllCondTC < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
         end
         function self = testGetScalarPolar(self)
-            DIM_VEC=2:11;
-            isnOverflowVec=arrayfun(@(x)min(eig(inv(hilb(x)))),DIM_VEC)>0;
-            dimVec=DIM_VEC(isnOverflowVec);
+            check(6, true);
+            check(8, false);
             
-            for N_DIMS = dimVec
+            function check(N_DIMS, expRobustBetter)
                 shMat = hilb(N_DIMS);
                 expShMat = invhilb(N_DIMS);
                 ell1 = ellipsoid(shMat);
                 [sh1Mat, sh2Mat] = self.auxGetTestPolars(ell1);
-                mlunitext.assert(norm(expShMat-sh1Mat)<=norm(expShMat-sh2Mat));
+                isRobustBetter = ...
+                    (norm(expShMat-sh1Mat)<=norm(expShMat-sh2Mat));
+                mlunitext.assert(isRobustBetter == expRobustBetter);
             end
         end     
         function self = testGetScalarPolarMethodsDifference(self)
