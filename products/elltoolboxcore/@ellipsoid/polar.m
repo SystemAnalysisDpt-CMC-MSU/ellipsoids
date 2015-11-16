@@ -51,6 +51,7 @@ arrayfun(@(x) fSinglePolar(x), 1:numel(ellArr));
     function fSinglePolar(index)
         import gras.geom.ell.quadmat;
         import gras.geom.ell.invmat;
+        import modgen.common.throwerror;
         singEll = ellArr(index);
         qVec = singEll.centerVec;
         shMat = singEll.shapeMat;

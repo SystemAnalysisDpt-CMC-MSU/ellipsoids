@@ -149,6 +149,7 @@ function [ellDist,timeOfCalculation] = computeEllEllDistance(ellObj1,ellObj2,nMa
 %            System Analysis Department 2012 $
 %
 %
+import gras.geom.ell.quadmat;
 tic;
 [ellCenter1Vec, ellQ1Mat] = double(ellObj1);
 [ellCenter2Vec, ellQ2Mat] = double(ellObj2);
@@ -183,12 +184,12 @@ else
         circleCentersDiffVec=circleCenter2Vec-circleCenter1Vec;
         ellCircleCentersDiff1Vec=circleCenter1Vec-ellCenter1Vec;
         ellCircleCentersDiff2Vec=circleCenter1Vec-ellCenter2Vec;
-        aCoeff1=circleCentersDiffVec.'*ellQ1Mat*circleCentersDiffVec;
+        aCoeff1=quadmat(ellQ1Mat,circleCentersDiffVec);
         bCoeff1=2*circleCentersDiffVec.'*ellQ1Mat*ellCircleCentersDiff1Vec;
-        cCoeff1=ellCircleCentersDiff1Vec.'*ellQ1Mat*ellCircleCentersDiff1Vec-1;
-        aCoeff2=circleCentersDiffVec.'*ellQ2Mat*circleCentersDiffVec;
+        cCoeff1=quadmat(ellQ1Mat,ellCircleCentersDiff1Vec)-1;
+        aCoeff2=quadmat(ellQ2Mat,circleCentersDiffVec);
         bCoeff2=2*circleCentersDiffVec.'*ellQ2Mat*ellCircleCentersDiff2Vec;
-        cCoeff2=ellCircleCentersDiff2Vec.'*ellQ2Mat*ellCircleCentersDiff2Vec-1;
+        cCoeff2=quadmat(ellQ2Mat,ellCircleCentersDiff2Vec)-1;
         %
         stepSize1=fzero(fSquareFunc(aCoeff1,bCoeff1,cCoeff1),[0,1]);
         stepSize2=fzero(fSquareFunc(aCoeff2,bCoeff2,cCoeff2),[0,1]);
@@ -518,13 +519,14 @@ end
 %%%%%%%%
 %
 function distEllHpVal = findEllHpDist(ellObj, hpObj,isFlagOn)
+import gras.geom.ell.quadmat;
 [vPar, cPar] = parameters(hpObj);
 if cPar < 0
     cPar = -cPar;
     vPar = -vPar;
 end
 if isFlagOn
-    sr = realsqrt(vPar' * (ellObj.shapeMat) * vPar);
+    sr=realsqrt(quadmat(ellObj.shapeMat,vPar));
 else
     sr = realsqrt(vPar' * vPar);
 end

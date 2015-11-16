@@ -39,42 +39,51 @@ classdef SuiteBasic < mlunitext.test_case
                 2)<MAX_TOL);
             mlunitext.assert_equals(true,isOk);
         end
+        function testInvMat(~)
+            import gras.geom.ell.invmat;
+            dimVec=2:11;
+            normDiffVec=arrayfun(@(x)(norm(invhilb(x)-...
+                invmat(hilb(x)))-norm(invhilb(x)-...
+                inv(hilb(x)))),dimVec);
+            isOk = prod(normDiffVec)==0;
+            mlunitext.assert_equals(true,isOk);
+        end
         function testQuadMat(~)
             import gras.geom.ell.quadmat;
-            qMat = [2, 5, 7; 6, 3, 4; 5, -2, -3];
-            xVec = [7, 8, 9].';
-            cVec = [1, 0, 1];
+            qMat = [2,5,7;6,3,4;5,-2,-3];
+            xVec = [7,8,9].';
+            cVec = [1,0,1];
             calcMode = 'plain';
-            quadRes = quadmat(qMat, xVec, cVec, calcMode);
+            quadRes = quadmat(qMat,xVec,cVec,calcMode);
             isOk = (abs(quadRes - 1304) < eps);
             mlunitext.assert_equals(true,isOk);
             %
-            quadRes = quadmat(qMat, xVec, cVec);
+            quadRes = quadmat(qMat,xVec,cVec);
             isOk = (abs(quadRes - 1304) < eps);
             mlunitext.assert_equals(true,isOk);
             %
-            quadRes = quadmat(qMat, xVec);
+            quadRes = quadmat(qMat,xVec);
             isOk = (abs(quadRes - 1563) < eps);
             mlunitext.assert_equals(true,isOk);
             %
             calcMode = 'InvAdv';
-            quadRes = quadmat(qMat, xVec, cVec, calcMode);
+            quadRes = quadmat(qMat,xVec,cVec,calcMode);
             isOk = (abs(quadRes - (-364)) < 1e-10);
             mlunitext.assert_equals(true,isOk);
             %
             calcMode = 'INV';
-            quadRes = quadmat(qMat, xVec, cVec, calcMode);
+            quadRes = quadmat(qMat,xVec,cVec,calcMode);
             isOk = (abs(quadRes - (-364)) < 1e-10);
             mlunitext.assert_equals(true,isOk);
         end
         function testQuadMatNegative(self)
             import gras.geom.ell.quadmat;
-            qMatSquare = [1, 0; 0, 1];
-            qMatNotSquare = [1, 0];
-            xVecGoodDim = [3, 2];
-            xVecBadDim = [1, 5, 10];
-            cVecGoodDim = [1, 1];
-            cVecBadDim = [1, 3, 7];
+            qMatSquare = [1,0;0,1];
+            qMatNotSquare = [1,0];
+            xVecGoodDim = [3,2];
+            xVecBadDim = [1,5,10];
+            cVecGoodDim = [1,1];
+            cVecBadDim = [1,3,7];
             mode = 'plain';
             %
             check(@()quadmat(qMatNotSquare, xVecGoodDim,...

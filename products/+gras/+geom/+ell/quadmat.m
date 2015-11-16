@@ -1,6 +1,6 @@
 function res = quadmat(varargin)
-% QUADMAT -- calculate quadratic functions
-%   (x-c,Q^{-1}(x-c)),(x-c,Q(x-c)),(x,Q^{-1}x),(x,Qx)
+% QUADMAT -- calculates quadratic functions
+%            (x-c,Q^{-1}(x-c)),(x-c,Q(x-c)),(x,Q^{-1}x),(x,Qx)
 %
 % Input:
 %   regular

@@ -11,6 +11,14 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 filesep,'TestData', filesep,shortClassName];
         end
         %
+        function testQuadFunc(~)
+            shMat=[10,5,2;5,7,4;2,4,11];
+            cVec=[1,2,3];
+            ell=ellipsoid(cVec.',shMat);
+            isOk = abs(ell.quadFunc() - 217) < 1e-10;
+            mlunitext.assert_equals(true,isOk);
+        end
+        %
         function testRepMat(~)
             shMat=eye(2);
             ell=ellipsoid(shMat);

@@ -215,6 +215,7 @@ import modgen.common.throwerror;
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
 import gras.geom.ell.invmat;
+import gras.geom.ell.quadmat;
 %
 persistent logger;
 [~, absTolScal] = getAbsTol(fstEll);
@@ -264,8 +265,8 @@ if strcmp(cvx_status,'Infeasible') ...
     status = 0;
 else
     [~, fstAbsTol] = secEllArr.getAbsTol();
-    if (xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
-            (qVec'*invQMat*qVec - 1)) < fstAbsTol
+    if (quadmat(invQMat,xVec) + 2*(-invQMat*qVec)'*xVec + ...
+            (quadmat(invQMat,qVec) - 1)) < fstAbsTol
         res = 1;
     else
         res = 0;

@@ -229,7 +229,7 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
             if isdegenerate(singEll)
                 shMat = ellipsoid.regularize(shMat, absTol);
             end
-            fstCoef = sqrt(dirVec'*shMat*dirVec);
+            fstCoef=gras.geom.ell.quadmat(shMat,dirVec);
             subShMat = subShMat + ((1/fstCoef) * shMat);
             secCoef = secCoef + fstCoef;
         end

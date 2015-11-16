@@ -111,7 +111,6 @@ for iDims = 1:2*nDims
             for iEll = 1:nEll
                 (x-cVecCArr{iEll})' * shMatCArr{nEll} * (x-cVecCArr{iEll})...
                     <= 1; %#ok<VUNUS>
-                %quadmat(shMatCArr{nEll}, x, cVecCArr{iEll}) <= 1; %#ok<VUNUS>
             end
     cvx_end
     maxVecsMat(iDims,:) = x';

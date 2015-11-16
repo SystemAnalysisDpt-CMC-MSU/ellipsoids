@@ -133,6 +133,7 @@ import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
 import modgen.common.throwerror;
 import gras.geom.ell.invmat;
+import gras.geom.ell.quadmat;
 %
 persistent logger;
 TRY_SOLVER_LIST={'SeDuMi','SDPT3'};
@@ -151,10 +152,10 @@ invSecEllShMat = invmat(secEllShMat);
 %
 aMat = [invFstEllShMat -invFstEllShMat*fstEllCentVec;...
     (-invFstEllShMat*fstEllCentVec)' ...
-    (fstEllCentVec'*invFstEllShMat*fstEllCentVec-1)];
+      quadmat(invFstEllShMat,fstEllCentVec)-1];
 bMat = [invSecEllShMat -invSecEllShMat*secEllCentVec;...
     (-invSecEllShMat*secEllCentVec)'...
-    (secEllCentVec'*invSecEllShMat*secEllCentVec-1)];
+      quadmat(invSecEllShMat,secEllCentVec)-1];
 %
 aMat = 0.5*(aMat + aMat');
 bMat = 0.5*(bMat + bMat');
