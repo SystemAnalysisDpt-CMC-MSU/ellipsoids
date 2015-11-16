@@ -62,7 +62,6 @@ import gras.ellapx.enums.EApproxType;
 import gras.ellapx.enums.EProjType;
 import gras.ellapx.smartdb.F;
 import modgen.graphics.camlight;
-graphObjectName =  ['Reach Tube: by ', char(approxType(1))];
 approxType = gras.ellapx.enums.EApproxType.External;
 projType = gras.ellapx.enums.EProjType.Static;
 nTimeSteps = writerObj.FrameRate * (timeVec(2)-timeVec(1));
