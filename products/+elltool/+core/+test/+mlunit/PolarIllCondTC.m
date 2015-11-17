@@ -16,29 +16,33 @@ classdef PolarIllCondTC < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
         end
         function self = testGetScalarPolar(self)
-            check(6, true);
-            check(8, false);
-            
-            function check(N_DIMS, expRobustBetter)
+            K_TOL = 1e-2;
+            DIM_VEC=2:11;
+            isnOverflowVec=arrayfun(@(x)min(eig(inv(hilb(x)))),DIM_VEC)>0;
+            dimVec=DIM_VEC(isnOverflowVec);
+            [~, N_TESTS] = size(dimVec);
+            %
+            isRobustBetterVec=zeros(N_TESTS, 1);
+            isMethodsSimilar=zeros(N_TESTS, 1);
+            %
+            for iElem = 1:N_TESTS
+                N_DIMS = dimVec(iElem);
                 shMat = hilb(N_DIMS);
                 expShMat = invhilb(N_DIMS);
                 ell1 = ellipsoid(shMat);
                 [sh1Mat, sh2Mat] = self.auxGetTestPolars(ell1);
-                isRobustBetter = ...
-                    (norm(expShMat-sh1Mat)<=norm(expShMat-sh2Mat));
-                mlunitext.assert(isRobustBetter == expRobustBetter);
+                isRobustBetterVec(iElem)=...
+                    norm(expShMat-sh1Mat)<=norm(expShMat-sh2Mat);
+                
+                isMethodsSimilar(iElem)=...
+                    norm(sh1Mat-sh2Mat) < K_TOL;
             end
-        end     
-        function self = testGetScalarPolarMethodsDifference(self)
-            K_TOL = 1e-2;
-            check(5, true);
-            check(11, false);   
             %
-            function check(N_DIMS,expVal)                
-                ell1 = ellipsoid(0.01 * ones(N_DIMS,1),hilb(N_DIMS));
-                [sh1Mat, sh2Mat] = self.auxGetTestPolars(ell1);
-                mlunitext.assert((norm(sh1Mat-sh2Mat) < K_TOL) == expVal);
-            end
+            mlunitext.assert(any(isMethodsSimilar));
+            mlunitext.assert(any(~isMethodsSimilar));
+            %
+            mlunitext.assert(any(isRobustBetterVec));
+            mlunitext.assert(any(~isRobustBetterVec));
         end
        
         function [sh1Mat, sh2Mat] = auxGetTestPolars(self,ell)
