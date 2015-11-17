@@ -23,7 +23,7 @@ classdef PolarIllCondTC < mlunitext.test_case
             [~, N_TESTS] = size(dimVec);
             %
             isRobustBetterVec=zeros(N_TESTS, 1);
-            isMethodsSimilar=zeros(N_TESTS, 1);
+            isMethodsSimVec=zeros(N_TESTS, 1);
             %
             for iElem = 1:N_TESTS
                 N_DIMS = dimVec(iElem);
@@ -34,12 +34,12 @@ classdef PolarIllCondTC < mlunitext.test_case
                 isRobustBetterVec(iElem)=...
                     norm(expShMat-sh1Mat)<=norm(expShMat-sh2Mat);
                 
-                isMethodsSimilar(iElem)=...
+                isMethodsSimVec(iElem)=...
                     norm(sh1Mat-sh2Mat) < K_TOL;
             end
             %
-            mlunitext.assert(any(isMethodsSimilar));
-            mlunitext.assert(any(~isMethodsSimilar));
+            mlunitext.assert(any(isMethodsSimVec));
+            mlunitext.assert(any(~isMethodsSimVec));
             %
             mlunitext.assert(any(isRobustBetterVec));
             mlunitext.assert(any(~isRobustBetterVec));
