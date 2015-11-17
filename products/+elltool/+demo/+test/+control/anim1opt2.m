@@ -1,4 +1,4 @@
-function anim1opt(varargin)
+function anim1opt2(varargin)
 
 N_FRAMES = 5;% use 10 for better granularity
 
@@ -8,7 +8,6 @@ else
     nDirs = 4;
 end
 import elltool.conf.Properties;
-import gras.geom.*;
 Properties.setNPlot2dPoints(1000)
 aCMat = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 bCMat = {'10' '0'; '0' '1/(2 + sin(t))'};
@@ -24,14 +23,16 @@ phiVec = linspace(0,pi,nDirs);
 forthDirsMat = [cos(phiVec); sin(phiVec)];
 
 firstSys  = elltool.linsys.LinSysContinuous(aCMat, bCMat, SUBounds);
-firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, firstDirVec, timeVec);
+firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj,...
+    firstDirVec, timeVec);
 secondRsObj = firstRsObj.refine(secondDirVec);
 thirdRsObj = secondRsObj.refine(thirdDirsMat);
-forthRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, forthDirsMat, timeVec);
+forthRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj,...
+    forthDirsMat, timeVec);
 
 %%%%%%%%%%%%%
 axisConfVec = [0 timeVec(2) -40 40 -5 5];
-writerObj=getVideoWriter('anim1opt');
+writerObj=getVideoWriter('anim1opt2');
 %
 writerObj.FrameRate = N_FRAMES;
 open(writerObj);
@@ -60,39 +61,44 @@ timeStepsVec(1) = [];
 numTransparency = 1;
 nTimeSteps = nTimeSteps - 1;
 plObj = rsObj.plotByEa;
-firstMap = plObj.getPlotStructure.figToAxesToPlotHMap;
-firstKey = firstMap.keys;
-secondMap = firstMap(firstKey{1});
-secondKey = secondMap.keys;
-plotGroup = secondMap(secondKey{1});
-set(plotGroup, 'Visible', 'off')
+mapObj = plObj.getPlotStructure.figToAxesToPlotHMap;
+SkeyData = mapObj.keys;
+while (numel(mapObj(SkeyData{1})) == 1) &&...
+        (ishandle(mapObj(SkeyData{1})) == 0) 
+    mapObj = mapObj(SkeyData{1});
+    SkeyData = mapObj.keys;
+end
+plotGroupArray = mapObj(SkeyData{1});
+set(plotGroupArray, 'Visible', 'off')
 view(VIEW_ANGLE);
 axis(axisConfVec);
 grid off;
-numElementsInGroup = size(plotGroup, 2);
-numofPatch = 1;
-typesGroupStruct = get(plotGroup, 'Type');
-for iGroupElement = 1 : numElementsInGroup
-    if  strcmp(typesGroupStruct{iGroupElement}, 'patch')
-        numofPatch = iGroupElement;
+nElements = size(plotGroupArray, 2);
+nOfPatch = 1;
+STypesGroupDataArray = get(plotGroupArray, 'Type');
+for iGroupElement = 1 : nElements
+    if  strcmp(STypesGroupDataArray{iGroupElement}, 'patch')
+        nOfPatch = iGroupElement;
     end
 end
-patchObj = plotGroup(numofPatch);
+patchObj = plotGroupArray(nOfPatch);
 patchTimeVec = patchObj.Vertices(:, 1);
-sizeVert = numel(patchTimeVec);
+nVertices = numel(patchTimeVec);
 while patchTimeVec(numTransparency) < timeVec(1)
     numTransparency = numTransparency + 1;
 end
-patchObj.FaceVertexAlphaData = [PATCH_ALPHA .* ones(numTransparency, 1); zeros(sizeVert - numTransparency, 1)];
+patchObj.FaceVertexAlphaData = [PATCH_ALPHA .* ones(numTransparency, 1);...
+    zeros(nVertices - numTransparency, 1)];
 patchObj.AlphaDataMapping = 'none';
 patchObj.EdgeAlpha = 'interp';
 patchObj.FaceAlpha = 'interp';
-set(plotGroup, 'Visible', 'on')
+set(plotGroupArray, 'Visible', 'on')
 for iTimeStep = 1:nTimeSteps
     while patchTimeVec(numTransparency) < timeStepsVec(iTimeStep);
         numTransparency = numTransparency + 1;
     end
-    patchObj.FaceVertexAlphaData = [PATCH_ALPHA .* ones(numTransparency, 1); zeros(sizeVert - numTransparency, 1)];
+    patchObj.FaceVertexAlphaData = [PATCH_ALPHA .*...
+        ones(numTransparency, 1); zeros(nVertices - numTransparency, 1)];
     set(gcf,'WindowStyle','normal');
     set(gcf,'units','normalized','outerposition',[0 0 1 1]);
     videoFrameObj = getframe(gcf);
