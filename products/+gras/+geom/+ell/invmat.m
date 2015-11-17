@@ -1,40 +1,20 @@
 function I = invmat(qMat)
+% INVMAT - computes matrix inverse treating ill-conditioned matrices
+% properly.
 %
-% ELL_INV - computes matrix inverse treating 
-%           ill-conditioned matrices properly.
-%
-%
-% Description:
-% ------------
-%
-%    I = ELL_INV(A)  Given two square nonsingular matrix A,
-%        returns its inverse.
-%
+% Input:
+%   regular:
+%       qMat: double[nDim,nDim]
 %
 % Output:
-% -------
+%   I: double[nDim,nDim] - inverse matrix
 %
-%    I - inverse of matrix A.
+% Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-%
-% See also:
-% ---------
-%
-%    INV, COND.
-%
-
-%
-% Author:
-% -------
-%
-%    Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-%
-
-    [m, n] = size(qMat);
-    if m ~= n
-        error('ELL_INV: matrix must be square.');
-    end
-    B = inv(qMat);
-    I = inv(B*qMat) * B;
+[m, n] = size(qMat);
+if m ~= n
+    error('ELL_INV: matrix must be square.');
 end
-
+B = inv(qMat);
+I = inv(B*qMat) * B;
+end

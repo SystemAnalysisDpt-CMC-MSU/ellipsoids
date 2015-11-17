@@ -12,10 +12,12 @@ classdef EllipsoidTestCase < mlunitext.test_case
         end
         %
         function testQuadFunc(~)
+            ANALYTICAL_RESULT = 217;
+            MAX_TOL = 1e-10;
             shMat=[10,5,2;5,7,4;2,4,11];
             cVec=[1,2,3];
             ell=ellipsoid(cVec.',shMat);
-            isOk = abs(ell.quadFunc() - 217) < 1e-10;
+            isOk = abs(ell.quadFunc()-ANALYTICAL_RESULT)<MAX_TOL;
             mlunitext.assert_equals(true,isOk);
         end
         %

@@ -1,19 +1,23 @@
 function res = quadmat(varargin)
-% QUADMAT -- calculates quadratic functions
+% QUADMAT - calculates quadratic functions
 %            (x-c,Q^{-1}(x-c)),(x-c,Q(x-c)),(x,Q^{-1}x),(x,Qx)
 %
 % Input:
-%   regular
+%   regular:
 %       qMat: double[nDim, nDim] - the square matrix itself
 %       xVec: double[1, nDim] - x vector
-%   optional
-%           cVec: double[1, nDim] - center vector,  if not specified - zero is assumed
+%   optional:
+%           cVec: double[1, nDim] - center vector,  if not specified - zero
+%               is assumed
 %           mode: char[1,] - regime specifier, can take the following values
 %                   plain - use Q
-%                   invadv - use Q^{-1} and calculate it using gras.geom.ell.invmat function
-%                   inv - use Q^{-1} but instead of calculating Q^{-1} use the algorithm from getPolar
+%                   invadv - use Q^{-1} and calculate it using 
+%                       gras.geom.ell.invmat function
+%                   inv - use Q^{-1} but instead of calculating Q^{-1} 
+%                       use the algorithm from getPolar
+%
 %   Output:
-%           res: double - result of calculation
+%           res: double[1,1] - result of calculation
 %
 [reg, ~] = modgen.common.parseparext(varargin, {},...
     [2 4], 'regDefList', {0, 0, 0, 'plain'},...

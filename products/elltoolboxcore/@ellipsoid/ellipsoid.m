@@ -57,16 +57,23 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
         end
         %
         function resQuad = quadFunc(self)
-            %
-            % QUADFUNC - computes quadratic function (x,Q^{-1}x) of given
-            %            ellipsoid.
+            % QUADFUNC computes quadratic function (x,Qx) of given
+            % ellipsoid.
             % 
             % INPUT:
             %   regular:
             %      self: ellipsoid[1,1]
             %
             % Output:
-            %   resQuad: double - value of quadratic function
+            %   resQuad: double[1,1] - value of quadratic function
+            %
+            % Example:
+            %   ellObj = ellipsoid([1;5;7],eye(3));
+            %   quadFunc(ellObj)
+            %   
+            %   ans =
+            %
+            %        75
             %
             self.checkIfScalar();
             resQuad = gras.geom.ell.quadmat(self.shapeMat,self.centerVec);
