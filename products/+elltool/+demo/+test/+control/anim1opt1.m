@@ -25,7 +25,7 @@ forthDirsMat = [cos(phiVec); sin(phiVec)];
 
 firstSys  = elltool.linsys.LinSysContinuous(aCMat, bCMat, SUBounds);
 firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj,...
-    \firstDirVec, timeVec);
+    firstDirVec, timeVec);
 secondRsObj = firstRsObj.refine(secondDirVec);
 thirdRsObj = secondRsObj.refine(thirdDirsMat);
 forthRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj,...
@@ -79,6 +79,7 @@ aMat = ellTubeProjObj.aMat{1};
 qArr = cat(4, ellTubeProjObj.QArray{:});
 numEndPloting = 1;
 hold on;
+grid off;
 view(VIEW_ANGLE);
 axis(axisConfVec);
 while (timeFromEllTubeVec(numEndPloting) < timeVec(1))

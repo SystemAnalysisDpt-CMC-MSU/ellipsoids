@@ -55,6 +55,7 @@ end
 function writerObj = getAnimation(rsObj,writerObj,timeVec,axisConfVec)
 PATCH_ALPHA = 0.3;
 VIEW_ANGLE = [39 -35];
+import modgen.common.throwerror;
 nTimeSteps = writerObj.FrameRate * (timeVec(2)-timeVec(1));
 timeStepsVec = linspace(timeVec(1),timeVec(2),nTimeSteps);
 timeStepsVec(1) = [];
@@ -62,22 +63,25 @@ numTransparency = 1;
 nTimeSteps = nTimeSteps - 1;
 plObj = rsObj.plotByEa;
 mapObj = plObj.getPlotStructure.figToAxesToPlotHMap;
-SkeyData = mapObj.keys;
-while (numel(mapObj(SkeyData{1})) == 1) &&...
-        (ishandle(mapObj(SkeyData{1})) == 0) 
-    mapObj = mapObj(SkeyData{1});
-    SkeyData = mapObj.keys;
+if numel(mapObj) ~= 1
+     modgen.common.throwerror('gettingPatchError','Must be only 1 map object.');
 end
-plotGroupArray = mapObj(SkeyData{1});
+keyC = mapObj.keys;
+mapObj = mapObj(keyC{1});
+if numel(mapObj) ~= 1
+     modgen.common.throwerror('gettingPatchError','Must be only 1 map object.');
+end
+keyC = mapObj.keys;
+plotGroupArray = mapObj(keyC{1});
 set(plotGroupArray, 'Visible', 'off')
 view(VIEW_ANGLE);
 axis(axisConfVec);
 grid off;
 nElements = size(plotGroupArray, 2);
 nOfPatch = 1;
-STypesGroupDataArray = get(plotGroupArray, 'Type');
+typesGroupCVec = get(plotGroupArray, 'Type');
 for iGroupElement = 1 : nElements
-    if  strcmp(STypesGroupDataArray{iGroupElement}, 'patch')
+    if  strcmp(typesGroupCVec{iGroupElement}, 'patch')
         nOfPatch = iGroupElement;
     end
 end
