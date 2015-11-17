@@ -60,7 +60,7 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             % QUADFUNC computes quadratic function (x,Qx) of given
             % ellipsoid.
             % 
-            % INPUT:
+            % Input:
             %   regular:
             %      self: ellipsoid[1,1]
             %

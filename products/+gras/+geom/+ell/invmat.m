@@ -1,20 +1,20 @@
-function I = invmat(qMat)
+function iMat = invmat(qMat)
 % INVMAT - computes matrix inverse treating ill-conditioned matrices
 % properly.
 %
 % Input:
 %   regular:
-%       qMat: double[nDim,nDim]
+%       qMat: double[nDim,nDim] - given square matrix
 %
 % Output:
-%   I: double[nDim,nDim] - inverse matrix
+%   iMat: double[nDim,nDim] - inverse matrix
 %
 % Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 %
-[m, n] = size(qMat);
-if m ~= n
+[qMatDimM,qMatDimN] = size(qMat);
+if qMatDimM ~= qMatDimN
     error('ELL_INV: matrix must be square.');
 end
-B = inv(qMat);
-I = inv(B*qMat) * B;
+bMat = inv(qMat);
+iMat = inv(bMat*qMat)*bMat;
 end
