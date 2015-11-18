@@ -8,7 +8,6 @@ else
     nDirs = 4;
 end
 import elltool.conf.Properties;
-import gras.geom.*;
 Properties.setNPlot2dPoints(1000)
 aCMat = {'0' '-10'; '1/(2 + sin(t))' '-4/(2 + sin(t))'};
 bCMat = {'10' '0'; '0' '1/(2 + sin(t))'};

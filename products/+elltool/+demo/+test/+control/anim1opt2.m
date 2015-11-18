@@ -64,28 +64,30 @@ nTimeSteps = nTimeSteps - 1;
 plObj = rsObj.plotByEa;
 mapObj = plObj.getPlotStructure.figToAxesToPlotHMap;
 if numel(mapObj) ~= 1
-     modgen.common.throwerror('gettingPatchError','Must be only 1 map object.');
+     throwerror('gettingPatchError',...
+         'Must be only 1 map object.');
 end
-keyC = mapObj.keys;
-mapObj = mapObj(keyC{1});
+keyFromMapC = mapObj.keys;
+mapObj = mapObj(keyFromMapC{1});
 if numel(mapObj) ~= 1
-     modgen.common.throwerror('gettingPatchError','Must be only 1 map object.');
+     throwerror('gettingPatchError',...
+         'Must be only 1 map object.');
 end
-keyC = mapObj.keys;
-plotGroupArray = mapObj(keyC{1});
-set(plotGroupArray, 'Visible', 'off')
+keyFromMapC = mapObj.keys;
+plotGroupVec = mapObj(keyFromMapC{1});
+set(plotGroupVec, 'Visible', 'off')
 view(VIEW_ANGLE);
 axis(axisConfVec);
 grid off;
-nElements = size(plotGroupArray, 2);
+nElements = size(plotGroupVec, 2);
 nOfPatch = 1;
-typesGroupCVec = get(plotGroupArray, 'Type');
+typesGroupCVec = get(plotGroupVec, 'Type');
 for iGroupElement = 1 : nElements
     if  strcmp(typesGroupCVec{iGroupElement}, 'patch')
         nOfPatch = iGroupElement;
     end
 end
-patchObj = plotGroupArray(nOfPatch);
+patchObj = plotGroupVec(nOfPatch);
 patchTimeVec = patchObj.Vertices(:, 1);
 nVertices = numel(patchTimeVec);
 while patchTimeVec(numTransparency) < timeVec(1)
@@ -96,7 +98,7 @@ patchObj.FaceVertexAlphaData = [PATCH_ALPHA .* ones(numTransparency, 1);...
 patchObj.AlphaDataMapping = 'none';
 patchObj.EdgeAlpha = 'interp';
 patchObj.FaceAlpha = 'interp';
-set(plotGroupArray, 'Visible', 'on')
+set(plotGroupVec, 'Visible', 'on')
 for iTimeStep = 1:nTimeSteps
     while patchTimeVec(numTransparency) < timeStepsVec(iTimeStep);
         numTransparency = numTransparency + 1;
