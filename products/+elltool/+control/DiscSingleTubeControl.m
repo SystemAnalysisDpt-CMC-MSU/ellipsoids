@@ -20,7 +20,7 @@ classdef DiscSingleTubeControl<elltool.control.ASingleTubeControl
         %
         function [trajEvalTime, trajectory] = getTrajectory(self,x0Vec)
             import modgen.common.throwerror;
-            ERR_TOL = 1e-4;
+            ERR_TOL = 1e-1;
             trajEvalTime = [];
             trajectory = [];
             switchTimeVecLenght=numel(self.switchSysTimeVec);
@@ -30,7 +30,7 @@ classdef DiscSingleTubeControl<elltool.control.ASingleTubeControl
             q0Mat = self.properEllTube.QArray{1}(:,:,1);
             isX0inSet = dot(x0Vec-q0Vec,q0Mat\(x0Vec-q0Vec));
             %
-            for iSwitch=1:switchTimeVecLenght-1                 
+            for iSwitch=1: switchTimeVecLenght-1                 
                 iSwitchBack = switchTimeVecLenght - iSwitch;
                 %
                 tStart = self.switchSysTimeVec(iSwitch);
@@ -40,17 +40,17 @@ classdef DiscSingleTubeControl<elltool.control.ASingleTubeControl
                 AtMat=self.probDynamicsList{iSwitchBack}.getAtDynamics();    
                 curProbDynObj=self.probDynamicsList{iSwitchBack};
                 %
-                CRel = 10000;
+                CRel = 1000;
                 timeVec = tStart:(tFin-tStart)/CRel:tFin;
                 %   
                 odeResMat = DiscrBackwardDynamics(AtMat,...
-                    self.controlVectorFunct,x0Vec,timeVec,curProbDynObj);     
+                    self.controlVectorFunct,x0Vec,timeVec,curProbDynObj,tFin,tStart);     
                 %
                 q1Vec=self.properEllTube.aMat{1}(:,indFin);
                 q1Mat=self.properEllTube.QArray{1}(:,:,indFin);
                 
-                currentScalProd = dot(odeResMat(end,:)'-q1Vec,q1Mat\...
-                    (odeResMat(end,:)'-q1Vec));
+                currentScalProd = dot(odeResMat(end,:).'-q1Vec,q1Mat\...
+                    (odeResMat(end,:).'-q1Vec));
                 
                 if (isX0inSet)&&(currentScalProd > 1 + ERR_TOL)
                     throwerror('TestFails', ['the result of test does '...
@@ -67,7 +67,7 @@ classdef DiscSingleTubeControl<elltool.control.ASingleTubeControl
             end
              
             
-            function resMat = DiscrBackwardDynamics(AtMat,controlVectorFunct,x0Vec,timeVec,curProbDynObj)
+            function resMat = DiscrBackwardDynamics(AtMat,controlVectorFunct,x0Vec,timeVec,curProbDynObj,tFin,tStart)
                 sysDim = max([size(x0Vec, 1) size(x0Vec, 2)]);
                 nTimePoints = length(timeVec);
                
@@ -80,19 +80,24 @@ classdef DiscSingleTubeControl<elltool.control.ASingleTubeControl
                 end;
                 xtArray1(:,1) = xtArray(:,1);
                 for iTime = 2:nTimePoints 
-                   aMat = AtMat.evaluate(timeVec(iTime));
-                   bptVec = curProbDynObj.getBptDynamics.evaluate(timeVec(iTime)); 
+                   aMat = inv(AtMat.evaluate(tFin+tStart - timeVec(iTime - 1)));
+                   curGoodDirSetObj = self.goodDirSetList{iSwitch};
+                   xstTransMat = curGoodDirSetObj.getXstTransDynamics();
+                   xt1tMat = transpose(xstTransMat.evaluate(tFin)\...
+                   xstTransMat.evaluate(timeVec(iTime - 1)));
+                   bptVec = -curProbDynObj.getBptDynamics.evaluate(tFin+tStart -timeVec(iTime - 1)); 
+                   bptVec = aMat*bptVec;
                    if(rank(aMat)~= 0)
-                   xtArray1(:,iTime) = aMat * (xtArray(:,iTime-1) - bptVec);
+                   xtArray1(:,iTime) = aMat * xtArray(:,iTime-1) + bptVec;
                    else
-                       xtArray1(:,iTime) =  - bptVec;
+                       xtArray1(:,iTime) =   bptVec;
                    end;
-                   bpVec = controlVectorFunct.evaluate(xtArray1(:,iTime),timeVec,iTime);
+                   bpVec = controlVectorFunct.evaluate(xtArray1(:,iTime),timeVec,iTime,aMat);
                    if(rank(aMat)~= 0)
                    xtArray(:,iTime) = ...
-                     aMat * (xtArray(:,iTime-1) - bpVec);
+                     aMat * xtArray(:,iTime-1) + bpVec;
                    else
-                      xtArray(:,iTime) =  - bpVec;
+                      xtArray(:,iTime) =   bpVec;
                    end;
                 end
                  resMat = xtArray.';        
