@@ -11,6 +11,16 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 filesep,'TestData', filesep,shortClassName];
         end
         %
+        function testQuadFunc(~)
+            ANALYTICAL_RESULT = 217;
+            MAX_TOL = 1e-10;
+            shMat=[10,5,2;5,7,4;2,4,11];
+            cVec=[1,2,3];
+            ell=ellipsoid(cVec.',shMat);
+            isOk = abs(ell.quadFunc()-ANALYTICAL_RESULT)<MAX_TOL;
+            mlunitext.assert_equals(true,isOk);
+        end
+        %
         function testRepMat(~)
             shMat=eye(2);
             ell=ellipsoid(shMat);
@@ -1492,15 +1502,16 @@ distEll = sqrt(fDist);
 end
 %
 function distEllEll=ellEllDistanceCVX(ellObj1,ellObj2,flag)
+import gras.geom.ell.invmat;
 dims1Mat = dimension(ellObj1);
 %dims2Mat = dimension(ellObj2);
 maxDim   = max(max(dims1Mat));
 %maxDim2   = max(max(dims2Mat));
 [cen1Vec, q1Mat] = double(ellObj1);
 [cen2Vec, q2Mat] = double(ellObj2);
-qi1Mat     = ell_inv(q1Mat);
+qi1Mat     = invmat(q1Mat);
 qi1Mat     = 0.5*(qi1Mat + qi1Mat');
-qi2Mat     = ell_inv(q2Mat);
+qi2Mat     = invmat(q2Mat);
 qi2Mat     = 0.5*(qi2Mat + qi2Mat');
 cvx_begin sdp
 variable x(maxDim, 1)

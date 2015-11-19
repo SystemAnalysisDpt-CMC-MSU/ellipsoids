@@ -148,15 +148,17 @@ function outEll = l_intersection_ea(fstEll, secObj)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
-
+%
+import gras.geom.ell.invmat;
+%
 fstEllCentVec = fstEll.centerVec;
 fstEllShMat = fstEll.shapeMat;
 if ~all(fstEllShMat(:) == 0)
     if rank(fstEllShMat) < size(fstEllShMat, 1)
         fstEllShMat = ...
-            ell_inv(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
+            invmat(ellipsoid.regularize(fstEllShMat,fstEll.absTol));
     else
-        fstEllShMat = ell_inv(fstEllShMat);
+        fstEllShMat = invmat(fstEllShMat);
     end
 end
 if isa(secObj, 'hyperplane')
@@ -200,9 +202,9 @@ else
         return;
     end;
     if rank(seqQMat) < size(seqQMat, 1)
-        seqQMat = ell_inv(ellipsoid.regularize(seqQMat,secObj.absTol));
+        seqQMat = invmat(ellipsoid.regularize(seqQMat,secObj.absTol));
     else
-        seqQMat = ell_inv(seqQMat);
+        seqQMat = invmat(seqQMat);
     end
 end
 
@@ -210,7 +212,7 @@ lambda = l_get_lambda(fstEllCentVec, fstEllShMat, qSecVec, ...
     seqQMat, isa(secObj, 'hyperplane'), fstEll.getAbsTol);
 xMat = lambda*fstEllShMat + (1 - lambda)*seqQMat;
 xMat = 0.5*(xMat + xMat');
-invXMat = ell_inv(xMat);
+invXMat = invmat(xMat);
 invXMat = 0.5*(invXMat + invXMat');
 const = 1 - lambda*(1 - lambda)*(qSecVec - ...
     fstEllCentVec)'*seqQMat*invXMat*fstEllShMat*(qSecVec - fstEllCentVec);

@@ -214,6 +214,8 @@ function [res, status] = qcqp(secEllArr, fstEll)
 import modgen.common.throwerror;
 import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
+import gras.geom.ell.invmat;
+import gras.geom.ell.quadmat;
 %
 persistent logger;
 [~, absTolScal] = getAbsTol(fstEll);
@@ -228,7 +230,7 @@ if size(qMat, 2) > rank(qMat)
     end
     qMat = ellipsoid.regularize(qMat,absTolScal);
 end
-invQMat = ell_inv(qMat);
+invQMat = invmat(qMat);
 invQMat = 0.5*(invQMat + invQMat');
 %
 nNumel = numel(secEllArr);
@@ -245,7 +247,7 @@ for iCount = 1:nNumel
         invQiMat = ...
             ellipsoid.regularize(invQiMat,getAbsTol(secEllArr(iCount)));
     end
-    invQiMat = ell_inv(invQiMat);
+    invQiMat = invmat(invQiMat);
     invQiMat = 0.5*(invQiMat + invQiMat');
     xVec'*invQiMat*xVec + 2*(-invQiMat*qiVec)'*xVec + ...
         (qiVec'*invQiMat*qiVec - 1) <= 0; %#ok<VUNUS>
@@ -263,8 +265,8 @@ if strcmp(cvx_status,'Infeasible') ...
     status = 0;
 else
     [~, fstAbsTol] = secEllArr.getAbsTol();
-    if (xVec'*invQMat*xVec + 2*(-invQMat*qVec)'*xVec + ...
-            (qVec'*invQMat*qVec - 1)) < fstAbsTol
+    if (quadmat(invQMat,xVec) + 2*(-invQMat*qVec)'*xVec + ...
+            (quadmat(invQMat,qVec) - 1)) < fstAbsTol
         res = 1;
     else
         res = 0;

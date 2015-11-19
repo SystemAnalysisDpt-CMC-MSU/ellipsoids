@@ -163,7 +163,10 @@ function outEll = l_intersection_ia(fstEll, secObj)
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California 2004-2008 $
-
+%
+import gras.geom.ell.invmat;
+import gras.geom.ell.quadmat;
+%
 if isa(secObj, 'ellipsoid')
     if fstEll == secObj
         outEll = fstEll;
@@ -178,10 +181,10 @@ end
 fstEllCentVec = fstEll.centerVec;
 fstEllShMat = fstEll.shapeMat;
 if rank(fstEllShMat) < size(fstEllShMat, 1)
-    fstEllShMat = ell_inv(ellipsoid.regularize(fstEllShMat,...
+    fstEllShMat = invmat(ellipsoid.regularize(fstEllShMat,...
         fstEll.absTol));
 else
-    fstEllShMat = ell_inv(fstEllShMat);
+    fstEllShMat = invmat(fstEllShMat);
 end
 
 [normHypVec, hypScalar] = parameters(-secObj);
@@ -205,22 +208,21 @@ end
 hEig      = 2*sqrt(maxeig(fstEll));
 secCentVec     = intEllCentVec + hEig*normHypVec;
 secMat     = (normHypVec*normHypVec')/(hEig^2);
-fstCoeff     = (fstEllCentVec - ...
-    intEllCentVec)'*fstEllShMat*(fstEllCentVec - intEllCentVec);
-secCoeff = (secCentVec - boundVec)'*secMat*(secCentVec - boundVec);
+fstCoeff=quadmat(fstEllShMat,fstEllCentVec,intEllCentVec);
+secCoeff=quadmat(secMat,secCentVec,boundVec);
 coeffDenomin = 1/(1 - fstCoeff*secCoeff);
 fstEllCoeff  = (1 - secCoeff)*coeffDenomin;
 secEllCoeff = (1 - fstCoeff)*coeffDenomin;
 intEllShMat      = fstEllCoeff*fstEllShMat + secEllCoeff*secMat;
 intEllShMat      = 0.5*(intEllShMat + intEllShMat');
-intEllCentVec      = ell_inv(intEllShMat)*...
+intEllCentVec      = invmat(intEllShMat)*...
     (fstEllCoeff*fstEllShMat*fstEllCentVec + ...
     secEllCoeff*secMat*secCentVec);
 intEllShMat      = intEllShMat/(1 - ...
     (fstEllCoeff*fstEllCentVec'*fstEllShMat*fstEllCentVec + ...
     secEllCoeff*secCentVec'*secMat*secCentVec - ...
-    intEllCentVec'*intEllShMat*intEllCentVec));
-intEllShMat      = ell_inv(intEllShMat);
+    quadmat(intEllShMat,intEllCentVec)));
+intEllShMat      = invmat(intEllShMat);
 intEllShMat      = (1-fstEll.absTol)*0.5*(intEllShMat + intEllShMat');
 outEll      = ellipsoid(intEllCentVec, intEllShMat);
 
@@ -254,6 +256,7 @@ function outEll = l_polyintersect(ell, poly)
 %            System Analysis Department$
 %
 
+import gras.geom.ell.quadmat;
 if doesIntersectionContain(ell, poly)
     outEll = getInnerEllipsoid(poly);
 elseif ~intersect(ell,poly)
@@ -270,7 +273,7 @@ else
     end
     invEllMat = inv(ellMat);
     ellShift = -invEllMat*ellVec;
-    ellConst = ellVec' * invEllMat * ellVec - 1;
+    ellConst=quadmat(ellMat,ellVec,0,'invadv')-1;
     cvx_begin sdp
         variable B(n,n) symmetric
         variable d(n)

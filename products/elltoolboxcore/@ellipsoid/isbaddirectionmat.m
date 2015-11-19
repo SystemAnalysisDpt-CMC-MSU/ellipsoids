@@ -47,8 +47,9 @@ dirsCVec = mat2cell(dirsMat,nDim,ones(1,nDirs));
 
 
     function [isBadDir,pUniversal] = culcPUniversal(dirVec)
-        p1Par=sqrt(dirVec.'*q1Mat*dirVec);
-        p2Par=sqrt(dirVec.'*q2Mat*dirVec);
+        import gras.geom.ell.quadmat;
+        p1Par=sqrt(quadmat(q1Mat,dirVec));
+        p2Par=sqrt(quadmat(q2Mat,dirVec));
         pPar=p1Par/p2Par;
         isBadDir = lamMin < pPar;
         pUniversal = min(pPar,lamMin);

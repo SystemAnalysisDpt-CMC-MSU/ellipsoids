@@ -124,7 +124,7 @@ end
                 end
                 shMat = ellipsoid.regularize(shMat, absTol);
             end
-            fstCoef = realsqrt(dirVec'*shMat*dirVec);
+            fstCoef=realsqrt(gras.geom.ell.quadmat(shMat,dirVec));
             subShMat = subShMat + ((1/fstCoef) * shMat);
             secCoef = secCoef + fstCoef;
         end

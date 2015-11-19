@@ -158,7 +158,7 @@ end
             shMat = ellipsoid.regularize(shMat, absTol);
         end
         
-        rVal = realsqrt(cVec' * ell_inv(shMat) * cVec);
+        rVal = realsqrt(cVec' * gras.geom.ell.invmat(shMat) * cVec);
         if (rVal < 1) || (abs(rVal - 1) < absTol)
             isPos = true;
         end

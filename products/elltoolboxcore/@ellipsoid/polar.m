@@ -49,16 +49,19 @@ polEllArr(sizeCVec{:}) = ellipsoid;
 arrayfun(@(x) fSinglePolar(x), 1:numel(ellArr));
 %
     function fSinglePolar(index)
+        import gras.geom.ell.quadmat;
+        import gras.geom.ell.invmat;
+        import modgen.common.throwerror;
         singEll = ellArr(index);
         qVec = singEll.centerVec;
         shMat = singEll.shapeMat;
-        chk    = qVec' * ell_inv(shMat) * qVec;
+        chk = quadmat(shMat, qVec, 0, 'invadv');
         %chk checks if zero belongs to singEll ellipsoid
         if chk < 1
-            auxMat  = ell_inv(shMat - qVec*qVec');
+            auxMat  = invmat(shMat - qVec*qVec');
             auxMat  = 0.5*(auxMat + auxMat');
             polCenVec  = -auxMat * qVec;
-            polShapeMat  = (1 + qVec'*auxMat*qVec)*auxMat;
+            polShapeMat  = (1 + quadmat(auxMat, qVec, 0, 'plain'))*auxMat;
             polEllArr(index).centerVec = polCenVec;
             polEllArr(index).shapeMat = polShapeMat;
         else

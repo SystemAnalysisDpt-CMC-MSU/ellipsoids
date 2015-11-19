@@ -175,7 +175,7 @@ end
         end
         function fCase2(index)
             eaShMat = extApprEllVec(index).shapeMat;
-            invShMat = ell_inv(eaShMat);
+            invShMat = gras.geom.ell.invmat(eaShMat);
             valVec = sum((invShMat*dirMat).*dirMat,1);
             mValVec = max(valVec, mValVec);
         end
@@ -229,7 +229,7 @@ arrayfun(@(x) fSingleDirection(x),1:nCols);
             if isdegenerate(singEll)
                 shMat = ellipsoid.regularize(shMat, absTol);
             end
-            fstCoef = sqrt(dirVec'*shMat*dirVec);
+            fstCoef=gras.geom.ell.quadmat(shMat,dirVec);
             subShMat = subShMat + ((1/fstCoef) * shMat);
             secCoef = secCoef + fstCoef;
         end

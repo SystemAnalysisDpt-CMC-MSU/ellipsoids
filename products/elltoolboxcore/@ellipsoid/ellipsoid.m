@@ -56,6 +56,29 @@ classdef ellipsoid < elltool.core.AGenEllipsoid
             resArr=resArr.getCopy();
         end
         %
+        function resQuad = quadFunc(self)
+            % QUADFUNC computes quadratic function (x,Qx) of given
+            % ellipsoid.
+            % 
+            % Input:
+            %   regular:
+            %      self: ellipsoid[1,1]
+            %
+            % Output:
+            %   resQuad: double[1,1] - value of quadratic function
+            %
+            % Example:
+            %   ellObj = ellipsoid([1;5;7],eye(3));
+            %   quadFunc(ellObj)
+            %   
+            %   ans =
+            %
+            %        75
+            %
+            self.checkIfScalar();
+            resQuad = gras.geom.ell.quadmat(self.shapeMat,self.centerVec);
+        end
+        %
         function shMat=getShapeMat(self)
             % GETSHAPEMAT - returns shapeMat matrix of given ellipsoid
             %
