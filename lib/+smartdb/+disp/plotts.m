@@ -235,11 +235,12 @@ figureNameList=figureNameList(indForward);
 %
 if ~isDryRun;
     
-    propValList={'Name',x,'Visible','off'};
+    propValList={};
     if usejava('swing')
         propValList=[propValList,'WindowStyle','docked'];
     end
-    hFigureCVec=cellfun(@(x)(prepivfigure(propValList{:})),...
+    hFigureCVec=cellfun(@(x)(prepivfigure('Name',x,'Visible','off',...
+        propValList{:})),...
         figureNameList,'UniformOutput',false);
     %
     hAxesCVec=cellfun(@(hFig,figureName,xCell,yCell,groupMembership,...
