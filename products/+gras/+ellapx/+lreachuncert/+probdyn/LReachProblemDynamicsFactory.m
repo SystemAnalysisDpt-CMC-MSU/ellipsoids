@@ -1,4 +1,4 @@
- classdef LReachProblemDynamicsFactory<handle
+classdef LReachProblemDynamicsFactory<handle
     methods(Static)
         function pDynamicsObject=create(pDefObj,calcPrecision)
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsInterp;
