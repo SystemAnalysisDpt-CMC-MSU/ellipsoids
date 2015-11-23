@@ -32,6 +32,8 @@ function polarObj = getScalarPolarInternal(self, isRobustMethod)
 % 			Faculty of Computational Mathematics and Computer Science,
 % 			System Analysis Department 2015 $
 % 
+import gras.geom.ell.quadmat;
+import gras.geom.ell.invmat;
 if nargin<2 
     isRobustMethod = true;
 end
@@ -41,18 +43,19 @@ modgen.common.checkmultvar('isscalar(x1)&&islogical(x2)&&isscalar(x2)',...
 if isRobustMethod
     [cVec,shMat] = double(self);
     invShMat = inv(shMat);
-    normConst = cVec.'*(shMat\cVec);
+    normConst = quadmat(shMat, cVec, 0, 'inv');
     polarCVec = -(shMat\cVec)/(1-normConst);
     polarShMat = invShMat/(1-normConst) + polarCVec*polarCVec.';
     polarObj = ellipsoid(polarCVec,polarShMat);
 else
+    import modgen.common.throwerror;
     [cVec,shMat] = double(self);
-    isZeroInEll = cVec.'*ell_inv(shMat)*cVec<1;
-    if isZeroInEll
-        auxMat = ell_inv(shMat - cVec*cVec.');
+    isZeroInEll = quadmat(shMat, cVec, 0, 'invadv');
+    if isZeroInEll < 1
+        auxMat = invmat(shMat - cVec*cVec.');
         auxMat = 0.5*(auxMat + auxMat.');
         polarCVec = -auxMat * cVec;
-        polarShMat = (1 + cVec.'*auxMat*cVec)*auxMat;
+        polarShMat = (1 + quadmat(auxMat, cVec, 0, 'plain'))*auxMat;
         polarObj = ellipsoid(polarCVec,polarShMat);
     else
         modgen.common.throwerror('degenerateEllipsoid',...
