@@ -212,6 +212,16 @@ classdef ReachContinuous < elltool.reach.AReach
             function isPos=isMatch(patternStr)
                 isPos=~isempty(strfind(meObj.identifier,patternStr));
             end
+            function probDefConstr = getProbDynamicsBuilder (isDisturbance, ...
+                    isBackward)
+                if (isBackward && ~isDisturbance)
+                    probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
+                        probdyn.LReachProblemDynamicsFactory.createByParams;
+                elseif (isBackward && isDisturbance)
+                    probDefConstr = @(varargin)gras.ellapx.lreachuncert. ...
+                        probdyn.LReachProblemDynamicsFactory.createByParams;
+                end
+            end
         end
     end
     methods (Access = private, Static)

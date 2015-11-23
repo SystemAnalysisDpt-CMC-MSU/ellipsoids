@@ -286,6 +286,18 @@ classdef ReachDiscrete < elltool.reach.AReach
             function isPos=isMatch(patternStr)
                 isPos=~isempty(strfind(meObj.identifier,patternStr));
             end
+            function probDefConstr = getProbDynamicsBuilder (isDisturbance, ...
+                    isBackward)
+                if (isBackward && ~isDisturbance)
+                    probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
+                        probdyn.LReachDiscrBackwardDynamics (gras.ellapx. ...
+                        lreachplain.probdef.LReachContProblemDef(varargin{:}));
+                elseif (~isBackward && ~isDisturbance)
+                    probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
+                        probdyn.LReachDiscrForwardDynamics (gras.ellapx. ...
+                        lreachplain.probdef.LReachContProblemDef(varargin{:}));
+                end
+            end
         end
     end
     %

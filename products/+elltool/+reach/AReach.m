@@ -123,6 +123,7 @@ classdef AReach < elltool.reach.IReach
         [ellTubeRel,goodDirSetObj] = internalMakeEllTubeRel(self,...
             probDynObj,l0Mat,...
             timeVec,isDisturb,absTol,relTol,approxTypeVec)
+        probDefConstr = getProbDynamicsBuilder (isDisturbance, isBackward)
     end
     %
     methods (Access=protected)
