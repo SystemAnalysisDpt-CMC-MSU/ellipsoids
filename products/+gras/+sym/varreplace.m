@@ -15,10 +15,12 @@ function reverseCMat=varreplace(mCMat,tSum)
 %		cell matrix of system reflected 
 %		about the value of tSum
 %
+%
 % $Author: Nikita Lukianenko  <old_pioneer_1@mail.ru> $	$Date: 2015-11-09 $
 % $Copyright: Moscow State University,
 %			Faculty of Computational Mathematics and Computer Science,
 %			System Analysis Department 2015 $
+%
 %
 repStr=sprintf('(%d-t)',tSum);
 regExpression='(^t\>|\<t\>|^t$|\<t$)';
