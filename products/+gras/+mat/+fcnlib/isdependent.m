@@ -1,4 +1,4 @@
-function isDependent=iscellofstringconst(mCMat,isDiscrete)
+function isDependent=isdependent(mCMat,isDiscrete)
 % ISDEPENDENT allows to check system set by cell 
 % matrix mCMat which can be discrete or conitinious
 % (depends on value of parameter isDiscrete) on

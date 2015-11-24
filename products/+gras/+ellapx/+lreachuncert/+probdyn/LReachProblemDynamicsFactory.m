@@ -72,16 +72,16 @@ classdef LReachProblemDynamicsFactory<handle
             end
         end
         function isDisturb = getIsDisturbance(ctStrCMat, qtStrCMat)
-            import gras.mat.fcnlib.iscellofstringconst;
+            import gras.mat.fcnlib.isdependent;
             import gras.gen.MatVector;
             isDisturb = true;
-            if iscellofstringconst(ctStrCMat)
+            if isdependent(ctStrCMat)
                 gtMat = MatVector.fromFormulaMat(ctStrCMat, 0);
                 if all(gtMat(:) == 0)
                     isDisturb = false;
                 end
             end
-            if isDisturb && iscellofstringconst(qtStrCMat)
+            if isDisturb && isdependent(qtStrCMat)
                 qtMat = MatVector.fromFormulaMat(qtStrCMat, 0);
                 if all(qtMat(:) == 0)
                     isDisturb = false;

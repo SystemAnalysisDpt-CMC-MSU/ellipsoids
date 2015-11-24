@@ -183,11 +183,11 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
             import gras.mat.fcnlib.MatrixSFTripleProd;
             import gras.mat.fcnlib.MatrixSFBinaryProd;
             import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.fcnlib.iscellofstringconst;
+            import gras.mat.fcnlib.isdependent;
             import gras.gen.MatVector;
             %
             if nargin > 3
-                if iscellofstringconst({lCMat{:},mCMat{:},rCMat{:}})
+                if isdependent({lCMat{:},mCMat{:},rCMat{:}})
                     lMat = MatVector.fromFormulaMat(lCMat,0);
                     mMat = MatVector.fromFormulaMat(mCMat,0);
                     rMat = MatVector.fromFormulaMat(rCMat,0);
@@ -197,7 +197,7 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                     obj = MatrixSFTripleProd(lCMat,mCMat,rCMat);
                 end
             else
-                if iscellofstringconst({lCMat{:},mCMat{:}})
+                if isdependent({lCMat{:},mCMat{:}})
                     lMat = MatVector.fromFormulaMat(lCMat,0);
                     mMat = MatVector.fromFormulaMat(mCMat,0);
                     obj = ConstMatrixFunctionFactory.createInstance(...
@@ -211,10 +211,10 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
         function obj = rSymbMultiplyByVec(self, mCMat, vCVec)
             import gras.mat.fcnlib.MatrixSFBinaryProdByVec;
             import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.fcnlib.iscellofstringconst;
+            import gras.mat.fcnlib.isdependent;
             import gras.gen.MatVector;
             %
-            if iscellofstringconst({mCMat{:},vCVec{:}})
+            if isdependent({mCMat{:},vCVec{:}})
                 mMat = MatVector.fromFormulaMat(mCMat,0);
                 vVec = MatVector.fromFormulaMat(vCVec,0);
                 obj = ConstMatrixFunctionFactory.createInstance(...
@@ -228,9 +228,9 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
         function obj = fromSymbMatrix(mCMat)
             import gras.mat.fcnlib.MatrixSymbFormulaBased;
             import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.fcnlib.iscellofstringconst;
+            import gras.mat.fcnlib.isdependent;
             %
-            if iscellofstringconst(mCMat)
+            if isdependent(mCMat)
                 obj = ConstMatrixFunctionFactory.createInstance(mCMat);
             else
                 obj = MatrixSymbFormulaBased(mCMat);
