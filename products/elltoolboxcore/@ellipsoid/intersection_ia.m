@@ -257,7 +257,7 @@ function outEll = l_polyintersect(ell, poly)
 %
 
 import gras.geom.ell.quadmat;
-if doesIntersectionContain(ell, poly)
+if doesIntersectionContain(ell, poly) == 1
     outEll = getInnerEllipsoid(poly);
 elseif ~intersect(ell,poly)
     outEll = ellipsoid();

@@ -19,13 +19,19 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
         end
         function self = testIsContainedInIntersection (self)
             [test1Ell, test2Ell] = createTypicalEll(1);
-            compareForIsCII(test1Ell, [test1Ell test2Ell], 'i', 1);
+            self.runAndCheckError(['doesIntersectionContain'...
+                    '(test1Ell, [test1Ell test2Ell], ''mode'','...
+                    '''i'')'], 'notSupportedMode');
             compareForIsCII(test1Ell, [test1Ell test2Ell], [], 0);
             [test1Ell, test2Ell] = createTypicalEll(2);
-            compareForIsCII(test1Ell, [test1Ell test2Ell], 'i', 1);
+            self.runAndCheckError(['doesIntersectionContain'...
+                    '(test1Ell, [test1Ell test2Ell], ''mode'','...
+                    '''i'')'], 'notSupportedMode');
             compareForIsCII(test1Ell, [test1Ell test2Ell], 'u', 0);
             [test1Ell, test2Ell] = createTypicalEll(3);
-            compareForIsCII(test1Ell, [test1Ell test2Ell], 'i', -1);
+            self.runAndCheckError(['doesIntersectionContain'...
+                    '(test1Ell, [test1Ell test2Ell], ''mode'','...
+                    '''i'')'], 'notSupportedMode');
             compareForIsCII(test1Ell, [test1Ell test2Ell], 'u', 0);
             [test1Ell, test2Ell] = createTypicalEll(4);
             compareForIsCII([test1Ell test2Ell], test1Ell, 'i', 0);
@@ -141,7 +147,7 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
         end
         
         function self = testMinkdiff_ea(self)
-            [testEllipsoid1 ~] = createTypicalEll(14);
+            [testEllipsoid1, ~] = createTypicalEll(14);
             testEllipsoid2 = ellipsoid([1; 0], eye(2));
             testEllipsoid3 = ellipsoid([1; 2], [1 0; 0 1]);
             testNotEllipsoid = [];
@@ -171,19 +177,19 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1 testEllHighDim2 testLVec] = createTypicalHighDimEll(1);
+            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(1);
             resEll = minkdiff_ea(testEllHighDim1, testEllHighDim2, testLVec);
             ansEll = ellipsoid(zeros(12, 1), eye(12));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1 testEllHighDim2 testLVec] = createTypicalHighDimEll(2);
+            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(2);
             resEll = minkdiff_ea(testEllHighDim1, testEllHighDim2, testLVec);
             ansEll = ellipsoid(zeros(20, 1), eye(20));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
 
-            [testEllHighDim1 testEllHighDim2 testLVec] = createTypicalHighDimEll(3);
+            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(3);
             resEll = minkdiff_ea(testEllHighDim1, testEllHighDim2, testLVec);
             ansEll = ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = isEqual(resEll, ansEll);
@@ -199,7 +205,7 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
         end 
         
         function self = testMinkdiff_ia(self)          
-            [testEllipsoid1 ~] = createTypicalEll(14);
+            [testEllipsoid1, ~] = createTypicalEll(14);
             testEllipsoid2 = ellipsoid([0; 1], eye(2));
             testEllipsoid3 = ellipsoid([0; 0], [4 0; 0 1]);
             testNotEllipsoid = [];
@@ -232,19 +238,19 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             %'MINKDIFF_IA: dimension of the direction vectors must be the same as dimension of ellipsoids.'
             self.runAndCheckError('minkdiff_ia(testEllipsoid3, testEllipsoid1, testLVec)','wrongSizes');
             
-            [testEllHighDim1 testEllHighDim2 testLVec] = createTypicalHighDimEll(1);
+            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(1);
             resEll = minkdiff_ia(testEllHighDim1, testEllHighDim2, testLVec);
             ansEll = ellipsoid(zeros(12, 1), eye(12));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1 testEllHighDim2 testLVec] = createTypicalHighDimEll(2);
+            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(2);
             resEll = minkdiff_ia(testEllHighDim1, testEllHighDim2, testLVec);
             ansEll = ellipsoid(zeros(20, 1), eye(20));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
  
-            [testEllHighDim1 testEllHighDim2 testLVec] = createTypicalHighDimEll(3);
+            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(3);
             resEll = minkdiff_ia(testEllHighDim1, testEllHighDim2, testLVec);
             ansEll = ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = isEqual(resEll, ansEll);
@@ -260,61 +266,61 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
         end
         
         function self = testMinkpm_ea(self)
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(15);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(15);
             resEll = minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
             ansEll = ellipsoid(4, 1);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(16);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(16);
             resEll = minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
             ansEll = ellipsoid([3; 1], [2 0; 0 2]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(17);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(17);
             resEll = minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
             ansEll = ellipsoid([3; 1; 0], [2 0 0; 0 2 0; 0 0 2]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(18);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(18);
             %'MINKPM_EA: first and second arguments must be ellipsoids.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongInput');
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(19);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(19);
             %'MINKPM_EA: first and second arguments must be ellipsoids.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongInput');
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(16);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(16);
             %'MINKPM_EA: second argument must be single ellipsoid.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], [testEllipsoid3 testEllipsoid3], testLVec)', 'wrongInput');
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(20);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(20);
             %'MINKPM_EA: all ellipsoids must be of the same dimension.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(21);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(21);
             %'MINKPM_EA: all ellipsoids must be of the same dimension.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
              
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(22);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(22);
             %'MINKPM_EA: dimension of the direction vectors must be the same as dimension of ellipsoids.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
             
-            [testEllHighDim1 testLVec] = createTypicalHighDimEll(4);
+            [testEllHighDim1, testLVec] = createTypicalHighDimEll(4);
             resEll = minkpm_ea([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
             ansEll = ellipsoid(zeros(12, 1), eye(12));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1 testLVec] = createTypicalHighDimEll(5);
+            [testEllHighDim1, testLVec] = createTypicalHighDimEll(5);
             resEll = minkpm_ea([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
             ansEll = ellipsoid(zeros(20, 1), eye(20));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1 testLVec] = createTypicalHighDimEll(6);
+            [testEllHighDim1, testLVec] = createTypicalHighDimEll(6);
             resEll = minkpm_ea([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
             ansEll = ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = isEqual(resEll, ansEll);
@@ -322,61 +328,61 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
         end
         
         function self = testMinkpm_ia(self)            
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(15);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(15);
             resEll = minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
             ansEll = ellipsoid(4, 1);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(16);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(16);
             resEll = minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
             ansEll = ellipsoid([3; 1], [2 0; 0 2]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(17);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(17);
             resEll = minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
             ansEll = ellipsoid([3; 1; 0], [2 0 0; 0 2 0; 0 0 2]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(18);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(18);
             %'MINKPM_IA: first and second arguments must be ellipsoids.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongInput');
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(19);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(19);
             %'MINKPM_IA: first and second arguments must be ellipsoids.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongInput');
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(16);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(16);
             %'MINKPM_IA: second argument must be single ellipsoid.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], [testEllipsoid3 testEllipsoid3], testLVec)', 'wrongInput');
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(20);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(20);
             %'MINKPM_IA: all ellipsoids must be of the same dimension.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
             
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(21);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(21);
             %'MINKPM_IA: all ellipsoids must be of the same dimension.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
              
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testLVec] = createTypicalEll(22);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(22);
             %'MINKPM_IA: dimension of the direction vectors must be the same as dimension of ellipsoids.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
             
-            [testEllHighDim1 testLVec] = createTypicalHighDimEll(4);
+            [testEllHighDim1, testLVec] = createTypicalHighDimEll(4);
             resEll = minkpm_ia([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
             ansEll = ellipsoid(zeros(12, 1), eye(12));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1 testLVec] = createTypicalHighDimEll(5);
+            [testEllHighDim1, testLVec] = createTypicalHighDimEll(5);
             resEll = minkpm_ia([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
             ansEll = ellipsoid(zeros(20, 1), eye(20));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1 testLVec] = createTypicalHighDimEll(6);
+            [testEllHighDim1, testLVec] = createTypicalHighDimEll(6);
             resEll = minkpm_ia([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
             ansEll = ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = isEqual(resEll, ansEll);

@@ -174,21 +174,9 @@ else
             res = 0;
         end
     else
-        if Properties.getIsVerbose()
-            if isempty(logger)
-                logger=Log4jConfigurator.getLogger();
-            end
-            logger.info('Invoking CVX...');
-        end
-        res = 1;
-        resMat  =arrayfun (@(x) qcqp(secObjVec,x), fstEllArr);
-        if any(resMat(:)<1)
-            res = 0;
-            if any(resMat(:)==-1)
-                res = -1;
-                status = 0;
-            end
-        end
+        throwerror('notSupportedMode',['ET for now does not support' ...
+            'solving non-convex QCQP problems.' ...
+            'This functionality will be implemented in the future']);
     end
 end
 end
