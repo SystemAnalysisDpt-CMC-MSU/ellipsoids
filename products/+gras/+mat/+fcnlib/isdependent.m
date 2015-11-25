@@ -6,26 +6,26 @@ function isDependent=isdependent(mCMat,isDiscrete)
 % case and 't' in continious one
 %
 % Input:
-%	regular:
-%		mCMat: cell[nDims1,nDims2] - 
-%			cell matrix of system
+% 	regular:
+% 		mCMat: cell[nDims1,nDims2] - 
+% 		cell matrix of system
 %
-%	optional:
-%		isDiscrete: logical[1,1] - logical variable
-%			which equals 1 in case of discrete system
-%			and equals 0 in case of continious system
+% 	optional:
+% 		isDiscrete: logical[1,1] - logical variable
+% 			which equals 1 in case of discrete system
+% 			and equals 0 in case of continious system
 %
 % Output:
-%	isOk: logical[nDims1,nDims2] - logical variable
-%			which equals 1 in case of dependency of system
-%			from variable 't or 'k' and equals 0 in case of 
-%			undependency
+% 	isOk: logical[nDims1,nDims2] - logical variable
+% 			which equals 1 in case of dependency of system
+% 			from variable 't or 'k' and equals 0 in case of 
+% 			undependency
 %
 %
 % $Author: Nikita Lukianenko  <old_pioneer_1@mail.ru> $	$Date: 2015-11-10 $
 % $Copyright: Moscow State University,
-%			Faculty of Computational Mathematics and Computer Science,
-%			System Analysis Department 2015 $
+% 			Faculty of Computational Mathematics and Computer Science,
+% 			System Analysis Department 2015 $
 %
 %
 if nargin < 2
