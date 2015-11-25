@@ -62,5 +62,7 @@ classdef AGenEllipsoid < handle
                     SEll2Array, tolerance);
             end
         end
+        %
+        polar = getScalarPolarInternal(self, isRobustMethod)
     end
 end
