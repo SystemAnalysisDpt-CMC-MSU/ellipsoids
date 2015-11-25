@@ -6,4 +6,5 @@ resList{4}=gras.gen.test.run_tests();
 resList{5}=gras.mat.interp.test.run_tests();
 resList{6}=gras.ode.test.run_tests();
 resList{7}=gras.mat.test.run_tests();
+resList{8}=gras.sym.test.run_tests();
 results=[resList{:}];

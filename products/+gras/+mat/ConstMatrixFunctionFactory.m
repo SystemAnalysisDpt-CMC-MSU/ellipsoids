@@ -10,7 +10,7 @@ classdef ConstMatrixFunctionFactory
             if isnumeric(mCMat)
                 mMat = mCMat;
             else
-                checkgen(mCMat,@iscellofstringconst);
+                checkgen(mCMat,@isdependent);
                 mMat = MatVector.fromFormulaMat(mCMat,0);
             end
             %

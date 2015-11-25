@@ -4,7 +4,7 @@ function results=run_support_function_tests(inpConfNameList)
 %             Faculty of Computational Mathematics and Computer Science,
 %             System Analysis Department 2012 $
 import gras.gen.MatVector;
-import gras.mat.fcnlib.iscellofstringconst;
+import gras.mat.fcnlib.isdependent;
 %
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
@@ -52,13 +52,13 @@ for iConf=nConfs:-1:1
             pCtCMat = crmSys.getParam('Ct');
             pCtMat = MatVector.fromFormulaMat(pCtCMat, 0);
             isCtZero = ~any(pCtMat(:));
-            isCtZero = isCtZero && iscellofstringconst(pCtCMat);             
+            isCtZero = isCtZero && isdependent(pCtCMat);             
         end
         if isQt
             pQtCMat = crmSys.getParam('disturbance_restriction.Q');
             pQtMat = MatVector.fromFormulaMat(pQtCMat, 0);
             isQtZero = ~any(pQtMat(:));
-            isQtZero = isQtZero && iscellofstringconst(pQtCMat); 
+            isQtZero = isQtZero && isdependent(pQtCMat); 
         end
         isnDisturbance =...
             ~isCt  || ~isQt || isCtZero || isQtZero;
