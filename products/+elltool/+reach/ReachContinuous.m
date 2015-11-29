@@ -179,7 +179,7 @@ classdef ReachContinuous < elltool.reach.AReach
         end
         %
         function probDefConstr = getProbDynamicsBuilder (self, ...
-                isDisturbance, ~)
+                isDisturbance, isBackward)
             if (~isDisturbance)
                 probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
                     probdyn.LReachProblemDynamicsFactory. ...
@@ -191,20 +191,6 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %
-        function probDynObj = getProbDynamics(self, atStrCMat, btStrCMat,...
-                ptStrCMat, ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec,...
-                x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
-            timeVec = [min(timeVec) max(timeVec)];
-            handleObj = self.getProbDynamicsBuilder(isDisturb);
-            if isDisturb
-                probDynObj = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
-                    ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec, x0Mat, ...
-                    x0Vec, timeVec, calcPrecision);
-            else
-                probDynObj = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
-                    ptStrCVec, x0Mat, x0Vec, timeVec, calcPrecision);
-            end
-        end
     end
     methods (Access = private, Static)
         function backwardStrCMat = getBackwardCMat(strCMat, tSum, isMinus)

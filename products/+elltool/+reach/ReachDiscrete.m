@@ -264,21 +264,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                     lreachuncert.probdef.LReachContProblemDef(varargin{:}));
             end
         end
-        %
-        function linSys = getProbDynamics(self, atStrCMat, btStrCMat,...
-                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                x0Mat, x0Vec, timeVec, ~, isDisturb)
-            isBack = timeVec(1) > timeVec(2);
-            handleObj = self.getProbDynamicsBuilder (isDisturb, isBack);
-            if isDisturb
-                linSys = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
-                    ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec, x0Mat, ...
-                    x0Vec, timeVec);
-            else
-                linSys = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
-                    ptStrCVec, x0Mat, x0Vec, timeVec);
-            end
-        end
     end
     %
     methods
