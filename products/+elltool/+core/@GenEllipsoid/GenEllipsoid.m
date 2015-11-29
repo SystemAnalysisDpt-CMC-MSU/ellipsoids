@@ -16,6 +16,18 @@ classdef GenEllipsoid < handle
         end
     end
     methods
+        outEllArr = plus(varargin)
+        outEllArr = minus(varargin)
+        minEigArr = mineig(inpEllArr)
+        maxEigArr = maxeig(inpEllArr)
+        isPositiveArr = isEmpty(myEllArr)
+        [ellCenterVec, ellDiagMat, ellEigvMat] = parameters(ell)
+        [SDataArr, SFieldNiceNames, SFieldDescr] = ...
+            toStruct(ellArr, isPropIncluded)
+        ellArr = shape(ellArr, modMat)
+        outEllArr = getShape(ellArr, modMat)
+        copyEllArr = getCopy(ellArr)
+        trArr = trace(ellArr)
         function isOk=getIsGoodDir(ellObj1,ellObj2,curDirVec)
             % Example:
             %   firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));
@@ -82,31 +94,6 @@ classdef GenEllipsoid < handle
                 end
                 isOk=ellObj1.getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,...
                     curDirVec,absTol);
-            end
-        end
-    end
-    methods (Access=private)
-        function SCompArr=toStruct(ellArr)
-            SCompArr=arrayfun(@formStruct,ellArr);
-            function SComp=formStruct(ellObj)
-                diagMat=ellObj.diagMat; %#ok<*PROP>
-                if isempty(diagMat)
-                    qMat=[];
-                    qInfMat=[];
-                    centerVec=[];
-                else
-                    eigvMat=ellObj.eigvMat;
-                    centerVec=ellObj.centerVec;
-                    diagMat=ellObj.diagMat;
-                    diagVec=diag(diagMat);
-                    isnInfVec=diagVec~=Inf;
-                    eigvFinMat=eigvMat(:,isnInfVec);
-                    qMat=eigvFinMat*diag(diagVec(isnInfVec))*eigvFinMat.';
-                    isInfVec=~isnInfVec;
-                    eigvInfMat=eigvMat(:,isInfVec);
-                    qInfMat=eigvInfMat*eigvInfMat.';
-                end
-                SComp=struct('Q',qMat,'q',centerVec.','QInf',qInfMat);
             end
         end
     end
@@ -372,8 +359,19 @@ classdef GenEllipsoid < handle
             %       0.9796         0
             %            0   50.0204
             %
-            
             diagMat=self.diagMat;
+        end
+        function shapeMat=getShapeMat(self)
+            % Example:
+            %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+            %   ellObj.getDiagMat()
+            %
+            %   ans =
+            %
+            %       10.0      19.0
+            %       19.0      41.0     
+            %
+            shapeMat=self.eigvMat*self.diagMat*self.eigvMat.';
         end
     end
     methods (Static)
@@ -389,6 +387,7 @@ classdef GenEllipsoid < handle
             import elltool.core.GenEllipsoid;
             tol=GenEllipsoid.CHECK_TOL;
         end
+        ellArr=fromRepMat(varargin)
     end
     methods (Static,Access = private)
         [isOk, pPar] = getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,dirVec,absTol)

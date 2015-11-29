@@ -27,7 +27,23 @@ function isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
 %
 %Find infinite directions for each of the ellipsoids
 import elltool.core.GenEllipsoid;
-
+import modgen.common.checkmultvar;
+import modgen.common.throwerror;
+%
+if nargin<2
+    throwerror('wrongInput','at least two arguments must be')
+end
+GenEllipsoid.checkIsMe(ellObj1);
+GenEllipsoid.checkIsMe(ellObj2);
+if nargin<4
+    absTol=ellObj1.getCheckTol();
+elseif nargin<3
+    nDimSpace=length(diag(ellObj1.diagMat));
+end
+checkmultvar('isscalar(x1)&&isscalar(x2)&&(dimension(x1)==dimension(x2))',...
+    2,ellObj1,ellObj2,...
+    'errorTag','wrongInput','errorMessage',...
+    'both arguments must be single ellipsoids of the same dimension.');
 eigv1Mat=ellObj1.eigvMat;
 eigv2Mat=ellObj2.eigvMat;
 diag1Mat=ellObj1.diagMat;
@@ -37,12 +53,12 @@ isInf2DirVec=diag(diag2Mat)==Inf;
 allInfDir1Mat=eigv1Mat(:,isInf1DirVec);
 allInfDir2Mat=eigv2Mat(:,isInf2DirVec);
 %Find basis for first ell
-[orthBas1Mat rank1Inf]=GenEllipsoid.findBasRank(allInfDir1Mat,absTol);
+[orthBas1Mat, rank1Inf]=GenEllipsoid.findBasRank(allInfDir1Mat,absTol);
 %rankZ>0 since there is at least one zero e.v. Q1
 finInd1Vec=(rank1Inf+1):nDimSpace;
 finBas1Mat = orthBas1Mat(:,finInd1Vec);
 %Find basis for second ell
-[orthBas2Mat rank2Inf]=GenEllipsoid.findBasRank(allInfDir2Mat,absTol);
+[orthBas2Mat, rank2Inf]=GenEllipsoid.findBasRank(allInfDir2Mat,absTol);
 %rankZ>0 since there is at least one zero e.v. Q1
 infInd2Vec=1:rank2Inf;
 infBas2Mat=orthBas2Mat(:,infInd2Vec);
