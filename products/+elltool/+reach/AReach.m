@@ -125,26 +125,14 @@ classdef AReach < elltool.reach.IReach
                 ptStrCMat, ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec, ...
                 x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
             isBack = timeVec(1) > timeVec(2);
-            contStr = 'elltool.reach.ReachContinuous';
-            discrStr = 'elltool.reach.ReachDiscrete';
-            if (isa(self, contStr))
-                timeVec = [min(timeVec) max(timeVec)];
-            end
             handleObj = self.getProbDynamicsBuilder (isDisturb, isBack);
-            if (isDisturb && isa(self, contStr))
+            if (isDisturb)
                 linSys = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
                     ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec, x0Mat, ...
                     x0Vec, timeVec, calcPrecision);
-            elseif (~isDisturb && isa(self, contStr))
+            elseif (~isDisturb)
                 linSys = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
                     ptStrCVec, x0Mat, x0Vec, timeVec, calcPrecision);
-            elseif (isDisturb && isa(self, discrStr))
-                linSys = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
-                    ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec, x0Mat, ...
-                    x0Vec, timeVec);
-            elseif (~isDisturb && isa(self, discrStr))
-                linSys = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
-                    ptStrCVec, x0Mat, x0Vec, timeVec);
             end
         end
         %
