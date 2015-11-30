@@ -180,6 +180,11 @@ classdef ReachContinuous < elltool.reach.AReach
         %
         function probDefConstr = getProbDynamicsBuilder (self, ...
                 isDisturbance, ~)
+            %
+            % input argument varargin{end - 1} is a 'timevec'; we transform 
+            % it to [min(varargin{end-1}) max(varargin{end-1})] for 
+            % Continuous systems
+            %
             if (~isDisturbance)
                 probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
                     probdyn.LReachProblemDynamicsFactory. ...

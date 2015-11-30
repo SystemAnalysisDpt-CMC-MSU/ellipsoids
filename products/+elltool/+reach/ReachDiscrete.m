@@ -246,6 +246,11 @@ classdef ReachDiscrete < elltool.reach.AReach
         end
         function probDefConstr = getProbDynamicsBuilder (self, isDisturb, ...
                 isBackward)
+            %
+            % creating a probDefConstr with using input arguments 
+            % varargin{1:end-1}: we ignored last argument 'calcPrecision' 
+            % for discrete systems
+            %
             if (~isDisturb && isBackward)
                 probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
                     probdyn.LReachDiscrBackwardDynamics(gras.ellapx. ...
