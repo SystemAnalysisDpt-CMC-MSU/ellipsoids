@@ -112,20 +112,30 @@ classdef AReach < elltool.reach.IReach
         end
     end
     %
-    methods (Static, Abstract, Access = protected)
-        linSys = getProbDynamics(atStrCMat, btStrCMat, ...
-            ptStrCMat, ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec, ...
-            x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
-    end
-    %
     methods (Abstract, Access = protected)
         %
         [ellTubeRel,goodDirSetObj] = internalMakeEllTubeRel(self,...
             probDynObj,l0Mat,...
             timeVec,isDisturb,absTol,relTol,approxTypeVec)
+        probDefConstr = getProbDynamicsBuilder (isDisturbance, isBackward)
     end
     %
     methods (Access=protected)
+        function linSys = getProbDynamics(self, atStrCMat, btStrCMat, ...
+                ptStrCMat, ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec, ...
+                x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
+            isBack = timeVec(1) > timeVec(2);
+            handleObj = self.getProbDynamicsBuilder (isDisturb, isBack);
+            if (isDisturb)
+                linSys = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
+                    ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec, x0Mat, ...
+                    x0Vec, timeVec, calcPrecision);
+            elseif (~isDisturb)
+                linSys = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
+                    ptStrCVec, x0Mat, x0Vec, timeVec, calcPrecision);
+            end
+        end
+        %
         function checkIndSTime(self,ellTubeRel)
             import modgen.common.throwerror;
             indSTimeVec=ellTubeRel.indSTime;

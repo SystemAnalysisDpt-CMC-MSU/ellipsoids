@@ -52,49 +52,6 @@ classdef ReachDiscrete < elltool.reach.AReach
                     'UniformOutput', false);
             end
         end
-        %
-        function linSys = getProbDynamics(atStrCMat, btStrCMat,...
-                ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                x0Mat, x0Vec, timeVec, ~, isDisturb)
-            isBack = timeVec(1) > timeVec(2);
-            if isDisturb
-                linSys = getSysWithDisturb(atStrCMat, btStrCMat,...
-                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat,...
-                    qtStrCVec, x0Mat, x0Vec, timeVec);
-            else
-                linSys = getSysWithoutDisturb(atStrCMat, btStrCMat,...
-                    ptStrCMat, ptStrCVec, x0Mat, x0Vec,...
-                    timeVec);
-            end
-            %
-            function linSys = getSysWithDisturb(atStrCMat, btStrCMat,...
-                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, qtStrCVec,...
-                    x0Mat, x0Vec, timeVec)
-                import gras.ellapx.lreachuncert.probdef.LReachContProblemDef;
-                import gras.ellapx.lreachuncert.probdyn.*;
-                pDefObj = LReachContProblemDef(atStrCMat, btStrCMat,...
-                    ptStrCMat, ptStrCVec, gtStrCMat, qtStrCMat, ...
-                    qtStrCVec, x0Mat, x0Vec, timeVec);
-                if isBack
-                    linSys = LReachDiscrBackwardDynamics(pDefObj);
-                else
-                    linSys = LReachDiscrForwardDynamics(pDefObj);
-                end
-            end
-            %
-            function linSys = getSysWithoutDisturb(atStrCMat, btStrCMat,...
-                    ptStrCMat, ptStrCVec, x0Mat, x0Vec, timeVec)
-                import gras.ellapx.lreachplain.probdef.LReachContProblemDef;
-                import gras.ellapx.lreachplain.probdyn.*;
-                pDefObj = LReachContProblemDef(atStrCMat, btStrCMat,...
-                    ptStrCMat, ptStrCVec, x0Mat, x0Vec, timeVec);
-                if isBack
-                    linSys = LReachDiscrBackwardDynamics(pDefObj);
-                else
-                    linSys = LReachDiscrForwardDynamics(pDefObj);
-                end
-            end
-        end
     end
     %
     methods (Static, Access = private)
@@ -285,6 +242,35 @@ classdef ReachDiscrete < elltool.reach.AReach
             end
             function isPos=isMatch(patternStr)
                 isPos=~isempty(strfind(meObj.identifier,patternStr));
+            end
+        end
+        function probDefConstr = getProbDynamicsBuilder (self, isDisturb, ...
+                isBackward)
+            %
+            % creating a probDefConstr with using input arguments 
+            % varargin{1:end-1}: we ignored last argument 'calcPrecision' 
+            % for discrete systems
+            %
+            if (~isDisturb && isBackward)
+                probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
+                    probdyn.LReachDiscrBackwardDynamics(gras.ellapx. ...
+                    lreachplain.probdef.LReachContProblemDef( ...
+                        varargin{1 : end-1}));
+            elseif (~isDisturb && ~isBackward)
+                probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
+                    probdyn.LReachDiscrForwardDynamics (gras.ellapx. ...
+                    lreachplain.probdef.LReachContProblemDef( ...
+                        varargin{1 : end-1}));
+            elseif (isDisturb && isBackward)
+                probDefConstr = @(varargin)gras.ellapx.lreachuncert. ...
+                    probdyn.LReachDiscrBackwardDynamics(gras.ellapx. ...
+                    lreachuncert.probdef.LReachContProblemDef( ...
+                        varargin{1 : end-1}));
+            elseif (isDisturb && ~isBackward)
+                probDefConstr = @(varargin)gras.ellapx.lreachuncert. ...
+                    probdyn.LReachDiscrForwardDynamics (gras.ellapx. ...
+                    lreachuncert.probdef.LReachContProblemDef( ...
+                        varargin{1 : end-1}));
             end
         end
     end
