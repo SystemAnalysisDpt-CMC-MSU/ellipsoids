@@ -126,11 +126,11 @@ classdef AReach < elltool.reach.IReach
                 x0Mat, x0Vec, timeVec, calcPrecision, isDisturb)
             isBack = timeVec(1) > timeVec(2);
             handleObj = self.getProbDynamicsBuilder (isDisturb, isBack);
-            if (isDisturb)
+            if isDisturb
                 linSys = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
                     ptStrCVec, ctStrCMat, qtStrCMat, qtStrCVec, x0Mat, ...
                     x0Vec, timeVec, calcPrecision);
-            elseif (~isDisturb)
+            elseif ~isDisturb
                 linSys = handleObj(atStrCMat, btStrCMat, ptStrCMat, ...
                     ptStrCVec, x0Mat, x0Vec, timeVec, calcPrecision);
             end
