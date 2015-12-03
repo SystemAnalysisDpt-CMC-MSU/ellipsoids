@@ -12,7 +12,8 @@ classdef AReachProblemDynamics<...
     end
     properties (Constant, GetAccess = protected)
         ODE_NORM_CONTROL='on';
-        CALC_PRECISION_FACTOR=0.001;
+        REL_TOL_FACTOR = 0.001;
+        ABS_TOL_FACTOR = 0.001;
         N_TIME_POINTS=2000;
     end
     methods
@@ -63,10 +64,10 @@ classdef AReachProblemDynamics<...
         end
     end
     methods (Access = protected)
-        function odePropList=getOdePropList(self,calcPrecision)
+        function odePropList=getOdePropList(self,relTol, absTol)
             odePropList={'NormControl',self.ODE_NORM_CONTROL,'RelTol',...
-                calcPrecision*self.CALC_PRECISION_FACTOR,...
-                'AbsTol',calcPrecision*self.CALC_PRECISION_FACTOR};
+                relTol*self.REL_TOL_FACTOR,...
+                'AbsTol',absTol*self.ABS_TOL_FACTOR};
         end
     end
 end
