@@ -1,17 +1,17 @@
 classdef LReachProblemDynamicsFactory<handle
     methods(Static)
-        function pDynamicsObject=create(pDefObj,relTol, absTol)
+        function pDynamicsObject=create(pDefObj,relTol,absTol)
             import gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp;
             import gras.ellapx.lreachplain.probdyn.LReachProblemLTIDynamics;
             %
             if isa(pDefObj,...
                     'gras.ellapx.lreachplain.probdef.ReachContLTIProblemDef')
                 pDynamicsObject = LReachProblemLTIDynamics(pDefObj,...
-                    relTol, absTol);
+                    relTol,absTol);
             elseif isa(pDefObj,...
                     'gras.ellapx.lreachplain.probdef.LReachContProblemDef')
                 pDynamicsObject = LReachProblemDynamicsInterp(pDefObj,...
-                    relTol, absTol);
+                    relTol,absTol);
             else
                 modgen.common.throwerror(...
                     'wrongInput', 'Incorrect system definition');
@@ -29,13 +29,13 @@ classdef LReachProblemDynamicsFactory<handle
                 pDefObj = ReachContLTIProblemDef(aCMat,bCMat,pCMat,...
                     pCVec,x0Mat,x0Vec,tLims);
                 pDynamicsObject = LReachProblemLTIDynamics(pDefObj,...
-                    relTol, absTol);
+                    relTol,absTol);
             elseif LReachContProblemDef.isCompatible(aCMat,bCMat,pCMat,...
                     pCVec,x0Mat,x0Vec,tLims)
                 pDefObj = LReachContProblemDef(aCMat,bCMat,pCMat,...
                     pCVec,x0Mat,x0Vec,tLims);
                 pDynamicsObject = LReachProblemDynamicsInterp(pDefObj,...
-                    relTol, absTol);
+                    relTol,absTol);
             else
                 modgen.common.throwerror(...
                     'wrongInput', 'Incorrect system definition');

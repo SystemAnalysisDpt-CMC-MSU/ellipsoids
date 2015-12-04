@@ -5,7 +5,7 @@ classdef LReachProblemDynamicsInterp<...
         xtDynamics
     end
     methods
-        function self=LReachProblemDynamicsInterp(problemDef,relTol, absTol)
+        function self=LReachProblemDynamicsInterp(problemDef,relTol,absTol)
             import gras.ellapx.common.*;
             import gras.mat.interp.MatrixInterpolantFactory;
             import gras.ode.MatrixODESolver;
@@ -20,7 +20,7 @@ classdef LReachProblemDynamicsInterp<...
             % call superclass constructor
             %
             self=self@gras.ellapx.lreachplain.probdyn.AReachProblemDynamicsInterp(...
-                problemDef,relTol, absTol);
+                problemDef,relTol,absTol);
             %
             matOpFactory = MatrixOperationsFactory.create(self.timeVec);
             %
@@ -36,7 +36,7 @@ classdef LReachProblemDynamicsInterp<...
             %
             % compute x(t)
             %
-            odeArgList=self.getOdePropList(relTol, absTol);
+            odeArgList=self.getOdePropList(relTol,absTol);
             solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
             %
             xtDerivFunc = @(t,x) self.AtDynamics.evaluate(t)*x+...

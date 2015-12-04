@@ -5,7 +5,7 @@ classdef LReachProblemLTIDynamics<...
         xtDynamics
     end
     methods
-        function self=LReachProblemLTIDynamics(problemDef,relTol, absTol)
+        function self=LReachProblemLTIDynamics(problemDef,relTol,absTol)
             import gras.mat.interp.MatrixInterpolantFactory;
             import gras.gen.MatVector;
             import gras.ode.MatrixODESolver;
@@ -19,7 +19,7 @@ classdef LReachProblemLTIDynamics<...
             % call superclass constructor
             %
             self=self@gras.ellapx.lreachplain.probdyn.AReachProblemLTIDynamics(...
-                problemDef,relTol, absTol);
+                problemDef,relTol,absTol);
             %
             % copy necessary data to local variables
             %
@@ -43,7 +43,7 @@ classdef LReachProblemLTIDynamics<...
             %
             % compute x(t)
             %
-            odeArgList=self.getOdePropList(relTol, absTol);
+            odeArgList=self.getOdePropList(relTol,absTol);
             solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
             %
             BpPlusCqVec = BpVec + CqVec;

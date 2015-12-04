@@ -1,7 +1,7 @@
 classdef AReachProblemLTIDynamics<...
         gras.ellapx.lreachplain.probdyn.AReachProblemDynamics
     methods
-        function self=AReachProblemLTIDynamics(problemDef,relTol, absTol)
+        function self=AReachProblemLTIDynamics(problemDef,relTol,absTol)
             %
             import modgen.cell.cellstr2func;
             import gras.gen.MatVector;
