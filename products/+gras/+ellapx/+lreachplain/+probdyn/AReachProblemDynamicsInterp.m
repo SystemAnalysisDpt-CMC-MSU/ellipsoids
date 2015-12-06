@@ -1,7 +1,7 @@
 classdef AReachProblemDynamicsInterp<...
         gras.ellapx.lreachplain.probdyn.AReachProblemDynamics
     methods
-        function self=AReachProblemDynamicsInterp(problemDef,relTol,absTol)
+        function self=AReachProblemDynamicsInterp(problemDef,~,~)
             %
             import gras.ellapx.common.*;
             import gras.mat.MatrixOperationsFactory;

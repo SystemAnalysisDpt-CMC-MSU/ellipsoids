@@ -244,7 +244,7 @@ classdef ReachDiscrete < elltool.reach.AReach
                 isPos=~isempty(strfind(meObj.identifier,patternStr));
             end
         end
-        function probDefConstr = getProbDynamicsBuilder(self,isDisturb, ...
+        function probDefConstr = getProbDynamicsBuilder(~,isDisturb, ...
                 isBackward)
             %
             % creating a probDefConstr with using input arguments

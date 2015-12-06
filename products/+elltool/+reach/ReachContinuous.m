@@ -178,8 +178,7 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %
-        function probDefConstr = getProbDynamicsBuilder (self, ...
-                isDisturbance,~)
+        function probDefConstr = getProbDynamicsBuilder (~,isDisturbance,~)
             %
             % input argument varargin{end - 2} is a 'timevec'; we transform
             % it to [min(varargin{end-2}) max(varargin{end-2})] for
