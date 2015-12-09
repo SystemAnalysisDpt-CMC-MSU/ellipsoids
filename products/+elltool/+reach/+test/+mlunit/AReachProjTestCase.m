@@ -11,7 +11,8 @@ classdef AReachProjTestCase < mlunitext.test_case
         linSys
         reachObj
         timeVec
-        calcPrecision
+        absTol
+        relTol
         linSysFactory
         reachObfFactory
         addArgList
@@ -59,8 +60,11 @@ classdef AReachProjTestCase < mlunitext.test_case
             %
             self.timeVec = [self.crmSys.getParam('time_interval.t0'),...
                 self.crmSys.getParam('time_interval.t1')];
-            self.calcPrecision =...
-                self.crm.getParam('genericProps.calcPrecision');
+            self.absTol =...
+                self.crm.getParam('genericProps.absTol');
+            self.relTol =...
+                self.crm.getParam('genericProps.relTol');
+            %
             isRegEnabled = crm.getParam('regularizationProps.isEnabled');
             isJustCheck = crm.getParam('regularizationProps.isJustCheck');
             regTol = crm.getParam('regularizationProps.regTol');
@@ -70,10 +74,11 @@ classdef AReachProjTestCase < mlunitext.test_case
             DistBounds = struct();
             DistBounds.center = qtDefCVec;
             DistBounds.shape = qtDefCMat;
-            self.addArgList={'absTol', 1e-07, 'relTol',1e-07,...
+            self.addArgList={'absTol', self.absTol,...
+                'relTol',self.absTol,...
                 'isRegEnabled', isRegEnabled,...
                 'isJustCheck', isJustCheck,...
-                'regTol', regTol};
+                'regTol',regTol};
             %
             self.linSys = self.linSysFactory.create(atDefCMat, btDefCMat,...
                 ControlBounds, ctDefCMat, DistBounds);

@@ -1,59 +1,24 @@
 classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
         gras.ellapx.smartdb.rels.EllTubeProjBasic&...
         gras.ellapx.smartdb.rels.EllUnionTubeBasic
-    % EllUnionTubeStaticProj - class which keeps projection on static plane
-    %                          union of ellipsoid tubes
+    % EllUnionTubeStaticProj - collection of static subspace projections 
+    %               of ellipsoidal tubes by the instant of
+    %               time i.e. union of E[\tau] for all \tau from [t_0,t]
+    %               (for reachability problem) or from [t,T] for
+    %               solvability problem, where E[\tau] is ordinary 
+    %               ellipsoidal tube
     %
-    % Fields:
-    %   QArray:cell[1, nElem] - Array of ellipsoid matrices
-    %   aMat:cell[1, nElem] - Array of ellipsoid centers
-    %   scaleFactor:double[1, 1] - Tube scale factor
-    %   MArray:cell[1, nElem] - Array of regularization ellipsoid matrices
-    %   dim :double[1, 1] - Dimensionality
-    %   sTime:double[1, 1] - Time s
-    %   approxSchemaName:cell[1,] - Name
-    %   approxSchemaDescr:cell[1,] - Description
-    %   approxType:gras.ellapx.enums.EApproxType - Type of approximation
-    %                 (external, internal, not defined
-    %   timeVec:cell[1, m] - Time vector
-    %   relTol:double[1, 1] - Relative tolerance 
-    %   absTol:double[1, 1] - Absolute tolerance 
-    %   indSTime:double[1, 1]  - index of sTime within timeVec
-    %   ltGoodDirMat:cell[1, nElem] - Good direction curve
-    %   lsGoodDirVec:cell[1, nElem] - Good direction at time s
-    %   ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve
-    %   lsGoodDirNorm:double[1, 1] - Norm of good direction at time s
-    %   xTouchCurveMat:cell[1, nElem] - Touch point curve for good
-    %                                   direction
-    %   xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction
-    %                                     opposite to good direction
-    %   xsTouchVec:cell[1, nElem]  - Touch point at time s
-    %   xsTouchOpVec :cell[1, nElem] - Touch point at time s
-    %   projSTimeMat: cell[1, 1] - Projection matrix at time s
-    %   projType:gras.ellapx.enums.EProjType - Projection type
-    %   ltGoodDirNormOrigVec:cell[1, 1] - Norm of the original (not
-    %                                     projected) good direction curve
-    %   lsGoodDirNormOrig:double[1, 1] - Norm of the original (not
-    %                                    projected)good direction at time s
-    %   lsGoodDirOrigVec:cell[1, 1] - Original (not projected) good
-    %                                 direction at time s
-    %   ellUnionTimeDirection:gras.ellapx.enums.EEllUnionTimeDirection -
-    %                      Direction in time along which union is performed
-    %   isLsTouch:logical[1, 1] - Indicates whether a touch takes place
-    %                             along LS
-    %   isLsTouchOp:logical[1, 1] - Indicates whether a touch takes place
-    %                               along LS opposite
-    %   isLtTouchVec:cell[1, nElem] - Indicates whether a touch takes place
-    %                                 along LT
-    %   isLtTouchOpVec:cell[1, nElem] - Indicates whether a touch takes
-    %                                   place along LT opposite
-    %   timeTouchEndVec:cell[1, nElem] - Touch point curve for good
-    %                                    direction
-    %   timeTouchOpEndVec:cell[1, nElem] - Touch point curve for good
-    %                                      direction
+    % Public properties:
+    %       - has the same fields as the following classes combined
+    %           gras.ellapx.smartdb.rels.EllUnionTube 
+    %               and 
+    %           gras.ellapx.smartdb.rels.EllTubeProj 
     %
-    %   TODO: correct description of the fields in
-    %     gras.ellapx.smartdb.rels.EllUnionTubeStaticProj
+    %
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-2015 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2015 $  
     methods (Access=protected,Static,Hidden)
         function outObj=loadobj(inpObj)
             import gras.ellapx.smartdb.rels.ATypifiedAdjustedRel;
@@ -234,7 +199,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
                 figureGetGroupKeyFunc@gras.ellapx.smartdb.rels.EllTubeProjBasic(self,...
                 varargin{:})];
         end
-        function SData = getInterpDataInternal(self, newTimeVec) %#ok<STOUT,MANU,INUSD>
+        function SData = getInterpDataInternal(self, newTimeVec) %#ok<STOUT,INUSD>
             import modgen.common.throwerror;
             throwerror('wrongState',['interpolation for union tube ',...
                 'projections is not supported because reconstruction of ',...

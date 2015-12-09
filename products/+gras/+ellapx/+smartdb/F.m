@@ -1,5 +1,9 @@
 classdef F<smartdb.gen.AFieldDefs
-    %Standard fields
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-2015 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2015 $  
+    %
     properties (Constant)
         DIM='dim'
         DIM_D='Dimensionality';
@@ -99,11 +103,11 @@ classdef F<smartdb.gen.AFieldDefs
         LT_GOOD_DIR_NORM_ORIG_VEC_T={'cell','double'};
         %
         LT_GOOD_DIR_NORM_ORIG_PROJ_VEC='ltGoodDirNormOrigProjVec';
-        LT_GOOD_DIR_NORM_ORIG_PROJ_VEC_D='Norm of the projecttion of original good direction curve';
+        LT_GOOD_DIR_NORM_ORIG_PROJ_VEC_D='Norm of the projection of original good direction curve';
         LT_GOOD_DIR_NORM_ORIG_PROJ_VEC_T={'cell','double'};
         %
         LT_GOOD_DIR_ORIG_PROJ_MAT = 'ltGoodDirOrigProjMat';
-        LT_GOOD_DIR_ORIG_PROJ_MAT_D = 'Projectition of original good direction curve';
+        LT_GOOD_DIR_ORIG_PROJ_MAT_D = 'Projection of original good direction curve';
         LT_GOOD_DIR_ORIG_PROJ_MAT_T = {'cell', 'double'};        
         %
         LS_GOOD_DIR_NORM_ORIG='lsGoodDirNormOrig';

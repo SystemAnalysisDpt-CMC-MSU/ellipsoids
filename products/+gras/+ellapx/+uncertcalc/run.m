@@ -19,7 +19,7 @@ tStartGlobal=tic;
     @(x)isa(x,'gras.ellapx.uncertcalc.conf.IConfRepoMgr'),...
     @(x)isa(x,'gras.ellapx.uncertcalc.conf.sysdef.AConfRepoMgr')},[0,1],...
     'regCheckList',{'isstring(x)'},'regDefList',{''});
-%    
+%
 %% Set up configurations
 if ~isConfRepoMgrSpec
     confRepoMgr=gras.ellapx.uncertcalc.conf.ConfRepoMgr();
@@ -29,11 +29,18 @@ if ~isSysConfRepoMgrSpec
 end
 confRepoMgr.selectConf(confName,'reloadIfSelected',false);
 %% Checking a validity of settings
-calcPrecision=confRepoMgr.getParam('genericProps.calcPrecision');
-if calcPrecision>MAX_SUPPORTED_PRECISION
-    throwerror('wrongInput',['specified calculation precision %d ',...
-        'is higher than a maximum supported precision %d'],...
-        calcPrecision,MAX_SUPPORTED_PRECISION);
+absTol=confRepoMgr.getParam('genericProps.absTol');
+relTol=confRepoMgr.getParam('genericProps.relTol');
+if absTol>relTol*0.1
+    throwerror('wrongInput',...
+        ['absolute precision (absTol) is expected to be at ',...
+        'least 10 smaller than relative precision (relTol)']);
+end
+if relTol>MAX_SUPPORTED_PRECISION
+    throwerror('wrongInput',...
+        ['specified relative precision (relTol)=%g\n',...
+        '  is higher than a maximum supported precision %g'],...
+        relTol,MAX_SUPPORTED_PRECISION);
 end
 %
 if isRegSpecVec(1)
@@ -68,7 +75,7 @@ saveConf(sysConfRepoMgr,confRepoMgr,resDir);
 %
 %% Build good directions
 [pDynObj,goodDirSetObj]=ApproxProblemPropertyBuilder.build(confRepoMgr,...
-    sysConfRepoMgr,logger);
+    sysConfRepoMgr);
 %
 %% Building internal ellipsoidal approximations
 [ellTubeRel,ellUnionTubeRel]=gras.ellapx.uncertcalc.EllApxBuilder(...
@@ -89,7 +96,7 @@ if confRepoMgr.getParam('plottingProps.isEnabled')
     gras.ellapx.smartdb.RelDispConfigurator.setViewAngleVec(...
         confRepoMgr.getParam('plottingProps.viewAngleVec'));
     gras.ellapx.smartdb.RelDispConfigurator.setIsGoodCurvesSeparately(...
-        confRepoMgr.getParam('plottingProps.isGoodCurvesSeparately'));    
+        confRepoMgr.getParam('plottingProps.isGoodCurvesSeparately'));
     %
     plotterObj=smartdb.disp.RelationDataPlotter();
     tStart=tic;
@@ -131,7 +138,7 @@ convertConf2Text(SSysDefConf,sysDefFileName);
         import gras.ellapx.uncertcalc.log.Log4jConfigurator;
         logger=Log4jConfigurator.getLogger();
         [SConf,confVersion]=confRepoMgr.getCurConf();
-        inpArgList={struct('conf',SConf,'version',confVersion)};
+        inpArgList={struct('conf',SConf,'version',confVersion)}; %#ok<NASGU>
         confStr=evalc('convertConf2Text(inpArgList{:})');
         logger.info(['Loaded configuration for ',confType,': ',confStr]);
         confRepoMgr.copyConfFile([resDir,filesep,confType,filesep]);

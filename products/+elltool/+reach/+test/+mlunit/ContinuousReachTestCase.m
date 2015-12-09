@@ -71,7 +71,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 plotter = projReachObj.plotIa();
                 scaleFactor = reachObj.getIaScaleFactor();
             end
-            [dirCVec timeVec] = reachObj.get_directions();
+            [dirCVec,timeVec] = reachObj.get_directions();
             goodDirCVec =...
                 cellfun(@(x) x(:, 1), dirCVec.', 'UniformOutput', false);
             
@@ -126,7 +126,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     pointsMat =...
                         rtVerticesVec(rtVerticesVec(:, 1) == curT, 2 : 3);
                     pointsMat = pointsMat.';
-                    [centerVec shapeMat] = parameters(ell);
+                    [centerVec, shapeMat] = parameters(ell);
                     centerPointsMat = pointsMat -...
                         repmat(centerVec, 1, size(pointsMat, 2));
                     sqrtScalProdVec = realsqrt(abs(dot(centerPointsMat,...

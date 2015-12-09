@@ -40,7 +40,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             else
                 isFirstPointToRemove=false;
             end
-            QArrayList=cell(1,nLDirs);
+            bigQArrList=cell(1,nLDirs);
             %% Calculating internal approximation
             for l=1:1:nLDirs
                 tStart=tic;
@@ -51,13 +51,13 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 fHandle=self.getEllApxMatrixDerivFunc(l);
                 initValueMat=self.getEllApxMatrixInitValue(l);
                 %
-                [~,data_Q_star]=solverObj.solve(fHandle,...
+                [~,bigQStartArr]=solverObj.solve(fHandle,...
                     solveTimeVec,initValueMat);
                 if isFirstPointToRemove
-                    data_Q_star(:,:,1)=[];
+                    bigQStartArr(:,:,1)=[];
                 end
                 %
-                QArrayList{l}=self.adjustEllApxMatrixVec(data_Q_star);
+                bigQArrList{l}=self.adjustEllApxMatrixVec(bigQStartArr);
                 logger.debug(sprintf([logStr,':done, %.3f sec. elapsed'],...
                     toc(tStart)));
             end
@@ -73,7 +73,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 ).evaluate(resTimeVec);
             %
             self.ellTubeRel=gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                QArrayList,aMat,resTimeVec,ltGoodDirArray,sTime,apxType,...
+                bigQArrList,aMat,resTimeVec,ltGoodDirArray,sTime,apxType,...
                 apxSchemaName,apxSchemaDescr,self.absTol, self.relTol);
         end
     end

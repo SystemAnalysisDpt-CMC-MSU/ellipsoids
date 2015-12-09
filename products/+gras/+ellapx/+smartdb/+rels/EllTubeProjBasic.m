@@ -1,5 +1,9 @@
 classdef EllTubeProjBasic<gras.ellapx.smartdb.rels.EllTubeBasic&...
         gras.ellapx.smartdb.rels.EllTubeTouchCurveProjBasic
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-2015 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2015 $      
     properties (Constant,Hidden, GetAccess=protected)
         N_SPOINTS=90;
         REACH_TUBE_PREFIX='Reach';

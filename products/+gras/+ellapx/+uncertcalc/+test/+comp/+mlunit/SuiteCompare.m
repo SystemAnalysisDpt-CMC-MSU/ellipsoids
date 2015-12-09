@@ -85,9 +85,9 @@ classdef SuiteCompare < mlunitext.test_case
                     runResult.plotterObj.closeAllFigures();
                 end
                 %
-                calcPrecision=crm.getParam('genericProps.calcPrecision');
+                absTol=crm.getParam('genericProps.absTol');
                 isOk=all(runResult.ellTubeProjRel.absTol<=...
-                    calcPrecision);
+                    absTol);
                 mlunitext.assert_equals(true,isOk);
                 %
                 % filter struct fields
@@ -132,7 +132,7 @@ classdef SuiteCompare < mlunitext.test_case
                 fieldValue1.sortBy(SSORT_KEYS.(fieldName));
                 fieldValue2.sortBy(SSORT_KEYS.(fieldName));
                 [isOk,reportStr]=fieldValue1.isEqual(fieldValue2,...
-                    'maxTolerance',2*calcPrecision,'checkTupleOrder',true);
+                    'maxTolerance',2*absTol,'checkTupleOrder',true);
                 %
                 reportStr=sprintf('confName=%s\n %s',confName,...
                     reportStr);

@@ -1,6 +1,7 @@
 classdef IEllApxBuilder<handle
     methods (Abstract)
         ellTubeRel=getEllTubes(self)
-        calcPrecision=getCalcPrecision(self)
+        absTol=getAbsTol(self)
+        relTol=getRelTol(self)
     end
 end

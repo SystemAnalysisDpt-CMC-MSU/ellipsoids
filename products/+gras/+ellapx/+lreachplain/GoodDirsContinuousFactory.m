@@ -5,7 +5,7 @@ classdef GoodDirsContinuousFactory<handle
             import gras.ellapx.lreachplain.GoodDirsContinuousGen;
             import gras.ellapx.lreachplain.GoodDirsContinuousLTI;
             if isa(pDynObj, ...
-                'gras.ellapx.lreachplain.probdyn.AReachProblemLTIDynamics')
+                    'gras.ellapx.lreachplain.probdyn.AReachProblemLTIDynamics')
                 goodDirObj = GoodDirsContinuousLTI(pDynObj, sTime, ...
                     lsGoodDirMat, relTol, absTol);
             else

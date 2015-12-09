@@ -92,8 +92,8 @@ classdef ReachFactory < handle
             self.regTol = crm.getParam('regularizationProps.regTol');
             self.x0Ell = ellipsoid(x0DefVec, x0DefMat);
             %
-            self.relTol=crm.getParam('genericProps.calcPrecision');
-            self.absTol=crm.getParam('genericProps.calcPrecision');
+            self.relTol=crm.getParam('genericProps.relTol');
+            self.absTol=crm.getParam('genericProps.absTol');
             %
             if self.isBack
                 self.tVec = [crmSys.getParam('time_interval.t1'),...

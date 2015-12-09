@@ -12,7 +12,8 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
         x0Ell
         l0Mat
         timeVec
-        calcPrecision
+        absTol
+        relTol
         regTol
     end
     %
@@ -58,8 +59,10 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
             self.x0Ell = ellipsoid(x0DefVec, x0DefMat);
             self.timeVec = [self.crmSys.getParam('time_interval.t0'),...
                 self.crmSys.getParam('time_interval.t1')];
-            self.calcPrecision =...
-                self.crm.getParam('genericProps.calcPrecision');
+            self.absTol =...
+                self.crm.getParam('genericProps.absTol');
+            self.relTol =...
+                self.crm.getParam('genericProps.relTol');
             self.regTol =...
                 self.crm.getParam('regularizationProps.regTol');
             self.ControlBounds = struct();
@@ -71,7 +74,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
         end
         %
         function self = testRegularization(self)
-            x0Ell = self.x0Ell.getCopy();
+            x0Ell = self.x0Ell.getCopy(); %#ok<*PROP>
             l0Mat = self.l0Mat;
             timeVec = self.timeVec;
             regTol = self.regTol;
@@ -86,7 +89,8 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
             linSys = elltool.linsys.LinSysFactory.create(...
                 atDefCMat, zeros(size(btDefCMat)));
             check(false,false,regTol,...
-                'MAKEELLTUBEREL:wrongInput:regProblem:RegIsDisabled:degenerateControlBounds');            
+                ['MAKEELLTUBEREL:wrongInput:regProblem:RegIsDisabled:',...
+                'degenerateControlBounds']);
             %%
 %            ControlBoundsTest = 100 * ellipsoid(eye(2));            
 %            linSys = elltool.linsys.LinSysFactory.create(...

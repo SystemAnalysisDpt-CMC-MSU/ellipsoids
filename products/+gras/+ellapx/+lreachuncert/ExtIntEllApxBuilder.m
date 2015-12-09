@@ -55,30 +55,31 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             end
         end
         function [dQIntMat,dQExtMat]=calcEllApxMatrixDeriv(self,...
-                AtDynamics,BPBTransDynamics,CQCTransDynamics,...
-                ltSpline,t,QIntMat,QExtMat)
+                bigAtDynamics,BPBTransDynamics,bigCQCTransDynamics,...
+                ltSpline,t,bigQIntMat,bigQExtMat)
             import modgen.common.throwerror;
             import gras.la.ismatposdef;
             import gras.la.sqrtmpos;
-            A=AtDynamics.evaluate(t);
+            bigA=bigAtDynamics.evaluate(t);
             ltVec=ltSpline.evaluate(t);
+            ltVec=ltVec./norm(ltVec);
             %
             %% Internal approximation
-            BPBTransMat=BPBTransDynamics.evaluate(t);
-            BPBTransSqrtMat=sqrtmpos(BPBTransMat);
+            bigBPBTransMat=BPBTransDynamics.evaluate(t);
+            bigBPBTransSqrtMat=sqrtmpos(bigBPBTransMat);
             %
-            CQCTransMat=CQCTransDynamics.evaluate(t);
+            bigCQCTransMat=bigCQCTransDynamics.evaluate(t);
             %
-            [VMat,DMat]=eig(QIntMat);
-            if ~ismatposdef(QIntMat,self.absTol,true)
+            [bigVMat,bigDMat]=eig(bigQIntMat);
+            if ~ismatposdef(bigQIntMat,self.absTol,true)
                 throwerror('wrongState','internal approx has degraded');
             end
-            Q_star=VMat*realsqrt(DMat)*transpose(VMat);
-            S=self.getOrthTranslMatrix(Q_star,BPBTransSqrtMat,...
-                BPBTransSqrtMat*ltVec,Q_star*ltVec);
+            bigQStarMat=bigVMat*realsqrt(bigDMat)*transpose(bigVMat);
+            bigSMat=self.getOrthTranslMatrix(bigQStarMat,bigBPBTransSqrtMat,...
+                bigBPBTransSqrtMat*ltVec,bigQStarMat*ltVec);
             %
-            piNumerator=realsqrt(ltVec.'*CQCTransMat*ltVec);
-            piDenominator=realsqrt(sum((QIntMat*ltVec).*ltVec));                        
+            piNumerator=realsqrt(ltVec.'*bigCQCTransMat*ltVec);
+            piDenominator=realsqrt(sum((bigQIntMat*ltVec).*ltVec));                        
             if piNumerator<=self.absTol
                 throwerror('wrongInput',...
                     ['matrices C,Q for disturbance ',...
@@ -88,20 +89,22 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                     'the internal estimate has degraded, reason unknown');
             end
             %
-            tmp=(A*Q_star+BPBTransSqrtMat*transpose(S))*transpose(Q_star);
+            tmp=(bigA*bigQStarMat+bigBPBTransSqrtMat*...
+                transpose(bigSMat))*transpose(bigQStarMat);
+            %
             dQIntMat=tmp+transpose(tmp)-...
-                piNumerator.*QIntMat./piDenominator-...
-                piDenominator.*CQCTransMat./piNumerator;
+                piNumerator.*bigQIntMat./piDenominator-...
+                piDenominator.*bigCQCTransMat./piNumerator;
             %
             %% External approximation
-            CQCTransSqrtMat=sqrtmpos(CQCTransMat);            
-            [VMat,DMat]=eig(QExtMat);
-            if ~ismatposdef(QExtMat,self.absTol)
+            bigCQCTransSqrtMat=sqrtmpos(bigCQCTransMat);            
+            [bigVMat,bigDMat]=eig(bigQExtMat);
+            if ~ismatposdef(bigQExtMat,self.absTol)
                 throwerror('wrongState','external approx has degraded');
             end
-            Q_star=VMat*realsqrt(DMat)*transpose(VMat);
-            piNumerator=realsqrt(ltVec.'*BPBTransMat*ltVec);
-            piDenominator=realsqrt(sum((QExtMat*ltVec).*ltVec));
+            bigQStarMat=bigVMat*realsqrt(bigDMat)*transpose(bigVMat);
+            piNumerator=realsqrt(ltVec.'*bigBPBTransMat*ltVec);
+            piDenominator=realsqrt(sum((bigQExtMat*ltVec).*ltVec));
             if piNumerator<=self.absTol
                 throwerror('wrongInput',...
                     ['matrices B,P for control ',...
@@ -110,12 +113,12 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 throwerror('wrongInput',...
                     'the external estimate has degraded, reason unknown');
             end            
-            S=self.getOrthTranslMatrix(Q_star,CQCTransSqrtMat,...
-                CQCTransSqrtMat*ltVec,Q_star*ltVec);
-            tmp=(A*Q_star-CQCTransSqrtMat*transpose(S))*transpose(Q_star);
+            bigSMat=self.getOrthTranslMatrix(bigQStarMat,bigCQCTransSqrtMat,...
+                bigCQCTransSqrtMat*ltVec,bigQStarMat*ltVec);
+            tmp=(bigA*bigQStarMat-bigCQCTransSqrtMat*transpose(bigSMat))*transpose(bigQStarMat);
             dQExtMat=tmp+transpose(tmp)+...
-                piNumerator.*QExtMat./piDenominator+...
-                piDenominator.*BPBTransMat./piNumerator;
+                piNumerator.*bigQExtMat./piDenominator+...
+                piDenominator.*bigBPBTransMat./piNumerator;
             dQExtMat=(dQExtMat+dQExtMat.')*0.5;
         end
     end
