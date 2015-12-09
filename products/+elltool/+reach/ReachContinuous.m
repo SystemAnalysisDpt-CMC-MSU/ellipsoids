@@ -178,11 +178,11 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %
-        function probDefConstr = getProbDynamicsBuilder (~,isDisturbance,~)
+        function probDefConstr = getProbDynamicsBuilder (~,isDisturbance, ...
+                isBackward) %#ok<INUSD>
             %
             % input argument varargin{end - 2} is a 'timevec'; we transform
-            % it to [min(varargin{end-2}) max(varargin{end-2})] for
-            % Continuous systems
+            % it to sort(varargin{end-2}) for Continuous systems
             %
             if ~isDisturbance
                 probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
