@@ -1,9 +1,7 @@
-classdef ellipsoid < elltool.core.AGenEllipsoid
+classdef ellipsoid < elltool.core.AEllipsoid
     %ELLIPSOID class of ellipsoids
-    properties (Access=private,Hidden)
-        centerVec
+    properties (Access=protected,Hidden)
         shapeMat
-        absTol
         relTol
         nPlot2dPoints
         nPlot3dPoints

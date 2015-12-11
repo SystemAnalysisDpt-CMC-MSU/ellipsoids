@@ -1,8 +1,8 @@
-classdef GenEllipsoid < handle
+classdef GenEllipsoid < elltool.core.AEllipsoid
     % GENELLIPSOID - class of generalized ellipsoids
     %
-    properties (Access = private)
-        centerVec
+    properties (Access = protected)
+        shapeMat
         diagMat
         eigvMat
     end
@@ -374,6 +374,10 @@ classdef GenEllipsoid < handle
             shapeMat=self.eigvMat*self.diagMat*self.eigvMat.';
         end
     end
+    methods (Access = protected, Static)
+        function SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
+        end
+    end
     methods (Static)
         function tol=getCheckTol()
             % Example:
@@ -388,6 +392,7 @@ classdef GenEllipsoid < handle
             tol=GenEllipsoid.CHECK_TOL;
         end
         ellArr=fromRepMat(varargin)
+        ellArr=fromStruct(SEllArr)
     end
     methods (Static,Access = private)
         [isOk, pPar] = getIsGoodDirForMat(ellQ1Mat,ellQ2Mat,dirVec,absTol)
