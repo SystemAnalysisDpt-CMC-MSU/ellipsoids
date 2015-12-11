@@ -123,16 +123,16 @@ classdef AReach < elltool.reach.IReach
     methods (Access=protected)
         function linSys = getProbDynamics(self,atStrCMat,btStrCMat, ...
                 ptStrCMat,ptStrCVec,ctStrCMat,qtStrCMat,qtStrCVec, ...
-                x0Mat,x0Vec,timeVec,relTol,absTol,isDisturb)
-            isBack = timeVec(1) > timeVec(2);
+                x0Mat,x0Vec,timeLimVec,relTol,absTol,isDisturb)
+            isBack = timeLimVec(1) > timeLimVec(2);
             handleObj = self.getProbDynamicsBuilder(isDisturb,isBack);
             if isDisturb
                 linSys = handleObj(atStrCMat,btStrCMat,ptStrCMat, ...
                     ptStrCVec,ctStrCMat,qtStrCMat,qtStrCVec,x0Mat, ...
-                    x0Vec,timeVec,relTol,absTol);
+                    x0Vec,timeLimVec,relTol,absTol);
             elseif ~isDisturb
                 linSys = handleObj(atStrCMat,btStrCMat,ptStrCMat, ...
-                    ptStrCVec,x0Mat,x0Vec,timeVec,relTol,absTol);
+                    ptStrCVec,x0Mat,x0Vec,timeLimVec,relTol,absTol);
             end
         end
         %
@@ -527,7 +527,7 @@ classdef AReach < elltool.reach.IReach
     end
     methods (Access = private)
         function [ellTubeRelList, indVec,probDynObjCell,goodDirSetObjCell]=...
-                evolveApprox(self,newTimeVec, newLinSys, approxType)
+                evolveApprox(self,timeLimVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
             APPROX_TYPE = F.APPROX_TYPE;
@@ -566,7 +566,7 @@ classdef AReach < elltool.reach.IReach
             end
             [atStrCMat, btStrCMat, ctStrCMat, ptStrCMat, ptStrCVec, ...
                 qtStrCMat, qtStrCVec] = ...
-                self.prepareSysParam(newLinSys, newTimeVec);
+                self.prepareSysParam(newLinSys, timeLimVec);
             %
             % ext/int-approx on the next time interval
             %
@@ -577,12 +577,12 @@ classdef AReach < elltool.reach.IReach
                 probDynObj = self.getProbDynamics(atStrCMat, ...
                     btStrCMat, ptStrCMat, ptStrCVec, ctStrCMat, ...
                     qtStrCMat, qtStrCVec, x0MatArray(:, :, il0Num), ...
-                    x0VecMat(:, il0Num), newTimeVec, self.relTol, ...
+                    x0VecMat(:, il0Num), timeLimVec, self.relTol, ...
                     self.absTol, isDisturbance);
                 [ellTubeRelVec{il0Num},goodDirSetObjCell{il0Num},probDynObjCell{il0Num}] =...
                     self.makeEllTubeRel(...
                     probDynObj, l0Mat(:, il0Num), ...
-                    newTimeVec, isDisturbance, self.absTol, self.relTol, approxType);
+                    timeLimVec, isDisturbance, self.absTol, self.relTol, approxType);
                 ellTubeRelList{il0Num} = ...
                     ellTubeRelVec{il0Num}.getTuplesFilteredBy(...
                     APPROX_TYPE, approxType);
@@ -872,9 +872,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
+            %   timeLimVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   copyRsObj = rsObj.getCopy();
             %   isEqual = isEqual(rsObj, copyRsObj)
             %
@@ -1045,9 +1045,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [10 0];
+            %   timeLimVec = [10 0];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   rsObj.getEaScaleFactor()
             %
             %   ans =
@@ -1084,9 +1084,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [10 0];
+            %   timeLimVec = [10 0];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   rsObj.getIaScaleFactor()
             %
             %   ans =
@@ -1124,9 +1124,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [10 0];
+            %   timeLimVec = [10 0];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   x0Ell = rsObj.getInitialSet()
             %
             %   x0Ell =
@@ -1172,9 +1172,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [10 0];
+            %   timeLimVec = [10 0];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   rsObj.isbackward()
             %
             %   ans =
@@ -1549,9 +1549,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
+            %   timeLimVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   rsObj.getEllTubeRel();
             %
             ellTubeRel = self.ellTubeRel;
@@ -1587,9 +1587,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
+            %   timeLimVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
             %   SUBounds2 = struct();
             %   SUBounds2.center = {'sin(t)'; 'cos(t)'};
@@ -1628,9 +1628,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
+            %   timeLimVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
             %   SUBounds2 = struct();
             %   SUBounds2.center = {'sin(t)'; 'cos(t)'};
@@ -1670,9 +1670,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
+            %   timeLimVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
             %   SUBounds2 = struct();
             %   SUBounds2.center = {'sin(t)'; 'cos(t)'};
@@ -1709,9 +1709,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
+            %   timeLimVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   aMat2 = [0 1; 1 0]; bMat2 = [0 1;1 0];
             %   SUBounds2 = struct();
             %   SUBounds2.center = {'sin(t)'; 'cos(t)'};
@@ -1740,9 +1740,9 @@ classdef AReach < elltool.reach.IReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
+            %   timeLimVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %   getEllTubeUnionRel(rsObj);
             %
             import gras.ellapx.smartdb.rels.EllUnionTube;
@@ -1814,19 +1814,19 @@ classdef AReach < elltool.reach.IReach
             if self.isBackward
                 newReachObj.switchSysTimeVec =...
                     [newEndTime, self.switchSysTimeVec];
-                newTimeVec = [self.switchSysTimeVec(1), newEndTime];
+                timeLimVec = [self.switchSysTimeVec(1), newEndTime];
             else
                 newReachObj.switchSysTimeVec =...
                     [self.switchSysTimeVec, newEndTime];
-                newTimeVec = [self.switchSysTimeVec(end), newEndTime];
+                timeLimVec = [self.switchSysTimeVec(end), newEndTime];
             end
             newReachObj.linSysCVec = [newReachObj.linSysCVec {newLinSys}];
             newReachObj.isCut = false;
             %
-            [relIntApxList, indIntVec,intProbDynCell,~] = self.evolveApprox(newTimeVec, ...
-                newLinSys, EApproxType.Internal);
-            [relExpApxList, indExtVec,extProbDynCell,goodDirSetCell] = self.evolveApprox(newTimeVec, ...
-                newLinSys, EApproxType.External);
+            [relIntApxList, indIntVec,intProbDynCell,~] = self.evolveApprox ...
+                (timeLimVec,newLinSys, EApproxType.Internal);
+            [relExpApxList, indExtVec,extProbDynCell,goodDirSetCell] = ...
+                self.evolveApprox(timeLimVec,newLinSys, EApproxType.External);
             relApxList = [relIntApxList, relExpApxList];
             %
             % cat old and new ellTubeRel
