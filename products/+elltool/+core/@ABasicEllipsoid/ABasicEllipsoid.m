@@ -21,15 +21,12 @@ classdef ABasicEllipsoid < handle
                 throwerror('wrongInput:emptyArray',...
                     'input ellipsoidal arrays should be empty at the same time');
             end
-            
             [~, absTol] = ellFirstArr.getAbsTol;
             firstSizeVec = size(ellFirstArr);
             secSizeVec = size(ellSecArr);
             isnFirstScalar=nFirstElems > 1;
             isnSecScalar=nSecElems > 1;
-            
-            [~, tolerance] = ellFirstArr.getRelTol;
-            
+            [~, tolVal] = ellFirstArr.getRelTol;
             [SEll1Array, SFieldNiceNames, ~] = ...
                 ellFirstArr.toStruct(isPropIncluded);
             SEll2Array = ellSecArr.toStruct(isPropIncluded);
@@ -38,7 +35,6 @@ classdef ABasicEllipsoid < handle
                 SFieldNiceNames, absTol, isPropIncluded), SEll1Array);
             SEll2Array = arrayfun(@(SEll)ellSecArr.formCompStruct(SEll,...
                 SFieldNiceNames, absTol, isPropIncluded), SEll2Array);
-            
             if isnFirstScalar&&isnSecScalar
                 if ~isequal(firstSizeVec, secSizeVec)
                     throwerror('wrongSizes',...
@@ -59,7 +55,7 @@ classdef ABasicEllipsoid < handle
             function compare()
                 [isEqualArr, reportStr] =...
                     modgen.struct.structcomparevec(SEll1Array,...
-                    SEll2Array, tolerance);
+                    SEll2Array, tolVal);
             end
         end
         %

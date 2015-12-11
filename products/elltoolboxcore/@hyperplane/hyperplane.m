@@ -1,4 +1,4 @@
-classdef hyperplane < elltool.core.AGenEllipsoid
+classdef hyperplane < elltool.core.ABasicEllipsoid
     %HYPERPLANE - a class for hyperplanes
     properties (Access=private)
         normal

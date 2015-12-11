@@ -7,7 +7,6 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         function ellObj=AEllipsoid(varargin)
             ellObj=ellObj@elltool.core.ABasicEllipsoid();
         end
-        
         function resArr=repMat(self,varargin)
             % REPMAT -  is analogous to built-in repmat function with 
             %           one exception - it copies the objects, not 
@@ -62,8 +61,18 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
             centerVecVec=self.centerVec;
         end
     end
+    methods(Access=protected)
+        function checkIfScalar(self,errMsg)
+            if nargin<2
+                errMsg='input argument must be single ellipsoid.';
+            end
+            modgen.common.checkvar(self,'isscalar(x)',...
+                'errorMessage',errMsg);
+        end
+    end
     methods (Abstract)
-        shapeMat=getShapeMat(self);
+        checkIsMe(ellArr,varargin)
+        shapeMat=getShapeMat(self)
         [SDataArr,SFieldNiceNames,SFieldDescr]=...
             toStruct(ellArr,isPropIncluded)
         copyEllArr = getCopy(ellArr)
