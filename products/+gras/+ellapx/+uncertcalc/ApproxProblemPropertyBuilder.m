@@ -33,8 +33,9 @@ classdef ApproxProblemPropertyBuilder
             % for solving ODE which also introduces its own imprecision
             %
             PRECISION_FACTOR = 0.1;
-            calcPrecision = confRepoMgr.getParam(...
+            relTol = confRepoMgr.getParam(...
                 'genericProps.calcPrecision')*PRECISION_FACTOR;
+            absTol = relTol;
             %
             % create problem dynamics
             %
@@ -59,13 +60,13 @@ classdef ApproxProblemPropertyBuilder
             tStart=tic;
             pDynObj = LReachProblemDynamicsFactory.createByParams(...
                 AtDefMat,BtDefMat,PtDefMat,ptDefVec,CtDefMat,...
-                QtDefMat,qtDefVec,X0DefMat,x0DefVec,tLims,calcPrecision);
+                QtDefMat,qtDefVec,X0DefMat,x0DefVec,tLims,relTol,absTol);
             pDynObj = RegProblemDynamicsFactory.create(pDynObj,...
                 isRegEnabled, isJustCheck, regTol);
             logger.info(...
                 sprintf(['building interpolation of the problem definition, ',...
                 'calc. precision=%d, time elapsed =%s sec.'],...
-                calcPrecision,num2str(toc(tStart))));
+                relTol,num2str(toc(tStart))));
             %
             % build good directions at time "s"
             %
@@ -104,11 +105,11 @@ classdef ApproxProblemPropertyBuilder
             % build good direction curves
             %
             goodDirSetObj = GoodDirsContinuousFactory.create(pDynObj,...
-                sTime,lsGoodDirMat,calcPrecision,calcPrecision);
+                sTime,lsGoodDirMat,relTol,relTol);
             logger.info(...
                 sprintf(['Building good directions at time %d, ',...
                 'calc. precision=%d, time elapsed =%s sec.'],...
-                sTime,calcPrecision,num2str(toc(tStart))));
+                sTime,relTol,num2str(toc(tStart))));
         end
     end
 end

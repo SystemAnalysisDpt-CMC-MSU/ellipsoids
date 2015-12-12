@@ -1,24 +1,24 @@
 classdef LReachProblemDynamicsFactory<handle
     methods(Static)
-        function pDynamicsObject=create(pDefObj,calcPrecision)
+        function pDynamicsObject=create(pDefObj,relTol,absTol)
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsInterp;
             import gras.ellapx.lreachuncert.probdyn.LReachProblemLTIDynamics;
             %
             if isa(pDefObj,...
                     'gras.ellapx.lreachuncert.probdef.ReachContLTIProblemDef')
                 pDynamicsObject = LReachProblemLTIDynamics(pDefObj,...
-                    calcPrecision);
+                    relTol,absTol);
             elseif isa(pDefObj,...
                     'gras.ellapx.lreachuncert.probdef.LReachContProblemDef')
                 pDynamicsObject = LReachProblemDynamicsInterp(pDefObj,...
-                    calcPrecision);
+                    relTol,absTol);
             else
                 modgen.common.throwerror(...
                     'wrongInput', 'Incorrect system definition');
             end
         end
         function pDynamicsObject=createByParams(aCMat,bCMat,pCMat,pCVec,...
-                cCMat,qCMat,qCVec,x0Mat,x0Vec,tLims,calcPrecision)
+                cCMat,qCMat,qCVec,x0Mat,x0Vec,tLims,relTol, absTol)
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;            
             %
             isDisturbance=LReachProblemDynamicsFactory.getIsDisturbance(...
@@ -34,7 +34,7 @@ classdef LReachProblemDynamicsFactory<handle
                         cCMat,qCMat,qCVec,x0Mat,x0Vec,tLims);
                     pDynamicsObject = ...
                         gras.ellapx.lreachuncert.probdyn.LReachProblemLTIDynamics(...
-                        pDefObj,calcPrecision);
+                        pDefObj,relTol,absTol);
                 elseif gras.ellapx.lreachuncert.probdef.LReachContProblemDef.isCompatible(...
                         aCMat,bCMat,pCMat,pCVec,...
                         cCMat,qCMat,qCVec,x0Mat,x0Vec,tLims)
@@ -43,7 +43,7 @@ classdef LReachProblemDynamicsFactory<handle
                         cCMat,qCMat,qCVec,x0Mat,x0Vec,tLims);
                     pDynamicsObject = ...
                         gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsInterp(...
-                        pDefObj,calcPrecision);
+                        pDefObj,relTol,absTol);
                 else
                     isOk=false;
                 end
@@ -54,14 +54,14 @@ classdef LReachProblemDynamicsFactory<handle
                         aCMat,bCMat,pCMat,pCVec,x0Mat,x0Vec,tLims);
                     pDynamicsObject = ...
                         gras.ellapx.lreachplain.probdyn.LReachProblemLTIDynamics(...
-                        pDefObj,calcPrecision);
+                        pDefObj,relTol,absTol);
                 elseif gras.ellapx.lreachplain.probdef.LReachContProblemDef.isCompatible(...
                         aCMat,bCMat,pCMat,pCVec,x0Mat,x0Vec,tLims)
                     pDefObj = gras.ellapx.lreachplain.probdef.LReachContProblemDef(...
                         aCMat,bCMat,pCMat,pCVec,x0Mat,x0Vec,tLims);
                     pDynamicsObject = ...
                         gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp(...
-                        pDefObj,calcPrecision);
+                        pDefObj,relTol,absTol);
                 else
                     isOk=false;
                 end                

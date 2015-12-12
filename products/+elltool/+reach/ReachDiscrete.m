@@ -244,33 +244,33 @@ classdef ReachDiscrete < elltool.reach.AReach
                 isPos=~isempty(strfind(meObj.identifier,patternStr));
             end
         end
-        function probDefConstr = getProbDynamicsBuilder (self, isDisturb, ...
+        function probDefConstr = getProbDynamicsBuilder(~,isDisturb, ...
                 isBackward)
             %
-            % creating a probDefConstr with using input arguments 
-            % varargin{1:end-1}: we ignored last argument 'calcPrecision' 
-            % for discrete systems
+            % creating a probDefConstr with using input arguments
+            % varargin{1:end-2}: we ignored last arguments 'relTol' and
+            % 'absTol' for discrete systems
             %
             if (~isDisturb && isBackward)
                 probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
                     probdyn.LReachDiscrBackwardDynamics(gras.ellapx. ...
                     lreachplain.probdef.LReachContProblemDef( ...
-                        varargin{1 : end-1}));
+                    varargin{1:end-2}));
             elseif (~isDisturb && ~isBackward)
                 probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
                     probdyn.LReachDiscrForwardDynamics (gras.ellapx. ...
                     lreachplain.probdef.LReachContProblemDef( ...
-                        varargin{1 : end-1}));
+                    varargin{1:end-2}));
             elseif (isDisturb && isBackward)
                 probDefConstr = @(varargin)gras.ellapx.lreachuncert. ...
                     probdyn.LReachDiscrBackwardDynamics(gras.ellapx. ...
                     lreachuncert.probdef.LReachContProblemDef( ...
-                        varargin{1 : end-1}));
+                    varargin{1:end-2}));
             elseif (isDisturb && ~isBackward)
                 probDefConstr = @(varargin)gras.ellapx.lreachuncert. ...
                     probdyn.LReachDiscrForwardDynamics (gras.ellapx. ...
                     lreachuncert.probdef.LReachContProblemDef( ...
-                        varargin{1 : end-1}));
+                    varargin{1:end-2}));
             end
         end
     end
@@ -287,7 +287,7 @@ classdef ReachDiscrete < elltool.reach.AReach
             %     x0Ell: ellipsoid[1, 1] - ellipsoidal set of initial conditions
             %     l0Mat: double[nRows, nColumns] - initial good directions
             %           matrix.
-            %     timeVec: double[1, 2] - time interval
+            %     timeLimVec: double[1, 2] - time interval
             %     properties:
             %       isRegEnabled: logical[1, 1] - if it is 'true' constructor
             %           is allowed to use regularization.
@@ -308,9 +308,9 @@ classdef ReachDiscrete < elltool.reach.AReach
             %   udBoundsEllObj  = ellipsoid(1);
             %   dtsys = elltool.linsys.LinSysDiscrete(adMat, bdMat, udBoundsEllObj);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
+            %   timeLimVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
-            %   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeVec);
+            %   dRsObj = elltool.reach.ReachDiscrete(dtsys, x0EllObj, dirsMat, timeLimVec);
             %
             %
             % $Authors: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>

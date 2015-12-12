@@ -178,25 +178,22 @@ classdef ReachContinuous < elltool.reach.AReach
             end
         end
         %
-        function probDefConstr = getProbDynamicsBuilder (self, ...
-                isDisturbance, ~)
+        function probDefConstr = getProbDynamicsBuilder (~,isDisturbance, ...
+                isBackward) %#ok<INUSD>
             %
-            % input argument varargin{end - 1} is a 'timevec'; we transform 
-            % it to [min(varargin{end-1}) max(varargin{end-1})] for 
-            % Continuous systems
+            % input argument varargin{end - 2} is a 'timeLimVec'; we 
+            % transform it to sort(varargin{end-2}) for Continuous systems
             %
-            if (~isDisturbance)
+            if ~isDisturbance
                 probDefConstr = @(varargin)gras.ellapx.lreachplain. ...
                     probdyn.LReachProblemDynamicsFactory. ...
-                    createByParams (varargin{1:end - 2}, ...
-                        [min(varargin{end-1}) max(varargin{end-1})], ...
-                        varargin{end});
-            elseif (isDisturbance)
+                    createByParams (varargin{1:end-3}, ...
+                    sort(varargin{end-2}),varargin{end-1:end});
+            elseif isDisturbance
                 probDefConstr = @(varargin)gras.ellapx.lreachuncert. ...
                     probdyn.LReachProblemDynamicsFactory. ...
-                    createByParams (varargin{1:end - 2}, ...
-                        [min(varargin{end-1}) max(varargin{end-1})], ...
-                        varargin{end});
+                    createByParams (varargin{1:end-3}, ...
+                    sort(varargin{end-2}),varargin{end-1:end});
             end
         end
         %
@@ -252,7 +249,7 @@ classdef ReachContinuous < elltool.reach.AReach
             %           initial conditions.
             %       l0Mat: double[nRows, nColumns] - initial good directions
             %           matrix.
-            %       timeVec: double[1, 2] - time interval.
+            %       timeLimVec: double[1, 2] - time interval.
             %
             %     properties:
             %       isRegEnabled: logical[1, 1] - if it is 'true' constructor
@@ -273,9 +270,9 @@ classdef ReachContinuous < elltool.reach.AReach
             %   SUBounds.shape = [9 0; 0 2];
             %   sys = elltool.linsys.LinSysContinuous(aMat, bMat, SUBounds);
             %   x0EllObj = ell_unitball(2);
-            %   timeVec = [0 10];
+            %   timeLimVec = [0 10];
             %   dirsMat = [1 0; 0 1]';
-            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
+            %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeLimVec);
             %
             % $Author: Kirill Mayantsev
             % <kirill.mayantsev@gmail.com> $

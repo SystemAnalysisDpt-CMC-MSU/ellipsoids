@@ -1,7 +1,8 @@
 classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
     properties (Constant, GetAccess = protected)
         ODE_NORM_CONTROL = 'on';
-        CALC_PRECISION_FACTOR = 1e-5;
+        REL_TOL_FACTOR = 1e-5;
+        ABS_TOL_FACTOR = 1e-5;
     end
     methods
         function self = GoodDirsContinuousGen(pDynObj, sTime, ...
@@ -13,8 +14,8 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
     methods (Access = protected)
         function odePropList=getOdePropList(self,relTol, absTol)
             odePropList={'NormControl', self.ODE_NORM_CONTROL, ...
-                'RelTol', relTol*self.CALC_PRECISION_FACTOR, ...
-                'AbsTol', absTol*self.CALC_PRECISION_FACTOR};
+                'RelTol', relTol*self.REL_TOL_FACTOR, ...
+                'AbsTol', absTol*self.ABS_TOL_FACTOR};
         end
         function [XstDynamics, RstDynamics, XstNormDynamics] = ...
                 calcTransMatDynamics(self, matOpFactory, STimeData, ...
