@@ -422,24 +422,6 @@ classdef AReach < elltool.reach.IReach
             end
         end
         %
-        function isDisturb = isDisturbance(ctStrCMat, qtStrCMat)
-            import gras.mat.fcnlib.isdependent;
-            import gras.gen.MatVector;
-            isDisturb = true;
-            if isdependent(ctStrCMat)
-                gtMat = MatVector.fromFormulaMat(ctStrCMat, 0);
-                if all(gtMat(:) == 0)
-                    isDisturb = false;
-                end
-            end
-            if isDisturb && isdependent(qtStrCMat)
-                qtMat = MatVector.fromFormulaMat(qtStrCMat, 0);
-                if all(qtMat(:) == 0)
-                    isDisturb = false;
-                end
-            end
-        end
-        %
         function outMat = getNormMat(inpMat, dim)
             matSqNormVec = sum(inpMat .* inpMat);
             isNormGrZeroVec = matSqNormVec > 0;
@@ -558,7 +540,8 @@ classdef AReach < elltool.reach.IReach
             % ext/int-approx on the next time interval
             %
             ellTubeRelList = cell(1, l0VecNum);
-            isDisturbance = self.isDisturbance(ctStrCMat, qtStrCMat);
+            isDisturbance = LReachProblemDynamicsFactory.getIsDisturbance( ...
+                ctStrCMat, qtStrCMat);
             for il0Num = l0VecNum: -1 : 1
                 probDynObj = self.getProbDynamics(atStrCMat,btStrCMat, ...
                     ptStrCMat, ptStrCVec, ctStrCMat,qtStrCMat,qtStrCVec, ...
@@ -693,6 +676,7 @@ classdef AReach < elltool.reach.IReach
             import modgen.common.throwerror;
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;
+            import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
             %
             if nargin>0
                 NEEDED_PROP_LIST =...
@@ -746,7 +730,8 @@ classdef AReach < elltool.reach.IReach
                 [atStrCMat, btStrCMat, ctStrCMat, ptStrCMat, ptStrCVec,...
                     qtStrCMat, qtStrCVec] =...
                     self.prepareSysParam(linSys, timeVec);
-                isDisturbance = self.isDisturbance(ctStrCMat, qtStrCMat);
+                isDisturbance = LReachProblemDynamicsFactory. ...
+                    getIsDisturbance(ctStrCMat, qtStrCMat);
                 %
                 % Normalize good directions
                 %
