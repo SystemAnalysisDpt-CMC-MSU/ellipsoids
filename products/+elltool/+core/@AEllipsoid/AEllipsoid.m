@@ -83,6 +83,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         ellArr=fromStruct(SEllArr)
     end
     methods
+        outEllArr=plus(varargin)
         trArr=trace(ellArr)
     end
 end

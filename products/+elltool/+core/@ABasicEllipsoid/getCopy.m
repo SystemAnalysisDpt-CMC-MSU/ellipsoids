@@ -34,6 +34,7 @@ function copyEllArr = getCopy(ellArr)
 %			Faculty of Computational Mathematics and Computer Science,
 %			System Analysis Department 2015 $
 %
+import elltool.core.ABasicEllipsoid;
 checkIsMeVirtual(ellArr);
 if isempty(ellArr)
     copyEllArr=ellArr.empty(size(ellArr));
@@ -41,7 +42,7 @@ elseif isscalar(ellArr)
     copyEllArr=getSingleCopy(ellArr);
 else
     sizeCVec = num2cell(size(ellArr));
-    copyEllArr(sizeCVec{:})=ellFactory(ellArr);
+    copyEllArr(sizeCVec{:})=ellArr.ellFactory();
     for iElem = 1:numel(ellArr)
         copyEllArr(iElem)=getSingleCopy(ellArr(iElem));
     end

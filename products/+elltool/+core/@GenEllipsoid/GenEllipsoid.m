@@ -17,12 +17,11 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             elltool.core.GenEllipsoid.checkIsMe(ellArr,varargin)
         end
         copyEllObj=getSingleCopy(ellObj)
-        function ellObj=ellFactory(~)
+        function ellObj=ellFactory(self) %#ok<MANU>
             ellObj=elltool.core.GenEllipsoid();
         end
     end
     methods
-        outEllArr = plus(varargin)
         outEllArr = minus(varargin)
         minEigArr = mineig(inpEllArr)
         maxEigArr = maxeig(inpEllArr)

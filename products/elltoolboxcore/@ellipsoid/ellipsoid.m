@@ -312,11 +312,10 @@ classdef ellipsoid < elltool.core.AEllipsoid
             ellipsoid.checkIsMe(ellArr,varargin)
         end
         copyEllObj=getSingleCopy(ellObj)
-        function ellObj=ellFactory(~)
+        function ellObj=ellFactory(self) %#ok<MANU>
             ellObj=ellipsoid();
         end
     end
-    
     methods (Access=private)
         function isArrEq = isMatEqualInternal(self,aArr,bArr)
             % ISMATEQUALINTERNAL - returns isArrEq - logical 1(true) if
