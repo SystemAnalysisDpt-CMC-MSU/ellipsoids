@@ -84,6 +84,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
     end
     methods
         outEllArr=plus(varargin)
+        outEllArr=minus(varargin)
         trArr=trace(ellArr)
     end
 end

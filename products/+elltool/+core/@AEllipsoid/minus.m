@@ -3,23 +3,23 @@ function outEllArr = minus(varargin)
 % MINUS - overloaded operator '-'
 %
 %	outEllArr = PLUS(inpEllArr, inpVec) implements E(q, Q) - b
-%		for each GenEllipsoid E in inpEllArr.
+%		for each AEllipsoid E in inpEllArr.
 %	outEllArr = PLUS(inpVec, inpEllArr) implements b - E(q, Q)
-%		for each GenEllipsoid E in inpEllArr.
+%		for each AEllipsoid E in inpEllArr.
 %
-%	Operation E - b (or b - E) where E = inpEll is an GenEllipsoid in R^n,
-%	and b = inpVec - vector in R^n. If E(q) is an GenEllipsoid
+%	Operation E - b (or b - E) where E = inpEll is an AEllipsoid in R^n,
+%	and b = inpVec - vector in R^n. If E(q) is an AEllipsoid
 %	with center q, then
 %	E(q) - b = = E(q - b).
 %
 % Input:
 %	regular:
-%		ellArr: GenEllipsoid [nDims1,nDims2,...,nDimsN] - array of 
-%			GenEllipsoids of the same dimentions nDims.
+%		ellArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%			AEllipsoids of the same dimentions nDims.
 %		bVec: double[nDims, 1] - vector.
 % Output:
-%	outEllArr: GenEllipsoid [nDims1,nDims2,...,nDimsN] - array of 
-%		GenEllipsoids with same shapes as ellArr,but with centers shifted 
+%	outEllArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%		AEllipsoids with same shapes as ellArr,but with centers shifted 
 %		by vectors in bVec.
 %
 % Example:
@@ -65,15 +65,16 @@ function outEllArr = minus(varargin)
 import modgen.common.throwerror;
 import modgen.common.checkvar;
 import modgen.common.checkmultvar;
-import elltool.core.GenEllipsoid;
 errMsg =...
-'this operation is only permitted between GenEllipsoid and vector in R^n.';
+'this operation is only permitted between AEllipsoid and vector in R^n.';
 checkvar(nargin,'x==2','errorTag','wrongInput',...
 	'errorMessage',errMsg)
-if isa(varargin{1},'GenEllipsoid')&&isa(varargin{2},'double')
+if isa(varargin{2},'double')
+    checkIsMeVirtual(varargin{1});
 	inpEllArr=varargin{1};
 	inpVec=varargin{2};
-elseif isa(varargin{2},'GenEllipsoid')&&isa(varargin{1},'double')
+elseif isa(varargin{1},'double')
+    checkIsMeVirtual(varargin{2})
 	inpEllArr=varargin{2};
 	inpVec=varargin{1};
 else

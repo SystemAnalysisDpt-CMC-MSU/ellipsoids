@@ -22,7 +22,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         end
     end
     methods
-        outEllArr = minus(varargin)
         minEigArr = mineig(inpEllArr)
         maxEigArr = maxeig(inpEllArr)
         [ellCenterVec, ellDiagMat, ellEigvMat] = parameters(ell)

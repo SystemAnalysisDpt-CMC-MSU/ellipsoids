@@ -66,7 +66,6 @@ function outEllArr=plus(varargin)
 import modgen.common.throwerror;
 import modgen.common.checkvar;
 import modgen.common.checkmultvar;
-import elltool.core.AEllipsoid;
 errMsg =...
 'this operation is only permitted between AEllipsoid and vector in R^n.';
 checkvar(nargin,'x==2','errorTag','wrongInput',...
