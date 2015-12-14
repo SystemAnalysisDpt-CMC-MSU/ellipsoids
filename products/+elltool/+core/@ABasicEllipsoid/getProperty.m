@@ -36,7 +36,7 @@ if nargin==2
 end
 sizeCVec = num2cell(size(ellArr));
 propArr=zeros(sizeCVec{:});
-for iElem=numel(ellArr)
+for iElem=1:numel(ellArr)
     propArr(iElem)=ellArr(iElem).(propName);
 end
 if nargout==2

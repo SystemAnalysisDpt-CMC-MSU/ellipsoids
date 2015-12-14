@@ -1105,7 +1105,7 @@ end
 %
 function isEqual=isEqElM(resEllipsoid,ansVMat,ansDVec,ansCenVec)
 import elltool.core.GenEllipsoid;
-absTol=GenEllipsoid.getAbsTol();
+absTol=GenEllipsoid().getAbsTol();
 eigvMat=resEllipsoid.getEigvMat();
 diagVec=diag(resEllipsoid.getDiagMat());
 cenVec=resEllipsoid.getCenter();
@@ -1152,7 +1152,7 @@ end
 %
 function checkSumTight(ellResObj, ellVec, dirVec)
 import elltool.core.GenEllipsoid;
-absTol=GenEllipsoid.getAbsTol();
+absTol=GenEllipsoid().getAbsTol();
 nEll=length(ellVec);
 sumOfRho=0;
 for iEll=1:nEll;
@@ -1169,7 +1169,7 @@ mlunitext.assert(isTight);
 end
 function checkDiffTight(ellResObj, ellVec, dirVec)
 import elltool.core.GenEllipsoid;
-absTol=GenEllipsoid.getAbsTol();
+absTol=GenEllipsoid().getAbsTol();
 rho1=rho(ellVec(1),dirVec);
 rho2=rho(ellVec(2),dirVec);
 if rho1==Inf

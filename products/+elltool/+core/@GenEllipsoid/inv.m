@@ -37,7 +37,7 @@ modgen.common.type.simple.checkgenext(@(x)isa(x,'elltool.core.GenEllipsoid'),...
     1,ellObj);
 modgen.common.type.simple.checkgenext('isscalar(x1)',1,ellObj);
 %
-absTol=ellObj.CHECK_TOL;
+absTol=ellObj.absTol;
 %
 diagVec=diag(ellObj.diagMat);
 isInfVec=diagVec==Inf;

@@ -2,9 +2,6 @@ classdef ellipsoid < elltool.core.AEllipsoid
     %ELLIPSOID class of ellipsoids
     properties (Access=protected,Hidden)
         shapeMat
-        relTol
-        nPlot2dPoints
-        nPlot3dPoints
     end
     %
     methods

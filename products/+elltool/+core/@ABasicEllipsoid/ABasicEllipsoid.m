@@ -2,6 +2,9 @@ classdef ABasicEllipsoid < handle
     properties(Access=protected)
         centerVec    
         absTol
+        relTol
+        nPlot2dPoints
+        nPlot3dPoints
     end
     %
     methods (Access = protected)
@@ -20,7 +23,8 @@ classdef ABasicEllipsoid < handle
         ellObj=ellFactory(self)
     end
     methods 
-        [absTolArr, absTolVal]=getAbsTol(ellArr, varargin)
+        [absTolArr,absTolVal]=getAbsTol(ellArr,varargin)
+        [relTolArr,relTolVal]=getRelTol(ellArr,varargin)
         copyEllArr=getCopy(ellArr)
         isPositiveArr=isEmpty(myEllArr)
     end

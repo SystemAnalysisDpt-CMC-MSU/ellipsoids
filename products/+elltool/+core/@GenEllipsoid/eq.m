@@ -28,7 +28,7 @@ import modgen.common.throwerror;
 import modgen.struct.structcomparevec;
 import gras.la.sqrtmpos;
 import elltool.core.GenEllipsoid;
-relTol=GenEllipsoid.getAbsTol();
+relTol=GenEllipsoid().getAbsTol();
 
 GenEllipsoid.checkIsMe(ellFirstArr);
 GenEllipsoid.checkIsMe(ellSecArr);

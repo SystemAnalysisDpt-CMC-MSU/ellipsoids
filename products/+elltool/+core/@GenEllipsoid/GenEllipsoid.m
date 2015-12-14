@@ -36,7 +36,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             %        1
             %
             import elltool.core.GenEllipsoid;
-            absTol=GenEllipsoid.getAbsTol();
+            absTol=GenEllipsoid().getAbsTol();
             eigv1Mat=ellObj1.getEigvMat();
             eigv2Mat=ellObj2.getEigvMat();
             diag1Vec=diag(ellObj1.getDiagMat());
@@ -154,6 +154,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             import gras.la.ismatposdef;
             %
             ellObj.absTol=1e-09;
+            ellObj.relTol=1e-08;
             absTol=ellObj.absTol;
             %
             nInput=nargin;
@@ -394,7 +395,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
     end
     methods (Static)
         function propNameVec=getPropList()
-            propNameVec={'absTol'};
+            propNameVec={'absTol','relTol'};
         end
         ellArr=fromRepMat(varargin)
         ellArr=fromStruct(SEllArr)

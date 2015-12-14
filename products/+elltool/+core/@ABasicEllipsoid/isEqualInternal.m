@@ -15,11 +15,15 @@ elseif (nFirstElems == 0 || nSecElems == 0)
     throwerror('wrongInput:emptyArray',...
         'input ellipsoidal arrays should be empty at the same time');
 end
-[~, absTol]=ellFirstArr.getAbsTol();
+
+[~, absTol] = ellFirstArr.getAbsTol();
 firstSizeVec = size(ellFirstArr);
 secSizeVec = size(ellSecArr);
 isnFirstScalar=nFirstElems > 1;
 isnSecScalar=nSecElems > 1;
+
+[~, tolVal] = ellFirstArr.getRelTol();
+
 [SEll1Array, SFieldNiceNames, ~] = ...
     ellFirstArr.toStruct(isPropIncluded);
 SEll2Array = ellSecArr.toStruct(isPropIncluded);
@@ -28,6 +32,7 @@ SEll1Array = arrayfun(@(SEll)ellFirstArr.formCompStruct(SEll,...
     SFieldNiceNames, absTol, isPropIncluded), SEll1Array);
 SEll2Array = arrayfun(@(SEll)ellSecArr.formCompStruct(SEll,...
     SFieldNiceNames, absTol, isPropIncluded), SEll2Array);
+
 if isnFirstScalar&&isnSecScalar
     if ~isequal(firstSizeVec, secSizeVec)
         throwerror('wrongSizes',...
@@ -48,6 +53,6 @@ end
     function compare()
         [isEqualArr, reportStr] =...
             modgen.struct.structcomparevec(SEll1Array,...
-            SEll2Array, absTol);
+            SEll2Array, tolVal);
     end
 end

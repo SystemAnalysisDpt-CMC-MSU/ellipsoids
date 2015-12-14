@@ -3,8 +3,6 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
     properties (Access=private)
         normal
         shift
-        absTol
-        relTol
     end
     %
     methods
