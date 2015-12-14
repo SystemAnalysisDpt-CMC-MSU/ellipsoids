@@ -70,7 +70,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
                 'errorMessage',errMsg);
         end
     end
-    methods (Access = protected,Abstract)
+    methods (Access=protected,Abstract)
         checkIsMeVirtual(ellArr,varargin)
     end
     methods (Abstract)
@@ -79,7 +79,10 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
             toStruct(ellArr,isPropIncluded)
     end
     methods (Abstract, Static)
-        ellArr = fromRepMat(varargin)
-        ellArr = fromStruct(SEllArr)
+        ellArr=fromRepMat(varargin)
+        ellArr=fromStruct(SEllArr)
+    end
+    methods
+        trArr=trace(ellArr)
     end
 end
