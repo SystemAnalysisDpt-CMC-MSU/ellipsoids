@@ -59,13 +59,15 @@ classdef ABasicEllipsoid < handle
             end
         end
         %
-        polar = getScalarPolarInternal(self, isRobustMethod)
+        polar=getScalarPolarInternal(self, isRobustMethod)
         checkIsMeInternal(objType,ellArr,varargin)
     end
-    methods (Access = protected,Abstract)
+    methods (Access=protected,Abstract)
         checkIsMeVirtual(ellArr,varargin)
+        copyEllObj=getSingleCopy(ellObj)
     end
     methods 
+        copyEllArr=getCopy(ellArr)
         isPositiveArr=isEmpty(myEllArr)
     end
 end

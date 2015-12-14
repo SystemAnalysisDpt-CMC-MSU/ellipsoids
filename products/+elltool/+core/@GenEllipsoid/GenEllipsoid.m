@@ -16,6 +16,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         function checkIsMeVirtual(ellArr,varargin)
             elltool.core.GenEllipsoid.checkIsMe(ellArr,varargin)
         end
+        copyEllObj=getSingleCopy(ellObj)
     end
     methods
         outEllArr = plus(varargin)
@@ -27,7 +28,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             toStruct(ellArr, isPropIncluded)
         ellArr = shape(ellArr, modMat)
         outEllArr = getShape(ellArr, modMat)
-        copyEllArr = getCopy(ellArr)
         trArr = trace(ellArr)
         function isOk=getIsGoodDir(ellObj1,ellObj2,curDirVec)
             % Example:
@@ -376,8 +376,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         end
     end
     methods (Access = protected, Static)
-        function SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
-        end
+        SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
     end
     methods (Static)
         function tol=getCheckTol()

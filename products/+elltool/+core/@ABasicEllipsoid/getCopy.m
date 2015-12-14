@@ -1,15 +1,15 @@
 function copyEllArr = getCopy(ellArr)
 % GETCOPY - returns array the same size as ellArr with copies of 
-%           GenEllipsoids in ellArr.
+%           ABasicEllipsoids in ellArr.
 %
 % Input:
 %   regular:
-%       ellArr: GenEllipsoid [nDim1, nDim2,...,nDimsN] - array of 
-%           GenEllipsoids.
+%       ellArr: ABasicEllipsoid [nDim1, nDim2,...,nDimsN] - array of 
+%           ABasicEllipsoids.
 %
 % Output:
-%   copyEllArr: GenEllipsoid [nDim1, nDim2,...,nDimsN] - array of  
-%       copies of GenEllipsoids in ellArr.
+%   copyEllArr: ABasicEllipsoid [nDim1, nDim2,...,nDimsN] - array of  
+%       copies of ABasicEllipsoids in ellArr.
 % 
 % Example:
 %   ellObj = GenEllipsoid([-1; 1], [2 0; 0 3]);
@@ -34,21 +34,13 @@ function copyEllArr = getCopy(ellArr)
 %			Faculty of Computational Mathematics and Computer Science,
 %			System Analysis Department 2015 $
 %
-import elltool.core.GenEllipsoid;
-GenEllipsoid.checkIsMe(ellArr);
+checkIsMeVirtual(ellArr);
 if isempty(ellArr)
-    copyEllArr=ellipsoid.empty(size(ellArr));
+    copyEllArr=ellArr.empty(size(ellArr));
 elseif isscalar(ellArr)
-    copyEllArr=GenEllipsoid();
-    fSingleCopy(copyEllArr,ellArr);
+    copyEllArr=getSingleCopy(ellArr);
 else
     sizeCVec=num2cell(size(ellArr));
-    copyEllArr(sizeCVec{:})=GenEllipsoid();
-    arrayfun(@fSingleCopy,copyEllArr,ellArr);
+    copyEllArr(sizeCVec{:})=getSingleCopy(ellArr(:));
 end
-    function fSingleCopy(copyEll,ell)
-        copyEll.centerVec=ell.centerVec;
-        copyEll.diagMat=ell.diagMat;
-        copyEll.eigvMat=ell.eigvMat;
-    end
 end

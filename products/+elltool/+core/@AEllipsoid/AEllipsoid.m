@@ -77,7 +77,6 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         shapeMat=getShapeMat(self)
         [SDataArr,SFieldNiceNames,SFieldDescr]=...
             toStruct(ellArr,isPropIncluded)
-        copyEllArr = getCopy(ellArr)
     end
     methods (Abstract, Static)
         ellArr = fromRepMat(varargin)

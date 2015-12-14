@@ -237,6 +237,7 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
         function checkIsMeVirtual(ellArr,varargin)
             hyperplane.checkIsMe(ellArr,varargin)
         end
+        copyEllObj=getSingleCopy(ellObj)
     end
     methods (Access = protected, Static)
         function SComp = formCompStruct(SHp, SFieldNiceNames, ~, isPropIncluded)

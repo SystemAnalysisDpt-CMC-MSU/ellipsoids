@@ -311,6 +311,7 @@ classdef ellipsoid < elltool.core.AEllipsoid
         function checkIsMeVirtual(ellArr,varargin)
             ellipsoid.checkIsMe(ellArr,varargin)
         end
+        copyEllObj=getSingleCopy(ellObj)
     end
     
     methods (Access=private)
