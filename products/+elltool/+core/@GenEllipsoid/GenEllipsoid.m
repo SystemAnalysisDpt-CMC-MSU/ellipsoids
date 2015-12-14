@@ -9,10 +9,12 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
     properties (Constant,GetAccess = private)
         CHECK_TOL=1e-09;
     end
-    methods (Static,Access=private)
-        function checkIsMe(objArr)
-            import modgen.common.checkvar;
-            checkvar(objArr,@(x)isa(x,'elltool.core.GenEllipsoid'));
+    methods (Access=protected,Static)
+        checkIsMe(ellArr,varargin)
+    end
+    methods (Access=protected)
+        function checkIsMeVirtual(ellArr,varargin)
+            elltool.core.GenEllipsoid.checkIsMe(ellArr,varargin)
         end
     end
     methods
@@ -20,7 +22,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         outEllArr = minus(varargin)
         minEigArr = mineig(inpEllArr)
         maxEigArr = maxeig(inpEllArr)
-        isPositiveArr = isEmpty(myEllArr)
         [ellCenterVec, ellDiagMat, ellEigvMat] = parameters(ell)
         [SDataArr, SFieldNiceNames, SFieldDescr] = ...
             toStruct(ellArr, isPropIncluded)

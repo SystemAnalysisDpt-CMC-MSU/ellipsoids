@@ -70,8 +70,10 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
                 'errorMessage',errMsg);
         end
     end
+    methods (Access = protected,Abstract)
+        checkIsMeVirtual(ellArr,varargin)
+    end
     methods (Abstract)
-        checkIsMe(ellArr,varargin)
         shapeMat=getShapeMat(self)
         [SDataArr,SFieldNiceNames,SFieldDescr]=...
             toStruct(ellArr,isPropIncluded)

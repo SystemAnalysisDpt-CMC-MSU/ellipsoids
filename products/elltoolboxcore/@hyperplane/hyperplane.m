@@ -227,11 +227,17 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
         end
     end
     methods (Static)
-        checkIsMe(someObj)
         hpArr = fromRepMat(varargin)
         hpObj = fromStruct(SHpObj)
     end
-    
+    methods (Access=protected,Static)
+        checkIsMe(ellArr,varargin)
+    end
+    methods (Access=protected)
+        function checkIsMeVirtual(ellArr,varargin)
+            hyperplane.checkIsMe(ellArr,varargin)
+        end
+    end
     methods (Access = protected, Static)
         function SComp = formCompStruct(SHp, SFieldNiceNames, ~, isPropIncluded)
             SComp.(SFieldNiceNames.normal) = SHp.normal;

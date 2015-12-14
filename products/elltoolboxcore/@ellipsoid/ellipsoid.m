@@ -304,8 +304,13 @@ classdef ellipsoid < elltool.core.AEllipsoid
         checkDoesContainArgs(ell,poly)
         doesContain = doesContainPoly(ellArr,polyhedronObj,varagin)
     end
-    methods (Static)
-        checkIsMe(someObj,varargin)
+    methods (Access=protected,Static)
+        checkIsMe(ellArr,varargin)
+    end
+    methods (Access=protected)
+        function checkIsMeVirtual(ellArr,varargin)
+            ellipsoid.checkIsMe(ellArr,varargin)
+        end
     end
     
     methods (Access=private)

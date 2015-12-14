@@ -60,5 +60,12 @@ classdef ABasicEllipsoid < handle
         end
         %
         polar = getScalarPolarInternal(self, isRobustMethod)
+        checkIsMeInternal(objType,ellArr,varargin)
+    end
+    methods (Access = protected,Abstract)
+        checkIsMeVirtual(ellArr,varargin)
+    end
+    methods 
+        isPositiveArr=isEmpty(myEllArr)
     end
 end
