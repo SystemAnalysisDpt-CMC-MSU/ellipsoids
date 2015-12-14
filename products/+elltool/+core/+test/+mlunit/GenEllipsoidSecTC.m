@@ -229,47 +229,26 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
         end
         %
         function testFromRepMat(self)
-            import elltool.core.GenEllipsoid;
             %Check negative
-            test1SizeVec=1; %#ok<NASGU>
-            self.runAndCheckError(...
-                'elltool.core.GenEllipsoid.fromRepMat(test1SizeVec)',...
-                'wrongInput');
-            test2SizeVec=[-1 2]; %#ok<NASGU>
-            self.runAndCheckError(...
-                'elltool.core.GenEllipsoid.fromRepMat(test2SizeVec)',...
-                'wrongInput');
-            test3SizeVec=[2;2]; %#ok<NASGU>
-            self.runAndCheckError(...
-                'elltool.core.GenEllipsoid.fromRepMat(test3SizeVec)',...
-                'wrongInput');
-            test4SizeVec=[2+2i,2]; %#ok<NASGU>
-            self.runAndCheckError(...
-                'elltool.core.GenEllipsoid.fromRepMat(test4SizeVec)',...
-                'wrongInput');
-            test5SizeVec=[2.5,5.2]; %#ok<NASGU>
-            self.runAndCheckError(...
-                'elltool.core.GenEllipsoid.fromRepMat(test5SizeVec)',...
-                'wrongInput');
+            testSizeVec={{1},{[-1 2]},{[2;2]},{[2+2i,2]},{[2.5,5.2]}}; 
+            arrayfun(@checkNegative,testSizeVec);
             %Check positive
-            test6SizeVec=[2,3,3,5];
-            test6EllArr=ellipsoid.fromRepMat(test6SizeVec);
-            isOk6Arr=test6EllArr.isEmpty();
-            mlunitext.assert(all(isOk6Arr(:)));
-            test7SizeVec=[2,3,3+1i*eps/10,5];
-            test7EllArr=ellipsoid.fromRepMat(test7SizeVec);
-            isOk7Arr=test7EllArr.isEmpty();
-            mlunitext.assert(all(isOk7Arr(:)));
-            test8centerVec=[4;5];
-            test8dVec=[10;11];
-            test8wMat=[1,2;3,4];
-            test8SizeVec=[5,4,3];
-            test8Ellipsoid=GenEllipsoid(test8centerVec,test8dVec,...
-                test8wMat);
-            res8EllArr=GenEllipsoid.fromRepMat(test8centerVec,test8dVec,...
-                test8wMat,test8SizeVec);
-            [isOkArr8,reportStr]=res8EllArr.isEqual(test8Ellipsoid);
-            mlunitext.assert(all(isOkArr8(:)),reportStr);
+            testSizeVec={[2,3,3,5],[2,3,3+1i*eps/10,5],[5,4,3]};
+            testArgsVec={{[1;1]},{[1;1]},{[10;11],[4;5],[1,2;3,4]}};
+            arrayfun(@checkPositive,testSizeVec,testArgsVec);
+            %
+            function checkPositive(testSizeVec,testArgs)
+                import elltool.core.GenEllipsoid;
+                testEllipsoid=GenEllipsoid(testArgs{1}{:});
+                resEllArr=GenEllipsoid.fromRepMat(testArgs{1}{:},testSizeVec{1});
+                [isOkArr,reportStr]=resEllArr.isEqual(testEllipsoid);
+                mlunitext.assert(all(isOkArr(:)),reportStr);
+            end
+            function checkNegative(testSizeVec) %#ok<INUSD>
+                self.runAndCheckError(...
+                'elltool.core.GenEllipsoid.fromRepMat(testSizeVec)',...
+                'wrongInput');
+            end
         end
     end
 end
