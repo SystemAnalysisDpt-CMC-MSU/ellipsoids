@@ -373,8 +373,26 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             shapeMat=self.eigvMat*self.diagMat*self.eigvMat.';
         end
     end
-    methods (Access = protected, Static)
-        SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
+    methods (Static)
+        function SComp=formCompStruct(SEll,SFieldNiceNames,...
+                absTol,isPropIncluded)
+            if (~isempty(SEll.QMat))
+                SComp.(SFieldNiceNames.QMat)=...
+                    gras.la.sqrtmpos(SEll.QMat, absTol);
+            else
+                SComp.(SFieldNiceNames.QMat)=[];
+            end
+            SComp.(SFieldNiceNames.centerVec)=SEll.centerVec;
+            if (~isempty(SEll.QInfMat))
+                SComp.(SFieldNiceNames.QInfMat)=...
+                    gras.la.sqrtmpos(SEll.QInfMat, absTol);
+            else
+                SComp.(SFieldNiceNames.shapeMat)=[];
+            end
+            if (isPropIncluded)
+                SComp.(SFieldNiceNames.absTol)=SEll.absTol;
+            end
+        end
     end
     methods (Static)
         function propNameVec=getPropList()

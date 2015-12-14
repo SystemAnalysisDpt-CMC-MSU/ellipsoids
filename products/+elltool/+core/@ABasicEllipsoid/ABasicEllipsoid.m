@@ -3,9 +3,6 @@ classdef ABasicEllipsoid < handle
         centerVec    
         absTol
     end
-    methods (Access = protected, Abstract, Static)
-        formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
-    end
     %
     methods (Access = protected)
         function [isEqualArr, reportStr] = isEqualInternal(ellFirstArr,...
@@ -30,7 +27,6 @@ classdef ABasicEllipsoid < handle
             secSizeVec = size(ellSecArr);
             isnFirstScalar=nFirstElems > 1;
             isnSecScalar=nSecElems > 1;
-            [~, tolVal] = ellFirstArr.getRelTol;
             [SEll1Array, SFieldNiceNames, ~] = ...
                 ellFirstArr.toStruct(isPropIncluded);
             SEll2Array = ellSecArr.toStruct(isPropIncluded);
@@ -59,7 +55,7 @@ classdef ABasicEllipsoid < handle
             function compare()
                 [isEqualArr, reportStr] =...
                     modgen.struct.structcomparevec(SEll1Array,...
-                    SEll2Array, tolVal);
+                    SEll2Array, absTol);
             end
         end
         %

@@ -106,7 +106,7 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             function binOperCheckRes(testEllArr,testVec,...
                     operation,expEllArr)
                 resEllArr=testEllArr.(operation)(testVec);
-                isTestMat=resEllArr==expEllArr;
+                isTestMat=isEqual(resEllArr,expEllArr);
                 mlunitext.assert(all(isTestMat(:)));
             end
             function binOperWithVecNegativeTest(operation)

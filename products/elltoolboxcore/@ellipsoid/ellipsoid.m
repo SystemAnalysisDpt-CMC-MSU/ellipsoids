@@ -352,7 +352,7 @@ classdef ellipsoid < elltool.core.AEllipsoid
         end
     end
     
-    methods (Access = protected, Static)
+    methods (Static)
         function SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
             if (~isempty(SEll.shapeMat))
                 SComp.(SFieldNiceNames.shapeMat) = gras.la.sqrtmpos(SEll.shapeMat, absTol);

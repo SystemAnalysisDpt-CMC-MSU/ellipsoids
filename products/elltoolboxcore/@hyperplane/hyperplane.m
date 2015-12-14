@@ -245,7 +245,7 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
             ellObj=hyperplane.empty(sizeVec);
         end
     end
-    methods (Access = protected, Static)
+    methods(Static)
         function SComp = formCompStruct(SHp, SFieldNiceNames, ~, isPropIncluded)
             SComp.(SFieldNiceNames.normal) = SHp.normal;
             SComp.(SFieldNiceNames.shift) = SHp.shift;
