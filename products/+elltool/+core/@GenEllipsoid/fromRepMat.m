@@ -91,33 +91,15 @@ function ellArr=fromRepMat(varargin)
 %
 import modgen.common.checkvar;
 import elltool.core.GenEllipsoid;
+import elltool.core.ABasicEllipsoid;
 %
 if nargin>4
-    indVec=[1:4,5:nargin];
+    indVec=[1:3,5:nargin];
     sizeVec=varargin{4};
 else
     sizeVec=varargin{nargin};
     indVec=1:nargin-1;
 end
 %
-if ~isa(sizeVec,'double')
-    modgen.common.throwerror('wrongInput','Size array is not double');
-end
-sizeVec=gras.la.trytreatasreal(sizeVec);
-checkvar(sizeVec,@(x)size(x,2)>1,'errorTag','wrongInput',...
-    'errorMessage','size vector must have at least two elements')
-checkvar(sizeVec,@(x)all(mod(x(:),1)==0)&&all(x(:)>0)...
-    &&(size(x,1)==1),'errorTag','wrongInput', ...
-    'errorMessage','size vector must contain positive integer values.');
-%
-nEllipsoids=prod(sizeVec);
-ellArr(nEllipsoids)=GenEllipsoid();
-% 
-ell=GenEllipsoid(varargin{indVec});
-arrayfun(@(x)makeEllipsoid(x),1:nEllipsoids);
-ellArr=reshape(ellArr,sizeVec);
-%
-function makeEllipsoid(index)
-    ellArr(index)=getCopy(ell);
-end
-end
+ellArr=ABasicEllipsoid.fromRepMatInternal(...
+    GenEllipsoid(varargin{indVec}),sizeVec);
