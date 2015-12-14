@@ -1376,7 +1376,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             ellMat(8) = ellipsoid(eye(3));
             ellMat(9) = ellipsoid(eye(5));
             copiedEllMat = ellMat.getCopy();
-            isEqualMat = copiedEllMat.isEqual(ellMat)
+            isEqualMat = copiedEllMat.isEqual(ellMat);
             isOk = all(isEqualMat(:));
             mlunitext.assert_equals(true, isOk);
             firstCutEllMat = ellMat(1 : 2, 1 : 2);

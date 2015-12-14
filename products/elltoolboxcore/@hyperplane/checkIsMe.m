@@ -18,4 +18,4 @@ function checkIsMe(ellArr,varargin)
 %             Faculty of Computational Mathematics
 %             and Computer Science,
 %             System Analysis Department 2012 $
-checkIsMeInternal('hyperplane',ellArr,varargin)
+hyperplane.checkIsMeInternal('hyperplane',ellArr,varargin)

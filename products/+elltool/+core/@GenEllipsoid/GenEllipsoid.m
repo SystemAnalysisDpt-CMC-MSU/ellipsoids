@@ -17,6 +17,9 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             elltool.core.GenEllipsoid.checkIsMe(ellArr,varargin)
         end
         copyEllObj=getSingleCopy(ellObj)
+        function ellObj=ellFactory(~)
+            ellObj=elltool.core.GenEllipsoid();
+        end
     end
     methods
         outEllArr = plus(varargin)

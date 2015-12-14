@@ -312,6 +312,9 @@ classdef ellipsoid < elltool.core.AEllipsoid
             ellipsoid.checkIsMe(ellArr,varargin)
         end
         copyEllObj=getSingleCopy(ellObj)
+        function ellObj=ellFactory(~)
+            ellObj=ellipsoid();
+        end
     end
     
     methods (Access=private)

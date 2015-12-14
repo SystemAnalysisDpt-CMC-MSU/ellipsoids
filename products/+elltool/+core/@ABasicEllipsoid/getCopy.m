@@ -40,7 +40,10 @@ if isempty(ellArr)
 elseif isscalar(ellArr)
     copyEllArr=getSingleCopy(ellArr);
 else
-    sizeCVec=num2cell(size(ellArr));
-    copyEllArr(sizeCVec{:})=getSingleCopy(ellArr(:));
+    sizeCVec = num2cell(size(ellArr));
+    copyEllArr(sizeCVec{:})=ellFactory(ellArr);
+    for iElem = 1:numel(ellArr)
+        copyEllArr(iElem)=getSingleCopy(ellArr(iElem));
+    end
 end
 end

@@ -22,4 +22,5 @@ function checkIsMe(ellArr,varargin)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2015 $
 %
-checkIsMeInternal('ellipsoid',ellArr,varargin)
+
+ellipsoid.checkIsMeInternal('ellipsoid',ellArr,varargin)
