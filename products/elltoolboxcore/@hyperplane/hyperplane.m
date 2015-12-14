@@ -229,6 +229,9 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
     methods (Static)
         hpArr = fromRepMat(varargin)
         hpObj = fromStruct(SHpObj)
+        function propNameVec=getPropList()
+            propNameVec={'absTol','relTol'};
+        end
     end
     methods (Access=protected,Static)
         checkIsMe(ellArr,varargin)

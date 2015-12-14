@@ -78,9 +78,9 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             self.plusMinusTest('minus',testResVec);
         end
         %
-        function plusMinusTest(self,operation,testResVec)
+        function plusMinusTest(self,opName,testResVec)
             %Chech negative
-            binOperWithVecNegativeTest(operation);
+            binOperWithVecNegativeTest(opName);
             %Chech positive
             import elltool.core.GenEllipsoid;
             test1EllObj=GenEllipsoid(1,5);
@@ -88,9 +88,9 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             test1Vec=5;
             exp1EllObj=testResVec(1);
             exp2EllObj=testResVec(2);
-            binOperCheckRes(test1EllObj,test1Vec,operation,exp1EllObj);
+            binOperCheckRes(test1EllObj,test1Vec,opName,exp1EllObj);
             binOperCheckRes([test1EllObj,test2EllObj],test1Vec,...
-                operation,[exp1EllObj,exp2EllObj]);
+                opName,[exp1EllObj,exp2EllObj]);
             %
             test1EllObj=GenEllipsoid([1;1],[5;6],[1,2;3,4]);
             test2EllObj=GenEllipsoid([-10;-5],[Inf;1],[0.1,0.1;0.2,0]);
@@ -99,9 +99,9 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             exp1EllObj=testResVec(3);
             exp2EllObj=testResVec(4);
             exp3EllObj=testResVec(5);
-            binOperCheckRes(test1EllObj,test1Vec,operation,exp1EllObj);
+            binOperCheckRes(test1EllObj,test1Vec,opName,exp1EllObj);
             binOperCheckRes([test1EllObj,test2EllObj,test3EllObj],...
-                test1Vec,operation,[exp1EllObj,exp2EllObj,exp3EllObj]);
+                test1Vec,opName,[exp1EllObj,exp2EllObj,exp3EllObj]);
             %
             function binOperCheckRes(testEllArr,testVec,...
                     operation,expEllArr)
@@ -148,9 +148,9 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 GenEllipsoid((0:0.1:1.4).',diag(1:15)),...
                 GenEllipsoid(),GenEllipsoid(zeros(40,40)),...
                 GenEllipsoid(ones(100,1),Inf*ones(100,1))];
-            testResVec=testEllVec.isEmpty();
-            expResVec=[false,false,true,true,false];
-            mlunitext.assert(expResVec==testResVec);
+            isTestResVec=testEllVec.isEmpty();
+            isExpResVec=[false,false,true,true,false];
+            mlunitext.assert(isExpResVec==isTestResVec);
         end
         %
         function testMinEig(self)
@@ -194,8 +194,8 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 GenEllipsoid(ones(100,1), Inf*ones(100, 1))];
             test5ResVec=test5EllVec.(operation)();
             exp5ResVec=testResVec(5:9);
-            isTestMat=exp5ResVec==test5ResVec;
-            mlunitext.assert(all(isTestMat(:)));
+            isTestResVec=exp5ResVec==test5ResVec;
+            mlunitext.assert(all(isTestResVec(:)));
             %
             function negativeEig(func) %#ok<INUSD>
                 import elltool.core.GenEllipsoid;
@@ -206,27 +206,25 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
         end
         %
         function testToStruct(~)
-            import elltool.core.GenEllipsoid;
-            import modgen.struct.structcompare;
-            test1Ellipsoid=GenEllipsoid(1);
-            SExp1Res=struct('QMat',1,'centerVec',0,'QInfMat',0);
-            STest1Res=test1Ellipsoid.toStruct();
-            mlunitext.assert(structcompare(STest1Res,SExp1Res));
-            test2Ellipsoid=GenEllipsoid([1;1],[100,0;0,100]);
-            SExp2Res=struct('QMat',[100,0;0,100],'centerVec',[1;1],...
-                'QInfMat',zeros(2));
-            STest2Res=test2Ellipsoid.toStruct();
-            mlunitext.assert(structcompare(STest2Res,SExp2Res));
-            test3Ellipsoid=GenEllipsoid([1;1],[5;1],[1,2;3,4]);
-            SExp3Res=struct('QMat',[9,23;23,61],'centerVec',[1;1],...
-                'QInfMat',zeros(2));
-            STest3Res=test3Ellipsoid.toStruct();
-            mlunitext.assert(structcompare(STest3Res,SExp3Res,1e-09));
-            test4Ellipsoid=GenEllipsoid((1:10)',Inf*ones(10,1),ones(10));
-            SExp4Res=struct('QMat',zeros(10),'centerVec',(1:10)',...
-                'QInfMat',0.1*ones(10));
-            STest4Res=test4Ellipsoid.toStruct();
-            mlunitext.assert(structcompare(STest4Res,SExp4Res,1e-09));
+            testEllVec=[GenEllipsoid(1),...
+                GenEllipsoid([1;1],[100,0;0,100]),...
+                GenEllipsoid([1;1],[5;1],[1,2;3,4]),...
+                GenEllipsoid((1:10)',Inf*ones(10,1),ones(10))];
+            SExpResVec=[struct('QMat',1,'centerVec',0,'QInfMat',0),...
+                struct('QMat',[100,0;0,100],'centerVec',[1;1],...
+                'QInfMat',zeros(2)),...
+                struct('QMat',[9,23;23,61],'centerVec',[1;1],...
+                'QInfMat',zeros(2)),...
+                struct('QMat',zeros(10),'centerVec',(1:10)',...
+                'QInfMat',0.1*ones(10))];
+            arrayfun(@singleTestToStruct,testEllVec,SExpResVec);
+            
+            function singleTestToStruct(testEllObj,SExpRes)
+                import elltool.core.GenEllipsoid;
+                import modgen.struct.structcompare;
+                STestRes=testEllObj.toStruct();
+                mlunitext.assert(structcompare(STestRes,SExpRes,1e-09));
+            end
         end
         %
         function testFromRepMat(self)
@@ -269,8 +267,8 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 test8wMat);
             res8EllArr=GenEllipsoid.fromRepMat(test8centerVec,test8dVec,...
                 test8wMat,test8SizeVec);
-            isOkArr8=eq(res8EllArr,test8Ellipsoid);
-            mlunitext.assert(all(isOkArr8(:)));
+            [isOkArr8,reportStr]=res8EllArr.isEqual(test8Ellipsoid);
+            mlunitext.assert(all(isOkArr8(:)),reportStr);
         end
     end
 end

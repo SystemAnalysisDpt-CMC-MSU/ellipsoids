@@ -1,4 +1,8 @@
 classdef ABasicEllipsoid < handle
+    properties(Access=protected)
+        centerVec    
+        absTol
+    end
     methods (Access = protected, Abstract, Static)
         formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
     end
@@ -21,7 +25,7 @@ classdef ABasicEllipsoid < handle
                 throwerror('wrongInput:emptyArray',...
                     'input ellipsoidal arrays should be empty at the same time');
             end
-            [~, absTol] = ellFirstArr.getAbsTol;
+            [~, absTol]=ellFirstArr.getAbsTol();
             firstSizeVec = size(ellFirstArr);
             secSizeVec = size(ellSecArr);
             isnFirstScalar=nFirstElems > 1;
@@ -60,6 +64,7 @@ classdef ABasicEllipsoid < handle
         end
         %
         polar=getScalarPolarInternal(self, isRobustMethod)
+        [propArr,propVal]=getProperty(ellArr,propName,fPropFun)
     end
     methods (Static)
         checkIsMeInternal(objType,ellArr,varargin)
@@ -70,6 +75,7 @@ classdef ABasicEllipsoid < handle
         ellObj=ellFactory(self)
     end
     methods 
+        [absTolArr, absTolVal]=getAbsTol(ellArr, varargin)
         copyEllArr=getCopy(ellArr)
         isPositiveArr=isEmpty(myEllArr)
     end

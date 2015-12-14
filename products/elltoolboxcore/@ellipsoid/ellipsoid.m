@@ -284,6 +284,10 @@ classdef ellipsoid < elltool.core.AEllipsoid
     end
     
     methods(Static)
+        function propNameVec=getPropList()
+            propNameVec={'absTol','relTol','nPlot2dPoints',...
+                'nPlot3dPoints','nTimeGridPoints'};
+        end
         ellArr = fromRepMat(varargin)
         ellArr = fromStruct(SEllArr)
     end
@@ -299,7 +303,6 @@ classdef ellipsoid < elltool.core.AEllipsoid
         [ bpMat, fMat] = ellbndr_2dmat(nPoints, cenVec, qMat,absTol)
     end
     methods(Access = private)
-        [propMat, propVal] = getProperty(hplaneMat,propName, fPropFun)
         [bpMat, fVec] = getGridByFactor(ellObj,factorVec)
         checkDoesContainArgs(ell,poly)
         doesContain = doesContainPoly(ellArr,polyhedronObj,varagin)

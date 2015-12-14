@@ -6,9 +6,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         diagMat
         eigvMat
     end
-    properties (Constant,GetAccess = private)
-        CHECK_TOL=1e-09;
-    end
     methods (Access=protected,Static)
         checkIsMe(ellArr,varargin)
     end
@@ -41,7 +38,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             %        1
             %
             import elltool.core.GenEllipsoid;
-            absTol=GenEllipsoid.getCheckTol();
+            absTol=GenEllipsoid.getAbsTol();
             eigv1Mat=ellObj1.getEigvMat();
             eigv2Mat=ellObj2.getEigvMat();
             diag1Vec=diag(ellObj1.getDiagMat());
@@ -158,7 +155,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             import gras.la.ismatsymm;
             import gras.la.ismatposdef;
             %
-            absTol=ellObj.CHECK_TOL;
+            ellObj.absTol=1e-09;
+            absTol=ellObj.absTol;
             %
             nInput=nargin;
             if  nInput>3
@@ -379,17 +377,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
     end
     methods (Static)
-        function tol=getCheckTol()
-            % Example:
-            %   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
-            %   ellObj.getCheckTol()
-            %
-            %   ans =
-            %
-            %      1.0000e-09
-            %
-            import elltool.core.GenEllipsoid;
-            tol=GenEllipsoid.CHECK_TOL;
+        function propNameVec=getPropList()
+            propNameVec={'absTol'};
         end
         ellArr=fromRepMat(varargin)
         ellArr=fromStruct(SEllArr)
