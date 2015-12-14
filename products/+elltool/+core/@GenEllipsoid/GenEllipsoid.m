@@ -19,8 +19,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         end
     end
     methods
-        minEigArr = mineig(inpEllArr)
-        maxEigArr = maxeig(inpEllArr)
         [ellCenterVec, ellDiagMat, ellEigvMat] = parameters(ell)
         [SDataArr, SFieldNiceNames, SFieldDescr] = ...
             toStruct(ellArr, isPropIncluded)

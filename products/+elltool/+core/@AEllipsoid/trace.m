@@ -24,14 +24,11 @@ function trArr = trace(ellArr)
 % 
 %       5     2
 %       
-% $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California
-%              2004-2008 $
-%
-% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $   
+% $Date: Dec-2015$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%			Faculty of Computational Mathematics and Computer Science,
+%			System Analysis Department 2015 $
 %
 checkIsMeVirtual(ellArr);
 modgen.common.checkvar(ellArr,'~any(x(:).isEmpty())',...

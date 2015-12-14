@@ -104,32 +104,32 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 test1Vec,opName,[exp1EllObj,exp2EllObj,exp3EllObj]);
             %
             function binOperCheckRes(testEllArr,testVec,...
-                    operation,expEllArr)
-                resEllArr=testEllArr.(operation)(testVec);
+                    opName,expEllArr)
+                resEllArr=testEllArr.(opName)(testVec);
                 isTestMat=isEqual(resEllArr,expEllArr);
                 mlunitext.assert(all(isTestMat(:)));
             end
-            function binOperWithVecNegativeTest(operation)
+            function binOperWithVecNegativeTest(opName)
                 import elltool.core.GenEllipsoid;
                 test1Ellipsoid=GenEllipsoid(1,5);
                 test2Ellipsoid=GenEllipsoid([1;2],[5 1;1 5]);
                 %Check wrong input processing
-                checkWrongInput('v',test1Ellipsoid,operation);
-                checkWrongInput(test2Ellipsoid,test1Ellipsoid,operation);
-                self.runAndCheckError('test1Ellipsoid.(operation)()',...
+                checkWrongInput('v',test1Ellipsoid,opName);
+                checkWrongInput(test2Ellipsoid,test1Ellipsoid,opName);
+                self.runAndCheckError('test1Ellipsoid.(opName)()',...
                     'wrongInput');
-                checkWrongInput(test1Ellipsoid,ellipsoid(1,1),operation);
+                checkWrongInput(test1Ellipsoid,ellipsoid(1,1),opName);
                 %Check different dimensions
-                checkWrongDimensions([1;1],test1Ellipsoid,operation);
-                checkWrongDimensions(1,test2Ellipsoid,operation);
-                checkWrongDimensions([1;1;1],test2Ellipsoid,operation);
+                checkWrongDimensions([1;1],test1Ellipsoid,opName);
+                checkWrongDimensions(1,test2Ellipsoid,opName);
+                checkWrongDimensions([1;1;1],test2Ellipsoid,opName);
                 %
-                function checkWrongInput(testVec,testEllipsoid,operation) %#ok<INUSD>
-                    self.runAndCheckError('testEllipsoid.(operation)(testVec)',...
+                function checkWrongInput(testVec,testEllipsoid,opName) %#ok<INUSD>
+                    self.runAndCheckError('testEllipsoid.(opName)(testVec)',...
                         'wrongInput');
                 end
-                function checkWrongDimensions(testVec,testEllipsoid,operation) %#ok<INUSD>
-                    self.runAndCheckError('testEllipsoid.(operation)(testVec)',...
+                function checkWrongDimensions(testVec,testEllipsoid,opName) %#ok<INUSD>
+                    self.runAndCheckError('testEllipsoid.(opName)(testVec)',...
                         'wrongDimensions');
                 end
             end
@@ -155,36 +155,37 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
         %
         function testMinEig(self)
             test3Mat=[1 1 -1; 1 4 -4; -1 -4 9];
-            testResVec=[1.5,Inf,min(eig(test3Mat)),0,[1,12,5,1,Inf]];
+            testResVec=[1.5,Inf,min(eig(test3Mat)),Inf,[1,12,5,1,NaN]];
             self.minMaxEig('mineig',testResVec);
         end
         function testMaxEig(self)
             test3Mat=[1 1 -1; 1 4 -4; -1 -4 9];
-            testResVec=[5,Inf,max(eig(test3Mat)),Inf,[1,100,205,1,Inf]];
+            testResVec=[5,Inf,max(eig(test3Mat)),Inf,[1,100,205,1,NaN]];
             self.minMaxEig('maxeig',testResVec);
         end
         %
-        function minMaxEig(self,operation,testResVec)
+        function minMaxEig(self,opName,testResVec)
             import elltool.core.GenEllipsoid;
+            eps=GenEllipsoid().getAbsTol();
             %Check negative
-            negativeEig(operation);
+            negativeEig(opName);
             %Check positive
             test1Ellipsoid=GenEllipsoid(diag(5:-0.1:1.5));
-            test1Res=test1Ellipsoid.(operation)();
+            test1Res=test1Ellipsoid.(opName)();
             exp1Res=testResVec(1);
             mlunitext.assert(exp1Res==test1Res);
             test2Ellipsoid=GenEllipsoid(Inf);
             exp2Res=testResVec(2);
-            mlunitext.assert(test2Ellipsoid.(operation)()==exp2Res);
+            mlunitext.assert(test2Ellipsoid.(opName)()==exp2Res);
             %
             test3Mat=[1 1 -1; 1 4 -4; -1 -4 9];
             test3Ellipsoid=GenEllipsoid(test3Mat);
-            test3Res=test3Ellipsoid.(operation)();
+            test3Res=test3Ellipsoid.(opName)();
             exp3Res=testResVec(3);
             mlunitext.assert(exp3Res-test3Res<=eps);
             %
             test4Ellipsoid=GenEllipsoid([-10;-5],[Inf;1],[1,1;1,1]);
-            test4Res=test4Ellipsoid.(operation)();
+            test4Res=test4Ellipsoid.(opName)();
             exp4Res=testResVec(4);
             mlunitext.assert(exp4Res==test4Res);
             %Check arrays
@@ -192,16 +193,16 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 GenEllipsoid((-100:100)', diag(5:205)),...
                 GenEllipsoid((0:100)', eye(101)),...
                 GenEllipsoid(ones(100,1), Inf*ones(100, 1))];
-            test5ResVec=test5EllVec.(operation)();
+            test5ResVec=test5EllVec.(opName)();
             exp5ResVec=testResVec(5:9);
-            isTestResVec=exp5ResVec==test5ResVec;
+            isTestResVec=isequaln(exp5ResVec,test5ResVec);
             mlunitext.assert(all(isTestResVec(:)));
             %
             function negativeEig(func) %#ok<INUSD>
                 import elltool.core.GenEllipsoid;
                 testEllipsoid=GenEllipsoid(); %#ok<NASGU>
                 self.runAndCheckError('testEllipsoid.(func)',...
-                    'wrongInput:emptyGenEllipsoid');
+                    'wrongInput');
             end
         end
         %
