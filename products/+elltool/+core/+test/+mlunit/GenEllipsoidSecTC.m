@@ -50,14 +50,17 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             exp1EigvMat=eye(3);
             exp2DiagMat=diag([0.1,1,4]);
             exp2EigvMat=[0,-1,0;0,0,-1;-1,0,0];
-            isTestMat=[isequal(test1DiagMat,exp1DiagMat),...
-                isequal(test1CenVec,expCenVec),...
-                isequal(test1EigvMat,exp1EigvMat);
-                isequal(test2DiagMat,exp2DiagMat),...
-                isequal(test2CenVec,expCenVec),...
-                isequal(test2EigvMat,exp2EigvMat)];
-            isTestRes=all(isTestMat(:));
-            mlunitext.assert(isTestRes);
+            test1SRes=struct('diagMat',test1DiagMat,...
+                'eigvMat',test1EigvMat,'centerVec',test1CenVec);
+            test2SRes=struct('diagMat',test2DiagMat,...
+                'eigvMat',test2EigvMat,'centerVec',test2CenVec);
+            exp1SRes=struct('diagMat',exp1DiagMat,...
+                'eigvMat',exp1EigvMat,'centerVec',expCenVec);
+            exp2SRes=struct('diagMat',exp2DiagMat,...
+                'eigvMat',exp2EigvMat,'centerVec',expCenVec);
+            import modgen.struct.structcompare;
+            mlunitext.assert(structcompare(test1SRes,exp1SRes,1e-09));
+            mlunitext.assert(structcompare(test2SRes,exp2SRes,1e-09));
         end
         %
         function testPlus(self)
@@ -109,27 +112,29 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 isTestMat=isEqual(resEllArr,expEllArr);
                 mlunitext.assert(all(isTestMat(:)));
             end
-            function binOperWithVecNegativeTest(opName)
+            function binOperWithVecNegativeTest(opName) %#ok<INUSD>
                 import elltool.core.GenEllipsoid;
-                test1Ellipsoid=GenEllipsoid(1,5);
-                test2Ellipsoid=GenEllipsoid([1;2],[5 1;1 5]);
+                test1Ell=GenEllipsoid(1,5);
+                test2Ell=GenEllipsoid([1;2],[5 1;1 5]); 
                 %Check wrong input processing
-                checkWrongInput('v',test1Ellipsoid,opName);
-                checkWrongInput(test2Ellipsoid,test1Ellipsoid,opName);
-                self.runAndCheckError('test1Ellipsoid.(opName)()',...
+                self.runAndCheckError('test1Ell.(opName)()',...
                     'wrongInput');
-                checkWrongInput(test1Ellipsoid,ellipsoid(1,1),opName);
+                testVec={'v',test2Ell,test1Ell};
+                testEllVec={test1Ell,test1Ell,ellipsoid(1,1)};
+                arrayfun(@checkWrongInput,testVec,testEllVec);
                 %Check different dimensions
-                checkWrongDimensions([1;1],test1Ellipsoid,opName);
-                checkWrongDimensions(1,test2Ellipsoid,opName);
-                checkWrongDimensions([1;1;1],test2Ellipsoid,opName);
+                testCVec={[1;1],1,[1;1;1]};
+                testEllVec={test1Ell,test2Ell,test2Ell};
+                arrayfun(@checkWrongDimensions,testCVec,testEllVec);
                 %
-                function checkWrongInput(testVec,testEllipsoid,opName) %#ok<INUSD>
-                    self.runAndCheckError('testEllipsoid.(opName)(testVec)',...
+                function checkWrongInput(testVec,testEllipsoid) %#ok<INUSD>
+                    self.runAndCheckError(...
+                        'testEllipsoid{:}.(opName)(testVec)',...
                         'wrongInput');
                 end
-                function checkWrongDimensions(testVec,testEllipsoid,opName) %#ok<INUSD>
-                    self.runAndCheckError('testEllipsoid.(opName)(testVec)',...
+                function checkWrongDimensions(testVec,testEllipsoid) %#ok<INUSD>
+                    self.runAndCheckError(...
+                        'testEllipsoid{:}.(opName)(testVec{:})',...
                         'wrongDimensions');
                 end
             end
