@@ -1,5 +1,5 @@
 classdef ABasicEllipsoid < handle
-    properties(Access=protected)
+    properties (Access=protected)
         centerVec    
         absTol
         relTol
@@ -7,13 +7,13 @@ classdef ABasicEllipsoid < handle
         nPlot3dPoints
     end
     %
-    methods (Access = protected)
-        [isEqualArr, reportStr] = isEqualInternal(ellFirstArr,...
-            ellSecArr, isPropIncluded)
-        polar=getScalarPolarInternal(self, isRobustMethod)
+    methods(Access=protected)
+        [isEqualArr,reportStr]=isEqualInternal(ellFirstArr,...
+            ellSecArr,isPropIncluded)
+        polar=getScalarPolarInternal(self,isRobustMethod)
         [propArr,propVal]=getProperty(ellArr,propName,fPropFun)
     end
-    methods (Static)
+    methods(Static)
         ellArr=fromRepMatInternal(ellObj,sizeVec)
         checkIsMeInternal(objType,ellArr,varargin)
     end
