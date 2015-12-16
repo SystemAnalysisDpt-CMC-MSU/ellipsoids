@@ -28,7 +28,7 @@ import elltool.core.GenEllipsoid;
 import elltool.conf.Properties;
 import modgen.common.checkmultvar;
 import modgen.common.throwerror;
-%
+%   
 if nargin~=2
     throwerror('wrongInput','two arguments must be')
 end
@@ -39,5 +39,5 @@ checkmultvar('isscalar(x1)&&isscalar(x2)&&(dimension(x1)==dimension(x2))',...
     'errorTag','wrongInput','errorMessage',...
     'both arguments must be single ellipsoids of the same dimension.');
 nDimSpace=length(diag(ellObj1.diagMat));
-checkTol=ellObj1.getCheckTol();
+checkTol=ellObj1.getAbsTol();
 isPositive=ellObj1.checkBigger(ellObj1,ellObj2,nDimSpace,checkTol);

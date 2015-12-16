@@ -284,5 +284,34 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 mlunitext.assert(isEqual(resEllArr,expEllArr));
             end
         end
+        %
+        function testGetShape(self) %#ok<MANU>
+            ellMat=eye(2);
+            testEll=elltool.core.GenEllipsoid(ellMat);
+            testEllArr=testEll.repMat([2 2 3 4]);
+            testMat=[2 0;0 2];
+            resEllArr=testEllArr.getShape(testMat);
+            expEll=elltool.core.GenEllipsoid([4;4]);
+            expEllArr=expEll.repMat([2 2 3 4]);
+            mlunitext.assert(isEqual(resEllArr,expEllArr));
+        end
+        %
+        function testIsBigger(self)
+            import elltool.core.GenEllipsoid;
+            testEll=GenEllipsoid([2;1]);
+            %Check negative
+            checkNegative(testEll);
+            checkNegative(GenEllipsoid(),testEll);
+            %
+            function checkNegative(test1Ell,test2Ell) %#ok<INUSD>
+                if nargin<2
+                    self.runAndCheckError(...
+                        'test1Ell.isbigger()','wrongInput');
+                else
+                    self.runAndCheckError(...
+                        'test1Ell.isbigger(test2Ell)','wrongInput');
+                end
+            end
+        end
     end
 end

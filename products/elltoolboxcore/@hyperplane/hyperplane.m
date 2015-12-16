@@ -239,8 +239,8 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
             hyperplane.checkIsMe(ellArr,varargin)
         end
         copyEllObj=getSingleCopy(ellObj)
-        function ellObj=ellFactory(sizeVec)
-            ellObj=hyperplane.empty(sizeVec);
+        function ellObj=ellFactory(self) %#ok<MANU>
+            ellObj=hyperplane;
         end
     end
     methods(Static)
