@@ -23,7 +23,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         [SDataArr, SFieldNiceNames, SFieldDescr] = ...
             toStruct(ellArr, isPropIncluded)
         ellArr = shape(ellArr, modMat)
-        outEllArr = getShape(ellArr, modMat)
         function isOk=getIsGoodDir(ellObj1,ellObj2,curDirVec)
             % Example:
             %   firstEllObj = elltool.core.GenEllipsoid([10;0], 2*eye(2));

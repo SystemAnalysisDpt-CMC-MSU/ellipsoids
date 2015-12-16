@@ -76,6 +76,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         ellArr=fromStruct(SEllArr)
     end
     methods
+        outEllArr=getShape(ellArr,modMat)
         minEigArr=mineig(inpEllArr)
         maxEigArr=maxeig(inpEllArr)
         outEllArr=plus(varargin)
