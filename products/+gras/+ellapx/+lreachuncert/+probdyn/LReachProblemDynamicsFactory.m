@@ -116,8 +116,9 @@ classdef LReachProblemDynamicsFactory<handle
             end
         end
         %
-        function pDynamicsObject=createByParams(aCMat,bCMat,pCMat,pCVec,cCMat,...
-                qCMat,qCVec,x0Mat,x0Vec,timeLimVec,relTol,absTol,isDiscrete)
+        function pDynamicsObject=createByParams(aCMat,bCMat,pCMat,pCVec,...
+                cCMat,qCMat,qCVec,x0Mat,x0Vec,timeLimVec,relTol,absTol,...
+                isDiscrete)
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
             if nargin<13
                 isDiscrete = false;
