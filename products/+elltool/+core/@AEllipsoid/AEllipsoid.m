@@ -65,6 +65,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
             modgen.common.checkvar(self,'isscalar(x)',...
                 'errorMessage',errMsg);
         end
+        isModScal=shapeInternal(ellArr, modMat)
     end
     methods (Abstract)
         shapeMat=getShapeMat(self)

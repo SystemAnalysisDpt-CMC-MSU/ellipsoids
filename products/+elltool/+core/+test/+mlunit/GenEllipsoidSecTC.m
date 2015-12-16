@@ -119,13 +119,13 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 %Check wrong input processing
                 self.runAndCheckError('test1Ell.(opName)()',...
                     'wrongInput');
-                testVec={'v',test2Ell,test1Ell};
-                testEllVec={test1Ell,test1Ell,ellipsoid(1,1)};
-                arrayfun(@checkWrongInput,testVec,testEllVec);
+                testCVec={'v',test2Ell,test1Ell};
+                testEllCVec={test1Ell,test1Ell,ellipsoid(1,1)};
+                arrayfun(@checkWrongInput,testCVec,testEllCVec);
                 %Check different dimensions
                 testCVec={[1;1],1,[1;1;1]};
-                testEllVec={test1Ell,test2Ell,test2Ell};
-                arrayfun(@checkWrongDimensions,testCVec,testEllVec);
+                testEllCVec={test1Ell,test2Ell,test2Ell};
+                arrayfun(@checkWrongDimensions,testCVec,testEllCVec);
                 %
                 function checkWrongInput(testVec,testEllipsoid) %#ok<INUSD>
                     self.runAndCheckError(...
@@ -238,9 +238,9 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             testSizeVec={{1},{[-1 2]},{[2;2]},{[2+2i,2]},{[2.5,5.2]}}; 
             arrayfun(@checkNegative,testSizeVec);
             %Check positive
-            testSizeVec={[2,3,3,5],[2,3,3+1i*eps/10,5],[5,4,3]};
-            testArgsVec={{[1;1]},{[1;1]},{[10;11],[4;5],[1,2;3,4]}};
-            arrayfun(@checkPositive,testSizeVec,testArgsVec);
+            testSizeCVec={[2,3,3,5],[2,3,3+1i*eps/10,5],[5,4,3]};
+            testArgsCVec={{[1;1]},{[1;1]},{[10;11],[4;5],[1,2;3,4]}};
+            arrayfun(@checkPositive,testSizeCVec,testArgsCVec);
             %
             function checkPositive(testSizeVec,testArgs)
                 import elltool.core.GenEllipsoid;
@@ -253,6 +253,35 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 self.runAndCheckError(...
                 'elltool.core.GenEllipsoid.fromRepMat(testSizeVec)',...
                 'wrongInput');
+            end
+        end
+        %
+        function testShape(self)
+            %Check negative
+            import elltool.core.GenEllipsoid;
+            testEll=GenEllipsoid([-2;-1],[4,-1;-1,1]);
+            testModMatCVec={1,[1;1]};
+            testEllArrCVec={testEll,testEll};
+            cellfun(@checkNegative,testModMatCVec,testEllArrCVec);
+            %CheckPositive
+            test1Ell=GenEllipsoid([-2;-1],[4;Inf]);
+            testModMatCVec={[1,2;2,1],[2,0;0,0]};
+            testEllArrCVec={testEll,test1Ell};
+            expEllArrCVec={GenEllipsoid([-2;-1],[4,5;5,13]),...
+                GenEllipsoid([-2;-1],[16;0])};
+            cellfun(@checkPositive,testModMatCVec,testEllArrCVec,...
+                expEllArrCVec);
+            %
+            function checkNegative(testModMat,testEllArr) %#ok<INUSD>
+                self.runAndCheckError(...
+                'testEllArr.shape(testModMat)',...
+                'wrongInput');
+            end
+            %
+            function checkPositive(testModMat,testEllArr,...
+                    expEllArr)
+                resEllArr=testEllArr.shape(testModMat);
+                mlunitext.assert(isEqual(resEllArr,expEllArr));
             end
         end
     end

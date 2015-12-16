@@ -1,7 +1,7 @@
 function ellArr = shape(ellArr, modMat)
 %
 % SHAPE - modifies the shape matrix of the GenEllipsoid without
-%	changing its center. 
+%	changing its center.
 %
 %	modEllArr = SHAPE(ellArr, modMat) Modifies the shape matrices of
 %		the GenEllipsoids in the ellipsoidal array ellArr. The centers
@@ -23,9 +23,9 @@ function ellArr = shape(ellArr, modMat)
 %	ellObj = GenEllipsoid([-2; -1], [4 -1; -1 1]);
 %	tempMat = [0 1; -1 0];
 %	outEllObj = shape(ellObj, tempMat)
-%	outEllObj = 
+%	outEllObj =
 %
-%		|    
+%		|
 %		|-- centerVec : [-2 -1]
 %		|               -----
 %		|------- QMat : |1|1|
@@ -36,30 +36,17 @@ function ellArr = shape(ellArr, modMat)
 %		|               |0|0|
 %		|               -----
 %
-% $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $   
+% $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $
 % $Date: Dec-2015$
 % $Copyright: Moscow State University,
 %			Faculty of Computational Mathematics and Computer Science,
 %			System Analysis Department 2015 $
 %
-import elltool.core.GenEllipsoid;
-GenEllipsoid.checkIsMe(ellArr);
-modgen.common.checkvar(modMat,@(x)isa(x,'double'),...
-    'errorMessage','second input argument must be double');   
-isModScal=isscalar(modMat);
-if isModScal
-   modMatSq=modMat*modMat;
-else
-    [nRows,nDim]=size(modMat);
-    dimArr=dimension(ellArr);
-    modgen.common.checkmultvar('(x1==x2)&&all(x3(:)==x2)',...
-        3,nRows,nDim,dimArr,'errorMessage',...
-        'input matrix not square or dimensions do not match');
-end
+isModScal=shapeInternal(ellArr,modMat);
 arrayfun(@(x)fSingleShape(x),ellArr);
     function fSingleShape(ellObj)
         if isModScal
-            eigvMat=modMatSq*ellObj.eigvMat;
+            eigvMat=modMat*modMat*ellObj.eigvMat;
         else
             eigvMat=modMat*ellObj.eigvMat;
         end
