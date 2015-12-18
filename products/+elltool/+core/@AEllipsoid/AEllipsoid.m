@@ -7,7 +7,6 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         centerVecVec=getCenterVec(self)
     end
     methods(Access=protected)
-        checkIfScalar(self,errMsg)
         isModScal=shapeInternal(ellArr,modMat)
     end
     methods(Abstract)
@@ -20,6 +19,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         ellArr=fromStruct(SEllArr)
     end
     methods
+        [dimArr,rankArr]=dimension(myEllArr)
         outEllArr=getShape(ellArr,modMat)
         minEigArr=mineig(inpEllArr)
         maxEigArr=maxeig(inpEllArr)

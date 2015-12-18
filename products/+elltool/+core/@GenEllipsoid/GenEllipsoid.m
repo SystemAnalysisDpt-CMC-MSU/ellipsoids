@@ -322,18 +322,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         end
     end
     methods
-        function cVec=getCenter(self)
-            % Example:
-            %   ellObj=elltool.core.GenEllipsoid([5;2],eye(2),[1 3; 4 5]);
-            %   ellObj.getCenter()
-            %
-            %   ans =
-            %
-            %        5
-            %        2
-            %
-            cVec=self.centerVec;
-        end
         function eigMat=getEigvMat(self)
             % Example:
             %   ellObj=elltool.core.GenEllipsoid([5;2],eye(2),[1 3; 4 5]);

@@ -260,7 +260,7 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             %Check negative
             import elltool.core.GenEllipsoid;
             testEll=GenEllipsoid([-2;-1],[4,-1;-1,1]);
-            testModMatCVec={1,[1;1]};
+            testModMatCVec={[1;1],[1,1,1]};
             testEllArrCVec={testEll,testEll};
             cellfun(@checkNegative,testModMatCVec,testEllArrCVec);
             %CheckPositive

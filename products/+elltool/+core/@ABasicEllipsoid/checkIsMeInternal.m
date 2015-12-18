@@ -19,14 +19,14 @@ function checkIsMeInternal(objType,ellArr,varargin)
 %			Faculty of Computational Mathematics and Computer Science,
 %			System Analysis Department 2015 $
 %
-if nargin == 2
-    modgen.common.checkvar(ellArr,@(x) isa(x,objType),...
+if nargin==2
+    modgen.common.checkvar(ellArr,@(x)isa(x,objType),...
         'errorTag','wrongInput',...
         'errorMessage',strcat('input argument must be ',objType));
 elseif nargin==3
-    modgen.common.checkvar(ellArr,@(x) isa(x,objType),...
+    modgen.common.checkvar(ellArr,@(x)isa(x,objType),...
         'errorTag','wrongInput','errorMessage',...
-        [varargin{1}, strcat(' input argument must be ',objType)]);
+        [varargin{1},strcat(' input argument must be ',objType)]);
 else
-    modgen.common.checkvar(ellArr,@(x) isa(x,objType),varargin{:});
+    modgen.common.checkvar(ellArr,@(x)isa(x,objType),varargin{:});
 end

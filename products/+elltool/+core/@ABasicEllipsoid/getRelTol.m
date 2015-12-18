@@ -44,4 +44,4 @@ function [relTolArr, relTolVal] = getRelTol(ellArr, varargin)
 %             and Computer Science,
 %             System Analysis Department 2013 $  
 %
-[relTolArr, relTolVal] = ellArr.getProperty('relTol',varargin{:});
+[relTolArr,relTolVal]=ellArr.getProperty('relTol',varargin{:});

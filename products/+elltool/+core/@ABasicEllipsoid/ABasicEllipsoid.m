@@ -7,7 +7,11 @@ classdef ABasicEllipsoid < handle
         nPlot3dPoints
     end
     %
+    methods(Abstract)
+        [dimArr,rankArr]=dimension(myEllArr)
+    end
     methods(Access=protected)
+        checkIfScalar(self,errMsg)
         [isEqualArr,reportStr]=isEqualInternal(ellFirstArr,...
             ellSecArr,isPropIncluded)
         polar=getScalarPolarInternal(self,isRobustMethod)
@@ -17,7 +21,7 @@ classdef ABasicEllipsoid < handle
         ellArr=fromRepMatInternal(ellObj,sizeVec)
         checkIsMeInternal(objType,ellArr,varargin)
     end
-    methods (Access=protected,Abstract)
+    methods(Access=protected,Abstract)
         checkIsMeVirtual(ellArr,varargin)
         copyEllObj=getSingleCopy(ellObj)
         ellObj=ellFactory(self)
