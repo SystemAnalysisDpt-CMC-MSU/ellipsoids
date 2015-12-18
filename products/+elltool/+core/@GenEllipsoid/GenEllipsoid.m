@@ -19,6 +19,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         end
     end
     methods
+        polar=getScalarPolarInternal(self,isRobustMethod)
         [ellCenterVec,ellDiagMat,ellEigvMat]=parameters(ell)
         [SDataArr,SFieldNiceNames,SFieldDescr]=...
             toStruct(ellArr,isPropIncluded)

@@ -14,6 +14,9 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         [SDataArr,SFieldNiceNames,SFieldDescr]=...
             toStruct(ellArr,isPropIncluded)
     end
+    methods(Abstract)
+        polar=getScalarPolarInternal(self,isRobustMethod)
+    end
     methods(Abstract, Static)
         ellArr=fromRepMat(varargin)
         ellArr=fromStruct(SEllArr)

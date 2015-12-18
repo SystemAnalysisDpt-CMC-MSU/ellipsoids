@@ -19,6 +19,7 @@ classdef TestPolarEllipsoid < elltool.core.AEllipsoid
         ellObj=ellFactory(self)
     end
     methods
+        polar=getScalarPolarInternal(self,isRobustMethod)
         shapeMat=getShapeMat(self)
         [SDataArr,SFieldNiceNames,SFieldDescr]=...
             toStruct(ellArr,isPropIncluded)

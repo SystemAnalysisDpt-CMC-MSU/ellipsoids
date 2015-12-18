@@ -68,6 +68,7 @@ classdef ellipsoid < elltool.core.AEllipsoid
         end
     end
     methods
+        polar=getScalarPolarInternal(self,isRobustMethod)
         function [ellMat] = ellipsoid(varargin)
             %
             % ELLIPSOID - constructor of the ellipsoid object.

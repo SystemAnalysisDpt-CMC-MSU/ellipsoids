@@ -14,7 +14,6 @@ classdef ABasicEllipsoid < handle
         checkIfScalar(self,errMsg)
         [isEqualArr,reportStr]=isEqualInternal(ellFirstArr,...
             ellSecArr,isPropIncluded)
-        polar=getScalarPolarInternal(self,isRobustMethod)
         [propArr,propVal]=getProperty(ellArr,propName,fPropFun)
     end
     methods(Static)
