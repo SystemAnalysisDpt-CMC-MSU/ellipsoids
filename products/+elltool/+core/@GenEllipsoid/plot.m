@@ -102,7 +102,7 @@ end
             'UniformOutput', false);
         function [xMat, fMat] = fCalcCenterTri(plotEll)
             import elltool.core.GenEllipsoid;
-            xMat = plotEll.getCenter();
+            xMat = plotEll.getCenterVec();
             fMat = [1 1];
         end
     end
@@ -133,7 +133,7 @@ end
         %
         function [xMat, fMat] = fCalcBodyTri(plotEll)
             import elltool.core.GenEllipsoid;
-            qVec = plotEll.getCenter();
+            qVec = plotEll.getCenterVec();
             diagMat = plotEll.getDiagMat();
             eigvMat = plotEll.getEigvMat();
             ell = GenEllipsoid(diagMat);
@@ -158,7 +158,7 @@ end
             nPoints = size(lGetGridMat, 1);
             xMat = zeros(nDim, nPoints+1);
             dMat = ell.getDiagMat();
-            qCenVec = ell.getCenter();
+            qCenVec = ell.getCenterVec();
             xMat(:, 1:end-1) = dMat.^0.5*lGetGridMat.' + ...
                 repmat(qCenVec, 1, nPoints);
             xMat(:, end) = xMat(:, 1);
@@ -184,7 +184,7 @@ ellsArr = vertcat(ellsCMat{:});
 nDim = 2;
     function ellTwoDim = oneDim2TwoDim(ell)
         import elltool.core.GenEllipsoid;
-        ellCenVec = ell.getCenter();
+        ellCenVec = ell.getCenterVec();
         ellEigMat = ell.getEigvMat();
         ellDiagMat = ell.getDiagMat();
         ellTwoDim = GenEllipsoid([ellCenVec, 0].', ...
@@ -215,7 +215,7 @@ end
         %
         function [minVal, maxVal] = findMinAndMaxDimEll(ell)
             import elltool.core.GenEllipsoid;
-            qCenVec = ell.getCenter();
+            qCenVec = ell.getCenterVec();
             dMat = ell.getDiagMat();
             ell = GenEllipsoid(qCenVec, dMat);
             minVal = Inf;

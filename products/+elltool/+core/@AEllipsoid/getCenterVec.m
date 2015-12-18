@@ -22,6 +22,5 @@ function centerVecVec=getCenterVec(self)
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics and Cybernetics,
 %             Science, System Analysis Department 2012-2013 $
-self.checkIfScalar();
 centerVecVec=self.centerVec;
 end

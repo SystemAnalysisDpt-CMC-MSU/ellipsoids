@@ -91,7 +91,7 @@ function SComp=ell2Struct(ellObj,isPropIncluded)
     end
     SComp=struct('QMat',qMat,'centerVec',centerVec,'QInfMat',qInfMat);
     if isPropIncluded
-        SComp.checkTol=ellObj.getCheckTol();
+        SComp.absTol=ellObj.getAbsTol();
     end
 end
 

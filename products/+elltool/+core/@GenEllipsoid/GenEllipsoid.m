@@ -361,19 +361,17 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
     end
     methods (Static)
         function SComp=formCompStruct(SEll,SFieldNiceNames,...
-                absTol,isPropIncluded)
+                absTol,isPropIncluded) %#ok<INUSL>
             if (~isempty(SEll.QMat))
-                SComp.(SFieldNiceNames.QMat)=...
-                    gras.la.sqrtmpos(SEll.QMat,absTol);
+                SComp.(SFieldNiceNames.QMat)=SEll.QMat;
             else
                 SComp.(SFieldNiceNames.QMat)=[];
             end
             SComp.(SFieldNiceNames.centerVec)=SEll.centerVec;
             if (~isempty(SEll.QInfMat))
-                SComp.(SFieldNiceNames.QInfMat)=...
-                    gras.la.sqrtmpos(SEll.QInfMat,absTol);
+                SComp.(SFieldNiceNames.QInfMat)=SEll.QInfMat;
             else
-                SComp.(SFieldNiceNames.shapeMat)=[];
+                SComp.(SFieldNiceNames.QInfMat)=[];
             end
             if (isPropIncluded)
                 SComp.(SFieldNiceNames.absTol)=SEll.absTol;

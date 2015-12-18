@@ -24,7 +24,7 @@ absTol=GenEllipsoid().getAbsTol();
 eigvMat=ellObj.getEigvMat();
 diagMat=ellObj.getDiagMat();
 diagVec=diag(diagMat);
-cenVec=ellObj.getCenter();
+cenVec=ellObj.getCenterVec();
 isInfVec=diagVec==Inf;
 sDirVec = dirVec;
 dirInfProjVec=0;

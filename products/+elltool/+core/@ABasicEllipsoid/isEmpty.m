@@ -28,5 +28,4 @@ function isPositiveArr = isEmpty(myEllArr)
 %			System Analysis Department 2015 $
 %
 checkIsMeVirtual(myEllArr);
-disp(myEllArr)
 isPositiveArr=dimension(myEllArr)==0;

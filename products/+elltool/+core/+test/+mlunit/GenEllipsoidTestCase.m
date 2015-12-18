@@ -796,7 +796,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 eigVMat=ellApx.getEigvMat();
                 if ~isempty(eigVMat)
                     eigVMat=oMat.'*eigVMat;
-                    ellApx=GenEllipsoid(ellApx.getCenter(),ellApx.getDiagMat(),...
+                    ellApx=GenEllipsoid(ellApx.getCenterVec(),ellApx.getDiagMat(),...
                         eigVMat);
                 end
             end
@@ -1088,7 +1088,7 @@ function resEllObj=rotateEll(ellObj,oMat)
 import elltool.core.GenEllipsoid;
 eigvMat=ellObj.getEigvMat();
 newVMat=oMat*eigvMat;
-resEllObj=GenEllipsoid(ellObj.getCenter(),ellObj.getDiagMat(),newVMat);
+resEllObj=GenEllipsoid(ellObj.getCenterVec(),ellObj.getDiagMat(),newVMat);
 end
 %
 function isEqual=isEqM( objMat1, objMat2,absTol)
@@ -1108,7 +1108,7 @@ import elltool.core.GenEllipsoid;
 absTol=GenEllipsoid().getAbsTol();
 eigvMat=resEllipsoid.getEigvMat();
 diagVec=diag(resEllipsoid.getDiagMat());
-cenVec=resEllipsoid.getCenter();
+cenVec=resEllipsoid.getCenterVec();
 %sort in increasing eigenvalue order
 [diagVec,indVec]=sort(diagVec);
 eigvMat=eigvMat(:,indVec);

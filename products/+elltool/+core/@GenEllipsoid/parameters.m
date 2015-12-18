@@ -40,10 +40,10 @@ function [ellDiagMat,ellCenterVec,ellEigvMat]=parameters(ell)
 if nargout < 2
     ellDiagMat=ell.getDiagMat();
 elseif nargout < 3
-    ellCenterVec=ell.getCenter();
+    ellCenterVec=ell.getCenterVec();
     ellDiagMat=ell.getDiagMat();
 else
-    ellCenterVec=ell.getCenter();
+    ellCenterVec=ell.getCenterVec();
     ellDiagMat=ell.getDiagMat();
     ellEigvMat=ell.getEigvMat();
 end
