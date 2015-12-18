@@ -109,8 +109,8 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             function binOperCheckRes(testEllArr,testVec,...
                     opName,expEllArr)
                 resEllArr=testEllArr.(opName)(testVec);
-                isTestMat=isEqual(resEllArr,expEllArr);
-                mlunitext.assert(all(isTestMat(:)));
+                [isTestMat,reportStr]=isEqual(resEllArr,expEllArr);
+                mlunitext.assert(all(isTestMat(:)),reportStr);
             end
             function binOperWithVecNegativeTest(opName) %#ok<INUSD>
                 import elltool.core.GenEllipsoid;
@@ -281,7 +281,8 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             function checkPositive(testModMat,testEllArr,...
                     expEllArr)
                 resEllArr=testEllArr.shape(testModMat);
-                mlunitext.assert(isEqual(resEllArr,expEllArr));
+                [isOk,reportStr]=isEqual(resEllArr,expEllArr);
+                mlunitext.assert(isOk,reportStr);
             end
         end
         %
@@ -293,7 +294,8 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             resEllArr=testEllArr.getShape(testMat);
             expEll=elltool.core.GenEllipsoid([4;4]);
             expEllArr=expEll.repMat([2 2 3 4]);
-            mlunitext.assert(isEqual(resEllArr,expEllArr));
+            [isOk,reportStr]=isEqual(resEllArr,expEllArr);
+            mlunitext.assert(isOk,reportStr);
         end
         %
         function testIsBigger(self)
@@ -302,7 +304,23 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             %Check negative
             checkNegative(testEll);
             checkNegative(GenEllipsoid(),testEll);
+            %CheckPositive
+            testBiggerEllCVec={GenEllipsoid([1;1]),...
+                GenEllipsoid(0.5*[1;1]),GenEllipsoid([1;1],[Inf;10]),...
+                GenEllipsoid([1;1],[10;Inf],[1,2;3,4]),...
+                GenEllipsoid([1;1],[Inf;10],[1,2;3,4])};
+            testSmallerEllCVec={GenEllipsoid(0.5*[1;1]),...
+                GenEllipsoid([1;1]),GenEllipsoid([Inf;1]),...
+                GenEllipsoid([1;1],[Inf;10],[1,2;3,4]),...
+                GenEllipsoid([1;1],[10;Inf],[1,2;3,4])};
+            isResVec=cellfun(@checkPositive,testBiggerEllCVec,...
+                testSmallerEllCVec);
+            isExpVec=[true,false,true,false,false];
+            mlunitext.assert(all(isResVec==isExpVec));
             %
+            function isBigger=checkPositive(testBiggerEll,testSmallerEll)
+                isBigger=testBiggerEll.isbigger(testSmallerEll);
+            end
             function checkNegative(test1Ell,test2Ell) %#ok<INUSD>
                 if nargin<2
                     self.runAndCheckError(...
