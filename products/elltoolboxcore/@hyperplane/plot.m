@@ -118,27 +118,27 @@ import elltool.plot.plotgeombodyarr;
                 shiftVec = -shiftVec;
                 normalVec = -normalVec;
             end
-            centVec = center';
-            if ~(contains(hyp, centVec))
-                centVec = (shiftVec*normalVec)/(normalVec.'*normalVec);
+            centerVec = centerVec.';
+            if ~(contains(hyp, centerVec))
+                centerVec = (shiftVec*normalVec)/(normalVec.'*normalVec);
             end
             if nDim == 1
-                xMat = [centVec ;0];
+                xMat = [centerVec ;0];
                 fMat = [1 1];
             else
                 sideWidth = plotWidth/2;
                 %
                 [uMat,~,~] = svd(normalVec);
                 eVec      = uMat(:, 2);
-                firstVec      = centVec - sideWidth*eVec;
-                secondVec      = centVec + sideWidth*eVec;
+                firstVec      = centerVec - sideWidth*eVec;
+                secondVec      = centerVec + sideWidth*eVec;
                 if nDim ==2
                     xMat = [firstVec, secondVec];
                     fMat = [1 2 1] ;
                 else
                     eVec2 = uMat(:, 3);
-                    thirdVec = centVec - sideWidth*eVec2;
-                    forthVec = centVec + sideWidth*eVec2;
+                    thirdVec = centerVec - sideWidth*eVec2;
+                    forthVec = centerVec + sideWidth*eVec2;
                     xMat = [firstVec,secondVec,thirdVec,forthVec];
                     fMat = [1,3,2,4,1];
                 end
