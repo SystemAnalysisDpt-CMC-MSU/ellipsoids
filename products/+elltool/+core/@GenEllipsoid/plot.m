@@ -109,11 +109,10 @@ end
     function [lGetGrid, fGetGrid] = calcGrid(nDim,ellArr)
         if nDim == 2
             nPoints = ellArr.nPlot2dPoints;
-            [lGetGrid,fGetGrid]=gras.geom.tri.spheretriext(nDim, nPoints);
         elseif nDim == 3
             nPoints = ellArr.nPlot3dPoints;
-            [lGetGrid,fGetGrid]=gras.geom.tri.spheretriext(nDim, nPoints);
         end
+        [lGetGrid,fGetGrid]=gras.geom.tri.spheretriext(nDim, nPoints);        
         lGetGrid(lGetGrid == 0) = eps;
     end
     %

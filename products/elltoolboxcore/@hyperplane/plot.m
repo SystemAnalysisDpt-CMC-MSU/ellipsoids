@@ -1,5 +1,4 @@
 function plObj = plot(varargin)
-%
 % PLOT - plots hyperplaces in 2D or 3D.
 %
 %
@@ -63,36 +62,34 @@ import elltool.plot.plotgeombodyarr;
     @(x)isa(x,'double')});
 
 [plObj]= plotgeombodyarr(@(x)isa(x,'hyperplane'),...
-        @(x)dimension(x),@fCalcBodyTriArr,@patch,reg{:});
-
-
-
-
+    @(x)dimension(x),@fCalcBodyTriArr,@patch,reg{:});
+%
     function [xMat,fMat] = fCalcBodyTriArr(hypArr)
+        import modgen.common.throwerror;
         hypNum = numel(hypArr);
         nDim = dimension(hypArr(1));
         DEFAULT_CENTER = zeros(1,nDim);
         DEFAULT_SIZE = 100;
-        centerVec = getPlotInitParam(centerVec, isCenterVec, DEFAULT_CENTER);
+        centerVec = getPlotInitParam(centerVec, isCenterVec,...
+            DEFAULT_CENTER);
         sizeVec = getPlotInitParam(sizeVec, isSizeVec, DEFAULT_SIZE);
-        
-        import modgen.common.throwerror;
+        %
         if  any(isnan(centerVec(:))) || ...
                 any(isinf(centerVec(:)))
             throwerror('wrongCenterVec', ...
                 'CenterVec must be finite');
         end
+        %
         if (any(sizeVec(:) < 0)) || any(isnan(sizeVec(:)))...
                 || any(isinf(sizeVec(:)))
-            throwerror('wrongSizeVec', 'sizeVec must be greater than 0 and finite');
+            throwerror('wrongSizeVec',...
+                'sizeVec must be greater than 0 and finite');
         end
-        
-        
-        
-        [xMat, fMat] = arrayfun(@(x,y,z) fCalcBodyTri(x,y,z, nDim), hypArr,num2cell(centerVec,2),sizeVec, ...
+        %
+        [xMat,fMat] = arrayfun(@(x,y,z) fCalcBodyTri(x,y,z, nDim),...
+            hypArr,num2cell(centerVec,2),sizeVec, ...
             'UniformOutput', false);
-        
-        
+        %
         function outParamVec = getPlotInitParam(inParamArr, ...
                 isFilledParam, multConst)
             import modgen.common.throwerror;
@@ -105,55 +102,47 @@ import elltool.plot.plotgeombodyarr;
                 else
                     if nParams ~= hypNum
                         throwerror('wrongParamsNumber',...
-                            'Number of params is not equal to number of hyperplanes');
+                            ['Number of params is not equal to number',...
+                            'of hyperplanes']);
                     end
                     outParamVec = inParamArr;
                 end
             end
         end
-        function [xMat, fMat] = fCalcBodyTri(hyp,center,size, nDim)
-            center = cell2mat(center);
-            normal = hyp.normal;
-            shift = hyp.shift;
-            if shift < 0
-                shift = -shift;
-                normal = -normal;
+        function [xMat, fMat] = fCalcBodyTri(hyp,centerCell,plotWidth,...
+                nDim)
+            centerVec = centerCell{1};
+            normalVec = hyp.normal;
+            shiftVec = hyp.shift;
+            if shiftVec < 0
+                shiftVec = -shiftVec;
+                normalVec = -normalVec;
             end
             centVec = center';
             if ~(contains(hyp, centVec))
-                centVec = (shift*normal)/(normal'*normal);
+                centVec = (shiftVec*normalVec)/(normalVec.'*normalVec);
             end
             if nDim == 1
                 xMat = [centVec ;0];
                 fMat = [1 1];
             else
-                side = size/2;
-                [U,~,~] = svd(normal);
-                eVec      = U(:, 2);
-                firstVec      = centVec - side*eVec;
-                secondVec      = centVec + side*eVec;
-                
-                
+                sideWidth = plotWidth/2;
+                %
+                [uMat,~,~] = svd(normalVec);
+                eVec      = uMat(:, 2);
+                firstVec      = centVec - sideWidth*eVec;
+                secondVec      = centVec + sideWidth*eVec;
                 if nDim ==2
                     xMat = [firstVec, secondVec];
                     fMat = [1 2 1] ;
                 else
-                    eVec2 = U(:, 3);
-                    thirdVec = centVec - side*eVec2;
-                    forthVec = centVec + side*eVec2;
-                    
+                    eVec2 = uMat(:, 3);
+                    thirdVec = centVec - sideWidth*eVec2;
+                    forthVec = centVec + sideWidth*eVec2;
                     xMat = [firstVec,secondVec,thirdVec,forthVec];
-                    
                     fMat = [1,3,2,4,1];
                 end
             end
-            
         end
     end
-
-
 end
-
-
-
-
