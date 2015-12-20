@@ -5,8 +5,8 @@ function [dimArr,rankArr]=dimension(myEllArr)
 %             
 % Input:
 %   regular:
-%     myEllArr: ABasivEllipsoid[nDims1,nDims2,...,nDimsN] - array 
-%       of ABasivEllipsoids.
+%     myEllArr: ABasicEllipsoid[nDims1,nDims2,...,nDimsN] - array 
+%       of ABasicEllipsoids.
 %
 % Output:
 %   regular:
@@ -14,7 +14,7 @@ function [dimArr,rankArr]=dimension(myEllArr)
 %
 %   optional:
 %     rankArr: double[nDims1,nDims2,...,nDimsN] - dimensions of the  
-%            ABasivEllipsoids in myEllArr.
+%            ABasicEllipsoids in myEllArr.
 % 
 % Example:
 %   firstEllObj = ellipsoid();
@@ -60,7 +60,7 @@ function [dimArr,rankArr]=dimension(myEllArr)
 % 			System Analysis Department 2015 $
 % 
 checkIsMeVirtual(myEllArr);
-dimArr=arrayfun(@(x)size(x.getShapeMat(),1),myEllArr);
+dimArr=arrayfun(@(x)size(x.getCenterVec(),1),myEllArr);
 if nargout>1
     rankArr=arrayfun(@(x)rank(x.getShapeMat()),myEllArr);
 end

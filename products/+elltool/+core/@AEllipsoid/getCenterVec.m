@@ -1,4 +1,4 @@
-function centerVecVec=getCenterVec(self)
+function centerVec=getCenterVec(self)
 % GETCENTERVEC - returns centerVec vector of given ellipsoid
 %
 % Input:
@@ -22,5 +22,5 @@ function centerVecVec=getCenterVec(self)
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics and Cybernetics,
 %             Science, System Analysis Department 2012-2013 $
-centerVecVec=self.centerVec;
+centerVec=self.centerVec;
 end

@@ -4,7 +4,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
             ellObj=ellObj@elltool.core.ABasicEllipsoid();
         end
         resArr=repMat(self,varargin)
-        centerVecVec=getCenterVec(self)
+        centerVec=getCenterVec(self)
     end
     methods(Access=protected)
         isModScal=shapeInternal(ellArr,modMat)
