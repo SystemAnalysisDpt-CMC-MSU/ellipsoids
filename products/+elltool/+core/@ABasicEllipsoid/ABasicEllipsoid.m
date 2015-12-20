@@ -1,10 +1,10 @@
 classdef ABasicEllipsoid < handle
-    properties (Access=protected)
-        centerVec    
-        absTol
-        relTol
+    properties(Access=protected) 
         nPlot2dPoints
         nPlot3dPoints
+        absTol
+        relTol
+        centerVec
     end
     %
     methods(Abstract)

@@ -3,8 +3,8 @@ function [relTolArr, relTolVal] = getRelTol(ellArr, varargin)
 %
 % Input:
 %   regular:
-%       ellArr: ellipsoid[nDim1, nDim2, ...] - multidimension array
-%           of ellipsoids
+%       ellArr: ABasicEllipsoid[nDim1, nDim2, ...] - multidimension array
+%           of ABasicEllipsoids
 %   optional: 
 %       fRelTolFun: function_handle[1,1] - function that apply 
 %           to the relTolArr. The default is @min.
