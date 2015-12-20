@@ -153,8 +153,19 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             import gras.la.ismatsymm;
             import gras.la.ismatposdef;
             %
-            ellObj.absTol=1e-09;
-            ellObj.relTol=1e-08;
+            NEEDED_PROP_NAME_LIST = {'absTol','relTol',...
+                'nPlot2dPoints','nPlot3dPoints'};
+            [~,propNameValList]=modgen.common.parseparams(...
+                varargin,NEEDED_PROP_NAME_LIST);
+            [absTolVal, relTolVal,nPlot2dPointsVal,nPlot3dPointsVal] =...
+                elltool.conf.Properties.parseProp(propNameValList,...
+                NEEDED_PROP_NAME_LIST);
+            ellObj.centerVec=[];
+            ellObj.shapeMat=[];
+            ellObj.absTol=absTolVal;
+            ellObj.relTol=relTolVal;
+            ellObj.nPlot2dPoints=nPlot2dPointsVal;
+            ellObj.nPlot3dPoints=nPlot3dPointsVal;
             absTol=ellObj.absTol;
             %
             nInput=nargin;

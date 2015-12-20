@@ -77,8 +77,7 @@ import elltool.plot.plotgeombodyarr;
 import elltool.logging.Log4jConfigurator;
 %
 logger=Log4jConfigurator.getLogger();
-N_PLOT_POINTS = 80;
-SPHERE_TRIANG_CONST = 3;
+
 [plObj,nDim,isHold]= ...
     plotgeombodyarr(@(x)isa(x,'elltool.core.GenEllipsoid'),...
     @(x)dimension(x),@fCalcBodyTriArr,@patch,varargin{:});
@@ -107,13 +106,13 @@ end
         end
     end
     %
-    function [lGetGrid, fGetGrid] = calcGrid(nDim)
+    function [lGetGrid, fGetGrid] = calcGrid(nDim,ellArr)
         if nDim == 2
-            lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
-            fGetGrid = 1:N_PLOT_POINTS+1;
-        else
-            [lGetGrid, fGetGrid] = ...
-                gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
+            nPoints = ellArr.nPlot2dPoints;
+            [lGetGrid,fGetGrid]=gras.geom.tri.spheretriext(nDim, nPoints);
+        elseif nDim == 3
+            nPoints = ellArr.nPlot3dPoints;
+            [lGetGrid,fGetGrid]=gras.geom.tri.spheretriext(nDim, nPoints);
         end
         lGetGrid(lGetGrid == 0) = eps;
     end
@@ -127,7 +126,7 @@ end
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
-        [lGetGridMat, fGetGridMat] = calcGrid(nDim);
+        [lGetGridMat, fGetGridMat] = calcGrid(nDim,ellsArr);
         [xMat, fMat] = arrayfun(@(x) fCalcBodyTri(x), ellsArr, ...
             'UniformOutput', false);
         %
