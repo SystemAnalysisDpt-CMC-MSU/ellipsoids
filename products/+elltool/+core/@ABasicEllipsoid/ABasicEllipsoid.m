@@ -1,20 +1,20 @@
 classdef ABasicEllipsoid < handle
     properties(Access=protected) 
-        nPlot2dPoints
-        nPlot3dPoints
         absTol
-        relTol
-        centerVec
+        relTol 
     end
     %
     methods(Abstract)
+        [propArr,propVal]=getProperty(ellArr,propName,fPropFun)
         [dimArr,rankArr]=dimension(myEllArr)
     end
     methods(Access=protected)
         checkIfScalar(self,errMsg)
         [isEqualArr,reportStr]=isEqualInternal(ellFirstArr,...
             ellSecArr,isPropIncluded)
-        [propArr,propVal]=getProperty(ellArr,propName,fPropFun)
+    end
+    methods(Access=protected,Static)
+        [propArr,propVal]=getPropertyInternal(propName,fPropFun)
     end
     methods(Static)
         ellArr=fromRepMatInternal(ellObj,sizeVec)

@@ -1,4 +1,9 @@
 classdef AEllipsoid < elltool.core.ABasicEllipsoid
+    properties(Access=protected)
+        nPlot2dPoints
+        nPlot3dPoints
+        centerVec
+    end
     methods
         function ellObj=AEllipsoid(varargin)
             ellObj=ellObj@elltool.core.ABasicEllipsoid();

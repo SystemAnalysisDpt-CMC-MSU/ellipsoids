@@ -6,6 +6,10 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
     end
     %
     methods
+        function [propArr,propVal]=getProperty(ellArr,propName,varargin)
+            [propArr,propVal]=ellArr.getPropertyInternal(ellArr,...
+                propName,varargin{:});
+        end
         function hypObjArr = hyperplane(hypNormArr, hypConstArr, varargin)
             %
             % HYPERPLANE - creates hyperplane structure
