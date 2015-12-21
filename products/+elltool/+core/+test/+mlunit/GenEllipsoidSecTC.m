@@ -212,6 +212,7 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
         end
         %
         function testToStruct(~)
+            import elltool.core.GenEllipsoid;
             testEllVec=[GenEllipsoid(1),...
                 GenEllipsoid([1;1],[100,0;0,100]),...
                 GenEllipsoid([1;1],[5;1],[1,2;3,4]),...
@@ -226,7 +227,6 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             arrayfun(@singleTestToStruct,testEllVec,SExpResVec);
             
             function singleTestToStruct(testEllObj,SExpRes)
-                import elltool.core.GenEllipsoid;
                 import modgen.struct.structcompare;
                 STestRes=testEllObj.toStruct();
                 mlunitext.assert(structcompare(STestRes,SExpRes,1e-09));
