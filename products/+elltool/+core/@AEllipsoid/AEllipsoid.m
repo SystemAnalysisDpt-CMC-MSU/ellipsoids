@@ -18,6 +18,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
     end
     methods(Access=protected)
         isModScal=shapeInternal(ellArr,modMat)
+        [isFstScal,outEllVec]=mtimesInternal(multMat,inpEllVec)
     end
     methods(Abstract)
         shapeMat=getShapeMat(self)
