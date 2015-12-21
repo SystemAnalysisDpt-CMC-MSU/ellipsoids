@@ -19,10 +19,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         end
     end
     methods
-        function [propArr,propVal]=getProperty(ellArr,propName,varargin)
-            [propArr,propVal]=ellArr.getPropertyInternal(ellArr,...
-                propName,varargin{:});
-        end
         polar=getScalarPolarInternal(self,isRobustMethod)
         [ellCenterVec,ellDiagMat,ellEigvMat]=parameters(ell)
         [SDataArr,SFieldNiceNames,SFieldDescr]=...

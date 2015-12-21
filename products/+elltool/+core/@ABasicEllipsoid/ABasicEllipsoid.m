@@ -5,16 +5,12 @@ classdef ABasicEllipsoid < handle
     end
     %
     methods(Abstract)
-        [propArr,propVal]=getProperty(ellArr,propName,fPropFun)
         [dimArr,rankArr]=dimension(myEllArr)
     end
     methods(Access=protected)
         checkIfScalar(self,errMsg)
         [isEqualArr,reportStr]=isEqualInternal(ellFirstArr,...
             ellSecArr,isPropIncluded)
-    end
-    methods(Access=protected,Static)
-        [propArr,propVal]=getPropertyInternal(propName,fPropFun)
     end
     methods(Static)
         ellArr=fromRepMatInternal(ellObj,sizeVec)

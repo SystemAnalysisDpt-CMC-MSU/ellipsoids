@@ -17,10 +17,6 @@ classdef ellipsoid < elltool.core.AEllipsoid
     end
     %
     methods
-        function [propArr,propVal]=getProperty(ellArr,propName,varargin)
-            [propArr,propVal]=ellipsoid.getPropertyInternal(ellArr,...
-                propName,varargin{:});
-        end
         function resQuad = quadFunc(self)
             % QUADFUNC computes quadratic function (x,Qx) of given
             % ellipsoid.

@@ -1,7 +1,10 @@
 classdef AEllipsoid < elltool.core.ABasicEllipsoid
-    properties(Access=protected)
+    properties(SetAccess=protected,GetAccess=public)
         nPlot2dPoints
         nPlot3dPoints
+    end
+    %
+    properties(Access=protected)
         centerVec
     end
     methods
