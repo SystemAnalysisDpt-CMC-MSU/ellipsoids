@@ -1,4 +1,4 @@
-function checkIsMe(someObjArr)
+function checkIsMe(ellArr,varargin)
 %
 % CHECKISME - determine whether input object is hyperplane. And display
 %             message and abort function if input object
@@ -18,6 +18,4 @@ function checkIsMe(someObjArr)
 %             Faculty of Computational Mathematics
 %             and Computer Science,
 %             System Analysis Department 2012 $
-
-modgen.common.checkvar(someObjArr,@(x) isa(x,'hyperplane'),'errorTag', ...
-    'wrongInput', 'errorMessage', 'Input arguments must be hyperplane.');
+hyperplane.checkIsMeInternal('hyperplane',ellArr,varargin)

@@ -796,7 +796,7 @@ classdef GenEllipsoidTestCase < mlunitext.test_case
                 eigVMat=ellApx.getEigvMat();
                 if ~isempty(eigVMat)
                     eigVMat=oMat.'*eigVMat;
-                    ellApx=GenEllipsoid(ellApx.getCenter(),ellApx.getDiagMat(),...
+                    ellApx=GenEllipsoid(ellApx.getCenterVec(),ellApx.getDiagMat(),...
                         eigVMat);
                 end
             end
@@ -1088,7 +1088,7 @@ function resEllObj=rotateEll(ellObj,oMat)
 import elltool.core.GenEllipsoid;
 eigvMat=ellObj.getEigvMat();
 newVMat=oMat*eigvMat;
-resEllObj=GenEllipsoid(ellObj.getCenter(),ellObj.getDiagMat(),newVMat);
+resEllObj=GenEllipsoid(ellObj.getCenterVec(),ellObj.getDiagMat(),newVMat);
 end
 %
 function isEqual=isEqM( objMat1, objMat2,absTol)
@@ -1105,10 +1105,10 @@ end
 %
 function isEqual=isEqElM(resEllipsoid,ansVMat,ansDVec,ansCenVec)
 import elltool.core.GenEllipsoid;
-absTol=GenEllipsoid.getCheckTol();
+absTol=GenEllipsoid().getAbsTol();
 eigvMat=resEllipsoid.getEigvMat();
 diagVec=diag(resEllipsoid.getDiagMat());
-cenVec=resEllipsoid.getCenter();
+cenVec=resEllipsoid.getCenterVec();
 %sort in increasing eigenvalue order
 [diagVec,indVec]=sort(diagVec);
 eigvMat=eigvMat(:,indVec);
@@ -1152,7 +1152,7 @@ end
 %
 function checkSumTight(ellResObj, ellVec, dirVec)
 import elltool.core.GenEllipsoid;
-absTol=GenEllipsoid.getCheckTol();
+absTol=GenEllipsoid().getAbsTol();
 nEll=length(ellVec);
 sumOfRho=0;
 for iEll=1:nEll;
@@ -1169,7 +1169,7 @@ mlunitext.assert(isTight);
 end
 function checkDiffTight(ellResObj, ellVec, dirVec)
 import elltool.core.GenEllipsoid;
-absTol=GenEllipsoid.getCheckTol();
+absTol=GenEllipsoid().getAbsTol();
 rho1=rho(ellVec(1),dirVec);
 rho2=rho(ellVec(2),dirVec);
 if rho1==Inf

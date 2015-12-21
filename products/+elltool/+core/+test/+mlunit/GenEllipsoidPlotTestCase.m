@@ -275,7 +275,7 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
     end
     function isBoundEllVec = checkNorm(testEll, cellPoints)
         absTol = elltool.conf.Properties.getAbsTol();
-        qCenVec = testEll.getCenter();
+        qCenVec = testEll.getCenterVec();
         dMat = testEll.getDiagMat();
         eigMat = testEll.getEigvMat();
         qMat = eigMat.'*dMat*eigMat;
@@ -288,7 +288,7 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
 
     function isBoundEllVec = check1d(testEll, cellPoints)
         absTol = elltool.conf.Properties.getAbsTol();
-        qCenVec = testEll.getCenter();
+        qCenVec = testEll.getCenterVec();
         dMat = testEll.getDiagMat();
         eigMat = testEll.getEigvMat();
         qMat = eigMat.'*dMat*eigMat;
@@ -298,7 +298,7 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
 
     function isBoundEllVec = check2dDimZero(testEll, cellPoints, dim)
         absTol = elltool.conf.Properties.getAbsTol();
-        qCenVec = testEll.getCenter();
+        qCenVec = testEll.getCenterVec();
         dMat = testEll.getDiagMat();
         eigMat = testEll.getEigvMat();
         secDim = @(x) x(3-dim);
@@ -311,7 +311,7 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
 
     function isBoundEllVec = check3dDimZero(testEll, cellPoints, dim)
         absTol = elltool.conf.Properties.getAbsTol();
-        qCenVec = testEll.getCenter();
+        qCenVec = testEll.getCenterVec();
         dMat = testEll.getDiagMat();
         eigMat = testEll.getEigvMat();
         if dim == 1
@@ -334,7 +334,7 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
 
     function isBoundEllVec = checkDimInf(testEll, cellPoints)
         absTol = elltool.conf.Properties.getAbsTol();
-        qCenVec = testEll.getCenter();
+        qCenVec = testEll.getCenterVec();
         dMat = testEll.getDiagMat();
         eigMat = testEll.getEigvMat();
         eigPoint = @(x) eigMat*(x-qCenVec) + qCenVec;

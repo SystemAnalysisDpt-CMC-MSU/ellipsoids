@@ -80,7 +80,7 @@ if (mDirSize~=dimSpace)
     throwerror('wrongDir',msgStr);
 end
 %
-absTol=ellObjVec.CHECK_TOL;
+absTol=ellObjVec.absTol;
 %
 [mSize kSize]=size(ellObjVec);
 if (mSize==1) && (kSize==1)

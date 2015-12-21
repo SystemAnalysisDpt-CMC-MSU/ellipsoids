@@ -49,7 +49,7 @@ ell1DiagVec=diag(ellObj1.diagMat);
 [mSize nDirs]=size(dirMat);
 nDimSpace=length(ell1DiagVec);
 %Check whether one ellipsoid is bigger then the other
-absTol=ellObj1.CHECK_TOL;
+absTol=ellObj1.absTol;
 isFirstBigger=GenEllipsoid.checkBigger(ellObj1,ellObj2,nDimSpace,absTol);
 if ~isFirstBigger
     throwerror('wrongElls',...

@@ -77,8 +77,7 @@ import elltool.plot.plotgeombodyarr;
 import elltool.logging.Log4jConfigurator;
 %
 logger=Log4jConfigurator.getLogger();
-N_PLOT_POINTS = 80;
-SPHERE_TRIANG_CONST = 3;
+
 [plObj,nDim,isHold]= ...
     plotgeombodyarr(@(x)isa(x,'elltool.core.GenEllipsoid'),...
     @(x)dimension(x),@fCalcBodyTriArr,@patch,varargin{:});
@@ -102,19 +101,18 @@ end
             'UniformOutput', false);
         function [xMat, fMat] = fCalcCenterTri(plotEll)
             import elltool.core.GenEllipsoid;
-            xMat = plotEll.getCenter();
+            xMat = plotEll.getCenterVec();
             fMat = [1 1];
         end
     end
     %
-    function [lGetGrid, fGetGrid] = calcGrid(nDim)
+    function [lGetGrid, fGetGrid] = calcGrid(nDim,ellArr)
         if nDim == 2
-            lGetGrid = gras.geom.circlepart(N_PLOT_POINTS);
-            fGetGrid = 1:N_PLOT_POINTS+1;
-        else
-            [lGetGrid, fGetGrid] = ...
-                gras.geom.tri.spheretri(SPHERE_TRIANG_CONST);
+            nPoints = ellArr.nPlot2dPoints;
+        elseif nDim == 3
+            nPoints = ellArr.nPlot3dPoints;
         end
+        [lGetGrid,fGetGrid]=gras.geom.tri.spheretriext(nDim, nPoints);        
         lGetGrid(lGetGrid == 0) = eps;
     end
     %
@@ -127,13 +125,13 @@ end
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
-        [lGetGridMat, fGetGridMat] = calcGrid(nDim);
+        [lGetGridMat, fGetGridMat] = calcGrid(nDim,ellsArr);
         [xMat, fMat] = arrayfun(@(x) fCalcBodyTri(x), ellsArr, ...
             'UniformOutput', false);
         %
         function [xMat, fMat] = fCalcBodyTri(plotEll)
             import elltool.core.GenEllipsoid;
-            qVec = plotEll.getCenter();
+            qVec = plotEll.getCenterVec();
             diagMat = plotEll.getDiagMat();
             eigvMat = plotEll.getEigvMat();
             ell = GenEllipsoid(diagMat);
@@ -158,7 +156,7 @@ end
             nPoints = size(lGetGridMat, 1);
             xMat = zeros(nDim, nPoints+1);
             dMat = ell.getDiagMat();
-            qCenVec = ell.getCenter();
+            qCenVec = ell.getCenterVec();
             xMat(:, 1:end-1) = dMat.^0.5*lGetGridMat.' + ...
                 repmat(qCenVec, 1, nPoints);
             xMat(:, end) = xMat(:, 1);
@@ -184,7 +182,7 @@ ellsArr = vertcat(ellsCMat{:});
 nDim = 2;
     function ellTwoDim = oneDim2TwoDim(ell)
         import elltool.core.GenEllipsoid;
-        ellCenVec = ell.getCenter();
+        ellCenVec = ell.getCenterVec();
         ellEigMat = ell.getEigvMat();
         ellDiagMat = ell.getDiagMat();
         ellTwoDim = GenEllipsoid([ellCenVec, 0].', ...
@@ -215,7 +213,7 @@ end
         %
         function [minVal, maxVal] = findMinAndMaxDimEll(ell)
             import elltool.core.GenEllipsoid;
-            qCenVec = ell.getCenter();
+            qCenVec = ell.getCenterVec();
             dMat = ell.getDiagMat();
             ell = GenEllipsoid(qCenVec, dMat);
             minVal = Inf;

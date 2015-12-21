@@ -1,4 +1,4 @@
-function [orthBasMat rankVal]=findBasRank(qMat,absTol)
+function [orthBasMat,rankVal]=findBasRank(qMat,absTol)
 % FINDBASrankVal - find basis of space that is linear hull of
 %                  input vector and find rankVal of that linear hull
 % Input:
@@ -16,7 +16,7 @@ function [orthBasMat rankVal]=findBasRank(qMat,absTol)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-[orthBasMat rBasMat]=qr(qMat);
+[orthBasMat,rBasMat]=qr(qMat);
 if size(rBasMat,2)==1
     isNeg=rBasMat(1)<0;
     orthBasMat(:,isNeg)=-orthBasMat(:,isNeg);
@@ -24,6 +24,6 @@ else
     isNegVec=diag(rBasMat)<0;
     orthBasMat(:,isNegVec)=-orthBasMat(:,isNegVec);
 end
-tolerance = absTol*norm(qMat,'fro');
-rankVal = sum(abs(diag(rBasMat)) > tolerance);
-rankVal = rankVal(1); %for case where rBasZMat is vector.
+tolerance=absTol*norm(qMat,'fro');
+rankVal=sum(abs(diag(rBasMat))>tolerance);
+rankVal=rankVal(1); %for case where rBasZMat is vector.
