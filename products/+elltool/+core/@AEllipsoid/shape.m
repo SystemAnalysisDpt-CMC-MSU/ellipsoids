@@ -42,14 +42,16 @@ function ellArr = shape(ellArr, modMat)
 %			Faculty of Computational Mathematics and Computer Science,
 %			System Analysis Department 2015 $
 %
-isModScal=shapeInternal(ellArr,modMat);
-arrayfun(@(x)fSingleShape(x),ellArr);
-    function fSingleShape(ellObj)
-        if isModScal
-            eigvMat=modMat*modMat*ellObj.eigvMat;
-        else
-            eigvMat=modMat*ellObj.eigvMat;
-        end
-        ellObj.eigvMat=eigvMat;
-    end
+checkIsMeVirtual(ellArr);
+modgen.common.checkvar(modMat, @(x)isa(x,'double'),...
+    'errorMessage','second input argument must be double');
+isModScal=isscalar(modMat);
+if ~isModScal
+    [nRows,nDim]=size(modMat);
+    dimArr=dimension(ellArr);
+    modgen.common.checkmultvar('(x1==x2)&&all(x3(:)==x2)',...
+        3,nRows,nDim,dimArr,'errorMessage',...
+        'input matrix not square or dimensions do not match');
+end  
+arrayfun(@(x)changeShapeMatInternal(x,isModScal,modMat),ellArr);
 end

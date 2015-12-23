@@ -15,18 +15,17 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         centerVec=getCenterVec(self)
         nPlot2dPointsArr=getNPlot2dPoints(ellArr)
         nPlot3dPointsArr=getNPlot3dPoints(ellArr)
-    end
-    methods(Access=protected)
-        isModScal=shapeInternal(ellArr,modMat)
-        [isFstScal,outEllVec]=mtimesInternal(multMat,inpEllVec)
+        outEllArr=mtimes(multMat,inpEllArr)
+        ellArr=shape(ellArr, modMat)
     end
     methods(Abstract)
         shapeMat=getShapeMat(self)
         [SDataArr,SFieldNiceNames,SFieldDescr]=...
             toStruct(ellArr,isPropIncluded)
-    end
-    methods(Abstract)
         polar=getScalarPolarInternal(self,isRobustMethod)
+    end
+    methods(Abstract,Access=protected)
+        ellObj=changeShapeMatInternal(ellObj,isModScal,modMat)
     end
     methods(Abstract, Static)
         ellArr=fromRepMat(varargin)

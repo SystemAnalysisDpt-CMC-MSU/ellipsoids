@@ -14,6 +14,7 @@ classdef TestPolarEllipsoid < elltool.core.AEllipsoid
         ellArr=fromStruct(SEllArr)
     end
     methods(Access=protected)
+        ellObj=changeShapeMatInternal(ellObj,isModScal,modMat)
         checkIsMeVirtual(ellArr,varargin)
         copyEllObj=getSingleCopy(ellObj)
         ellObj=ellFactory(self)

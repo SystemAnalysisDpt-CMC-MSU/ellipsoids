@@ -10,6 +10,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         checkIsMe(ellArr,varargin)
     end
     methods(Access=protected)
+        changeShapeMatInternal(ellObj,isModScal,modMat)
         function checkIsMeVirtual(ellArr,varargin)
             elltool.core.GenEllipsoid.checkIsMe(ellArr,varargin)
         end
@@ -23,7 +24,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         [ellCenterVec,ellDiagMat,ellEigvMat]=parameters(ell)
         [SDataArr,SFieldNiceNames,SFieldDescr]=...
             toStruct(ellArr,isPropIncluded)
-        ellArr=shape(ellArr,modMat)
         function isOk=getIsGoodDir(ellObj1,ellObj2,curDirVec)
             % Example:
             %   firstEllObj=elltool.core.GenEllipsoid([10;0],2*eye(2));

@@ -1,4 +1,4 @@
-function [isFstScal,outEllVec]=mtimesInternal(multMat,inpEllVec)
+function outEllArr=mtimesInternal(multMat,inpEllArr)
 %
 % MTIMES - overloaded operator '*'.
 %
@@ -44,19 +44,24 @@ function [isFstScal,outEllVec]=mtimesInternal(multMat,inpEllVec)
 %            System Analysis Department 2012 $
 %
 import modgen.common.checkvar
-checkIsMeVirtual(inpEllVec);
+checkIsMeVirtual(inpEllArr);
 checkvar(multMat,@(x)isa(x,'double'),...
     'errorTag','wrongInput','errorMessage',...
-    'first input argument must be matrix or sacalar.');
-checkvar(inpEllVec,'~any(isempty(x(:)))',...
+    'first input argument must be matrix or scalar.');
+checkvar(inpEllArr,'~any(isempty(x(:)))',...
     'errorTag','wrongInput','errorMessage',...
     'array of ellipsoids contains empty ellipsoid');
 isFstScal=isscalar(multMat);
 nDims=size(multMat,2);
-nDimsVec=dimension(inpEllVec);
+nDimsVec=dimension(inpEllArr);
 modgen.common.checkmultvar...
     ('all(x2(:)==x2(1))&&(x1||(~x1)&&(x2(1)==x3))',3,isFstScal,...
     nDimsVec,nDims,'errorTag','wrongSizes','errorMessage',...
     'dimensions not match.');
-outEllVec=inpEllVec.getCopy();
+outEllArr=inpEllArr.getCopy();
+arrayfun(@(x) fSingleMtimes(x),outEllArr);
+    function fSingleMtimes(ellObj)
+        ellObj.changeShapeMatInternal(isFstScal,multMat);
+        ellObj.centerVec=multMat*ellObj.getCenterVec();
+    end
 end

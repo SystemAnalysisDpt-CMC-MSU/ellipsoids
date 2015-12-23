@@ -282,6 +282,7 @@ classdef ellipsoid < elltool.core.AEllipsoid
         checkIsMe(ellArr,varargin)
     end
     methods (Access=protected)
+        changeShapeMatInternal(ellObj,isModScal,modMat)
         function checkIsMeVirtual(ellArr,varargin)
             ellipsoid.checkIsMe(ellArr,varargin)
         end
