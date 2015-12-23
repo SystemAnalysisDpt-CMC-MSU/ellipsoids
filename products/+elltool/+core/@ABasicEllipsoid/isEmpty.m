@@ -1,6 +1,6 @@
 function isPositiveArr = isEmpty(myEllArr)
 %
-% ISEMPTY - checks if the ellipsoid object is empty.
+% ISEMPTY - checks if the ABasicEllipsoid object is empty.
 %
 % Input:
 %	regular:

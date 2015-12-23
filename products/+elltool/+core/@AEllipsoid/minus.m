@@ -1,4 +1,4 @@
-function outEllArr = minus(varargin)
+function outEllArr=minus(varargin)
 %
 % MINUS - overloaded operator '-'
 %

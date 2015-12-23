@@ -1,4 +1,4 @@
-function [propArr,propVal]=getPropertyInternal(ellArr,propName,fPropFun)
+function [propArr,propVal]=getProperty(ellArr,propName,fPropFun)
 % GETPROPERTY - gives array the same size as ellArr with values of
 %               propName properties for each ABasicEllipsoid in ellArr.
 %               Private method, used in every public property getter.
@@ -34,7 +34,7 @@ end
 if nargin==2
     fPropFun=@min;
 end
-sizeCVec = num2cell(size(ellArr));
+sizeCVec=num2cell(size(ellArr));
 propArr=zeros(sizeCVec{:});
 for iElem=1:numel(ellArr)
     propArr(iElem)=ellArr(iElem).(propName);

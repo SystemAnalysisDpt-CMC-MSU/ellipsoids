@@ -1,5 +1,5 @@
-function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr, varargin)
-% EQ - compares two arrays of ellipsoids
+function [isEqualArr,reportStr]=eq(ellFirstArr,ellSecArr,varargin)
+% EQ - compares two arrays of ABasicEllipsoids
 %
 % Input:
 %   regular:
@@ -18,5 +18,5 @@ function [isEqualArr, reportStr] = eq(ellFirstArr, ellSecArr, varargin)
 %            Faculty of Computational Mathematics
 %            and Computer Science,
 %            System Analysis Department 2013 $
-[isEqualArr, reportStr] = ellFirstArr.isEqual(ellSecArr);
+[isEqualArr,reportStr]=ellFirstArr.isEqual(ellSecArr);
 end

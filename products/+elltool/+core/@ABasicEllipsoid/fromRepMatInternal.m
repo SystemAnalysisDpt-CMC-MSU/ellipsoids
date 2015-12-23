@@ -1,5 +1,5 @@
-function ellArr = fromRepMatInternal(ellObj,sizeVec)
-% FROMREPMAT - returns array of equal ellipsoids the same
+function ellArr=fromRepMatInternal(ellObj,sizeVec)
+% FROMREPMAT - returns array of equal ABasicEllipsoids the same
 % 		size as stated in sizeVec argument
 % 
 % ellArr = fromRepMat(sizeVec) - creates an array of size 

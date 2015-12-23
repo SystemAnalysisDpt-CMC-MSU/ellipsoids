@@ -1,23 +1,23 @@
-function ellArr = shape(ellArr, modMat)
+function ellArr=shape(ellArr,modMat)
 %
-% SHAPE - modifies the shape matrix of the GenEllipsoid without
+% SHAPE - modifies the shape matrix of the AEllipsoid without
 %	changing its center.
 %
 %	modEllArr = SHAPE(ellArr, modMat) Modifies the shape matrices of
-%		the GenEllipsoids in the ellipsoidal array ellArr. The centers
+%		the AEllipsoids in the ellipsoidal array ellArr. The centers
 %		remain untouched - that is the difference of the function SHAPE and
 %		linear transformation modMat*ellArr. modMat is expected to be a
 %		scalar or a square matrix of suitable dimension.
 %
 % Input:
 %	regular:
-%		ellArr: GenEllipsoid [nDims1,nDims2,...,nDimsN] - array
-%			of GenEllipsoids.
+%		ellArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array
+%			of AEllipsoids.
 %		modMat: double[nDim, nDim]/[1,1] - square matrix or scalar
 %
 % Output:
-%	ellArr: GenEllipsoid [nDims1,nDims2,...,nDimsN] - array of modified
-%		GenEllipsoids.
+%	ellArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array of modified
+%		AEllipsoids.
 %
 % Example:
 %	ellObj = GenEllipsoid([-2; -1], [4 -1; -1 1]);

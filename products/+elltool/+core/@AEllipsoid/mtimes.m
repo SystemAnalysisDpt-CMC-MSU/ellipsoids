@@ -1,20 +1,17 @@
-function outEllArr=mtimesInternal(multMat,inpEllArr)
+function outEllArr=mtimes(multMat,inpEllArr)
 %
 % MTIMES - overloaded operator '*'.
 %
-%   Multiplication of the ellipsoid by a matrix or a scalar.
-%   If inpEllVec(iEll) = E(q, Q) is an ellipsoid, and
-%   multMat = A - matrix of suitable dimensions,
-%   then A E(q, Q) = E(Aq, AQA').
+%   Multiplication of the AEllipsoid by a matrix or a scalar.
 %
 % Input:
 %   regular:
 %       multMat: double[mRows, nDims]/[1, 1] - scalar or
 %           matrix in R^{mRows x nDim}
-%       inpEllVec: ellipsoid [1, nCols] - array of ellipsoids.
+%       inpEllVec: AEllipsoid [1, nCols] - array of AEllipsoids.
 %
 % Output:
-%   outEllVec: ellipsoid [1, nCols] - resulting ellipsoids.
+%   outEllVec: AEllipsoid [1, nCols] - resulting AEllipsoids.
 %
 % Example:
 %   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
@@ -42,6 +39,12 @@ function outEllArr=mtimesInternal(multMat,inpEllArr)
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
+%
+% $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $   
+% $Date: Dec-2015$
+% $Copyright: Moscow State University,
+%			Faculty of Computational Mathematics and Computer Science,
+%			System Analysis Department 2015 $
 %
 import modgen.common.checkvar
 checkIsMeVirtual(inpEllArr);

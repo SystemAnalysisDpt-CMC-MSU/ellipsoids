@@ -1,4 +1,4 @@
-function [relTolArr, relTolVal] = getRelTol(ellArr, varargin)
+function [relTolArr,relTolVal]=getRelTol(ellArr,varargin)
 % GETRELTOL - gives the array of relTol for all elements in ellArr
 %
 % Input:

@@ -1,4 +1,4 @@
-function copyEllArr = getCopy(ellArr)
+function copyEllArr=getCopy(ellArr)
 % GETCOPY - returns array the same size as ellArr with copies of 
 %           ABasicEllipsoids in ellArr.
 %
@@ -41,9 +41,9 @@ if isempty(ellArr)
 elseif isscalar(ellArr)
     copyEllArr=getSingleCopy(ellArr);
 else
-    sizeCVec = num2cell(size(ellArr));
+    sizeCVec=num2cell(size(ellArr));
     copyEllArr(sizeCVec{:})=ellArr.ellFactory();
-    for iElem = 1:numel(ellArr)
+    for iElem=1:numel(ellArr)
         copyEllArr(iElem)=getSingleCopy(ellArr(iElem));
     end
 end

@@ -4,11 +4,11 @@ function nPlot3dPointsArr=getNPlot3dPoints(ellArr)
 %
 % Input:
 %   regular:
-%       ellArr: AEllipsoid[nDim1, nDim2,...] - mltidimensional array  of 
+%       ellArr: AEllipsoid[nDim1, nDim2,...] - multidimensional array  of 
 %          AEllipsoids
 %
 % Output:
-%       nPlot2dPointsArr: double[nDim1, nDim2,...] - multidimension array
+%       nPlot2dPointsArr: double[nDim1, nDim2,...] - multidimensional array
 %           of nPlot3dPoints property for ellipsoids in ellArr
 % 
 % Example:

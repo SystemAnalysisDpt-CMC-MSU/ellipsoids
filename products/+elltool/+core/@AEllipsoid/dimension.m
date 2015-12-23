@@ -1,12 +1,12 @@
 function [dimArr,rankArr]=dimension(myEllArr)
 %
-% DIMENSION - returns the dimension of the space in which the ellipsoid is  
-%             defined and the actual dimension of the ellipsoid.
+% DIMENSION - returns the dimension of the space in which the AEllipsoid is  
+%             defined and the actual dimension of the AEllipsoid.
 %             
 % Input:
 %   regular:
-%     myEllArr: ABasicEllipsoid[nDims1,nDims2,...,nDimsN] - array 
-%       of ABasicEllipsoids.
+%     myEllArr: AEllipsoid[nDims1,nDims2,...,nDimsN] - array 
+%       of AEllipsoids.
 %
 % Output:
 %   regular:
@@ -14,7 +14,7 @@ function [dimArr,rankArr]=dimension(myEllArr)
 %
 %   optional:
 %     rankArr: double[nDims1,nDims2,...,nDimsN] - dimensions of the  
-%            ABasicEllipsoids in myEllArr.
+%            AEllipsoids in myEllArr.
 % 
 % Example:
 %   firstEllObj = ellipsoid();

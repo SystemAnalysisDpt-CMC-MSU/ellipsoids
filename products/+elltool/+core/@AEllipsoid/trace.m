@@ -1,4 +1,4 @@
-function trArr = trace(ellArr)
+function trArr=trace(ellArr)
 %
 % TRACE - returns the trace of the AEllipsoid.
 %
@@ -34,4 +34,4 @@ checkIsMeVirtual(ellArr);
 modgen.common.checkvar(ellArr,'~any(x(:).isEmpty())',...
     'errorTag','wrongInput:emptyEllipsoid',...
     'errorMessage','input argument contains empty ellipsoid.')
-trArr = arrayfun(@(x) trace(x.getShapeMat), ellArr);
+trArr=arrayfun(@(x) trace(x.getShapeMat), ellArr);

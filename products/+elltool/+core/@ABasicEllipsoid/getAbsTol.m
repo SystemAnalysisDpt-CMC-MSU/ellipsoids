@@ -1,10 +1,10 @@
-function [absTolArr, absTolVal] = getAbsTol(ellArr, varargin)
+function [absTolArr,absTolVal]=getAbsTol(ellArr,varargin)
 % GETABSTOL - gives the array of absTol for all elements in ellArr
 %
 % Input:
 %   regular:
-%       ellArr: ellipsoid[nDim1, nDim2, ...] - multidimension array
-%           of ellipsoids
+%       ellArr: ABasicEllipsoid[nDim1, nDim2, ...] - multidimension array
+%           of ABasicEllipsoids
 %   optional
 %       fAbsTolFun: function_handle[1,1] - function that apply
 %           to the absTolArr. The default is @min.
@@ -44,4 +44,4 @@ function [absTolArr, absTolVal] = getAbsTol(ellArr, varargin)
 %             Faculty of Computational Mathematics
 %             and Computer Science,
 %             System Analysis Department 2013 $ 
-[absTolArr, absTolVal] = ellArr.getProperty('absTol',varargin{:});
+[absTolArr,absTolVal]=ellArr.getProperty('absTol',varargin{:});

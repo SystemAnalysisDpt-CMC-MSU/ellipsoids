@@ -1,10 +1,10 @@
-function maxEigArr = maxeig(inpEllArr)
+function maxEigArr=maxeig(ellArr)
 %
 % MAXEIG - return the maximal eigenvalue of the AEllipsoid.
 %
 % Input:
 %   regular:
-%       inpEllArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%       ellArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array of 
 %            AEllipsoids.
 %
 % Output:
@@ -26,11 +26,11 @@ function maxEigArr = maxeig(inpEllArr)
 %			System Analysis Department 2015 $
 %
 import elltool.conf.Properties;
-checkIsMeVirtual(inpEllArr);
-modgen.common.checkvar(inpEllArr,'~any(x(:).isEmpty())',...
+checkIsMeVirtual(ellArr);
+modgen.common.checkvar(ellArr,'~any(x(:).isEmpty())',...
     'errorTag','wrongInput:emptyEllipsoid','errorMessage',...
     'input argument contains empty ellipsoid');
-maxEigArr = arrayfun(@getSingleMaxEig,inpEllArr);
+maxEigArr = arrayfun(@getSingleMaxEig,ellArr);
 %
 function maxEig=getSingleMaxEig(ellObj)
     shapeMat=ellObj.getShapeMat();
