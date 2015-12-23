@@ -265,9 +265,10 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             cellfun(@checkNegative,testModMatCVec,testEllArrCVec);
             %CheckPositive
             test1Ell=GenEllipsoid([-2;-1],[4;Inf]);
-            testModMatCVec={[1,2;2,1],[2,0;0,0]};
-            testEllArrCVec={testEll,test1Ell};
-            expEllArrCVec={GenEllipsoid([-2;-1],[4,5;5,13]),...
+            testModMatCVec={2,[1,2;2,1],[2,0;0,0]};
+            testEllArrCVec={GenEllipsoid(2),testEll,test1Ell};
+            expEllArrCVec={GenEllipsoid(8),...
+                GenEllipsoid([-2;-1],[4,5;5,13]),...
                 GenEllipsoid([-2;-1],[16;0])};
             cellfun(@checkPositive,testModMatCVec,testEllArrCVec,...
                 expEllArrCVec);
@@ -329,6 +330,49 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                     self.runAndCheckError(...
                         'test1Ell.isbigger(test2Ell)','wrongInput');
                 end
+            end
+        end
+        %
+        function testMtimes(self)
+            import elltool.core.GenEllipsoid
+            testEll=GenEllipsoid([1;1],[10;12]);
+            %Check negative
+            testMultMatCVec={testEll,'a',[1;1],[1,1]};
+            testEllCVec={testEll,testEll,testEll,GenEllipsoid()};
+            errTagCVec={'wrongInput','wrongInput','wrongSizes',...
+                'wrongInput'};
+            cellfun(@checkNegative,testMultMatCVec,testEllCVec,errTagCVec);
+            %Check positive
+            testMultMatCVec={1,2,[1,1],ones(100,2)};
+            expEllCVec={testEll,GenEllipsoid([2;2],[40;48]),...
+                GenEllipsoid(2,22),...
+                GenEllipsoid(2*ones(100,1),22*ones(100,100))};
+            cellfun(@(x,y)checkPositive(x,testEll,y),testMultMatCVec,...
+                expEllCVec);
+            %Check positive with Inf values
+            test2Ell=GenEllipsoid([1;1],[4;Inf]);
+            testMultMatCVec={2,[1,1],ones(100,2)};
+            SExpResCVec={struct('QMat',[16,0;0,0],'centerVec',[2;2],...
+                'QInfMat',[0,0;0,4]),...
+                struct('QMat',4,'centerVec',2,...
+                'QInfMat',1),...
+                struct('QMat',4*ones(100,100),'centerVec',2*ones(100,1),...
+                'QInfMat',ones(100,100))};
+            cellfun(@(x,y)check2Positive(x,test2Ell,y),testMultMatCVec,...
+                SExpResCVec);
+            function checkNegative(testMultMat,testEllArr,errTag) %#ok<INUSL>
+                self.runAndCheckError('testMultMat*testEllArr',errTag);
+            end
+            function checkPositive(testMultMat,testEll,expEll)
+                resEll=testMultMat*testEll;
+                [isOkArr,reportStr]=resEll.isEqual(expEll);
+                mlunitext.assert(all(isOkArr(:)),reportStr);
+            end
+            function check2Positive(testMultMat,testEll,SExpRes)
+                resEll=testMultMat*testEll;
+                STestRes=resEll.toStruct();
+                mlunitext.assert(structcompare(STestRes,SExpRes,1e-09));
+                import modgen.struct.structcompare;
             end
         end
     end
