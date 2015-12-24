@@ -11,7 +11,6 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         function ellObj=AEllipsoid(varargin)
             ellObj=ellObj@elltool.core.ABasicEllipsoid();
         end
-        resArr=repMat(self,varargin)
         centerVec=getCenterVec(self)
         nPlot2dPointsArr=getNPlot2dPoints(ellArr)
         nPlot3dPointsArr=getNPlot3dPoints(ellArr)

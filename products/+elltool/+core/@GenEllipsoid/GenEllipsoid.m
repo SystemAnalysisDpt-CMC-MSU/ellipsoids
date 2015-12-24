@@ -15,9 +15,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             elltool.core.GenEllipsoid.checkIsMe(ellArr,varargin)
         end
         copyEllObj=getSingleCopy(ellObj)
-        function ellObj=ellFactory(self) %#ok<MANU>
-            ellObj=elltool.core.GenEllipsoid();
-        end
     end
     methods
         polar=getScalarPolarInternal(self,isRobustMethod)
@@ -391,9 +388,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         end
     end
     methods (Static)
-        function propNameVec=getPropList()
-            propNameVec={'absTol','relTol'};
-        end
         ellArr=fromRepMat(varargin)
         ellArr=fromStruct(SEllArr)
     end

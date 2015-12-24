@@ -42,7 +42,7 @@ elseif isscalar(ellArr)
     copyEllArr=getSingleCopy(ellArr);
 else
     sizeCVec=num2cell(size(ellArr));
-    copyEllArr(sizeCVec{:})=ellArr.ellFactory();
+    copyEllArr(sizeCVec{:})=feval(class(ellArr));
     for iElem=1:numel(ellArr)
         copyEllArr(iElem)=getSingleCopy(ellArr(iElem));
     end

@@ -159,7 +159,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
             sizeArr = [2 3+1i*eps*2 3 5];
             eyeMat = eye(5);
             self.runAndCheckError('ellipsoid.fromRepMat(sizeArr)', ...
-                'wrongInput:inpMat');
+                'wrongInput');
             self.runAndCheckError('ellipsoid.fromRepMat(eyeMat)', ...
                 'wrongInput');
         end

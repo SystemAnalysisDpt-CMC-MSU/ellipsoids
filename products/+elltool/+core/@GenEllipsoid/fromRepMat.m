@@ -91,7 +91,6 @@ function ellArr=fromRepMat(varargin)
 %
 import modgen.common.checkvar;
 import elltool.core.GenEllipsoid;
-import elltool.core.ABasicEllipsoid;
 %
 if nargin>4
     indVec=[1:3,5:nargin];
@@ -101,5 +100,4 @@ else
     indVec=1:nargin-1;
 end
 %
-ellArr=ABasicEllipsoid.fromRepMatInternal(...
-    GenEllipsoid(varargin{indVec}),sizeVec);
+ellArr=repMat(GenEllipsoid(varargin{indVec}),sizeVec);

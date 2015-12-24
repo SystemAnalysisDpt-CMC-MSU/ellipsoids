@@ -27,10 +27,6 @@ function [propArr,propVal]=getProperty(ellArr,propName,fPropFun)
 %			System Analysis Department 2015 $
 %
 import modgen.common.throwerror;
-propNameList=ellArr.getPropList();
-if ~any(strcmp(propName,propNameList))
-    throwerror('wrongInput',[propName,':no such property']);
-end
 if nargin==2
     fPropFun=@min;
 end

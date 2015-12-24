@@ -88,7 +88,7 @@ else
 	dimArr=dimension(inpEllArr);
 	checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimArr,...
 		'errorTag','wrongDimensions','errorMessage','dimensions mismatch');
-	outEllArr(sizeCVec{:})=inpEllArr.ellFactory();
+	outEllArr(sizeCVec{:})=feval(class(inpEllArr));
 	arrayfun(@(x) fSinglePlus(x),1:numel(inpEllArr));
 end        
 	function fSinglePlus(index)

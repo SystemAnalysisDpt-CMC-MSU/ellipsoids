@@ -255,10 +255,6 @@ classdef ellipsoid < elltool.core.AEllipsoid
     end
     
     methods(Static)
-        function propNameVec=getPropList()
-            propNameVec={'absTol','relTol','nPlot2dPoints',...
-                'nPlot3dPoints','nTimeGridPoints'};
-        end
         ellArr = fromRepMat(varargin)
         ellArr = fromStruct(SEllArr)
     end
@@ -287,9 +283,6 @@ classdef ellipsoid < elltool.core.AEllipsoid
             ellipsoid.checkIsMe(ellArr,varargin)
         end
         copyEllObj=getSingleCopy(ellObj)
-        function ellObj=ellFactory(self) %#ok<MANU>
-            ellObj=ellipsoid();
-        end
     end
     methods (Access=private)
         function isArrEq = isMatEqualInternal(self,aArr,bArr)
