@@ -63,9 +63,11 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
         end
     end
     methods
-        %
-        function calcPrecision=getCalcPrecision(self)
-            calcPrecision = self.relTol;
+        function relTol=getRelTol(self)
+            relTol = self.relTol;
+        end
+        function absTol=getAbsTol(self)
+            absTol = self.absTol;
         end
         %
         function self=ATightEllApxBuilder(pDefObj,goodDirSetObj,...

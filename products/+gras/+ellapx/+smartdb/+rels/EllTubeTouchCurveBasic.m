@@ -1,6 +1,9 @@
 classdef EllTubeTouchCurveBasic<handle
-    %TestRelation Summary of this class goes here
-    %   Detailed explanation goes here
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-2015 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2015 $  
+    %
     properties (Constant,Hidden)
         FCODE_DIM %#ok<*MCCPI>
         FCODE_S_TIME

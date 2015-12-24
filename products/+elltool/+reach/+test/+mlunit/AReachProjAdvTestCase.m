@@ -37,7 +37,8 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
         linSys
         reachObj
         timeVec
-        calcPrecision
+        absTol
+        relTol
         modeList
         SysParam
         linSysFactory
@@ -111,8 +112,8 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
             fieldNotToCompareList=F().getNameList(...
                 self.FIELD_CODES_NOT_TO_COMPARE);
             %
-            maxTolerance=Properties.getAbsTol()*self.CMP_PREC_FACTOR;
-            maxRelTolerance=Properties.getRelTol()*self.CMP_PREC_FACTOR;
+            maxTolerance=self.absTol*self.CMP_PREC_FACTOR;
+            maxRelTolerance=self.relTol*self.CMP_PREC_FACTOR;
             %
             [isEqual,reportStr] = secondProjReachObj.isEqual(...
                 firstProjReachObj,...
@@ -157,8 +158,11 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
             self.fillSysParamField();
             %
             self.timeVec = self.crm.getParam('genericProps').calcTimeLimVec;
-            self.calcPrecision =...
-                self.crm.getParam('genericProps.calcPrecision');
+            self.absTol =...
+                self.crm.getParam('genericProps.absTol');
+            self.relTol =...
+                self.crm.getParam('genericProps.relTol');
+            %
             ControlBounds = struct();
             ControlBounds.center = self.SysParam.ptCVec;
             ControlBounds.shape = self.SysParam.ptCMat;

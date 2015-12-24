@@ -1,12 +1,17 @@
 classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
-    %TestRelation Summary of this class goes here
-    %   Detailed explanation goes here
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-2015 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2015 $  
     properties (Constant,Hidden)
         FCODE_Q_ARRAY %#ok<*MCCPI>
         FCODE_A_MAT
         FCODE_SCALE_FACTOR
         FCODE_M_ARRAY
     end
+    properties (GetAccess=private,Constant)
+        DEFAULT_SCALE_FACTOR=1;
+    end    
     methods
         function fieldsList = getNoCatOrCutFieldsList(~)
             import  gras.ellapx.smartdb.F;
@@ -154,12 +159,38 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 %
                 isLsTouch=lsGoodDirNorm>absTol;
                 %
-                %
-                if isLsTouch
+                if ~isLsTouch
+                    if lsGoodDirNorm>0
+                        throwerror('wrongInput:ltDegraded',...
+                            ['norm of l(%g)=%s ',...
+                            'has degraded below absolute ',...
+                            'tolerance=%g\n',...
+                            '  norm(l(%g))=%g'],...
+                            sTime,mat2str(lsGoodDirVec),absTol,sTime,...
+                            lsGoodDirNorm);
+                    end
+                else
                     lsGoodDirVec=lsGoodDirVec./lsGoodDirNorm;
                 end
                 %
                 isLtTouchVec=ltGoodDirNormVec>absTol;
+                if ~all(isLtTouchVec)
+                    isLtDegradedVec=~isLtTouchVec&(ltGoodDirNormVec>0);
+                    if any(isLtDegradedVec)
+                        indFirstDegraded=find(isLtDegradedVec,1,'first');
+                        tDegr=timeVec(indFirstDegraded);
+                        ltGoodDirVec=ltGoodDirMat(:,indFirstDegraded);
+                        ltNorm=ltGoodDirNormVec(indFirstDegraded);
+                        throwerror('wrongState',...
+                            ['norm of l(t) at t=%g has degraded ',...
+                            'below absolute tolerance=%g\n',...
+                            '  l(%g)=%s,\n',...
+                            '  l(%g)=%s,\n',...
+                            '  norm(l(%g))=%g'],...
+                            tDegr,absTol,sTime,mat2str(lsGoodDirVec),...
+                            tDegr,mat2str(ltGoodDirVec),tDegr,ltNorm);
+                    end
+                end
                 %
                 if any(isLtTouchVec)
                     ltGoodDirMat(:,isLtTouchVec)=ltGoodDirMat(:,isLtTouchVec)./...
@@ -204,7 +235,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         end
         function STubeData=fromQArraysInternal(QArrayList,aMat,...
                 MArrayList,timeVec,ltGoodDirArray,sTime,approxType,...
-                approxSchemaName,approxSchemaDescr,absTol,relTol,scaleFactorVec)
+                approxSchemaName,approxSchemaDescr,absTol,relTol,...
+                scaleFactorVec,isScalingApplied)
             %
             % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011 $
             % $Copyright: Moscow State University,
@@ -216,26 +248,94 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             import gras.gen.SquareMatVector;
             import gras.ode.MatrixODESolver;
             import gras.ellapx.smartdb.rels.EllTubeBasic;
-            import modgen.common.type.simple.checkgenext;
+            import modgen.common.checkmultvar;
             %
-            checkgenext(['numel(x1)==numel(x2)&&numel(x2)==numel(x3)',...
-                '&&isrow(x1)&&isrow(x2)&&isrow(x3)&&isnumeric(x3)'],3,...
+            if nargin<13
+                isScalingApplied=false;
+                if nargin<12
+                    scaleFactorVec=...
+                        EllTubeBasic.DEFAULT_SCALE_FACTOR(...
+                        ones(size(QArrayList)));
+                end
+            end
+            %
+            if ~iscell(QArrayList)
+                QArrayList={QArrayList};
+            end
+            if ~iscell(MArrayList)
+                MArrayList={MArrayList};
+            end
+            %
+            checkmultvar(['((numel(x1)==numel(x2))||isempty(x2))',...
+                '&&isnumeric(x3)&&~isempty(x1)'],3,...
                 QArrayList,MArrayList,scaleFactorVec);
             %
+            if isempty(MArrayList)&&~isempty(QArrayList)
+                MArrayList=cellfun(@(x)zeros(size(x)),QArrayList,...
+                    'UniformOutput',false);
+            end
+            %
             nLDirs=length(QArrayList);
+            checkmultvar(...
+                ['((iscell(x2)&&numel(x2)==x1)||isnumeric(x2))',...
+                '&&((iscell(x3)&&numel(x3)==x1)||isnumeric(x3))',...
+                '&&((iscell(x4)&&numel(x4)==x1)||',...
+                'isnumeric(x4)&&(ndims(x4)==3||ndims(x4)==2))'],4,...
+                nLDirs,aMat,timeVec,ltGoodDirArray);
+            checkmultvar(...
+                ['((iscell(x2)&&numel(x2)==x1)||ischar(x2))',...
+                '&&((iscell(x3)&&numel(x3)==x1)||ischar(x3))'],3,...
+                nLDirs,approxSchemaName,approxSchemaDescr);
+            checkmultvar(...
+                ['(isnumeric(x2)&&isscalar(x2)||numel(x2)==x1)',...
+                '&&(isnumeric(x3)&&isscalar(x3)||numel(x3)==x1)',...
+                '&&(isnumeric(x4)&&isscalar(x4)||numel(x4)==x1)',...
+                '&&(isnumeric(x5)&&isscalar(x5)||numel(x5)==x1)'],5,...
+                nLDirs,scaleFactorVec,sTime,absTol,relTol);
+            %
             STubeData=struct;
             %
-            STubeData.scaleFactor=ones(nLDirs,1);
-            STubeData.QArray=QArrayList.';
-            STubeData.aMat=repmat({aMat},nLDirs,1);
+            if isrow(scaleFactorVec)
+                scaleFactorVec=scaleFactorVec.';
+            end
+            if isscalar(scaleFactorVec)
+                scaleFactorVec=repmat(scaleFactorVec,nLDirs,1);
+            end
+            if isScalingApplied
+                STubeData.scaleFactor=scaleFactorVec;
+            else
+                STubeData.scaleFactor=ones(nLDirs,1);
+            end
+            if isrow(QArrayList)
+                QArrayList=QArrayList.';
+            end
+            STubeData.QArray=QArrayList;
+            if isnumeric(aMat)
+                aMat=repmat({aMat},nLDirs,1);
+            elseif isrow(aMat)
+                aMat=aMat.';
+            end
+            STubeData.aMat=aMat;
             %
-            STubeData.MArray=MArrayList.';
+            if isrow(MArrayList)
+                MArrayList=MArrayList.';
+            end
+            STubeData.MArray=MArrayList;
             %
-            STubeData.dim=repmat(size(aMat,1),nLDirs,1);
+            STubeData.dim=repmat(size(aMat{1},1),nLDirs,1);
             %
-            STubeData.sTime=repmat(sTime,nLDirs,1);
+            if numel(sTime)>1
+                STubeData.sTime=sTime;
+            else
+                STubeData.sTime=repmat(sTime,nLDirs,1);
+            end
             %
-            STubeData.timeVec=repmat({timeVec},nLDirs,1);
+            if isnumeric(timeVec)
+                timeVec=repmat({timeVec},nLDirs,1);
+            elseif isrow(timeVec)
+                timeVec=timeVec.';
+            end
+            STubeData.timeVec=timeVec;
             %
             if length(approxType) > 1
                 STubeData.approxType=approxType;
@@ -243,12 +343,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 STubeData.approxType=repmat(approxType,nLDirs,1);
             end
             %
-            if iscell(approxSchemaName)
-                STubeData.approxSchemaName=approxSchemaName;
-            else
-                STubeData.approxSchemaName=repmat({approxSchemaName},...
-                    nLDirs,1);
+            if ischar(approxSchemaName)
+                approxSchemaName=repmat({approxSchemaName},nLDirs,1);
+            elseif isrow(approxSchemaName)
+                approxSchemaName=approxSchemaName.';
             end
+            STubeData.approxSchemaName=approxSchemaName;
             %
             if iscell(approxSchemaDescr)
                 STubeData.approxSchemaDescr=approxSchemaDescr;
@@ -257,20 +357,37 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     nLDirs,1);
             end
             %
-            STubeData.ltGoodDirMat=cell(nLDirs,1);
-            %
-            STubeData.ltGoodDirNormVec=cell(nLDirs,1);
-            %
-            STubeData.absTol=repmat(absTol,nLDirs,1);
-            %
-            STubeData.relTol=repmat(relTol,nLDirs,1);
-            % 
-            for iLDir=1:1:nLDirs
-                STubeData.ltGoodDirMat{iLDir}=...
-                    squeeze(ltGoodDirArray(:,iLDir,:));
+            if isscalar(absTol)
+                absTol=repmat(absTol,nLDirs,1);
             end
+            %
+            STubeData.absTol=absTol;
+            %
+            if isscalar(relTol)
+                relTol=repmat(relTol,nLDirs,1);
+            end
+            STubeData.relTol=relTol;
+            %
+            if isnumeric(ltGoodDirArray)
+                ltGoodDirMatList=cell(nLDirs,1);
+                for iLDir=1:1:nLDirs
+                    ltGoodDirMatList{iLDir}=...
+                        squeeze(ltGoodDirArray(:,iLDir,:));
+                end
+            else
+                if isrow(ltGoodDirArray)
+                    ltGoodDirMatList=ltGoodDirArray.';
+                else
+                    ltGoodDirMatList=ltGoodDirArray;
+                end
+            end
+            STubeData.ltGoodDirMat=ltGoodDirMatList;
+            %
             STubeData=EllTubeBasic.calcGoodCurveData(STubeData);
-            STubeData=EllTubeBasic.scaleTubeData(STubeData,scaleFactorVec.');
+            if ~isScalingApplied
+                STubeData=EllTubeBasic.scaleTubeData(STubeData,...
+                    scaleFactorVec);
+            end
             STubeData=EllTubeBasic.calcTouchCurveData(STubeData);
         end
     end
@@ -279,7 +396,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             dependencyFieldList={'sTime','lsGoodDirVec','MArray'};
         end
         function checkTouchCurveVsQNormArray(self,tubeRel,curveRel,...
-                fDistFunc,checkName,fFilterFunc)
+                fDistFunc,checkName,fFilterFunc) %#ok<INUSL>
             nTubes=tubeRel.getNTuples();
             nCurves=curveRel.getNTuples();
             QArrayList=tubeRel.QArray;
@@ -323,7 +440,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 actualPrecision = min([actualSvdPrecision, ...
                     actualRegPrecision]);
                 %
-                isOk = (actualPrecision <= calcPrecision);
+                isOk=actualPrecision<=calcPrecision;
                 if ~isOk
                     throwerror('wrongInput:touchLineValueFunc',...
                         ['check [%s] has failed for %s, ',...
@@ -331,6 +448,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                         checkName, fieldName, calcPrecision, ...
                         actualPrecision);
                 end
+                %
                 function normVal = checkPrecision(lrDivByVecOp)
                     normVec = lrDivByVecOp(QArray, xTouchCurveMat - aMat);
                     isnNanVec=~isnan(normVec);
@@ -350,12 +468,12 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             QIntArrayList=intRel.applyTupleGetFunc(@(x,y)x./(y.*y),...
                 {'QArray','scaleFactor'},'UniformOutput',false);
             intCalcPrecVec=intRel.absTol;
-
+            
             %
             QExtArrayList=extRel.applyTupleGetFunc(@(x,y)x./(y.*y),...
                 {'QArray','scaleFactor'},'UniformOutput',false);
             extCalcPrecVec=extRel.absTol;
-
+            
             %
             nIntGroups=length(indIntForwardVec);
             nExtGroups=length(indExtForwardVec);
@@ -619,8 +737,8 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         end
     end
     methods (Access=protected)
-        function [ellTubeProjRel,indProj2OrigVec]=projectInternal(self,projType,...
-                projMatList,fGetProjMat)
+        function [ellTubeProjRel,indProj2OrigVec]=projectInternal(self,...
+                projType,projMatList,fGetProjMat)
             import gras.ellapx.uncertcalc.common.*;
             import modgen.common.throwerror;
             import gras.ellapx.common.*;
@@ -802,7 +920,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
         end
     end
     methods
-        function [apprEllMat timeVec] = getEllArray(self, approxType)
+        function [apprEllMat,timeVec] = getEllArray(self, approxType)
             % GETELLARRAY - returns array of matrix's ellipsoid according to
             %               approxType
             %
@@ -1070,7 +1188,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
             self.checkIfObjectScalar();
             ellTubeObj.checkIfObjectScalar();
             notExistFieldList=setdiff(self.getFieldNameList(),...
-                    ellTubeObj.getFieldNameList());
+                ellTubeObj.getFieldNameList());
             %
             if ~isempty(notExistFieldList)
                 throwerror('wrongInput:notConsistentTubes',...
@@ -1091,7 +1209,7 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                 notComparedFieldList,areTimeBoundsCompared,...
                 isTupleOrderChecked,isMaxCompareTolSpec,...
                 isMaxRelCompareTolSpec]=modgen.common.parseparext(...
-                varargin,propCheckMat);            
+                varargin,propCheckMat);
             %
             if ~isMaxCompareTolSpec
                 maxCompareTol=max(self.absTol)+...
@@ -1255,7 +1373,6 @@ classdef EllTubeBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBasic
                     end
                 end
             end
-            %
         end
     end
 end

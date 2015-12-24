@@ -9,58 +9,69 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         mixingStrength
         mixingProportionsMat
         ellTubeRel
-        AtDynamics
-        BPBTransDynamics
-        CQCTransDynamics
+        bigAtDynamics
+        bigBPBTransDynamics
+        bigCQCTransDynamics
         ltSplineList
         goodDirSetObj
     end
     methods (Access=protected)
         function varargout = calcEllApxMatrixDeriv(self,t,varargin)
             nGoodDirs = self.getNGoodDirs();
-            AMat = self.AtDynamics.evaluate(t);
-            BPBTransMat = self.BPBTransDynamics.evaluate(t);
-            CQCTransMat = self.CQCTransDynamics.evaluate(t);
-            BPBTransSqrtMat = gras.la.sqrtmpos(BPBTransMat);
+            bigAMat = self.bigAtDynamics.evaluate(t);
+            bigBPBTransMat = self.bigBPBTransDynamics.evaluate(t);
+            bigCQCTransMat = self.bigCQCTransDynamics.evaluate(t);
+            bigBPBTransSqrtMat = gras.la.sqrtmpos(bigBPBTransMat);
             %
             varargout = cell(1,nGoodDirs);
             %
             for iGoodDir = 1:nGoodDirs
-                QMat = varargin{iGoodDir};
+                bigQMat = varargin{iGoodDir};
                 %
                 % dynamics and contol component
                 %
-                QSqrtMat = gras.la.sqrtmpos(QMat);
+                bigQSqrtMat = gras.la.sqrtmpos(bigQMat);
                 ltVec = self.ltSplineList{iGoodDir}.evaluate(t);
-                SMat = self.getOrthTranslMatrix(QSqrtMat,BPBTransSqrtMat,...
-                    BPBTransSqrtMat*ltVec,QSqrtMat*ltVec);
-                uMat = AMat*QMat + QSqrtMat*SMat*BPBTransSqrtMat;
+                ltVec=ltVec./norm(ltVec);
+                %
+                bigSMat = self.getOrthTranslMatrix(bigQSqrtMat,...
+                    bigBPBTransSqrtMat,bigBPBTransSqrtMat*ltVec,...
+                    bigQSqrtMat*ltVec);
+                %
+                uMat = bigAMat*bigQMat+bigQSqrtMat*bigSMat*...
+                    bigBPBTransSqrtMat;
                 %
                 % disturbance component
                 %
-                isDisturbance = sum(abs(CQCTransMat(:))) > self.absTol;
+                isDisturbance=sum(abs(bigCQCTransMat(:)))>self.absTol;
                 if isDisturbance
-                    piNumerator = dot(ltVec, CQCTransMat*ltVec);
-                    piDenominator = dot(ltVec, QMat*ltVec);
-                    if piNumerator <= 0 || piDenominator <= 0
-                        if min(eig(CQCTransMat)) <= 0
+                    piNumerator = dot(ltVec, bigCQCTransMat*ltVec);
+                    piDenominator = dot(ltVec, bigQMat*ltVec);
+                    if piNumerator <= self.absTol||...
+                            piDenominator <= self.absTol
+                        %
+                        if ~gras.la.ismatposdef(bigCQCTransMat,self.absTol)
                             modgen.common.throwerror('wrongInput',...
-                                ['degenerate matrices C,Q for disturbance ',...
-                                'contraints are not supported']);
+                                ['matrices C,Q for disturbance ',...
+                                'contraints are found to be degenerate',...
+                                'with absolute precision =%g ',...
+                                'which is not supported'],self.absTol);
                         else
                             modgen.common.throwerror('wrongInput',...
-                                'the estimate has degraded for unknown reason');
+                                ['the estimate has degraded below ',...
+                                'absolute precision level = %g for ',...
+                                'unknown reason'],self.absTol);
                         end
                     end
                     piFactor = realsqrt(piNumerator/piDenominator);
-                    vMat = piFactor*QMat + CQCTransMat/piFactor;
+                    vMat = piFactor*bigQMat + bigCQCTransMat/piFactor;
                 else
                     vMat = 0;
                 end
                 %
                 % convex combination component
                 %
-                mMat = -QMat;
+                mMat = -bigQMat;
                 for jGoodDir = 1:nGoodDirs
                     mMat = mMat+self.mixingProportionsMat(iGoodDir,...
                         jGoodDir)*varargin{jGoodDir};
@@ -77,9 +88,9 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         function self=prepareODEData(self)
             pDefObj = self.getProblemDef();
             %
-            self.AtDynamics = pDefObj.getAtDynamics();
-            self.BPBTransDynamics = pDefObj.getBPBTransDynamics();
-            self.CQCTransDynamics = pDefObj.getCQCTransDynamics();
+            self.bigAtDynamics = pDefObj.getAtDynamics();
+            self.bigBPBTransDynamics = pDefObj.getBPBTransDynamics();
+            self.bigCQCTransDynamics = pDefObj.getCQCTransDynamics();
             self.ltSplineList = ...
                 self.getGoodDirSet().getGoodDirOneCurveSplineList();
         end
@@ -122,11 +133,11 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                 'solving ode for %d good direction(s) \n '...
                 'defined at time %f...'],nGoodDirs,sTime));
             initQMatList = repmat({pDefObj.getX0Mat()},1,nGoodDirs);
-            QArrayList = cell(1,nGoodDirs);
-            [~,QArrayList{:}] = solverObj.solve(...
+            bigQArrayList = cell(1,nGoodDirs);
+            [~,bigQArrayList{:}] = solverObj.solve(...
                 {@self.calcEllApxMatrixDeriv},solveTimeVec,initQMatList{:});
             if removeFirstPoint
-                QArrayList = cellfun(@(x) x(:,:,2:end), QArrayList,...
+                bigQArrayList = cellfun(@(x) x(:,:,2:end), bigQArrayList,...
                     'UniformOutput', false);
             end
             %
@@ -134,10 +145,12 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %
             aMat = pDefObj.getxtDynamics.evaluate(resTimeVec);
             ltGoodDirArray = ...
-                self.goodDirSetObj.getGoodDirCurveSpline().evaluate(resTimeVec);
+                self.goodDirSetObj.getGoodDirCurveSpline().evaluate(...
+                resTimeVec);
+            %
             self.ellTubeRel = ...
                 gras.ellapx.smartdb.rels.EllTube.fromQArrays(...
-                QArrayList,aMat,resTimeVec,ltGoodDirArray,...
+                bigQArrayList,aMat,resTimeVec,ltGoodDirArray,...
                 sTime,self.APPROX_TYPE,...
                 self.APPROX_SCHEMA_NAME,self.APPROX_SCHEMA_DESCR,...
                 self.absTol, self.relTol);
@@ -151,12 +164,11 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             import modgen.common.type.simple.*;
             import modgen.common.throwerror;
             import gras.ellapx.lreachuncert.probdyn.PlainAsUncertWrapperProbDynamics;
-            
             %
             if ~isa(pDynObj,...
                     'gras.ellapx.lreachuncert.probdyn.IReachProblemDynamics')
                 if isa(pDynObj,...
-                    'gras.ellapx.lreachplain.probdyn.IReachProblemDynamics')
+                        'gras.ellapx.lreachplain.probdyn.IReachProblemDynamics')
                     pDynObj=PlainAsUncertWrapperProbDynamics(pDynObj);
                 else
                     throwerror('wrongInput',...
@@ -165,7 +177,7 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                         'received an object of type \n (%s)'],...
                         mfilename('class'),class(pDynObj));
                 end
-            end            
+            end
             self = self@gras.ellapx.gen.ATightEllApxBuilder(pDynObj,...
                 goodDirSetObj,timeLimsVec,...
                 MixedIntEllApxBuilder.N_TIME_POINTS,relTol,absTol);
@@ -173,10 +185,10 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             [~,~,sMethodName,mixingStrength,mixingProportionsCMat] = ...
                 modgen.common.parseparext(varargin,...
                 {'selectionMethodForSMatrix','mixingStrength',...
-                'mixingProportions'}, 0, 3); 
+                'mixingProportions'}, 0, 3);
             mMat = cell2mat(mixingProportionsCMat);
             %
-            checkgen(mixingStrength,'x>=0'); 
+            checkgen(mixingStrength,'x>=0');
             checkgenext(['size(x1,1)==size(x1,2) && size(x1,1)==x2 && '...
                 'all(x1(:)>=0) && max(abs(sum(x1,2)-ones(x2,1)))<x3'],...
                 3,mMat,goodDirSetObj.getNGoodDirs(),absTol);

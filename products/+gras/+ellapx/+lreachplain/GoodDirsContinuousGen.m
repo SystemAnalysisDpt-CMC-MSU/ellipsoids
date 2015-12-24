@@ -19,7 +19,7 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
         end
         function [XstDynamics, RstDynamics, XstNormDynamics] = ...
                 calcTransMatDynamics(self, matOpFactory, STimeData, ...
-                AtDynamics, relTol, absTol)
+                AtDynamics, relTol, absTol) %#ok<INUSL>
             %
             import gras.gen.matdot;
             import gras.mat.interp.MatrixInterpolantFactory;
@@ -71,11 +71,11 @@ classdef GoodDirsContinuousGen<gras.ellapx.lreachplain.AGoodDirs
                 'column', dataRstArray .* repmat(dataXstNormArray, ...
                 [sizeSysVec, 1]), timeRstVec);
             RstDynamics = MatrixInterpolantFactory.createInstance(...
-                'column', dataRstArray, timeRstVec);            
+                'column', dataRstArray, timeRstVec);
             %
             logger.info(...
-                sprintf(['calculating transition matrix spline ' ...
-                'at time %d, nodes = %d, time elapsed = %s sec.'], ...
+                sprintf(['calculating transition matrix spline\n '...
+                '\tat time %d, nodes = %d,\n\ttime elapsed = %s sec.'],...
                 self.sTime, length(timeRstVec), ...
                 num2str(toc(tStart))));
         end
@@ -119,26 +119,26 @@ end
 %
 function [timeRstOutVec, dataRstOutArray, dataXstNormOutArray] = ...
     fPostProcLeftFunc(timeRstInVec, dataRstInArray, dataXstNormInArray)
-    %
-    timeRstOutVec = flipdim(timeRstInVec, 2);
-    dataXstNormOutArray = flipdim(dataXstNormInArray, 2);
-    dataRstOutArray = flipdim(dataRstInArray, 3);
+%
+timeRstOutVec = flip(timeRstInVec, 2);
+dataXstNormOutArray = flip(dataXstNormInArray, 2);
+dataRstOutArray = flip(dataRstInArray, 3);
 end
 %
 % equations for R(s, t)
 %
 function dxMat = fRstExtFunc(t, xMat, fAtMat)
-    import gras.gen.matdot;
-    %
-    atMat = fAtMat(t);
-    rstMat = reshape(xMat(1:end-1), size(atMat));
-    xstNorm = xMat(end);
-    %
-    cachedMat = -rstMat * atMat;
-    arstNorm = matdot(rstMat, cachedMat);
-    %
-    drstMat = cachedMat - rstMat * arstNorm;
-    dxstNorm = arstNorm .* xstNorm;
-    %
-    dxMat = [drstMat(:); dxstNorm];
+import gras.gen.matdot;
+%
+atMat = fAtMat(t);
+rstMat = reshape(xMat(1:end-1), size(atMat));
+xstNorm = xMat(end);
+%
+cachedMat = -rstMat * atMat;
+arstNorm = matdot(rstMat, cachedMat);
+%
+drstMat = cachedMat - rstMat * arstNorm;
+dxstNorm = arstNorm .* xstNorm;
+%
+dxMat = [drstMat(:); dxstNorm];
 end

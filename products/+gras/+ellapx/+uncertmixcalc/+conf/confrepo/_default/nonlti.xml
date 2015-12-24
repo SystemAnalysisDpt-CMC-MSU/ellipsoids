@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
-<root version="18" xml_tb_version="2.0" type="struct" >
+<root version="1" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<genericProps type="struct" >
 		<calcTimeLimVec type="double" >0 1.3</calcTimeLimVec>
-		<calcPrecision type="double" >1e-07</calcPrecision>
 		<isSplineForMatrixCalcUsed type="boolean" >1</isSplineForMatrixCalcUsed>
+		<absTol type="double" >1e-09</absTol>
+		<relTol type="double" >1e-07</relTol>
 	</genericProps>
 	<projectionProps type="struct" >
 		<projSpaceSetName type="char" >set1</projSpaceSetName>

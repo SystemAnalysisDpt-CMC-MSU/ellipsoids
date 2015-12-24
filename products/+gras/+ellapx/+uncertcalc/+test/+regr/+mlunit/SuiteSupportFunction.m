@@ -1,8 +1,8 @@
 classdef SuiteSupportFunction < mlunitext.test_case
-% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: 2-11-2012 $
-% $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Computer Science,
-%             System Analysis Department 2012 $
+    % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: 2-11-2012 $
+    % $Copyright: Moscow State University,
+    %             Faculty of Computational Mathematics and Computer Science,
+    %             System Analysis Department 2012 $
     properties (Access=private)
         testDataRootDir
         confNameList
@@ -71,9 +71,11 @@ classdef SuiteSupportFunction < mlunitext.test_case
         function testSupportCompare(self)
             import modgen.common.throwerror;
             %
+            CONF_EXCLUDE_LIST={'yuchenZhouProb1'};
+            %
             crm = self.crm; %#ok<*PROP>
             crmSys = self.crmSys;
-            confNameList = self.confNameList;
+            confNameList = setdiff(self.confNameList,CONF_EXCLUDE_LIST);
             nConfs = length(confNameList);
             for iConf = 1 : nConfs
                 crm.deployConfTemplate(confNameList{iConf});
@@ -97,9 +99,10 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 SRunProp.ellTubeRel.scale(fGetScaleFactor,...
                     scaleFactorFieldList);
                 %
-                calcPrecision = crm.getParam('genericProps.calcPrecision');
+                absTol = crm.getParam('genericProps.absTol');
+                relTol = crm.getParam('genericProps.relTol');
                 isOk = all(SRunProp.ellTubeProjRel.absTol <=...
-                    calcPrecision);
+                    absTol);
                 mlunitext.assert_equals(true,isOk);
                 %
                 pDynObj=SRunAuxProp.pDynObj;
@@ -124,8 +127,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
                 ellCenterCMat = SRunProp.ellTubeRel.aMat;
                 %
                 OdeOptionsStruct = odeset(...
-                    'RelTol', calcPrecision * self.REL_TOL_FACTOR,...
-                    'AbsTol', calcPrecision * self.ABS_TOL_FACTOR);
+                    'RelTol', relTol * self.REL_TOL_FACTOR,...
+                    'AbsTol', absTol * self.ABS_TOL_FACTOR);
                 lsGoodDirMat = SRunAuxProp.goodDirSetObj.getlsGoodDirMat();
                 for iGoodDir = 1:size(lsGoodDirMat, 2)
                     lsGoodDirMat(:, iGoodDir) = ...
@@ -149,7 +152,7 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     %
                     for iGoodDir = 1:size(lsGoodDirMat, 2)
                         isFound = norm(curGoodDirVec - ...
-                            lsGoodDirMat(:, iGoodDir)) <= calcPrecision;
+                            lsGoodDirMat(:, iGoodDir)) <= absTol;
                         if isFound
                             break;
                         end
@@ -181,10 +184,10 @@ classdef SuiteSupportFunction < mlunitext.test_case
                         curEllMatArray,currGoodDirMat)) +...
                         sum(curEllCenterMat .* currGoodDirMat, 1);
                     %
-                    [isOk, ~, ~, ~, ~, reportStr] = ...
+                    [isOk,~,~,~,~,reportStr]=...
                         modgen.common.absrelcompare(supFunVec(:), ...
-                        expResultMat(:), calcPrecision, calcPrecision, ...
-                        @abs);
+                        expResultMat(:),absTol,relTol,@abs);
+                    %
                     if ~isOk
                         reportResStr = horzcat('Support function values ',...
                             reportStr);

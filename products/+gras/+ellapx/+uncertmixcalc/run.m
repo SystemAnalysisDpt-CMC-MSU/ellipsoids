@@ -28,11 +28,12 @@ if ~isSysConfRepoMgrSpec
 end
 confRepoMgr.selectConf(confName,'reloadIfSelected',false);
 % Checking a validity of settings
-calcPrecision=confRepoMgr.getParam('genericProps.calcPrecision');
-if calcPrecision>MAX_SUPPORTED_PRECISION
-    throwerror('wrongInput',['specified calculation precision %d ',...
+relTol=confRepoMgr.getParam('genericProps.relTol');
+if relTol>MAX_SUPPORTED_PRECISION
+    throwerror('wrongInput',...
+        ['specified calculation precision(relTol)=%g\n',...
         'is higher than a maximum supported precision %d'],...
-        calcPrecision,MAX_SUPPORTED_PRECISION);
+        relTol,MAX_SUPPORTED_PRECISION);
 end
 %
 if isRegSpecVec(1)
@@ -67,7 +68,7 @@ saveConf(sysConfRepoMgr,confRepoMgr,resDir);
 %
 % Build good directions
 [pDynObj,goodDirSetObj]=ApproxProblemPropertyBuilder.build(confRepoMgr,...
-    sysConfRepoMgr,logger);
+    sysConfRepoMgr);
 %
 % Building internal ellipsoidal approximations
 [ellTubeRel,ellUnionTubeRel]=gras.ellapx.uncertcalc.EllApxBuilder(...

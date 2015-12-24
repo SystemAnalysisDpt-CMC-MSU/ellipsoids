@@ -1,13 +1,15 @@
 classdef EllUnionTubeBasic<handle
-    %TestRelation Summary of this class goes here
-    %   Detailed explanation goes here
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-2015 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2015 $  
+    %
     properties (Constant,Hidden)
-        FCODE_ELL_UNION_TIME_DIRECTION
-        %
+        FCODE_ELL_UNION_TIME_DIRECTION %#ok<*MCCPI>
         FCODE_TIME_TOUCH_END_VEC
-        FCODE_TIME_TOUCH_OP_END_VEC   
-        FCODE_IS_LS_TOUCH_OP        
-        FCODE_IS_LT_TOUCH_OP_VEC   
+        FCODE_TIME_TOUCH_OP_END_VEC
+        FCODE_IS_LS_TOUCH_OP
+        FCODE_IS_LT_TOUCH_OP_VEC
     end
     methods(Access=protected)
         setDataInternal(~);

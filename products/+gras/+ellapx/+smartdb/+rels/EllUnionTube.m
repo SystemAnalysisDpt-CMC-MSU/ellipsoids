@@ -2,51 +2,39 @@ classdef EllUnionTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
         gras.ellapx.smartdb.rels.EllTubeBasic&...        
         gras.ellapx.smartdb.rels.EllUnionTubeBasic&...
         gras.ellapx.smartdb.rels.AEllTubeProjectable
-    % EllUionTube - class which keeps ellipsoidal tubes by the instant of
-    %               time
+    % EllUionTube - collection of ellipsoidal tubes by the instant of
+    %               time i.e. union of E[\tau] for all \tau from [t_0,t]
+    %               (for reachability problem) or from [t,T] for
+    %               solvability problem, where E[\tau] is ordinary 
+    %               ellipsoidal tube
     % 
-    % Fields:
-    %   QArray:cell[1, nElem] - Array of ellipsoid matrices                              
-    %   aMat:cell[1, nElem] - Array of ellipsoid centers                               
-    %   scaleFactor:double[1, 1] - Tube scale factor                                        
-    %   MArray:cell[1, nElem] - Array of regularization ellipsoid matrices                
-    %   dim :double[1, 1] - Dimensionality                                          
-    %   sTime:double[1, 1] - Time s                                                   
-    %   approxSchemaName:cell[1,] - Name                                                      
-    %   approxSchemaDescr:cell[1,] - Description                                               
-    %   approxType:gras.ellapx.enums.EApproxType - Type of approximation 
-    %                 (external, internal, not defined 
-    %   timeVec:cell[1, m] - Time vector                                             
-    %   absTol:double[1, 1] - Absolute tolerance                                    
-    %   relTol:double[1, 1] - Relative tolerance 
-    %   indSTime:double[1, 1]  - index of sTime within timeVec                             
-    %   ltGoodDirMat:cell[1, nElem] - Good direction curve                                     
-    %   lsGoodDirVec:cell[1, nElem] - Good direction at time s                                  
-    %   ltGoodDirNormVec:cell[1, nElem] - Norm of good direction curve                              
-    %   lsGoodDirNorm:double[1, 1] - Norm of good direction at time s                         
-    %   xTouchCurveMat:cell[1, nElem] - Touch point curve for good 
-    %                                   direction                     
-    %   xTouchOpCurveMat:cell[1, nElem] - Touch point curve for direction 
-    %                                     opposite to good direction
-    %   xsTouchVec:cell[1, nElem]  - Touch point at time s                                    
-    %   xsTouchOpVec :cell[1, nElem] - Touch point at time s  
-    %   ellUnionTimeDirection:gras.ellapx.enums.EEllUnionTimeDirection - 
-    %                      Direction in time along which union is performed          
-    %   isLsTouch:logical[1, 1] - Indicates whether a touch takes place 
-    %                             along LS           
-    %   isLsTouchOp:logical[1, 1] - Indicates whether a touch takes place 
-    %                               along LS opposite  
-    %   isLtTouchVec:cell[1, nElem] - Indicates whether a touch takes place 
-    %                                 along LT         
-    %   isLtTouchOpVec:cell[1, nElem] - Indicates whether a touch takes 
-    %                                   place along LT opposite  
-    %   timeTouchEndVec:cell[1, nElem] - Touch point curve for good 
-    %                                    direction                     
-    %   timeTouchOpEndVec:cell[1, nElem] - Touch point curve for good 
-    %                                      direction
+    % Public properties:
+    %       - in addition to the fields of gras.ellapx.smartdb.rels.UnionTube
+    %       this class has the following public fields
+    %   isLsTouchOp: - same as isLsTouch (see EllTube properties 
+    %       description) but for -l(t_s) i.e. opposite direction    
+    %   isLtTouchOpVec: - same as isLtTouchVec (see EllTube properties 
+    %       description) but for -l(t) i.e. for the opposite direction    
+    %   ellUnionTimeDirection: 
+    %       gras.ellapx.enums.EEllUnionTimeDirection[nTubes,1] - direction
+    %       along which ellipsoidal tube cuts E[t] are united, it can have
+    %       the following values:
+    %           "Ascending" for reachability problems
+    %           "Descending" for solvability problems
+    %   timeTouchEndVec: cell[nTubes,1] of double[1,nTimePoints] - list of
+    %       last touch time vectors for each tube. Each element of the touch 
+    %       time vector contains the last time t*(t) preceeding 
+    %       (or following depending on the value of ellUnionTimeDirection
+    %       field) time t when E[t] touched reachability domain along 
+    %       l(t*(t))
+    %   
+    %   timeTouchOpEndVec: - same as timeTouchEndVec but for the opposite
+    %       direction
     %
-    % TODO: correct description of the fields in 
-    %     gras.ellapx.smartdb.rels.EllUnionTube
+    % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011-2015 $
+    % $Copyright: Moscow State University,
+    %            Faculty of Computational Mathematics and Computer Science,
+    %            System Analysis Department 2015 $  
     %
     methods (Access=protected,Static,Hidden)
         function outObj=loadobj(inpObj)

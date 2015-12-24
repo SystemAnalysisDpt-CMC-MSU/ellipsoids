@@ -17,6 +17,8 @@ classdef ReachContinuous < elltool.reach.AReach
     properties (Constant,GetAccess=protected)
         DISPLAY_PARAMETER_STRINGS = {'continuous-time', 'k0 = ', 'k1 = '}
         LINSYS_CLASS_STRING = 'elltool.linsys.LinSysContinuous'
+        MIN_EIG_Q_REG_UNCERT = 0.1
+        DEFAULT_INTAPX_S_SELECTION_MODE = 'volume'        
     end
     %
     properties (Constant, GetAccess = private)
@@ -95,14 +97,14 @@ classdef ReachContinuous < elltool.reach.AReach
                         gras.ellapx.lreachplain.ExtEllApxBuilder(...
                         probDynObj, goodDirSetObj, timeVec,...
                         self.relTol, self.absTol);
-                    extellTubeBuilder =...
+                    extEllTubeBuilder =...
                         gras.ellapx.gen.EllApxCollectionBuilder(...
                         {extBuilder});
-                    extEllTubeRel = extellTubeBuilder.getEllTubes();
+                    extEllTubeRel = extEllTubeBuilder.getEllTubes();
                     if ~isIntApprox
                         ellTubeRel = extEllTubeRel;
                     end
-                end
+                end                
                 if isIntApprox
                     intBuilder =...
                         gras.ellapx.lreachplain.IntEllApxBuilder(...
@@ -110,15 +112,15 @@ classdef ReachContinuous < elltool.reach.AReach
                         self.relTol, self.absTol,...
                         'selectionMethodForSMatrix',...
                         self.DEFAULT_INTAPX_S_SELECTION_MODE);
-                    intellTubeBuilder =...
+                    intEllTubeBuilder =...
                         gras.ellapx.gen.EllApxCollectionBuilder(...
                         {intBuilder});
-                    intEllTubeRel = intellTubeBuilder.getEllTubes();
+                    intEllTubeRel = intEllTubeBuilder.getEllTubes();
                     if isExtApprox
                         intEllTubeRel.unionWith(extEllTubeRel);
                     end
                     ellTubeRel = intEllTubeRel;
-                end
+                end                
             end
         end
         %

@@ -17,10 +17,8 @@ classdef AReach < elltool.reach.IReach
     end
     %
     properties (Constant, GetAccess = protected)
-        MIN_EIG_Q_REG_UNCERT = 0.1
         EXTERNAL_SCALE_FACTOR = 1.02
         INTERNAL_SCALE_FACTOR = 0.98
-        DEFAULT_INTAPX_S_SELECTION_MODE = 'volume'
         FIELDS_NOT_TO_COMPARE = {'LT_GOOD_DIR_MAT'; ...
             'LT_GOOD_DIR_NORM_VEC'; 'LS_GOOD_DIR_NORM'; ...
             'LS_GOOD_DIR_VEC';'IND_S_TIME';...

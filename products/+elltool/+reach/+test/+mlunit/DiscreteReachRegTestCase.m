@@ -12,7 +12,8 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
         x0Ell
         l0Mat
         timeVec
-        calcPrecision
+        absTol
+        relTol
         regTol
     end
     %
@@ -58,8 +59,10 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
             self.x0Ell = ellipsoid(x0DefVec, x0DefMat);
             self.timeVec = [self.crmSys.getParam('time_interval.t0'),...
                 self.crmSys.getParam('time_interval.t1')];
-            self.calcPrecision =...
-                self.crm.getParam('genericProps.calcPrecision');
+            self.absTol =...
+                self.crm.getParam('genericProps.absTol');
+            self.relTol =...
+                self.crm.getParam('genericProps.relTol');            
             self.regTol =...
                 self.crm.getParam('regularizationProps.regTol');
             self.ControlBounds = struct();

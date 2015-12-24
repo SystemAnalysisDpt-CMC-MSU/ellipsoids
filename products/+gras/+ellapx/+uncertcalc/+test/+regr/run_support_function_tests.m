@@ -1,4 +1,4 @@
-function results=run_support_function_tests(inpConfNameList)
+function results=run_support_function_tests(varargin)
 % $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: 2-11-2012 $
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics and Computer Science,
@@ -13,17 +13,19 @@ NOT_TO_TEST_CONF_NAME_LIST = {'discrSecondTest',...
     'check','checkTime','testA0Cunitball'};
 %
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-if nargin>0
-    if ischar(inpConfNameList)
-        inpConfNameList={inpConfNameList};
+
+[restArgList,~,filterProp]=modgen.common.parseparext(varargin,...
+    {'filter';{}});
+[reg,suitePropList]=modgen.common.parseparams(restArgList);
+if ~isempty(reg)
+    confNameList=reg{1};
+    if ischar(confNameList)
+        confNameList={confNameList};
     end
+else
+    confNameList=crm.deployConfTemplate('*');
 end
 %
-if nargin==0
-    confNameList=crm.deployConfTemplate('*');    
-else
-    confNameList=inpConfNameList;
-end
 %
 isNotToTestVec=ismember(confNameList,NOT_TO_TEST_CONF_NAME_LIST);
 confNameList=confNameList(~isNotToTestVec);
@@ -44,7 +46,7 @@ for iConf=nConfs:-1:1
     confStartTime=calcTimeLimVec(1);
     %
     if sysStartTime==confStartTime
-    %
+        %
         isCt = crmSys.isParam('Ct');
         isQt = crmSys.isParam('disturbance_restriction.Q');
         %
@@ -52,13 +54,13 @@ for iConf=nConfs:-1:1
             pCtCMat = crmSys.getParam('Ct');
             pCtMat = MatVector.fromFormulaMat(pCtCMat, 0);
             isCtZero = ~any(pCtMat(:));
-            isCtZero = isCtZero && isdependent(pCtCMat);             
+            isCtZero = isCtZero && isdependent(pCtCMat);
         end
         if isQt
             pQtCMat = crmSys.getParam('disturbance_restriction.Q');
             pQtMat = MatVector.fromFormulaMat(pQtCMat, 0);
             isQtZero = ~any(pQtMat(:));
-            isQtZero = isQtZero && isdependent(pQtCMat); 
+            isQtZero = isQtZero && isdependent(pQtCMat);
         end
         isnDisturbance =...
             ~isCt  || ~isQt || isCtZero || isQtZero;
@@ -73,6 +75,7 @@ for iConf=nConfs:-1:1
 end
 suiteList=suiteList(isnEmptyVec);
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
-suite=mlunitext.test_suite(horzcat(testLists{:}));
+suite=mlunitext.test_suite(horzcat(testLists{:}),suitePropList{:});
+suite=suite.getCopyFiltered(filterProp{:});
 %
 results=runner.run(suite);
