@@ -369,25 +369,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         end
     end
     methods (Static)
-        function SComp=formCompStruct(SEll,SFieldNiceNames,...
-                absTol,isPropIncluded) %#ok<INUSL>
-            if (~isempty(SEll.QMat))
-                SComp.(SFieldNiceNames.QMat)=SEll.QMat;
-            else
-                SComp.(SFieldNiceNames.QMat)=[];
-            end
-            SComp.(SFieldNiceNames.centerVec)=SEll.centerVec;
-            if (~isempty(SEll.QInfMat))
-                SComp.(SFieldNiceNames.QInfMat)=SEll.QInfMat;
-            else
-                SComp.(SFieldNiceNames.QInfMat)=[];
-            end
-            if (isPropIncluded)
-                SComp.(SFieldNiceNames.absTol)=SEll.absTol;
-            end
-        end
-    end
-    methods (Static)
         ellArr=fromRepMat(varargin)
         ellArr=fromStruct(SEllArr)
     end

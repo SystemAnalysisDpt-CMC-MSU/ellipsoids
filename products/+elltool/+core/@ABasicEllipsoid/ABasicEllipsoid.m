@@ -7,6 +7,9 @@ classdef ABasicEllipsoid < handle
     methods(Abstract)
         [dimArr,rankArr]=dimension(myEllArr)
     end
+    methods(Static,Access=private)
+        SComp=formCompStruct(SEll,SFieldNiceNames)
+    end
     methods(Access=protected)
         checkIfScalar(self,errMsg)
         [isEqualArr,reportStr]=isEqualInternal(ellFirstArr,...

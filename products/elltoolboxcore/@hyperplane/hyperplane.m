@@ -237,15 +237,6 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
         end
         copyEllObj=getSingleCopy(ellObj)
     end
-    methods(Static)
-        function SComp = formCompStruct(SHp, SFieldNiceNames, ~, isPropIncluded)
-            SComp.(SFieldNiceNames.normal) = SHp.normal;
-            SComp.(SFieldNiceNames.shift) = SHp.shift;
-            if (isPropIncluded)
-                SComp.(SFieldNiceNames.absTol) = SHp.absTol;
-            end
-        end
-    end
 end
 %
 function [nElems outSizeVec] = setSizes(inpObjArr)

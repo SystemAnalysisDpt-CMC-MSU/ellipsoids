@@ -315,24 +315,5 @@ classdef ellipsoid < elltool.core.AEllipsoid
                 isArrEq = true;
             end
         end
-    end
-    
-    methods (Static)
-        function SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
-            if (~isempty(SEll.shapeMat))
-                SComp.(SFieldNiceNames.shapeMat) = gras.la.sqrtmpos(SEll.shapeMat, absTol);
-            else
-                SComp.(SFieldNiceNames.shapeMat) = [];
-            end
-            SComp.(SFieldNiceNames.centerVec) = SEll.centerVec;
-            if (isPropIncluded)
-                SComp.(SFieldNiceNames.absTol) = SEll.absTol;
-                SComp.(SFieldNiceNames.relTol) = SEll.relTol;
-                SComp.(SFieldNiceNames.nPlot2dPoints) = SEll.nPlot2dPoints;
-                SComp.(SFieldNiceNames.nPlot3dPoints) = SEll.nPlot3dPoints;
-            end
-        end
-    end
-    
-    
+    end 
 end
