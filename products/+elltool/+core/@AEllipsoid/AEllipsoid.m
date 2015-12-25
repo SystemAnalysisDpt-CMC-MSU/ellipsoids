@@ -17,6 +17,9 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         outEllArr=mtimes(multMat,inpEllArr)
         ellArr=shape(ellArr, modMat)
     end
+    methods(Access=protected)
+        volVal=ellSingleVolume(ellObj)
+    end
     methods(Abstract)
         shapeMat=getShapeMat(self)
         [SDataArr,SFieldNiceNames,SFieldDescr,SFieldTransformFunc]=...

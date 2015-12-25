@@ -375,5 +375,25 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 import modgen.struct.structcompare;
             end
         end
+        %
+        function testVolume(self)
+            import elltool.core.GenEllipsoid
+            eps=1e-4;
+            %Check negative
+            testEll=GenEllipsoid(); %#ok<NASGU>
+            self.runAndCheckError('testEll.volume()',...
+                'wrongInput:emptyEllipsoid');
+            %Check positive
+            testEllCVec={GenEllipsoid(1),GenEllipsoid([2;2]),...
+                GenEllipsoid([1;1],[2;2]),...
+                GenEllipsoid([1;1],[2;2],[1,2;3,4])};
+            expVolVec=[2,2*pi,2*pi,12.5664];
+            testResVec=cellfun(@(x) x.volume(),testEllCVec);
+            mlunitext.assert(all(abs(testResVec-expVolVec)<eps));
+            %Check Inf volumes
+            testEllCVec={GenEllipsoid([1;Inf]),GenEllipsoid(Inf*ones(5,1))};
+            testResVec=cellfun(@(x) x.volume(),testEllCVec);
+            mlunitext.assert(all(testResVec==Inf));
+        end
     end
 end

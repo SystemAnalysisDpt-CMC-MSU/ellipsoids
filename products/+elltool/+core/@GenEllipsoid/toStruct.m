@@ -1,5 +1,5 @@
 function [SDataArr,SFieldNiceNames,SFieldDescr,SFieldTransformFunc] = ...
-    toStruct(ellArr,isPropIncluded,absTol) %#ok<INUSD>
+    toStruct(ellArr,isPropIncluded,absTol)
 % toStruct -- converts GenEllipsoid array into structural array.
 %
 % Input:

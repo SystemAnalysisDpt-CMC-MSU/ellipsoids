@@ -17,6 +17,7 @@ classdef ellipsoid < elltool.core.AEllipsoid
     end
     %
     methods
+        volArr = volume(ellArr)
         function resQuad = quadFunc(self)
             % QUADFUNC computes quadratic function (x,Qx) of given
             % ellipsoid.
@@ -238,7 +239,7 @@ classdef ellipsoid < elltool.core.AEllipsoid
                 % because the zero eigenvalue may be internally represented
                 % as something like -10^(-15).
                 import modgen.common.checkmultvar;
-                checkmultvar(@(aMat, aAbsTolVal)gras.la.ismatsymm(aMat)...
+                checkmultvar(@(aMat, aAbsTolVal)gras.la.ismatsymm(aMat,aAbsTolVal)...
                     &&gras.la.ismatposdef(aMat,aAbsTolVal,true), 2,...
                     shMatArray(:,:,iEll), absTolVal,...
                     'errorTag','wrongInput:shapeMat',...

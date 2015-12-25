@@ -365,6 +365,21 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             %
             shapeMat=self.eigvMat*self.diagMat*self.eigvMat.';
         end
+        function qInfMat=getQInfMat(self)
+            % Example:
+            %   ellObj=elltool.core.GenEllipsoid([5;2],[4;Inf]);
+            %   ellObj.getQInfMat()
+            %
+            %   ans =
+            %
+            %       0      0
+            %       0      1     
+            %
+            diagVec=diag(self.diagMat);
+            isInfVec=diagVec==Inf;
+            eigvInfMat=self.eigvMat(:,isInfVec);
+            qInfMat=eigvInfMat*eigvInfMat.';
+        end
     end
     methods (Static)
         ellArr=fromRepMat(varargin)

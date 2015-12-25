@@ -1,4 +1,4 @@
-function volArr = volume(ellArr)
+function volArr=volume(ellArr)
 %
 % VOLUME - returns the volume of the ellipsoid.
 %
@@ -37,30 +37,5 @@ function volArr = volume(ellArr)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-
-ellipsoid.checkIsMe(ellArr); 
-
-modgen.common.checkvar(ellArr,'~any(x(:).isEmpty())',...
-    'errorTag','wrongInput:emptyEllipsoid',...
-    'errorMessage','input argument is empty.');
-volArr = arrayfun(@(x) fSingleVolume(x), ellArr);
-
-end
-
-function vol = fSingleVolume(singEll)
-if isdegenerate(singEll)
-    vol = 0;
-else
-    qMat = singEll.shapeMat;
-    nDim = size(qMat, 1);
-    
-    if mod(nDim,2)
-        k = (nDim-1)*0.5;
-        s = ((2^(2*k + 1))*(pi^k)*factorial(k))/factorial(2*k + 1);
-    else
-        k = nDim *0.5;
-        s = (pi^k)/factorial(k);
-    end
-    vol = s*realsqrt(det(qMat));
-end
+volArr = arrayfun(@(x) ellSingleVolume(x), ellArr);
 end
