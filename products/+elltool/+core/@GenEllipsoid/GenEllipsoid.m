@@ -19,8 +19,6 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
     methods
         polar=getScalarPolarInternal(self,isRobustMethod)
         [ellCenterVec,ellDiagMat,ellEigvMat]=parameters(ell)
-        [SDataArr,SFieldNiceNames,SFieldDescr]=...
-            toStruct(ellArr,isPropIncluded)
         function isOk=getIsGoodDir(ellObj1,ellObj2,curDirVec)
             % Example:
             %   firstEllObj=elltool.core.GenEllipsoid([10;0],2*eye(2));

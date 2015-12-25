@@ -1,4 +1,5 @@
-function [SDataArr, SFieldNiceNames, SFieldDescr] = toStruct(hpArr, isPropIncluded)
+function [SDataArr,SFieldNiceNames,SFieldDescr,SFieldTransformFunc]=...
+    toStruct(hpArr,isPropIncluded,absTol) %#ok<INUSD>
 % toStruct -- converts hyperplanes array into structural array.
 %
 % Input:
@@ -33,6 +34,7 @@ end
 
 SDataArr = arrayfun(@(hpObj)hp2Struct(hpObj, isPropIncluded), hpArr);
 SFieldNiceNames = struct('normal', 'normal', 'shift', 'shift');
+SFieldTransformFunc=struct('normal',@(x)x,'shift',@(x)x);
 SFieldDescr = struct('normal', 'Hyperplane normal.',...
     'shift', 'Hyperplane shift along normal from origin.');
 

@@ -1,14 +1,15 @@
-function SComp=formCompStruct(SEll,SFieldNiceNames)
+function SComp=formCompStruct(SEll,SFieldNiceNames,SFieldTransformFunc)
 fieldNameList=fieldnames(SFieldNiceNames);
 %
 nFields=numel(fieldNameList);
 %
 for iField=1:nFields
     fieldName=fieldNameList{iField};
-    if isempty(SFieldNiceNames.(fieldName))
-        SComp.(fieldName)=[];
+    if isempty(SEll.(fieldName))
+        SComp.(SFieldNiceNames.(fieldName))=[];
     else
-        SComp.(fieldName)=SEll.(fieldName);
+        fTransfomr=SFieldTransformFunc.(fieldName);
+        SComp.(SFieldNiceNames.(fieldName))=fTransfomr(SEll.(fieldName));
     end
 end
 end

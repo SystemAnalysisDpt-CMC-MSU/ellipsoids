@@ -8,7 +8,7 @@ classdef ABasicEllipsoid < handle
         [dimArr,rankArr]=dimension(myEllArr)
     end
     methods(Static,Access=private)
-        SComp=formCompStruct(SEll,SFieldNiceNames)
+        SComp=formCompStruct(SEll,SFieldNiceNames,SFieldTransformFunc)
     end
     methods(Access=protected)
         checkIfScalar(self,errMsg)
