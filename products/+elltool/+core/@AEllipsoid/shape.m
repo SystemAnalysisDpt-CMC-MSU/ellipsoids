@@ -53,5 +53,5 @@ if ~isModScal
         3,nRows,nDim,dimArr,'errorMessage',...
         'input matrix not square or dimensions do not match');
 end  
-arrayfun(@(x)changeShapeMatInternal(x,isModScal,modMat),ellArr);
+arrayfun(@(x)shapeSingleInternal(x,isModScal,modMat),ellArr);
 end

@@ -76,6 +76,6 @@ if ~isempty(ellArr)
     normMat=repmat(realsqrt(normSqVec.'),nDim,1);
     ortBasisMat=basisMat./normMat;
     % compute projection
-    arrayfun(@(x)fSingleProjection(x,ortBasisMat),ellArr);
+    arrayfun(@(x)projectionSingleInternal(x,ortBasisMat),ellArr);
 end        
 end

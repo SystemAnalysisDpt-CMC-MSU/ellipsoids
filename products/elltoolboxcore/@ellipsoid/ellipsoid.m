@@ -17,7 +17,6 @@ classdef ellipsoid < elltool.core.AEllipsoid
     end
     %
     methods
-        volArr = volume(ellArr)
         function resQuad = quadFunc(self)
             % QUADFUNC computes quadratic function (x,Qx) of given
             % ellipsoid.
@@ -279,8 +278,8 @@ classdef ellipsoid < elltool.core.AEllipsoid
         checkIsMe(ellArr,varargin)
     end
     methods (Access=protected)
-        changeShapeMatInternal(ellObj,isModScal,modMat)
-        fSingleProjection(ellObj,ortBasisMat)
+        shapeSingleInternal(ellObj,isModScal,modMat)
+        projectionSingleInternal(ellObj,ortBasisMat)
         function checkIsMeVirtual(ellArr,varargin)
             ellipsoid.checkIsMe(ellArr,varargin)
         end

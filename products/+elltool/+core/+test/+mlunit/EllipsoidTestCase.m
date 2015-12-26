@@ -1235,7 +1235,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 0.255693118460086 - 0.343438979993794i];
             testEllipsoid3 = ellipsoid(diag(1:1:4));
             resEll = mtimes(AMat, testEllipsoid3);
-            ansEll = ellipsoid(zeros(4, 1), AMat*diag(1:1:4)*AMat.');
+            ansEll = ellipsoid(zeros(4, 1), AMat*diag(1:1:4)*AMat');
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             

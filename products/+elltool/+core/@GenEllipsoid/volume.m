@@ -34,19 +34,14 @@ function volArr=volume(ellArr)
 %			Faculty of Computational Mathematics and Computer Science,
 %			System Analysis Department 2015 $
 % 
-volArr = arrayfun(@(x) fSingleVolume(x), ellArr);
-end
-%
-function volVal=fSingleVolume(ellObj)
-qInfMat=ellObj.getQInfMat();
-if any(qInfMat(:)>0)
-    volVal=Inf;
-else
-    if ellObj.isEmpty()
-        simpleEllObj=ellipsoid();
+elltool.core.GenEllipsoid.checkIsMe(ellArr);
+volArr=zeros(size(ellArr));
+for iElem=1:numel(ellArr)
+    qInfMat=ellArr(iElem).getQInfMat();
+    if any(qInfMat(:)>0)
+        volArr(iElem)=Inf;
     else
-        simpleEllObj=ellipsoid(ellObj.centerVec,ellObj.getShapeMat());
+        volArr(iElem)=volume@elltool.core.AEllipsoid(ellArr(iElem));
     end
-    volVal=ellSingleVolume(simpleEllObj);
 end
 end

@@ -19,7 +19,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         ellArr=shape(ellArr, modMat)
     end
     methods(Access=protected)
-        volVal=ellSingleVolume(ellObj)
+        
     end
     methods(Abstract)
         shapeMat=getShapeMat(self)
@@ -28,14 +28,16 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         polar=getScalarPolarInternal(self,isRobustMethod)
     end
     methods(Abstract,Access=protected)
-        ellObj=changeShapeMatInternal(ellObj,isModScal,modMat)
-        fSingleProjection(ellObj,ortBasisMat)
+        ellObj=shapeSingleInternal(ellObj,isModScal,modMat)
+        projectionSingleInternal(ellObj,ortBasisMat)
     end
     methods(Abstract, Static)
         ellArr=fromRepMat(varargin)
         ellArr=fromStruct(SEllArr)
     end
     methods
+        isPositiveArr=isdegenerate(myEllArr)
+        volVal=volume(ellArr)
         [dimArr,rankArr]=dimension(myEllArr)
         outEllArr=getShape(ellArr,modMat)
         minEigArr=mineig(inpEllArr)

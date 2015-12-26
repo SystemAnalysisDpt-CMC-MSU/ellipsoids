@@ -8,8 +8,8 @@ for iField=1:nFields
     if isempty(SEll.(fieldName))
         SComp.(SFieldNiceNames.(fieldName))=[];
     else
-        fTransfomr=SFieldTransformFunc.(fieldName);
-        SComp.(SFieldNiceNames.(fieldName))=fTransfomr(SEll.(fieldName));
+        fTransform=SFieldTransformFunc.(fieldName);
+        SComp.(SFieldNiceNames.(fieldName))=fTransform(SEll.(fieldName));
     end
 end
 end

@@ -64,7 +64,7 @@ modgen.common.checkmultvar...
 outEllArr=inpEllArr.getCopy();
 arrayfun(@(x) fSingleMtimes(x),outEllArr);
     function fSingleMtimes(ellObj)
-        ellObj.changeShapeMatInternal(isFstScal,multMat);
+        ellObj.shapeSingleInternal(isFstScal,multMat);
         ellObj.centerVec=multMat*ellObj.getCenterVec();
     end
 end

@@ -30,14 +30,13 @@ elltool.core.GenEllipsoid.checkIsMe(myEllArr);
 modgen.common.checkvar(myEllArr,'~any(x(:).isEmpty())',...
     'errorTag','wrongInput:emptyEllipsoid',...
     'errorMessage','input argument contains empty GenEllipsoid.');
-if isempty(myEllArr)
-    isPositiveArr=true(size(myEllArr));
-else
-    isPositiveArr=~arrayfun(@(x)fIsSingleDegenerate(x),myEllArr);
+isPositiveArr=true(size(myEllArr));
+if ~isempty(myEllArr)
+    for iElem=1:numel(myEllArr)
+        qInfMat=myEllArr(iElem).getQInfMat();
+        isDegenerate=all(qInfMat(:)==0)&&...
+            isdegenerate@elltool.core.AEllipsoid(myEllArr(iElem));
+        isPositiveArr(iElem)=isDegenerate;
+    end
 end
-end
-function isDegenerate=fIsSingleDegenerate(ellObj)
-isDegenerate=...
-    gras.la.ismatnotdeg(ellObj.getShapeMat(),ellObj.getAbsTol())&&...
-    gras.la.ismatnotdeg(ellObj.getQInfMat(),ellObj.getAbsTol());
 end

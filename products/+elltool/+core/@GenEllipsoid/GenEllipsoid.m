@@ -10,8 +10,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         checkIsMe(ellArr,varargin)
     end
     methods(Access=protected)
-        changeShapeMatInternal(ellObj,isModScal,modMat)
-        fSingleProjection(ellObj,ortBasisMat)
+        shapeSingleInternal(ellObj,isModScal,modMat)
+        projectionSingleInternal(ellObj,ortBasisMat)
         function checkIsMeVirtual(ellArr,varargin)
             elltool.core.GenEllipsoid.checkIsMe(ellArr,varargin)
         end
