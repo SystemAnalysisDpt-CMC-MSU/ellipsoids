@@ -395,5 +395,48 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             testResVec=cellfun(@(x) x.volume(),testEllCVec);
             mlunitext.assert(all(testResVec==Inf));
         end
+        %
+        function testProjection(self)
+            import elltool.core.GenEllipsoid
+            testEll=GenEllipsoid([1;1;1],[2;3;4]);
+            %Check negative
+            testBasisMatCVec={[0 1 1; 0 0 1]',[0 1 1; 0 0 1],1,'a',...
+                ellipsoid(hilb(2))};
+            testEllCVec={testEll,testEll,GenEllipsoid(),testEll,testEll};
+            cellfun(@checkNegative,testBasisMatCVec,testEllCVec);
+            %Check backward compatibility with ellipsoid
+            testBasisMatCVec={[0 1 0; 0 0 1]',[3,0;0,2]};
+            testEllCVec={testEll,GenEllipsoid([1;1],[2;3])};
+            cellfun(@checkBackCompEll,testBasisMatCVec,testEllCVec);
+            %Check Inf-contained GenEllipsoids
+            testBasisMatCVec={[0 1 0; 0 0 1]',[0 1 0; 0 0 1]',[3,0;0,2]};
+            testEllCVec={GenEllipsoid([1;1;1],[Inf;3;4]),...
+                GenEllipsoid([1;1;1],[3;Inf;4]),...
+                GenEllipsoid([1;1],[Inf;3])};
+            expResEllCVec={GenEllipsoid([1;1],[3;4]),...
+                GenEllipsoid([1;1],[Inf;4]),...
+                GenEllipsoid([1;1],[Inf;3])};
+            cellfun(@checkPositive,testBasisMatCVec,testEllCVec,...
+                expResEllCVec);
+            %
+            function checkNegative(testBasisMat,testEll) %#ok<INUSD>
+                self.runAndCheckError(...
+                    'testEll.projection(testBasisMat)',...
+                    'wrongInput');
+            end
+            function checkBackCompEll(testBasisMat,testEll)
+                simpleEll=ellipsoid(testEll.getCenterVec(),...
+                    testEll.getShapeMat());
+                resEllProj=testEll.projection(testBasisMat);
+                simpleEllProj=simpleEll.projection(testBasisMat);
+                resSimpleEllProj=ellipsoid(resEllProj.getCenterVec(),...
+                    resEllProj.getShapeMat());
+                mlunitext.assert(isEqual(simpleEllProj,resSimpleEllProj));
+            end
+            function checkPositive(testBasisMat,testEll,expEllProj)
+                resEllProj=testEll.projection(testBasisMat);
+                mlunitext.assert(isEqual(resEllProj,expEllProj));
+            end
+        end
     end
 end

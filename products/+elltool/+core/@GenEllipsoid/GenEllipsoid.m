@@ -11,6 +11,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
     end
     methods(Access=protected)
         changeShapeMatInternal(ellObj,isModScal,modMat)
+        fSingleProjection(ellObj,ortBasisMat)
         function checkIsMeVirtual(ellArr,varargin)
             elltool.core.GenEllipsoid.checkIsMe(ellArr,varargin)
         end

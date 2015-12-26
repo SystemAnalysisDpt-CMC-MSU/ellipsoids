@@ -11,6 +11,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         function ellObj=AEllipsoid(varargin)
             ellObj=ellObj@elltool.core.ABasicEllipsoid();
         end
+        ellArr=projection(ellArr,basisMat)
         centerVec=getCenterVec(self)
         nPlot2dPointsArr=getNPlot2dPoints(ellArr)
         nPlot3dPointsArr=getNPlot3dPoints(ellArr)
@@ -28,6 +29,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
     end
     methods(Abstract,Access=protected)
         ellObj=changeShapeMatInternal(ellObj,isModScal,modMat)
+        fSingleProjection(ellObj,ortBasisMat)
     end
     methods(Abstract, Static)
         ellArr=fromRepMat(varargin)

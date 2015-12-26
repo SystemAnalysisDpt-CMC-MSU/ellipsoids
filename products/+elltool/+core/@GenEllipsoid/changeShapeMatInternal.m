@@ -1,8 +1,4 @@
-function changeShapeMatInternal(ellObj,isModScal,modMat)
-if isModScal
-    eigvMat=modMat*ellObj.eigvMat;
-else
-    eigvMat=modMat*ellObj.eigvMat;
-end
+function changeShapeMatInternal(ellObj,isModScal,modMat) %#ok<INUSL>
+eigvMat=modMat*ellObj.eigvMat;
 ellObj.eigvMat=eigvMat;
 end
