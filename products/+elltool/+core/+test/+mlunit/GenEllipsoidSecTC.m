@@ -438,5 +438,48 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 mlunitext.assert(isEqual(resEllProj,expEllProj));
             end
         end
+        %
+        function testTrace(self)
+            import elltool.core.GenEllipsoid
+            %Check negative
+            self.runAndCheckError('elltool.core.GenEllipsoid().trace()',...
+                'wrongInput:emptyEllipsoid');
+            %Check positive
+            testEllCVec={GenEllipsoid(1),GenEllipsoid([1;1]),...
+                GenEllipsoid([1;1],[1;1]),...
+                GenEllipsoid([1;1],[1;1],[1,2;3,4])};
+            expResValCVec={1,2,2,30};
+            cellfun(@checkPositive,testEllCVec,expResValCVec);
+            %Check Inf-contained
+            testEllCVec={GenEllipsoid(Inf),GenEllipsoid([1;Inf]),...
+                GenEllipsoid(ones(100,1),Inf*ones(100,1))};
+            cellfun(@checkPosInf,testEllCVec);
+            %
+            function checkPositive(testEll,expResVal)
+                resVal=testEll.trace();
+                mlunitext.assert(abs(resVal-expResVal)<...
+                    testEll.getAbsTol());
+            end
+            function checkPosInf(testEll)
+                mlunitext.assert(testEll.trace()==Inf);
+            end
+        end
+        %
+        function testIsdegenerate(self)
+            import elltool.core.GenEllipsoid
+            %Check negative
+            self.runAndCheckError('elltool.core.GenEllipsoid().trace()',...
+                'wrongInput:emptyEllipsoid');
+            %Check positive
+            testEllCVec={GenEllipsoid(ones(6,1),zeros(6,6)),...
+                GenEllipsoid([10,1,-5;1,1,1;-5,1,5]),...
+                GenEllipsoid([Inf;3;4]),GenEllipsoid([3;4])};
+            expResValCVec={true,true,false,false};
+            cellfun(@checkPositive,testEllCVec,expResValCVec);
+            %
+            function checkPositive(testEll,expResVal)
+                mlunitext.assert(testEll.isdegenerate()==expResVal);
+            end
+        end
     end
 end

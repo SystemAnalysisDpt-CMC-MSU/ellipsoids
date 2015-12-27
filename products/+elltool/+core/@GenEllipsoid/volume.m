@@ -37,11 +37,9 @@ function volArr=volume(ellArr)
 elltool.core.GenEllipsoid.checkIsMe(ellArr);
 volArr=zeros(size(ellArr));
 for iElem=1:numel(ellArr)
-    qInfMat=ellArr(iElem).getQInfMat();
-    if any(qInfMat(:)>0)
+    volArr(iElem)=volume@elltool.core.AEllipsoid(ellArr(iElem));
+    if isnan(volArr(iElem))
         volArr(iElem)=Inf;
-    else
-        volArr(iElem)=volume@elltool.core.AEllipsoid(ellArr(iElem));
     end
 end
 end
