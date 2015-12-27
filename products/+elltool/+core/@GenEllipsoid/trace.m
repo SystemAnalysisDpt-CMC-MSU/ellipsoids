@@ -2,17 +2,17 @@ function trArr=trace(ellArr)
 %
 % TRACE - returns the trace of the GenEllipsoid.
 %
-%    trArr = TRACE(ellArr)  Computes the trace of GenEllipsoids in
-%       ellipsoidal array ellArr.
+%	trArr = TRACE(ellArr)  Computes the trace of GenEllipsoids in
+%		ellipsoidal array ellArr.
 %
 % Input:
-%   regular:
-%       ellArr: GenEllipsoid [nDims1,nDims2,...,nDimsN] - array
-%           of GenEllipsoids.
+%	regular:
+%		ellArr: GenEllipsoid [nDims1,nDims2,...,nDimsN] - array
+%			of GenEllipsoids.
 %
 % Output:
 %	trArr: double [nDims1,nDims2,...,nDimsN] - array of trace values, 
-%       same size as ellArr.
+%		same size as ellArr.
 %
 %       
 % $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $   

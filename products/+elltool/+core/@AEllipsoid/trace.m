@@ -2,27 +2,27 @@ function trArr=trace(ellArr)
 %
 % TRACE - returns the trace of the AEllipsoid.
 %
-%    trArr = TRACE(ellArr)  Computes the trace of AEllipsoids in
-%       ellipsoidal array ellArr.
+%	trArr = TRACE(ellArr) Computes the trace of AEllipsoids in
+%		ellipsoidal array ellArr.
 %
 % Input:
-%   regular:
-%       ellArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array
-%           of AEllipsoids.
+%	regular:
+%		ellArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array
+%			of AEllipsoids.
 %
 % Output:
 %	trArr: double [nDims1,nDims2,...,nDimsN] - array of trace values, 
-%       same size as ellArr.
+%		same size as ellArr.
 %
 % Example:
-%   firstEllObj = ellipsoid([4 -1; -1 1]);
-%   secEllObj = ell_unitball(2);
-%   ellVec = [firstEllObj secEllObj];
-%   trVec = ellVec.trace()
+%	firstEllObj = ellipsoid([4 -1; -1 1]);
+%	secEllObj = ell_unitball(2);
+%	ellVec = [firstEllObj secEllObj];
+%	trVec = ellVec.trace()
 % 
-%   trVec =
+%	trVec =
 % 
-%       5     2
+%		5     2
 %       
 % $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $   
 % $Date: Dec-2015$

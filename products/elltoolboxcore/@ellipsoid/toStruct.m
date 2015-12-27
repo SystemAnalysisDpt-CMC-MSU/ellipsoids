@@ -28,9 +28,9 @@ function [SDataArr,SFieldNiceNames,SFieldDescr,SFieldTransformFunc]=...
 %
 % $Author: Alexander Karev <Alexander.Karev.30@gmail.com>
 % $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics
-%             and Computer Science,
-%             System Analysis Department 2013 $
+%           Faculty of Computational Mathematics
+%           and Computer Science,
+%           System Analysis Department 2013 $
 if nargin<3
     absTol=ellArr.getAbsTol();
 end   

@@ -17,22 +17,22 @@ function ellArr=fromRepMat(varargin)
 %	Case1:
 %		regular:
 %			sizeVec: double[1,n] - vector of size, have
-%			integer values.
+%				integer values.
 %
 %	Case2:
 %		regular:
 %			normalVec: double[nDim, 1] - normal of
-%			hyperplanes.
+%				hyperplanes.
 %			sizeVec: double[1, n] - vector of size, have
-%			integer values.
+%				integer values.
 %
 %	Case3:
 %		regular:
 %			normalVec: double[nDim, 1] - normal of
-%			hyperplanes.
+%				hyperplanes.
 %			shift: double[1, 1] - shift of hyperplane.
 %			sizeVec: double[1,n] - vector of size, have
-%			integer values.
+%				integer values.
 %
 %	properties:
 %		absTol: double [1,1] - absolute tolerance with default

@@ -30,7 +30,7 @@ function ellArr=shape(ellArr,modMat)
 %		|               -----
 %		|------- QMat : |1|1|
 %		|               |1|4|
-%       |               -----
+%		|               -----
 %		|               -----
 %		|---- QInfMat : |0|0|
 %		|               |0|0|

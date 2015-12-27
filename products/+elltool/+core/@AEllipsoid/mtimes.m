@@ -2,43 +2,43 @@ function outEllArr=mtimes(multMat,inpEllArr)
 %
 % MTIMES - overloaded operator '*'.
 %
-%   Multiplication of the AEllipsoid by a matrix or a scalar.
+%	Multiplication of the AEllipsoid by a matrix or a scalar.
 %
 % Input:
-%   regular:
-%       multMat: double[mRows, nDims]/[1, 1] - scalar or
-%           matrix in R^{mRows x nDim}
-%       inpEllVec: AEllipsoid [1, nCols] - array of AEllipsoids.
+%	regular:
+%		multMat: double[mRows, nDims]/[1, 1] - scalar or
+%			matrix in R^{mRows x nDim}
+%		inpEllVec: AEllipsoid [1, nCols] - array of AEllipsoids.
 %
 % Output:
-%   outEllVec: AEllipsoid [1, nCols] - resulting AEllipsoids.
+%	outEllVec: AEllipsoid [1, nCols] - resulting AEllipsoids.
 %
 % Example:
-%   ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
-%   tempMat = [0 1; -1 0];
-%   outEllObj = tempMat*ellObj
+%	ellObj = ellipsoid([-2; -1], [4 -1; -1 1]);
+%	tempMat = [0 1; -1 0];
+%	outEllObj = tempMat*ellObj
 %
-%   outEllObj =
+%	outEllObj =
 %
-%   Center:
-%       -1
-%        2
+%	Center:
+%		-1
+%		 2
 %
-%   Shape:
-%        1     1
-%        1     4
+%	Shape:
+%		1     1
+%		1     4
 %
-%   Nondegenerate ellipsoid in R^2.
+%	Nondegenerate ellipsoid in R^2.
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
 % $Copyright:  The Regents of the University of California
-% 2004-2008 $
+% 			2004-2008 $
 %
 % $Author: Guliev Rustam <glvrst@gmail.com> $
 % $Date: Dec-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%			Faculty of Computational Mathematics and Computer Science,
+%			System Analysis Department 2012 $
 %
 % $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $   
 % $Date: Dec-2015$

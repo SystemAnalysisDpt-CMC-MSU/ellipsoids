@@ -2,9 +2,9 @@ function outEllArr=plus(varargin)
 %
 % PLUS - overloaded operator '+'
 %
-%	outEllArr=PLUS(inpEllArr,inpVec) implements E(q,Q)+b
+%	outEllArr=PLUS(inpEllArr,inpVec) implements E+b
 %		for each AEllipsoid E in inpEllArr.
-%	outEllArr=PLUS(inpVec,inpEllArr) implements b+E(q,Q)
+%	outEllArr=PLUS(inpVec,inpEllArr) implements b+E
 %		for each AEllipsoid E in inpEllArr.
 %
 %	Operation E+b (or b+E) where E=inpEll is an AEllipsoid in R^n,

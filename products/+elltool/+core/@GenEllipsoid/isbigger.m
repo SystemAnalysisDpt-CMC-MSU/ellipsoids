@@ -21,8 +21,8 @@ function isPositive=isbigger(ellObj1,ellObj2)
 % $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $   
 % $Date: Dec-2015$
 % $Copyright: Moscow State University,
-%           Faculty of Computational Mathematics and Computer Science,
-%           System Analysis Department 2015 $
+%			Faculty of Computational Mathematics and Computer Science,
+%			System Analysis Department 2015 $
 %
 import elltool.core.GenEllipsoid;
 import elltool.conf.Properties;

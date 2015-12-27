@@ -3,22 +3,22 @@ function isPositiveArr=isdegenerate(myEllArr)
 % ISDEGENERATE - checks if the GenEllipsoid is degenerate.
 %
 % Input:
-%   regular:
-%       myEllArr: GenEllipsoid[nDims1,nDims2,...,nDimsN] - array of
-%           GenEllipsoids.
+%	regular:
+%		myEllArr: GenEllipsoid[nDims1,nDims2,...,nDimsN] - array of
+%			GenEllipsoids.
 %
 % Output:
-%   isPositiveArr: logical[nDims1,nDims2,...,nDimsN],
-%       isPositiveArr(iCount) = true if GenEllipsoid myEllMat(iCount)
-%       is degenerate, false - otherwise.
+%	isPositiveArr: logical[nDims1,nDims2,...,nDimsN],
+%		isPositiveArr(iCount) = true if GenEllipsoid myEllMat(iCount)
+%		is degenerate, false - otherwise.
 %
 % Example:
-%   ellObj = ellipsoid([1; 1], eye(2));
-%   isdegenerate(ellObj)
+%	ellObj = ellipsoid([1; 1], eye(2));
+%	isdegenerate(ellObj)
 %
-%   ans =
+%	ans =
 %
-%        0
+%		0
 %
 % $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com>
 % $Date: Dec-2015$

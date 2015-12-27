@@ -3,45 +3,45 @@ function [SDataArr,SFieldNiceNames,SFieldDescr,SFieldTransformFunc] = ...
 % toStruct -- converts GenEllipsoid array into structural array.
 %
 % Input:
-%   regular:
-%       ellArr: GenEllipsoid [nDim1, nDim2, ...] - array
-%           of GenEllipsoids.
-%       isPropIncluded: logical[1,1] - if true, then properties also 
-%           adds to struct
+%	regular:
+%		ellArr: GenEllipsoid [nDim1, nDim2, ...] - array
+%			of GenEllipsoids.
+%		isPropIncluded: logical[1,1] - if true, then properties also 
+%			adds to struct
 % Output:
-%   SDataArr: struct[nDims1,...,nDimsk] - structure array same size, as
-%       ellArr, contain all data.
-%   SFieldNiceNames: struct[1,1] - structure with the same fields as 
-%       SDataArr. Field values contain the nice names.
-%   SFieldDescr: struct[1,1] - structure with same fields as SDataArr,
-%       values contain field descriptions.
+%	SDataArr: struct[nDims1,...,nDimsk] - structure array same size, as
+%		ellArr, contain all data.
+%	SFieldNiceNames: struct[1,1] - structure with the same fields as 
+%		SDataArr. Field values contain the nice names.
+%	SFieldDescr: struct[1,1] - structure with same fields as SDataArr,
+%		values contain field descriptions.
 %
-%       q:      double[1, nEllDim] - the center of ellipsoid
-%       Q:      double[nEllDim, nEllDim] - the shape matrix of ellipsoid
-%       QInf:   double[nEllDim, nEllDim] - the matrix of infinity values of
-%           GenEllipsoid
+%		q:      double[1, nEllDim] - the center of ellipsoid
+%		Q:      double[nEllDim, nEllDim] - the shape matrix of ellipsoid
+%		QInf:   double[nEllDim, nEllDim] - the matrix of infinity values of
+%					GenEllipsoid
 %
 % Example:
 %   
-%   ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
+%	ellObj = elltool.core.GenEllipsoid([5;2], eye(2), [1 3; 4 5]);
 %   
-%   [Data, NiceNames, Descr] = ellObj.toStruct()
+%	[Data, NiceNames, Descr] = ellObj.toStruct()
 % 
-%   Data = 
+%	Data = 
 % 
 %          QMat: [2x2 double]
 %     centerVec: [2x1 double]
 %       QInfMat: [2x2 double]
 % 
 % 
-%   NiceNames = 
+%	NiceNames = 
 % 
 %          QMat: 'Q'
 %     centerVec: 'q'
 %       QInfMat: 'QInf'
 % 
 % 
-%   Descr = 
+%	Descr = 
 % 
 %          QMat: 'GenEllipsoid "shape" matrix.'
 %     centerVec: 'GenEllipsoid center vector.'

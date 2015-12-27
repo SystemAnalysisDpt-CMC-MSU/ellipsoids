@@ -3,21 +3,21 @@ function minEigArr=mineig(ellArr)
 % MAXEIG - return the maximal eigenvalue of the AEllipsoid.
 %
 % Input:
-%   regular:
-%       ellArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array of 
-%            AEllipsoids.
+%	regular:
+%		ellArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%			AEllipsoids.
 %
 % Output:
-%   maxEigArr: double[nDims1,nDims2,...,nDimsN] - array of maximal 
-%       eigenvalues of AEllipsoids in the input matrix inpEllMat.
+%	maxEigArr: double[nDims1,nDims2,...,nDimsN] - array of maximal 
+%		eigenvalues of AEllipsoids in the input matrix inpEllMat.
 % 
 % Example:
-%   ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
-%   maxEig = maxeig(ellObj)
+%	ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
+%	maxEig = maxeig(ellObj)
 % 
-%   maxEig =
+%	maxEig =
 % 
-%       3.3820 
+%		3.3820 
 % 
 % $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $   
 % $Date: Dec-2015$
