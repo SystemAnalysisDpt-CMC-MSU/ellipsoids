@@ -12,20 +12,19 @@ function isBigger=checkBigger(ellObj1,ellObj2,nDimSpace,absTol)
 %
 % $Author: Vitaly Baranov  <vetbar42@gmail.com> $    $Date: Nov-2012$
 % $Copyright: Moscow State University,
-%            Faculty of Computational Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%           Faculty of Computational Mathematics and Computer Science,
+%           System Analysis Department 2012 $
 %
-%Algorithm:
-%First, construct orthogonal bases of infinite directions for both
-%ellipsoids and then check that these directions are collinear.
-%Then find projections on nonifinite basis, which is the same for two
-%ellipsoids. Then find zero directions among this basis for each of the
-%ellipsoids ans check that directions in first ellipsoid correspond
-%to zero directions of the second. Finally, project every ellipsoids
-%on basis that doesnt contain zero directions for first ellipsoid and
-%then use simultaneos diagonalization.
+% Algorithm:
+%   First, construct orthogonal bases of infinite directions for both
+%   ellipsoids and then check that these directions are collinear.
+%   Then find projections on nonifinite basis, which is the same for two
+%   ellipsoids. Then find zero directions among this basis for each of the
+%   ellipsoids ans check that directions in first ellipsoid correspond
+%   to zero directions of the second. Finally, project every ellipsoids
+%   on basis that doesnt contain zero directions for first ellipsoid and
+%   then use simultaneos diagonalization.
 %
-%Find infinite directions for each of the ellipsoids
 import elltool.core.GenEllipsoid;
 import modgen.common.checkmultvar;
 import modgen.common.throwerror;

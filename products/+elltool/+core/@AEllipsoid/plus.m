@@ -2,9 +2,9 @@ function outEllArr=plus(varargin)
 %
 % PLUS - overloaded operator '+'
 %
-%	outEllArr=PLUS(inpEllArr,inpVec) implements E(q,Q)+b
+%	outEllArr=PLUS(inpEllArr,inpVec) implements E+b
 %		for each AEllipsoid E in inpEllArr.
-%	outEllArr=PLUS(inpVec,inpEllArr) implements b+E(q,Q)
+%	outEllArr=PLUS(inpVec,inpEllArr) implements b+E
 %		for each AEllipsoid E in inpEllArr.
 %
 %	Operation E+b (or b+E) where E=inpEll is an AEllipsoid in R^n,
@@ -83,12 +83,13 @@ else
 end
 sizeCVec=num2cell(size(inpEllArr));
 if isempty(inpEllArr)
-	outEllArr(sizeCVec{:})=ellFactory();
+	outEllArr=feval(class(inpEllArr));
+    outEllArr=outEllArr.empty(sizeCVec{:});
 else    
 	dimArr=dimension(inpEllArr);
 	checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimArr,...
-		'errorTag','wrongDimensions','errorMessage','dimensions mismatch');
-	outEllArr(sizeCVec{:})=inpEllArr.ellFactory();
+		'errorTag','wrongInput','errorMessage','dimensions mismatch');
+	outEllArr(sizeCVec{:})=feval(class(inpEllArr));
 	arrayfun(@(x) fSinglePlus(x),1:numel(inpEllArr));
 end        
 	function fSinglePlus(index)

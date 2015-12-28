@@ -2,7 +2,7 @@ function outEllArr=getShape(ellArr,modMat)
 %
 % GETSHAPE -  does the same as SHAPE method: modifies the shape matrix 
 %	of the AEllipsoid without changing its center, with only difference,  
-%	that it doesn't modify input array of GenEllipsoids, i.e. creates new.
+%	that it doesn't modify input array of AEllipsoids, i.e. creates new.
 %
 % Input:
 %	regular
@@ -11,8 +11,8 @@ function outEllArr=getShape(ellArr,modMat)
 %		modMat: double[nDim, nDim]/[1,1] - square matrix or scalar
 %
 % Output:
-%	outEllArr: GenEllipsoid [nDims1,nDims2,...,nDimsN] - array of modified
-%		GenEllipsoids.
+%	outEllArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array of modified
+%		AEllipsoids.
 %
 % Example:
 %	ellObj = GenEllipsoid([-2; -1], [4 -1; -1 1]);

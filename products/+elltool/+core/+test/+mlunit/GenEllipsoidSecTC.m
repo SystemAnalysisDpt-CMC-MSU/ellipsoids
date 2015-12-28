@@ -135,7 +135,7 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 function checkWrongDimensions(testVec,testEllipsoid) %#ok<INUSD>
                     self.runAndCheckError(...
                         'testEllipsoid{:}.(opName)(testVec{:})',...
-                        'wrongDimensions');
+                        'wrongInput');
                 end
             end
         end
@@ -265,9 +265,10 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
             cellfun(@checkNegative,testModMatCVec,testEllArrCVec);
             %CheckPositive
             test1Ell=GenEllipsoid([-2;-1],[4;Inf]);
-            testModMatCVec={[1,2;2,1],[2,0;0,0]};
-            testEllArrCVec={testEll,test1Ell};
-            expEllArrCVec={GenEllipsoid([-2;-1],[4,5;5,13]),...
+            testModMatCVec={2,[1,2;2,1],[2,0;0,0]};
+            testEllArrCVec={GenEllipsoid(2),testEll,test1Ell};
+            expEllArrCVec={GenEllipsoid(8),...
+                GenEllipsoid([-2;-1],[4,5;5,13]),...
                 GenEllipsoid([-2;-1],[16;0])};
             cellfun(@checkPositive,testModMatCVec,testEllArrCVec,...
                 expEllArrCVec);
@@ -329,6 +330,155 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                     self.runAndCheckError(...
                         'test1Ell.isbigger(test2Ell)','wrongInput');
                 end
+            end
+        end
+        %
+        function testMtimes(self)
+            import elltool.core.GenEllipsoid
+            testEll=GenEllipsoid([1;1],[10;12]);
+            %Check negative
+            testMultMatCVec={testEll,'a',[1;1],[1,1]};
+            testEllCVec={testEll,testEll,testEll,GenEllipsoid()};
+            errTagCVec={'wrongInput','wrongInput','wrongSizes',...
+                'wrongInput'};
+            cellfun(@checkNegative,testMultMatCVec,testEllCVec,errTagCVec);
+            %Check positive
+            testMultMatCVec={1,2,[1,1],ones(100,2)};
+            expEllCVec={testEll,GenEllipsoid([2;2],[40;48]),...
+                GenEllipsoid(2,22),...
+                GenEllipsoid(2*ones(100,1),22*ones(100,100))};
+            cellfun(@(x,y)checkPositive(x,testEll,y),testMultMatCVec,...
+                expEllCVec);
+            %Check positive with Inf values
+            test2Ell=GenEllipsoid([1;1],[4;Inf]);
+            testMultMatCVec={2,[1,1],ones(100,2)};
+            SExpResCVec={struct('QMat',[16,0;0,0],'centerVec',[2;2],...
+                'QInfMat',[0,0;0,4]),...
+                struct('QMat',4,'centerVec',2,...
+                'QInfMat',1),...
+                struct('QMat',4*ones(100,100),'centerVec',2*ones(100,1),...
+                'QInfMat',ones(100,100))};
+            cellfun(@(x,y)check2Positive(x,test2Ell,y),testMultMatCVec,...
+                SExpResCVec);
+            function checkNegative(testMultMat,testEllArr,errTag) %#ok<INUSL>
+                self.runAndCheckError('testMultMat*testEllArr',errTag);
+            end
+            function checkPositive(testMultMat,testEll,expEll)
+                resEll=testMultMat*testEll;
+                [isOkArr,reportStr]=resEll.isEqual(expEll);
+                mlunitext.assert(all(isOkArr(:)),reportStr);
+            end
+            function check2Positive(testMultMat,testEll,SExpRes)
+                resEll=testMultMat*testEll;
+                STestRes=resEll.toStruct();
+                mlunitext.assert(structcompare(STestRes,SExpRes,1e-09));
+                import modgen.struct.structcompare;
+            end
+        end
+        %
+        function testVolume(self)
+            import elltool.core.GenEllipsoid
+            eps=1e-4;
+            %Check negative
+            testEll=GenEllipsoid(); %#ok<NASGU>
+            self.runAndCheckError('testEll.volume()',...
+                'wrongInput:emptyEllipsoid');
+            %Check positive
+            testEllCVec={GenEllipsoid(1),GenEllipsoid([2;2]),...
+                GenEllipsoid([1;1],[2;2]),...
+                GenEllipsoid([1;1],[2;2],[1,2;3,4])};
+            expVolVec=[2,2*pi,2*pi,12.5664];
+            testResVec=cellfun(@(x) x.volume(),testEllCVec);
+            mlunitext.assert(all(abs(testResVec-expVolVec)<eps));
+            %Check Inf volumes
+            testEllCVec={GenEllipsoid([1;Inf]),GenEllipsoid(Inf*ones(5,1))};
+            testResVec=cellfun(@(x) x.volume(),testEllCVec);
+            mlunitext.assert(all(testResVec==Inf));
+        end
+        %
+        function testProjection(self)
+            import elltool.core.GenEllipsoid
+            testEll=GenEllipsoid([1;1;1],[2;3;4]);
+            %Check negative
+            testBasisMatCVec={[0 1 1; 0 0 1]',[0 1 1; 0 0 1],1,'a',...
+                ellipsoid(hilb(2))};
+            testEllCVec={testEll,testEll,GenEllipsoid(),testEll,testEll};
+            cellfun(@checkNegative,testBasisMatCVec,testEllCVec);
+            %Check backward compatibility with ellipsoid
+            testBasisMatCVec={[0 1 0; 0 0 1]',[3,0;0,2]};
+            testEllCVec={testEll,GenEllipsoid([1;1],[2;3])};
+            cellfun(@checkBackCompEll,testBasisMatCVec,testEllCVec);
+            %Check Inf-contained GenEllipsoids
+            testBasisMatCVec={[0 1 0; 0 0 1]',[0 1 0; 0 0 1]',[3,0;0,2]};
+            testEllCVec={GenEllipsoid([1;1;1],[Inf;3;4]),...
+                GenEllipsoid([1;1;1],[3;Inf;4]),...
+                GenEllipsoid([1;1],[Inf;3])};
+            expResEllCVec={GenEllipsoid([1;1],[3;4]),...
+                GenEllipsoid([1;1],[Inf;4]),...
+                GenEllipsoid([1;1],[Inf;3])};
+            cellfun(@checkPositive,testBasisMatCVec,testEllCVec,...
+                expResEllCVec);
+            %
+            function checkNegative(testBasisMat,testEll) %#ok<INUSD>
+                self.runAndCheckError(...
+                    'testEll.projection(testBasisMat)',...
+                    'wrongInput');
+            end
+            function checkBackCompEll(testBasisMat,testEll)
+                simpleEll=ellipsoid(testEll.getCenterVec(),...
+                    testEll.getShapeMat());
+                resEllProj=testEll.projection(testBasisMat);
+                simpleEllProj=simpleEll.projection(testBasisMat);
+                resSimpleEllProj=ellipsoid(resEllProj.getCenterVec(),...
+                    resEllProj.getShapeMat());
+                mlunitext.assert(isEqual(simpleEllProj,resSimpleEllProj));
+            end
+            function checkPositive(testBasisMat,testEll,expEllProj)
+                resEllProj=testEll.projection(testBasisMat);
+                mlunitext.assert(isEqual(resEllProj,expEllProj));
+            end
+        end
+        %
+        function testTrace(self)
+            import elltool.core.GenEllipsoid
+            %Check negative
+            self.runAndCheckError('elltool.core.GenEllipsoid().trace()',...
+                'wrongInput:emptyEllipsoid');
+            %Check positive
+            testEllCVec={GenEllipsoid(1),GenEllipsoid([1;1]),...
+                GenEllipsoid([1;1],[1;1]),...
+                GenEllipsoid([1;1],[1;1],[1,2;3,4])};
+            expResValCVec={1,2,2,30};
+            cellfun(@checkPositive,testEllCVec,expResValCVec);
+            %Check Inf-contained
+            testEllCVec={GenEllipsoid(Inf),GenEllipsoid([1;Inf]),...
+                GenEllipsoid(ones(100,1),Inf*ones(100,1))};
+            cellfun(@checkPosInf,testEllCVec);
+            %
+            function checkPositive(testEll,expResVal)
+                resVal=testEll.trace();
+                mlunitext.assert(abs(resVal-expResVal)<...
+                    testEll.getAbsTol());
+            end
+            function checkPosInf(testEll)
+                mlunitext.assert(testEll.trace()==Inf);
+            end
+        end
+        %
+        function testIsdegenerate(self)
+            import elltool.core.GenEllipsoid
+            %Check negative
+            self.runAndCheckError('elltool.core.GenEllipsoid().trace()',...
+                'wrongInput:emptyEllipsoid');
+            %Check positive
+            testEllCVec={GenEllipsoid(ones(6,1),zeros(6,6)),...
+                GenEllipsoid([10,1,-5;1,1,1;-5,1,5]),...
+                GenEllipsoid([Inf;3;4]),GenEllipsoid([3;4])};
+            expResValCVec={true,true,false,false};
+            cellfun(@checkPositive,testEllCVec,expResValCVec);
+            %
+            function checkPositive(testEll,expResVal)
+                mlunitext.assert(testEll.isdegenerate()==expResVal);
             end
         end
     end

@@ -227,9 +227,6 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
     methods (Static)
         hpArr = fromRepMat(varargin)
         hpObj = fromStruct(SHpObj)
-        function propNameVec=getPropList()
-            propNameVec={'absTol','relTol'};
-        end
     end
     methods (Access=protected,Static)
         checkIsMe(ellArr,varargin)
@@ -239,18 +236,6 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
             hyperplane.checkIsMe(ellArr,varargin)
         end
         copyEllObj=getSingleCopy(ellObj)
-        function ellObj=ellFactory(self) %#ok<MANU>
-            ellObj=hyperplane;
-        end
-    end
-    methods(Static)
-        function SComp = formCompStruct(SHp, SFieldNiceNames, ~, isPropIncluded)
-            SComp.(SFieldNiceNames.normal) = SHp.normal;
-            SComp.(SFieldNiceNames.shift) = SHp.shift;
-            if (isPropIncluded)
-                SComp.(SFieldNiceNames.absTol) = SHp.absTol;
-            end
-        end
     end
 end
 %

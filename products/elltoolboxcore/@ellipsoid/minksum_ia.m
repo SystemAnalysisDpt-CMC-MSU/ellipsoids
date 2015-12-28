@@ -91,7 +91,7 @@ checkmultvar('x1(1)==x2',2,nDimsInpEllArr,nDims,...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
 
 if isscalar(inpEllArr)
-    intApprEllVec=inpEllArr.repMat(1,nCols);
+    intApprEllVec=inpEllArr.repMat([1,nCols]);
 else
     %
     isVerbose=Properties.getIsVerbose();

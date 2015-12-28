@@ -238,7 +238,7 @@ classdef ellipsoid < elltool.core.AEllipsoid
                 % because the zero eigenvalue may be internally represented
                 % as something like -10^(-15).
                 import modgen.common.checkmultvar;
-                checkmultvar(@(aMat, aAbsTolVal)gras.la.ismatsymm(aMat)...
+                checkmultvar(@(aMat, aAbsTolVal)gras.la.ismatsymm(aMat,aAbsTolVal)...
                     &&gras.la.ismatposdef(aMat,aAbsTolVal,true), 2,...
                     shMatArray(:,:,iEll), absTolVal,...
                     'errorTag','wrongInput:shapeMat',...
@@ -255,10 +255,6 @@ classdef ellipsoid < elltool.core.AEllipsoid
     end
     
     methods(Static)
-        function propNameVec=getPropList()
-            propNameVec={'absTol','relTol','nPlot2dPoints',...
-                'nPlot3dPoints','nTimeGridPoints'};
-        end
         ellArr = fromRepMat(varargin)
         ellArr = fromStruct(SEllArr)
     end
@@ -282,13 +278,12 @@ classdef ellipsoid < elltool.core.AEllipsoid
         checkIsMe(ellArr,varargin)
     end
     methods (Access=protected)
+        shapeSingleInternal(ellObj,isModScal,modMat)
+        projectionSingleInternal(ellObj,ortBasisMat)
         function checkIsMeVirtual(ellArr,varargin)
             ellipsoid.checkIsMe(ellArr,varargin)
         end
         copyEllObj=getSingleCopy(ellObj)
-        function ellObj=ellFactory(self) %#ok<MANU>
-            ellObj=ellipsoid();
-        end
     end
     methods (Access=private)
         function isArrEq = isMatEqualInternal(self,aArr,bArr)
@@ -321,24 +316,5 @@ classdef ellipsoid < elltool.core.AEllipsoid
                 isArrEq = true;
             end
         end
-    end
-    
-    methods (Static)
-        function SComp = formCompStruct(SEll, SFieldNiceNames, absTol, isPropIncluded)
-            if (~isempty(SEll.shapeMat))
-                SComp.(SFieldNiceNames.shapeMat) = gras.la.sqrtmpos(SEll.shapeMat, absTol);
-            else
-                SComp.(SFieldNiceNames.shapeMat) = [];
-            end
-            SComp.(SFieldNiceNames.centerVec) = SEll.centerVec;
-            if (isPropIncluded)
-                SComp.(SFieldNiceNames.absTol) = SEll.absTol;
-                SComp.(SFieldNiceNames.relTol) = SEll.relTol;
-                SComp.(SFieldNiceNames.nPlot2dPoints) = SEll.nPlot2dPoints;
-                SComp.(SFieldNiceNames.nPlot3dPoints) = SEll.nPlot3dPoints;
-            end
-        end
-    end
-    
-    
+    end 
 end

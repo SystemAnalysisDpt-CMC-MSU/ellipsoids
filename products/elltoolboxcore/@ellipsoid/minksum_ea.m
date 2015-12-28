@@ -88,7 +88,7 @@ checkmultvar('x1(1)==x2',2,nDimsInpEllArr,nDims,...
     'ellipsoids in the array and vector(s) must be of the same dimension.');
 
 if isscalar(inpEllArr)
-    extApprEllVec=inpEllArr.repMat(1,nCols);
+    extApprEllVec=inpEllArr.repMat([1,nCols]);
 else
     centVec =zeros(nDims,1);
     arrayfun(@(x) fAddCenter(x),inpEllArr);

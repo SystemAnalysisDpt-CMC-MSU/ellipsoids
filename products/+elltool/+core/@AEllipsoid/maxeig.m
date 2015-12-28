@@ -1,23 +1,23 @@
-function maxEigArr = maxeig(inpEllArr)
+function maxEigArr=maxeig(ellArr)
 %
 % MAXEIG - return the maximal eigenvalue of the AEllipsoid.
 %
 % Input:
-%   regular:
-%       inpEllArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array of 
-%            AEllipsoids.
+%	regular:
+%		ellArr: AEllipsoid [nDims1,nDims2,...,nDimsN] - array of 
+%			AEllipsoids.
 %
 % Output:
-%   maxEigArr: double[nDims1,nDims2,...,nDimsN] - array of maximal 
-%       eigenvalues of AEllipsoids in the input matrix inpEllMat.
+%	maxEigArr: double[nDims1,nDims2,...,nDimsN] - array of maximal 
+%		eigenvalues of AEllipsoids in the input matrix inpEllMat.
 % 
 % Example:
-%   ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
-%   maxEig = maxeig(ellObj)
+%	ellObj = ellipsoid([-2; 4], [4 -1; -1 5]);
+%	maxEig = maxeig(ellObj)
 % 
-%   maxEig =
+%	maxEig =
 % 
-%       5.6180
+%		5.6180
 % 
 % $Author: Alexandr Timchenko <timchenko.alexandr@gmail.com> $   
 % $Date: Dec-2015$
@@ -26,11 +26,11 @@ function maxEigArr = maxeig(inpEllArr)
 %			System Analysis Department 2015 $
 %
 import elltool.conf.Properties;
-checkIsMeVirtual(inpEllArr);
-modgen.common.checkvar(inpEllArr,'~any(x(:).isEmpty())',...
+checkIsMeVirtual(ellArr);
+modgen.common.checkvar(ellArr,'~any(x(:).isEmpty())',...
     'errorTag','wrongInput:emptyEllipsoid','errorMessage',...
     'input argument contains empty ellipsoid');
-maxEigArr = arrayfun(@getSingleMaxEig,inpEllArr);
+maxEigArr = arrayfun(@getSingleMaxEig,ellArr);
 %
 function maxEig=getSingleMaxEig(ellObj)
     shapeMat=ellObj.getShapeMat();

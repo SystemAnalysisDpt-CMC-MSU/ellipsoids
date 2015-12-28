@@ -10,20 +10,16 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
         checkIsMe(ellArr,varargin)
     end
     methods(Access=protected)
+        shapeSingleInternal(ellObj,isModScal,modMat)
+        projectionSingleInternal(ellObj,ortBasisMat)
         function checkIsMeVirtual(ellArr,varargin)
             elltool.core.GenEllipsoid.checkIsMe(ellArr,varargin)
         end
         copyEllObj=getSingleCopy(ellObj)
-        function ellObj=ellFactory(self) %#ok<MANU>
-            ellObj=elltool.core.GenEllipsoid();
-        end
     end
     methods
         polar=getScalarPolarInternal(self,isRobustMethod)
         [ellCenterVec,ellDiagMat,ellEigvMat]=parameters(ell)
-        [SDataArr,SFieldNiceNames,SFieldDescr]=...
-            toStruct(ellArr,isPropIncluded)
-        ellArr=shape(ellArr,modMat)
         function isOk=getIsGoodDir(ellObj1,ellObj2,curDirVec)
             % Example:
             %   firstEllObj=elltool.core.GenEllipsoid([10;0],2*eye(2));
@@ -370,30 +366,23 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             %
             shapeMat=self.eigvMat*self.diagMat*self.eigvMat.';
         end
-    end
-    methods (Static)
-        function SComp=formCompStruct(SEll,SFieldNiceNames,...
-                absTol,isPropIncluded) %#ok<INUSL>
-            if (~isempty(SEll.QMat))
-                SComp.(SFieldNiceNames.QMat)=SEll.QMat;
-            else
-                SComp.(SFieldNiceNames.QMat)=[];
-            end
-            SComp.(SFieldNiceNames.centerVec)=SEll.centerVec;
-            if (~isempty(SEll.QInfMat))
-                SComp.(SFieldNiceNames.QInfMat)=SEll.QInfMat;
-            else
-                SComp.(SFieldNiceNames.QInfMat)=[];
-            end
-            if (isPropIncluded)
-                SComp.(SFieldNiceNames.absTol)=SEll.absTol;
-            end
+        function qInfMat=getQInfMat(self)
+            % Example:
+            %   ellObj=elltool.core.GenEllipsoid([5;2],[4;Inf]);
+            %   ellObj.getQInfMat()
+            %
+            %   ans =
+            %
+            %       0      0
+            %       0      1     
+            %
+            diagVec=diag(self.diagMat);
+            isInfVec=diagVec==Inf;
+            eigvInfMat=self.eigvMat(:,isInfVec);
+            qInfMat=eigvInfMat*eigvInfMat.';
         end
     end
     methods (Static)
-        function propNameVec=getPropList()
-            propNameVec={'absTol','relTol'};
-        end
         ellArr=fromRepMat(varargin)
         ellArr=fromStruct(SEllArr)
     end

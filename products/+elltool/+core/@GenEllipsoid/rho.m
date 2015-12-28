@@ -1,23 +1,23 @@
 function [resRho, bndPVec] = rho(ellObj,dirVec)
 % Example:
-%   ellObj = elltool.core.GenEllipsoid([1;1],eye(2));
-%   dirsVec = [1; 0];
-%   [resRho, bndPVec] = rho(ellObj, dirsVec)
+%	ellObj = elltool.core.GenEllipsoid([1;1],eye(2));
+%	dirsVec = [1; 0];
+%	[resRho, bndPVec] = rho(ellObj, dirsVec)
 % 
-%   resRho =
+%	resRho =
 % 
-%        2
+%		2
 % 
-%  bndPVec =
+%	bndPVec =
 % 
-%        2
-%        1
+%		2
+%		1
 % 
 %
 % $Author: Vadim Kaushanskiy <vkaushanskiy@gmail.com> $	$Date: 2012-12-24 $ 
 % $Copyright: Moscow State University,
-%            Faculty of Applied Mathematics and Computer Science,
-%            System Analysis Department 2012 $
+%			Faculty of Applied Mathematics and Computer Science,
+%			System Analysis Department 2012 $
 %
 import elltool.core.GenEllipsoid;
 absTol=GenEllipsoid().getAbsTol();

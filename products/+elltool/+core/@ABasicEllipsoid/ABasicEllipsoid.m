@@ -7,21 +7,23 @@ classdef ABasicEllipsoid < handle
     methods(Abstract)
         [dimArr,rankArr]=dimension(myEllArr)
     end
+    methods(Static,Access=private)
+        SComp=formCompStruct(SEll,SFieldNiceNames,SFieldTransformFunc)
+    end
     methods(Access=protected)
         checkIfScalar(self,errMsg)
         [isEqualArr,reportStr]=isEqualInternal(ellFirstArr,...
             ellSecArr,isPropIncluded)
     end
     methods(Static)
-        ellArr=fromRepMatInternal(ellObj,sizeVec)
         checkIsMeInternal(objType,ellArr,varargin)
     end
     methods(Access=protected,Abstract)
         checkIsMeVirtual(ellArr,varargin)
         copyEllObj=getSingleCopy(ellObj)
-        ellObj=ellFactory(self)
     end
     methods 
+        ellArr=repMat(ellObj,sizeVec)
         [absTolArr,absTolVal]=getAbsTol(ellArr,varargin)
         [relTolArr,relTolVal]=getRelTol(ellArr,varargin)
         copyEllArr=getCopy(ellArr)

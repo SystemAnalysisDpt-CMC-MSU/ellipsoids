@@ -1,16 +1,16 @@
-function outEllArr = minus(varargin)
+function outEllArr=minus(varargin)
 %
 % MINUS - overloaded operator '-'
 %
-%	outEllArr = PLUS(inpEllArr, inpVec) implements E(q, Q) - b
+%	outEllArr = PLUS(inpEllArr, inpVec) implements E - b
 %		for each AEllipsoid E in inpEllArr.
-%	outEllArr = PLUS(inpVec, inpEllArr) implements b - E(q, Q)
+%	outEllArr = PLUS(inpVec, inpEllArr) implements b - E
 %		for each AEllipsoid E in inpEllArr.
 %
 %	Operation E - b (or b - E) where E = inpEll is an AEllipsoid in R^n,
 %	and b = inpVec - vector in R^n. If E(q) is an AEllipsoid
 %	with center q, then
-%	E(q) - b = = E(q - b).
+%	E(q) - b = E(q - b).
 %
 % Input:
 %	regular:
