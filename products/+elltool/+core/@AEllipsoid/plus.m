@@ -83,11 +83,12 @@ else
 end
 sizeCVec=num2cell(size(inpEllArr));
 if isempty(inpEllArr)
-	outEllArr(sizeCVec{:})=ellFactory();
+	outEllArr=feval(class(inpEllArr));
+    outEllArr=outEllArr.empty(sizeCVec{:});
 else    
 	dimArr=dimension(inpEllArr);
 	checkmultvar('iscolumn(x1)&&all(x2(:)==length(x1))',2,inpVec,dimArr,...
-		'errorTag','wrongDimensions','errorMessage','dimensions mismatch');
+		'errorTag','wrongInput','errorMessage','dimensions mismatch');
 	outEllArr(sizeCVec{:})=feval(class(inpEllArr));
 	arrayfun(@(x) fSinglePlus(x),1:numel(inpEllArr));
 end        

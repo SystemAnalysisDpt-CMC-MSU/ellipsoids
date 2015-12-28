@@ -135,7 +135,7 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 function checkWrongDimensions(testVec,testEllipsoid) %#ok<INUSD>
                     self.runAndCheckError(...
                         'testEllipsoid{:}.(opName)(testVec{:})',...
-                        'wrongDimensions');
+                        'wrongInput');
                 end
             end
         end
