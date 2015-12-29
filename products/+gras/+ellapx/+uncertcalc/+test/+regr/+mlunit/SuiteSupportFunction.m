@@ -71,11 +71,9 @@ classdef SuiteSupportFunction < mlunitext.test_case
         function testSupportCompare(self)
             import modgen.common.throwerror;
             %
-            CONF_EXCLUDE_LIST={'yuchenZhouProb1'};
-            %
             crm = self.crm; %#ok<*PROP>
             crmSys = self.crmSys;
-            confNameList = setdiff(self.confNameList,CONF_EXCLUDE_LIST);
+            confNameList=self.confNameList;
             nConfs = length(confNameList);
             for iConf = 1 : nConfs
                 crm.deployConfTemplate(confNameList{iConf});

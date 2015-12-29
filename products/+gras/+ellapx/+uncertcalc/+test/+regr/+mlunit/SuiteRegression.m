@@ -51,11 +51,9 @@ classdef SuiteRegression < mlunitext.test_case
             import modgen.struct.pathfilterstruct;
             NOT_COMPARED_FIELD_LIST={'resDir','plotterObj'};
             %
-            CONF_EXCLUDE_LIST={'yuchenZhouProb1'};            
-            %
             curCrm=self.crm;
             curCrmSys=self.crmSys;
-            curConfNameList=setdiff(self.confNameList,CONF_EXCLUDE_LIST);
+            curConfNameList=self.confNameList;
             nConfs=length(curConfNameList);
             for iConf=1:nConfs
                 curCrm.deployConfTemplate(curConfNameList{iConf});
