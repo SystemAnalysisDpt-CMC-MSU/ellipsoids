@@ -28,11 +28,11 @@ isnSecScalar=nSecElems > 1;
     ellFirstArr.toStruct(isPropIncluded,absTol);
 SEll2Array = ellSecArr.toStruct(isPropIncluded,absTol);
 %
-SEll1Array = arrayfun(@(SEll)ellFirstArr.formCompStruct(SEll,...
+SEll1Array = arrayfun(@(SEll)formCompStruct(SEll,...
     SFieldNiceNames,SFieldTransformFunc), SEll1Array);
-SEll2Array = arrayfun(@(SEll)ellSecArr.formCompStruct(SEll,...
+SEll2Array = arrayfun(@(SEll)formCompStruct(SEll,...
     SFieldNiceNames,SFieldTransformFunc), SEll2Array);
-
+%
 if isnFirstScalar&&isnSecScalar
     if ~isequal(firstSizeVec, secSizeVec)
         throwerror('wrongSizes',...
@@ -55,4 +55,19 @@ end
             modgen.struct.structcomparevec(SEll1Array,...
             SEll2Array, tolVal);
     end
+end
+function SComp=formCompStruct(SEll,SFieldNiceNames,SFieldTransformFunc)
+fieldNameList=fieldnames(SFieldNiceNames);
+%
+nFields=numel(fieldNameList);
+%
+for iField=1:nFields
+    fieldName=fieldNameList{iField};
+    if isempty(SEll.(fieldName))
+        SComp.(SFieldNiceNames.(fieldName))=[];
+    else
+        fTransform=SFieldTransformFunc.(fieldName);
+        SComp.(SFieldNiceNames.(fieldName))=fTransform(SEll.(fieldName));
+    end
+end
 end

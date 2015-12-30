@@ -378,7 +378,7 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
         %
         function testVolume(self)
             import elltool.core.GenEllipsoid
-            eps=1e-4;
+            COMP_TOL=1e-4;
             %Check negative
             testEll=GenEllipsoid(); %#ok<NASGU>
             self.runAndCheckError('testEll.volume()',...
@@ -388,8 +388,8 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
                 GenEllipsoid([1;1],[2;2]),...
                 GenEllipsoid([1;1],[2;2],[1,2;3,4])};
             expVolVec=[2,2*pi,2*pi,12.5664];
-            testResVec=cellfun(@(x) x.volume(),testEllCVec);
-            mlunitext.assert(all(abs(testResVec-expVolVec)<eps));
+            testResVec=cellfun(@(x)x.volume(),testEllCVec);
+            mlunitext.assert(all(abs(testResVec-expVolVec)<COMP_TOL));
             %Check Inf volumes
             testEllCVec={GenEllipsoid([1;Inf]),GenEllipsoid(Inf*ones(5,1))};
             testResVec=cellfun(@(x) x.volume(),testEllCVec);
@@ -442,7 +442,8 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
         function testTrace(self)
             import elltool.core.GenEllipsoid
             %Check negative
-            self.runAndCheckError('elltool.core.GenEllipsoid().trace()',...
+            ellObj=elltool.core.GenEllipsoid(); %#ok<NASGU>
+            self.runAndCheckError('ellObj.trace()',...
                 'wrongInput:emptyEllipsoid');
             %Check positive
             testEllCVec={GenEllipsoid(1),GenEllipsoid([1;1]),...
@@ -468,7 +469,8 @@ classdef GenEllipsoidSecTC < mlunitext.test_case
         function testIsdegenerate(self)
             import elltool.core.GenEllipsoid
             %Check negative
-            self.runAndCheckError('elltool.core.GenEllipsoid().trace()',...
+            ellObj=elltool.core.GenEllipsoid(); %#ok<NASGU>
+            self.runAndCheckError('ellObj.isdegenerate()',...
                 'wrongInput:emptyEllipsoid');
             %Check positive
             testEllCVec={GenEllipsoid(ones(6,1),zeros(6,6)),...

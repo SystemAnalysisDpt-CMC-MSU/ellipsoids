@@ -365,6 +365,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             %       19.0      41.0     
             %
             shapeMat=self.eigvMat*self.diagMat*self.eigvMat.';
+            shapeMat=0.5*(shapeMat+shapeMat.');
         end
         function qInfMat=getQInfMat(self)
             % Example:

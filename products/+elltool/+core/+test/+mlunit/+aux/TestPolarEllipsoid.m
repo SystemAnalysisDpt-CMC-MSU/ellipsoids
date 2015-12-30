@@ -6,9 +6,6 @@ classdef TestPolarEllipsoid < elltool.core.AEllipsoid
             polarObj=ell.getScalarPolarInternal(isRobustMethod);
         end
     end
-    methods(Access=protected, Static)
-        formCompStruct(SEll,SFieldNiceNames,absTol,isPropIncluded)
-    end
     methods(Static)
         ellArr=fromRepMat(varargin)
         ellArr=fromStruct(SEllArr)
@@ -18,7 +15,6 @@ classdef TestPolarEllipsoid < elltool.core.AEllipsoid
         projectionSingleInternal(ellObj,ortBasisMat)
         checkIsMeVirtual(ellArr,varargin)
         copyEllObj=getSingleCopy(ellObj)
-        ellObj=ellFactory(self)
     end
     methods
         polar=getScalarPolarInternal(self,isRobustMethod)

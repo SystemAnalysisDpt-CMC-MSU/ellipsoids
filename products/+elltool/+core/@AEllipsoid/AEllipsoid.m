@@ -1,5 +1,5 @@
 classdef AEllipsoid < elltool.core.ABasicEllipsoid
-    properties(SetAccess=protected,GetAccess=public)
+    properties(SetAccess=protected,GetAccess=public,Hidden)
         nPlot2dPoints
         nPlot3dPoints
     end
@@ -7,6 +7,7 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
     properties(Access=protected)
         centerVec
     end
+    %
     methods
         function ellObj=AEllipsoid(varargin)
             ellObj=ellObj@elltool.core.ABasicEllipsoid();
@@ -18,23 +19,24 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
         outEllArr=mtimes(multMat,inpEllArr)
         ellArr=shape(ellArr, modMat)
     end
-    methods(Access=protected)
-        
-    end
+    %
     methods(Abstract)
         shapeMat=getShapeMat(self)
         [SDataArr,SFieldNiceNames,SFieldDescr,SFieldTransformFunc]=...
             toStruct(ellArr,isPropIncluded,absTol)
         polar=getScalarPolarInternal(self,isRobustMethod)
     end
+    %
     methods(Abstract,Access=protected)
         ellObj=shapeSingleInternal(ellObj,isModScal,modMat)
         projectionSingleInternal(ellObj,ortBasisMat)
     end
+    %
     methods(Abstract, Static)
         ellArr=fromRepMat(varargin)
         ellArr=fromStruct(SEllArr)
     end
+    %
     methods
         isPositiveArr=isdegenerate(myEllArr)
         volVal=volume(ellArr)

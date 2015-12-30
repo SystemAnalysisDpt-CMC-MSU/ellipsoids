@@ -7,7 +7,7 @@ classdef PolarIllCondTC < mlunitext.test_case
     %            System Analysis Department 2015 $
 
     methods (Access=private)
-        function testEllObj = getTest(self)
+        function testEllObj = getTest(~)
             testEllObj = elltool.core.test.mlunit.aux.TestPolarEllipsoid();
         end
     end
