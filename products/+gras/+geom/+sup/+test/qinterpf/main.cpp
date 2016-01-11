@@ -3,7 +3,7 @@
 #include <memory.h>
 bool FindExtremPoints(double *,double *,double *,int);
 void SolveL(double* p,double *pA0,double *pA1,double *pb1,double *pb2);
-void mexFunction(int nOut,mxArray *pOut[],int nIn,mxArray *pIn[])
+void mexFunction(int nOut,mxArray *pOut[],int nIn,const mxArray *pIn[])
 {
 	int n0,m0,n1,m1;
 	double *pI1,*pI2,*pO;
@@ -104,12 +104,6 @@ bool FindExtremPoints(double * data_dir,double* data_sup,double* data_res,int n)
 			ipp=ippn;
 			if (ipp>=ip)
 			{
-				/////////////////
-		//		res=nan;ћножество €вл€етс€ пустым
-				//необходимо посмотреть, как реализуетс€ 
-			//	присвоение свойсво Ёнеопределено инициалзированной переменной
-			//		пэтому мы должны находитс€ в том само метсе в котром рождаютс€ 
-			//		мечты и мы должны действовать достаточно быстро.
 				//delete [] data_X;
 				mxFree(data_X);
 				mxFree(data_I);
