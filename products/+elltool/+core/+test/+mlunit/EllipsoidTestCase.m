@@ -15,53 +15,50 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function testIsEqualSymProp(~)
             % test symmetry property
             TOL=[1e-4;1e-5];
-            centEllCVec=num2cell([0,TOL(1);0,TOL(1)],1);
-            testEllVec=createEllVecFun(centEllCVec,TOL,TOL);
-            checkForIsEqualFun(testEllVec(2),testEllVec(1),...
+            testEllVec=fCreateEllVec(num2cell([0,TOL(1);0,TOL(1)],1),...
+                TOL,TOL);
+            fCheckForIsEqual(testEllVec(2),testEllVec(1),...
                 isEqual(testEllVec(1),testEllVec(2)));
         end
         function testIsEqualTransProp(~)
             % test transitive property
             TOL=[1e-5;1e-4;1e-6];
-            centEllCVec=num2cell([0,TOL(1),TOL(2);0,TOL(1),TOL(2)],1);
-            testEllVec=createEllVecFun(centEllCVec,TOL,TOL);
-            checkForIsEqualFun(testEllVec(1),testEllVec(3),...
+            testEllVec=fCreateEllVec(num2cell([0,TOL(1),TOL(2);...
+                0,TOL(1),TOL(2)],1),TOL,TOL);
+            fCheckForIsEqual(testEllVec(1),testEllVec(3),...
                 isEqual(testEllVec(1),testEllVec(2))&&...
                 isEqual(testEllVec(2),testEllVec(3)))
         end
         function testIsEqualAbsTolRepByRelTol(~)
             % test captures that absTol replaced by relTol
-            ABS_TOL=1e-4;
-            REL_TOL=1e-6;
-            centEllCVec=num2cell([0,(ABS_TOL+REL_TOL)/2;0,...
-                (ABS_TOL+REL_TOL)/2],1);
-            testEllVec=createEllVecFun(centEllCVec,...
-                [ABS_TOL;ABS_TOL],[REL_TOL;REL_TOL]);
-            checkForIsEqualFun(testEllVec(1),testEllVec(2),true)
+            fCentEllCVec = @(absTol,relTol) ...
+                num2cell([0,(absTol+relTol)/2;0,(absTol+relTol)/2],1);
+            fTestAbsTolRelTolDiff(1e-4,1e-6,fCentEllCVec);
         end
         function testIsEqualDifBetweenAbsTolAndRelTol(~)
             % test checks real difference between relTol and absTol
-            ABS_TOL=1e-6;
-            REL_TOL=1e-7;
-            centEllCVec=num2cell([100,100+ABS_TOL;100,100+ABS_TOL],1);
-            testEllVec=createEllVecFun(centEllCVec,...
-                [ABS_TOL;ABS_TOL],[REL_TOL;REL_TOL]);
-            checkForIsEqualFun(testEllVec(1),testEllVec(2),true)
+            fCentEllCVec = @(absTol,relTol)...
+                num2cell([100,100+absTol;100,100+absTol],1);
+            fTestAbsTolRelTolDiff(1e-6,1e-7,fCentEllCVec);
         end
-        function testEllVec = createEllVecFun(centCVec,absTolVec,relTolVec)
-            vecSize = numel(centCVec);
-            testEllVec(1:vecSize)=ellipsoid();
-            for iEll = 1:vecSize
+        function testEllVec = fCreateEllVec(centCVec,absTolVec,relTolVec)
+            nElls = numel(centCVec);
+            testEllVec(1:nElls)=ellipsoid();
+            for iEll = 1:nElls
                 testEllVec(iEll)=ellipsoid(centCVec{iEll},eye(2),...
                     'absTol',absTolVec(iEll),'relTol',relTolVec(iEll));
             end
         end   
-        function checkForIsEqualFun(testEll1Vec,testEll2Vec,expectResult)
+        function fCheckForIsEqual(testEll1Vec,testEll2Vec,expectResult)
             [isOkArr, reportStr]=isEqual(testEll1Vec,testEll2Vec);
             isOk=all(isOkArr(:)==expectResult(:));
             mlunitext.assert(isOk,reportStr);
         end
-        
+        function fTestAbsTolRelTolDiff(ABS_TOL,REL_TOL,fCentEllCVec)
+            testEllVec=fCreateEllVec(fCentEllCVec(ABS_TOL,REL_TOL),...
+                [ABS_TOL;ABS_TOL],[REL_TOL;REL_TOL]);
+            fCheckForIsEqual(testEllVec(1),testEllVec(2),true)
+        end
         function testQuadFunc(~)
             ANALYTICAL_RESULT = 217;
             MAX_TOL = 1e-10;
