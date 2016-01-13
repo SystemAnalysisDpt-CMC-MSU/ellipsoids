@@ -22,8 +22,6 @@ classdef AEllipsoid < elltool.core.ABasicEllipsoid
     %
     methods(Abstract)
         shapeMat=getShapeMat(self)
-        [SDataArr,SFieldNiceNames,SFieldDescr,SFieldTransformFunc]=...
-            toStruct(ellArr,isPropIncluded,absTol)
         polar=getScalarPolarInternal(self,isRobustMethod)
     end
     %

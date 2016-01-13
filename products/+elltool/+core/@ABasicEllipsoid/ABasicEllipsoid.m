@@ -6,6 +6,8 @@ classdef ABasicEllipsoid < handle
     %
     methods(Abstract)
         [dimArr,rankArr]=dimension(myEllArr)
+        [SDataArr,SFieldNiceNames,SFieldDescr,SFieldTransformFunc]=...
+            toStruct(ellArr,isPropIncluded,absTol)        
     end
     methods(Access=protected)
         checkIfScalar(self,errMsg)
