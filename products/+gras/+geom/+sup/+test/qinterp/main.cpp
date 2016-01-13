@@ -3,7 +3,7 @@
 #include <memory.h>
 void Intersect(double *,double *,double *,int);
 void SolveL(double* p,double *pA0,double *pA1,double *pb1,double *pb2);
-void mexFunction(int nOut,mxArray *pOut[],int nIn,mxArray *pIn[])
+void mexFunction(int nOut,mxArray *pOut[],int nIn,const mxArray *pIn[])
 {
 	int n0,m0,n1,m1;
 	double *pI1,*pI2,*pO;
