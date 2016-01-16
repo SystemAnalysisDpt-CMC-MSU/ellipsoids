@@ -41,10 +41,10 @@ classdef SuiteOde45Reg < gras.ode.test.mlunit.SuiteBasic
                     [~,yyMat,yyRegMat] = interpObj.evaluate(tspanVec);
                 end
                 
-                 tBeginVec = linspace(0,1,nPoints);
-                 tBeginVec(2) = 1e-6;
-                 interpObj = helpForComparision(tBeginVec,tBeginVec);
-                 compare(yMat,yyMat,yRegMat,yyRegMat);
+                tBeginVec = linspace(0,1,nPoints);
+                tBeginVec(2) = 1e-6;
+                interpObj = helpForComparision(tBeginVec,tBeginVec);
+                compare(yMat,yyMat,yRegMat,yyRegMat);
                  
                 tVaryVec = tBeginVec.^2;
                 tVaryVec(2) = tBeginVec(2);
@@ -85,6 +85,60 @@ classdef SuiteOde45Reg < gras.ode.test.mlunit.SuiteBasic
                     'matrix yRegMat and yyRegMat are not equal');
                 
             end
+        end
+        
+        function self = testInverseTspan(self)
+            %TODO: common compare and fRegDummy function for both test
+            
+            function [isStrictViolVec,yRegMat] = fRegDummy(~,yMat)
+            	isStrictViolVec=false(1,size(yMat,2));
+                yRegMat=yMat;
+            end
+            
+            function compare(yMat,yyMat,yRegMat,yyRegMat, t1, t2, COMPARE_TOL)
+                if ~exist('COMPARE_TOL', 'var')
+                    COMPARE_TOL = 1e-8;
+                end
+                
+                [isEqual,~,~,~,~] = modgen.common.absrelcompare(...
+                    yMat,yyMat,COMPARE_TOL,COMPARE_TOL,@norm);
+                mlunitext.assert_equals(true,isEqual,...
+                    'matrix yMat and yyMat are not equal')
+                [isEqual,~,~,~,~] = modgen.common.absrelcompare(...
+                    yRegMat,yyRegMat,COMPARE_TOL,COMPARE_TOL,@norm);
+                mlunitext.assert_equals(true,isEqual,...
+                    'matrix yRegMat and yyRegMat are not equal');
+                [isEqual,~,~,~,~] = modgen.common.absrelcompare(...
+                    t1,t2,COMPARE_TOL,COMPARE_TOL,@norm);
+                mlunitext.assert_equals(true,isEqual,...
+                    'time vectors t1 and t2 are not equal');
+            end
+            
+            ABS_TOL=1e-8;
+            odePropList={'NormControl','on','RelTol',ABS_TOL,...
+                    'AbsTol',ABS_TOL};
+            
+            function check(fOdeDeriv1, tspan1, y0Vec)
+                [t1, y1, yr1] = feval(self.odeSolver, fOdeDeriv1,...
+                                     @fRegDummy, tspan1, y0Vec,...
+                                     odePropList{:});
+                
+                t0 = tspan1(end);
+                fOdeDeriv2 = @(t, y) -fOdeDeriv1(t0 - t, y);
+                tspan2 = t0 - tspan1;
+                [t2, y2, yr2] = feval(self.odeSolver, fOdeDeriv2,...
+                                     @fRegDummy, tspan2, y0Vec,...
+                                     odePropList{:});
+                t2 = t0 - t2;
+                
+                compare(y1, y2, yr1, yr2, t1, t2);
+            end
+            
+            check(@(t,y) cos(y), [0 1], 0);
+            check(@(t,y) sin(y), linspace(0, 1, 9), 0);
+            
+            check(@(t, y) t*cos(y), [0, 1], zeros(1, 10));
+            check(@(t, y) t*sin(y), linspace(0, 1, 9), ones(1, 10));
         end
     end
 end

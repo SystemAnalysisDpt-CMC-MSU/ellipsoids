@@ -41,8 +41,9 @@ function [tOutVec,yOutMat,dyRegMat,interpObj] = ode45reg(fOdeDeriv,...
 %   interpObj: gras.ode.VecOde45RegInterp[1,1] - all the data nessecary 
 %       for calculation on an arbitrary time grid is stored in  this object
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011$
-% $Author: Vadim Danilov <vadimdanilov93@gmail.com> $   $Data: 2013$
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	      $Date: 2011$
+% $Author: Vadim Danilov <vadimdanilov93@gmail.com> $         $Data: 2013$
+% $Author: Arthur Lukyanenko <arthurlukyanenko@gmail.com> $   $Data: 2016$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
@@ -77,6 +78,13 @@ nfevals = 0;
 checkgen(fOdeDeriv,'isfunction(x)');
 checkgen(fOdeReg,'isfunction(x)');
 %
+%% Handle inverse time direction
+isInvTspan = (tSpanVec(1) > tSpanVec(end));
+if isInvTspan
+    fOdeDeriv = @(t, y) -fOdeDeriv(-t, y);
+    fOdeReg = @(t, y) fOdeReg(-t, y);
+    tSpanVec = -tSpanVec;
+end
 %% Handle solver arguments
 [neq, tSpanVec, ntspan, next, t0, tfinal, y0Vec, f0, ...
     SOptions, threshold, rtol, normcontrol, normy, hmax, htry, htspan,...
@@ -391,10 +399,16 @@ while ~isDone
 end
 shrinkResults();
 if nargout == 4
+    if isInvTspan
+        throwerror('notImplemented', 'Reverse time is not supported');
+    end
     SInterp.tVec = [SInterp.tBegin SInterp.tVec];
     SInterp.yCVec = [{SInterp.yBeginVec} SInterp.yCVec];
     interpObj = gras.ode.VecOde45RegInterp(SInterp);
 end;
+if isInvTspan
+	tOutVec = -tOutVec;
+end
 prDispObj.finish();
     function shrinkResults()
         tOutVec = tOutVec(1:nout).';
