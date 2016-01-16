@@ -48,6 +48,26 @@ function [tOutVec,yOutMat,dyRegMat,interpObj] = ode45reg(fOdeDeriv,...
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
+
+isInvTspan = (tSpanVec(1) > tSpanVec(end));
+if isInvTspan
+    fOdeDeriv = @(t, y) -fOdeDeriv(-t, y);
+    fOdeReg = @(t, y) fOdeReg(-t, y);
+    tSpanVec = -tSpanVec;
+end
+
+[tOutVec,yOutMat,dyRegMat,interpObj] = ode45regdir(fOdeDeriv,...
+    fOdeReg,tSpanVec,y0Vec,SOptions,varargin{:});
+
+if isInvTspan
+	tOutVec = -tOutVec;
+    interpObj = gras.ode.VecOdeRegInterpInverseTimeWrapper(interpObj);
+end
+
+end
+
+function [tOutVec,yOutMat,dyRegMat,interpObj] = ode45regdir(fOdeDeriv,...
+    fOdeReg,tSpanVec,y0Vec,SOptions,varargin)
 import modgen.common.throwerror;
 import modgen.common.type.simple.*;
 solver_name = 'ode45reg';
@@ -78,13 +98,6 @@ nfevals = 0;
 checkgen(fOdeDeriv,'isfunction(x)');
 checkgen(fOdeReg,'isfunction(x)');
 %
-%% Handle inverse time direction
-isInvTspan = (tSpanVec(1) > tSpanVec(end));
-if isInvTspan
-    fOdeDeriv = @(t, y) -fOdeDeriv(-t, y);
-    fOdeReg = @(t, y) fOdeReg(-t, y);
-    tSpanVec = -tSpanVec;
-end
 %% Handle solver arguments
 [neq, tSpanVec, ntspan, next, t0, tfinal, y0Vec, f0, ...
     SOptions, threshold, rtol, normcontrol, normy, hmax, htry, htspan,...
@@ -399,16 +412,10 @@ while ~isDone
 end
 shrinkResults();
 if nargout == 4
-    if isInvTspan
-        throwerror('notImplemented', 'Reverse time is not supported');
-    end
     SInterp.tVec = [SInterp.tBegin SInterp.tVec];
     SInterp.yCVec = [{SInterp.yBeginVec} SInterp.yCVec];
     interpObj = gras.ode.VecOde45RegInterp(SInterp);
 end;
-if isInvTspan
-	tOutVec = -tOutVec;
-end
 prDispObj.finish();
     function shrinkResults()
         tOutVec = tOutVec(1:nout).';
@@ -416,6 +423,7 @@ prDispObj.finish();
         dyRegMat = dyRegMat(:,1:nout).';
     end
 end
+
 function yinterp = ntrp45(tinterp,t,y,h,f,fOdeReg)
 BI = [
     1       -183/64      37/12       -145/128

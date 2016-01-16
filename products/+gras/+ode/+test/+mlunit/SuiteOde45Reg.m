@@ -119,26 +119,34 @@ classdef SuiteOde45Reg < gras.ode.test.mlunit.SuiteBasic
                     'AbsTol',ABS_TOL};
             
             function check(fOdeDeriv1, tspan1, y0Vec)
-                [t1, y1, yr1] = feval(self.odeSolver, fOdeDeriv1,...
+                [t1, y1, yr1, int1] = feval(self.odeSolver, fOdeDeriv1,...
                                      @fRegDummy, tspan1, y0Vec,...
                                      odePropList{:});
                 
                 t0 = tspan1(end);
                 fOdeDeriv2 = @(t, y) -fOdeDeriv1(t0 - t, y);
                 tspan2 = t0 - tspan1;
-                [t2, y2, yr2] = feval(self.odeSolver, fOdeDeriv2,...
+                [t2, y2, yr2, int2] = feval(self.odeSolver, fOdeDeriv2,...
                                      @fRegDummy, tspan2, y0Vec,...
                                      odePropList{:});
-                t2 = t0 - t2;
                 
-                compare(y1, y2, yr1, yr2, t1, t2);
+                %check output
+                compare(y1, y2, yr1, yr2, t1, t0 - t2);
+                
+                %check interpolator
+                if numel(tspan1) <= 2
+                    tspan1 = linspace(tspan1(1), tspan1(end), 9);
+                    tspan2 = t0 - tspan1;
+                end
+                [t1, y1, yr1] = int1.evaluate(tspan1);
+                [t2, y2, yr2] = int2.evaluate(tspan2);
+                compare(y1, y2, yr1, yr2, t1, t0 - t2);
             end
             
             check(@(t,y) cos(y), [0 1], 0);
             check(@(t,y) sin(y), linspace(0, 1, 9), 0);
-            
             check(@(t, y) t*cos(y), [0, 1], zeros(1, 10));
-            check(@(t, y) t*sin(y), linspace(0, 1, 9), ones(1, 10));
+            check(@(t, y) t*sin(y), linspace(0, 1, 7), ones(1, 10));
         end
     end
 end
