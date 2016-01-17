@@ -1,4 +1,4 @@
-classdef VecOde45RegInterp
+classdef VecOde45RegInterp < gras.ode.IVecOdeRegInterp
     properties  (Access=private)
         tVec = [] 
         yCVec = []
@@ -83,7 +83,7 @@ classdef VecOde45RegInterp
             % gras.ode.ode45reg work on an arbitrary time grid timeVec
             % Input:
             %   regular:
-            %       self: VecOde45RegInterp[1,1] - all the data nessecary 
+            %       self: VecOde45RegInterp[1,1] - all the data necessary 
             %           for calculation on an arbitrary time grid is
             %           stored in   this object
             %       timeVec: double[1,nPoints] - time range, same meaning 
@@ -196,6 +196,14 @@ classdef VecOde45RegInterp
             	dyRegMat = dyRegMat(:,1:nOut).';
             end
           
+        end
+        
+        function [tStart] = getTStart(self)
+            tStart = self.tBegin;
+        end
+        
+        function [tEnd] = getTEnd(self)
+            tEnd = self.tFinal;
         end
     end
 end

@@ -41,12 +41,33 @@ function [tOutVec,yOutMat,dyRegMat,interpObj] = ode45reg(fOdeDeriv,...
 %   interpObj: gras.ode.VecOde45RegInterp[1,1] - all the data nessecary 
 %       for calculation on an arbitrary time grid is stored in  this object
 %
-% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2011$
-% $Author: Vadim Danilov <vadimdanilov93@gmail.com> $   $Data: 2013$
+% $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	      $Date: 2011$
+% $Author: Vadim Danilov <vadimdanilov93@gmail.com> $         $Data: 2013$
+% $Author: Arthur Lukyanenko <arthurlukyanenko@gmail.com> $   $Data: 2016$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
+
+isInvTspan = (tSpanVec(1) > tSpanVec(end));
+if isInvTspan
+    fOdeDeriv = @(t, y) -fOdeDeriv(-t, y);
+    fOdeReg = @(t, y) fOdeReg(-t, y);
+    tSpanVec = -tSpanVec;
+end
+
+[tOutVec,yOutMat,dyRegMat,interpObj] = ode45regdir(fOdeDeriv,...
+    fOdeReg,tSpanVec,y0Vec,SOptions,varargin{:});
+
+if isInvTspan
+	tOutVec = -tOutVec;
+    interpObj = gras.ode.VecOdeRegInterpInverseTimeWrapper(interpObj);
+end
+
+end
+
+function [tOutVec,yOutMat,dyRegMat,interpObj] = ode45regdir(fOdeDeriv,...
+    fOdeReg,tSpanVec,y0Vec,SOptions,varargin)
 import modgen.common.throwerror;
 import modgen.common.type.simple.*;
 solver_name = 'ode45reg';
@@ -402,6 +423,7 @@ prDispObj.finish();
         dyRegMat = dyRegMat(:,1:nout).';
     end
 end
+
 function yinterp = ntrp45(tinterp,t,y,h,f,fOdeReg)
 BI = [
     1       -183/64      37/12       -145/128
