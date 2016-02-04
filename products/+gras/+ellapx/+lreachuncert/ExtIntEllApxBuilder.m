@@ -236,7 +236,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     end
     methods
         function self=ExtIntEllApxBuilder(pDynObj,goodDirSetObj,...
-                timeLimsVec,relTol,absTol,varargin)
+                timeLimsVec,nTimeGridPoints,relTol,absTol,varargin)
             import gras.ellapx.lreachuncert.ExtIntEllApxBuilder;
             import modgen.common.throwerror;
             import gras.la.ismatposdef;
@@ -250,7 +250,7 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             end
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDynObj,...
                 goodDirSetObj,timeLimsVec,...
-                ExtIntEllApxBuilder.N_TIME_POINTS,relTol,absTol);
+                nTimeGridPoints,relTol,absTol);
             x0Mat = pDynObj.getX0Mat();            
             if ~ismatposdef(x0Mat, self.REG_ABS_TOL)
                 throwerror('wrongInput',...
