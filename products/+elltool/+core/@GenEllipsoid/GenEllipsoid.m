@@ -151,8 +151,9 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             %
             NEEDED_PROP_NAME_LIST = {'absTol','relTol',...
                 'nPlot2dPoints','nPlot3dPoints'};
-            [~,propNameValList]=modgen.common.parseparams(...
-                varargin,NEEDED_PROP_NAME_LIST);
+            [regList,~,...
+                propNameValList]=modgen.common.parseparext(...
+                varargin,NEEDED_PROP_NAME_LIST,[0 3],'propRetMode','list');
             [absTolVal, relTolVal,nPlot2dPointsVal,nPlot3dPointsVal] =...
                 elltool.conf.Properties.parseProp(propNameValList,...
                 NEEDED_PROP_NAME_LIST);
@@ -164,12 +165,9 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             ellObj.nPlot3dPoints=nPlot3dPointsVal;
             absTol=ellObj.absTol;
             %
-            nInput=nargin;
-            if  nInput>3
-                throwerror('wrongParameters',...
-                    'Incorrect number of parameters');
-            elseif nInput==1
-                ellMat=varargin{1};
+            nRegInputs=numel(regList);
+            if nRegInputs==1
+                ellMat=regList{1};
                 [mSize,nSize]=size(ellMat);
                 isPar2Vector=nSize==1;
                 isMatSquare=mSize == nSize;
@@ -193,9 +191,9 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                     end
                 end
                 ellObj.centerVec=zeros(mSize,1);
-            elseif nInput==2
-                ellCenterVec=varargin{1};
-                ellMat=varargin{2};
+            elseif nRegInputs==2
+                ellCenterVec=regList{1};
+                ellMat=regList{2};
                 [mCenSize,nCenSize]=size(ellCenterVec);
                 [mSize,nSize]=size(ellMat);
                 isPar2Vector=nSize==1;
@@ -228,10 +226,10 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                         'be the same as matrix']);
                 end
                 ellObj.centerVec=ellCenterVec;
-            elseif nInput == 3
-                ellCenterVec=varargin{1};
-                ellDiagMat=varargin{2};
-                ellWMat=varargin{3};
+            elseif nRegInputs == 3
+                ellCenterVec=regList{1};
+                ellDiagMat=regList{2};
+                ellWMat=regList{3};
                 [mCenSize,nCenSize]=size(ellCenterVec);
                 [mDSize,nDSize]=size(ellDiagMat);
                 [mWSize,nWSize]=size(ellWMat);
@@ -316,7 +314,7 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
                 ellObj.eigvMat=eigvResMat;
                 ellObj.centerVec=ellCenterVec;
             end
-            if (nInput~=0)
+            if (nRegInputs~=0)
                 isNotInfIndVec=~(diag(ellObj.diagMat)==Inf);
                 if any(isNotInfIndVec)
                     if ~ismatposdef(ellObj.diagMat(isNotInfIndVec,...
