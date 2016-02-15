@@ -194,6 +194,14 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             self.l0Mat = reachFactObj.getL0Mat();
         end
         %
+        function testGettters(self)
+            [~,~]=self.reachObj.getAbsTol();
+            [~,~]=self.reachObj.getRelTol();
+            [~]=self.reachObj.getNPlot2dPoints();
+            [~]=self.reachObj.getNPlot3dPoints();
+            [~]=self.reachObj.getNTimeGridPoints();
+        end
+        %
         function self = testDisplay(self)
             self.displayTest(self.reachObj, self.tVec);
             newTimeVec = [sum(self.tVec)*self.SPLIT_FACTOR, self.tVec(2)];

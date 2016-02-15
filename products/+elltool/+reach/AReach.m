@@ -297,8 +297,7 @@ classdef AReach < elltool.reach.IReach
             %             and Computer Science,
             %             System Analysis Department 2012 $
             %
-            nTimeGridPointsArr =...
-                elltool.reach.AReach.getProperty(rsArr, 'nTimeGridPoints');
+            nTimeGridPointsArr=rsArr.getProperty('nTimeGridPoints');
         end
         %
         function [relTolArr, relTolVal] = getRelTol(rsArr, varargin)
@@ -337,8 +336,8 @@ classdef AReach < elltool.reach.IReach
             %             and Computer Science,
             %             System Analysis Department 2013 $
             %
-            [relTolArr, relTolVal] = elltool.reach.AReach.getProperty(...
-                rsArr, 'relTol', varargin{:});
+            [relTolArr, relTolVal] = rsArr.getProperty(...
+                'relTol', varargin{:});
         end
         %
     end
