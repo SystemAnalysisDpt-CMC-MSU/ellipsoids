@@ -71,7 +71,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
         end
         %
         function self=ATightEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,nTimePoints,relTol, absTol)
+                timeLimsVec,nTimePoints,relTol,absTol)
             import gras.ellapx.gen.ATightEllApxBuilder;
             import modgen.common.throwerror;
             import gras.la.ismatposdef; 
