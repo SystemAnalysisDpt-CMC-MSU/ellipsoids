@@ -1,5 +1,5 @@
 function results = run_cont_tests(varargin)
-% RUN_MOST_CONT_TESTS runs most of the tests based on specified patters
+% RUN_CONT_TESTS runs tests based on specified patters
 % for markers, test cases, tests names
 %
 % Input:
@@ -14,13 +14,13 @@ function results = run_cont_tests(varargin)
 %
 % Example:
 %
-%   elltool.reach.test.run_most_cont_tests('demo3firstTest',...
+%   elltool.reach.test.run_cont_tests('demo3firstTest',...
 %       'elltool.reach.test.mlunit.ContinuousReachTestCase','testCut')  
 %
-%   elltool.reach.test.run_most_cont_tests('.*',...
+%   elltool.reach.test.run_cont_tests('.*',...
 %       'elltool.reach.test.mlunit.ContinuousReachTestCase','testCut')
 %
-%   elltool.reach.test.run_most_cont_tests('_IsBackTrueIsEvolveFalse',...
+%   elltool.reach.test.run_cont_tests('_IsBackTrueIsEvolveFalse',...
 %       '.*','testCut')
 %
 % $Authors: Peter Gagarinov <pgagarinov@gmail.com>

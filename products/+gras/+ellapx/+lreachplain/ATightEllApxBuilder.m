@@ -106,7 +106,6 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             else
                 nTimeGridPoints=ATightEllApxBuilder.N_TIME_POINTS;
             end
-            disp(nTimeGridPoints);
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...
                 goodDirSetObj,timeLimsVec,nTimeGridPoints,relTol,absTol);
         end
