@@ -21,10 +21,11 @@ X0 = eye(3);
 x0 = zeros(3, 1);
 t0 = 0;
 t1 = 10;
-precision = 1e-5;
+absTol = 1e-5;
+relTol = 1e-5;
 %
 pDynObj = LReachProblemDynamicsFactory.createByParams(...
-                At, Bt, Pt, pt, Ct, Qt, qt, X0, x0, [t0, t1], precision);
+                At, Bt, Pt, pt, Ct, Qt, qt, X0, x0, [t0, t1], relTol, absTol);
 %
 isRegEnabled = 1;
 isJustCheck = 0;
@@ -44,4 +45,4 @@ lsGoodDirMat(:,indVec)=lsGoodDirMat(:,indVec)./normVec(ones(1,size(At, 1)),...
 sTime = 5;
 %
 GoodDirsContinuousLTI(pDynObj, sTime, lsGoodDirMat, ...
-    precision, precision);
+    relTol, absTol);
