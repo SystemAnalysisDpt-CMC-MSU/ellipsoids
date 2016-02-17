@@ -10,55 +10,6 @@ classdef EllipsoidTestCase < mlunitext.test_case
             self.testDataRootDir=[fileparts(which(className)),...
                 filesep,'TestData', filesep,shortClassName];
         end
-        %
-        %isEqual tests
-        function testIsEqualSymProp(~)
-            % test symmetry property
-            TOL=[1e-4;1e-5];
-            testEllVec=fCreateEllVec(num2cell([0,TOL(1);0,TOL(1)],1),...
-                TOL,TOL);
-            fCheckForIsEqual(testEllVec(2),testEllVec(1),...
-                isEqual(testEllVec(1),testEllVec(2)));
-        end
-        function testIsEqualTransProp(~)
-            % test transitive property
-            TOL=[1e-5;1e-4;1e-6];
-            testEllVec=fCreateEllVec(num2cell([0,TOL(1),TOL(2);...
-                0,TOL(1),TOL(2)],1),TOL,TOL);
-            fCheckForIsEqual(testEllVec(1),testEllVec(3),...
-                isEqual(testEllVec(1),testEllVec(2))&&...
-                isEqual(testEllVec(2),testEllVec(3)))
-        end
-        function testIsEqualAbsTolRepByRelTol(~)
-            % test captures that absTol replaced by relTol
-            fCentEllCVec = @(absTol,relTol) ...
-                num2cell([0,(absTol+relTol)/2;0,(absTol+relTol)/2],1);
-            fTestAbsTolRelTolDiff(1e-4,1e-6,fCentEllCVec);
-        end
-        function testIsEqualDifBetweenAbsTolAndRelTol(~)
-            % test checks real difference between relTol and absTol
-            fCentEllCVec = @(absTol,relTol)...
-                num2cell([100,100+absTol;100,100+absTol],1);
-            fTestAbsTolRelTolDiff(1e-6,1e-7,fCentEllCVec);
-        end
-        function testEllVec = fCreateEllVec(centCVec,absTolVec,relTolVec)
-            nElls = numel(centCVec);
-            testEllVec(1:nElls)=ellipsoid();
-            for iEll = 1:nElls
-                testEllVec(iEll)=ellipsoid(centCVec{iEll},eye(2),...
-                    'absTol',absTolVec(iEll),'relTol',relTolVec(iEll));
-            end
-        end   
-        function fCheckForIsEqual(testEll1Vec,testEll2Vec,expectResult)
-            [isOkArr, reportStr]=isEqual(testEll1Vec,testEll2Vec);
-            isOk=all(isOkArr(:)==expectResult(:));
-            mlunitext.assert(isOk,reportStr);
-        end
-        function fTestAbsTolRelTolDiff(ABS_TOL,REL_TOL,fCentEllCVec)
-            testEllVec=fCreateEllVec(fCentEllCVec(ABS_TOL,REL_TOL),...
-                [ABS_TOL;ABS_TOL],[REL_TOL;REL_TOL]);
-            fCheckForIsEqual(testEllVec(1),testEllVec(2),true)
-        end
         function testQuadFunc(~)
             ANALYTICAL_RESULT = 217;
             MAX_TOL = 1e-10;

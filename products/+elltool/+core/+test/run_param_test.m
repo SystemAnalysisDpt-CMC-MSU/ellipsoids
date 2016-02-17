@@ -1,4 +1,4 @@
-function resultObj=run_param_test(varargin)
+function suiteObj=run_param_test(varargin)
     suite1Obj=mlunitext.test_suite.fromTestCaseNameList(...
         'elltool.core.test.mlunit.PrameterizedTC',...
         {@ellipsoid,'marker','Ellipsoid'});
@@ -13,8 +13,6 @@ function resultObj=run_param_test(varargin)
             
     suiteObj=mlunitext.test_suite.fromSuites(suite1Obj,...
         suite2Obj,suite3Obj);
-    runnerObj=mlunitext.text_test_runner(1,1);
-    resultObj=runnerObj.run(suiteObj);
     
     function res = hyp(x,y,varargin)
         res = hyperplane(x,y(1),varargin{:});
