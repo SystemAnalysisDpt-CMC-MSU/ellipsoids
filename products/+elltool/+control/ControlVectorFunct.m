@@ -93,7 +93,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 %
                 evalTime = t1-curControlTime+t0;
                 %
-                bpVec = -curProbDynObj.getBptDynamics.evaluate(evalTime);           
+                bpVec = -curProbDynObj.getBptDynamics.evaluate(evalTime);
                 bpbMat = ...
                     curProbDynObj.getBPBTransDynamics.evaluate(evalTime);
                 %

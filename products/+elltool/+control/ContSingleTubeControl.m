@@ -97,7 +97,7 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             isX0inSet = dot(x0Vec-q0Vec,q0Mat\(x0Vec-q0Vec));
             %
             for iSwitch = 1:switchTimeVecLength-1
-                self.logger.info(sprintf(['Calculating trajectory'...
+                self.logger.info(sprintf(['Calculating trajectory '...
                     'between switches #%d and #%d'],iSwitch,iSwitch+1));
                 iSwitchBack = switchTimeVecLength - iSwitch;
                 %
@@ -108,7 +108,7 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                 AtMat = self.probDynamicsList{iSwitchBack}.getAtDynamics();
                 %
                 tic
-                [curTrajEvalTime,odeResMat] = ode45(@(t,y)ode(t,y,AtMat,...
+                [curTrajEvalTime,odeResMat] = ode23(@(t,y)ode(t,y,AtMat,...
                     self.controlVectorFunct,tFin,tStart),[tStart tFin],...
                     x0Vec.',SOptions);
                 %
@@ -144,9 +144,10 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             %
             function [value, isTerminal, direction] = StopByTimeout(T, Y)
                 TIMEOUT = 15;
-                value = toc - TIMEOUT;
-                if value <= 0
-                    self.logger.warn(sprintf(['timeout=%d reached!'...
+                value = 1;
+                if toc - TIMEOUT >= 0
+                    value = 0;
+                    self.logger.warn(sprintf(['timeout=%d reached! '...
                         'stopping calculations...'],TIMEOUT));
                 end
                 isTerminal = 1;

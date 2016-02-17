@@ -14,7 +14,7 @@ function resObj = run_cont_tests(varargin)
 %       reCache: logical[1,1] - if true, test results are rechaced on disk
 %       filter: cell[1,3] with the following elements
 %           markerRegExp: char[1,] - regexp for marker AND/OR configuration
-%               names, default is '.*' which means 'all cofigs'
+%               names, default is '.*' which means 'all configs'
 %           testCaseRegExp: char[1,] - regexp for test case names, same 
 %               default
 %           testRegExp: char[1,] - regexp for test names, same default
@@ -93,7 +93,7 @@ confCMat = {
     %
     'demo3secondTest',[1 1],[12 -14; -4.0166437625885 -17.5592541694641],[-15 -20];
     'demo3thirdTest',[1 1],[25 -10; -39.649453163147 -29.8921394348145],[-40 -30];
-    'ellDemo3test',[1 1],[1 1],[1 1]; % QMat is not positively defined
+    'ellDemo3test',[1 1],[1 1],[1 1]; % QMat is not positive-definite
     %
     'ltisys',[1 1],[1 0 1 0 0 0 -1 1; 1.89532947540283 0.895329475402832...
     1.89532947540283 0.895329475402832 1.79065895080566 0.895329475402832...
