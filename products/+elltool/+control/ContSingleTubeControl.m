@@ -4,6 +4,7 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
         goodDirSetList
         downScaleKoeff
         switchSysTimeVec
+        logger
     end
     %
     methods
@@ -39,7 +40,9 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             %
             % $Author: Komarov Yuri <ykomarov94@gmail.com> $ 
             % $Date: 2015-30-10 $
-            %           
+            %
+            import elltool.logging.Log4jConfigurator;
+            self.logger = Log4jConfigurator.getLogger();           
             self.properEllTube = properEllTube;
             self.probDynamicsList = probDynamicsList;
             self.goodDirSetList = goodDirSetList;
@@ -81,6 +84,9 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             trajectory = [];
             trajEvalTime = [];
             switchTimeVecLength = length(self.switchSysTimeVec);
+            self.logger.info(...
+                sprintf('%d switches found',switchTimeVecLength)...
+            );
             SOptions = odeset('RelTol',relTol,'AbsTol',absTol,...
                 'Events',@StopByTimeout);
             self.properEllTube.scale(@(x)1/sqrt(self.downScaleKoeff),...
@@ -90,7 +96,9 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             q0Mat = self.properEllTube.QArray{1}(:,:,1);
             isX0inSet = dot(x0Vec-q0Vec,q0Mat\(x0Vec-q0Vec));
             %
-            for iSwitch = 1:switchTimeVecLength-1                 
+            for iSwitch = 1:switchTimeVecLength-1
+                self.logger.info(sprintf(['Calculating trajectory'...
+                    'between switches #%d and #%d'],iSwitch,iSwitch+1));
                 iSwitchBack = switchTimeVecLength - iSwitch;
                 %
                 tStart = self.switchSysTimeVec(iSwitch);
@@ -107,16 +115,20 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                 q1Vec = self.properEllTube.aMat{1}(:,indFin);
                 q1Mat = self.properEllTube.QArray{1}(:,:,indFin);
                 %
-                currentScalProd = dot(odeResMat(end,:).'-q1Vec,...
-                    q1Mat\(odeResMat(end,:).'-q1Vec));
-                %
-                if (isX0inSet)&&(currentScalProd > 1 + ERR_TOL)
-                    throwerror('TestFails', ['the result of test does '...
-                        'not correspond with theory, current scalar ' ...
-                        'production at the end of system switch ' ...
-                        'interval number ', num2str(iSwitchBack), ' is '...
-                        num2str(currentScalProd), ', while the original'...
-                        ' solvability domain actually contains x(t0)']);
+                if isX0inSet
+                    currentScalProd = dot(odeResMat(end,:).'-q1Vec,...
+                        q1Mat\(odeResMat(end,:).'-q1Vec));
+                    %
+                    if currentScalProd > 1 + ERR_TOL
+                        throwerror('TestFails', ['the result of test '...
+                            'does not correspond with theory, current '...
+                            'scalar production at the end of system '...
+                            'switch interval number ',...
+                            num2str(iSwitchBack),' is '...
+                            num2str(currentScalProd),', while the'...
+                            ' original solvability domain actually'...
+                            ' contains x(t0)']);
+                    end
                 end
                 %
                 x0Vec = odeResMat(end,:);
@@ -129,9 +141,14 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                dyMat = -AtMat.evaluate(tFin-time+tStart)*yMat +...
                    controlFuncVec.evaluate(yMat,time);
             end
+            %
             function [value, isTerminal, direction] = StopByTimeout(T, Y)
                 TIMEOUT = 15;
                 value = toc - TIMEOUT;
+                if value <= 0
+                    self.logger.warn(sprintf(['timeout=%d reached!'...
+                        'stopping calculations...'],TIMEOUT));
+                end
                 isTerminal = 1;
                 direction = 0;
             end
