@@ -16,17 +16,16 @@ elseif (nFirstElems == 0 || nSecElems == 0)
         'input ellipsoidal arrays should be empty at the same time');
 end
 %
-[~, absTol] = ellFirstArr.getAbsTol();
 firstSizeVec = size(ellFirstArr);
 secSizeVec = size(ellSecArr);
 isnFirstScalar=nFirstElems > 1;
 isnSecScalar=nSecElems > 1;
 %
-[~, tolVal] = ellFirstArr.getRelTol();
+tolVec=getTol(ellFirstArr,ellSecArr);
 %
 [SEll1Array, SFieldNiceNames, ~, SFieldTransformFunc] = ...
-    ellFirstArr.toStruct(isPropIncluded,absTol);
-SEll2Array = ellSecArr.toStruct(isPropIncluded,absTol);
+    ellFirstArr.toStruct(isPropIncluded,tolVec(1));
+SEll2Array = ellSecArr.toStruct(isPropIncluded,tolVec(1));
 %
 SEll1Array = arrayfun(@(SEll)formCompStruct(SEll,...
     SFieldNiceNames,SFieldTransformFunc), SEll1Array);
@@ -53,9 +52,10 @@ end
     function compare()
         [isEqualArr, reportStr] =...
             modgen.struct.structcomparevec(SEll1Array,...
-            SEll2Array, tolVal);
+            SEll2Array, tolVec(1), tolVec(2));
     end
 end
+
 function SComp=formCompStruct(SEll,SFieldNiceNames,SFieldTransformFunc)
 fieldNameList=fieldnames(SFieldNiceNames);
 %
@@ -70,4 +70,10 @@ for iField=1:nFields
         SComp.(SFieldNiceNames.(fieldName))=fTransform(SEll.(fieldName));
     end
 end
+end
+
+function tolVec=getTol(ellFirstArr,ellSecArr)
+    ellArr=[ellFirstArr(:);ellSecArr(:)];
+    [~,tolVec(1)]=ellArr.getAbsTol();
+    [~,tolVec(2)]=ellArr.getRelTol();
 end
