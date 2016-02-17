@@ -1,4 +1,4 @@
-function resObj = run_disc_tests(varargin)
+clccfunction resObj = run_disc_tests(varargin)
 % RUN_DISC_TESTS runs control synthesis tests for discrete systems  
 % based on specified patters for markers, test cases, tests names
 %

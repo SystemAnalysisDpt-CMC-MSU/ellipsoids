@@ -76,12 +76,13 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             %
             import modgen.common.throwerror;
             ERR_TOL = 1e-4;
-            REL_TOL = elltool.conf.Properties.getRelTol();
-            ABS_TOL = elltool.conf.Properties.getAbsTol();
+            relTol = elltool.conf.Properties.getRelTol();
+            absTol = elltool.conf.Properties.getAbsTol();
             trajectory = [];
             trajEvalTime = [];
-            switchTimeVecLenght = length(self.switchSysTimeVec);
-            SOptions = odeset('RelTol',REL_TOL,'AbsTol',ABS_TOL);
+            switchTimeVecLength = length(self.switchSysTimeVec);
+            SOptions = odeset('RelTol',relTol,'AbsTol',absTol,...
+                'Events',@StopByTimeout);
             self.properEllTube.scale(@(x)1/sqrt(self.downScaleKoeff),...
                 'QArray'); 
             %
@@ -89,8 +90,8 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             q0Mat = self.properEllTube.QArray{1}(:,:,1);
             isX0inSet = dot(x0Vec-q0Vec,q0Mat\(x0Vec-q0Vec));
             %
-            for iSwitch = 1:switchTimeVecLenght-1                 
-                iSwitchBack = switchTimeVecLenght - iSwitch;
+            for iSwitch = 1:switchTimeVecLength-1                 
+                iSwitchBack = switchTimeVecLength - iSwitch;
                 %
                 tStart = self.switchSysTimeVec(iSwitch);
                 tFin = self.switchSysTimeVec(iSwitch+1);
@@ -98,6 +99,7 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                 indFin = find(self.properEllTube.timeVec{1} == tFin);
                 AtMat = self.probDynamicsList{iSwitchBack}.getAtDynamics();
                 %
+                tic
                 [curTrajEvalTime,odeResMat] = ode45(@(t,y)ode(t,y,AtMat,...
                     self.controlVectorFunct,tFin,tStart),[tStart tFin],...
                     x0Vec.',SOptions);
@@ -126,7 +128,13 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                     tFin,tStart)
                dyMat = -AtMat.evaluate(tFin-time+tStart)*yMat +...
                    controlFuncVec.evaluate(yMat,time);
-            end            
+            end
+            function [value, isTerminal, direction] = StopByTimeout(T, Y)
+                TIMEOUT = 15;
+                value = toc - TIMEOUT;
+                isTerminal = 1;
+                direction = 0;
+            end
         end
     end
 end
