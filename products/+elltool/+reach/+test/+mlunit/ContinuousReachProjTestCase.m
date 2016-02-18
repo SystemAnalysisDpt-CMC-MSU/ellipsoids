@@ -22,16 +22,16 @@ classdef ContinuousReachProjTestCase < ...
             isEqual = true;
             if nTuples > 0
                 nTimes = numel(SData.timeVec{1});
-                SData.timeVec
+                SData.timeVec;
                 for iTuple = nTuples : -1 : 1
                     tupleCentMat = SData.aMat{iTuple};
                     tupleMatArray = SData.QArray{iTuple};
                     for jTime = nTimes : -1 : 1
-                        approxEllMat(iTuple, jTime)
-                        [centerVec shapeMat] =...
+                        approxEllMat(iTuple, jTime);
+                        [centerVec, shapeMat] =...
                             approxEllMat(iTuple, jTime).parameters;
-                        tupleCentMat(:, jTime)
-                        tupleMatArray(:, :, jTime)
+                        tupleCentMat(:, jTime);
+                        tupleMatArray(:, :, jTime);
                         isEqual = isEqual &&...
                             (norm(centerVec - tupleCentMat(:, jTime)) <=...
                             self.COMP_PRECISION) &&...
