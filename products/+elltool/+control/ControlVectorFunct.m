@@ -102,11 +102,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 if ellTubeTimeVec(indTime) < curControlTime
                     qVec = self.aInterpObj.evaluate(curControlTime);
                     qMat=self.bigQInterpObj.evaluate(curControlTime);
-                else
-                    if (ellTubeTimeVec(indTime) ~= curControlTime)
-                        error('%d should be <= %d! Error of code logic',...
-                            ellTubeTimeVec(indTime),curControlTime)
-                    end
+                else %ellTubeTimeVec(indTime) == curControlTime
                     qVec=self.properEllTube.aMat{1}(:,indTime);
                     qMat=self.properEllTube.QArray{1}(:,:,indTime);
                 end
