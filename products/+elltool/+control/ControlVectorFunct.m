@@ -35,7 +35,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             %       inDownScaleKoeff: scaling coefficient for internal
             %           ellipsoid tube approximation
             %
-            % $Author: Komarov Yuri <ykomarov94@gmail.com> $ 
+            % $Author: Komarov Yuri <ykomarov94@gmail.com> $
             % $Date: 2015-30-10 $
             %
             self.properEllTube=properEllTube;
@@ -46,35 +46,35 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             bigQArray=self.properEllTube.QArray{1}(:,:,:);
             self.bigQInterpObj=...
                 gras.mat.interp.MatrixInterpolantFactory.createInstance(...
-                    'posdef_chol',bigQArray,timeSpanVec);
+                'posdef_chol',bigQArray,timeSpanVec);
             aMat=self.properEllTube.aMat{1};
             self.aInterpObj=...
                 gras.mat.interp.MatrixInterpolantFactory.createInstance(...
-                    'column',aMat,timeSpanVec);
+                'column',aMat,timeSpanVec);
         end
         %
         function resMat=evaluate(self,xVec,timeVec)
             % EVALUATE evaluates control synthesis for predetermined
             % position (t,x)
-            % 
+            %
             % Input:
             %   regular:
             %       xVec: double[nDim,1] where n is dimentionality
             %           of the phase space - x coordinate for control
             %           synthesis evaluation
-            %         
+            %
             %       timeVec: double[1,timeVecLength] - vector of time
             %           moments for control synthesis evaluation
             % Output:
             %   resMat: double[nDim,timeVecLength] - control synthesis
             %      values evaluated for specified positions (xVec,timeVec)
             %
-            % $Author: Komarov Yuri <ykomarov94@gmail.com> $ 
+            % $Author: Komarov Yuri <ykomarov94@gmail.com> $
             % $Date: 2015-30-10 $
-            %            
-            resMat=zeros(size(xVec,1),size(timeVec,2));    
             %
-            tEnd=self.probDynamicsList{1}.getTimeVec();                
+            resMat=zeros(size(xVec,1),size(timeVec,2));
+            %
+            tEnd=self.probDynamicsList{1}.getTimeVec();
             % probDynamicsList{indSwitch}{indTube} returns dynamics for
             %     indSwitch time period and indTube tube
             tEnd=tEnd(end);
@@ -96,8 +96,23 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                     end
                 end
                 %
+                ellTubeTimeVec=self.properEllTube.timeVec{1};
+                indTime=nnz(ellTubeTimeVec <= curControlTime);
+                % TODO: check if indTime == 0
+                if ellTubeTimeVec(indTime) < curControlTime
+                    qVec = self.aInterpObj.evaluate(curControlTime);
+                    qMat=self.bigQInterpObj.evaluate(curControlTime);
+                else
+                    if (ellTubeTimeVec(indTime) ~= curControlTime)
+                        error('%d should be <= %d! Error of code logic',...
+                            ellTubeTimeVec(indTime),curControlTime)
+                    end
+                    qVec=self.properEllTube.aMat{1}(:,indTime);
+                    qMat=self.properEllTube.QArray{1}(:,:,indTime);
+                end
+                %
                 xstTransMat=curGoodDirSetObj.getXstTransDynamics();
-                % X(t,t_0) = 
+                % X(t,t_0) =
                 %   ( xstTransMat.evaluate(t)\xstTransMat.evaluate(t_0) ).'
                 xt1tMat=transpose(xstTransMat.evaluate(t1)\...
                     xstTransMat.evaluate(curControlTime));
@@ -105,44 +120,10 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 [pVec,pMat]=getControlBounds(t0,t1,curControlTime,...
                     curProbDynObj,xt1tMat);
                 %
-                ellTubeTimeVec=self.properEllTube.timeVec{1};
-                %
-                indTime=nnz(ellTubeTimeVec <= curControlTime);
-                %
-                % TODO: check if indTime == 0
-                if ellTubeTimeVec(indTime) < curControlTime
-%                     qVec=interp1(ellTubeTimeVec',...
-%                         transpose(self.properEllTube.aMat{1}),...
-%                         curControlTime);
-%                     qVec=qVec';
-                    qVec = self.aInterpObj.evaluate(curControlTime);
-                    %
-                    qMat=self.bigQInterpObj.evaluate(curControlTime);
-%                     nDimRow=size(self.properEllTube.QArray{1},1);
-%                     nDimCol=size(self.properEllTube.QArray{1},2);
-%                     qMat=zeros(nDimRow,nDimCol);
-%                     for iDim = 1:nDimRow                       
-%                         for jDim = 1:nDimCol
-%                             QArrayTime(1,:)=...
-%                                 self.properEllTube.QArray{1}(iDim,jDim,:);
-%                             qMat(iDim,jDim)=interp1(ellTubeTimeVec, ...
-%                                 QArrayTime,curControlTime);
-%                         end
-%                     end;
-                %
-                else
-                    if (ellTubeTimeVec(indTime) ~= curControlTime)
-                        error('%d should be <= %d! Error of code logic',...
-                            ellTubeTimeVec(indTime),curControlTime)                  
-                    end
-                    qVec=self.properEllTube.aMat{1}(:,indTime);
-                    qMat=self.properEllTube.QArray{1}(:,:,indTime);
-                end                
-                
                 qVec=xt1tMat*qVec;
-                qMat=xt1tMat*qMat*transpose(xt1tMat); 
+                qMat=xt1tMat*qMat*transpose(xt1tMat);
                 xVec=xt1tMat*xVec;
-                
+                %
                 ml1Vec = sqrt(dot(xVec-qVec, qMat \ (xVec-qVec)));
                 l0Vec = (qMat \ (xVec-qVec)) / ml1Vec;
                 if (dot(-l0Vec,xVec) - dot(-l0Vec,qVec) > ...
@@ -150,7 +131,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                     l0Vec=-l0Vec;
                 end
                 l0Vec = l0Vec / norm(l0Vec);
-                
+                %
                 resMat(:,iTime) = pVec - (pMat*l0Vec) / ...
                     sqrt(l0Vec'*pMat*l0Vec);
                 resMat(:,iTime) = xt1tMat \ resMat(:,iTime);
