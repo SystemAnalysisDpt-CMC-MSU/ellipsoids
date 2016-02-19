@@ -8,7 +8,7 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
     end
     %
     methods
-        function self = ContSingleTubeControl(properEllTube,...
+        function self=ContSingleTubeControl(properEllTube,...
                 probDynamicsList, goodDirSetList, switchSysTimeVec,...
                 inDownScaleKoeff)
             % CONTSINGLETUBECONTROL constructes an object for 
@@ -42,20 +42,20 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             % $Date: 2015-30-10 $
             %
             import elltool.logging.Log4jConfigurator;
-            self.logger = Log4jConfigurator.getLogger();           
-            self.properEllTube = properEllTube;
-            self.probDynamicsList = probDynamicsList;
-            self.goodDirSetList = goodDirSetList;
-            self.switchSysTimeVec = switchSysTimeVec;
-            self.downScaleKoeff = inDownScaleKoeff;
-            self.controlVectorFunct = ...
-                elltool.control.ControlVectorFunct(properEllTube, ...
-                self.probDynamicsList, self.goodDirSetList, ...
+            self.logger=Log4jConfigurator.getLogger();           
+            self.properEllTube=properEllTube;
+            self.probDynamicsList=probDynamicsList;
+            self.goodDirSetList=goodDirSetList;
+            self.switchSysTimeVec=switchSysTimeVec;
+            self.downScaleKoeff=inDownScaleKoeff;
+            self.controlVectorFunct=...
+                elltool.control.ControlVectorFunct(properEllTube,...
+                self.probDynamicsList,self.goodDirSetList,...
                 inDownScaleKoeff);
         end
 
 
-        function [trajEvalTime, trajectory] = ...
+        function [trajEvalTime,trajectory]=...
                     getTrajectory(self,x0Vec)
             % GETTRAJECTORY returns a trajectory corresponding
             % to constructed control synthesis 
@@ -78,48 +78,48 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             % $Date: 2015-30-10 $
             %
             import modgen.common.throwerror;
-            ERR_TOL = 1e-4;
-            relTol = elltool.conf.Properties.getRelTol();
-            absTol = elltool.conf.Properties.getAbsTol();
-            trajectory = [];
-            trajEvalTime = [];
-            switchTimeVecLength = length(self.switchSysTimeVec);
+            ERR_TOL=1e-4;
+            relTol=elltool.conf.Properties.getRelTol();
+            absTol=elltool.conf.Properties.getAbsTol();
+            trajectory=[];
+            trajEvalTime=[];
+            switchTimeVecLength=length(self.switchSysTimeVec);
             self.logger.info(...
                 sprintf('%d switches found',switchTimeVecLength)...
             );
-            SOptions = odeset('RelTol',relTol,'AbsTol',absTol,...
-                'Events',@StopByTimeout);
+            SOptions=odeset('RelTol',relTol,'AbsTol',absTol,...
+                'Events',@stopByTimeout);
             self.properEllTube.scale(@(x)1/sqrt(self.downScaleKoeff),...
                 'QArray'); 
             %
-            q0Vec = self.properEllTube.aMat{1}(:,1);
-            q0Mat = self.properEllTube.QArray{1}(:,:,1);
-            isX0inSet = dot(x0Vec-q0Vec,q0Mat\(x0Vec-q0Vec));
+            q0Vec=self.properEllTube.aMat{1}(:,1);
+            q0Mat=self.properEllTube.QArray{1}(:,:,1);
+            isX0inSet=dot(x0Vec-q0Vec,q0Mat\(x0Vec-q0Vec));
             %
             for iSwitch = 1:switchTimeVecLength-1
                 self.logger.info(sprintf(['Calculating trajectory '...
                     'between switches #%d and #%d'],iSwitch,iSwitch+1));
-                iSwitchBack = switchTimeVecLength - iSwitch;
+                iSwitchBack=switchTimeVecLength-iSwitch;
                 %
-                tStart = self.switchSysTimeVec(iSwitch);
-                tFin = self.switchSysTimeVec(iSwitch+1);
+                tStart=self.switchSysTimeVec(iSwitch);
+                tFin=self.switchSysTimeVec(iSwitch+1);
                 %
-                indFin = find(self.properEllTube.timeVec{1} == tFin);
-                AtMat = self.probDynamicsList{iSwitchBack}.getAtDynamics();
+                indFin=find(self.properEllTube.timeVec{1}==tFin);
+                AtMat=self.probDynamicsList{iSwitchBack}.getAtDynamics();
                 %
-                tic
-                [curTrajEvalTime,odeResMat] = ode45(@(t,y)ode(t,y,AtMat,...
+                timeMarker=tic;
+                [curTrajEvalTime,odeResMat]=ode45(@(t,y)ode(t,y,AtMat,...
                     self.controlVectorFunct,tFin,tStart),[tStart tFin],...
                     x0Vec.',SOptions);
                 %
-                q1Vec = self.properEllTube.aMat{1}(:,indFin);
-                q1Mat = self.properEllTube.QArray{1}(:,:,indFin);
+                q1Vec=self.properEllTube.aMat{1}(:,indFin);
+                q1Mat=self.properEllTube.QArray{1}(:,:,indFin);
                 %
                 if isX0inSet
-                    currentScalProd = dot(odeResMat(end,:).'-q1Vec,...
+                    currentScalProd=dot(odeResMat(end,:).'-q1Vec,...
                         q1Mat\(odeResMat(end,:).'-q1Vec));
                     %
-                    if currentScalProd > 1 + ERR_TOL
+                    if currentScalProd > 1+ERR_TOL
                         throwerror('TestFails', ['the result of test '...
                             'does not correspond with theory, current '...
                             'scalar production at the end of system '...
@@ -131,27 +131,27 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                     end
                 end
                 %
-                x0Vec = odeResMat(end,:);
-                trajectory = vertcat(trajectory,odeResMat);
-                trajEvalTime = vertcat(trajEvalTime,curTrajEvalTime);
+                x0Vec=odeResMat(end,:);
+                trajectory=vertcat(trajectory,odeResMat);
+                trajEvalTime=vertcat(trajEvalTime,curTrajEvalTime);
             end
             %
-            function dyMat = ode(time,yMat,AtMat,controlFuncVec, ...
+            function dyMat=ode(time,yMat,AtMat,controlFuncVec,...
                     tFin,tStart)
-               dyMat = -AtMat.evaluate(tFin-time+tStart)*yMat +...
+               dyMat = -AtMat.evaluate(tFin-time+tStart)*yMat + ...
                    controlFuncVec.evaluate(yMat,time);
             end
             %
-            function [value, isTerminal, direction] = StopByTimeout(T, Y)
-                TIMEOUT = 15;
-                value = 1;
-                if toc - TIMEOUT >= 0
-                    value = 0;
+            function [value,isTerminal,direction]=stopByTimeout(T, Y)
+                TIMEOUT=15;
+                value=1;
+                if toc(timeMarker)-TIMEOUT >= 0
+                    value=0;
                     self.logger.warn(sprintf(['timeout=%d reached! '...
                         'stopping calculations...'],TIMEOUT));
                 end
-                isTerminal = 1;
-                direction = 0;
+                isTerminal=true;
+                direction=0;
             end
         end
     end

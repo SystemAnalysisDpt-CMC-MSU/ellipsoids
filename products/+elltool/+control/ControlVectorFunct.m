@@ -39,6 +39,10 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             % $Date: 2015-30-10 $
             %
             self.properEllTube=properEllTube;
+            if propEllTube.getNTuples()~=1
+                modgen.common.throwerror(['properEllTube must have'...
+                    'only 1 tuple']);
+            end
             self.probDynamicsList=probDynamicsList;
             self.goodDirSetList=goodDirSetList;
             self.downScaleKoeff=inDownScaleKoeff;
@@ -97,7 +101,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 end
                 %
                 ellTubeTimeVec=self.properEllTube.timeVec{1};
-                indTime=nnz(ellTubeTimeVec <= curControlTime);
+                indTime=sum(ellTubeTimeVec <= curControlTime);
                 % TODO: check if indTime == 0
                 if ellTubeTimeVec(indTime) < curControlTime
                     qVec = self.aInterpObj.evaluate(curControlTime);
