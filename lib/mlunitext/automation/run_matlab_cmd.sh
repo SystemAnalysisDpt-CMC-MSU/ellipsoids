@@ -26,5 +26,5 @@ fi
 
 cd $deploymentDir
 echo $scriptName: Launching Matlab from $matlabBin to execute $mFile
-$matlabBin $matlabArg -nosplash -singleCompThread -r "try, s_install, cd .., $matlabCmd, exit(0), catch meObj, disp(meObj.getReport()), exit(1), end"
+$matlabBin $matlabArg  -logfile matlab_cmwin_output.log -nosplash -singleCompThread -r "try, s_install, cd .., $matlabCmd, exit(0), catch meObj, disp(meObj.getReport()), exit(1), end"
 echo ==== $scriptName: `date` Done! =====
