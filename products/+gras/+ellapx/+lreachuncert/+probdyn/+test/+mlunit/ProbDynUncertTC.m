@@ -33,25 +33,14 @@ classdef ProbDynUncertTC <...
         end
         
         function test_xtDynamics(self)
-            import gras.ellapx.common.*;
-            import gras.mat.interp.MatrixInterpolantFactory;
-            import gras.ode.MatrixODESolver;
+            XtDerivFunc = @(t,x)...
+                self.pDynObj.getAtDynamics().evaluate(t)*x+...
+                self.pDynObj.getBptDynamics().evaluate(t)+...
+                self.pDynObj.getCqtDynamics().evaluate(t);
             
-            sysDim = size(self.readObj.aCMat, 1);
-            odeArgList=self.getOdePropList();
-            solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
+            XtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
             
-            XtDerivFunc = @(t,x)self.pDynObj.getAtDynamics().evaluate(t)*x...
-            +self.pDynObj.getBptDynamics().evaluate(t)...
-            +self.pDynObj.getCqtDynamics().evaluate(t);
-        
-            [timeXtVec,xtArray]=solverObj.solve(XtDerivFunc,...
-                self.tVec,self.readObj.x0Vec);
-            
-            xt = MatrixInterpolantFactory.createInstance(...
-                'column',xtArray,timeXtVec);
-            
-            self.checkMatFun(xt, self.pDynObj.getxtDynamics());
+            self.checkDerivFun(XtDerivFunc, XtFunc);
         end
     end
 end

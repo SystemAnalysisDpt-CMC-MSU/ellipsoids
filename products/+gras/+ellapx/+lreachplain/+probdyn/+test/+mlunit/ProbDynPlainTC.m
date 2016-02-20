@@ -64,24 +64,34 @@ classdef ProbDynPlainTC < mlunitext.test_case
         end
         
         function test_xtDynamics(self)
-            import gras.ellapx.common.*;
-            import gras.mat.interp.MatrixInterpolantFactory;
-            import gras.ode.MatrixODESolver;
-            
-            sysDim = size(self.readObj.aCMat, 1);
-            odeArgList=self.getOdePropList();
-            solverObj=MatrixODESolver(sysDim,@ode45,odeArgList{:});
-            
             XtDerivFunc = @(t,x)self.pDynObj.getAtDynamics().evaluate(t)*x...
             +self.pDynObj.getBptDynamics().evaluate(t);
+            
+            XtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
+            
+            self.checkDerivFun(XtDerivFunc, XtFunc);
+        end
         
-            [timeXtVec,xtArray]=solverObj.solve(XtDerivFunc,...
-                self.tVec,self.readObj.x0Vec);
+        function checkDerivFun(self, XtDerivFunc, XtFunc)
+            import modgen.common.absrelcompare;
+            TOL_MULT = 10e1;
             
-            xt = MatrixInterpolantFactory.createInstance(...
-                'column',xtArray,timeXtVec);
-            
-            self.checkMatFun(xt, self.pDynObj.getxtDynamics());
+            for iElem=1:numel(self.tVec)-1
+                t0 = self.tVec(iElem);
+                t1 = self.tVec(iElem+1);
+                t = 0.5*(t0+t1);
+                
+                xVec = XtFunc(t);
+                dxVec = (XtFunc(t1) - XtFunc(t0)) / (t1 - t0);
+                dxRefVec = XtDerivFunc(t, xVec);
+                
+                [isEqual,absDif,~,relDif] = absrelcompare(dxRefVec,dxVec,...
+                    TOL_MULT*self.absTol, TOL_MULT*self.relTol, @norm);
+                
+                mlunitext.assert(isEqual,...
+                    sprintf(['xtDynamics check failed at '...
+                    't=%f: absDif=%f, relDif=%f'], t0, absDif, relDif));
+            end
         end
         
         function checkMatFun(self, mat1Obj, mat2Obj)
@@ -89,7 +99,7 @@ classdef ProbDynPlainTC < mlunitext.test_case
            mlunitext.assert_equals(mat1Obj.getMatrixSize(),...
                mat2Obj.getMatrixSize());
            
-           for iElem=1:3:numel(self.tVec)
+           for iElem=1:numel(self.tVec)
                t = self.tVec(iElem);
                et1Mat = mat1Obj.evaluate(t);
                et2Mat = mat1Obj.evaluate(t);
@@ -97,19 +107,9 @@ classdef ProbDynPlainTC < mlunitext.test_case
                    self.absTol, self.relTol, @norm);
                
                mlunitext.assert(isEqual,...
-                   sprintf(['Equality test failed for matrix function'...
-                   '%s at t=%f'], inputname(2), t));
+                   sprintf(['%s matrix function check failed '...
+                   'at t=%f'], inputname(2), t));
            end
-        end
-        
-        function odePropList=getOdePropList(self)
-            ODE_NORM_CONTROL='on';
-            REL_TOL_FACTOR = 0.001;
-            ABS_TOL_FACTOR = 0.001;
-        
-            odePropList={'NormControl',ODE_NORM_CONTROL,'RelTol',...
-                self.relTol*REL_TOL_FACTOR,...
-                'AbsTol',self.absTol*ABS_TOL_FACTOR};
         end
     end
 end
