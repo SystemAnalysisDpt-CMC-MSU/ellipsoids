@@ -64,6 +64,7 @@ classdef AGoodDirs
             import gras.mat.MatrixOperationsFactory;
             import gras.mat.ConstMatrixFunctionFactory;
             import modgen.common.throwerror;
+            import elltool.conf.Properties;
             %
             self.lsGoodDirMat = lsGoodDirMat;
             %
@@ -75,6 +76,8 @@ classdef AGoodDirs
                     mat2str(timeLimsVec));
             end
             timeVec = unique([pDynObj.getTimeVec(), sTime]);
+            nTimePoints = Properties.getNTimeGridPoints();
+            timeVec = linspace(timeVec(1), timeVec(end), nTimePoints);
             indSTime = find(timeVec == sTime, 1, 'first');
             if isempty(indSTime)
                 throwerror('wrongInput', ...
