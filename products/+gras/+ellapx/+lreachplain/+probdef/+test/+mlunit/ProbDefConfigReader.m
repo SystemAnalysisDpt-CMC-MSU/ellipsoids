@@ -19,8 +19,6 @@ classdef ProbDefConfigReader
     
     methods
         function self = ProbDefConfigReader(confName, crm, crmSys)
-            %fprintf('\n==%s==\n\n', confName);
-            
             crm.deployConfTemplate(confName);
             crm.selectConf(confName);
             sysDefConfName = crm.getParam('systemDefinitionConfName');
