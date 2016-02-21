@@ -38,11 +38,11 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             % $Author: Komarov Yuri <ykomarov94@gmail.com> $
             % $Date: 2015-30-10 $
             %
-            self.properEllTube=properEllTube;
-            if propEllTube.getNTuples()~=1
+            if properEllTube.getNTuples()~=1
                 modgen.common.throwerror(['properEllTube must have'...
                     'only 1 tuple']);
             end
+            self.properEllTube=properEllTube;
             self.probDynamicsList=probDynamicsList;
             self.goodDirSetList=goodDirSetList;
             self.downScaleKoeff=inDownScaleKoeff;
@@ -57,7 +57,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 'column',aMat,timeSpanVec);
         end
         %
-        function resMat=evaluate(self,xVec,timeVec)
+        function resVec=evaluate(self,xVec,tVal)
             % EVALUATE evaluates control synthesis for predetermined
             % position (t,x)
             %
@@ -67,74 +67,86 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             %           of the phase space - x coordinate for control
             %           synthesis evaluation
             %
-            %       timeVec: double[1,timeVecLength] - vector of time
-            %           moments for control synthesis evaluation
+            %       tVal: double[1,1] - scalar time moment for control
+            %           synthesis evaluation
             % Output:
             %   resMat: double[nDim,timeVecLength] - control synthesis
-            %      values evaluated for specified positions (xVec,timeVec)
+            %      values evaluated for specified positions (xVec,tVal)
             %
             % $Author: Komarov Yuri <ykomarov94@gmail.com> $
             % $Date: 2015-30-10 $
             %
-            resMat=zeros(size(xVec,1),size(timeVec,2));
+            indSwitch=getIndexOfSwitchTime(tVal,self.probDynamicsList);
+            t0=getBeginOfSwitchTimeSpan(indSwitch);
+            t1=getEndOfSwitchTimeSpan(indSwitch);
+            curProbDynObj=self.probDynamicsList{indSwitch};
+            curGoodDirSetObj=self.goodDirSetList{indSwitch};
             %
-            tEnd=self.probDynamicsList{1}.getTimeVec();
-            % probDynamicsList{indSwitch}{indTube} returns dynamics for
-            %     indSwitch time period and indTube tube
-            tEnd=tEnd(end);
+            ellTubeTimeVec=self.properEllTube.timeVec{1};
+            indTime=sum(ellTubeTimeVec <= tVal);
+            % TODO: check if indTime == 0
+            if ellTubeTimeVec(indTime) < tVal
+                qVec = self.aInterpObj.evaluate(tVal);
+                qMat=self.bigQInterpObj.evaluate(tVal);
+            else %ellTubeTimeVec(indTime) == curControlTime
+                qVec=self.properEllTube.aMat{1}(:,indTime);
+                qMat=self.properEllTube.QArray{1}(:,:,indTime);
+            end
             %
-            for iTime = 1:size(timeVec,2)
-                curControlTime=timeVec(iTime);
-                %
-                for iSwitch = length(self.probDynamicsList):-1:1
-                    probTimeVec=...
-                        self.probDynamicsList{iSwitch}.getTimeVec();
-                    if ( ( curControlTime < probTimeVec(end) ) && ...
-                            ( curControlTime >= probTimeVec(1) ) || ...
-                            ( curControlTime ==  tEnd) )
-                        curProbDynObj=self.probDynamicsList{iSwitch};
-                        curGoodDirSetObj=self.goodDirSetList{iSwitch};
-                        t1=max(probTimeVec);
-                        t0=min(probTimeVec);
-                        break;
-                    end
+            xstTransMat=curGoodDirSetObj.getXstTransDynamics();
+            % X(t,t_0) =
+            %   ( xstTransMat.evaluate(t)\xstTransMat.evaluate(t_0) ).'
+            xt1tMat=transpose(xstTransMat.evaluate(t1)\...
+                xstTransMat.evaluate(tVal));
+            %
+            [pVec,pMat]=getControlBounds(t0,t1,tVal,...
+                curProbDynObj,xt1tMat);
+            %
+            qVec=xt1tMat*qVec;
+            qMat=xt1tMat*qMat*transpose(xt1tMat);
+            xVec=xt1tMat*xVec;
+            %
+            ml1Vec = sqrt(dot(xVec-qVec, qMat \ (xVec-qVec)));
+            l0Vec = (qMat \ (xVec-qVec)) / ml1Vec;
+            if (dot(-l0Vec,xVec) - dot(-l0Vec,qVec) > ...
+                    dot(l0Vec,xVec) - dot(l0Vec,qVec))
+                l0Vec=-l0Vec;
+            end
+            l0Vec = l0Vec / norm(l0Vec);
+            %
+            resVec = pVec - (pMat*l0Vec) / sqrt(l0Vec'*pMat*l0Vec);
+            resVec = xt1tMat \ resVec;
+            %
+            function indSwitch=getIndexOfSwitchTime(tVal,probDynamicsList)
+                % time is backward, so if t_0 < t_1 < ... < t_{n-1} < t_{n}
+                % {1}->[t_{n-1},t_{n}], {2}->[t_{n_2},t_{n-1}, ... ,
+                % {n}->[t_{0}, t_{1}], where {i} is index in probDynamicsList
+                indSwitchesVec=length(self.probDynamicsList):-1:1;
+                timeSwitchesVec=arrayfun(...     % timeSwitchesVec(i) = t_{n-i}
+                    @getBeginOfSwitchTimeSpan,indSwitchesVec);
+               % currently t_{n} is missing in partion - we have to append it:
+                indSwitchesVec=horzcat(indSwitchesVec,1);
+                timeSwitchesVec=...
+                    horzcat(timeSwitchesVec,getEndOfSwitchTimeSpan(1));
+                if ~issorted(timeSwitchesVec)
+                    modgen.common.throwerror('tSwitchesVec should be sorted!');
                 end
-                %
-                ellTubeTimeVec=self.properEllTube.timeVec{1};
-                indTime=sum(ellTubeTimeVec <= curControlTime);
-                % TODO: check if indTime == 0
-                if ellTubeTimeVec(indTime) < curControlTime
-                    qVec = self.aInterpObj.evaluate(curControlTime);
-                    qMat=self.bigQInterpObj.evaluate(curControlTime);
-                else %ellTubeTimeVec(indTime) == curControlTime
-                    qVec=self.properEllTube.aMat{1}(:,indTime);
-                    qMat=self.properEllTube.QArray{1}(:,:,indTime);
+                if any(isnan(timeSwitchesVec))
+                    modgen.common.throwerror('tVal should belong to timespan!');
                 end
-                %
-                xstTransMat=curGoodDirSetObj.getXstTransDynamics();
-                % X(t,t_0) =
-                %   ( xstTransMat.evaluate(t)\xstTransMat.evaluate(t_0) ).'
-                xt1tMat=transpose(xstTransMat.evaluate(t1)\...
-                    xstTransMat.evaluate(curControlTime));
-                %
-                [pVec,pMat]=getControlBounds(t0,t1,curControlTime,...
-                    curProbDynObj,xt1tMat);
-                %
-                qVec=xt1tMat*qVec;
-                qMat=xt1tMat*qMat*transpose(xt1tMat);
-                xVec=xt1tMat*xVec;
-                %
-                ml1Vec = sqrt(dot(xVec-qVec, qMat \ (xVec-qVec)));
-                l0Vec = (qMat \ (xVec-qVec)) / ml1Vec;
-                if (dot(-l0Vec,xVec) - dot(-l0Vec,qVec) > ...
-                        dot(l0Vec,xVec) - dot(l0Vec,qVec))
-                    l0Vec=-l0Vec;
-                end
-                l0Vec = l0Vec / norm(l0Vec);
-                %
-                resMat(:,iTime) = pVec - (pMat*l0Vec) / ...
-                    sqrt(l0Vec'*pMat*l0Vec);
-                resMat(:,iTime) = xt1tMat \ resMat(:,iTime);
+                indSwitch=interp1(timeSwitchesVec,indSwitchesVec,tVal,'prev');
+            end
+            %
+            function tSwitch=getBeginOfSwitchTimeSpan(indSwitch)
+                % probDynamicsList{indSwitch}{indTube} returns dynamics for
+                %     indSwitch time period and indTube tube
+                probTimeVec=self.probDynamicsList{indSwitch}.getTimeVec();
+                tSwitch=probTimeVec(1);
+            end
+            %
+            function tSwitch=getEndOfSwitchTimeSpan(indSwitch)
+                probTimeVec=self.probDynamicsList{indSwitch}.getTimeVec();
+                tSwitch=probTimeVec(end);
             end
             %
             function [pVec,pMat]=getControlBounds(t0,t1,...
