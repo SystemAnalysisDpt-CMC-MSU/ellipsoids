@@ -43,7 +43,7 @@ classdef LReachDiscrForwardDynamics < ...
             xtArray(:, 1) = x0DefVec;
             for iTime = 1:nTimePoints - 1
                 aMat = self.AtDynamics.evaluate(self.timeVec(iTime));
-                bpVec = self.BptDynamics().evaluate(self.timeVec(iTime));
+                bpVec = self.BptDynamics.evaluate(self.timeVec(iTime));
                 cqVec = self.getCqtDynamics().evaluate(self.timeVec(iTime));
                 xtArray(:, iTime + 1) = ...
                     aMat * xtArray(:, iTime) + bpVec + cqVec;

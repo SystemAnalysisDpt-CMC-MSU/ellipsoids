@@ -16,9 +16,7 @@ classdef ProbDynUncertTC <...
             self.absTol = absTol;
         end
         
-        function testDynGetters(self)
-            self.testDynGetters@gras.ellapx.lreachplain.probdyn.test.mlunit.ProbDynPlainTC();
-            
+        function testDynUncertGetters(self)
             import gras.mat.MatrixOperationsFactory;
             matOpFactory = MatrixOperationsFactory.create(self.tVec);
             
