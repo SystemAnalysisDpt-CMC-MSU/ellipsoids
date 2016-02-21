@@ -61,15 +61,12 @@ classdef ReachDiscrete < elltool.reach.AReach
             import elltool.conf.Properties;
             import gras.ellapx.enums.EApproxType;
             import gras.la.regposdefmat;
-            import elltool.conf.Properties;
             %
             isBack = isa(probDynObj, ...
                 'gras.ellapx.lreachplain.probdyn.LReachDiscrBackwardDynamics');
             %
             xDim = probDynObj.getDimensionality();
             timeVec = probDynObj.getTimeVec();
-            nTimeGridPoints = Properties.getNTimeGridPoints();
-            timeVec = linspace(timeVec(1), timeVec(end), nTimeGridPoints);
             nTubes = size(l0Mat, 2);
             qArrayList = repmat({repmat(zeros(xDim), ...
                 [1, 1, length(timeVec)])}, 1, nTubes);
@@ -148,15 +145,12 @@ classdef ReachDiscrete < elltool.reach.AReach
                 approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.lreachplain.GoodDirsDiscrete;
-            import elltool.conf.Properties;
             goodDirSetObj = GoodDirsDiscrete(...
                 probDynObj, timeLimsVec(1), l0Mat, relTol, absTol);
             %
             approxSchemaDescr = char.empty(1,0);
             approxSchemaName = char.empty(1,0);
             timeVec = probDynObj.getTimeVec();
-            nTimeGridPoints = Properties.getNTimeGridPoints();
-            timeVec = linspace(timeVec(1), timeVec(end), nTimeGridPoints);
             sTime=timeVec(1);
             if self.isBackward
                 timeVec = fliplr(timeVec);

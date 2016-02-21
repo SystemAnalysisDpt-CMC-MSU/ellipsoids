@@ -15,7 +15,6 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
             import gras.mat.CompositeMatrixOperations;
             import gras.gen.matdot;
-            import elltool.conf.Properties;
             %
             logger=Log4jConfigurator.getLogger();
             %
@@ -28,10 +27,10 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
             t1 = STimeData.t1;
             %
             isBack = t0 > t1;
-            nTimePoints = Properties.getNTimeGridPoints();
-            timeVec = linspace(t0, t1, nTimePoints);
             if isBack
-                timeVec = fliplr(timeVec);
+                timeVec = fliplr(t1:t0);
+            else
+                timeVec = t0:t1;
             end
             %
             dataXtt0Arr = zeros([sizeSysVec nTimePoints]);
