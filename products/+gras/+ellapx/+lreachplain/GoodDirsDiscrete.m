@@ -32,6 +32,7 @@ classdef GoodDirsDiscrete < gras.ellapx.lreachplain.AGoodDirs
             else
                 timeVec = t0:t1;
             end
+            nTimePoints = length(timeVec);
             %
             dataXtt0Arr = zeros([sizeSysVec nTimePoints]);
             dataRtt0Arr = zeros([sizeSysVec nTimePoints]);
