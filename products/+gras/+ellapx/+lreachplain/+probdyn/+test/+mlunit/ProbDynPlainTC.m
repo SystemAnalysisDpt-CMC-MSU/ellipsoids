@@ -44,7 +44,7 @@ classdef ProbDynPlainTC < mlunitext.test_case
                 self.pDynObj.getDimensionality());
         end
         
-        function testDynGetters(self)
+        function testDynBasicGetters(self)
             import gras.mat.MatrixOperationsFactory;
             matOpFactory = MatrixOperationsFactory.create(self.tVec);
             

@@ -1,38 +1,5 @@
 function results=run_tests(varargin)
-testCase = 'gras.ellapx.lreachplain.probdyn.test.mlunit.ProbDynPlainTC';
-
-confList = {
-    'demo3firstTest';
-    'demo3secondTest';
-    'demo3thirdTest';
-    'demo3fourthTest';
-};
-
-suiteDefList = {
-	struct(...
-    'defConstr', @gras.ellapx.lreachplain.probdef.ReachContLTIProblemDef,...
-    'dynConstr', {{
-        @gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsFactory.create
-     }},...
-    'confs', {confList([1 4])}...
-    );
-    
-    struct(...
-    'defConstr', @gras.ellapx.lreachplain.probdef.LReachContProblemDef,...
-    'dynConstr', {{
-        @gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsFactory.create
-    }},...
-    'confs', {confList([2 3])}...
-    );
-    
-    struct(...
-    'defConstr', [],...
-    'dynConstr', {{
-        @gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsFactory.createByParams
-    }},...
-    'confs', {confList([1 2 3 4])}...
-    );
-};
-
-import gras.ellapx.lreachplain.probdyn.test.run_cont_tests_from_package;
-results=run_cont_tests_from_package(testCase, suiteDefList, varargin{:});
+import gras.ellapx.lreachplain.probdyn.test.*;
+res1 = run_cont_tests(varargin{:});
+res2 = run_discr_tests(varargin{:});
+results = [res1 res2];
