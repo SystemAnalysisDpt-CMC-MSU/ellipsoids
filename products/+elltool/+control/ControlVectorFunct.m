@@ -155,7 +155,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 %
                 bpVec=-curProbDynObj.getBptDynamics.evaluate(evalTime);
                 bpbMat=...
-                    curProbDynObj.getBPBTransDynamics.evaluateFast(evalTime);
+                    curProbDynObj.getBPBTransDynamics.evaluate(evalTime);
                 %
                 pVec=xt1tMat*bpVec;
                 pMat=xt1tMat*bpbMat*transpose(xt1tMat);

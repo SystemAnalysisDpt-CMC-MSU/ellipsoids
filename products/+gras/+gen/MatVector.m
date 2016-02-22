@@ -52,17 +52,16 @@ classdef MatVector
         %
         function resArray=evalMFunc(fHandle,dataArray,varargin)
             import modgen.common.throwerror;
-            import gras.gen.MatVector;
             [~,~,isUniformOutput,isSizeKept]=modgen.common.parseparext(varargin,...
                 {'UniformOutput','keepSize';...
                 true,false;...
                 'islogical(x)&&isscalar(x)','islogical(x)&&isscalar(x)'},0);
-            resArray=...
-                gras.gen.MatVector.evalMFuncFast(fHandle,dataArray,isUniformOutput,isSizeKept);
+            resArray=gras.gen.MatVector.evalMFuncParams(...
+                fHandle,dataArray,isUniformOutput,isSizeKept);
         end
         %
         function resArray=...
-                evalMFuncFast(fHandle,dataArray,isUniformOutput,isSizeKept)
+                evalMFuncParams(fHandle,dataArray,isUniformOutput,isSizeKept)
             %
             nElems=size(dataArray,3);
             if ~isUniformOutput
