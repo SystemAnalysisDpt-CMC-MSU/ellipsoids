@@ -76,7 +76,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             % $Author: Komarov Yuri <ykomarov94@gmail.com> $
             % $Date: 2015-30-10 $
             %
-            indSwitch=getIndexOfSwitchTime(tVal,self.probDynamicsList);
+            indSwitch=getIndexOfSwitchTime(tVal);
             t0=getBeginOfSwitchTimeSpan(indSwitch);
             t1=getEndOfSwitchTimeSpan(indSwitch);
             curProbDynObj=self.probDynamicsList{indSwitch};
@@ -99,8 +99,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             xt1tMat=transpose(xstTransMat.evaluate(t1)\...
                 xstTransMat.evaluate(tVal));
             %
-            [pVec,pMat]=getControlBounds(t0,t1,tVal,...
-                curProbDynObj,xt1tMat);
+            [pVec,pMat]=getControlBounds(t0,t1,tVal,curProbDynObj,xt1tMat);
             %
             qVec=xt1tMat*qVec;
             qMat=xt1tMat*qMat*transpose(xt1tMat);
@@ -117,7 +116,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             resVec = pVec - (pMat*l0Vec) / sqrt(l0Vec'*pMat*l0Vec);
             resVec = xt1tMat \ resVec;
             %
-            function indSwitch=getIndexOfSwitchTime(tVal,probDynamicsList)
+            function indSwitch=getIndexOfSwitchTime(tVal)
                 % time is backward, so if t_0 < t_1 < ... < t_{n-1} < t_{n}
                 % {1}->[t_{n-1},t_{n}], {2}->[t_{n_2},t_{n-1}, ... ,
                 % {n}->[t_{0}, t_{1}], where {i} is index in probDynamicsList
@@ -156,7 +155,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 %
                 bpVec=-curProbDynObj.getBptDynamics.evaluate(evalTime);
                 bpbMat=...
-                    curProbDynObj.getBPBTransDynamics.evaluate(evalTime);
+                    curProbDynObj.getBPBTransDynamics.evaluateFast(evalTime);
                 %
                 pVec=xt1tMat*bpVec;
                 pMat=xt1tMat*bpbMat*transpose(xt1tMat);

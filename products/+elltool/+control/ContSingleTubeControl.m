@@ -5,12 +5,13 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
         downScaleKoeff
         switchSysTimeVec
         logger
+        timeout
     end
     %
     methods
         function self=ContSingleTubeControl(properEllTube,...
-                probDynamicsList, goodDirSetList, switchSysTimeVec,...
-                inDownScaleKoeff)
+                probDynamicsList,goodDirSetList,switchSysTimeVec,...
+                inDownScaleKoeff,timeout)
             % CONTSINGLETUBECONTROL constructes an object for 
             % control synthesis for a continuous time system based on a
             % single ellipsoidal tube from any predetermined position 
@@ -52,6 +53,7 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                 elltool.control.ControlVectorFunct(properEllTube,...
                 self.probDynamicsList,self.goodDirSetList,...
                 inDownScaleKoeff);
+            self.timeout=timeout;
         end
 
 
@@ -142,13 +144,12 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                    controlFuncVec.evaluate(yMat,time);
             end
             %
-            function [value,isTerminal,direction]=stopByTimeout(T, Y)
-                TIMEOUT=15;
+            function [value,isTerminal,direction]=stopByTimeout(T,Y)
                 value=1;
-                if toc(timeMarker)-TIMEOUT >= 0
+                if toc(timeMarker)-self.timeout >= 0
                     value=0;
                     self.logger.warn(sprintf(['timeout=%d reached! '...
-                        'stopping calculations...'],TIMEOUT));
+                        'stopping calculations...'],self.timeout));
                 end
                 isTerminal=true;
                 direction=0;
