@@ -202,16 +202,6 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             [~]=self.reachObj.getNTimeGridPoints();
         end
         %
-        function self = testNTimeGridPoints(self)
-            import elltool.conf.Properties;
-            N_TIME_POINTS = 135;
-            Properties.setNTimeGridPoints(N_TIME_POINTS);
-            reachObj = elltool.reach.ReachContinuous(self.linSys,...
-                self.x0Ell, self.l0Mat, self.tVec);
-            [~, timeVec] = reachObj.get_goodcurves();
-            mlunitext.assert_equals(N_TIME_POINTS, numel(timeVec));
-        end
-        %
         function self = testDisplay(self)
             self.displayTest(self.reachObj, self.tVec);
             newTimeVec = [sum(self.tVec)*self.SPLIT_FACTOR, self.tVec(2)];
