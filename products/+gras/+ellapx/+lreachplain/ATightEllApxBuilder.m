@@ -1,6 +1,5 @@
 classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     properties (Constant,GetAccess=protected)
-        N_TIME_POINTS=100;
         NON_ZERO_DISTURBANCE_TOL=1e-14;
     end
     properties (Access=private)
@@ -100,14 +99,8 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
             %for that fact we need to adjust a tolerance for
             %each matrix component.
             %
-            if ~isempty(varargin)
-                [~,~,nTimeGridPoints]=modgen.common.parseparext(varargin,...
-                    {'nTimeGridPoints'},0,1);
-            else
-                nTimeGridPoints=ATightEllApxBuilder.N_TIME_POINTS;
-            end
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...
-                goodDirSetObj,timeLimsVec,nTimeGridPoints,relTol,absTol);
+                goodDirSetObj,timeLimsVec,relTol,absTol,varargin{:});
         end
         function ellTubeRel=getEllTubes(self)
             import gras.gen.SquareMatVector;

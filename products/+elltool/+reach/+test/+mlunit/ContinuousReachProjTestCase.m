@@ -22,16 +22,12 @@ classdef ContinuousReachProjTestCase < ...
             isEqual = true;
             if nTuples > 0
                 nTimes = numel(SData.timeVec{1});
-                SData.timeVec;
                 for iTuple = nTuples : -1 : 1
                     tupleCentMat = SData.aMat{iTuple};
                     tupleMatArray = SData.QArray{iTuple};
                     for jTime = nTimes : -1 : 1
-                        approxEllMat(iTuple, jTime);
                         [centerVec, shapeMat] =...
                             approxEllMat(iTuple, jTime).parameters;
-                        tupleCentMat(:, jTime);
-                        tupleMatArray(:, :, jTime);
                         isEqual = isEqual &&...
                             (norm(centerVec - tupleCentMat(:, jTime)) <=...
                             self.COMP_PRECISION) &&...
@@ -65,13 +61,6 @@ classdef ContinuousReachProjTestCase < ...
             mlunitext.assert(all(self.reachObj.get_ea() == ...
                 self.reachObj.getEllTubeRel().getEllArray(...
                 gras.ellapx.enums.EApproxType.External))); 
-            l0CMat = self.crm.getParam(...
-                'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
-            l0Mat = cell2mat(l0CMat.').';
-            projMat = l0Mat(:,1);
-            projReachObj = self.reachObj.projection(projMat);
-            projReachObj.getEllTubeRel();
-
         end
         function self = testGetEllTubeUnionRel(self)
             NOT_COMPARE_FIELD_LIST={'isLsTouch','isLtTouchVec'...
@@ -86,12 +75,6 @@ classdef ContinuousReachProjTestCase < ...
                 ellTubeUnionRel.getFieldProjection(compFieldList). ...
                 isEqual(ellTubeRel.getFieldProjection(compFieldList));
             mlunitext.assert(isOk,reportStr);
-            l0CMat = self.crm.getParam(...
-                'goodDirSelection.methodProps.manual.lsGoodDirSets.set1');
-            l0Mat = cell2mat(l0CMat.').';
-            projMat = l0Mat(:,1);
-            projReachObj = self.reachObj.projection(projMat);
-            projReachObj.getEllTubeUnionRel();
         end
         function self = testSystem(self)
             import modgen.common.throwerror;

@@ -45,8 +45,6 @@ classdef ContinuousReachTestNTimeGridPoints < mlunitext.test_case
         %
         function self = testSetMatchesGetNTimeGridPoints(self)
             import elltool.conf.Properties;
-            N_TIME_POINTS = 145;
-            Properties.setNTimeGridPoints(N_TIME_POINTS);
             reachObj = elltool.reach.ReachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, self.tVec);
             [~, timeVec] = reachObj.get_goodcurves();

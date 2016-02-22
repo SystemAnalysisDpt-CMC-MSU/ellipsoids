@@ -1,4 +1,7 @@
 classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
+    properties (Constant,GetAccess=private)
+        N_TIME_POINTS=100;
+    end
     properties (Access=private)
         goodDirSetObj
         pDefObj
@@ -71,10 +74,13 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
         end
         %
         function self=ATightEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,nTimePoints,relTol,absTol)
+                timeLimsVec,relTol,absTol,varargin)
             import gras.ellapx.gen.ATightEllApxBuilder;
             import modgen.common.throwerror;
             import gras.la.ismatposdef; 
+            [~,~,nTimePoints]=modgen.common.parseparext(varargin,...
+                {'nTimeGridPoints'; ATightEllApxBuilder.N_TIME_POINTS},[0 1],...
+                'isObligatoryPropVec',false);
             if ~isa(pDefObj,...
                     'gras.ellapx.lreachplain.probdyn.IReachProblemDynamics')
                 throwerror('wrongInput','incorrect type of pDefObj');
