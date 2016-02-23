@@ -2,7 +2,7 @@ classdef ProbDefConfigReader
     %ProbDefConfigReader defenetion of a problem from config files 
     % by using CRM system
     
-    properties
+    properties(Access=public)
         aCMat
         bCMat
         cCMat
@@ -33,12 +33,14 @@ classdef ProbDefConfigReader
             self.tLims  = [crmSys.getParam('time_interval.t0'),...
                 crmSys.getParam('time_interval.t1')];
             
-            try
+            if crmSys.isParam('Ct')&&...
+               crmSys.isParam('disturbance_restriction.Q')&&...
+               crmSys.isParam('disturbance_restriction.a')
+                self.isUncert = true;
                 self.cCMat = crmSys.getParam('Ct');
                 self.qCMat = crmSys.getParam('disturbance_restriction.Q');
                 self.qCVec = crmSys.getParam('disturbance_restriction.a');
-                self.isUncert = true;
-            catch
+            else
                 self.isUncert = false;
             end
         end

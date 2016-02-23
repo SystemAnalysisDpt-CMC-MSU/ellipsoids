@@ -1,4 +1,4 @@
-function results=run_tests_for_package(package, testCase, varargin)
+function results=run_tests_for_package(packageName, testCase, varargin)
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 
@@ -40,6 +40,6 @@ suite = mlunitext.test_suite(testsList).getCopyFiltered(varargin{:});
 results = runner.run(suite);
 
 function fConstr = getConstr(className)
-    fConstr = eval(['@' package '.'  className]);
+    fConstr = eval(['@' packageName '.'  className]);
 end
 end

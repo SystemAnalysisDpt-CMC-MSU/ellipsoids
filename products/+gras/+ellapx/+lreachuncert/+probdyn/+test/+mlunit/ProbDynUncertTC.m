@@ -31,14 +31,14 @@ classdef ProbDynUncertTC <...
         end
         
         function test_xtDynamics(self)
-            XtDerivFunc = @(t,x)...
-                self.pDynObj.getAtDynamics().evaluate(t)*x+...
+            fXtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
+            
+            fXtDeriv = @(t,x)...
+                self.pDynObj.getAtDynamics().evaluate(t)*fXtFunc(t)+...
                 self.pDynObj.getBptDynamics().evaluate(t)+...
                 self.pDynObj.getCqtDynamics().evaluate(t);
             
-            XtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
-            
-            self.checkDerivFun(XtDerivFunc, XtFunc);
+            self.checkDerivFun(fXtDeriv, fXtFunc);
         end
     end
 end

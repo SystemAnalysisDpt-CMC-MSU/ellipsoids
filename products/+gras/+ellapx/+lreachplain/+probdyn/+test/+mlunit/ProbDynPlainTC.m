@@ -64,26 +64,27 @@ classdef ProbDynPlainTC < mlunitext.test_case
         end
         
         function test_xtDynamics(self)
-            XtDerivFunc = @(t,x)self.pDynObj.getAtDynamics().evaluate(t)*x...
-            +self.pDynObj.getBptDynamics().evaluate(t);
+            fXtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
             
-            XtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
+            fXtDeriv = @(t)...
+                self.pDynObj.getAtDynamics().evaluate(t)*fXtFunc(t)+...
+                self.pDynObj.getBptDynamics().evaluate(t);
             
-            self.checkDerivFun(XtDerivFunc, XtFunc);
+            self.checkDerivFun(fXtDeriv, fXtFunc);
         end
         
-        function checkDerivFun(self, XtDerivFunc, XtFunc)
+        function checkDerivFun(self, fXtDeriv, fXtFunc)
             import modgen.common.absrelcompare;
             TOL_MULT = 10e1;
             
-            for iElem=1:numel(self.tVec)-1
-                t0 = self.tVec(iElem);
-                t1 = self.tVec(iElem+1);
+            tVec = self.tVec;
+            for iElem=1:numel(tVec)-1
+                t0 = tVec(iElem);
+                t1 = tVec(iElem+1);
                 t = 0.5*(t0+t1);
                 
-                xVec = XtFunc(t);
-                dxVec = (XtFunc(t1) - XtFunc(t0)) / (t1 - t0);
-                dxRefVec = XtDerivFunc(t, xVec);
+                dxVec = (fXtFunc(t1) - fXtFunc(t0)) / (t1 - t0);
+                dxRefVec = fXtDeriv(t);
                 
                 [isEqual,absDif,~,relDif] = absrelcompare(dxRefVec,dxVec,...
                     TOL_MULT*self.absTol, TOL_MULT*self.relTol, @norm);
@@ -110,6 +111,13 @@ classdef ProbDynPlainTC < mlunitext.test_case
                    sprintf(['%s matrix function check failed '...
                    'at t=%f'], inputname(2), t));
            end
+        end
+    end
+    
+    methods(Static)
+        function multiplyMatrixSamples(m1Array, m2Array)
+            m1Array = reshape(shiftdim(m1Array, 2), [], size(m1Array, 2));
+            m2Array = reshape(shiftdim(m2Array, 2), [], size(m2Array, 2));
         end
     end
 end

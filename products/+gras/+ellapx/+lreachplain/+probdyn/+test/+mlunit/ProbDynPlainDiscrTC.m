@@ -28,12 +28,13 @@ classdef ProbDynPlainDiscrTC <...
         end
         
         function test_xtDynamics(self)
-            XtDifFunc = @(t,x)self.pDynObj.getAtDynamics().evaluate(t)*x...
-            +self.pDynObj.getBptDynamics().evaluate(t)-x;
+            fXtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
             
-            XtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
+            fXtDiff = @(t)...
+                self.pDynObj.getAtDynamics().evaluate(t)*fXtFunc(t)+...
+                self.pDynObj.getBptDynamics().evaluate(t)-fXtFunc(t);
             
-            self.checkDifFun(XtDifFunc, XtFunc);
+            self.checkDifFun(fXtDiff, fXtFunc);
         end
         
         function checkDifFun(self, XtDifFunc, XtFunc)
@@ -41,13 +42,12 @@ classdef ProbDynPlainDiscrTC <...
             TOL_MULT = 10e1;
             
             tVec = self.pDynObj.getTimeVec();
-            for iElem=1:numel(tVec)-1
-                t0 = tVec(iElem);
-                t1 = tVec(iElem+1);
+            for iTime=1:numel(tVec)-1
+                t0 = tVec(iTime);
+                t1 = tVec(iTime+1);
                 
-                xVec = XtFunc(t0);
                 dxVec = XtFunc(t1) - XtFunc(t0);
-                dxRefVec = XtDifFunc(t0, xVec);
+                dxRefVec = XtDifFunc(t0);
                 
                 [isEqual,absDif,~,relDif] = absrelcompare(dxRefVec,dxVec,...
                     TOL_MULT*self.absTol, TOL_MULT*self.relTol, @norm);
