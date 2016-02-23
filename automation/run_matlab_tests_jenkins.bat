@@ -24,7 +24,7 @@ if "%archName%"=="win64" (
 	exit /b 1
 )	
 SET automationDir=%~dp0
-set runMarker=win_%JOB_NAME%_%GIT_BRANCH%
+set runMarker="win_%JOB_NAME%_%GIT_BRANCH%"
 echo runMarker=%runMarker%
 set confName="default"
 set genericBatScript=%automationDir%..\lib\mlunitext\automation\run_matlab_tests.bat
