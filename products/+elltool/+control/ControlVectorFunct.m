@@ -115,26 +115,6 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             resVec = pVec - (pMat*l0Vec) / sqrt(l0Vec'*pMat*l0Vec);
             resVec = xt1tMat \ resVec;
             %
-            function indSwitch=getIndexOfSwitchTime(tVal)
-                % time is backward, so if t_0 < t_1 < ... < t_{n-1} < t_{n}
-                % {1}->[t_{n-1},t_{n}], {2}->[t_{n_2},t_{n-1}, ... ,
-                % {n}->[t_{0}, t_{1}], where {i} is index in probDynamicsList
-                indSwitchesVec=length(self.probDynamicsList):-1:1;
-                timeSwitchesVec=arrayfun(...     % timeSwitchesVec(i) = t_{n-i}
-                    @getBeginOfSwitchTimeSpan,indSwitchesVec);
-               % currently t_{n} is missing in partion - we have to append it:
-                indSwitchesVec=horzcat(indSwitchesVec,1);
-                timeSwitchesVec=...
-                    horzcat(timeSwitchesVec,getEndOfSwitchTimeSpan(1));
-                if ~issorted(timeSwitchesVec)
-                    modgen.common.throwerror('tSwitchesVec should be sorted!');
-                end
-                if any(isnan(timeSwitchesVec))
-                    modgen.common.throwerror('tVal should belong to timespan!');
-                end
-                indSwitch=interp1(timeSwitchesVec,indSwitchesVec,tVal,'prev');
-            end
-            %
             function tSwitch=getBeginOfSwitchTimeSpan(indSwitch)
                 % probDynamicsList{indSwitch}{indTube} returns dynamics for
                 %     indSwitch time period and indTube tube
