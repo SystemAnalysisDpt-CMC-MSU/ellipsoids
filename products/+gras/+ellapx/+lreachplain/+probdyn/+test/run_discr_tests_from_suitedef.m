@@ -14,12 +14,12 @@ for iSuiteElem=1:numel(suiteDefList)
     SCurSuite = suiteDefList{iSuiteElem};
     testCase = SCurSuite.testCase;
     fDynConstr = @(p)createDynDiscrObj(...
-        SCurSuite.dynConstr, SCurSuite.defConstr, p);
-        
-	for iConfElem=1:numel(SCurSuite.confs)
-    	confName = SCurSuite.confs{iConfElem};
+        SCurSuite.fDynConstr, SCurSuite.fDefConstr, p);
+    
+	for iConfElem=1:numel(SCurSuite.confList)
+    	confName = SCurSuite.confList{iConfElem};
         fReader = @()ProbDefConfigReader(confName, crm, crmSys);
-            
+        
         suiteList{end+1} = loader.load_tests_from_test_case(testCase,... 
             fDynConstr, fReader, REL_TOL, ABS_TOL,...
             'marker', sprintf('suite=%d_conf=%s',iSuiteElem,confName));

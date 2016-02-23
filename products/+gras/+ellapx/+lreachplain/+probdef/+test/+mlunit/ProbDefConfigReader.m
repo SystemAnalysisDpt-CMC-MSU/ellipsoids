@@ -2,7 +2,7 @@ classdef ProbDefConfigReader
     %ProbDefConfigReader defenetion of a problem from config files 
     % by using CRM system
     
-    properties(Access=public)
+    properties(SetAccess=private)
         aCMat
         bCMat
         cCMat

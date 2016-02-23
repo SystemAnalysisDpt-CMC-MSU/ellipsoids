@@ -1,4 +1,4 @@
-function results=run_cont_tests_from_package(testCase, suiteDefList,...
+function results=run_cont_tests_from_suitedef(testCase, suiteDefList,...
     varargin)
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
@@ -13,14 +13,14 @@ ABS_TOL = 1e-8;
 suiteList = {};
 for iSuiteElem=1:numel(suiteDefList)
     SCurSuite = suiteDefList{iSuiteElem}; 
-    fDefConstr = SCurSuite.defConstr;
+    fDefConstr = SCurSuite.fDefConstr;
     
-    for iDynConstrElem=1:numel(SCurSuite.dynConstr)
-        fDynConstr = SCurSuite.dynConstr{iDynConstrElem};
+    for iDynConstrElem=1:numel(SCurSuite.fDynConstrList)
+        fDynConstr = SCurSuite.fDynConstrList{iDynConstrElem};
         fConstr = @(p,t)createDynObj(fDynConstr, fDefConstr, p, t);
         
-        for iConfElem=1:numel(SCurSuite.confs)
-            confName = SCurSuite.confs{iConfElem};
+        for iConfElem=1:numel(SCurSuite.confList)
+            confName = SCurSuite.confList{iConfElem};
             fReader = @()ProbDefConfigReader(confName, crm, crmSys);
             
             suiteList{end+1} = loader.load_tests_from_test_case(testCase,... 

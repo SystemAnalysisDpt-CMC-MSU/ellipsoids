@@ -44,11 +44,11 @@ classdef ProbDefPlainTC < mlunitext.test_case
     end
     
     methods(Static)
-        function assertCellEquals(c1, c2, msg)
+        function assertCellEquals(expectedCMat, actualCMat, msg)
             if nargin < 3
-                mlunitext.assert(isequal(c1, c2));
+                mlunitext.assert(isequal(expectedCMat, actualCMat));
             else
-                mlunitext.assert(isequal(c1, c2, msg));
+                mlunitext.assert(isequal(expectedCMat, actualCMat), msg);
             end
         end
     end

@@ -37,7 +37,7 @@ classdef ProbDynPlainDiscrTC <...
             self.checkDifFun(fXtDiff, fXtFunc);
         end
         
-        function checkDifFun(self, XtDifFunc, XtFunc)
+        function checkDifFun(self, fXtDiff, fXtFunc)
             import modgen.common.absrelcompare;
             TOL_MULT = 10e1;
             
@@ -46,15 +46,15 @@ classdef ProbDynPlainDiscrTC <...
                 t0 = tVec(iTime);
                 t1 = tVec(iTime+1);
                 
-                dxVec = XtFunc(t1) - XtFunc(t0);
-                dxRefVec = XtDifFunc(t0);
+                dxVec = fXtFunc(t1) - fXtFunc(t0);
+                dxRefVec = fXtDiff(t0);
                 
                 [isEqual,absDif,~,relDif] = absrelcompare(dxRefVec,dxVec,...
                     TOL_MULT*self.absTol, TOL_MULT*self.relTol, @norm);
                 
                 mlunitext.assert(isEqual,...
-                    sprintf(['xtDynamics check failed at '...
-                    't=%f: absDif=%f, relDif=%f'], t0, absDif, relDif));
+                    sprintf(['xtDynamics check failed at t=%f:'...
+                    'absDif=%f, relDif=%f'], t0, absDif, relDif));
             end
         end
     end

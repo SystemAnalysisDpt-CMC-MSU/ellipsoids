@@ -48,19 +48,20 @@ classdef ProbDynPlainTC < mlunitext.test_case
             import gras.mat.MatrixOperationsFactory;
             matOpFactory = MatrixOperationsFactory.create(self.tVec);
             
-            At = matOpFactory.fromSymbMatrix(self.readObj.aCMat);
-            self.checkMatFun(At, self.pDynObj.getAtDynamics());
+            AtMatFun = matOpFactory.fromSymbMatrix(self.readObj.aCMat);
+            self.checkMatFun(AtMatFun, self.pDynObj.getAtDynamics());
             
-            BPBTrans = matOpFactory.rSymbMultiply(...
+            BPBTransMatFun = matOpFactory.rSymbMultiply(...
                 self.readObj.bCMat,...
                 self.readObj.pCMat,...
                 self.readObj.bCMat');
-            self.checkMatFun(BPBTrans, self.pDynObj.getBPBTransDynamics());
+            self.checkMatFun(BPBTransMatFun,...
+                self.pDynObj.getBPBTransDynamics());
             
-            Bpt = matOpFactory.rSymbMultiply(...
+            BptMatFun = matOpFactory.rSymbMultiply(...
                 self.readObj.bCMat,...
                 self.readObj.pCVec);
-            self.checkMatFun(Bpt, self.pDynObj.getBptDynamics());
+            self.checkMatFun(BptMatFun, self.pDynObj.getBptDynamics());
         end
         
         function test_xtDynamics(self)
@@ -78,9 +79,9 @@ classdef ProbDynPlainTC < mlunitext.test_case
             TOL_MULT = 10e1;
             
             tVec = self.tVec;
-            for iElem=1:numel(tVec)-1
-                t0 = tVec(iElem);
-                t1 = tVec(iElem+1);
+            for iTime=1:numel(tVec)-1
+                t0 = tVec(iTime);
+                t1 = tVec(iTime+1);
                 t = 0.5*(t0+t1);
                 
                 dxVec = (fXtFunc(t1) - fXtFunc(t0)) / (t1 - t0);
@@ -95,29 +96,19 @@ classdef ProbDynPlainTC < mlunitext.test_case
             end
         end
         
-        function checkMatFun(self, mat1Obj, mat2Obj)
+        function checkMatFun(self, expectedMatFun, actualMatFun)
            import modgen.common.absrelcompare;
-           mlunitext.assert_equals(mat1Obj.getMatrixSize(),...
-               mat2Obj.getMatrixSize());
+           mlunitext.assert_equals(expectedMatFun.getMatrixSize(),...
+               actualMatFun.getMatrixSize());
            
-           for iElem=1:numel(self.tVec)
-               t = self.tVec(iElem);
-               et1Mat = mat1Obj.evaluate(t);
-               et2Mat = mat1Obj.evaluate(t);
-               isEqual = absrelcompare(et1Mat, et2Mat,...
+           expectedArray = expectedMatFun.evaluate(self.tVec);
+           actualArray   = actualMatFun.evaluate(self.tVec);
+           
+           isEqual = absrelcompare(expectedArray(:), actualArray(:),...
                    self.absTol, self.relTol, @norm);
-               
-               mlunitext.assert(isEqual,...
-                   sprintf(['%s matrix function check failed '...
-                   'at t=%f'], inputname(2), t));
-           end
-        end
-    end
-    
-    methods(Static)
-        function multiplyMatrixSamples(m1Array, m2Array)
-            m1Array = reshape(shiftdim(m1Array, 2), [], size(m1Array, 2));
-            m2Array = reshape(shiftdim(m2Array, 2), [], size(m2Array, 2));
+           mlunitext.assert(isEqual,...
+                   sprintf('%s matrix function check failed',...
+                   inputname(2)));
         end
     end
 end
