@@ -163,7 +163,7 @@
                         bCMat=linSysList{iLinSys}.getBtMat();
                         bMat=cellfun(@eval,bCMat);
                         uBoundsEll=linSysList{iLinSys}.getUBoundsEll();
-                        pCMat=uBoundsEll.shape();
+                        pCMat=uBoundsEll.shape;
                         pMat=cellfun(@eval,pCMat);
                         bpbMat=bMat*pMat*(bMat)';
                         if (isReg)
@@ -185,14 +185,14 @@
                 end
                 %
                 function mapGoodDirInd(goodDirSetObj,ellTube)
-                    nTuples = ellTube.getNTuples;
+                    nTuples = ellTube.getNTuples();
                     lsGoodDirMat = goodDirSetObj.getlsGoodDirMat();
                     for iGoodDir = 1:size(lsGoodDirMat, 2)
                         lsGoodDirMat(:, iGoodDir) = ...
                             lsGoodDirMat(:, iGoodDir) / ...
                             norm(lsGoodDirMat(:, iGoodDir));
                     end
-                    lsGoodDirCMat = ellTube.lsGoodDirVec();
+                    lsGoodDirCMat = ellTube.lsGoodDirVec;
                     for iTuple = 1 : nTuples
                         %
                         % good directions' indexes mapping
@@ -214,7 +214,7 @@
                 %
                 function isEqual=compareGoodCurves(ellTube,goodDirSetList)
                     isEqual=true;
-                    nTuples = ellTube.getNTuples;
+                    nTuples = ellTube.getNTuples();
                     goodDirSetObj=goodDirSetList{1}{1};
                     mapGoodDirInd(goodDirSetObj,ellTube);
                     for iTuple=1:nTuples

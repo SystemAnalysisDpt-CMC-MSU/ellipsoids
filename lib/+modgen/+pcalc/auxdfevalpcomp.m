@@ -256,7 +256,6 @@ if (nTasks>1&&clusterSize>1) || isFork
             errorList{iTask}=errObj;
         end
         %
-        resultCell=getAllOutputArguments(jobObj);
         if any(isErrorVec)
             indErrorVec=find(isErrorVec);
             parentException=throwerror('derivedTaskFailed',...
@@ -269,6 +268,7 @@ if (nTasks>1&&clusterSize>1) || isFork
             end
             throw(parentException);
         end
+        resultCell=getAllOutputArguments(jobObj);        
         varargout=mat2cell(resultCell,nTasks,ones(1,nOut));
     catch meObj
         cancel(jobObj);

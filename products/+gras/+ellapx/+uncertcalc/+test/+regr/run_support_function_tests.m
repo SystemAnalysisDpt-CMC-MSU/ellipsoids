@@ -1,8 +1,11 @@
 function results=run_support_function_tests(varargin)
-% $Author: Kirill Mayantsev  <kirill.mayantsev@gmail.com> $  $Date: 2-11-2012 $
-% $Copyright: Moscow State University,
-%             Faculty of Computational Mathematics and Computer Science,
-%             System Analysis Department 2012 $
+% Examples:
+%
+%   gras.ellapx.uncertcalc.test.regr.run_support_function_tests({'testA0UInterval','uosc8'},'nParallelProcesses',12)
+%   gras.ellapx.uncertcalc.test.regr.run_support_function_tests('nParallelProcesses',12,'filter',{'testA0UInterval','.*','.*'})
+%   gras.ellapx.uncertcalc.test.regr.run_support_function_tests('nParallelProcesses',12,'filter',{'testA0UInterval','gras.ellapx.uncertcalc.test.regr.mlunit.SuiteRegression','testRegression'})
+%   gras.ellapx.uncertcalc.test.regr.run_support_function_tests('nParallelProcesses',12,'filter',{'testA0UInterval','.*','testRegression'})
+%
 import gras.gen.MatVector;
 import gras.mat.fcnlib.isdependent;
 %
@@ -16,6 +19,7 @@ crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 
 [restArgList,~,filterProp]=modgen.common.parseparext(varargin,...
     {'filter';{}});
+%
 [reg,suitePropList]=modgen.common.parseparams(restArgList);
 if ~isempty(reg)
     confNameList=reg{1};

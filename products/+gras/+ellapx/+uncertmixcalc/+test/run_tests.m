@@ -1,41 +1,39 @@
 function results=run_tests(varargin)
-% RUN_TESTS runs tests based on specified patters
-%  for markers, test cases, tests names
+% Examples:
 %
-% Input:
-%   optional:
-%       markerRegExp: char[1,] - regexp for marker AND/OR configuration
-%           names, default is '.*' which means 'all cofigs'
-%       testCaseRegExp: char[1,] - regexp for test case names, same default
-%       testRegExp: char[1,] - regexp for test names, same default
+%   gras.ellapx.uncertmixcalc.test.run_tests({'testA0UInterval','uosc8'},'nParallelProcesses',12)
+%   gras.ellapx.uncertmixcalc.test.run_tests('nParallelProcesses',12,'filter',{'testA0UInterval','.*','.*'})
+%   gras.ellapx.uncertmixcalc.test.run_tests('nParallelProcesses',12,'filter',{'testA0UInterval','gras.ellapx.uncertcalc.test.regr.mlunit.SuiteRegression','testRegression'})
+%   gras.ellapx.uncertmixcalc.test.run_tests('nParallelProcesses',12,'filter',{'testA0UInterval','.*','testRegression'})
 %
-% Output:
-%   results: mlunitext.text_test_run[1,1] - test result
-%
-% Example:
-%
-%   gras.ellapx.uncertmixcalc.test.run_tests('springs_2',...
-%       'gras.ellapx.uncertmixcalc.test.mlunit.SuiteMixTubeFort','testCompare')  
-%
-%   gras.ellapx.uncertmixcalc.test.run_tests('.*',...
-%       ''gras.ellapx.uncertmixcalc.test.mlunit.SuiteMixTubeFort'','testCompare')
-%
-%   gras.ellapx.uncertmixcalc.test.run_tests('springs_2',...
-%       '.*','testCompare')
 %
 % $Authors: Peter Gagarinov <pgagarinov@gmail.com>
-% $Date: 1-Nov-2015 $
+% $Date: 23-Feb-2016 $
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics
 %             and Computer Science,
-%             System Analysis Department 2012-2015$
+%             System Analysis Department 2012-2016$
+%
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 %
+[restArgList,~,filterProp]=modgen.common.parseparext(varargin,...
+    {'filter';{}});
+%
 crm=gras.ellapx.uncertmixcalc.test.conf.ConfRepoMgr();
-confNameList=crm.deployConfTemplate('*');
-confNameList=setdiff(confNameList,{'default'});
 crmSys=gras.ellapx.uncertmixcalc.test.conf.sysdef.ConfRepoMgr();
+%
+[reg,suitePropList]=modgen.common.parseparams(restArgList);
+if ~isempty(reg)
+    confNameList=reg{1};
+    if ischar(confNameList)
+        confNameList={confNameList};
+    end
+else
+    confNameList=crm.deployConfTemplate('*');
+    confNameList=setdiff(confNameList,{'default'});
+end
+%
 crmSys.deployConfTemplate('*');
 nConfs=length(confNameList);
 %
@@ -55,8 +53,8 @@ for iConf=1:nConfs
 end
 %
 testLists=cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
-suite=mlunitext.test_suite(horzcat(testLists{:}));
-suite=suite.getCopyFiltered(varargin{:});
+suite=mlunitext.test_suite(horzcat(testLists{:}),suitePropList{:});
+suite=suite.getCopyFiltered(filterProp{:});
 %
 resList{1}=runner.run(suite);
 %

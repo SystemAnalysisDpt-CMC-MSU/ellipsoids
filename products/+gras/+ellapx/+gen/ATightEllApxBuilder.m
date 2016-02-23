@@ -19,7 +19,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
         absTol
     end
     properties (Constant,GetAccess=private)
-        MAX_PRECISION_FACTOR=0.003;
+        MAX_PRECISION_FACTOR=0.002;
     end
     methods (Access=protected)
         function sMat=getOrthTranslMatrix(self,QMat,RSqrtMat,bVec,aVec)
@@ -99,7 +99,9 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             end
             nDims=pDefObj.getDimensionality;
             precisionFactor=min(2./(nDims*nDims),...
-                ATightEllApxBuilder.MAX_PRECISION_FACTOR);
+                ATightEllApxBuilder.MAX_PRECISION_FACTOR)*...
+                (100/nTimePoints);
+            %
             self.odeAbsCalcPrecision=absTol*precisionFactor;
             self.odeRelCalcPrecision=relTol*precisionFactor;
             self.relTol=relTol;

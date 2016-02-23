@@ -9,12 +9,15 @@ function results=run_regr_tests(varargin)
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
-
+%
 [restArgList,~,prop]=modgen.common.parseparext(varargin,...
     {'reCache';false;'islogical(x)'},[],'propRetMode','list');
+%
 [restArgList,~,filterProp]=modgen.common.parseparext(restArgList,...
     {'filter';{}});
+%
 [reg,suitePropList]=modgen.common.parseparams(restArgList);
+%
 if ~isempty(reg)
     confNameList=reg{1};
     if ischar(confNameList)

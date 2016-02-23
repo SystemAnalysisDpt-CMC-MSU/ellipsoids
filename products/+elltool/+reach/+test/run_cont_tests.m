@@ -1,35 +1,27 @@
 function results = run_cont_tests(varargin)
-% RUN_CONT_TESTS runs tests based on specified patters
-% for markers, test cases, tests names
-%
-% Input:
-%   optional:
-%       markerRegExp: char[1,] - regexp for marker AND/OR configuration
-%           names, default is '.*' which means 'all cofigs'
-%       testCaseRegExp: char[1,] - regexp for test case names, same default
-%       testRegExp: char[1,] - regexp for test names, same default
-%
-% Output:
-%   results: mlunitext.text_test_run[1,1] - test result
-%
 % Example:
 %
-%   elltool.reach.test.run_cont_tests('demo3firstTest',...
-%       'elltool.reach.test.mlunit.ContinuousReachTestCase','testCut')  
+%   elltool.reach.test.run_cont_tests('filter',{'demo3firstTest',...
+%       'elltool.reach.test.mlunit.ContinuousReachTestCase','testCut'})  
 %
-%   elltool.reach.test.run_cont_tests('.*',...
-%       'elltool.reach.test.mlunit.ContinuousReachTestCase','testCut')
+%   elltool.reach.test.run_cont_tests('filter',{'.*',...
+%       'elltool.reach.test.mlunit.ContinuousReachTestCase','testCut'})
 %
-%   elltool.reach.test.run_cont_tests('_IsBackTrueIsEvolveFalse',...
-%       '.*','testCut')
+%   elltool.reach.test.run_cont_tests('filter',{'_IsBackTrueIsEvolveFalse',...
+%       '.*','testCut'},'nParallelProcesses',8)
 %
 % $Authors: Peter Gagarinov <pgagarinov@gmail.com>
-% $Date: March-2013 $
+% $Date: March-2016 $
 % $Copyright: Moscow State University,
 %             Faculty of Computational Mathematics
 %             and Computer Science,
-%             System Analysis Department 2012-2013$
+%             System Analysis Department 2012-2016$
 import elltool.reach.ReachFactory;
+%
+%
+[restArgList,~,filterPropList]=modgen.common.parseparext(varargin,...
+    {'filter';{}});
+[~,suitePropList]=modgen.common.parseparams(restArgList,[],0);
 %
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
@@ -130,22 +122,7 @@ for iConf = 1:nConfs
     end
     %
     suiteList{end + 1} = loader.load_tests_from_test_case(...
-        'elltool.reach.test.mlunit.ContinuousReachTestNTimeGridPoints',...
-        ReachFactory(confName, crm, crmSys, false, false),...
-        'marker',[confName,'_IsBackFalseIsEvolveFalse']);
-    %
-    suiteList{end + 1} = loader.load_tests_from_test_case(...
-        'elltool.reach.test.mlunit.ContinuousReachTestNTimeGridPoints',...
-        ReachFactory(confName, crm, crmSys, true, false),...
-        'marker',[confName,'_IsBackTrueIsEvolveFalse']);
-    %
-    suiteList{end + 1} = loader.load_tests_from_test_case(...
-        'elltool.reach.test.mlunit.ContinuousReachTestNTimeGridPoints',...
-        ReachFactory(confName, crm, crmSys, false, true),...
-        'marker',[confName,'_IsBackFalseIsEvolveTrue']);
-    %
-    suiteList{end + 1} = loader.load_tests_from_test_case(...
-        'elltool.reach.test.mlunit.ContinuousReachTestNTimeGridPoints',...
+        'elltool.reach.test.mlunit.ContReachTestNTimeGridPoints',...
         ReachFactory(confName, crm, crmSys, true, true),...
         'marker',[confName,'_IsBackTrueIsEvolveTrue']);
 end
@@ -154,6 +131,6 @@ suiteList{end + 1} = loader.load_tests_from_test_case(...
 %%
 testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 testList=horzcat(testLists{:});
-suite = mlunitext.test_suite(testList);
-suite=suite.getCopyFiltered(varargin{:});
+suite = mlunitext.test_suite(testList,suitePropList{:});
+suite=suite.getCopyFiltered(filterPropList{:});
 results = runner.run(suite);
