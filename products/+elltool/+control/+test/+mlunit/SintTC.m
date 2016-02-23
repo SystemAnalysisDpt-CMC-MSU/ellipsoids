@@ -11,11 +11,11 @@ classdef SintTC < mlunitext.test_case
         inPointList
         outPointList
         isReCache
-        timeoutInSeconds
+        timeoutForTrajCalc
     end
     %
     methods (Abstract,Access=public)
-        controlObj=getControlBuilder(self,timeout)
+        controlObj=getControlBuilder(self,varargin)
     end
     %
     methods (Access=protected)
@@ -48,9 +48,9 @@ classdef SintTC < mlunitext.test_case
         %
         function self=set_up_param(self,reachFactObj,inPointVecList,...
                 outPointVecList,varargin)
-            [~,~,self.isReCache,self.timeoutInSeconds]=...
+            [~,~,self.isReCache,self.timeoutForTrajCalc]=...
                 modgen.common.parseparext(varargin,...
-                    {'reCache','timeout';...
+                    {'reCache','TimeoutForTrajCalc';...
                     false,0;...
                     'islogical(x)','isscalar(x)'},0);
             %
@@ -82,12 +82,12 @@ classdef SintTC < mlunitext.test_case
                 x0Vec=transpose(x0Vec);
                 isX0inSet=false;
                 %
-                if self.timeoutInSeconds == 0
+                if self.timeoutForTrajCalc == 0
                     controlBuilderObj=...
                         self.getControlBuilder();
                 else
                     controlBuilderObj=...
-                        self.getControlBuilder(self.timeoutInSeconds);
+                        self.getControlBuilder(self.timeoutForTrajCalc);
                 end
                 controlObj=controlBuilderObj.getControlObj(x0Vec);
                 if ~all(size(x0Vec)==size(intEllTube.aMat{1}(:,1)))

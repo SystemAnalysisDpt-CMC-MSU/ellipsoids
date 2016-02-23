@@ -110,14 +110,19 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                 AMat=self.probDynamicsList{iSwitchBack}.getAtDynamics();
                 %
                 timeMarker=tic;
-                [curTrajEvalTimeVec,curTrajectoryMat]=ode45(@(t,y)ode(t,y,AMat,...
-                    self.controlVectorFunct,tStart,tFin,iSwitch),...
-                    [tStart tFin],x0Vec.',SOptions);
+                [curTrajEvalTimeVec,curTrajectoryMat,indTimeoutVec]=...
+                    ode45(@(t,y)ode(t,y,AMat,self.controlVectorFunct,...
+                            tStart,tFin,iSwitch),...
+                        [tStart tFin],x0Vec.',SOptions);
+                isTimeoutHappened=~isempty(indTimeoutVec);
                 %
                 q1Vec=self.properEllTube.aMat{1}(:,indFin);
                 q1Mat=self.properEllTube.QArray{1}(:,:,indFin);
                 %
-                if isX0inSet
+                if isTimeoutHappened
+                    throwerror('TestFails',...
+                        'Timeout of calculating the trajectory');
+                elseif isX0inSet
                     currentScalProd=dot(curTrajectoryMat(end,:).'-q1Vec,...
                         q1Mat\(curTrajectoryMat(end,:).'-q1Vec));
                     %

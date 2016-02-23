@@ -5,7 +5,7 @@ classdef ContControlBuilder
         probDynamicsList
         goodDirSetList
         switchSysTimeVec
-        timeout
+        timeoutForTrajCalc
     end
     %
     methods
@@ -21,14 +21,19 @@ classdef ContControlBuilder
             %           approximations for some continuous time system. It
             %           is expected that a reachability tube in reachContObj
             %           is calculated in a backward time
+            %   optional:
+            %       TimeoutForTrajCalc: double[1,1] - timeout in seconds
+            %       for calculation of trajectory on each interval between
+            %       switches
             %
             % $Author: Komarov Yuri <ykomarov94@gmail.com> $
             % $Date: 2015-30-10 $
             %
             import modgen.common.throwerror;
             DEFAULT_TIMEOUT_IN_SECONDS=15;
-            [~,~,self.timeout]=modgen.common.parseparext(varargin,... 
-                {'Timeout';DEFAULT_TIMEOUT_IN_SECONDS});
+            [~,~,self.timeoutForTrajCalc]=modgen.common.parseparext(... 
+                varargin,...
+                {'TimeoutForTrajCalc';DEFAULT_TIMEOUT_IN_SECONDS});
             self.switchSysTimeVec=reachContObj.getSwitchTimeVec();
             ellTubeRel=reachContObj.getEllTubeRel();
             self.intEllTube=ellTubeRel.getTuplesFilteredBy('approxType',...
@@ -105,7 +110,7 @@ classdef ContControlBuilder
             %
             controlFuncObj=elltool.control.ContSingleTubeControl(...
                 properEllTube,properProbDynList,properGoodDirSetList,...
-                self.switchSysTimeVec,indWithoutX,self.timeout);
+                self.switchSysTimeVec,indWithoutX,self.timeoutForTrajCalc);
             %
             function properProbDynList=getProperProbDynList(indTube)
                 properProbDynList=cellfun(@(x)(x{min(indTube,numel(x))}),...
