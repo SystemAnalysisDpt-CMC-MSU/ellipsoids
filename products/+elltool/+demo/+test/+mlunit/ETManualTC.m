@@ -1,11 +1,22 @@
 classdef ETManualTC < mlunitext.test_case
+    properties (Access=private)
+        originalNTimeGridPoints
+    end
     methods
         function self=ETManualTC(varargin)
             self=self@mlunitext.test_case(varargin{:});
         end
-        function self = set_up_param(self,varargin)
-            
+        %
+        function set_up(self)
+            import elltool.conf.Properties;
+            self.originalNTimeGridPoints = Properties.getNTimeGridPoints();
         end
+        %
+        function tear_down(self)
+            import elltool.conf.Properties;
+            Properties.setNTimeGridPoints(self.originalNTimeGridPoints);
+        end
+        %
         function self = testBasic(self)
             currentDir = fileparts(which(mfilename('class')));
             rootDir = modgen.path.rmlastnpathparts(currentDir, 5);
