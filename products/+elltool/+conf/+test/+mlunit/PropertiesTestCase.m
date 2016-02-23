@@ -9,6 +9,7 @@ classdef PropertiesTestCase < mlunitext.test_case
 %
     properties (Access=private)
         confName
+        originalNTimeGridPoints
     end
     %
     methods 
@@ -16,6 +17,16 @@ classdef PropertiesTestCase < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
             self.confName=className;     
+        end
+        %
+        function set_up(self)
+            import elltool.conf.Properties;
+            self.originalNTimeGridPoints = Properties.getNTimeGridPoints();
+        end
+        %
+        function tear_down(self)
+            import elltool.conf.Properties;
+            Properties.setNTimeGridPoints(self.originalNTimeGridPoints);
         end
         %
         function self = testGetAndSet(self)
