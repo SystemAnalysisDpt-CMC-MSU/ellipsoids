@@ -4,18 +4,17 @@ classdef PrameterizedTC < mlunitext.test_case
     end
     methods (Access=private)
         function objCVec = createObjCVec(self,centCVec,varargin)
-            matCVec=repmat(num2cell(eye(numel(centCVec{1})),...
-                [1,2]),1,numel(centCVec));
+            matCVec=repmat({eye(numel(centCVec{1}))},1,numel(centCVec));
             if numel(varargin)==0
-                fCrObVec = @(cent,mat,tol) self.fCreateObj(cent,mat);
-                objCVec=cellfun(fCrObVec,centCVec,matCVec,...
-                    'UniformOutput',false);
+                fCrObVec=@(centVec,shapeMat)...
+                    self.fCreateObj(centVec,shapeMat);
             else
-                fCrObVec = @(cent,mat,tol) self.fCreateObj(cent,mat,...
-                    'absTol',tol(1),'relTol',tol(2));
-                objCVec=cellfun(fCrObVec,centCVec,matCVec,varargin{:},...
-                    'UniformOutput',false);
+                fCrObVec=@(centVec,shapeMat,absTol,relTol)...
+                    self.fCreateObj(centVec,shapeMat,...
+                    'absTol',absTol,'relTol',relTol);
             end
+            objCVec=cellfun(fCrObVec,centCVec,matCVec,varargin{:},...
+                    'UniformOutput',false);
         end
     end
     methods
@@ -25,8 +24,7 @@ classdef PrameterizedTC < mlunitext.test_case
         %
         function set_up_param(self, varargin)
             import modgen.common.throwerror;
-            nArgs = numel(varargin);
-            if nArgs == 1
+            if nargin == 2
                 self.fCreateObj=varargin{1};
             elseif nArgs > 1
                 throwerror('wrongInput','Too many parameters');
@@ -34,22 +32,22 @@ classdef PrameterizedTC < mlunitext.test_case
         end
         
         function testIsEqualSymProp(self)
-            % test symmetry property
+            %test symmetry property
             defTol=min(getDefTol());
-            tolCVec=num2cell([10*defTol,defTol;10*defTol,defTol],1);
-            centCVec=num2cell([0,tolCVec{1}(1);1,1],1);
-            testObjCVec=self.createObjCVec(centCVec,tolCVec);
+            tolVec={10*defTol,defTol}; %absTolVec=relTolVec=tolVec
+            centCVec={[0;1],[tolVec{1};1]};
+            testObjCVec=self.createObjCVec(centCVec,tolVec,tolVec);
             checkForIsEqual(testObjCVec{2},testObjCVec{1},...
                 isEqual(testObjCVec{1},testObjCVec{2}));
         end
         
         function testIsEqualTransProp(self)
-            % test transitive property
+            %test transitive property
             defTol=min(getDefTol());
-            tolCVec=num2cell([10*defTol,100*defTol,defTol;10*defTol,...
-                100*defTol,defTol],1);
-            centCVec=num2cell([0,tolCVec{1}(1),tolCVec{2}(1);1,1,1],1);
-            testObjCVec=self.createObjCVec(centCVec,tolCVec);
+            %absTolVec=relTolVec=tolVec
+            tolVec={10*defTol,100*defTol,defTol};
+            centCVec={[0;1],[tolVec{1};1],[tolVec{2};1]};
+            testObjCVec=self.createObjCVec(centCVec,tolVec,tolVec);
             checkForIsEqual(testObjCVec{1},testObjCVec{3},...
                 isEqual(testObjCVec{1},testObjCVec{2})&&...
                 isEqual(testObjCVec{2},testObjCVec{3}))
@@ -57,35 +55,36 @@ classdef PrameterizedTC < mlunitext.test_case
         
         function testIsEqualAbsTolRepByRelTol(self)
             %test captures that absTol replaced by relTol
-            defTolVec=getDefTol();
-            if defTolVec(1)~=defTolVec(2)
-                if defTolVec(1)<defTolVec(2)
-                    centCVec=num2cell([0,defTolVec(2);1,1],1);
-                    expResIsEqual=false;
+            [defAbsTol,defRelTol]=getDefTol();
+            if defAbsTol~=defRelTol
+                if defAbsTol<defRelTol
+                    centCVec={[0;1],[defRelTol;1]};
+                    isExpResIsEqual=false;
                 else
-                    centCVec=num2cell([0,defTolVec(1);1,1],1);
-                    expResIsEqual=true;
+                    centCVec={[0;1],[defAbsTol;1]};
+                    isExpResIsEqual=true;
                 end
                 testObjCVec=createObjCVec(self,centCVec);
             else
-                defTol=min(getDefTol());
-                tolCVec=num2cell([defTol,defTol;...
-                    10*defTol,10*defTol],1);
-                centCVec=num2cell([0,10*defTol;1,1],1);
-                testObjCVec=self.createObjCVec(centCVec,tolCVec);
-                expResIsEqual=false;
+                absTolVec={defAbsTol,defAbsTol};
+                relTolVec={10*defAbsTol,10*defAbsTol};
+                centCVec={[0;1],[relTolVec{1};1]};
+                testObjCVec=self.createObjCVec...
+                    (centCVec,absTolVec,relTolVec);
+                isExpResIsEqual=false;
             end
-            checkForIsEqual(testObjCVec{1},testObjCVec{2},expResIsEqual)
+            checkForIsEqual(testObjCVec{1},testObjCVec{2},isExpResIsEqual)
         end
     end
 end
 
-function defTolVec = getDefTol()
-defTolVec = [elltool.conf.Properties.getAbsTol();elltool.conf.Properties.getRelTol()];
+function [defAbsTol,defRelTol] = getDefTol()
+defAbsTol=elltool.conf.Properties.getAbsTol();
+defRelTol=elltool.conf.Properties.getRelTol();
 end
 
-function checkForIsEqual(testEll1Vec,testEll2Vec,expectResult)
+function checkForIsEqual(testEll1Vec,testEll2Vec,isExpResIsEqual)
 [isOkArr, reportStr]=isEqual(testEll1Vec,testEll2Vec);
-isOk=all(isOkArr(:)==expectResult(:));
+isOk=all(isOkArr(:)==isExpResIsEqual(:));
 mlunitext.assert(isOk,reportStr);
 end

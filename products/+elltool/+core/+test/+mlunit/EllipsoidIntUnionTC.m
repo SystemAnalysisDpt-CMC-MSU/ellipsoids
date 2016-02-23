@@ -29,12 +29,12 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
                 mlunitext.assert_equals(varargin{2:end});
             end;
         end;
-%         
+        
         function self = testEllUnionEaSensitivity(self)
             import elltool.conf.Properties;
             self.setUpCheckSettings();
-            absTol = Properties.getAbsTol();
-            sensEPS = 0.5*absTol;
+            relTol = Properties.getAbsTol();
+            sensEPS = 0.5*relTol;
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllunionEa_inp.mat')), 'testEllCenterVec', ...
                 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
@@ -60,8 +60,8 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
         function self = testEllIntersectionIaSensitivity(self)
             import elltool.conf.Properties;
             self.setUpCheckSettings();
-            absTol = Properties.getAbsTol();
-            sensEPS = absTol;
+            relTol = Properties.getAbsTol();
+            sensEPS = relTol;
             
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllintersectionIa_inp.mat')), 'testEllCenterVec', ...
@@ -137,21 +137,41 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             test2SqrtMat = eye(2) + 1.01*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
             [isEq, reportStr] = isEqual(ellipsoid(test1Mat), ellipsoid(test2Mat));
-            mlunitext.assert_equals(false,isEq,reportStr);
+            mlunitext.assert_equals(false, isEq);
+            ansStr = ...
+                '\(1).QSqrt-->.*\(2).*tolerance.\(1.000000.*e\-05).*';
+            ansAltStr=ansStr;
+            checkRep();
             %            
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + 0.5*MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
             [isEq, reportStr] = isEqual(ellipsoid(test1Mat),...
                 ellipsoid(test2Mat));
-            mlunitext.assert_equals(true,isEq,reportStr);
+            mlunitext.assert_equals(true, isEq);
+            ansStr = '';
+            checkRep();
             %
             test1Mat = eye(2);
             test2SqrtMat = eye(2) + MAX_TOL;
             test2Mat = test2SqrtMat*test2SqrtMat.';
             [isEq, reportStr] = isEqual(ellipsoid(test1Mat),...
                 ellipsoid(test2Mat));
-            mlunitext.assert_equals(false, isEq,reportStr);
+            mlunitext.assert_equals(false, isEq);
+            mlunitext.assert_equals(false, isEq);
+            ansStr = ...
+                '\(1).QSqrt-->.*\(2).*tolerance.\(1.000000.*e\-05).*';
+            ansAltStr=ansStr;
+            %
+            checkRep();
+            function checkRep()
+                isRepEq = isequal(reportStr, ansStr);
+                if ~isRepEq
+                    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'))||...
+                        ~isempty(regexp(reportStr, ansAltStr, 'once'));
+                end
+                mlunitext.assert_equals(isRepEq, true);
+            end
         end
         
         function testIsInternalCenter(~)
@@ -579,7 +599,6 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             self.flexAssert(true, doesContain(resEllVec, testEllVec(2)));
             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
             self.flexAssert(true, isEq, reportStr);
-            
             clear testEllVec;
             nDim = 15;
             load(strcat(self.testDataRootDir, strcat(filesep,...
@@ -777,7 +796,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             resEllVec = ell_enclose(pointsVec);
             ansEllVec = ellipsoid([0, 0, 0].', eye(3));
             [isEq, reportStr] = isEqual(resEllVec, ansEllVec);
-            mlunitext.assert_equals(true, isEq, reportStr);            
+            mlunitext.assert_equals(true, isEq, reportStr);
+            
         end
-    end
+%         
+     end
+    
 end

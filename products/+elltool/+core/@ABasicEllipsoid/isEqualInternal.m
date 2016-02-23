@@ -21,11 +21,11 @@ secSizeVec = size(ellSecArr);
 isnFirstScalar=nFirstElems > 1;
 isnSecScalar=nSecElems > 1;
 %
-tolVec=getTol(ellFirstArr,ellSecArr);
+[absTol,relTol]=getTol(ellFirstArr,ellSecArr);
 %
 [SEll1Array, SFieldNiceNames, ~, SFieldTransformFunc] = ...
-    ellFirstArr.toStruct(isPropIncluded,tolVec(1));
-SEll2Array = ellSecArr.toStruct(isPropIncluded,tolVec(1));
+    ellFirstArr.toStruct(isPropIncluded,absTol);
+SEll2Array = ellSecArr.toStruct(isPropIncluded,absTol);
 %
 SEll1Array = arrayfun(@(SEll)formCompStruct(SEll,...
     SFieldNiceNames,SFieldTransformFunc), SEll1Array);
@@ -52,7 +52,7 @@ end
     function compare()
         [isEqualArr, reportStr] =...
             modgen.struct.structcomparevec(SEll1Array,...
-            SEll2Array, tolVec(1), tolVec(2));
+            SEll2Array, absTol, relTol);
     end
 end
 
@@ -72,8 +72,8 @@ for iField=1:nFields
 end
 end
 
-function tolVec=getTol(ellFirstArr,ellSecArr)
+function [absTol,relTol]=getTol(ellFirstArr,ellSecArr)
     ellArr=[ellFirstArr(:);ellSecArr(:)];
-    [~,tolVec(1)]=ellArr.getAbsTol();
-    [~,tolVec(2)]=ellArr.getRelTol();
+    [~,absTol]=ellArr.getAbsTol();
+    [~,relTol]=ellArr.getRelTol();
 end

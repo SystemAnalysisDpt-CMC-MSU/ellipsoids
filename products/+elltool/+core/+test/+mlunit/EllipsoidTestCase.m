@@ -850,25 +850,25 @@ classdef EllipsoidTestCase < mlunitext.test_case
             isTestRes = all(isTestEqMat(:));
             mlunitext.assert_equals(true, isTestRes);
         end
-        %
+%         %
         function self = testEq(self)
             import elltool.conf.Properties;
             MAX_TOL = Properties.getAbsTol();
             
             testMat = eye(2);
-            checkEllEqual(ellipsoid(testMat), ellipsoid(testMat), true);
+            checkEllEqual(ellipsoid(testMat), ellipsoid(testMat), true, '');
             
             test1Mat = eye(2);
             test2Mat = eye(2) + MAX_TOL;
-            checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true);
+            checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true, '');
             
             test1Mat = eye(2);
             test2Mat = eye(2) - 0.99*MAX_TOL;
-            checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true);
+            checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true, '');
             
             test1Mat = 100*eye(2);
             test2Mat = 100*eye(2) - 0.99*MAX_TOL;
-            checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true);
+            checkEllEqual(ellipsoid(test1Mat), ellipsoid(test2Mat), true, '');
             %
             %test for maxTolerance
             firstMat = eye(2);
@@ -905,35 +905,48 @@ classdef EllipsoidTestCase < mlunitext.test_case
             [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(1);
             
             
-            checkEllEqual(testEllHighDim1, testEllHighDim1, true);
+            checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
-            checkEllEqual(testEllHighDim1, testEllHighDim2, false);
+            checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
+                '\(1).QSqrt-->.*\(1.07335.*).*tolerance.\(1.00000.*e\-05)');
             
             [testEllHighDim1 testEllHighDim2] = createTypicalHighDimEll(2);
-            checkEllEqual(testEllHighDim1, testEllHighDim1, true);
+            checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
             
-            checkEllEqual(testEllHighDim1, testEllHighDim2, false);
+            checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
+                '\(1).QSqrt-->.*\(1.07335.*).*tolerance.\(1.00000.*e\-05)');
             
             [testEllHighDim1, testEllHighDim2] = createTypicalHighDimEll(3);
-            checkEllEqual(testEllHighDim1, testEllHighDim1, true);
+            checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
             
-            checkEllEqual(testEllHighDim1, testEllHighDim2, false);
+            checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
+                '\(1).QSqrt-->.*\(1.07335.*).*tolerance.\(1.00000.*e\-05)');
             
             
-            checkEllEqual(testEllipsoid1, testEllipsoid1, true);
+            checkEllEqual(testEllipsoid1, testEllipsoid1, true, '');
             
-            checkEllEqual(testEllipsoid2, testEllipsoid1, false);
+            checkEllEqual(testEllipsoid2, testEllipsoid1, false, ...
+                '\(1).q-->.*\(2.*).*tolerance.\(1.00000.*e\-05)');
             
-            checkEllEqual(testEllipsoid3, testEllipsoid2, false);
+            checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
+                '\(1).QSqrt-->.*\(3.4314.*e\-01).*tolerance.\(1.00000.*e\-05)',...
+                '\(1).QSqrt-->.*\(0.34314.*).*tolerance.\(1.00000.*e\-05)');
             
-            checkEllEqual(testEllipsoid3, testEllipsoid2, false);
             
-            checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false);
+            checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
+                '\(1).QSqrt-->.*\(3.4314.*e\-01).*tolerance.\(1.00000.*e\-05)',...
+                '\(1).QSqrt-->.*\(0.34314.*).*tolerance.\(1.00000.*e\-05)');
             
-            checkEllEqual(testEllipsoidZeros2, testEllipsoidEmpty, false);
+            ansStr = sprintf('(1).QSqrt-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
+            checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
             
-            checkEllEqual(testEllipsoidEmpty, testEllipsoidEmpty, true);
+            
+            ansStr = sprintf('(1).QSqrt-->Different sizes (left: [2 2], right: [0 0])\n(1).q-->Different sizes (left: [2 1], right: [0 0])');
+            checkEllEqual(testEllipsoidZeros2, testEllipsoidEmpty, false, ansStr);
+            
+            
+            checkEllEqual(testEllipsoidEmpty, testEllipsoidEmpty, true, '');
             
             testNotEllipsoid = [];
             %'==: both arguments must be ellipsoids.'
@@ -941,10 +954,13 @@ classdef EllipsoidTestCase < mlunitext.test_case
             
             %'==: sizes of ellipsoidal arrays do not match.'
             self.runAndCheckError('eq([testEllipsoidEmpty testEllipsoidEmpty], [testEllipsoidEmpty; testEllipsoidEmpty])','wrongSizes');
-           
-            checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true]);
+            
+            
+            
+            ansStr = sprintf('(1).QSqrt-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
+            checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr);
         end
-        %
+%         %
         function self = testNe(self)
             [testEllipsoid1 testEllipsoid2 testEllipsoid3 testEllipsoidZeros2 testEllipsoidZeros3 ...
                 testEllipsoidEmpty] = createTypicalEll(1);
@@ -1407,7 +1423,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
         end
     end
 end
-%
+
 function fCheckForTestEllipsoidAndDouble(qCenterVec, qShapeMat)
 if nargin < 2
     qShapeMat = qCenterVec;
@@ -1425,8 +1441,7 @@ catch
 end
 isTestRes = all(isTestCVec(:)) && all(isTestEyeMat(:));
 mlunitext.assert_equals(true, isTestRes);
-    end
-
+end
 %
 function fCheckForTestParameters(qCenterVec, qShapeMat)
 if nargin < 2
@@ -1512,7 +1527,7 @@ y'*qi2Mat*y + 2*(-qi2Mat*cen2Vec)'*y + (cen2Vec'*qi2Mat*cen2Vec - 1) <= 0
 cvx_end
 distEllEll = sqrt(fDist);
 end
-%
+% %
 function [varargout] = createTypicalEll(flag)
 switch flag
     case 1
@@ -1531,13 +1546,22 @@ switch flag
         varargout{4} = ellipsoid;
     otherwise
 end
+ end
+% %
+function checkEllEqual(testEll1Vec, testEll2Vec, isEqRight, ansStr,ansAltStr)
+if nargin<5
+    ansAltStr=ansStr;
 end
-%
-function checkEllEqual(testEll1Vec, testEll2Vec, isEqRight)
-    [isEq, reportStr] = isEqual(testEll1Vec, testEll2Vec);
-    mlunitext.assert_equals(isEq, isEqRight, reportStr);
+[isEq, reportStr] = isEqual(testEll1Vec, testEll2Vec);
+mlunitext.assert_equals(isEq, isEqRight);
+isRepEq = isequal(reportStr, ansStr);
+if ~isRepEq
+    isRepEq = ~isempty(regexp(reportStr, ansStr, 'once'))||...
+        ~isempty(regexp(reportStr, ansAltStr, 'once'));
 end
-%
+mlunitext.assert_equals(isRepEq, true);
+end
+% %
 function [varargout] = createTypicalHighDimEll(flag)
 switch flag
     case 1
