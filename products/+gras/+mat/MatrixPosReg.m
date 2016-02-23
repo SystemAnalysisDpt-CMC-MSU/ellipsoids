@@ -23,12 +23,12 @@ classdef MatrixPosReg < gras.mat.IMatrixFunction
             nRows = self.matFunc.getNRows();
         end
         function resArray=evaluate(self, timeVec)
-            UNIFORM_OUTPUT = true;
-            KEEP_SIZE = true;
+            IS_UNIFORM_OUTPUT = true;
+            IS_SIZE_KEPT = true;
             resArray = self.matFunc.evaluate(timeVec);
             resArray = gras.gen.SquareMatVector.evalMFuncParams(...
                 @(x) gras.la.regposdefmat(x, self.regTol), resArray,...
-                UNIFORM_OUTPUT, KEEP_SIZE);
+                IS_UNIFORM_OUTPUT, IS_SIZE_KEPT);
         end
     end
 end

@@ -6,6 +6,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
         probDynamicsList
         goodDirSetList
         downScaleKoeff
+        ellTubeTimeVec
         bigQInterpObj
         aInterpObj
     end
@@ -39,25 +40,25 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             % $Date: 2015-30-10 $
             %
             if properEllTube.getNTuples()~=1
-                modgen.common.throwerror(['properEllTube must have'...
-                    'only 1 tuple']);
+                modgen.common.throwerror('wrongInput',...
+                    'properEllTube must have only 1 tuple');
             end
             self.properEllTube=properEllTube;
             self.probDynamicsList=probDynamicsList;
             self.goodDirSetList=goodDirSetList;
             self.downScaleKoeff=inDownScaleKoeff;
-            timeSpanVec=self.properEllTube.timeVec{1};
+            self.ellTubeTimeVec=self.properEllTube.timeVec{1};
             bigQArray=self.properEllTube.QArray{1}(:,:,:);
             self.bigQInterpObj=...
                 gras.mat.interp.MatrixInterpolantFactory.createInstance(...
-                'posdef_chol',bigQArray,timeSpanVec);
+                'posdef_chol',bigQArray,self.ellTubeTimeVec);
             aMat=self.properEllTube.aMat{1};
             self.aInterpObj=...
                 gras.mat.interp.MatrixInterpolantFactory.createInstance(...
-                'column',aMat,timeSpanVec);
+                'column',aMat,self.ellTubeTimeVec);
         end
         %
-        function resVec=evaluate(self,xVec,tVal)
+        function resVec=evaluate(self,xVec,tVal,indSwitch)
             % EVALUATE evaluates control synthesis for predetermined
             % position (t,x)
             %
@@ -76,16 +77,14 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             % $Author: Komarov Yuri <ykomarov94@gmail.com> $
             % $Date: 2015-30-10 $
             %
-            indSwitch=getIndexOfSwitchTime(tVal);
             t0=getBeginOfSwitchTimeSpan(indSwitch);
             t1=getEndOfSwitchTimeSpan(indSwitch);
             curProbDynObj=self.probDynamicsList{indSwitch};
             curGoodDirSetObj=self.goodDirSetList{indSwitch};
             %
-            ellTubeTimeVec=self.properEllTube.timeVec{1};
-            indTime=sum(ellTubeTimeVec <= tVal);
+            indTime=sum(self.ellTubeTimeVec <= tVal);
             % TODO: check if indTime == 0
-            if ellTubeTimeVec(indTime) < tVal
+            if self.ellTubeTimeVec(indTime) < tVal
                 qVec = self.aInterpObj.evaluate(tVal);
                 qMat=self.bigQInterpObj.evaluate(tVal);
             else %ellTubeTimeVec(indTime) == curControlTime

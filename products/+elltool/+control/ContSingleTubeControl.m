@@ -57,7 +57,7 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
         end
 
 
-        function [trajEvalTime,trajectory]=...
+        function [trajEvalTimeVec,trajectoryMat]=...
                     getTrajectory(self,x0Vec)
             % GETTRAJECTORY returns a trajectory corresponding
             % to constructed control synthesis 
@@ -69,10 +69,10 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             %           the syntesis is to be constructed from
             %
             % Output:
-            %   trajEvalTime: double[1,] - time vector, corresponding to
+            %   trajEvalTimeVec: double[1,] - time vector, corresponding to
             %       constructed trajectory
             %
-            %   trajectory: double[nDims,] where nDims is a
+            %   trajectoryMat: double[nDims,] where nDims is a
             %       dimentionality of the phase space - trajectory, that
             %       corresponds to constructed control synthesis
             %
@@ -83,8 +83,8 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             ERR_TOL=1e-4;
             relTol=elltool.conf.Properties.getRelTol();
             absTol=elltool.conf.Properties.getAbsTol();
-            trajectory=[];
-            trajEvalTime=[];
+            trajectoryMat=[];
+            trajEvalTimeVec=[];
             switchTimeVecLength=length(self.switchSysTimeVec);
             self.logger.info(...
                 sprintf('%d switches found',switchTimeVecLength)...
@@ -107,19 +107,19 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                 tFin=self.switchSysTimeVec(iSwitch+1);
                 %
                 indFin=find(self.properEllTube.timeVec{1}==tFin);
-                AtMat=self.probDynamicsList{iSwitchBack}.getAtDynamics();
+                AMat=self.probDynamicsList{iSwitchBack}.getAtDynamics();
                 %
                 timeMarker=tic;
-                [curTrajEvalTime,odeResMat]=ode45(@(t,y)ode(t,y,AtMat,...
-                    self.controlVectorFunct,tFin,tStart),[tStart tFin],...
-                    x0Vec.',SOptions);
+                [curTrajEvalTimeVec,curTrajectoryMat]=ode45(@(t,y)ode(t,y,AMat,...
+                    self.controlVectorFunct,tStart,tFin,iSwitch),...
+                    [tStart tFin],x0Vec.',SOptions);
                 %
                 q1Vec=self.properEllTube.aMat{1}(:,indFin);
                 q1Mat=self.properEllTube.QArray{1}(:,:,indFin);
                 %
                 if isX0inSet
-                    currentScalProd=dot(odeResMat(end,:).'-q1Vec,...
-                        q1Mat\(odeResMat(end,:).'-q1Vec));
+                    currentScalProd=dot(curTrajectoryMat(end,:).'-q1Vec,...
+                        q1Mat\(curTrajectoryMat(end,:).'-q1Vec));
                     %
                     if currentScalProd > 1+ERR_TOL
                         throwerror('TestFails', ['the result of test '...
@@ -133,15 +133,16 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                     end
                 end
                 %
-                x0Vec=odeResMat(end,:);
-                trajectory=vertcat(trajectory,odeResMat);
-                trajEvalTime=vertcat(trajEvalTime,curTrajEvalTime);
+                x0Vec=curTrajectoryMat(end,:);
+                trajectoryMat=vertcat(trajectoryMat,curTrajectoryMat);
+                trajEvalTimeVec=...
+                    vertcat(trajEvalTimeVec,curTrajEvalTimeVec);
             end
             %
-            function dyMat=ode(time,yMat,AtMat,controlFuncVec,...
-                    tFin,tStart)
-               dyMat = -AtMat.evaluate(tFin-time+tStart)*yMat + ...
-                   controlFuncVec.evaluate(yMat,time);
+            function dyMat=ode(tVal,yMat,AMat,controlFuncVec,...
+                    tStart,tFin,indSwitch)
+               dyMat = -AMat.evaluate(tFin-tVal+tStart)*yMat + ...
+                   controlFuncVec.evaluate(yMat,tVal,indSwitch);
             end
             %
             function [value,isTerminal,direction]=stopByTimeout(T,Y)
