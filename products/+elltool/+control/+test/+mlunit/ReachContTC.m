@@ -3,9 +3,9 @@ classdef ReachContTC<elltool.control.test.mlunit.SintTC
         function self=ReachContTC(varargin)
             self=self@elltool.control.test.mlunit.SintTC(varargin{:});
         end
-        function controlObj=getControlBuilder(self,timeout)
-            controlObj=elltool.control.ContControlBuilder(self.reachObj,...
-                'Timeout',timeout);
+        function controlObj=getControlBuilder(self,varargin)
+            controlObj=...
+                elltool.control.ContControlBuilder(self.reachObj,varargin);
         end
     end
 end

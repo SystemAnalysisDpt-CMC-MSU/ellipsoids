@@ -11,6 +11,7 @@ classdef SintTC < mlunitext.test_case
         inPointList
         outPointList
         isReCache
+        timeoutInSeconds
     end
     %
     methods (Abstract,Access=public)
@@ -47,8 +48,11 @@ classdef SintTC < mlunitext.test_case
         %
         function self=set_up_param(self,reachFactObj,inPointVecList,...
                 outPointVecList,varargin)
-            [~,~,self.isReCache]=modgen.common.parseparext(varargin,...
-                {'reCache';false;'islogical(x)'},0);
+            [~,~,self.isReCache,self.timeoutInSeconds]=...
+                modgen.common.parseparext(varargin,...
+                    {'reCache','timeout';...
+                    false,0;...
+                    'islogical(x)','isscalar(x)'},0);
             %
             self.reachFactoryObj=reachFactObj;
             self.setUpReachObj();
@@ -64,7 +68,6 @@ classdef SintTC < mlunitext.test_case
     %
     methods
         function isOk=testReachControl(self)
-            TIMEOUT_IN_SECONDS=15;
             isOk=true;
             TOL=1e-5;
             ellTubeRel=self.reachObj.getEllTubeRel();
@@ -79,8 +82,13 @@ classdef SintTC < mlunitext.test_case
                 x0Vec=transpose(x0Vec);
                 isX0inSet=false;
                 %
-                controlBuilderObj=...
-                    self.getControlBuilder(TIMEOUT_IN_SECONDS);
+                if self.timeoutInSeconds == 0
+                    controlBuilderObj=...
+                        self.getControlBuilder();
+                else
+                    controlBuilderObj=...
+                        self.getControlBuilder(self.timeoutInSeconds);
+                end
                 controlObj=controlBuilderObj.getControlObj(x0Vec);
                 if ~all(size(x0Vec)==size(intEllTube.aMat{1}(:,1)))
                     self.runAndCheckError('controlObj.getControl(x0Vec)',...
