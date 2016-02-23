@@ -3,7 +3,6 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
         APPROX_SCHEMA_NAME = 'InternalMixed'
         APPROX_SCHEMA_DESCR = 'Internal approximation with regularization'
         APPROX_TYPE = gras.ellapx.enums.EApproxType.Internal
-        N_TIME_POINTS = 100
     end
     properties (Access=private)
         mixingStrength
@@ -178,14 +177,17 @@ classdef MixedIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                         mfilename('class'),class(pDynObj));
                 end
             end
-            self = self@gras.ellapx.gen.ATightEllApxBuilder(pDynObj,...
-                goodDirSetObj,timeLimsVec,...
-                MixedIntEllApxBuilder.N_TIME_POINTS,relTol,absTol);
             %
-            [~,~,sMethodName,mixingStrength,mixingProportionsCMat] = ...
+            [unparsedArgList,~,sMethodName,mixingStrength,...
+                mixingProportionsCMat] = ...
                 modgen.common.parseparext(varargin,...
                 {'selectionMethodForSMatrix','mixingStrength',...
-                'mixingProportions'}, 0, 3);
+                'mixingProportions'},[0 4],'isObligatoryPropVec',...
+                [true true true]);
+            %
+            self = self@gras.ellapx.gen.ATightEllApxBuilder(pDynObj,...
+                goodDirSetObj,timeLimsVec,relTol,absTol,unparsedArgList{:});
+            %
             mMat = cell2mat(mixingProportionsCMat);
             %
             checkgen(mixingStrength,'x>=0');

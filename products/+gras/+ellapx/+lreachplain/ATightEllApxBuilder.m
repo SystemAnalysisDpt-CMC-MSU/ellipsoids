@@ -1,6 +1,5 @@
 classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     properties (Constant,GetAccess=protected)
-        N_TIME_POINTS=100;
         NON_ZERO_DISTURBANCE_TOL=1e-14;
     end
     properties (Access=private)
@@ -88,21 +87,20 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     end
     methods
         function self=ATightEllApxBuilder(pDefObj,goodDirSetObj,...
-                timeLimsVec,relTol, absTol)
+                timeLimsVec,relTol,absTol,varargin)
             import gras.ellapx.common.*;
             import modgen.common.throwerror;
             import gras.ellapx.lreachplain.ATightEllApxBuilder;
             %
             %Since certain parameters of ellipsoidal approximation depend
-            %on all configuration matrix components we need increase
+            %on all configuration matrix components we need to increase
             %precision. The resulting tolerance is proportional to the
             %cumulative tolerance in all matrix components. To account
             %for that fact we need to adjust a tolerance for
             %each matrix component.
             %
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDefObj,...
-                goodDirSetObj,timeLimsVec,...
-                ATightEllApxBuilder.N_TIME_POINTS,relTol, absTol);
+                goodDirSetObj,timeLimsVec,relTol,absTol,varargin{:});
         end
         function ellTubeRel=getEllTubes(self)
             import gras.gen.SquareMatVector;

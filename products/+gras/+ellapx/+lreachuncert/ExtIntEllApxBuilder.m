@@ -2,7 +2,6 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
     properties (Constant,GetAccess=private)
         APPROX_SCHEMA_NAME='ExtIntUncert'
         APPROX_SCHEMA_DESCR='External and internal approximation based on matrix ODEs for (Q)'
-        N_TIME_POINTS=100;
         ODE_NORM_CONTROL='on';
         REG_MAX_STEP_TOL=0.05;
         REG_ABS_TOL=1e-8;
@@ -248,18 +247,19 @@ classdef ExtIntEllApxBuilder<gras.ellapx.gen.ATightEllApxBuilder
                     'system without uncertainty \n (%s)'],...
                     mfilename('class'),class(pDynObj));
             end
+            %
+            [unparsedArgList,~,sMethodName,minQSqrtMatEig] = ...
+                modgen.common.parseparext(varargin,...
+                {'selectionMethodForSMatrix','minQSqrtMatEig'},[0 3],...
+                'isObligatoryPropVec',[true true]);
+            %
             self=self@gras.ellapx.gen.ATightEllApxBuilder(pDynObj,...
-                goodDirSetObj,timeLimsVec,...
-                ExtIntEllApxBuilder.N_TIME_POINTS,relTol,absTol);
+                goodDirSetObj,timeLimsVec,relTol,absTol,unparsedArgList{:});
             x0Mat = pDynObj.getX0Mat();            
             if ~ismatposdef(x0Mat, self.REG_ABS_TOL)
                 throwerror('wrongInput',...
                     'Initial set is not positive definite.');
             end
-            %
-            [~,~,sMethodName,minQSqrtMatEig] = ...
-                modgen.common.parseparext(varargin, ...
-                {'selectionMethodForSMatrix','minQSqrtMatEig'}, 0, 2);
             %
             self.minQMatEig=minQSqrtMatEig*minQSqrtMatEig;
             self.goodDirSetObj=goodDirSetObj;
