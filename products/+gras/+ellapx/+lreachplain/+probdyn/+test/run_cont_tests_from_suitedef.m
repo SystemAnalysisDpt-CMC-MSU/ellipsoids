@@ -1,4 +1,4 @@
-function results=run_cont_tests_from_package(testCase, suiteDefList,...
+function results=run_cont_tests_from_suitedef(testCase, suiteDefList,...
     varargin)
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
@@ -7,23 +7,24 @@ import import gras.ellapx.lreachplain.probdef.test.mlunit.ProbDefConfigReader;
 crm=gras.ellapx.uncertcalc.test.regr.conf.ConfRepoMgr();
 crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
 
-REL_ABS_TOL = {1e-6, 1e-8};
+REL_TOL = 1e-6;
+ABS_TOL = 1e-8;
 
 suiteList = {};
 for iSuiteElem=1:numel(suiteDefList)
     SCurSuite = suiteDefList{iSuiteElem}; 
-    fDefConstr = SCurSuite.defConstr;
+    fDefConstr = SCurSuite.fDefConstr;
     
-    for iDynConstrElem=1:numel(SCurSuite.dynConstr)
-        fDynConstr = SCurSuite.dynConstr{iDynConstrElem};
+    for iDynConstrElem=1:numel(SCurSuite.fDynConstrList)
+        fDynConstr = SCurSuite.fDynConstrList{iDynConstrElem};
         fConstr = @(p,t)createDynObj(fDynConstr, fDefConstr, p, t);
         
-        for iConfElem=1:numel(SCurSuite.confs)
-            confName = SCurSuite.confs{iConfElem};
+        for iConfElem=1:numel(SCurSuite.confList)
+            confName = SCurSuite.confList{iConfElem};
             fReader = @()ProbDefConfigReader(confName, crm, crmSys);
             
             suiteList{end+1} = loader.load_tests_from_test_case(testCase,... 
-                fConstr, fReader, REL_ABS_TOL{:},...
+                fConstr, fReader, REL_TOL, ABS_TOL,...
                 'marker', num2str(numel(suiteList)+1));
         end
     end

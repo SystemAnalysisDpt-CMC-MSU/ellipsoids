@@ -20,25 +20,26 @@ classdef ProbDynUncertTC <...
             import gras.mat.MatrixOperationsFactory;
             matOpFactory = MatrixOperationsFactory.create(self.tVec);
             
-            cCMat = self.readObj.cCMat;
-            Cqt = matOpFactory.rSymbMultiplyByVec(...
-                cCMat, self.readObj.qCVec);
-            self.checkMatFun(Cqt, self.pDynObj.getCqtDynamics());
+            bigCMat = self.readObj.cCMat;
+            CqtMatFun = matOpFactory.rSymbMultiplyByVec(...
+                bigCMat, self.readObj.qCVec);
+            self.checkMatFun(CqtMatFun, self.pDynObj.getCqtDynamics());
             
-            CQCTrans = matOpFactory.rSymbMultiply(...
-                cCMat, self.readObj.qCMat, cCMat');
-            self.checkMatFun(CQCTrans, self.pDynObj.getCQCTransDynamics());
+            bigCQCTransMatFun = matOpFactory.rSymbMultiply(...
+                bigCMat, self.readObj.qCMat, bigCMat');
+            self.checkMatFun(bigCQCTransMatFun,...
+                self.pDynObj.getCQCTransDynamics());
         end
         
         function test_xtDynamics(self)
-            XtDerivFunc = @(t,x)...
-                self.pDynObj.getAtDynamics().evaluate(t)*x+...
+            fXtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
+            
+            fXtDeriv = @(t,x)...
+                self.pDynObj.getAtDynamics().evaluate(t)*fXtFunc(t)+...
                 self.pDynObj.getBptDynamics().evaluate(t)+...
                 self.pDynObj.getCqtDynamics().evaluate(t);
             
-            XtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
-            
-            self.checkDerivFun(XtDerivFunc, XtFunc);
+            self.checkDerivFun(fXtDeriv, fXtFunc);
         end
     end
 end

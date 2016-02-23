@@ -48,42 +48,44 @@ classdef ProbDynPlainTC < mlunitext.test_case
             import gras.mat.MatrixOperationsFactory;
             matOpFactory = MatrixOperationsFactory.create(self.tVec);
             
-            At = matOpFactory.fromSymbMatrix(self.readObj.aCMat);
-            self.checkMatFun(At, self.pDynObj.getAtDynamics());
+            bigAtMatFun = matOpFactory.fromSymbMatrix(self.readObj.aCMat);
+            self.checkMatFun(bigAtMatFun, self.pDynObj.getAtDynamics());
             
-            BPBTrans = matOpFactory.rSymbMultiply(...
+            bigBPBTransMatFun = matOpFactory.rSymbMultiply(...
                 self.readObj.bCMat,...
                 self.readObj.pCMat,...
                 self.readObj.bCMat');
-            self.checkMatFun(BPBTrans, self.pDynObj.getBPBTransDynamics());
+            self.checkMatFun(bigBPBTransMatFun,...
+                self.pDynObj.getBPBTransDynamics());
             
-            Bpt = matOpFactory.rSymbMultiply(...
+            BptMatFun = matOpFactory.rSymbMultiply(...
                 self.readObj.bCMat,...
                 self.readObj.pCVec);
-            self.checkMatFun(Bpt, self.pDynObj.getBptDynamics());
+            self.checkMatFun(BptMatFun, self.pDynObj.getBptDynamics());
         end
         
         function test_xtDynamics(self)
-            XtDerivFunc = @(t,x)self.pDynObj.getAtDynamics().evaluate(t)*x...
-            +self.pDynObj.getBptDynamics().evaluate(t);
+            fXtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
             
-            XtFunc = @(t)self.pDynObj.getxtDynamics().evaluate(t);
+            fXtDeriv = @(t)...
+                self.pDynObj.getAtDynamics().evaluate(t)*fXtFunc(t)+...
+                self.pDynObj.getBptDynamics().evaluate(t);
             
-            self.checkDerivFun(XtDerivFunc, XtFunc);
+            self.checkDerivFun(fXtDeriv, fXtFunc);
         end
         
-        function checkDerivFun(self, XtDerivFunc, XtFunc)
+        function checkDerivFun(self, fXtDeriv, fXtFunc)
             import modgen.common.absrelcompare;
             TOL_MULT = 10e1;
             
-            for iElem=1:numel(self.tVec)-1
-                t0 = self.tVec(iElem);
-                t1 = self.tVec(iElem+1);
+            tVec = self.tVec;
+            for iTime=1:numel(tVec)-1
+                t0 = tVec(iTime);
+                t1 = tVec(iTime+1);
                 t = 0.5*(t0+t1);
                 
-                xVec = XtFunc(t);
-                dxVec = (XtFunc(t1) - XtFunc(t0)) / (t1 - t0);
-                dxRefVec = XtDerivFunc(t, xVec);
+                dxVec = (fXtFunc(t1) - fXtFunc(t0)) / (t1 - t0);
+                dxRefVec = fXtDeriv(t);
                 
                 [isEqual,absDif,~,relDif] = absrelcompare(dxRefVec,dxVec,...
                     TOL_MULT*self.absTol, TOL_MULT*self.relTol, @norm);
@@ -94,22 +96,19 @@ classdef ProbDynPlainTC < mlunitext.test_case
             end
         end
         
-        function checkMatFun(self, mat1Obj, mat2Obj)
+        function checkMatFun(self, expectedMatFun, actualMatFun)
            import modgen.common.absrelcompare;
-           mlunitext.assert_equals(mat1Obj.getMatrixSize(),...
-               mat2Obj.getMatrixSize());
+           mlunitext.assert_equals(expectedMatFun.getMatrixSize(),...
+               actualMatFun.getMatrixSize());
            
-           for iElem=1:numel(self.tVec)
-               t = self.tVec(iElem);
-               et1Mat = mat1Obj.evaluate(t);
-               et2Mat = mat1Obj.evaluate(t);
-               isEqual = absrelcompare(et1Mat, et2Mat,...
+           expectedArray = expectedMatFun.evaluate(self.tVec);
+           actualArray   = actualMatFun.evaluate(self.tVec);
+           
+           isEqual = absrelcompare(expectedArray(:), actualArray(:),...
                    self.absTol, self.relTol, @norm);
-               
-               mlunitext.assert(isEqual,...
-                   sprintf(['%s matrix function check failed '...
-                   'at t=%f'], inputname(2), t));
-           end
+           mlunitext.assert(isEqual,...
+                   sprintf('%s matrix function check failed',...
+                   inputname(2)));
         end
     end
 end
