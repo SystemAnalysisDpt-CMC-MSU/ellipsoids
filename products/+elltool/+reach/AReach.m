@@ -79,8 +79,10 @@ classdef AReach < elltool.reach.IReach
         isRegEnabled
         isJustCheck
         regTol
-        intProbDynList        
-        extProbDynList
+        actionIntProbDynList
+        originIntProbDynList
+        actionExtProbDynList
+        originExtProbDynList
         goodDirSetList
     end
     %
@@ -493,7 +495,7 @@ classdef AReach < elltool.reach.IReach
         end
     end
     methods (Access = private)
-        function [ellTubeRelList, indVec,probDynObjCell,goodDirSetObjCell]=...
+        function [ellTubeRelList,indVec,probDynActionObjCell,probDynOriginObjCell,goodDirSetObjCell]=...
                 evolveApprox(self,timeLimVec, newLinSys, approxType)
             import gras.ellapx.smartdb.F;
             import gras.ellapx.lreachuncert.probdyn.LReachProblemDynamicsFactory;
@@ -546,7 +548,8 @@ classdef AReach < elltool.reach.IReach
                     x0MatArray(:, :, il0Num),x0VecMat(:, il0Num), ...
                     timeLimVec, self.relTol,self.absTol);
                 [ellTubeRelVec{il0Num},goodDirSetObjCell{il0Num}, ...
-                    probDynObjCell{il0Num}] = self.makeEllTubeRel(...
+                    probDynActionObjCell{il0Num},...
+                    probDynOriginObjCell{il0Num}] = self.makeEllTubeRel(...
                     probDynActionObj, probDynOriginObj, l0Mat(:, il0Num), ...
                     timeLimVec, isDisturbance, self.absTol, self.relTol,...
                     approxType);
@@ -620,13 +623,15 @@ classdef AReach < elltool.reach.IReach
             end
         end
         %
-        function [ellTubeRel,goodDirSetObj,probDynOriginObj]=makeEllTubeRel(...
-                self,probDynActionObj,probDynOriginObj,l0Mat,timeVec,isDisturb,absTol,relTol,...
-                approxTypeVec)
+        function [ellTubeRel,goodDirSetObj,probDynActionObj,probDynOriginObj]=...
+                makeEllTubeRel(self,probDynActionObj,probDynOriginObj,...
+                l0Mat,timeVec,isDisturb,absTol,relTol,approxTypeVec)
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.gen.RegProblemDynamicsFactory;
             import modgen.common.throwerror;
             %
+            probDynActionObj = RegProblemDynamicsFactory.create(probDynActionObj,...
+                self.isRegEnabled, self.isJustCheck, self.regTol);
             probDynOriginObj = RegProblemDynamicsFactory.create(probDynOriginObj,...
                 self.isRegEnabled, self.isJustCheck, self.regTol);
             try
@@ -742,14 +747,16 @@ classdef AReach < elltool.reach.IReach
                     x0Mat,x0Vec,timeVec,self.relTol,self.absTol);
                 approxTypeVec = [EApproxType.External, EApproxType.Internal];
                 %               
-                [self.ellTubeRel,goodDirSetObj,probDynOriginObj] =...
+                [self.ellTubeRel,goodDirSetObj,probDynActionObj,probDynOriginObj] =...
                     self.makeEllTubeRel(probDynActionObj, probDynOriginObj, l0Mat,...
                     timeVec, isDisturbance, self.absTol,...
                     self.relTol, approxTypeVec);
                 %
                 self.goodDirSetList={{goodDirSetObj}};
-                self.intProbDynList={{probDynOriginObj}};
-                self.extProbDynList={{probDynOriginObj}};
+                self.actionIntProbDynList={{probDynActionObj}};
+                self.originIntProbDynList={{probDynOriginObj}};
+                self.actionExtProbDynList={{probDynActionObj}};
+                self.originExtProbDynList={{probDynOriginObj}};
             end
         end
         %
@@ -1483,8 +1490,14 @@ classdef AReach < elltool.reach.IReach
                 copyReachObj.isProj = reachObj.isProj;
                 copyReachObj.isBackward = reachObj.isBackward;
                 copyReachObj.projectionBasisMat = reachObj.projectionBasisMat;
-                copyReachObj.intProbDynList=reachObj.intProbDynList;
-                copyReachObj.extProbDynList=reachObj.extProbDynList;
+                copyReachObj.actionIntProbDynList=...
+                    reachObj.actionIntProbDynList;
+                copyReachObj.originIntProbDynList=...
+                    reachObj.originIntProbDynList;
+                copyReachObj.actionExtProbDynList=...
+                    reachObj.actionExtProbDynList;
+                copyReachObj.originExtProbDynList=...
+                    reachObj.originExtProbDynList;
                 copyReachObj.goodDirSetList=reachObj.goodDirSetList;
                 %%%
                 copyReachObj.isRegEnabled = reachObj.isRegEnabled;
@@ -1541,27 +1554,34 @@ classdef AReach < elltool.reach.IReach
         end
         %
         
-        function intProbDynList = getIntProbDynamicsList(self)
+        function [actionIntProbDynList, originIntProbDynList] = ...
+                getIntProbDynamicsList(self)
             %
-            % GETINTPROBDYNAMICSLIST - returns the intProbDynamicsList 
-            %                           property
+            % GETINTPROBDYNAMICSLIST - returns the 
+            %                          actionIntProbDynList 
+            %                          and originIntProbDynLists properties
             %
             % Input:
             %   regular:
             %       self: - reach tube
             %
             % Output:
-            %   intProbDynamicsList: cell[1,nLinSys] of cell[1,nTube] of
+            %   actionIntProbDynList: cell[1,nLinSys] of cell[1,nTube] of
             %       gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
             %       list of of cell arrays filled with objects which describe 
             %       the system dynamics between switch time. 
-            %       intProbDynamicsList is constructed during the internal 
+            %       actionIntProbDynList is constructed during the internal 
             %       approximations and has the following structure:
             %       {{probDynObjSys1},{probDynObjSys2dir1,...,probDynObjSys2dirn},...,
             %       {probDynObjSyskdir1,...,probDynObjSyskdirn}}.           
             %       Nested cell arrays have dimensionality nTube equal to
-            %       the number of directions. The order of intProbDynList{:}
+            %       the number of directions. The order of actionIntProbDynList{:}
             %       corresponds to the time direction.
+            %   originIntProbDynList: cell[1,nLinSys] of cell[1,nTube] of
+            %       gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
+            %       same as actionIntProbDynList, but for getting real
+            %       values of linear system instead of those used in
+            %       calculations
             %
             % Example:
             %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -1584,7 +1604,8 @@ classdef AReach < elltool.reach.IReach
             % 
             %       {1x1 cell}    {1x2 cell}
             %
-            intProbDynList = self.intProbDynList;
+            actionIntProbDynList = self.actionIntProbDynList;
+            originIntProbDynList = self.originIntProbDynList;
         end
         %
         function goodDirSetList = getGoodDirSetList(self)
@@ -1628,9 +1649,10 @@ classdef AReach < elltool.reach.IReach
             goodDirSetList = self.goodDirSetList;
         end
         %
-        function extProbDynList = getExtProbDynamicsList(self)
+        function [actionExtProbDynList, originExtProbDynList] = ...
+                getExtProbDynamicsList(self)
             %
-            % GETEXTPROBDYNAMICSLIST - returns the extProbDynamicsList 
+            % GETEXTPROBDYNAMICSLIST - returns the actionExtProbDynList 
             %                           property
             %
             % Input:
@@ -1638,13 +1660,18 @@ classdef AReach < elltool.reach.IReach
             %       self: - reach tube
             %
             % Output:
-            %   extProbDynamicsList: cell[1,nLinSys] of cell[1,nTube] of
+            %   actionExtProbDynList: cell[1,nLinSys] of cell[1,nTube] of
             %       gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
             %       list of cell arrays filled with objects which describe 
             %       the system dynamics between switch time. 
-            %       extProbDynamicsList is constructed during the external 
+            %       actionExtProbDynList is constructed during the external 
             %       approximations. If time is backward than the order of
-            %       extProbDynamicsList{:} is also backward.
+            %       actionExtProbDynList{:} is also backward.
+            %   originExtProbDynList: cell[1,nLinSys] of cell[1,nTube] of
+            %       gras.ellapx.lreachplain.probdyn.LReachProblemDynamicsInterp -
+            %       same as actionExtProbDynList, but for getting real
+            %       values of linear system instead of those used in
+            %       calculations
             %
             % Example:
             %   aMat = [0 1; 0 0]; bMat = eye(2);
@@ -1667,7 +1694,8 @@ classdef AReach < elltool.reach.IReach
             % 
             %       {1x1 cell}    {1x2 cell}
             %
-            extProbDynList = self.extProbDynList;
+            actionExtProbDynList = self.actionExtProbDynList;
+            originExtProbDynList = self.originExtProbDynList;
         end
            %        
         function linSysCVec = getSystemList(self)
@@ -1806,19 +1834,31 @@ classdef AReach < elltool.reach.IReach
             newReachObj.linSysCVec = [newReachObj.linSysCVec {newLinSys}];
             newReachObj.isCut = false;
             %
-            [relIntApxList, indIntVec,intProbDynCell,~] = self.evolveApprox ...
-                (timeLimVec,newLinSys, EApproxType.Internal);
-            [relExpApxList, indExtVec,extProbDynCell,goodDirSetCell] = ...
+            [relIntApxList,indIntVec,actionIntProbDynCell,originIntProbDynCell,~] = ...
+                self.evolveApprox(timeLimVec,newLinSys, EApproxType.Internal);
+            [relExpApxList, indExtVec,actionExtProbDynCell,originExtProbDynCell,goodDirSetCell] = ...
                 self.evolveApprox(timeLimVec,newLinSys, EApproxType.External);
             relApxList = [relIntApxList, relExpApxList];
             %
             % cat old and new ellTubeRel
             %
-            self.intProbDynList=[self.intProbDynList {intProbDynCell}];
-            self.extProbDynList=[self.extProbDynList {extProbDynCell}];
+            self.actionIntProbDynList=...
+                [self.actionIntProbDynList {actionIntProbDynCell}];
+            self.originIntProbDynList=...
+                [self.originIntProbDynList {originIntProbDynCell}];
+            self.actionExtProbDynList=...
+                [self.actionExtProbDynList {actionExtProbDynCell}];
+            self.originExtProbDynList=...
+                [self.originExtProbDynList {originExtProbDynCell}];
             self.goodDirSetList=[self.goodDirSetList {goodDirSetCell}];            
-            newReachObj.intProbDynList=[newReachObj.intProbDynList {intProbDynCell}];
-            newReachObj.extProbDynList=[newReachObj.extProbDynList {extProbDynCell}];
+            newReachObj.actionIntProbDynList=...
+                [newReachObj.actionIntProbDynList {actionIntProbDynCell}];
+            newReachObj.originIntProbDynList=...
+                [newReachObj.originIntProbDynList {originIntProbDynCell}];
+            newReachObj.actionExtProbDynList=...
+                [newReachObj.actionExtProbDynList {actionExtProbDynCell}];
+            newReachObj.originExtProbDynList=...
+                [newReachObj.originExtProbDynList {originExtProbDynCell}];
             newReachObj.goodDirSetList=[newReachObj.goodDirSetList {goodDirSetCell}];
             newEllTubeRel=smartdb.relationoperators.union(relApxList{:});
             self.checkIndSTime(newEllTubeRel);

@@ -23,8 +23,6 @@
         end
         %
         function self = set_up_param(self, reachFactObj)
-            %reachFactObj
-            %fuck = you
             self.reachFactoryObj=reachFactObj;
             self.reachObj = reachFactObj.createInstance();
             self.linSys = reachFactObj.getLinSys();
@@ -55,49 +53,28 @@
             isBackward=self.reachObj.isbackward();
             hasOk=auxtestProbDynGetters(intEllTube,intProbDynamicsList,goodDirSetList);
             isOk=isOk&&hasOk;
-%             if ~isOk
-%                 error('int(1)')
-%             end
             hasOk=auxtestProbDynGetters(extEllTube,extProbDynamicsList,goodDirSetList);
             isOk=isOk&&hasOk;
-%             if ~isOk
-%                 error('ext(2)')
-%             end
             mlunitext.assert_equals(true, isOk);
             %
             function isOk=auxtestProbDynGetters(ellTube,probDynamicsList,goodDirSetList)
                 isOk=true;
                 nTube=ellTube.getNTuples();
                 goodDirOrderedVec=zeros(1,nTube);
-                
-                %3) comparison of good directions obtained from GoodDirSetList and EllTubeRel
-                
                 isEqual=compareGoodCurves(ellTube,goodDirSetList);
                 isOk=isOk&&isEqual;
-%                 if ~isOk
-%                     disp('compareGoodCurves(1)')
-%                 end
-                %2)comparing results of linSys and probDynObj.getBPBgetBPBTransDynamics().evaluate(t)
-                
                 probDynamicsListLenght=numel(probDynamicsList);
                 if (sysTimeVecLenght~=probDynamicsListLenght)
-%                     disp('sysTimeVecLenght~=probDynamicsListLenght')
                     isOk=false;
                 end;
                 isEqual=isEqualBPBandpDynBPB(probDynamicsList);
                 isOk=isOk&&isEqual;
-%                 if ~isOk
-%                     disp('isEqualBPBandpDynBPB(2)')
-%                 end
-                
-                %1) comparison of the results obtained from getEllTubeRel and probDynObj.getX0Mat();
-                
                 isEqual=compareX0Mat(ellTube,probDynamicsList,nTube);
                 isOk=isOk&&isEqual;
                 if ~isOk
                     disp('compareX0Mat(3)')
                 end
-                
+                %
                 function isEqual=compareX0Mat(ellTube,probDynamicsList,nTube)
                     isEqual=true;
                     for iTube=1:nTube
@@ -146,13 +123,9 @@
                     for iTuple=1:nTube
                         isCurEqual=isEqualBPBandpDynBPBTimeInterval(probDynObj,timeVec,1);
                         isEqual=isEqual&&isCurEqual;
-%                         if ~isEqual
-%                             error('here')
-%                         end
                         if ((switchTimeVecLenght-1>=2)&&(nTube~=numel(probDynamicsList{2}))...
                                 ||(sysTimeVecLenght~=numel(probDynamicsList)))
                             isEqual=false;
-%                             error('here')
                         end;
                         if (isEqual)&&(sysTimeVecLenght>1)
                             for iLinSys = 2 : sysTimeVecLenght
@@ -160,9 +133,6 @@
                                 probDynObj=probDynamicsList{iLinSys}{iTuple};
                                 isCurEqual=isEqualBPBandpDynBPBTimeInterval(probDynObj,timeVec,iLinSys);
                                 isEqual=isEqual&&isCurEqual;
-%                                 if ~isEqual
-%                                     error('here')
-%                                 end
                             end;
                         end;
                     end;
@@ -178,11 +148,6 @@
                             end;                          
                             isCurEqualVec(iStep)=isEqualBPBandpDynBPBatCurTime(pDynBPBMat,...
                                 curTime,iLinSys);
-%                             if ~isCurEqualVec(iStep)
-%                                 type(probDynObj)
-%                                 error('Here!')
-%                                 iStep
-%                             end
                             iStep=iStep+1;
                         end;
                         isCurEqual=all(isCurEqualVec);
@@ -203,12 +168,6 @@
                             bpbMat=bpbPosReg.evaluate(t);
                         end;
                         isCurEqual=modgen.common.absrelcompare(bpbMat,pDynBPBMat, CMP_TOL, [], @abs);
-                        if ~isCurEqual
-                            format long
-                            bpbMat
-                            pDynBPBMat
-                            bpbMat == pDynBPBMat
-                        end
                     end
                 end
                 %
@@ -321,7 +280,7 @@
                     end
                 end
             end
-            %mlunitext.assert_equals(true, isOk);
+            mlunitext.assert_equals(true, isOk);
         end
    end
 end
