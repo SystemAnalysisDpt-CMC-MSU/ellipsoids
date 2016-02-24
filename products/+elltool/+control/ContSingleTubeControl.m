@@ -49,10 +49,6 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
             self.goodDirSetList=goodDirSetList;
             self.switchSysTimeVec=switchSysTimeVec;
             self.downScaleKoeff=inDownScaleKoeff;
-            self.controlVectorFunct=...
-                elltool.control.ControlVectorFunct(properEllTube,...
-                self.probDynamicsList,self.goodDirSetList,...
-                inDownScaleKoeff);
             self.timeout=timeout;
         end
 
@@ -109,10 +105,17 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                 indFin=find(self.properEllTube.timeVec{1}==tFin);
                 aMat=self.probDynamicsList{iSwitchBack}.getAtDynamics();
                 %
+                curProbDynObj=self.probDynamicsList{iSwitch};
+                curGoodDirSetObj=self.goodDirSetList{iSwitch};
+                controlVectorFunct=...
+                    elltool.control.ControlVectorFunct(...
+                        self.properEllTube,curProbDynObj,...
+                        curGoodDirSetObj,self.downScaleKoeff,tStart,tFin);
+                %
                 timeMarker=tic;
                 [curTrajEvalTimeVec,curTrajectoryMat,indTimeoutVec]=...
-                    ode45(@(t,y)ode(t,y,aMat,self.controlVectorFunct,...
-                            tStart,tFin,iSwitch),...
+                    ode45(@(t,y)ode(t,y,aMat,controlVectorFunct,...
+                            tStart,tFin),...
                         [tStart tFin],x0Vec.',SOptions);
                 isTimeoutHappened=~isempty(indTimeoutVec);
                 %
@@ -144,10 +147,9 @@ classdef ContSingleTubeControl<elltool.control.ASingleTubeControl
                     vertcat(trajEvalTimeVec,curTrajEvalTimeVec);
             end
             %
-            function dyMat=ode(tVal,yMat,aMat,controlFuncVec,...
-                    tStart,tFin,indSwitch)
+            function dyMat=ode(tVal,yMat,aMat,controlFuncVec,tStart,tFin)
                dyMat = -aMat.evaluate(tFin-tVal+tStart)*yMat + ...
-                   controlFuncVec.evaluate(yMat,tVal,indSwitch);
+                   controlFuncVec.evaluate(yMat,tVal);
             end
             %
             function [value,isTerminal,direction]=stopByTimeout(T,Y)

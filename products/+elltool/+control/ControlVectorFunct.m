@@ -3,17 +3,19 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
     %
     properties (Access=private)
         properEllTube
-        probDynamicsList
-        goodDirSetList
+        probDynamicsObj
+        goodDirSetObj
         downScaleKoeff
         ellTubeTimeVec
         bigQInterpObj
         aInterpObj
+        t0
+        t1
     end
     %
     methods
         function self=ControlVectorFunct(properEllTube,...
-                probDynamicsList,goodDirSetList,inDownScaleKoeff)
+                probDynamicsObj,goodDirSetObj,inDownScaleKoeff,t0,t1)
             % CONTROLVECTORFUNCT is a class providing evaluation of control
             % synthesis for predetermined position (t,x)
             %
@@ -23,14 +25,14 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             %           - an ellipsoidal tube object that is used for
             %           contol synthesis constructing
             %
-            %       probDynamicsList:
-            %           gras.ellapx.lreachplain.probdyn.LReachProblemLTIDynamics[1,]
-            %           - cellArray providing information about system's
+            %       probDynamicsObj:
+            %           gras.ellapx.lreachplain.probdyn.LReachProblemLTIDynamics[1,1]
+            %           object providing information about system's
             %           dynamics
             %
-            %       goodDirSetList:
-            %           gras.ellapx.lreachplain.GoodDirsContinuousLTI[1,]
-            %           - cellArray providing information about
+            %       goodDirSetObj:
+            %           gras.ellapx.lreachplain.GoodDirsContinuousLTI[1,1]
+            %           object providing information about
             %           'good directions'
             %
             %       inDownScaleKoeff: scaling coefficient for internal
@@ -44,9 +46,11 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                     'properEllTube must have only 1 tuple');
             end
             self.properEllTube=properEllTube;
-            self.probDynamicsList=probDynamicsList;
-            self.goodDirSetList=goodDirSetList;
+            self.probDynamicsObj=probDynamicsObj;
+            self.goodDirSetObj=goodDirSetObj;
             self.downScaleKoeff=inDownScaleKoeff;
+            self.t0=t0;
+            self.t1=t1;
             self.ellTubeTimeVec=self.properEllTube.timeVec{1};
             bigQArray=self.properEllTube.QArray{1}(:,:,:);
             self.bigQInterpObj=...
@@ -58,7 +62,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 'column',aMat,self.ellTubeTimeVec);
         end
         %
-        function resVec=evaluate(self,xVec,tVal,indSwitch)
+        function resVec=evaluate(self,xVec,tVal)
             % EVALUATE evaluates control synthesis for predetermined
             % position (t,x)
             %
@@ -77,13 +81,7 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             % $Author: Komarov Yuri <ykomarov94@gmail.com> $
             % $Date: 2015-30-10 $
             %
-            t0=getBeginOfSwitchTimeSpan(indSwitch);
-            t1=getEndOfSwitchTimeSpan(indSwitch);
-            curProbDynObj=self.probDynamicsList{indSwitch};
-            curGoodDirSetObj=self.goodDirSetList{indSwitch};
-            %
             indTime=sum(self.ellTubeTimeVec <= tVal);
-            % TODO: check if indTime == 0
             if self.ellTubeTimeVec(indTime) < tVal
                 qVec = self.aInterpObj.evaluate(tVal);
                 qMat=self.bigQInterpObj.evaluate(tVal);
@@ -92,13 +90,13 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
                 qMat=self.properEllTube.QArray{1}(:,:,indTime);
             end
             %
-            xstTransMat=curGoodDirSetObj.getXstTransDynamics();
+            xstTransMat=self.goodDirSetObj.getXstTransDynamics();
             % X(t,t_0) =
             %   ( xstTransMat.evaluate(t)\xstTransMat.evaluate(t_0) ).'
-            xt1tMat=transpose(xstTransMat.evaluate(t1)\...
+            xt1tMat=transpose(xstTransMat.evaluate(self.t1)\...
                 xstTransMat.evaluate(tVal));
             %
-            [pVec,pMat]=getControlBounds(t0,t1,tVal,curProbDynObj,xt1tMat);
+            [pVec,pMat]=getControlBounds(tVal,xt1tMat);
             %
             qVec=xt1tMat*qVec;
             qMat=xt1tMat*qMat*transpose(xt1tMat);
@@ -115,26 +113,13 @@ classdef ControlVectorFunct < elltool.control.IControlVectFunction&...
             resVec = pVec - (pMat*l0Vec) / sqrt(l0Vec'*pMat*l0Vec);
             resVec = xt1tMat \ resVec;
             %
-            function tSwitch=getBeginOfSwitchTimeSpan(indSwitch)
-                % probDynamicsList{indSwitch}{indTube} returns dynamics for
-                %     indSwitch time period and indTube tube
-                probTimeVec=self.probDynamicsList{indSwitch}.getTimeVec();
-                tSwitch=probTimeVec(1);
-            end
-            %
-            function tSwitch=getEndOfSwitchTimeSpan(indSwitch)
-                probTimeVec=self.probDynamicsList{indSwitch}.getTimeVec();
-                tSwitch=probTimeVec(end);
-            end
-            %
-            function [pVec,pMat]=getControlBounds(t0,t1,...
-                    curControlTime,curProbDynObj,xt1tMat)
+            function [pVec,pMat]=getControlBounds(curControlTime,xt1tMat)
                 %
-                evalTime=t1-curControlTime+t0;
+                evalTime=self.t1-curControlTime+self.t0;
                 %
-                bpVec=-curProbDynObj.getBptDynamics.evaluate(evalTime);
+                bpVec=-self.probDynamicsObj.getBptDynamics.evaluate(evalTime);
                 bpbMat=...
-                    curProbDynObj.getBPBTransDynamics.evaluate(evalTime);
+                    self.probDynamicsObj.getBPBTransDynamics.evaluate(evalTime);
                 %
                 pVec=xt1tMat*bpVec;
                 pMat=xt1tMat*bpbMat*transpose(xt1tMat);
