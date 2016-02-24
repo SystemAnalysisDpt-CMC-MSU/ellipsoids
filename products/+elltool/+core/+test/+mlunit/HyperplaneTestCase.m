@@ -200,14 +200,14 @@ classdef HyperplaneTestCase < mlunitext.test_case
             testHypHighDimFst = hyperplane([1:1:75]', 1);
             testHypHighDimSec = hyperplane([1:1:75]', 2);
             checkHypEqual(testHypHighDimFst, testHypHighDimSec, false, ...
-                '\(1).shift-->.*\(2.64027.*e\-03).*tolerance.\(1.00000.*e\-05)',...
-                '\(1).shift-->.*\(0.00264027.*).*tolerance.\(1.00000.*e\-05)');
+                '\(1).shift-->.*\(6.666666.*e\-01).*tolerance.\(1.00000.*e\-05)',...
+                '\(1).shift-->.*\(0.6666666.*).*tolerance.\(1.00000.*e\-05)');
             %
             testFstHyp = hyperplane([1; 0], 0);
             testSecHyp = hyperplane([1; 0], 0);
             testThrHyp = hyperplane([2; 1], 0);
-            str = '\(1).shift-->.*\(2.64027.*e\-03).*tolerance.\(1.00000.*e\-05)\n\(3).normal-->.*\(4.47213.*e\-01).*tolerance.\(1.00000.*e\-05)';
-            altStr = '\(1).shift-->.*\(0.0026402.*).*tolerance.\(1.00000.*e\-05)\n\(3).normal-->.*\(0.447213.*).*tolerance.\(1.00000.*e\-05)';
+            str = '\(1).shift-->.*\(6.66666.*e\-01).*tolerance.\(1.00000.*e\-05).*\n\(3).normal-->.*\(4.47213.*e\-01).*tolerance.\(1.00000.*e\-05).*';
+            altStr = '\(1).shift-->.*\(0.66666666.*).*tolerance.\(1.00000.*e\-05).*\n\(3).normal-->.*\(2).*tolerance.\(1.00000.*e\-05).*';
             checkHypEqual([testHypHighDimFst testFstHyp testFstHyp], ...
                 [testHypHighDimSec testSecHyp testThrHyp], ...
                 [false true false], str,altStr);
@@ -365,8 +365,8 @@ classdef HyperplaneTestCase < mlunitext.test_case
                 mlunitext.assert_equals(true, isOk)
             end
         end
-    end
-    %
+     end
+%     %
     methods(Static, Access = private)
         function res = isNormalAndConstantRight(testNormal, testConstant, testingHyraplane)
             [resultNormal, resultConstant] = double(testingHyraplane);
@@ -384,7 +384,7 @@ classdef HyperplaneTestCase < mlunitext.test_case
                 res = false;
             end
         end
-        
+%         
         function SInpData = auxReadFile(self)
             methodName=modgen.common.getcallernameext(2);
             inpFileName=[self.testDataRootDir,filesep,[methodName,'_inp.mat']];
