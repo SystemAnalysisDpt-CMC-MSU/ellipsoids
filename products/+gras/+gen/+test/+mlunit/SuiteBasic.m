@@ -78,7 +78,7 @@ classdef SuiteBasic < mlunitext.test_case
             import gras.gen.MatVector;
             %
             CALC_PRECISION = 1e-5;
-            SData = load([mfilename('fullpath') filesep '..' filesep...
+            SData = load([fileparts(mfilename('fullpath')) filesep...
                 'TestData', filesep, 'matvector_data.mat']);
             aArray = SData.aArray;
             bMat = aArray(:,:,1);
@@ -172,7 +172,7 @@ classdef SuiteBasic < mlunitext.test_case
             import gras.gen.MatVector;
             %
             CALC_PRECISION = 1e-5;
-            SData = load([mfilename('fullpath') filesep '..' filesep...
+            SData = load([fileparts(mfilename('fullpath')) filesep...
                 'TestData', filesep, 'matvector_data.mat']);
             aArray = SData.aArray;
             bMat = squeeze(aArray(1,:,:));

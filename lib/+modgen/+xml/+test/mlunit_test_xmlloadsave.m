@@ -82,14 +82,16 @@ classdef mlunit_test_xmlloadsave < mlunitext.test_case
         end
         function testNegative(self)
             import modgen.xml.*;
-            checkN(handle([1,2]));
+            if verLessThan('matlab','R2016a')
+                checkN(handle([1,2]));
+            end
             checkN(complex([1,2],[1,2]));
             checkN(complex(int32([1,2]),int32([1,2])));
             checkN(sparse([1,2]));
             %
             function checkN(inpArray)
                 SData.alpha=inpArray;
-                self.runAndCheckError('self.xmlsave(self.fileName,SData);',...
+                    self.runAndCheckError('self.xmlsave(self.fileName,SData);',...
                     ':wrongInput');
             end
         end
