@@ -752,7 +752,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         end
         %
         function self = testRuntimeGetBoundary(self)
-            MAX_PORTION = 0.32;
+            MAX_PORTION = 0.4; %0.32;
             NUMBER_STEPS = 100;
             ellConstrMat = eye(2);
             shiftVec = [0.05; 0];
@@ -762,20 +762,20 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ell1 = ellipsoid(ellConstrMat);
             ell2 = ellipsoid(shiftVec, ellConstrMat);
             ell3 = ellipsoid(ell3ShiftVec, ell3ConstrMat);
-            tic
+            tStart = tic();
             for iElem = 1 : NUMBER_STEPS
                 [~] = ell1.toPolytope();
                 [~] = ell2.toPolytope();
                 [~] = ell3.toPolytope();
             end;
-            polTime = toc;
-            tic
+            polTime = toc(tStart);
+            tStart = tic();
             for iElem = 1 : NUMBER_STEPS
                 [~, ~] = ell1.getBoundary();
                 [~, ~] = ell2.getBoundary();
                 [~, ~] = ell3.getBoundary();
             end;
-            boundTime = toc;
+            boundTime = toc(tStart);
             boundRatio=boundTime / polTime;
             mlunitext.assert(boundRatio < MAX_PORTION, ...
                 sprintf(['Ratio of of getBoundary runtime (%g) ',...
@@ -790,15 +790,15 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 timeCompare)
             
             if checkBoth
-                tic;
+                tStart = tic;
                 isCIIVec = doesIntersectionContain(ellVec,polyVec,...
                     'mode',letter,'computeMode','lowDimFast');
-                lowTime = toc;
+                lowTime = toc(tStart);
                 mlunitext.assert(all(isCIIVec == isCIIExpVec));
-                tic;
+                tStart = tic;
                 isCIIVec = doesIntersectionContain(ellVec,polyVec,...
                     'mode',letter,'computeMode','highDimFast');
-                highTime = toc;
+                highTime = toc(tStart);
                 mlunitext.assert(all(isCIIVec == isCIIExpVec));
                 if strcmp(timeCompare,'low')
                     mlunitext.assert(lowTime <= highTime);

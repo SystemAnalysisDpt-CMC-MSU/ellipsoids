@@ -34,7 +34,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             import elltool.conf.Properties;
             self.setUpCheckSettings();
             relTol = Properties.getAbsTol();
-            sensEPS = 0.1*relTol;
+            sensEPS = 0.005*relTol;
             load(strcat(self.testDataRootDir, strcat(filesep,...
                 'testEllunionEa_inp.mat')), 'testEllCenterVec', ...
                 'testEllMat', 'testEllCenter2Vec', 'testEll2Mat');
