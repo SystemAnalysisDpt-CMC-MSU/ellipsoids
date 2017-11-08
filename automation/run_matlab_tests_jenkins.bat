@@ -4,25 +4,13 @@ setlocal
 
 
 if "%~1"=="" (
-	set archName=win64
+	set matlabVer=2017b
 ) else (
-	set archName=%1
+	set matlabVer=%1
 )	
 
-if "%archName%"=="win64" (
-	set matlabBin="C:\Program Files\MATLAB\R2013b\bin\win64\matlab"
-) else if "%archName%"=="win32" (
-	set matlabBin="C:\Program Files (x86)\MATLAB\R2013b\bin\win32\matlab"
-) else if "%archName%"=="win64_2015a" (
-	set matlabBin="C:\Program Files\MATLAB\MATLAB Production Server\R2015a\bin\win64\matlab"
-) else if "%archName%"=="win64_2015b" (
-	set matlabBin="C:\Program Files\MATLAB\R2015b\bin\win64\matlab"
-) else if "%archName%"=="win32_2015b" (
-	set matlabBin="C:\Program Files (x86)\MATLAB\R2015b\bin\win32\matlab"
-) else (
-	echo %0: architecture %archName% not supported
-	exit /b 1
-)	
+set matlabBin="C:\Program Files\MATLAB\R%matlabVer%\bin\win64\matlab"
+
 SET automationDir=%~dp0
 set runMarker="win_%JOB_NAME%_%GIT_BRANCH%"
 echo runMarker=%runMarker%

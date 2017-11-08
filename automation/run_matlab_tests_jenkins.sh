@@ -10,20 +10,12 @@ echo deploymentDir=$deploymentDir
 echo ===== run_tests_remotely started: `date` =====
 if [ $# -eq 0 ]
 then
-	echo archName is obligatory argument
+	matlabVer=2017b
 else
-	archName=$1
+	matlabVer=$1
 fi
 
-if [ "$archName" == "2014b" ] 
-then
-	matlabBin=/usr/local/MATLAB/R2014b/bin/matlab
-elif [ "$archName" == "2015b" ]
-then 
-	matlabBin=/usr/local/MATLAB/R2015b/bin/matlab
-else
-	echo $archName is not supported
-	exit 1
-fi
+matlabBin=/usr/local/MATLAB/${matlabVer}/bin/matlab
+
 runMarker=linux_${JOB_NAME}_${GIT_BRANCH}
 $genericBatScript $deploymentDir elltool.test.run_tests_remotely $matlabBin $runMarker default
