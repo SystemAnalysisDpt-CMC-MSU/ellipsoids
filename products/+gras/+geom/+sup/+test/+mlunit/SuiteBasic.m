@@ -105,9 +105,14 @@ classdef SuiteBasic < mlunitext.test_case
             %
             qMat=sMat.'*qMat*sMat;
             dirMat=gras.geom.circlepart(100);
+            if ismac
+                fCheckBoundary=@gras.geom.sup.sup2boundary2;
+            else
+                fCheckBoundary=...
+                    @(x,y)transpose(gras.geom.sup.test.sup2boundary2(x.',y.'));
+            end
             self.aux_testSupBoundary(@gras.geom.sup.sup2boundary2,...
-                @(x,y)transpose(gras.geom.sup.test.sup2boundary2(x.',y.')),...
-                qMat,dirMat);
+                fCheckBoundary,qMat,dirMat);
         end
         %
         function self=testSup2Boundary3(self)
