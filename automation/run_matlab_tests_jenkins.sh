@@ -15,7 +15,7 @@ else
 	matlabVer=$1
 fi
 
-matlabBin=/usr/local/MATLAB/${matlabVer}/bin/matlab
+matlabBin=/usr/local/MATLAB/R${matlabVer}/bin/matlab
 
 runMarker=linux_${JOB_NAME}_${GIT_BRANCH}
 $genericBatScript $deploymentDir elltool.test.run_tests_remotely $matlabBin $runMarker default
