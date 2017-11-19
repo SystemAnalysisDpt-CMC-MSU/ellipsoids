@@ -30,5 +30,5 @@ lamMax=max(diag(diagMat));
 p1Par=sqrtpos(dirVec.'*ellQ1Mat*dirVec,absTol);
 p2Par=sqrtpos(dirVec.'*ellQ2Mat*dirVec,absTol);
 pPar=p2Par/p1Par;
-isOk=(pPar>lamMax && pPar<1);
+isOk=(pPar>lamMax+eps && pPar<1-eps);
 pPar=max(pPar,lamMax);
