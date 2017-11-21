@@ -53,7 +53,10 @@ else
     isZeroInEll=quadmat(shMat,cVec,0,'invadv');
     if isZeroInEll<1
         auxMat=invmat(shMat-cVec*cVec.');
-        auxMat=0.5*(auxMat+auxMat.');
+        %auxMat=0.5*(auxMat+auxMat.');
+        [vMat, dMat] = eig(auxMat, 'nobalance');
+        mMat = vMat * dMat * transpose(vMat);
+        auxMat = 0.5 * (mMat + mMat.');
         polarCVec=-auxMat*cVec;
         polarShMat=(1+quadmat(auxMat,cVec,0,'plain'))*auxMat;
         polarObj=ellipsoid(polarCVec,polarShMat);
