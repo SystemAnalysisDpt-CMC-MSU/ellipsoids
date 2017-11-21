@@ -21,7 +21,8 @@ regTol = gras.la.trytreatasreal (regTol);
 modgen.common.checkvar(inpMat, 'gras.la.ismatsymm(x)',...
     'errorMessage', 'matrix must be symmetric.');
 [vMat, dMat] = eig(inpMat, 'nobalance');
-mMat = diag(max(diag(dMat), regTol));
+mMat = diag(max(0,regTol-diag(dMat)));
 mMat = vMat * mMat * transpose(vMat);
-regMat = 0.5 * (mMat + mMat.');
+regMat = inpMat + mMat;
+regMat = 0.5 * (regMat + regMat.');
 end
