@@ -64,7 +64,7 @@ classdef ReachContinuous < elltool.reach.AReach
         %
     end
     %
-    methods (Access = private)
+    methods (Access = protected)
         function [ellTubeRel,goodDirSetObj] = auxMakeEllTubeRel(self,...
                 probDynObj,l0Mat, timeVec, isDisturb,absTol,relTol,...
                 approxTypeVec)
