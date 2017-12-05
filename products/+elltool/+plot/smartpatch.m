@@ -1,4 +1,4 @@
-function hPatch = smartpatch(extraPropCVec, varargin)
+function hPatch = smartpatch(isShowLegend, extraPropCVec, varargin)
 %
 % SMARTPATCH legend-friendly wrapper for 'patch'
 %
@@ -9,4 +9,7 @@ function hPatch = smartpatch(extraPropCVec, varargin)
 hPatch = patch(varargin{:});
 if (~isempty(extraPropCVec))
     set(hPatch, extraPropCVec{:});
+end
+if (~isShowLegend)
+    hPatch.Annotation.LegendInformation.IconDisplayStyle = 'off';
 end
