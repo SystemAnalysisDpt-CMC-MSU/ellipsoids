@@ -11,30 +11,39 @@ classdef TolCounter < handle
     properties (GetAccess = protected)
         absTolCount = 0;
         relTolCount = 0;
+        isTesting = false;
     end
     %
     methods (Access = protected)
-        function resetTolCounters(self)
+        function startTolTest(self)
            self.absTolCount = 0;
            self.relTolCount = 0;
+           self.isTesting = true;
+        end
+        function finishTolTest(self)
+           self.isTesting = false;
         end
         function incAbsTolCount(self)
             self.absTolCount = self.absTolCount + 1;
+            if self.isTesting == true
+                self.checkMentions();
+            end
         end
         function incRelTolCount(self)
             self.relTolCount = self.relTolCount + 1;
+            if self.isTesting == true
+                self.checkMentions();
+            end
         end
         function checkMentions(self)
-           if self.absTolCount > 0
-               msgID = 'TolCounter:absTol';
-               msg = 'absTolCount is positive.';
-               exception = MException(msgID,msg);
-               throw(exception);
-           end
-           if self.relTolCount > 0
-               msgID = 'TolCounter:relTol';
-               msg = 'relTolCount is positive.';
-               exception = MException(msgID,msg);
+           if self.absTolCount > 0 || self.relTolCount > 0
+               if self.absTolCount > 0
+                   msgID = 'TolCounter:absTol';
+               else
+                   msgID = 'TolCounter:relTol';
+               end
+               msg = 'counter is positive';
+               exception = MException(msgID, msg);
                throw(exception);
            end
         end

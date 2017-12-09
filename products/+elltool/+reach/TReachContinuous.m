@@ -21,11 +21,11 @@ classdef TReachContinuous < elltool.reach.ReachContinuous & ...
     methods (Access = protected)
         function [ellTubeRel,goodDirSetObj] = auxMakeEllTubeRel(self, ...
             varargin)
-            self.resetTolCounters();
+            self.startTolTest();
             [ellTubeRel,goodDirSetObj] = ...
                 auxMakeEllTubeRel@elltool.reach.ReachContinuous(self, ...
             	varargin{:});
-            self.checkMentions();
+            self.finishTolTest();
         end
     end
     %

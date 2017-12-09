@@ -128,6 +128,9 @@ for iConf = 1:nConfs
 end
 suiteList{end + 1} = loader.load_tests_from_test_case(...
     'elltool.reach.test.mlunit.MPTIntegrationTestCase');
+%
+suiteList{end + 1} = loader.load_tests_from_test_case(...
+    'elltool.reach.test.mlunit.TolTestCase','marker','demo3firstTest');
 %%
 testLists = cellfun(@(x)x.tests,suiteList,'UniformOutput',false);
 testList=horzcat(testLists{:});
