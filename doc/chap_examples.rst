@@ -683,6 +683,287 @@ equilibrium :math:`\theta \sim \frac{\pi}{2}`. Thus, in order to reach a neighbo
 
 .. [1] H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
 
+
+Two-link planar manipulator
+-------------
+
+.. _tlpmfig:
+
+.. figure:: /pic/chapter06_section07_task.png
+    :width: 25 %
+	
+	Two-link planar manipulator.
+
+	
+Consider a model of two-link planar pendulum whose hinge axes are parallel.
+Movements occur in a vertical plane. 
+Consider the problem of transposition the system in finite time into an unstable state.
+To solve this problem we construct a set of solvability for the linearized system released from a small neighborhood of the given position
+(:math:`\phi_1^0, \phi_2^0` --- angles of construction in given state).
+	
+	
+	
+At first, write the kinetic and potential energy for this system.
+
+.. math:: 
+   :label: energy_def
+
+	T_1 =& \ \frac{m_1 (\ddot{x}_1^2 + \ddot{y}_1^2)}{2} + \frac{J_{c_1} \dot{\phi}_1^2}{2},\\
+	T_2 =& \ \frac{m_2 (\ddot{x}_2^2 + \ddot{y}_1^2)}{2} + \frac{J_{c_2} \dot{\phi}_2^2}{2}, \\
+	V_1 =& \ m_1 g s_1 \sin{\phi_1},\\
+	V_2 =& \ m_2 g l_1 \sin{\phi_1} + m_2 g s_2 \sin{\phi_2}
+
+In these equations :math:`m_1, m_2` --- masses of objects, :math:`s_1 = |O_1 C_1|,
+s_2 = |O_2 C_2|`, where :math:`C_1, C_2` --- centers of masses, 
+:math:`\phi_1, \phi_2` --- angles of elements' position,  :math:`l_1, l_2` --- full 
+lengths of elements, :math:`J_{c_1}, J_{c_2}` --- moments of inertia,
+:math:`\left | u_1\right | \leqslant \alpha_1,  \left | u_2\right | \leqslant \alpha_2` --- restriction of controls, which are attached to the hinges,
+:math:`M_{tr1}, M_{tr2}` --- torques of friction force and torques are proportional to the angular speed with coefficients :math:`k_1, k_2`.
+
+Next come to Lagrange function:
+	
+.. math:: 
+   :label: lagran_1
+	
+	L = T - V =  \dot{\phi}_1^2 \frac{m_1 s_1^2 + J_{c_1} + m_2 l_1^2}{2} +
+		\dot{\phi}_2^2 \frac{m_2 s_2^2 + J_{c_2}}{2} + \\
+	+ \dot{\phi}_1\dot{\phi}_2 l_1 s_2 \cos{(\phi_1 - \phi_2)} - m_2 g s_2 \sin{\phi_2}
+		-  (m_1 s_1 + m_2 l_1)g \sin{\phi_1}
+
+	
+.. math:: 
+   :label: lagran_equ
+   
+    \dfrac{d}{dt}\left ( \dfrac{\partial L}{\partial \dot{\phi}_1 }\right ) - 
+		\dfrac{\partial{L}}{\partial \phi_1} = u_1 - M_{tr1}\\
+    \dfrac{d}{dt}\left ( \dfrac{\partial L}{\partial \dot{\phi}_2 }\right ) - 
+		\dfrac{\partial{L}}{\partial \phi_2} = u_2 - M_{tr2}
+
+Make some changes of variables for more convenient view:
+	
+.. math:: 
+   :label: replacements
+   
+    & a_1 = m_1s_1^2 + J_{c_1} + m_2l_1^2,\\
+	& b_1 = l_1s_2\cos(\phi_1 - \phi_2),\\
+	& c_1 = l_1s_2\sin(\phi_1- \phi_2),\\
+	& d_1 = (m_1s_1 + m_2l_1)g\cos(\phi_1),\\
+	& f_1 = u_1 - M_{tr1},\\
+	& a_2 = l_1 s_2 \cos(\phi_1 - \phi_2),\\
+	& b_2 = m_2 s_2^2 + J_{c_2},\\
+	& e_2 = l_1 s_2 \sin(\phi_1- \phi_2),\\
+	& d_2 = m_2 g s_2 \cos(\phi_2),\\
+	& f_2 = u_2 - M_{tr2}.
+	
+Lagrange equation:
+
+.. math:: 
+   :label: phi_1phi_2
+	
+	& \ddot{\phi}_1 =
+    \dfrac{f_1b_2-f_2b_1 + d_2b_1 - d_1b_2 - \dot{\phi}_1^2b_1e_2 - \dot{\phi}_2^2c_1b_2}
+    {s_2b_1 - s_1b_2}\\
+	
+	& \ddot{\phi}_2 = 
+    \dfrac{f_1s_2-f_2s_1 - d_1s_2 - d_2a_1 + \dot{\phi}_1^2s_1e_2 - \dot{\phi}_2^2s_2c_1}    
+    {s_2b_1 - s_1b_2}
+
+Make new replacements:
+
+.. math:: 
+   :label: replacement_before_taylor
+   
+   & x_1 = \frac{-k_1 a_2}{a_2 b_1 - a_1 b_2},\ x_2 = \frac{k_2 a_1}{a_2 b_1 - a_1 b_2},\ x_3 = \frac{a_2}{a_2 b_1 - a_1 b_2}, \\
+   & x_4 = \frac{-a_1}{a_2 b_1 - a_1 b_2},\ x_5 = \frac{-d_1 a_2 - d_2 a_1}{a_2 b_1 - a_1 b_2},\\
+   & y_1 = \frac{-k_1 b_2}{a_2 b_1 - a_1 b_2},\ y_2 = \frac{k_2 b_1}{a_2 b_1 - a_1 b_2},\ y_3 = \frac{b_2}{a_2 b_1 - a_1 b_2}, \\
+   & y_4 = \frac{-b_1}{a_2 b_1 - a_1 b_2},\ y_5 = \frac{-d_2 b_1 - d_1 b_2}{a_2 b_1 - a_1 b_2}
+
+The results with new variables:
+	
+.. math:: 
+   :label: deriv_angles
+
+   & \ddot{\phi}_1 = \dot{\phi}_1 y_1 + \dot{\phi}_2 y_2 + u_1 y_3 + u_2 y_4 + y_5,\\
+   & \ddot{\phi}_2 = \dot{\phi}_1 x_1 + \dot{\phi}_2 x_2 + u_1 x_3 + u_2 x_4 + x_5.
+	
+Here :math:`x_5, y_5` depends on :math:`cos{\phi_1}, cos{\phi_2}`
+so write Taylor formula for :math:`\cos` function.
+Then :math:`x_5, y_5` we can imagine as:
+
+.. math::
+	:label: x_5_y_5
+
+	x_5 = & \phi_1 \left( \frac{d_1^{'} a_2 \sin{\phi_1^0}}{a_2 b_1 - a_1 b_2} \right) + 
+			\phi_2 \left( \frac{d_2^{'} a_1 \sin{\phi_2^0}}{a_2 b_1 - a_1 b_2} \right) + \\
+			& + \frac{-d_1^{'} a_2 \cos{\phi_1^0} -d_1^{'} a_2 \phi_1 \sin{\phi_1^0}}{a_2 b_1 - a_1 b_2} +
+			\frac{-d_2^{'} a_1 \cos{\phi_2^0} -d_2^{'} a_1 \phi_1^0 \sin{\phi_1^0}}{a_2 b_1 - a_1 b_2}, \\ 
+	
+	y_5 = & \phi_1 \left( \frac{d_1^{'} b_2 \sin{\phi_1^0}}{a_2 b_1 - a_1 b_2} \right)+
+			\phi_2 \left( \frac{- d_2^{'} b_1 \sin{\phi_2^0}}{a_2 b_1 - a_1 b_2} \right) + \\
+			& + \frac{-d_2^{'} b_1 \cos{\phi_2^0} - d_2^{'} b_1 \phi_2^0 \sin{\phi_2^0}}{a_2 b_1 - a_1 b_2}+
+			\frac{-d_1^{'} b_2 \cos{\phi_1^0} - d_1^{'} b_2 \phi_1^0 \sin{\phi_1^0}}{a_2 b_1 - a_1 b_2},
+	
+where :math:`d_1^{'} \cos(\phi_1)  = d_1 , d_2^{'} \cos(\phi_2) = d_2`.
+Now define new variables:
+
+.. math::
+	:label: x_11_x12
+	
+	x_{11} = & \ \frac{d_1^{'} a_2 \sin{\phi_1^0}}{a_2 b_1 - a_1 b_2}, \\
+	x_{12} = & \ \frac{d_2^{'} a_1 \sin{\phi_2^0}}{a_2 b_1 - a_1 b_2}, \\
+	x_{13} = & \ \frac{-d_1^{'} a_2 \cos{\phi_1^0} -d_1^{'} a_2 \phi_1 \sin{\phi_1^0}}{a_2 b_1 - a_1 b_2} +  \\
+				& + \frac{-d_2^{'} a_1 \cos{\phi_2^0} -d_2^{'} a_1 \phi_1^0 \sin{\phi_1^0}}{a_2 b_1 - a_1 b_2}, \\
+	y_{11} = & \ \frac{d_1^{'} b_2 \sin{\phi_1^0}}{a_2 b_1 - a_1 b_2}, \\
+	y_{12} = & \ \frac{- d_2^{'} b_1 \sin{\phi_2^0}}{a_2 b_1 - a_1 b_2}, \\
+	y_{13} = & \ \frac{-d_2^{'} b_1 \cos{\phi_2^0} - d_2^{'} b_1 \phi_2^0 \sin{\phi_2^0}}{a_2 b_1 - a_1 b_2} +  \\
+				& + \frac{-d_1^{'} b_2 \cos{\phi_1^0} - d_1^{'} b_2 \phi_1^0 \sin{\phi_1^0}}{a_2 b_1 - a_1 b_2}, \\
+
+   
+
+
+where :math:`\phi_1^0, \phi_2^0` --- angles of construction in given state.
+   
+We have system :math:`\dot{t} = At + Bu + C`, here :math:`t` - vector with 4 coordinates,
+where :math:`t_1 = \phi_1,\ t_2 = \phi_2,\ t_3 = \dot{\phi_3},\ t_4 = \dot{\phi_4}`,
+:math:`A, B \in \mathbb{R}^{4 \times 4}`.
+
+:math:`C` not depend on :math:`\phi_1, \phi_2`, so we can do replacement :math:`z = t + \frac{C}{A}`.
+   
+As a result:
+
+.. math::
+	:label: equation_AB
+	
+	\dot{z} = Az + Bu
+	
+	
+.. math::
+
+   \left[\begin{array}{c}
+   \dot{z}_1\\
+   \dot{z}_2\\
+   \dot{z}_3\\
+   \dot{z}_4\end{array}\right]
+   =
+   \left[\begin{array}{cccc}
+   0 & 0 & 1 & 0 \\
+   0 & 0 & 0 & 1 \\
+   y_{11} & y_{12} & y_1 & y_2 \\
+   x_{11} & x_{12} & x_1 & x_2
+   \end{array}\right]
+   \left[\begin{array}{c}
+   z_1\\
+   z_2\\
+   z_3\\
+   z_4\end{array}\right]
+   + 
+   \left[\begin{array}{cc}
+   0 & 0 \\
+   0 & 0 \\
+   y_{3} & y_{4} \\
+   x_{3} & x_{4} 
+   \end{array}\right]
+   \left[\begin{array}{c}\
+   u_1 \\
+   u_2
+   \end{array}\right],
+
+Here :math:`u_3, u_4` --- fictitious variables for right size, 
+:math:`|u_1| \leqslant \alpha_1, |u_2| \leqslant \alpha_2`.
+
+
+Now compute the solvability set of the linear system
+and taking its projection onto :math:`(z_1, z_2)` subspace.
+
+
+.. figure:: /pic/chapter06_section07_pic1.png
+   :width: 100 %
+   
+   Figure shows solvability set projection onto (:math:`z_3, z_4`) of system
+   ( evolves in time from t=0 to t=5, end position is
+   :math:`z_1=0, z_2=0,z_3=0,z_4=0`)
+   
+
+.. figure:: /pic/chapter06_section07_pic2.png
+   :width: 100 %
+   
+   Figure shows solvability set projection onto (:math:`z_1, z_2`) of system
+   ( evolves in time from t=0 to t=5, end position is
+   :math:`z_1=0, z_2=0,z_3=0,z_4=0`)
+   
+
+.. figure:: /pic/chapter06_section07_pic3.png
+   :width: 100 %
+   
+   Figure shows solvability set projection onto (:math:`z_1, z_3`) of system
+   ( evolves in time from t=0 to t=5, end position is
+   :math:`z_1=0, z_2=0,z_3=0,z_4=0`)
+   
+
+.. figure:: /pic/chapter06_section07_pic4.png
+   :width: 100 %
+   
+   Figure shows solvability set projection onto (:math:`z_2, z_4`) of system
+   ( evolves in time from t=0 to t=5, end position is
+	:math:`z_1=0, z_2=0,z_3=0,z_4=0`)
+   
+
+.. figure:: /pic/chapter06_section07_pic5.png
+   :width: 100 %
+   
+   Figure shows solvability set projection onto (:math:`z_3, z_4`) of system
+   ( evolves in time from t=0 to t=5, end position is
+   :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
+   
+
+.. figure:: /pic/chapter06_section07_pic6.png
+   :width: 100 %
+   
+   Figure shows solvability set projection onto (:math:`z_1, z_2`) of system
+   ( evolves in time from t=0 to t=5, end position is
+   :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
+  
+
+.. figure:: /pic/chapter06_section07_pic7.png
+   :width: 100 %
+   
+   Figure shows solvability set projection onto (:math:`z_1, z_3`) of system
+   ( evolves in time from t=0 to t=5, end position is
+   :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
+  
+
+.. figure:: /pic/chapter06_section07_pic8.png
+   :width: 100 %
+   
+   Figure shows solvability set projection onto (:math:`z_2, z_4`) of system
+   ( evolves in time from t=0 to t=5, end position is
+   :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
+
+
+.. figure:: /pic/chapter06_section07_pic9.png
+   :width: 100 %
+   
+   Now set control restrictions on :math:`\alpha_1 = 10, \alpha_2 = 10`.
+   Figure shows solvability set projection onto (:math:`z_1, z_2`) of system
+   ( evolves in time from t=0 to t=5, end position is
+   :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
+   
+
+.. figure:: /pic/chapter06_section07_pic10.png
+   :width: 100 %
+   
+   Figure shows solvability set projection onto (:math:`z_3, z_4`) of system
+   ( evolves in time from t=0 to t=5, end position is
+   :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`, control limits:
+   :math:`\alpha_1 = 10, \alpha_2 = 10`)
+
+	
+   
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet01.m
+   :language: matlab
+   :linenos:
+   
+   
 LMI-based three-vehicle platoon
 -------------------------------
 
