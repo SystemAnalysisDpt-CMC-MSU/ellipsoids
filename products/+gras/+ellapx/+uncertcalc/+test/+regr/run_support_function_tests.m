@@ -7,7 +7,7 @@ function results=run_support_function_tests(varargin)
 %   gras.ellapx.uncertcalc.test.regr.run_support_function_tests('nParallelProcesses',12,'filter',{'testA0UInterval','.*','testRegression'})
 %
 import gras.gen.MatVector;
-import gras.mat.fcnlib.isdependent;
+import gras.sym.isdependent;
 %
 runner = mlunitext.text_test_runner(1, 1);
 loader = mlunitext.test_loader;
