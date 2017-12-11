@@ -34,7 +34,7 @@ elseif (~isstr(fromVarName))
 elseif (~isstr(toVarName))
     modgen.common.throwerror('wrongInput','toVarName is expected to be a string');
 else
-    mCMat = strrep(mCMat,' ','');   
+    mCMat = strrep(mCMat,' ','');
     regExpression = strcat('(^',fromVarName);
     regExpression = strcat(regExpression,'\>|\<');
     regExpression = strcat(regExpression,fromVarName);
