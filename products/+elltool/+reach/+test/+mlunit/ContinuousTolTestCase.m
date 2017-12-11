@@ -1,5 +1,5 @@
-classdef TolTestCase < mlunitext.test_case
-    %TOLTESTCASE Test to count Tol references
+classdef ContinuousTolTestCase < mlunitext.test_case
+    %CONTINUOUSTOLTESTCASE Test to count Tol references
     %
     % $Authors: Ivan Chistyakov <efh996@gmail.com> $
     %               $Date: December-2017
@@ -22,7 +22,7 @@ classdef TolTestCase < mlunitext.test_case
         secondSys
     end
     methods
-        function self = TolTestCase(varargin)
+        function self = ContinuousTolTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
             self.set_up_param();
         end
@@ -43,7 +43,7 @@ classdef TolTestCase < mlunitext.test_case
             self.secondSys = elltool.linsys.LinSysContinuous(...
                 self.secondAMat, self.secondBMat, self.secondSUBounds);
         end
-        function testEvolve(self)
+        function testTolContinuous(self)
             firstRsObj = elltool.reach.TReachContinuous(self.firstSys, ...
                 self.x0EllObj, self.dirsMat, self.timeVec, ...
                 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
