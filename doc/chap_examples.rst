@@ -522,6 +522,163 @@ to the green region.
 
 .. raw:: html
 
+
+LMI-based three-vehicle platoon
+------------------------
+
+A platoon of vehicles includes typically a leader and a number
+of followers. In a controlled platoon the controllers are
+designed to maintain constant relative distances between
+autonomous vehicles by tracking the trajectory of the
+leader. The latter is manually driven and can be considered
+as a reference input to the whole system. We are concerned
+with the longitudinal control of a platoon of vehicles engaged
+in following each other longitudinally by exchanging
+information via a wireless local area network (WLAN) (see
+Fig.1).
+
+. _platoonfig1:
+
+.. figure:: /pic/chapter06_section05_platoon.png
+:alt: platoon
+:width: 50 %
+
+ Platoon struture and notations.
+
+The spacing errors :math: `e_i` are defined as the difference
+between the actual distance to the predecessor and a
+(fixed) reference distance:
+:math: `e_i(t) = d_i(t) - dref_i.`
+Bounds for these reference distances will be stipulated by the result of
+our safety verification. The effective acceleration ai of each
+vehicle within the platoon is governed by the drivetrain
+dynamics.According to Fig. 1 and with
+the further approximation the resulting platoon model is
+given by:
+
+.. math::
+:label: platoon1
+
+\ddot{e}_i & = a_{i−1} - a_i.
+
+.. math::
+:label: platoon2
+
+a_i & = -1\frac{1}{\tau_i}a_i + 1\frac{1}{\tau_i}v_i
+
+where τi is the time constant of the drivetrain considered
+here to be constant and vi the input signal. The
+dynamics of the whole platoon with a state vector
+:math: `x =[. . . e_i, \dot{e}_i, a_i . . .]^T`
+can be expressed in state space form as
+follows:
+
+.. math::
+:label: platoon3
+
+\dot{x} & = A_sx+B_1a_L+B_2v.
+
+where the leading vehicle’s acceleration aL enters the dynamics
+as a disturbance. The goal thereby is to stabilize
+the platoon and realize a good disturbance rejection in
+terms of small spacing errors at reasonable control effort.
+These constraints comprise in particular maximum (absolute)
+spacing errors to prevent collisions among platoon
+members but also maximum amplification of velocity or
+acceleration values to account for the existing saturation
+effects that arise due to force limitation between road
+and tire. This optimal control problem is applied to a
+state feedback structure assuming that each vehicle has
+information access to all other vehicles states. We obtain
+as result an optimal matrix K verifying:
+
+
+.. math::
+:label: platoon4
+v & = K x
+
+The closed loop system is hence given by:
+
+.. math::
+:label: platoon5
+
+\dot{x} & = Ax + Bu.
+where :math: `A = (A_s + B_2K), B = B_1` and  :math: `u = a_L`.
+
+The main goal of this work, is to investigate the impact
+of disturbances of the communication network on the performance
+of the cooperative platoon. We are particularly
+interested in worst cases, in which a loss of communication
+between two/many or all vehicles occurs. The theory of
+hybrid systems offers a convenient framework to model this
+kind of systems. A hybrid automaton consists of states described
+by continuous dynamics and discrete events which
+trigger transitions between these states. Our application
+can be modeled by a hybrid automaton. The controlled
+platoon dynamics constitute thereby the continuous states
+and the communication breakdowns trigger the discrete
+switches from one continuous state to another. The interconnection
+topology within the platoon is modeled with
+a directed graph G = (V,E), defined by vertices V and
+edges E. The ith vertex represents the ith vehicle and
+the edge (i, j) indicates that vehicle j receives information
+from vehicle i. This graph is represented by the adjacent
+matrix :math: `R = [r_{ij}]` referred to as the communication matrix
+of the platoon.
+
+To take into account the communication failures in the
+controller design, the loss of information is expressed by
+forcing zeros in K. Depending on the topology and the configuration
+of the communication between vehicles given by
+the matrix R, many communication scenarios are possible.
+Consequently, the hybrid automaton modeling this kind
+of system will be complex. We focus our study on safetycritical
+worst case scenarios.We consider the worst case in
+Fig.2, in which the system switches from a full to a total
+dropout of the communication between the vehicles within
+the platoon. In general, our controlled hybrid automaton
+has continuous states.
+
+. _platoonfig2:
+
+.. figure:: /pic/chapter06_section05_automat.png
+:alt: automat
+:width: 50 %
+
+Hybrid automata modeling the worst case scenario.
+
+To each continuous state q corresponds a new K_q and consequently new
+matrices A_q and B_q verifying the equation
+.. math::
+:label: platoon6
+\dot{x}(t) = A_qx(t) + B_qu(t)
+
+where :math: `x(t) \in R^9` denotes the state vector,  :math: `u(t) = a_L \in R` is
+
+the input vector and  :math: `q \in {1, 2}` is the mode described
+by  :math: `(A_q,B_q) \in R^{9 \multiply 9} \multiply  R^9.`
+
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet01.m
+:language: matlab
+:linenos:
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet02.m
+:language: matlab
+:linenos:
+
+. _platoonfig3:
+
+.. figure:: /pic/chapter06_section05_automat.png
+:alt: automat
+:width: 50 %
+
+. _platoonfig4:
+
+.. figure:: /pic/chapter06_section05_automat.png
+:alt: automat
+:width: 50 %
+
 	<h2>References</h2>
 
 .. [SUN2003] L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
