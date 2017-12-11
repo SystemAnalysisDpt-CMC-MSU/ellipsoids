@@ -72,6 +72,10 @@ classdef EmailLogger<handle
             if ~self.isDryRun
                 [curUserName,curHostName]=modgen.system.getuserhost();
                 if ~isempty(curUserName)
+                    isSpaceVec=isspace(curUserName);
+                    if any(isSpaceVec)
+                        curUserName(isSpaceVec)=[];
+                    end
                     self.userName = curUserName;
                 end
                 if ~isempty(curHostName)
