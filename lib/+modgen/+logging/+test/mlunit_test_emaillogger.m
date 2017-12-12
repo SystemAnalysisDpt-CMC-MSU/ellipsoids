@@ -38,6 +38,11 @@ classdef mlunit_test_emaillogger < mlunitext.test_case
             [userName,hostName]=modgen.system.getuserhost();
             if isempty(userName)
                 userName = 'unknown';
+            else
+                isSpaceVec=isspace(userName);
+                if any(isSpaceVec)
+                    userName(isSpaceVec)=[];
+                end
             end
             if isempty(hostName)
                 hostName = 'unknown';

@@ -1,4 +1,5 @@
 function results=run_tests(varargin)
+elltool.test.TmpDataManager.setRootDir();
 logger=modgen.logging.log4j.Log4jConfigurator.getLogger();
 resList{1}=lib_run_tests(varargin{:});
 resList{2}=gras.test.run_tests();

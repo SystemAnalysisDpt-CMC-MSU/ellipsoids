@@ -6,7 +6,7 @@
 		<distributionList type="cell" >
 			<item type="char" >ellipsoids-tests-notification@googlegroups.com</item>
 		</distributionList>
-		<smtpServer type="char" >xeonus</smtpServer>
+		<smtpServer type="char" >glados</smtpServer>
 	</emailNotification>
 	<logging type="struct" >
 		<log4jSettings type="char" >

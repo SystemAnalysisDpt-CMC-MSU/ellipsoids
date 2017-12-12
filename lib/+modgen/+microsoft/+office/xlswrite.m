@@ -199,7 +199,11 @@ end
                 otherwise
                     xlFormat = -4143;
             end
-            ExcelWorkbook.SaveAs(file, xlFormat);
+            try
+                ExcelWorkbook.SaveAs(file, xlFormat);
+            catch
+                ExcelWorkbook.SaveAs(file);
+            end
             ExcelWorkbook.Close(false);
         end
         
