@@ -9,9 +9,21 @@ classdef TolCounter < handle
     %             and Computer Science,
     %             System Analysis Department 2017$
     properties (GetAccess = protected)
-        absTolCount = 0;
-        relTolCount = 0;
-        isTesting = false;
+        absTolCount;
+        relTolCount;
+        isTesting;
+    end
+    %
+    methods
+        function self = TolCounter(varargin)
+            self.absTolCount = 0;
+            self.relTolCount = 0;
+            if nargin > 0 && strcmp(varargin{1},'true')
+                self.isTesting = true;
+            else
+                self.isTesting = false;
+            end
+        end
     end
     %
     methods (Access = protected)

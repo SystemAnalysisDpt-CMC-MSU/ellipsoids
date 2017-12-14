@@ -31,7 +31,7 @@ classdef EllApxBuilder<handle
                         case 'noUncertJustQ'
                             fHandle=@lreachplain.IntProperEllApxBuilder;
                         case 'uncertMixed'
-                            fHandle=@lreachuncert.MixedIntEllApxBuilder;
+                            fHandle=@lreachuncert.TMixedIntEllApxBuilder;
                     end
                 case 'externalApx'
                     switch schemaName
@@ -41,7 +41,7 @@ classdef EllApxBuilder<handle
                 case 'extIntApx'
                     switch schemaName
                         case 'uncert'
-                            fHandle=@lreachuncert.ExtIntEllApxBuilder;
+                            fHandle=@lreachuncert.TExtIntEllApxBuilder;
                     end
             end
             if isempty(fHandle)

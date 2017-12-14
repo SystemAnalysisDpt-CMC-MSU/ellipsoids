@@ -21,6 +21,26 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
     properties (Constant,GetAccess=private)
         MAX_PRECISION_FACTOR=0.002;
     end
+    %
+    methods
+        function property = get.absTol(self)
+            self.countAbsTolMentions();
+            property = self.absTol;
+        end
+        function property = get.relTol(self)
+            self.countRelTolMentions();
+            property = self.relTol;
+        end
+    end
+    methods (Access = protected)
+        function countAbsTolMentions(self) %#ok<MANU>
+            % count references to absTol in subclasses
+        end
+        function countRelTolMentions(self) %#ok<MANU>
+            % count references to relTol in subclasses
+        end
+    end
+    %
     methods (Access=protected)
         function sMat=getOrthTranslMatrix(self,QMat,RSqrtMat,bVec,aVec)
             import gras.la.*;
@@ -107,7 +127,7 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
             self.relTol=relTol;
             self.absTol=absTol;
             x0Mat = pDefObj.getX0Mat();            
-            if ~ismatposdef(x0Mat, self.absTol)
+            if ~ismatposdef(x0Mat, absTol)
                 throwerror('wrongInput',...
                     'Initial set is not positive definite.');
             end            
