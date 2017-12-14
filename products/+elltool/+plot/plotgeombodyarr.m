@@ -467,8 +467,21 @@ axis(hAxes,'on');
 axis(hAxes,'auto');
 grid(hAxes,'on');
 hold(hAxes,'on');
+
 setDisplayName(hAxes);
 hVec=[];
+if strcmp(get(get(hAxes, 'XLabel'), 'String'), '')
+    set(get(hAxes, 'XLabel'), 'String', 'x_1', 'Interpreter', 'tex');
+    hVec=[hVec, get(hAxes, 'XLabel')];
+end
+if strcmp(get(get(hAxes, 'YLabel'), 'String'), '')
+    set(get(hAxes, 'YLabel'), 'String', 'x_2', 'Interpreter', 'tex');
+    hVec=[hVec, get(hAxes, 'YLabel')];
+end
+if strcmp(get(get(hAxes, 'ZLabel'), 'String'), '')
+    set(get(hAxes, 'ZLabel'), 'String', 'x_3', 'Interpreter', 'tex');
+    hVec=[hVec, get(hAxes, 'ZLabel')];
+end
 end
 %
 function hVec=axesSetPropDoNothing2Func(hAxes,~)
@@ -479,8 +492,21 @@ axis(hAxes,'on');
 axis(hAxes,'auto');
 grid(hAxes,'on');
 hold(hAxes,'off');
+
 setDisplayName(hAxes);
 hVec=[];
+if strcmp(get(get(hAxes, 'XLabel'), 'String'), '')
+    set(get(hAxes, 'XLabel'), 'String', 'x_1', 'Interpreter', 'tex');
+    hVec=[hVec, get(hAxes, 'XLabel')];
+end
+if strcmp(get(get(hAxes, 'YLabel'), 'String'), '')
+    set(get(hAxes, 'YLabel'), 'String', 'x_2', 'Interpreter', 'tex');
+    hVec=[hVec, get(hAxes, 'YLabel')];
+end
+if strcmp(get(get(hAxes, 'ZLabel'), 'String'), '')
+    set(get(hAxes, 'ZLabel'), 'String', 'x_3', 'Interpreter', 'tex');
+    hVec=[hVec, get(hAxes, 'ZLabel')];
+end
 end
 %
 function initializeUserData(hAxes)
