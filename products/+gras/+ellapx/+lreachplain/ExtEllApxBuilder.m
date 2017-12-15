@@ -1,4 +1,4 @@
-classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
+classdef ExtEllApxBuilder<gras.ellapx.lreachplain.TATightEllApxBuilder
     properties (Constant,GetAccess=private)
         APPROX_SCHEMA_NAME='ExternalQ'
         APPROX_SCHEMA_DESCR='External approximation based on matrix ODE for Q'
@@ -54,7 +54,7 @@ classdef ExtEllApxBuilder<gras.ellapx.lreachplain.ATightEllApxBuilder
     end
     methods
         function self=ExtEllApxBuilder(varargin)
-            self=self@gras.ellapx.lreachplain.ATightEllApxBuilder(...
+            self=self@gras.ellapx.lreachplain.TATightEllApxBuilder(...
                 varargin{:});
         end
     end
