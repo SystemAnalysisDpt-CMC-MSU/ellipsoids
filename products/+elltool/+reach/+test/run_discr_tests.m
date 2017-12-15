@@ -16,7 +16,7 @@ function results = run_discr_tests(varargin)
 %             and Computer Science,
 %             System Analysis Department 2012-2016$
 %
-import elltool.reach.TReachFactory;
+import elltool.reach.test.mlunit.TReachFactory;
 %
 [restArgList,~,filterPropList]=modgen.common.parseparext(varargin,...
     {'filter';{}});

@@ -9,12 +9,12 @@ classdef TReachFactory < elltool.reach.ReachFactory
     %             Faculty of Computational Mathematics
     %             and Computer Science,
     %             System Analysis Department 2017$
-    methods (Access = public, Static)
+    methods (Access = protected, Static)
         function name = getContReachName()
-            name = 'elltool.reach.TReachContinuous';
+            name = 'elltool.reach.test.mlunit.TReachContinuous';
         end
         function name = getDiscrReachName()
-            name = 'elltool.reach.TReachDiscrete';
+            name = 'elltool.reach.test.mlunit.TReachDiscrete';
         end
     end
     %

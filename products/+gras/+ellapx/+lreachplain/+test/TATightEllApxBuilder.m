@@ -1,4 +1,4 @@
-classdef TATightEllApxBuilder < elltool.reach.TolCounter & ...
+classdef TATightEllApxBuilder < elltool.reach.test.mlunit.TolCounter & ...
         gras.ellapx.lreachplain.ATightEllApxBuilder
     %TATIGHTELLAPXBUILDER Subclass to count Tol references
     %
@@ -20,8 +20,7 @@ classdef TATightEllApxBuilder < elltool.reach.TolCounter & ...
     %
     methods
         function self = TATightEllApxBuilder(varargin)
-            disp('TATIGHTELLAPXBUILDER');
-            self = self@elltool.reach.TolCounter('true');
+            self = self@elltool.reach.test.mlunit.TolCounter('true');
             self = ...
                 self@gras.ellapx.lreachplain.ATightEllApxBuilder(varargin{:});
             self.finishTolTest();

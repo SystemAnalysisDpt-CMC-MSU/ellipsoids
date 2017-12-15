@@ -1,6 +1,6 @@
-classdef TMixedIntEllApxBuilder < elltool.reach.TolCounter & ...
-        gras.ellapx.lreachuncert.MixedIntEllApxBuilder
-    %TMIXEDINTELLAPXBUILDER Subclass to count Tol references
+classdef TExtIntEllApxBuilder < elltool.reach.test.mlunit.TolCounter & ...
+        gras.ellapx.lreachuncert.ExtIntEllApxBuilder
+    %TEXTINTELLAPXBUILDER Subclass to count Tol references
     %
     % $Authors: Ivan Chistyakov <efh996@gmail.com> $
     %               $Date: December-2017
@@ -19,11 +19,12 @@ classdef TMixedIntEllApxBuilder < elltool.reach.TolCounter & ...
     end
     %
     methods
-        function self = TMixedIntEllApxBuilder(varargin)
-            self = self@elltool.reach.TolCounter('true');
+        function self = TExtIntEllApxBuilder(varargin)
+            self = self@elltool.reach.test.mlunit.TolCounter('true');
             self = ...
-                self@gras.ellapx.lreachuncert.MixedIntEllApxBuilder(varargin{:});
+                self@gras.ellapx.lreachuncert.ExtIntEllApxBuilder(varargin{:});
             self.finishTolTest();
         end
     end
 end
+

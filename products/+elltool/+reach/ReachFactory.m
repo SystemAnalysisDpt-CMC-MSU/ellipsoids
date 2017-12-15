@@ -18,7 +18,7 @@ classdef ReachFactory < handle
         absTol
         relTol
     end
-    methods (Static, Access = public)
+    methods (Static, Access = protected)
         function name = getContReachName()
             name = 'elltool.reach.ReachContinuous';
         end
