@@ -92,7 +92,8 @@ classdef SuiteSupportFunction < mlunitext.test_case
                     'writeDepth','cache');
                 %
                 [SRunProp, SRunAuxProp] = gras.ellapx.uncertcalc.run(confName,...
-                    'confRepoMgr', crm, 'sysConfRepoMgr', crmSys);
+                    'confRepoMgr', crm, 'sysConfRepoMgr', crmSys, ...
+                    'ellApxBuilderName', 'TEllApxBuilder');
                 %
                 fGetScaleFactor = @(x)1/x;
                 scaleFactorFieldList = {'scaleFactor'};

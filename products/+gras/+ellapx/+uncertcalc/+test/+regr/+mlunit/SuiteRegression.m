@@ -77,7 +77,8 @@ classdef SuiteRegression < mlunitext.test_case
                 curCrm.setParam('customResultDir.isEnabled',true,...
                         'writeDepth','cache');
                 SRunProp=gras.ellapx.uncertcalc.run(confName,...
-                    'confRepoMgr',curCrm,'sysConfRepoMgr',curCrmSys);
+                    'confRepoMgr',curCrm,'sysConfRepoMgr',curCrmSys,...
+                    'ellApxBuilderName','TEllApxBuilder');
                 if curCrm.getParam('plottingProps.isEnabled')
                     SRunProp.plotterObj.closeAllFigures();
                 end
