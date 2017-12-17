@@ -17,16 +17,16 @@ classdef TEllApxBuilder < gras.ellapx.uncertcalc.EllApxBuilder
                 case 'internalApx'
                     switch schemaName
                         case 'noUncertSqrtQ'
-                            fHandle = @lreachplain.IntEllApxBuilder;
+                            fHandle = @lreachplain.test.TIntEllApxBuilder;
                         case 'noUncertJustQ'
-                            fHandle = @lreachplain.IntProperEllApxBuilder;
+                            fHandle = @lreachplain.test.TIntProperEllApxBuilder;
                         case 'uncertMixed'
                             fHandle = @lreachuncert.test.TMixedIntEllApxBuilder;
                     end
                 case 'externalApx'
                     switch schemaName
                         case 'justQ'
-                            fHandle = @lreachplain.ExtEllApxBuilder;
+                            fHandle = @lreachplain.test.TExtEllApxBuilder;
                     end
                 case 'extIntApx'
                     switch schemaName

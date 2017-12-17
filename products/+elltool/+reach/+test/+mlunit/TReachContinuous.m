@@ -18,6 +18,22 @@ classdef TReachContinuous < elltool.reach.ReachContinuous & ...
         end
     end
     %
+    methods (Static, Access = protected)
+        function builderObj = createExtIntEllApxBuilderInstance(varargin)
+            builderObj = ...
+                gras.ellapx.lreachuncert.test.TExtIntEllApxBuilder(...
+                varargin{:});
+        end
+        function extBuilder = createExtEllApxBuilderInstance(varargin)
+            extBuilder = gras.ellapx.lreachplain.test.TExtEllApxBuilder(...
+                varargin{:});
+        end
+        function intBuilder = createIntEllApxBuilderInstance(varargin)
+            intBuilder = gras.ellapx.lreachplain.test.TIntEllApxBuilder(...
+                varargin{:});
+        end
+    end
+    %
     methods (Access = protected)
         function [ellTubeRel,goodDirSetObj] = auxMakeEllTubeRel(self, ...
             varargin)
