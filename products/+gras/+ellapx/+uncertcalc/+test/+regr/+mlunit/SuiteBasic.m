@@ -33,7 +33,8 @@ classdef SuiteBasic < mlunitext.test_case
             crmSys=gras.ellapx.uncertcalc.test.regr.conf.sysdef.ConfRepoMgr();
             SRunProp=gras.ellapx.uncertcalc.run('basic','basic',...
                 'confRepoMgr',crm,'sysConfRepoMgr',crmSys,...
-                'ellApxBuilderName','TEllApxBuilder');
+                'ellApxBuilderName',...
+                'gras.ellapx.uncertcalc.test.TEllApxBuilder');
             if crm.getParam('plottingProps.isEnabled')
                 SRunProp.plotterObj.closeAllFigures();
             end

@@ -81,7 +81,8 @@ classdef SuiteCompare < mlunitext.test_case
                         'writeDepth','cache');
                 runResult=gras.ellapx.uncertcalc.run(confName,...
                     'confRepoMgr',crm,'sysConfRepoMgr',crmSys,...
-                    'ellApxBuilderName','TEllApxBuilder');
+                    'ellApxBuilderName',...
+                    'gras.ellapx.uncertcalc.test.TEllApxBuilder');
                 if crm.getParam('plottingProps.isEnabled')
                     runResult.plotterObj.closeAllFigures();
                 end
