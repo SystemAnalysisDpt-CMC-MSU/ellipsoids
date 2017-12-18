@@ -1,4 +1,4 @@
-classdef TIntProperEllApxBuilder < elltool.reach.test.mlunit.TolCounter & ...
+classdef TIntProperEllApxBuilder < gras.test.mlunit.TolCounter & ...
         gras.ellapx.lreachplain.IntProperEllApxBuilder
     %TINTPROPERELLAPXBUILDER Subclass to count Tol references
     %
@@ -10,17 +10,17 @@ classdef TIntProperEllApxBuilder < elltool.reach.test.mlunit.TolCounter & ...
     %             and Computer Science,
     %             System Analysis Department 2017$
     methods (Access = protected)
-        function countAbsTolMentions(self)
+        function beforeGetAbsTol(self)
             self.incAbsTolCount();
         end
-        function countRelTolMentions(self)
+        function beforeGetRelTol(self)
             self.incRelTolCount();
         end
     end
     %
     methods
         function self = TIntProperEllApxBuilder(varargin)
-            self = self@elltool.reach.test.mlunit.TolCounter('true');
+            self = self@gras.test.mlunit.TolCounter(true);
             self = self@gras.ellapx.lreachplain.IntProperEllApxBuilder(...
                 varargin{:});
             self.finishTolTest();

@@ -1,5 +1,5 @@
 classdef TReachContinuous < elltool.reach.ReachContinuous & ...
-        elltool.reach.test.mlunit.TolCounter
+        gras.test.mlunit.TolCounter
     %TREACHCONTINUOUS Subclass to count Tol references
     %
     % $Authors: Ivan Chistyakov <efh996@gmail.com> $
@@ -10,10 +10,10 @@ classdef TReachContinuous < elltool.reach.ReachContinuous & ...
     %             and Computer Science,
     %             System Analysis Department 2017$
     methods (Access=protected)
-        function countAbsTolMentions(self)
+        function beforeGetAbsTol(self)
             self.incAbsTolCount();
         end
-        function countRelTolMentions(self)
+        function beforeGetRelTol(self)
             self.incRelTolCount();
         end
     end
@@ -76,7 +76,7 @@ classdef TReachContinuous < elltool.reach.ReachContinuous & ...
     %
     methods
         function self = TReachContinuous(varargin)
-            self = self@elltool.reach.test.mlunit.TolCounter();
+            self = self@gras.test.mlunit.TolCounter();
             self = self@elltool.reach.ReachContinuous(varargin{:});
         end
     end

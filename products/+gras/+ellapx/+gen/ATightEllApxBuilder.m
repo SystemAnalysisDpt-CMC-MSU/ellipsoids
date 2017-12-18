@@ -24,19 +24,19 @@ classdef ATightEllApxBuilder<gras.ellapx.gen.IEllApxBuilder
     %
     methods
         function property = get.absTol(self)
-            self.countAbsTolMentions();
+            self.beforeGetAbsTol();
             property = self.absTol;
         end
         function property = get.relTol(self)
-            self.countRelTolMentions();
+            self.beforeGetRelTol();
             property = self.relTol;
         end
     end
     methods (Access = protected)
-        function countAbsTolMentions(self) %#ok<MANU>
+        function beforeGetAbsTol(self) %#ok<MANU>
             % count references to absTol in subclasses
         end
-        function countRelTolMentions(self) %#ok<MANU>
+        function beforeGetRelTol(self) %#ok<MANU>
             % count references to relTol in subclasses
         end
     end

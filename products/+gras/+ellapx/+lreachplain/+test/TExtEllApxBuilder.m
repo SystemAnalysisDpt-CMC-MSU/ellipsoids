@@ -1,5 +1,5 @@
 classdef TExtEllApxBuilder < gras.ellapx.lreachplain.ExtEllApxBuilder & ...
-    elltool.reach.test.mlunit.TolCounter
+    gras.test.mlunit.TolCounter
     %TEXTELLAPXBUILDER Subclass to check Tol references
     %
     % $Authors: Ivan Chistyakov <efh996@gmail.com> $
@@ -10,17 +10,17 @@ classdef TExtEllApxBuilder < gras.ellapx.lreachplain.ExtEllApxBuilder & ...
     %             and Computer Science,
     %             System Analysis Department 2017$
     methods (Access = protected)
-        function countAbsTolMentions(self)
+        function beforeGetAbsTol(self)
             self.incAbsTolCount();
         end
-        function countRelTolMentions(self)
+        function beforeGetRelTol(self)
             self.incRelTolCount();
         end
     end
     %
     methods
         function self = TExtEllApxBuilder(varargin)
-            self = self@elltool.reach.test.mlunit.TolCounter('true');
+            self = self@gras.test.mlunit.TolCounter(true);
             self = ...
                 self@gras.ellapx.lreachplain.ExtEllApxBuilder(varargin{:});
             self.finishTolTest();
