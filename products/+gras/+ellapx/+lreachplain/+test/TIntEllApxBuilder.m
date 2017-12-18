@@ -1,5 +1,5 @@
-classdef TIntEllApxBuilder < gras.ellapx.lreachplain.IntEllApxBuilder & ...
-    gras.ellapx.lreachplain.test.TATightIntEllApxBuilder
+classdef TIntEllApxBuilder < elltool.reach.test.mlunit.TolCounter & ...
+    gras.ellapx.lreachplain.IntEllApxBuilder
     %TINTELLAPXBUILDER Subclass to check Tol references
     %
     % $Authors: Ivan Chistyakov <efh996@gmail.com> $
@@ -9,20 +9,21 @@ classdef TIntEllApxBuilder < gras.ellapx.lreachplain.IntEllApxBuilder & ...
     %             Faculty of Computational Mathematics
     %             and Computer Science,
     %             System Analysis Department 2017$
+    methods (Access = protected)
+        function countAbsTolMentions(self)
+            self.incAbsTolCount();
+        end
+        function countRelTolMentions(self)
+            self.incRelTolCount();
+        end
+    end
+    %
     methods
         function self = TIntEllApxBuilder(varargin)
-            self=self@gras.ellapx.lreachplain.test.TATightIntEllApxBuilder(...
+            self = self@elltool.reach.test.mlunit.TolCounter('true');
+            self = self@gras.ellapx.lreachplain.IntEllApxBuilder(...
                 varargin{:});
-            bigX0SqrtMat=gras.la.sqrtmpos(self.getProblemDef().getX0Mat);
-            self.bigS0X0SqrtMat=bigX0SqrtMat;
-            pDefObj=self.getProblemDef();
-            sysDim=pDefObj.getDimensionality();
-            pTimeLimsVec=pDefObj.getTimeLimsVec();
-            startTime=pTimeLimsVec(1);
-            s0Mat=eye(sysDim);
-            goodDirCurveSpline=self.getGoodDirSet().getGoodDirCurveSpline();
-            self.l0Mat=s0Mat*bigX0SqrtMat*goodDirCurveSpline.evaluate(...
-                startTime);
+            self.finishTolTest();
         end
     end
 end
