@@ -1,10 +1,38 @@
 classdef SuiteBasic < mlunitext.test_case
     
+    properties (GetAccess=private,Constant)
+        N_COMPARE_DECIMAL_DIGITS = 15
+    end
+    
+    methods (Access=private,Static)
+        function isOk = compareCMatWithNumerics(self,mCMat,resCMat,corCMat)
+            isNumMat = cellfun('isclass',mCMat,'double');
+            isEqMat = false(size(isNumMat));
+            isEqMat(~isNumMat) = ...
+                cellfun(@isequal,corCMat(~isNumMat),resCMat(~isNumMat));
+            isEqMat(isNumMat) = ...
+                cellfun(@(x,y)cmpuptodigits(x,y,...
+                self.N_COMPARE_DECIMAL_DIGITS),corCMat(isNumMat),...
+                resCMat(isNumMat));
+            isOk = all(isEqMat(:));
+            
+            function isEq = cmpuptodigits(firstNumStr,secondNumStr,nCmpDigits)
+                [firstNumStr,firstFracStr] = strtok(firstNumStr, '.');
+                [secondNumStr,secondFracStr] = strtok(secondNumStr, '.');
+                isEq = strcmp(firstNumStr,secondNumStr) &&...
+                    (isempty(firstFracStr) == isempty(secondFracStr));
+                if isEq && ~isempty(firstFracStr)
+                    isEq = strncmp(firstFracStr, secondFracStr, nCmpDigits + 1);
+                end
+            end
+        end
+    end
+    
     methods
         function self = SuiteBasic(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
-        
+                
         function testVarreplaceInt(~)
             mCMat={'t+t^2+t^3+sin(t)', 't^(1/2)+t*t*17';...
                 'att+t2', 't+temp^t';...
@@ -191,7 +219,7 @@ classdef SuiteBasic < mlunitext.test_case
             mlunitext.assert_equals(true,isOk);
         end
         
-        function testVarreplaceOneRealElem(~)
+        function testVarreplaceOneRealElem(self)
             mCMat={0.01};
             
             fromVarName = 'att';
@@ -201,12 +229,13 @@ classdef SuiteBasic < mlunitext.test_case
             toVarName = strcat(toVarName, fromVarName);
             resCMat=gras.sym.varreplace(mCMat, fromVarName, toVarName);
             
-            corCMat={'0.010000000000000000208'};
-            isOk=isequal(corCMat, resCMat);
+            corCMat={'0.01'};
+            isOk = self.compareCMatWithNumerics(self,mCMat,resCMat,corCMat);
             mlunitext.assert_equals(true,isOk);
         end
         
-        function testVarreplaceMatreal(~)
+        
+        function testVarreplaceMatreal(self)
             mCMat={150.1, 1.08,  2.09;
                 -10.008, 30.1, 100.01;
                 1.1,   0.556,  -190.901};
@@ -218,10 +247,10 @@ classdef SuiteBasic < mlunitext.test_case
             toVarName = strcat(toVarName, fromVarName);
             resCMat=gras.sym.varreplace(mCMat, fromVarName, toVarName);
             
-            corCMat={'150.09999999999999432',   '1.0800000000000000711',  '2.0899999999999998579';
-                '-10.007999999999999119', '30.100000000000001421',  '100.01000000000000512';
-                '1.1000000000000000888',     '0.55600000000000004974', '-190.90100000000001046'};
-            isOk=isequal(corCMat, resCMat);
+            corCMat={'150.1',   '1.08',  '2.09';
+                     '-10.008', '30.1',  '100.01';
+                     '1.1',     '0.556', '-190.901'};
+            isOk = self.compareCMatWithNumerics(self,mCMat,resCMat,corCMat);
             mlunitext.assert_equals(true,isOk);
         end
         
@@ -244,7 +273,7 @@ classdef SuiteBasic < mlunitext.test_case
             mlunitext.assert_equals(true,isOk);
         end
         
-        function testVarreplaceRealElem(~)
+        function testVarreplaceRealElem(self)
             mCMat={'3.2',           't';...
                 'att+t2',        't+temp^t';...
                 '1/(t+3)*2^t^t', 1.9};
@@ -258,12 +287,12 @@ classdef SuiteBasic < mlunitext.test_case
             
             corCMat={'3.2',           't';...
                 '(10.8-att)+t2', 't+temp^t';...
-                '1/(t+3)*2^t^t', '1.8999999999999999112'};
-            isOk=isequal(corCMat, resCMat);
+                '1/(t+3)*2^t^t', '1.9'};
+            isOk = self.compareCMatWithNumerics(self,mCMat,resCMat,corCMat);
             mlunitext.assert_equals(true,isOk);
         end
         
-        function testVarreplaceMixedElems(~)
+        function testVarreplaceMixedElems(self)
             mCMat={'3.2',    't + 3.2';...
                 9.8,      -34;...
                 'sin(t)', 1.9};
@@ -275,10 +304,10 @@ classdef SuiteBasic < mlunitext.test_case
             toVarName = strcat(toVarName, fromVarName);
             resCMat=gras.sym.varreplace(mCMat, fromVarName, toVarName);
             
-            corCMat={'3.2',         '(0.81-t)+3.2';...
-                '9.8000000000000007105',         '-34';...
-                'sin((0.81-t))', '1.8999999999999999112'};
-            isOk=isequal(corCMat, resCMat);
+            corCMat={'3.2',           '(0.81-t)+3.2';...
+                     '9.8',           '-34';...
+                     'sin((0.81-t))', '1.9'};
+            isOk = self.compareCMatWithNumerics(self,mCMat,resCMat,corCMat);
             mlunitext.assert_equals(true,isOk);
         end
         
@@ -302,7 +331,7 @@ classdef SuiteBasic < mlunitext.test_case
             mlunitext.assert_equals(true,isOk);
         end
         
-        function testVarreplaceAll(~)
+        function testVarreplaceAll(self)
             if isempty(ver('Symbolic'))
                 return;
             end
@@ -318,9 +347,9 @@ classdef SuiteBasic < mlunitext.test_case
             resCMat=gras.sym.varreplace(mCMat, fromVarName, toVarName);
             
             corCMat={'sin((1-t))', '10', 'exp(tt)';
-                'cos(2*(1-t))', 'sin(3*(1-t))', '-1.0900000000000000799';
+                'cos(2*(1-t))', 'sin(3*(1-t))', '-1.09';
                 '3*(1-t)*tt', '(1-t)+tt', '1'};
-            isOk=isequal(corCMat, resCMat);
+            isOk = self.compareCMatWithNumerics(self,mCMat,resCMat,corCMat);
             mlunitext.assert_equals(true,isOk);
         end
         

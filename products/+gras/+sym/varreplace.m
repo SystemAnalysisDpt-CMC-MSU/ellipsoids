@@ -8,10 +8,7 @@ function resCMat=varreplace(mCMat,fromVarName,toVarName)
 % 		mCMat: cell[nDims1,nDims2] -
 %          cell matrix of expressions; each cell may be either a number,
 %          a char string or a symbolic expression (the latter in the case
-%          when Symbolic Toolbox is installed); it should be noted that 
-%          numbers are transformed into strings using 20 signs after 
-%          the decimal point to preserve accuracy, so the result may look
-%          a bit confused
+%          when Symbolic Toolbox is installed)
 %       fromVarName: variable that we want to be replaced
 %       toVarName: expression that we get instead of variable fromVarName
 %
@@ -23,12 +20,12 @@ function resCMat=varreplace(mCMat,fromVarName,toVarName)
 %                          9.8,     -34;...
 %                         'sin(t)', 1.9},'t','(0.81-t)')
 %
-% resCMat = {'3.2',                   '(0.81-t)+3.2';...
-%            '9.8000000000000007105', '-34';...
-%            'sin((0.81-t))',         '1.8999999999999999112'}
+% resCMat = {'3.2',           '(0.81-t)+3.2';...
+%            '9.8',           '-34';...
+%            'sin((0.81-t))', '1.9'}
 %
 %
-% $Author: Nikolay Trusov  <trunick.10.96@gmail.com>$	$Date: 2017-12-18$
+% $Author: Nikolay Trusov  <trunick.10.96@gmail.com>$	$Date: 2017-12-20$
 % $Copyright: Moscow State University,
 % 			Faculty of Computational Mathematics and Computer Science,
 % 			System Analysis Department 2017$
@@ -49,11 +46,10 @@ modgen.common.checkvar(toVarName,'ischar(x)',...
     'errorTag','wrongInput','errorMessage',...
     'toVarName is expected to be a string');
 
-
 isSymMat = cellfun(@(x)isa(x,'sym'),mCMat);
 mCMat(isSymMat) = cellfun(@char,mCMat(isSymMat),'UniformOutput',false);
 isnCharMat = ~cellfun('isclass',mCMat,'char');
-mCMat(isnCharMat)=cellfun(@(x)num2str(x,20),mCMat(isnCharMat),... 
+mCMat(isnCharMat)=cellfun(@(x)num2str(x,15),mCMat(isnCharMat),... 
     'UniformOutput',false);
 mCMat = strrep(mCMat,' ','');
 regExpression = strcat('(^',fromVarName);
