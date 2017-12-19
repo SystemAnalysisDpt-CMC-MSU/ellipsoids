@@ -54,7 +54,7 @@ classdef TolCounter < handle
         end
         function incAbsTolCount(self)
             self.absTolCount = self.absTolCount + 1;
-            if self.isTesting == true
+            if self.isTesting
                 self.checkMentions();
             end
         end
