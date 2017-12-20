@@ -525,11 +525,11 @@ Pendulum with a flywheel
 
 .. _pendulungfig:
 
-.. figure::  _static/chapter06_section06_pendulung.png
+.. figure::  /pic/chapter06_section06_pendulung.png
    :alt: pendulung
    :width: 30 %
 
-   Pendulum with a flywheel
+   Pendulum with a flywheel.
 
 Consider a system consisting of a rod weight :math:`{m}_1` attached to the fixed base at the point :math:`O`
 and to the flywheel at the point :math:`A`. The flywheel is a disk of weight :math:`{m}_2`.
@@ -542,28 +542,30 @@ Define
 -  :math:`\phi` - angle of rotation of the flywheel relative to the rod,
 -  :math:`J_1` -  moment of inertia of rod, rotating about point C,
 -  :math:`J_2` - moment of inertia of disk, rotating about point A,
--  :math:`k_1, k_2` - coefficients of friction.
+-  :math:`k_1` - coefficient of friction at point O.
+-  :math:`k_2` - coefficient of friction at point A.
 
 .. _forcesfig:
 
-.. figure::  _static/chapter06_section06_forces.png
+.. figure::  /pic/chapter06_section06_forces.png
    :alt: forces
    :width: 60 %
 
-   Active, reaction and inertial forces
+   Forces and moments.
 
 The mechanical system presented in :num:`figure #forcesfig` is described by the following system of equations:
 
 .. math:: 
+   :label: forces
    
     \left\{
    \begin{aligned}
    & m_1 \ddot{x}_{C} = F^{01}_{x} - F^{12}_{x},\\
    & m_1 \ddot{y}_{C} = F^{01}_{y} - F^{12}_{x} - m_1g,\\
-   & J_1 \ddot{\theta} = F^{01}_{x}a \sin \theta - F^{01}_{y}a \cos \theta + F^{12}_{x}a \sin \theta - F^{12}_{y}a \cos \theta - M,\\
+   & J_1 \ddot{\theta} = F^{01}_{x}a \sin \theta - F^{01}_{y}a \cos \theta + F^{12}_{x}a \sin \theta - F^{12}_{y}a \cos \theta - M - k_1 \dot{\theta} + k_2 \dot{\phi},\\
    & m_2 \ddot{x}_{A} = F^{12}_{x},\\
    & m_2 \ddot{y}_{A} = F^{12}_{y} - m_2 g,\\
-   & J_2 (\ddot{\theta} + \ddot{\phi}) = M.\\
+   & J_2 (\ddot{\theta} + \ddot{\phi}) = M - k_2 \dot{\phi}.\\
    \end{aligned}
    \right.
 
@@ -588,20 +590,7 @@ In order to obtain a closed system we add four relating equations:
 Remembering that :math:`l = 2a`, we get:
 
 .. math:: 
-   :label: frictionless
-   
-    \left\{
-   \begin{aligned}
-   & (J_1 + J_2 + m_1 a^2 + m_2 l^2)\ddot{\theta} + J_2 \ddot{\phi} = -(m_1a + m_2 l) g \cos\theta,\\
-   & J_2 (\ddot{\theta} + \ddot{\phi}) = M.\\
-   \end{aligned}
-   \right.
-
-Equations :eq:`frictionless` don't include friction. Add the moment of force of friction that is proportional to the
-angular velocity:
-
-.. math:: 
-   :label: whithfriction
+   :label: system
    
     \left\{
    \begin{aligned}
@@ -610,7 +599,7 @@ angular velocity:
    \end{aligned}
    \right.
 
-Let's linearize system :eq:`whithfriction`, supposing that the system is in a small neighborhood of unstable 
+Let's linearize system :eq:`system`, supposing that the system is in a small neighborhood of unstable 
 equilibrium :math:`\theta \sim \frac{\pi}{2}`. Linearization gives:
 
 .. math:: 
