@@ -520,6 +520,74 @@ are shown in green. Observe that in the congested mode, the density
 the guard is not actually reached, because the state evolves according
 to the green region.
 
+Inverted Pendulum On a Cart
+---------------------------
+
+.. _invpendfig:
+
+.. figure:: /pic/chapter06_section05_inpendulum.png
+   :alt: invpend
+   :width: 50 %
+
+   Inverted pendulum
+
+The mechanical system presented in :num:`figure #invpendfig` is described by the following system of equations:
+
+.. math:: 
+   :label: invpend1
+
+   m_1\ddot{x}_1+k_1x = u, 
+
+.. math::
+   :label: invpend2
+   
+   (J_c + \frac{m_2L^2}{4})\ddot{\theta}+\frac{m_2gL\cos(\theta)}{2} + k_2\dot{\theta}L = 0 . 
+
+Here :math:`k_1, k_2` are the coefficient of dynamic viscosity for the bodies 1 and 2, with masses :math:`m_1` and :math:`m_2` respectively, 
+
+:math:`J_c` is inertia moment of the second body relatively to its center of mass, 
+
+:math:`u` is the force applied to cart and we shall assume
+:math:`|u| \leqslant \alpha`. 
+
+The initial conditions can
+be taken as :math:`x(0)=0`, :math:`x_2(0)=\pi/2 - \varepsilon`, where :math:`\varepsilon=10^{-3}`. 
+
+After linerarization in the neighbourhood of :math:`\frac{\pi}{2}` we have :math:`\cos(\theta) \approx \frac{\pi}{2} - \theta`.
+Defining :math:`x_1 = x, x_2=\dot{x}_1, x_3 = \theta` and :math:`x_4=\dot{x}_3`, we can rewrite
+:eq:`invpend1`-:eq:`invpend2` as a linear system in standard form:
+
+.. math::
+   :label: invpendls
+
+   \left[\begin{array}{c}
+   \dot{x}_1 \\
+   \dot{x}_2 \\
+   \dot{x}_3 \\
+   \dot{x}_4 \end{array}\right] = \left[\begin{array}{cccc}
+   0 & 1 & 0 & 0\\
+   0 & \frac{-k_1}{m_1} & 0 & 0\\
+   0 & 0 & 0 & 1\\
+   0 & 0 & \frac{m_2Lg}{2(J_c+\frac{m_2L^2}{4})} & -\frac{k_2L}{J_c+\frac{m_2L^2}{4}}\end{array}\right]
+   \left[\begin{array}{c}
+   x_1 \\
+   x_2 \\
+   x_3 \\
+   x_4 \end{array}\right] + \left[\begin{array}{cc}
+   0 \\
+   0 \\
+   0 \\
+   -\frac{m_2Lg\pi}{4J_c+m_2L^2} \end{array}\right] + \left[\begin{array}{cc}
+   0 \\
+   \frac{1}{m_1} \\
+   0 \\
+   0 \end{array}\right]\left[\begin{array}{c}
+   u\\
+   1\end{array}\right].   
+
+Now we can compute the reach set of system :eq:`invpend1`-:eq:`invpend2` for given time by computing the reach set of the linear system :eq:`invpendls`
+and taking its projection onto :math:`(x_1, x_3)` subspace. 
+
 .. raw:: html
 
 	<h2>References</h2>
