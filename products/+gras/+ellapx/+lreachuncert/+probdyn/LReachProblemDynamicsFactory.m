@@ -132,7 +132,7 @@ classdef LReachProblemDynamicsFactory<handle
         end
         %
         function isDisturb = getIsDisturbance(ctStrCMat, qtStrCMat)
-            import gras.mat.fcnlib.isdependent;
+            import gras.sym.isdependent;
             import gras.gen.MatVector;
             isDisturb = true;
             if isdependent(ctStrCMat)

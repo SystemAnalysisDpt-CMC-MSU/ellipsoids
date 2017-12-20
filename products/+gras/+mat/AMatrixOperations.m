@@ -183,7 +183,7 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
             import gras.mat.fcnlib.MatrixSFTripleProd;
             import gras.mat.fcnlib.MatrixSFBinaryProd;
             import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.fcnlib.isdependent;
+            import gras.sym.isdependent;
             import gras.gen.MatVector;
             %
             if nargin > 3
@@ -211,7 +211,7 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
         function obj = rSymbMultiplyByVec(self, mCMat, vCVec)
             import gras.mat.fcnlib.MatrixSFBinaryProdByVec;
             import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.fcnlib.isdependent;
+            import gras.sym.isdependent;
             import gras.gen.MatVector;
             %
             if isdependent({mCMat{:},vCVec{:}})
@@ -228,7 +228,7 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
         function obj = fromSymbMatrix(mCMat)
             import gras.mat.fcnlib.MatrixSymbFormulaBased;
             import gras.mat.ConstMatrixFunctionFactory;
-            import gras.mat.fcnlib.isdependent;
+            import gras.sym.isdependent;
             %
             if isdependent(mCMat)
                 obj = ConstMatrixFunctionFactory.createInstance(mCMat);

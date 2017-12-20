@@ -9,6 +9,7 @@ classdef ReachContinuous < elltool.reach.AReach
     %               $Date: May-2013 $
     %           Peter Gagarinov <pagarinov@gmail.com>
     %               $Date: 2013-2014 $
+    %           Nikolay Trusov <trunick.10.96@gmail.com>
     %
     % $Copyright: Moscow State University,
     %             Faculty of Computational Mathematics
@@ -196,16 +197,14 @@ classdef ReachContinuous < elltool.reach.AReach
     end
     methods (Access = private, Static)
         function backwardStrCMat = getBackwardCMat(strCMat, tSum, isMinus)
-            t = sym('t');
-            t = tSum-t; %#ok<NASGU>
-            %
-            evCMat = cellfun(@eval, strCMat, 'UniformOutput', false);
-            symIndMat = cellfun(@(x) isa(x, 'sym'), evCMat);
-            backwardStrCMat = cell(size(strCMat));
-            backwardStrCMat(symIndMat) = cellfun(@char,...
-                evCMat(symIndMat), 'UniformOutput', false);
-            backwardStrCMat(~symIndMat) = cellfun(@(x)num2str(x,20),...
-                evCMat(~symIndMat), 'UniformOutput', false);
+            import gras.sym.varreplace
+
+            fromVarName = 't';
+            tSumStr = num2str(tSum);
+            toVarName = strcat(tSumStr,'-');
+            toVarName = strcat(toVarName, fromVarName);
+            
+            backwardStrCMat = gras.sym.varreplace(strCMat, fromVarName, toVarName);
             if isMinus
                 backwardStrCMat = strcat('-(', backwardStrCMat, ')');
             end
