@@ -260,7 +260,7 @@ function outEll = l_polyintersect(ell, poly)
 import gras.geom.ell.quadmat;
 className = class(ell);
 if doesIntersectionContain(ell, poly) == 1
-    outEll = getInnerEllipsoid(poly);
+    outEll = getInnerEllipsoid(className, poly);
 elseif ~intersect(ell,poly)
     outEll = feval(className);
 else
@@ -299,7 +299,7 @@ else
     end
 end
 end
-function E = getInnerEllipsoid(Pset,E,Options)
+function E = getInnerEllipsoid(className,Pset,E,Options)
 %GETINNERELLIPSOID Computes the largest ellipsoid inscribed in a Polyhedron
 %
 % E = getInnerEllipsoid(Pset,x0,E,Options)
@@ -315,6 +315,7 @@ function E = getInnerEllipsoid(Pset,E,Options)
 % ---------------------------------------------------------------------------
 % INPUT
 % ---------------------------------------------------------------------------  
+%   className - Name of class for ellipsoid
 %   Pset    -   Polyhedron object constraining the ellipsoid
 %   E,x0    -   Optional: input ellipsoid with center x0, i.e.
 %                           (x-x0) E^(-1) (x - x0) <= rho 
@@ -365,9 +366,9 @@ function E = getInnerEllipsoid(Pset,E,Options)
 
 global MPTOPTIONS
 
-error(nargchk(1,3,nargin));
+error(nargchk(1,4,nargin));
 
-if nargin < 3,
+if nargin < 4,
     Options = [];
 end
 if ~isfield(Options,'plotresult')
@@ -377,7 +378,7 @@ end
 [H,K]=double(Pset);
 nx=size(H,2);
 
-if(nargin>1)
+if(nargin>2)
     %compute the scaled ellipsoid
     [x0, E] = parameters(E);
     E=(E+E')/2;
@@ -416,5 +417,5 @@ end
 
 E = inv(E);
 E = 0.5*(E + E');
-E = ellipsoid(x0, E);
+E = feval(className, x0, E);
 end
