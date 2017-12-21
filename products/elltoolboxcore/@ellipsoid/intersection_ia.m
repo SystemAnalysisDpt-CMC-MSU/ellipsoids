@@ -302,7 +302,7 @@ end
 function E = getInnerEllipsoid(className,Pset,E,Options)
 %GETINNERELLIPSOID Computes the largest ellipsoid inscribed in a Polyhedron
 %
-% E = getInnerEllipsoid(Pset,x0,E,Options)
+% E = getInnerEllipsoid(className,Pset,x0,E,Options)
 %
 % ---------------------------------------------------------------------------
 % DESCRIPTION
