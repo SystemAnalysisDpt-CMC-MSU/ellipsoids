@@ -45,7 +45,7 @@ modgen.common.checkvar(ellArr,'~any(isdegenerate(x))',...
     'errorTag','degenerateEllipsoid',...
     'errorMessage','The resulting ellipsoid is not bounded');
 sizeCVec = num2cell(size(ellArr));
-polEllArr(sizeCVec{:}) = ellipsoid;
+polEllArr(sizeCVec{:}) = feval(class(ellArr));
 
 for iElem = 1:numel(ellArr)
     polEllArr(iElem) = getScalarPolarInternal(ellArr(iElem));

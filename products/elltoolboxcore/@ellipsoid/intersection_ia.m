@@ -115,7 +115,7 @@ else
     nAmount = numel(objArr);
     sizeCVec = num2cell(size(objArr));
 end
-outEllArr(sizeCVec{:}) = ellipsoid;
+outEllArr(sizeCVec{:}) = feval(class(myEllArr));
 indexVec = 1:nAmount;
 
 if ~(isEllScal || isObjScal )
@@ -167,11 +167,12 @@ function outEll = l_intersection_ia(fstEll, secObj)
 import gras.geom.ell.invmat;
 import gras.geom.ell.quadmat;
 %
+className = class(fstEll);
 if isa(secObj, 'ellipsoid')
     if fstEll == secObj
         outEll = fstEll;
     elseif ~intersect(fstEll, secObj)
-        outEll = ellipsoid;
+        outEll = feval(className);
     else
         outEll = ellintersection_ia([fstEll secObj]);
     end
@@ -198,7 +199,7 @@ if (normHypVec'*fstEllCentVec > hypScalar) ...
 end
 if (normHypVec'*fstEllCentVec < hypScalar) ...
         && ~(intersect(fstEll, secObj))
-    outEll = ellipsoid;
+    outEll = feval(className);
     return;
 end
 
@@ -224,7 +225,7 @@ intEllShMat      = intEllShMat/(1 - ...
     quadmat(intEllShMat,intEllCentVec)));
 intEllShMat      = invmat(intEllShMat);
 intEllShMat      = (1-fstEll.absTol)*0.5*(intEllShMat + intEllShMat');
-outEll      = ellipsoid(intEllCentVec, intEllShMat);
+outEll      = feval(className, intEllCentVec, intEllShMat);
 
 end
 
@@ -257,10 +258,11 @@ function outEll = l_polyintersect(ell, poly)
 %
 
 import gras.geom.ell.quadmat;
+className = class(ell);
 if doesIntersectionContain(ell, poly) == 1
     outEll = getInnerEllipsoid(poly);
 elseif ~intersect(ell,poly)
-    outEll = ellipsoid();
+    outEll = feval(className);
 else
     [ellVec,ellMat] = double(ell);
     [n,~] = size(ellMat);
@@ -291,9 +293,9 @@ else
     Q = (B*B');
     v = d;
     if ~gras.la.ismatposdef(Q,getAbsTol(ell))
-        outEll = ellipsoid(v,zeros(size(Q)));
+        outEll = feval(className,v,zeros(size(Q)));
     else
-        outEll = ellipsoid(v,Q);
+        outEll = feval(className,v,Q);
     end
 end
 end

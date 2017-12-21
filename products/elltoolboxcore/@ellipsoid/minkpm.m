@@ -103,7 +103,6 @@ else
     end
 end
     function ellsVec = getEllArr(ellsArr)
-        ellsVec = ellipsoid;
         if isa(ellsArr, 'ellipsoid')
             cnt    = numel(ellsArr);
             ellsVec = reshape(ellsArr, cnt, 1);
@@ -145,7 +144,7 @@ end
         centVec= extApproxEllVec(1).centerVec - inpEll.centerVec;
         nCols = size(dirMat, 2);
 
-                extApprEllVec(1,nCols) = ellipsoid();
+                extApprEllVec(1,nCols) = feval(class(ellsArr));
                 arrayfun(@(x) fCase2extAppr(x),1:nCols);
                 
                 mValVec=zeros(1, nCols);
@@ -191,7 +190,7 @@ end
         nDim = 2;
         function ellTwoDim = oneDim2TwoDim(ell)
             [ellCenVec, qMat] = ell.double();
-            ellTwoDim = ellipsoid([ellCenVec, 0].', ...
+            ellTwoDim = feval(class(ellsArr),[ellCenVec, 0].', ...
                 diag([qMat, 0]));
         end
     end
@@ -209,7 +208,7 @@ end
 centVec =zeros(nDims,1);
 arrayfun(@(x) fAddCenter(x),inpEllArr);
 absTolArr = getAbsTol(inpEllArr);
-extApprEllVec(1,nCols) = ellipsoid;
+extApprEllVec(1,nCols) = feval(class(inpEllArr));
 arrayfun(@(x) fSingleDirection(x),1:nCols);
 
     function fAddCenter(singEll)

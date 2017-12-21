@@ -40,10 +40,11 @@ function outEllArr = uminus(ellArr)
 
 ellipsoid.checkIsMe(ellArr);
 sizeCVec = num2cell(size(ellArr));
+className = class(ellArr);
 if isempty(ellArr)
-    outEllArr = ellipsoid.empty(sizeCVec{:});
+    outEllArr = feval([className '.empty'],sizeCVec{:});
 else    
-    outEllArr(sizeCVec{:}) = ellipsoid;
+    outEllArr(sizeCVec{:}) = feval(className);
     arrayfun(@(x) fSingleUminus(x), 1:numel(ellArr));   
 end
     function fSingleUminus(index)

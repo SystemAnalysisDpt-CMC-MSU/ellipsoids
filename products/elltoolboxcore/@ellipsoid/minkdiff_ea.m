@@ -131,7 +131,7 @@ srcMat=fstEllSqrtShMat*directionsMat;
 dstMat=secEllSqrtShMat*directionsMat;
 rotArray=gras.la.mlorthtransl(dstMat, srcMat);
 
-extApprEllVec(nDirs) = ellipsoid();
+extApprEllVec(nDirs) = feval(class(fstEll));
 arrayfun(@(x) fSingleDir(x), 1:nDirs)
     function fSingleDir(index)
         rotMat = rotArray(:,:,index);

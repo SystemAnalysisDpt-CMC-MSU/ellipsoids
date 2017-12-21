@@ -103,7 +103,7 @@ else
     nAmount = numel(objArr);
     sizeCVec = num2cell(size(objArr));
 end
-outEllArr(sizeCVec{:}) = ellipsoid;
+outEllArr(sizeCVec{:}) = feval(class(myEllArr));
 indexVec = 1:nAmount;
 
 if ~(isEllScal || isObjScal)
@@ -151,6 +151,7 @@ function outEll = l_intersection_ea(fstEll, secObj)
 %
 import gras.geom.ell.invmat;
 %
+className = class(fstEll);
 fstEllCentVec = fstEll.centerVec;
 fstEllShMat = fstEll.shapeMat;
 if ~all(fstEllShMat(:) == 0)
@@ -173,7 +174,7 @@ if isa(secObj, 'hyperplane')
     end
     if (normHypVec'*fstEllCentVec < hypScalar) ...
             && ~(intersect(fstEll, secObj))
-        outEll = ellipsoid;
+        outEll = feval(className);
         return;
     end
     hEig  = 2*realsqrt(maxeig(fstEll));
@@ -188,7 +189,7 @@ else
         return;
     end
     if ~intersect(fstEll, secObj)
-        outEll = ellipsoid;
+        outEll = feval(className);
         return;
     end
     if all(fstEllShMat(:) == 0)
@@ -219,7 +220,7 @@ const = 1 - lambda*(1 - lambda)*(qSecVec - ...
 qCenterVec = invXMat*(lambda*fstEllShMat*fstEllCentVec + ...
     (1 - lambda)*seqQMat*qSecVec);
 shQMat = const*invXMat;
-outEll = ellipsoid(qCenterVec, shQMat);
+outEll = feval(className, qCenterVec, shQMat);
 
 end
 

@@ -32,7 +32,7 @@ function copyHpObj = getSingleCopy(hpObj)
 %			System Analysis Department 2015 $
 %
 hyperplane.checkIsMe(hpObj);
-copyHpObj=hyperplane();
+copyHpObj=feval(class(hpObj));
 copyHpObj.normal=hpObj.normal;
 copyHpObj.shift=hpObj.shift;
 copyHpObj.absTol=hpObj.absTol;

@@ -36,7 +36,7 @@ function copyEllObj = getSingleCopy(ellObj)
 %			System Analysis Department 2015 $
 %
 ellipsoid.checkIsMe(ellObj);
-copyEllObj=ellipsoid();
+copyEllObj=feval(class(ellObj));
 copyEllObj.centerVec=ellObj.centerVec;
 copyEllObj.shapeMat=ellObj.shapeMat;
 copyEllObj.absTol=ellObj.absTol;

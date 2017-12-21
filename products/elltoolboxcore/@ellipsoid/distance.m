@@ -125,9 +125,10 @@ newCen1Vec=sqrInvQ1Mat*cen1Vec;
 newQ2Mat=sqrInvQ1Mat*ellQ2Mat*sqrInvQ1Mat;
 newCen2Vec=sqrInvQ1Mat*cen2Vec;
 newQ2Mat=0.5*(newQ2Mat+newQ2Mat.');
+className=class(ellObj1);
 [ellDist,timeOfCalculation]=...
-    computeEllEllDistance(ellipsoid(newCen1Vec,newQ1Mat),...
-    ellipsoid(newCen2Vec,newQ2Mat),nMaxIter,absTol);
+    computeEllEllDistance(feval(className,newCen1Vec,newQ1Mat),...
+    feval(className,newCen2Vec,newQ2Mat),nMaxIter,absTol);
 end
 %
 

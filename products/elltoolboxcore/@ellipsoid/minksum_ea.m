@@ -96,7 +96,7 @@ else
     isVerbose=Properties.getIsVerbose();
     %
     absTolArr = getAbsTol(inpEllArr);
-    extApprEllVec(1,nCols) = ellipsoid;
+    extApprEllVec(1,nCols) = feval(class(inpEllArr));
     arrayfun(@(x) fSingleDirection(x),1:nCols);
 end
     function fAddCenter(singEll)

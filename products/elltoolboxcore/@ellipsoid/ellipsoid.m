@@ -1,4 +1,4 @@
-classdef ellipsoid < elltool.core.AEllipsoid
+classdef ellipsoid < elltool.core.AEllipsoid & modgen.reflection.ReflectionHelper
     %ELLIPSOID class of ellipsoids
     properties (Access=protected,Hidden)
         shapeMat
@@ -154,6 +154,10 @@ classdef ellipsoid < elltool.core.AEllipsoid
             import modgen.common.checkmultvar;
             import gras.la.ismatsymm;
             %
+            metaClassBoxedObj=modgen.containers.ValueBox();
+            ellMat=ellMat@modgen.reflection.ReflectionHelper(...
+                metaClassBoxedObj);
+            metaClass=metaClassBoxedObj.getValue();
             NEEDED_PROP_NAME_LIST = {'absTol','relTol',...
                 'nPlot2dPoints','nPlot3dPoints'};
             [regParamList,propNameValList]=modgen.common.parseparams(...
@@ -223,7 +227,7 @@ classdef ellipsoid < elltool.core.AEllipsoid
                     'centerVec must be vector and dimesions must agree.');
                 %
                 if nShDims > 2
-                    ellMat(prod(shDimsVec(3:end))) = ellipsoid();
+                    ellMat(prod(shDimsVec(3:end))) = feval(metaClass.Name);
                     arrayfun(@(iEll)fMakeEllipsoid(iEll), 1:numel(ellMat));
                     if (nShDims > 3)
                         ellMat = reshape(ellMat, shDimsVec(3:end));

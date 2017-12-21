@@ -95,7 +95,7 @@ if is2EllEqCentre(inpEllVec)
              sqrtFirstEllShMat';
     ellMat = 0.5*(ellMat + ellMat');
     %
-    outEll = ellipsoid(ellCenterVec, ellMat);
+    outEll = feval(class(inpEllArr), ellCenterVec, ellMat);
 else
     if Properties.getIsVerbose()
         if isempty(logger)
@@ -144,7 +144,7 @@ else
     ellMat = cvxEllMat * cvxEllMat';
     ellMat = 0.5*(ellMat + ellMat');
     %
-    outEll = ellipsoid(cvxEllCenterVec, ellMat);
+    outEll = feval(class(inpEllArr), cvxEllCenterVec, ellMat);
 end
 end
 %
