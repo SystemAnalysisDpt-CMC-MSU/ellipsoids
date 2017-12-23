@@ -41,10 +41,8 @@ end
 [dirMat, fMat] = fGetGrid(nPoints);
 %
 [cenVec, qMat] = double(ellObj);
-bpMat = dirMat * gras.la.sqrtmpos(qMat, ellObj.getAbsTol());
-cenMat = repmat(cenVec.', size(dirMat, 1), 1);
-bpMat = bpMat + cenMat;
-bpMat = [bpMat; bpMat(1, :)];
-cenMat = [cenMat; cenMat(1, :)];
-lGridMat = bpMat - cenMat;
-supVec = (rho(ellObj, lGridMat.')).';
+lGridMat = [dirMat; dirMat(1, :)];
+[supVec, bpMat] = gras.geom.ell.rhomat(qMat, lGridMat.', ...
+    ellObj.getAbsTol(), cenVec);
+supVec = supVec.';
+bpMat = bpMat.';

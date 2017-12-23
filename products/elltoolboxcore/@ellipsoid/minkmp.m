@@ -186,6 +186,8 @@ end
         if isa(ellsArr, 'ellipsoid')
             cnt    = numel(ellsArr);
             ellsVec = reshape(ellsArr, cnt, 1);
+        else
+            ellsVec = [];
         end
     end
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)
