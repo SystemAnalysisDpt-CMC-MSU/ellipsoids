@@ -1,4 +1,7 @@
 classdef LegendDisplayTC < mlunitext.test_case
+    properties (Access=private)
+        fCreateObj;
+    end
     methods
         function self = tear_down(self)
             close all;
@@ -55,6 +58,33 @@ classdef LegendDisplayTC < mlunitext.test_case
             mlunitext.assert_equals(hyp.FaceColor, 'none');
             mlunitext.assert_equals(...
                 center.Annotation.LegendInformation.IconDisplayStyle, 'off');
+            mlunitext.assert_equals(...
+                ell.Annotation.LegendInformation.IconDisplayStyle, 'on');
+            mlunitext.assert_equals(...
+                hyp.Annotation.LegendInformation.IconDisplayStyle, 'on');
+            str1 = hLegend.String{1};
+            str2 = hLegend.String{2};
+            mlunitext.assert_equals(str1, '1');
+            mlunitext.assert_equals(str2, '2');
+        end
+
+        function self = test3dEllipsoidAndHyperplane(self)
+            hyp1 = hyperplane([1; 1; 2], 3);
+            ell1 = ellipsoid([100 0 0; 0 200 0; 0 0 300]);
+            hold on;
+            plObj = plot(ell1, 'r');
+            plot(hyp1, 'b');
+            legend('show');
+            SProps = plObj.getPlotStructure();
+            SFigure = SProps.figHMap.toStruct();
+            hFigure = SFigure.figure_g1;
+            childVec = hFigure.Children;
+            mlunitext.assert_equals(length(childVec), 2);
+            hAxes = childVec(2);
+            hLegend = childVec(1);
+            graphicalObjectsVec = hAxes.Children;
+            ell = graphicalObjectsVec(8);
+            hyp = graphicalObjectsVec(4);
             mlunitext.assert_equals(...
                 ell.Annotation.LegendInformation.IconDisplayStyle, 'on');
             mlunitext.assert_equals(...
