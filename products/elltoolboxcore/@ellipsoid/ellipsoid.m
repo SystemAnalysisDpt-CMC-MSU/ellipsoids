@@ -262,7 +262,7 @@ classdef ellipsoid < elltool.core.AEllipsoid & modgen.reflection.ReflectionHelpe
         ellArr = fromRepMat(varargin)
         ellArr = fromStruct(SEllArr)
     end
-    methods(Static,Access = private)
+    methods(Static,Access = protected)
         regQMat = regularize(qMat,absTol)
         clrDirsMat = rm_bad_directions(q1Mat, q2Mat, dirsMat,absTol)
         [isBadDirVec,pUniversalVec] = isbaddirectionmat(q1Mat, q2Mat,...

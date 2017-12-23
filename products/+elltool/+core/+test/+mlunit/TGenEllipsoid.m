@@ -18,6 +18,24 @@ classdef TGenEllipsoid < elltool.core.GenEllipsoid & ...
         end
     end
     %
+    methods (Static)
+        function ellArr = fromRepMat(varargin)
+            import modgen.common.checkvar;
+            import elltool.core.GenEllipsoid;
+            %
+            if nargin > 4
+                indVec = [1:3,5:nargin];
+                sizeVec = varargin{4};
+            else
+                sizeVec = varargin{nargin};
+                indVec = 1:nargin-1;
+            end
+            %
+            ellArr = repMat(elltool.core.test.mlunit.TGenEllipsoid(...
+                varargin{indVec}),sizeVec);
+        end
+    end
+    %
     methods (Static,Access=private)
         function [isOk, pPar] = getIsGoodDirForMat(ellQ1Mat, ellQ2Mat, ...
                dirVec, absTol)

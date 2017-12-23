@@ -1,5 +1,21 @@
 classdef LinSysTestCase < mlunitext.test_case
     %
+    properties (Access=private)
+        ellFactoryObj;
+    end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     methods
         function self = LinSysTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -221,12 +237,12 @@ classdef LinSysTestCase < mlunitext.test_case
         %
         function self = testHasDisturbance(self)
             constantDistLinSys = elltool.linsys.LinSysFactory.create(eye(2), eye(2),...
-                ellipsoid([0; 0], eye(2)), eye(2), [1; 1], 'd');
+                self.ellipsoid([0; 0], eye(2)), eye(2), [1; 1], 'd');
             boundedDistLinSys = elltool.linsys.LinSysFactory.create(eye(2), eye(2),...
-                ellipsoid([0; 0], eye(2)), eye(2),...
-                ellipsoid([0; 0], eye(2)), [], [], 'd');
+                self.ellipsoid([0; 0], eye(2)), eye(2),...
+                self.ellipsoid([0; 0], eye(2)), [], [], 'd');
             noDistLinSys = elltool.linsys.LinSysFactory.create(eye(2), eye(2),...
-                ellipsoid([0; 0], eye(2)), [], [], 'd');
+                self.ellipsoid([0; 0], eye(2)), [], [], 'd');
             flagCVec = {1, 1, 2, 2, 3, 3, 4, 5, 6};
             isFlagFirstArgCVec = {true, false, true, false, true, false, '', '', ''};
             isFlagSecondArgCVec = {true, true, false, true, false, false,...
@@ -242,17 +258,17 @@ classdef LinSysTestCase < mlunitext.test_case
         function self = testGetCopy(self)
             aMat = eye(3);
             bMat = eye(3);
-            uEll = ellipsoid([0; 1; 2], eye(3));
+            uEll = self.ellipsoid([0; 1; 2], eye(3));
             uStruct = struct();
             uStruct.center = [1; 1; 1];
             uStruct.shape = {'10' 't' '0'; 't' '2' '0'; '0' '0' '3'};
             cMat = eye(3);
             cCMat = {'1' '0' '0'; '0' 'sin(t)' '0'; '0' '0' '2'};
-            vEll = ellipsoid(0.5 * eye(3));
+            vEll = self.ellipsoid(0.5 * eye(3));
             vStruct = struct();
             vStruct.center = [-1; 0; 1];
             vStruct.shape = {'1' '0' '0'; '0' 't' '0'; '0' '0' 't^3'};
-            nEll = ellipsoid([1; 2; 3], eye(3));
+            nEll = self.ellipsoid([1; 2; 3], eye(3));
             nStruct = struct();
             nStruct.center = [0; 0; 0];
             nStruct.shape = {'t' '0' '0'; '0' '1' '0'; '0' '0' 't'};

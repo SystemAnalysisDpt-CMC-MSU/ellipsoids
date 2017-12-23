@@ -17,7 +17,42 @@ classdef TEllipsoid < ellipsoid & gras.test.mlunit.TolCounter
         end
     end
     %
-    methods(Static,Access = private)
+    methods(Static)
+        function ellArr = fromRepMat(varargin)
+            import modgen.common.checkvar;
+            if nargin>3
+                indVec=[1:2,4:nargin];
+                sizeVec=varargin{3};
+            else
+                sizeVec=varargin{nargin};
+                indVec=1:nargin-1;
+            end
+            ellArr = repMat(elltool.core.test.mlunit.TEllipsoid(...
+                varargin{indVec}), sizeVec);
+        end
+        function ellArr = fromStruct(SEllArr)
+            function ell = struct2Ell(SEll)
+                if (isfield(SEll, 'absTol'))
+                    SProp = rmfield(SEll, {'shapeMat', 'centerVec'});
+                    propNameValueCMat = [fieldnames(SProp), ...
+                        struct2cell(SProp)].';
+                    ell = elltool.core.test.mlunit.TEllipsoid(...
+                        SEll.centerVec.', SEll.shapeMat, ...
+                        propNameValueCMat{:});
+                else
+                    ell = elltool.core.test.mlunit.TEllipsoid(...
+                        SEll.centerVec.', SEll.shapeMat);
+                end
+            end
+            
+            for iEll = numel(SEllArr) : -1 : 1
+                ellArr(iEll) = struct2Ell(SEllArr(iEll));
+            end
+            ellArr = reshape(ellArr, size(SEllArr));
+        end
+    end
+    %
+    methods (Static, Access = protected)
         function regQMat = regularize(qMat,absTol)
             self.startTolTest();
             regQMat = regularize@ellipsoid(qMat,absTol);

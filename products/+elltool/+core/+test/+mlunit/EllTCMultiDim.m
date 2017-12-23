@@ -8,8 +8,26 @@ classdef EllTCMultiDim < mlunitext.test_case
     
     properties (Access=private)
         testDataRootDir
-     end
-     methods
+        ellFactoryObj
+    end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+        function ellObj = ell_unitball(self, varargin)
+            ellObj = elltool.core.test.mlunit.tell_unitball(...
+                self.ellFactoryObj, varargin{:});
+        end
+    end
+    %
+    methods
         function self=EllTCMultiDim(varargin)
             self=self@mlunitext.test_case(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
@@ -24,11 +42,11 @@ classdef EllTCMultiDim < mlunitext.test_case
             % Test input of distance().
             arrSizeVec=[1, 2, 3];
             testFirstArr=ones(arrSizeVec);
-            testSecArr=ellipsoid(1);
+            testSecArr=self.ellipsoid(1);
             %
             % Create Data for tests
             arrSizeVec=[2, 3, 2, 2];
-            testEllArray=createObjectArray(arrSizeVec,@ell_unitball,2,1,1);
+            testEllArray=createObjectArray(arrSizeVec, @self.ell_unitball,2,1,1);
             nEll=numel(testEllArray);
             %vecMat=repmat([2;0],1,nEll);
             vecArrSizeVec=[2, arrSizeVec];
@@ -37,9 +55,9 @@ classdef EllTCMultiDim < mlunitext.test_case
             ansArray=ones(arrSizeVec);
             testEll3Array=testEllArray(:,:,:,1);
             testEll2Array=testEllArray;
-            testEll2Array(1)=ell_unitball(3);
+            testEll2Array(1) = self.ell_unitball(3);
             %
-            % Test ellipsoid-vector distance
+            % Test self.ellipsoid-vector distance
             checkCommonErrors('vecArray');
             checkMultyInput(testEllArray,vecArray,true);
             % Wrong dimension of vectors
@@ -48,19 +66,19 @@ classdef EllTCMultiDim < mlunitext.test_case
             self.runAndCheckError('testEllArray.distance(vec3Array)',...
                 'wrongInput');           
             %
-            % Test ellipsoid-ellipsoids distance 
-            testEll4Array=createObjectArray(arrSizeVec,@ellipsoid,[3;0],...
+            % Test self.ellipsoid-self.ellipsoids distance 
+            testEll4Array=createObjectArray(arrSizeVec,@self.ellipsoid,[3;0],...
                 diag([1,1]),2);
             %
             checkMultyInput(testEllArray,testEll4Array,false);
             checkCommonErrors('testEllArray');
             % wrong number of one of dims
             testEll4Array=createObjectArray(arrSizeVec(end:-1:1),...
-                @ell_unitball,2,1,1);
+                @self.ell_unitball,2,1,1);
             self.runAndCheckError('testEllArray.distance(testEll4Array)',...
                 'wrongInput');
             %
-            % Test ellipsoid-hiperplane distance 
+            % Test self.ellipsoid-hiperplane distance 
             % Create data.
             arrSize2Vec=[2 arrSizeVec];
             testNormArray=zeros(arrSize2Vec);
@@ -71,7 +89,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             checkMultyInput(testEllArray,testHpArray,false);
             checkCommonErrors('testHpArray');
             %
-            % Test ellipsoid-Polyhedron distance 
+            % Test self.ellipsoid-Polyhedron distance 
             % Create data.
             hMat=-eye(2);
             kVec=[-2 1]';
@@ -102,20 +120,20 @@ classdef EllTCMultiDim < mlunitext.test_case
         end
         function self = testDimension(self)
             %Chek for one output argument
-            %1: Empty ellipsoid
+            %1: Empty self.ellipsoid
             testCorrect(true, true, 1);
-            %2: Not empty ellipsoid
+            %2: Not empty self.ellipsoid
             testCorrect(true, true, 2);
             testCorrect(true, true, 3);
             %Chek for two output arguments
-            %1: Empty ellipsoid
+            %1: Empty self.ellipsoid
             testCorrect(true, false, 1);
-            %2: Not empty ellipsoid
+            %2: Not empty self.ellipsoid
             testCorrect(true, false, 2);
             testCorrect(true, false, 3);
             testCorrect(false, false, 4);
             arraySizeVec = [2, 1, 1, 2, 3, 3, 1, 1];
-            testEllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
+            testEllArray = createObjectArray(arraySizeVec, @self.ellipsoid, ...
                 diag([zeros(1, 50), ones(1, 50)]), 1, 1);
             ansDimNumArray = createObjectArray(arraySizeVec, @diag, ...
                 100, 1, 1);
@@ -126,7 +144,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect(true, false, 16);
             function testCorrect(isTwoArg, isnRankParam, flag)
                 if isTwoArg
-                    [testEllArray ansNumArray, ~] = createTypicalArray(flag);
+                    [testEllArray ansNumArray, ~] = self.createTypicalArray(flag);
                     if isnRankParam
                         testRes = dimension(testEllArray);
                         mlunitext.assert_equals(ansNumArray, testRes);
@@ -147,7 +165,7 @@ classdef EllTCMultiDim < mlunitext.test_case
                     end
                 else
                     [testEllArray ansDimNumArray ansRankNumArray, ~] = ...
-                        createTypicalArray(flag);
+                        self.createTypicalArray(flag);
                     test2Correct();
                 end
             end
@@ -159,27 +177,27 @@ classdef EllTCMultiDim < mlunitext.test_case
             
         end
         function self = testIsDegenerate(self)
-            %Not degerate ellipsoid
-            [testEllArray isAnsArray] = createTypicalArray(5);
+            %Not degerate self.ellipsoid
+            [testEllArray isAnsArray] = self.createTypicalArray(5);
             testCorrect()
-            %Degenerate ellipsoids
+            %Degenerate self.ellipsoids
             arraySizeVec = [2, 1, 1, 1, 3, 1, 1];
-            testEllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
+            testEllArray = createObjectArray(arraySizeVec, @self.ellipsoid, ...
                 diag([1, 2, 3, 4, 0]), 1, 1);
             isAnsArray = createObjectArray(arraySizeVec, @true, ...
                 1, 1, 1);
             testCorrect()
             arraySizeVec = [1, 1, 2, 3, 1, 2, 1];
-            testEllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
+            testEllArray = createObjectArray(arraySizeVec, @self.ellipsoid, ...
                 diag([zeros(1, 50), ones(1, 50)]), 1, 1);
             isAnsArray = createObjectArray(arraySizeVec, @true, ...
                 1, 1, 1);
             testCorrect()
             mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
-            [testEllArray, ~, isAnsArray] = createTypicalArray(16);
+            [testEllArray, ~, isAnsArray] = self.createTypicalArray(16);
             testCorrect()
             mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
-            %Empty ellipsoid
+            %Empty self.ellipsoid
             testError(1);
             testError(14);
             testError(15);
@@ -188,7 +206,7 @@ classdef EllTCMultiDim < mlunitext.test_case
                 mlunitext.assert_equals(isAnsArray, isTestRes);
             end
             function testError(flag)
-                [testEllArray, ~, errorStr] = createTypicalArray(flag);
+                [testEllArray, ~, errorStr] = self.createTypicalArray(flag);
                 if (flag == 1)
                     self.runAndCheckError('testEllArray.isdegenerate()', ...
                         'wrongInput:emptyEllipsoid');
@@ -199,24 +217,24 @@ classdef EllTCMultiDim < mlunitext.test_case
            end
         end
         function self = testIsEmpty(self)
-            %Chek realy empty ellipsoid            
+            %Chek realy empty self.ellipsoid            
             arraySizeVec = [2, 1, 1, 1, 1, 3, 1, 1];
-            testEllArray(2, 1, 1, 1, 1, 3, 1, 1) = ellipsoid;
+            testEllArray(2, 1, 1, 1, 1, 3, 1, 1) = self.ellipsoid;
             isAnsArray = createObjectArray(arraySizeVec, @true, ...
                 1, 1, 1);
             testCorrect()
-            %Chek not empty ellipsoid
-            [testEllArray isAnsArray] = createTypicalArray(5);
+            %Chek not empty self.ellipsoid
+            [testEllArray isAnsArray] = self.createTypicalArray(5);
             testCorrect()
             arraySizeVec = [1, 1, 1, 1, 1, 4, 1, 1, 3];
-            testEllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
+            testEllArray = createObjectArray(arraySizeVec, @self.ellipsoid, ...
                 diag([zeros(1, 50), ones(1, 50)]), 1, 1);
             isAnsArray = createObjectArray(arraySizeVec, @false, ...
                 1, 1, 1);
-            testEllArray(1, 1, 1, 1, 1, 3, 1, 1, 2) = ellipsoid;
+            testEllArray(1, 1, 1, 1, 1, 3, 1, 1, 2) = self.ellipsoid;
             isAnsArray(1, 1, 1, 1, 1, 3, 1, 1, 2) = true;
             testCorrect()
-            [testEllArray, ~, isAnsArray] = createTypicalArray(16);
+            [testEllArray, ~, isAnsArray] = self.createTypicalArray(16);
             testCorrect()
             mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
             function testCorrect()
@@ -238,21 +256,21 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect(8);
             testCorrect(16);
             mlunitext.assert_equals(class(ansNumArray), class(testNumArray)); 
-            %Empty ellipsoid
+            %Empty self.ellipsoid
             testError(1);
             testError(14);
             testError(15);
             function testCorrect(flag)
                 if (flag == 2) || (flag == 6) || (flag == 16)
-                    [testEllArray ansNumArray] = createTypicalArray(flag);
+                    [testEllArray ansNumArray] = self.createTypicalArray(flag);
                 else
-                    [testEllArray, ~, ~, ansNumArray] = createTypicalArray(flag);
+                    [testEllArray, ~, ~, ansNumArray] = self.createTypicalArray(flag);
                 end
                 [testNumArray] = trace(testEllArray);
                 mlunitext.assert_equals(ansNumArray, testNumArray);
             end
             function testError(flag)
-                [testEllArray, ~, errorStr] = createTypicalArray(flag);
+                [testEllArray, ~, errorStr] = self.createTypicalArray(flag);
                 if (flag == 1)
                     self.runAndCheckError('testEllArray.trace()','wrongInput:emptyEllipsoid');
                 else
@@ -261,7 +279,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             end
         end
         function self = testVolume(self)
-            %Check degenerate ellipsoid
+            %Check degenerate self.ellipsoid
             testCorrect(4);
             %Check dim=1 with two different centers
             testCorrect(2);
@@ -269,23 +287,23 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect(16);
             mlunitext.assert_equals(class(ansDoubleArray), ...
                 class(testDoubleArray)); 
-            %Empty ellipsoid
+            %Empty self.ellipsoid
             testError(1);
             testError(14);
             testError(15);
             function testCorrect(flag)
                 if  (flag == 16)
-                    [testEllArray, ansDoubleArray, ~] = createTypicalArray(flag);
+                    [testEllArray, ansDoubleArray, ~] = self.createTypicalArray(flag);
                 elseif (flag == 2) || (flag == 3)
-                    [testEllArray, ~, ansDoubleArray] = createTypicalArray(flag);
+                    [testEllArray, ~, ansDoubleArray] = self.createTypicalArray(flag);
                 else
-                    [testEllArray, ~, ~, ansDoubleArray] = createTypicalArray(flag);
+                    [testEllArray, ~, ~, ansDoubleArray] = self.createTypicalArray(flag);
                 end
                 [testDoubleArray] = volume(testEllArray);
                 mlunitext.assert_equals(ansDoubleArray, testDoubleArray);
             end
             function testError(flag)
-                [testEllArray, ~, errorStr] = createTypicalArray(flag);
+                [testEllArray, ~, errorStr] = self.createTypicalArray(flag);
                 if (flag == 1)
                     self.runAndCheckError('testEllArray.volume()','wrongInput:emptyEllipsoid');
                 else
@@ -323,10 +341,10 @@ classdef EllTCMultiDim < mlunitext.test_case
             args = {ellCenter, ellMat, 'absTol', testAbsTol, 'relTol', ...
                 testRelTol, 'nPlot2dPoints', testNPlot2dPoints,...
                 'nPlot3dPoints', testNPlot3dPoints};
-            testEllArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1) = ellipsoid(args{:});
-            testEllArray(1, 1, 1, 1, 1, 1, 1, 1, 2, 1) = ellipsoid(args{:});
-            testEllArray(1, 1, 2, 1, 1, 1, 1, 1, 1, 1) = ellipsoid(args{:});
-            testEllArray(1, 1, 2, 1, 1, 1, 1, 1, 2, 1) = ellipsoid(args{:});
+            testEllArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1) = self.ellipsoid(args{:});
+            testEllArray(1, 1, 1, 1, 1, 1, 1, 1, 2, 1) = self.ellipsoid(args{:});
+            testEllArray(1, 1, 2, 1, 1, 1, 1, 1, 1, 1) = self.ellipsoid(args{:});
+            testEllArray(1, 1, 2, 1, 1, 1, 1, 1, 2, 1) = self.ellipsoid(args{:});
             testAbsTolArray = createObjectArray(arraySizeVec, @repmat, ... 
                 testAbsTol, 1, 2);
             testRelTolArray = createObjectArray(arraySizeVec, @repmat, ... 
@@ -342,14 +360,27 @@ classdef EllTCMultiDim < mlunitext.test_case
             mlunitext.assert_equals(testNPlot3dPointsArray, ...
                 testEllArray.getNPlot3dPoints());
         end
-     end
- end
-function [varargout] = createTypicalArray(flag)
+    end
+    %
+    methods (Access = private)
+        function varargout = createTypicalArray(self, varargin)
+            varargout = cell(1, nargout);
+            if nargout > 0
+                [varargout{:}] = createTypicalArray(self.ellFactoryObj,...
+                    varargin{:});
+            else
+                createTypicalArray(self.ellFactoryObj, varargin{:});
+            end
+        end
+    end
+end
+function [varargout] = createTypicalArray(ellFactoryObj, flag)
     arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
     switch flag
         case 1
             arraySizeVec = [2, 1, 3, 2, 1, 1, 4];
-            testEllArray(2, 1, 3, 2, 1, 1, 4) = ellipsoid;
+            testEllArray(2, 1, 3, 2, 1, 1, 4) = ...
+                ellFactoryObj.createInstance('ellipsoid');
             ansNumArray = createObjectArray(arraySizeVec, @diag, ...
                 0, 1, 1);
             isAnsArray = true(arraySizeVec);
@@ -360,8 +391,9 @@ function [varargout] = createTypicalArray(flag)
             varargout{4} = errorStr;
         case 2
             arraySizeVec = [1, 2, 4, 3, 2, 1];
-            testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
-                1, 1, 1);
+            testEllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 1, 1, 1);
             ansNumArray = createObjectArray(arraySizeVec, @diag, ...
                 1, 1, 1);
             ansVolumeDoubleArray = createObjectArray(arraySizeVec, @diag, ...
@@ -373,8 +405,8 @@ function [varargout] = createTypicalArray(flag)
             varargout{4} = isAnsArray;
         case 3
             arraySizeVec = [1, 1, 1, 1, 1, 7, 1, 1, 7];
-            testEllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
-                eye(5), 1, 1);
+            testEllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), eye(5), 1, 1);
             ansNumArray = createObjectArray(arraySizeVec, @diag, ...
                 5, 1, 1);
             volumeDouble = 8 * (pi ^ 2) / 15;
@@ -385,7 +417,8 @@ function [varargout] = createTypicalArray(flag)
             varargout{3} = ansVolumeDoubleArray;
         case 4
             arraySizeVec = [2, 1, 3, 2, 1, 1, 4, 1, 1];
-            testEllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
+            testEllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ...
                 diag([1, 2, 3, 4, 0]), 1, 1);
             ansDimNumArray = createObjectArray(arraySizeVec, @diag, ...
                 5, 1, 1);
@@ -399,15 +432,17 @@ function [varargout] = createTypicalArray(flag)
             varargout{4} = ansVolumeDoubleArray;
         case 5
             arraySizeVec = [1, 2, 4, 3, 2];
-            testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
-                1, 1, 1);
+            testEllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 1, 1, 1);
             isAnsArray = createObjectArray(arraySizeVec, @false, ...
                 1, 1, 1);
             varargout{1} = testEllArray;
             varargout{2} = isAnsArray;
         case 6
             arraySizeVec = [1, 1, 2, 3, 2, 1, 1, 1, 4];
-            testEllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
+            testEllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ...
                 diag(zeros(1, 100)), 1, 1);
             ansNumArray = createObjectArray(arraySizeVec, @diag, ...
                 0, 1, 1);
@@ -416,7 +451,8 @@ function [varargout] = createTypicalArray(flag)
         case 7
             arraySizeVec = [2, 3, 2, 1, 1, 1, 4, 1, 1];
             myMat = diag(0 : 1 : 100);
-            testEllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
+            testEllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ...
                 myMat, 1, 1);
             ansMaxNumArray = createObjectArray(arraySizeVec, @diag, ...
                 100, 1, 1);
@@ -432,7 +468,8 @@ function [varargout] = createTypicalArray(flag)
             arraySizeVec = [1, 1, 1, 1, 1, 7, 1, 1, 7];
             myMat = rand(10);
             myMat = myMat * myMat.';
-            testEllArray = createObjectArray(arraySizeVec, @ellipsoid, ...
+            testEllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ...
                 myMat, 1, 1);
             ansMaxNumArray = createObjectArray(arraySizeVec, @diag, ...
                 max(eig(myMat)), 1, 1);
@@ -448,9 +485,11 @@ function [varargout] = createTypicalArray(flag)
             import elltool.conf.Properties;
             MAX_TOL = Properties.getRelTol();
             arraySizeVec = [1, 1, 1, 1, 1, 7, 1, 1, 7];
-            my1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
-                2, 1, 1);
-            my2EllArray = createObjectArray(arraySizeVec, @ellipsoid, ... 
+            my1EllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 2, 1, 1);
+            my2EllArray = createObjectArray(arraySizeVec, ...
+               @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ... 
                 diag([1 + MAX_TOL, 1 + MAX_TOL]) , 1, 1);
             isAnsArray = true(arraySizeVec);
             varargout{1} = my1EllArray;
@@ -460,9 +499,11 @@ function [varargout] = createTypicalArray(flag)
             import elltool.conf.Properties;
             MAX_TOL = Properties.getRelTol();
             arraySizeVec = [1, 1, 2, 1, 1, 1, 2, 1, 1];
-            my1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
-                5, 1, 1);
-            my2EllArray = createObjectArray(arraySizeVec, @ellipsoid, ... 
+            my1EllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 5, 1, 1);
+            my2EllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ... 
                 diag(repmat(1 + 100 * MAX_TOL, 1, 5)), 1, 1);
             isAnsArray = false(arraySizeVec);
             varargout{1} = my1EllArray;
@@ -470,10 +511,12 @@ function [varargout] = createTypicalArray(flag)
             varargout{3} = isAnsArray;
         case 11
             arraySizeVec = [1, 1, 3, 1, 1, 1, 2, 1, 1];
-            my1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
-                5, 1, 1);
-            my2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
-                4, 1, 1);
+            my1EllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 5, 1, 1);
+            my2EllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 4, 1, 1);
             isAnsArray = false(arraySizeVec);
             reportStr = 'wrongInput';
             varargout{1} = my1EllArray;
@@ -484,44 +527,55 @@ function [varargout] = createTypicalArray(flag)
             import elltool.conf.Properties;
             MAX_TOL = Properties.getRelTol();
             arraySizeVec = [1, 1, 2, 1, 1, 1, 1, 1, 2];
-            my1EllArray = createObjectArray(arraySizeVec, @ell_unitball, ... 
-                10, 1, 1);
-            my2EllArray = createObjectArray(arraySizeVec, @ellipsoid, ... 
-                (2 * MAX_TOL) * ones(10, 1), eye(10), 2);
+            my1EllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 10, 1, 1);
+            my2EllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:}),(2 * MAX_TOL) * ones(10, 1), eye(10), 2);
             isAnsArray = false(arraySizeVec);
             varargout{1} = my1EllArray;
             varargout{2} = my2EllArray;
             varargout{3} = isAnsArray;
         case 13
-            testEllArray = ellipsoid.empty(1, 0, 0, 1, 5);
-            test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
-                3, 1, 1);
+            ellObj = ellFactoryObj.createInstance(...
+                'ellipsoid');
+            testEllArray = ellObj.empty(1, 0, 0, 1, 5);
+            test2EllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 3, 1, 1);
             errorStr = 'wrongInput:emptyArray';
             varargout{1} = testEllArray;
             varargout{2} = test2EllArray;
             varargout{3} = errorStr;
         case 14
-            testEllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
-                3, 1, 1);
-            testEllArray(2, 1, 1, 2, 1, 3, 1) = ellipsoid;
-            test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
-                3, 1, 1);
+            testEllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 3, 1, 1);
+            testEllArray(2, 1, 1, 2, 1, 3, 1) = ...
+                ellFactoryObj.createInstance('ellipsoid');
+            test2EllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 3, 1, 1);
             errorStr = 'wrongInput:emptyEllipsoid';
             varargout{1} = testEllArray;
             varargout{2} = test2EllArray;
             varargout{3} = errorStr;
         case 15
-            testEllArray = createObjectArray(arraySizeVec, @(x)ellipsoid(), ...
+            testEllArray = createObjectArray(arraySizeVec, @(x) ...
+                ellFactoryObj.createInstance('ellipsoid'), ...
                 3, 1, 1);
-            test2EllArray = createObjectArray(arraySizeVec, @ell_unitball, ...
-                3, 1, 1);
+            test2EllArray = createObjectArray(arraySizeVec, ...
+                @(varargin) elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, varargin{:}), 3, 1, 1);
             errorStr = 'wrongInput:emptyEllipsoid';
             varargout{1} = testEllArray;
             varargout{2} = test2EllArray;
             varargout{3} = errorStr;
         case 16
             arraySizeVec = [1, 0, 0, 1, 5];
-            testEllArray = ellipsoid.empty(arraySizeVec);
+            ellObj = ellFactoryObj.createInstance('ellipsoid');
+            testEllArray = ellObj.empty(arraySizeVec);
             ansDoubleArray = zeros(arraySizeVec);
             isAnsArray = true(arraySizeVec);
             varargout{1} = testEllArray;
@@ -558,26 +612,30 @@ function checkMaxeigAndMineig(self, isMaxeigCheck)
     testCorrect(8);
     testCorrect(16);
     mlunitext.assert_equals(class(ansNumArray), class(testNumArray)); 
-    %Check empty ellipsoid
+    %Check empty self.ellipsoid
     testError(1);
     testError(14);
     testError(15);
     function testCorrect(flag)
         if isMaxeigCheck
-            [testEllArray ansNumArray] = createTypicalArray(flag);
+            [testEllArray ansNumArray] = createTypicalArray(...
+                self.ellFactoryObj, flag);
             [testNumArray] = maxeig(testEllArray);
         else
             if (flag == 2) || (flag == 6) || (flag == 16)
-                [testEllArray ansNumArray] = createTypicalArray(flag);
+                [testEllArray ansNumArray] = createTypicalArray(...
+                    self.ellFactoryObj, flag);
             else
-                [testEllArray, ~, ansNumArray] = createTypicalArray(flag);
+                [testEllArray, ~, ansNumArray] = createTypicalArray(...
+                    self.ellFactoryObj, flag);
             end
             [testNumArray] = mineig(testEllArray);
         end
         mlunitext.assert_equals(ansNumArray, testNumArray);
     end
     function testError(flag)
-        [testEllArray, ~, errorStr] = createTypicalArray(flag);
+        [testEllArray, ~, errorStr] = createTypicalArray(...
+            self.ellFactoryObj, flag);
         if isMaxeigCheck
             if (flag == 1)
                 self.runAndCheckError('testEllArray.maxeig()','wrongInput:emptyEllipsoid');
@@ -603,7 +661,8 @@ function checkEqAndNq(self, isEqCheck)
     testCheckCorrect()
     testCorrect(11);
     testCorrect(12);
-    [test1EllArray, test2EllArray, errorStr] = createTypicalArray(13);
+    [test1EllArray, test2EllArray, errorStr] = createTypicalArray(...
+        self.ellFactoryObj, 13);
     if isEqCheck
         self.runAndCheckError('eq(test1EllArray, test2EllArray)', ...
             errorStr);
@@ -632,14 +691,15 @@ function checkEqAndNq(self, isEqCheck)
         myReportStr = '';
         if (flag == 1)
             [test1EllArray, ~, isAnsArray, ~] = ...
-                createTypicalArray(flag);
-            [test2EllArray, ~, ~, ~] = createTypicalArray(flag);
+                self.createTypicalArray(flag);
+            [test2EllArray, ~, ~, ~] = self.createTypicalArray(flag);
         elseif (flag == 2)
-            [test1EllArray, ~, ~, ~] = createTypicalArray(flag);
-            [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(flag);
+            [test1EllArray, ~, ~, ~] = self.createTypicalArray(flag);
+            [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(...
+                self.ellFactoryObj, flag);
         else
             [test1EllArray, test2EllArray, isAnsArray] = ...
-                createTypicalArray(flag);
+                self.createTypicalArray(flag);
         end
         if isEqCheck
             [isTestArray, reportStr] = isEqual(test1EllArray, test2EllArray);
@@ -693,11 +753,13 @@ function checkGeAndGtAndLeAndLt(self, isG, isE)
     end
     function testCorrect(flag)
         if (flag == 2)
-            [test1EllArray, ~, ~, ~] = createTypicalArray(flag);
-            [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(flag);
+            [test1EllArray, ~, ~, ~] = createTypicalArray(...
+                self.ellFactoryObj, flag);
+            [test2EllArray, ~, ~, isAnsArray] = createTypicalArray(...
+                self.ellFactoryObj, flag);
         else
             [test1EllArray, test2EllArray, isAnsArray] = ...
-                createTypicalArray(flag);
+                self.createTypicalArray(flag);
         end
         if (flag == 12) || (isG && (flag == 9)) || (~isG && (flag == 10))
             isAnsArray = ~isAnsArray;
@@ -721,14 +783,15 @@ function checkGeAndGtAndLeAndLt(self, isG, isE)
     function testError(flag)
         if (flag == 1)
             [test1EllArray, ~, ~, errorStr] = ...
-                createTypicalArray(flag);
-            [test2EllArray, ~, ~, ~] = createTypicalArray(flag);
+                self.createTypicalArray(flag);
+            [test2EllArray, ~, ~, ~] = createTypicalArray(...
+                self.ellFactoryObj, flag);
         elseif (flag == 11)
             [test1EllArray, test2EllArray, ~, errorStr] = ...
-                createTypicalArray(flag);
+                self.createTypicalArray(flag);
         else
             [test1EllArray, test2EllArray, errorStr] = ...
-                createTypicalArray(flag);
+                self.createTypicalArray(flag);
         end
         if isG
             if isE

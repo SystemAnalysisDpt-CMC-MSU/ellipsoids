@@ -6,6 +6,22 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
+    properties (Access=private)
+        ellFactoryObj;
+    end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     methods (Access = protected, Static)
         
         function objArrCVec = getToStructObj()
@@ -100,8 +116,9 @@ classdef HyperplaneDispStructTC < elltool.core.test.mlunit.ADispStructTC
                 hyperplane.fromStruct(struct('normal',...
                 num2cell(ones(5, 5, 5)), ...
                 'shift', num2cell(ones(5, 5, 5)))),...
-                hyperplane([1, 2]', 3),...
-                ellipsoid()};
+                hyperplane([1, 2]', 3), ...
+                elltool.core.test.mlunit.TEllipsoidFactory.createInstance(...
+                'ellipsoid')};
             objArrCVec{5} = [objArrCVec{5} objArrCVec{5}];
         end
         

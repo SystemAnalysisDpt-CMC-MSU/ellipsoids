@@ -6,10 +6,32 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
 %            and Computer Science,
 %            System Analysis Department 2013 $
 
-     properties (Access=private)
-        testDataRootDir
-     end
-     methods
+    properties (Access=private)
+       testDataRootDir
+       ellFactoryObj
+    end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+        function ellObj = ell_unitball(self, varargin)
+            ellObj = elltool.core.test.mlunit.tell_unitball(...
+                self.ellFactoryObj, varargin{:});
+        end
+        function ellObj = ell_enclose(self, varargin)
+            ellObj = elltool.core.test.mlunit.tell_enclose(...
+                self.ellFactoryObj, varargin{:});
+        end
+    end
+    %
+    methods
         function self=EllipsoidSecTestCase(varargin)
             self=self@mlunitext.test_case(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
@@ -18,26 +40,26 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
                 'TestData', filesep,shortClassName];
         end
         function self = testIsContainedInIntersection (self)
-            [test1Ell, test2Ell] = createTypicalEll(1);
+            [test1Ell, test2Ell] = self.createTypicalEll(1);
             self.runAndCheckError(['doesIntersectionContain'...
                     '(test1Ell, [test1Ell test2Ell], ''mode'','...
                     '''i'')'], 'notSupportedMode');
             compareForIsCII(test1Ell, [test1Ell test2Ell], [], 0);
-            [test1Ell, test2Ell] = createTypicalEll(2);
+            [test1Ell, test2Ell] = self.createTypicalEll(2);
             self.runAndCheckError(['doesIntersectionContain'...
                     '(test1Ell, [test1Ell test2Ell], ''mode'','...
                     '''i'')'], 'notSupportedMode');
             compareForIsCII(test1Ell, [test1Ell test2Ell], 'u', 0);
-            [test1Ell, test2Ell] = createTypicalEll(3);
+            [test1Ell, test2Ell] = self.createTypicalEll(3);
             self.runAndCheckError(['doesIntersectionContain'...
                     '(test1Ell, [test1Ell test2Ell], ''mode'','...
                     '''i'')'], 'notSupportedMode');
             compareForIsCII(test1Ell, [test1Ell test2Ell], 'u', 0);
-            [test1Ell, test2Ell] = createTypicalEll(4);
+            [test1Ell, test2Ell] = self.createTypicalEll(4);
             compareForIsCII([test1Ell test2Ell], test1Ell, 'i', 0);
             compareForIsCII([test1Ell test2Ell], [test1Ell test2Ell],...
                 [], 0);
-            [test1Ell, test2Ell] = createTypicalHighDimEll(7);
+            [test1Ell, test2Ell] = self.createTypicalHighDimEll(7);
             compareForIsCII([test1Ell test2Ell], test1Ell, 'i', 0);
             compareForIsCII([test1Ell test2Ell], [test1Ell test2Ell],...
                 [], 0);
@@ -45,52 +67,52 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
                 'u', 0);
         end
         function self = testIsBadDirection(self)
-            [test1Ell, test2Ell] = createTypicalEll(5);
+            [test1Ell, test2Ell] = self.createTypicalEll(5);
             absTol=min(test1Ell.getAbsTol(),test2Ell.getAbsTol());
             aMat = [diag(ones(6, 1)), [1; 2; 3; 3; 4; 5]];
             isTestResVec = isbaddirection(test1Ell, test2Ell, aMat,...
                 absTol);
             isTestRes = any(isTestResVec);
             mlunitext.assert_equals(false, isTestRes);
-            [test1Ell, test2Ell] = createTypicalEll(6);
+            [test1Ell, test2Ell] = self.createTypicalEll(6);
             compareExpForIsBadDir(test1Ell, test2Ell, [1, -1; 0, 0], ...
                 [1, -1; 2, 3],absTol);
-            [test1Ell, test2Ell] = createTypicalEll(7);
+            [test1Ell, test2Ell] = self.createTypicalEll(7);
             compareExpForIsBadDir(test1Ell, test2Ell,...
             [1, -1, 1000, 1000; 0, 0, 0.5, 0.5; 0, 0, -0.5, -1],...
             [1, -1, 0, 0; 1, -2, 1, 2; 7, 3, 2, 1],absTol);
-            [test1Ell, test2Ell, aMat, bMat] = createTypicalHighDimEll(8);
+            [test1Ell, test2Ell, aMat, bMat] = self.createTypicalHighDimEll(8);
             compareExpForIsBadDir(test1Ell, test2Ell, aMat, bMat,absTol);
         end
         function self = testMinkmp_ea(self)
-            compareAnalyticForMinkMp(true, false, 8, 5, 0, [])
-            compareAnalyticForMinkMp(true, false, 9, 5, 5, true)
-            compareAnalyticForMinkMp(true, false, 10, 5, 2, true)
-            compareAnalyticForMinkMp(true, true, 9, 100, 100, true)
+            self.compareAnalyticForMinkMp(true, false, 8, 5, 0, [])
+            self.compareAnalyticForMinkMp(true, false, 9, 5, 5, true)
+            self.compareAnalyticForMinkMp(true, false, 10, 5, 2, true)
+            self.compareAnalyticForMinkMp(true, true, 9, 100, 100, true)
         end
         function self = testMinkmp_ia(self)
-            compareAnalyticForMinkMp(false, false, 8, 5, 0, [])
-            compareAnalyticForMinkMp(false, false, 9, 5, 5, true)
-            compareAnalyticForMinkMp(false, false, 10, 5, 2, true)
-            compareAnalyticForMinkMp(false, true, 9, 100, 100, true)
+            self.compareAnalyticForMinkMp(false, false, 8, 5, 0, [])
+            self.compareAnalyticForMinkMp(false, false, 9, 5, 5, true)
+            self.compareAnalyticForMinkMp(false, false, 10, 5, 2, true)
+            self.compareAnalyticForMinkMp(false, true, 9, 100, 100, true)
         end
         function self = testMinksum_ea(self)
-            compareAnalyticForMinkSum(true, false, 11, 5, 5, true)
-            compareAnalyticForMinkSum(true, false, 12, 5, 5, true)
-            compareAnalyticForMinkSum(true, false, 13, 5, 5, true)
-            compareAnalyticForMinkSum(true, true, 10, 100, 100, true)
+            self.compareAnalyticForMinkSum(true, false, 11, 5, 5, true)
+            self.compareAnalyticForMinkSum(true, false, 12, 5, 5, true)
+            self.compareAnalyticForMinkSum(true, false, 13, 5, 5, true)
+            self.compareAnalyticForMinkSum(true, true, 10, 100, 100, true)
         end
         function self = testMinksum_ia(self)
-            compareAnalyticForMinkSum(false, false, 11, 5, 5, true)
-            compareAnalyticForMinkSum(false, false, 12, 5, 5, true)
-            compareAnalyticForMinkSum(false, false, 13, 5, 5, true)
-            compareAnalyticForMinkSum(false, true, 10, 100, 100, true)
+            self.compareAnalyticForMinkSum(false, false, 11, 5, 5, true)
+            self.compareAnalyticForMinkSum(false, false, 12, 5, 5, true)
+            self.compareAnalyticForMinkSum(false, false, 13, 5, 5, true)
+            self.compareAnalyticForMinkSum(false, true, 10, 100, 100, true)
         end
         
         function self=testRepmat(self)     
             %
-            testEll1=ellipsoid([16 0;0 25]);
-            testEll2=ellipsoid([9 0; 0 4]);
+            testEll1=self.ellipsoid([16 0;0 25]);
+            testEll2=self.ellipsoid([9 0; 0 4]);
             testDir1Vec=[10;1]/realsqrt(101);
             testDir2Vec=[1;1]/realsqrt(2);
             testDirMat=[testDir1Vec, testDir2Vec];
@@ -106,9 +128,9 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             check(@minkpm_ia,false);
             %
             fMmpEA=@(fEll,sEll,dMat)minkmp_ea(fEll,sEll,...
-                ellipsoid(eye(2)),dMat);
+                self.ellipsoid(eye(2)),dMat);
             fMmpIA=@(fEll,sEll,dMat)minkmp_ia(fEll,sEll,...
-                ellipsoid(eye(2)),dMat);
+                self.ellipsoid(eye(2)),dMat);
             check(fMmpEA,false);
             check(fMmpIA,false);
             %
@@ -147,14 +169,14 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
         end
         
         function self = testMinkdiff_ea(self)
-            [testEllipsoid1, ~] = createTypicalEll(14);
-            testEllipsoid2 = ellipsoid([1; 0], eye(2));
-            testEllipsoid3 = ellipsoid([1; 2], [1 0; 0 1]);
+            [testEllipsoid1, ~] = self.createTypicalEll(14);
+            testEllipsoid2 = self.ellipsoid([1; 0], eye(2));
+            testEllipsoid3 = self.ellipsoid([1; 2], [1 0; 0 1]);
             testNotEllipsoid = [];
             
             testLVec = [0; 1];
             resEll = minkdiff_ea(testEllipsoid1, testEllipsoid2, testLVec);
-            ansEll = ellipsoid([-1; 0], [0 0; 0 0]);
+            ansEll = self.ellipsoid([-1; 0], [0 0; 0 0]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
@@ -169,61 +191,64 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             %'MINKDIFF_EA: dimension of the direction vectors must be the same as dimension of ellipsoids.'
             self.runAndCheckError('minkdiff_ea(2*testEllipsoid1, testEllipsoid3, testLVec)','wrongSizes');
             
-            testEllipsoid1 = ellipsoid([0; 0], [17 8; 8 17]);
-            testEllipsoid2 = ellipsoid([1; 2], [13 12; 12 13]);
+            testEllipsoid1 = self.ellipsoid([0; 0], [17 8; 8 17]);
+            testEllipsoid2 = self.ellipsoid([1; 2], [13 12; 12 13]);
             testLVec = [1; 1];
             resEll = minkdiff_ea(testEllipsoid1, testEllipsoid2, testLVec);
-            ansEll = ellipsoid([-1; -2], [2 -2; -2 2]);
+            ansEll = self.ellipsoid([-1; -2], [2 -2; -2 2]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(1);
+            [testEllHighDim1, testEllHighDim2, testLVec] = ...
+                self.createTypicalHighDimEll(1);
             resEll = minkdiff_ea(testEllHighDim1, testEllHighDim2, testLVec);
-            ansEll = ellipsoid(zeros(12, 1), eye(12));
+            ansEll = self.ellipsoid(zeros(12, 1), eye(12));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(2);
+            [testEllHighDim1, testEllHighDim2, testLVec] = ...
+                self.createTypicalHighDimEll(2);
             resEll = minkdiff_ea(testEllHighDim1, testEllHighDim2, testLVec);
-            ansEll = ellipsoid(zeros(20, 1), eye(20));
+            ansEll = self.ellipsoid(zeros(20, 1), eye(20));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
 
-            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(3);
+            [testEllHighDim1, testEllHighDim2, testLVec] = ...
+                self.createTypicalHighDimEll(3);
             resEll = minkdiff_ea(testEllHighDim1, testEllHighDim2, testLVec);
-            ansEll = ellipsoid(zeros(100, 1), eye(100));
+            ansEll = self.ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            testEllipsoid1 = ellipsoid(eye(3));
-            testEllipsoid2 = ellipsoid(diag([4, 9, 25]));
+            testEllipsoid1 = self.ellipsoid(eye(3));
+            testEllipsoid2 = self.ellipsoid(diag([4, 9, 25]));
             testLVec = [1; 0; 0];
             resEll = minkdiff_ea(testEllipsoid2, testEllipsoid1, testLVec);
-            ansEll = ellipsoid([0; 0; 0], diag([1, 4, 16]));
+            ansEll = self.ellipsoid([0; 0; 0], diag([1, 4, 16]));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
         end 
         
         function self = testMinkdiff_ia(self)          
-            [testEllipsoid1, ~] = createTypicalEll(14);
-            testEllipsoid2 = ellipsoid([0; 1], eye(2));
-            testEllipsoid3 = ellipsoid([0; 0], [4 0; 0 1]);
+            [testEllipsoid1, ~] = self.createTypicalEll(14);
+            testEllipsoid2 = self.ellipsoid([0; 1], eye(2));
+            testEllipsoid3 = self.ellipsoid([0; 0], [4 0; 0 1]);
             testNotEllipsoid = [];
             
             testLVec = [0; 1];
             resEll = minkdiff_ia(testEllipsoid1, testEllipsoid2, testLVec);
-            ansEll = ellipsoid([0; -1], [0 0; 0 0]);
+            ansEll = self.ellipsoid([0; -1], [0 0; 0 0]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
             resEll = minkdiff_ia(testEllipsoid3, testEllipsoid2, testLVec);
-            ansEll = ellipsoid([0; -1], [0 0; 0 0]);
+            ansEll = self.ellipsoid([0; -1], [0 0; 0 0]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
             testLVec = [1; 0];
             resEll = minkdiff_ia(2*testEllipsoid1, testEllipsoid1, testLVec);
-            ansEll = ellipsoid([0; 0], [1 0; 0 1]);
+            ansEll = self.ellipsoid([0; 0], [1 0; 0 1]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
@@ -238,153 +263,174 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             %'MINKDIFF_IA: dimension of the direction vectors must be the same as dimension of ellipsoids.'
             self.runAndCheckError('minkdiff_ia(testEllipsoid3, testEllipsoid1, testLVec)','wrongSizes');
             
-            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(1);
+            [testEllHighDim1, testEllHighDim2, testLVec] = ...
+                self.createTypicalHighDimEll(1);
             resEll = minkdiff_ia(testEllHighDim1, testEllHighDim2, testLVec);
-            ansEll = ellipsoid(zeros(12, 1), eye(12));
+            ansEll = self.ellipsoid(zeros(12, 1), eye(12));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(2);
+            [testEllHighDim1, testEllHighDim2, testLVec] = ...
+                self.createTypicalHighDimEll(2);
             resEll = minkdiff_ia(testEllHighDim1, testEllHighDim2, testLVec);
-            ansEll = ellipsoid(zeros(20, 1), eye(20));
+            ansEll = self.ellipsoid(zeros(20, 1), eye(20));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
  
-            [testEllHighDim1, testEllHighDim2, testLVec] = createTypicalHighDimEll(3);
+            [testEllHighDim1, testEllHighDim2, testLVec] = ...
+                self.createTypicalHighDimEll(3);
             resEll = minkdiff_ia(testEllHighDim1, testEllHighDim2, testLVec);
-            ansEll = ellipsoid(zeros(100, 1), eye(100));
+            ansEll = self.ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            testEllipsoid1 = ellipsoid(eye(3));
-            testEllipsoid2 = ellipsoid(diag([4, 9, 16]));
+            testEllipsoid1 = self.ellipsoid(eye(3));
+            testEllipsoid2 = self.ellipsoid(diag([4, 9, 16]));
             testLVec = [1; 0; 0];
             resEll = minkdiff_ia(testEllipsoid2, testEllipsoid1, testLVec);
-            ansEll = ellipsoid([0; 0; 0], diag([1, 3.5, 7]));
+            ansEll = self.ellipsoid([0; 0; 0], diag([1, 3.5, 7]));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
         end
         
         function self = testMinkpm_ea(self)
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(15);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(15);
             resEll = minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
-            ansEll = ellipsoid(4, 1);
+            ansEll = self.ellipsoid(4, 1);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(16);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(16);
             resEll = minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
-            ansEll = ellipsoid([3; 1], [2 0; 0 2]);
+            ansEll = self.ellipsoid([3; 1], [2 0; 0 2]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(17);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(17);
             resEll = minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
-            ansEll = ellipsoid([3; 1; 0], [2 0 0; 0 2 0; 0 0 2]);
+            ansEll = self.ellipsoid([3; 1; 0], [2 0 0; 0 2 0; 0 0 2]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(18);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(18);
             %'MINKPM_EA: first and second arguments must be ellipsoids.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongInput');
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(19);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(19);
             %'MINKPM_EA: first and second arguments must be ellipsoids.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongInput');
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(16);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(16);
             %'MINKPM_EA: second argument must be single ellipsoid.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], [testEllipsoid3 testEllipsoid3], testLVec)', 'wrongInput');
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(20);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(20);
             %'MINKPM_EA: all ellipsoids must be of the same dimension.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(21);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(21);
             %'MINKPM_EA: all ellipsoids must be of the same dimension.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
              
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(22);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(22);
             %'MINKPM_EA: dimension of the direction vectors must be the same as dimension of ellipsoids.'
             self.runAndCheckError('minkpm_ea([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
             
-            [testEllHighDim1, testLVec] = createTypicalHighDimEll(4);
+            [testEllHighDim1, testLVec] = self.createTypicalHighDimEll(4);
             resEll = minkpm_ea([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
-            ansEll = ellipsoid(zeros(12, 1), eye(12));
+            ansEll = self.ellipsoid(zeros(12, 1), eye(12));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1, testLVec] = createTypicalHighDimEll(5);
+            [testEllHighDim1, testLVec] = self.createTypicalHighDimEll(5);
             resEll = minkpm_ea([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
-            ansEll = ellipsoid(zeros(20, 1), eye(20));
+            ansEll = self.ellipsoid(zeros(20, 1), eye(20));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1, testLVec] = createTypicalHighDimEll(6);
+            [testEllHighDim1, testLVec] = self.createTypicalHighDimEll(6);
             resEll = minkpm_ea([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
-            ansEll = ellipsoid(zeros(100, 1), eye(100));
+            ansEll = self.ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
         end
         
         function self = testMinkpm_ia(self)            
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(15);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(15);
             resEll = minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
-            ansEll = ellipsoid(4, 1);
+            ansEll = self.ellipsoid(4, 1);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(16);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(16);
             resEll = minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
-            ansEll = ellipsoid([3; 1], [2 0; 0 2]);
+            ansEll = self.ellipsoid([3; 1], [2 0; 0 2]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(17);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(17);
             resEll = minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec);
-            ansEll = ellipsoid([3; 1; 0], [2 0 0; 0 2 0; 0 0 2]);
+            ansEll = self.ellipsoid([3; 1; 0], [2 0 0; 0 2 0; 0 0 2]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(18);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(18);
             %'MINKPM_IA: first and second arguments must be ellipsoids.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongInput');
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(19);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(19);
             %'MINKPM_IA: first and second arguments must be ellipsoids.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongInput');
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(16);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(16);
             %'MINKPM_IA: second argument must be single ellipsoid.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], [testEllipsoid3 testEllipsoid3], testLVec)', 'wrongInput');
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(20);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(20);
             %'MINKPM_IA: all ellipsoids must be of the same dimension.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
             
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(21);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(21);
             %'MINKPM_IA: all ellipsoids must be of the same dimension.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
              
-            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = createTypicalEll(22);
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testLVec] = ...
+                self.createTypicalEll(22);
             %'MINKPM_IA: dimension of the direction vectors must be the same as dimension of ellipsoids.'
             self.runAndCheckError('minkpm_ia([testEllipsoid1 testEllipsoid2], testEllipsoid3, testLVec)', 'wrongSizes');
             
-            [testEllHighDim1, testLVec] = createTypicalHighDimEll(4);
+            [testEllHighDim1, testLVec] = self.createTypicalHighDimEll(4);
             resEll = minkpm_ia([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
-            ansEll = ellipsoid(zeros(12, 1), eye(12));
+            ansEll = self.ellipsoid(zeros(12, 1), eye(12));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1, testLVec] = createTypicalHighDimEll(5);
+            [testEllHighDim1, testLVec] = self.createTypicalHighDimEll(5);
             resEll = minkpm_ia([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
-            ansEll = ellipsoid(zeros(20, 1), eye(20));
+            ansEll = self.ellipsoid(zeros(20, 1), eye(20));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
             
-            [testEllHighDim1, testLVec] = createTypicalHighDimEll(6);
+            [testEllHighDim1, testLVec] = self.createTypicalHighDimEll(6);
             resEll = minkpm_ia([testEllHighDim1 testEllHighDim1], testEllHighDim1, testLVec);
-            ansEll = ellipsoid(zeros(100, 1), eye(100));
+            ansEll = self.ellipsoid(zeros(100, 1), eye(100));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
         end
@@ -407,16 +453,43 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             self.runAndCheckError('isInside(ell1Arr(1:2),ell2Arr)',...
                 'wrongInput');
             %
-            self.runAndCheckError('isInside(ellipsoid(eye(3)),ell2Arr)',...
+            self.runAndCheckError('isInside(self.ellipsoid(eye(3)),ell2Arr)',...
                 'wrongInput');
-            badEllVec = [ellipsoid(eye(2)), ellipsoid(eye(3))];
+            badEllVec = [self.ellipsoid(eye(2)), self.ellipsoid(eye(3))];
             self.runAndCheckError('isInside(badEllVec,ell1Arr(1))',...
                 'wrongInput');
             %
             self.runAndCheckError('isInside(ell1Arr,hyperplane())',...
                 'wrongInput');
         end
-     end
+    end
+    %
+    methods (Access = private)
+        function varargout = createTypicalEll(self, varargin)
+            varargout = cell(1, nargout);
+            if nargout > 0
+                [varargout{:}] = createTypicalEll(self.ellFactoryObj,...
+                    varargin{:});
+            else
+                 createTypicalArray(self.ellFactoryObj, varargin{:});
+            end
+        end
+        function varargout = createTypicalHighDimEll(self, varargin)
+            varargout = cell(1, nargout);
+            if nargout > 0
+                [varargout{:}] = createTypicalHighDimEll(...
+                    self.ellFactoryObj, varargin{:});
+            else
+                 createTypicalHighDimEll(self.ellFactoryObj, varargin{:});
+            end
+        end
+        function compareAnalyticForMinkMp(self, varargin)
+            compareAnalyticForMinkMp(self.ellFactoryObj, varargin{:});
+        end
+        function compareAnalyticForMinkSum(self, varargin)
+            compareAnalyticForMinkSum(self.ellFactoryObj, varargin{:});
+        end
+    end
 end
 
 function myTestIsInside(ell1Arr,ell2Arr, expResVec)
@@ -424,79 +497,84 @@ function myTestIsInside(ell1Arr,ell2Arr, expResVec)
     mlunitext.assert(all(resVec == expResVec));
 end
 
-function [varargout] = createTypicalEll(flag)
+function [varargout] = createTypicalEll(ellFactoryObj, flag)
     switch flag
         case 1
-            varargout{1} = ellipsoid([2; 1], [4, 1; 1, 1]);
-            varargout{2} = ell_unitball(2);
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [2; 1], [4, 1; 1, 1]);
+            varargout{2} = elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, 2);
         case 2
-            varargout{1} = ellipsoid([2; 1; 0], ...
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [2; 1; 0], ...
                 [4, 1, 1; 1, 2, 1; 1, 1, 5]);
-            varargout{2} = ell_unitball(3);
+            varargout{2} = elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, 3);
         case 3
-            varargout{1} = ellipsoid([5; 5; 5], ...
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [5; 5; 5], ...
                 [4, 1, 1; 1, 2, 1; 1, 1, 5]);
-            varargout{2} = ell_unitball(3);
+            varargout{2} = elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, 3);
         case 4
-            varargout{1} = ellipsoid([5; 5; 5; 5], ...
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [5; 5; 5; 5], ...
                 [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6]);
-            varargout{2} = ell_unitball(4);    
+            varargout{2} = elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, 4);    
         case 5
-            varargout{1} = ell_unitball(6);
-            varargout{2} = ellipsoid(zeros(6, 1), diag(0.5 * ones(6, 1)));
+            varargout{1} = elltool.core.test.mlunit.tell_unitball(...
+                ellFactoryObj, 6);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', zeros(6, 1), diag(0.5 * ones(6, 1)));
         case 6
-            varargout{1} = ellipsoid([5; 0], diag([4, 1]));
-            varargout{2} = ellipsoid([0; 0], diag([1 / 8, 1/ 2]));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [5; 0], diag([4, 1]));
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [0; 0], diag([1 / 8, 1/ 2]));
         case 7
-            varargout{1} = ellipsoid([0; 0; 0], diag([4, 1, 1]));
-            varargout{2} = ellipsoid([0; 0; 0], ...
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [0; 0; 0], diag([4, 1, 1]));
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [0; 0; 0], ...
                 diag([1 / 8, 1/ 2, 1 / 2]));
         case 8
             varargout{1} = [3; 3; 8; 3; 23];
             varargout{2} = diag(ones(1, 5));
-            varargout{3} = ellipsoid(varargout{1}, varargout{2});
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
             varargout{4} = [6.5; 1; 1; 1; 1];
             varargout{5} = diag([5, 2, 2, 2, 2]);
-            varargout{6} = ellipsoid(varargout{4}, varargout{5});
+            varargout{6} = ellFactoryObj.createInstance('ellipsoid', varargout{4}, varargout{5});
             varargout{7} = [3; 3; 65; 4; 23];
             varargout{8} = diag([13, 3, 2, 2, 2]);
-            test1Ell = ellipsoid(varargout{7}, varargout{8});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{7}, varargout{8});
             varargout{9} = [3; 8; 3; 2; 6];
             varargout{10} = diag([7, 2, 6, 2, 2]);
-            test2Ell = ellipsoid(varargout{9}, varargout{10});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{9}, varargout{10});
             varargout{11} = [test1Ell, test2Ell];
         case 9
             varargout{1} = [3; 3; 8; 3; 23];
             varargout{2} = diag(ones(1, 5));
-            varargout{3} = ellipsoid(varargout{1}, varargout{2});
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
             varargout{4} = [6.5; 1; 1; 1; 1];
             varargout{5} = diag([0.25, 0.25, 0.25, 0.25, 0.25]);
-            varargout{6} = ellipsoid(varargout{4}, varargout{5});
+            varargout{6} = ellFactoryObj.createInstance('ellipsoid', varargout{4}, varargout{5});
             varargout{7} = [3; 3; 65; 4; 23];
             varargout{8} = diag([13, 3, 2, 2, 2]);
-            test1Ell = ellipsoid(varargout{7}, varargout{8});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{7}, varargout{8});
             varargout{9} = [3; 8; 3; 2; 6];
             varargout{10} = diag([7, 2, 6, 2, 2]);
-            test2Ell = ellipsoid(varargout{9}, varargout{10});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{9}, varargout{10});
             varargout{11} = [test1Ell, test2Ell];
         case 10
             varargout{1} = [3; 76; 8; 3; 23];
             varargout{2} = diag([3, 5, 6, 2, 7]);
-            varargout{3} = ellipsoid(varargout{1}, varargout{2});
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
             varargout{4} = [6.5; 1.345; 1.234; 114; 241];
             varargout{5} = diag([2, 3, 1.5, 0.6, 2]);
-            varargout{6} = ellipsoid(varargout{4}, varargout{5});
+            varargout{6} = ellFactoryObj.createInstance('ellipsoid', varargout{4}, varargout{5});
             varargout{7} = [7; 33; 45; 42; 3];
             varargout{8} = diag([3, 34, 23, 22, 21]);
-            test1Ell = ellipsoid(varargout{7}, varargout{8});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{7}, varargout{8});
             varargout{9} = [32; 81; 36; -2325; -6];
             varargout{10} = diag([34, 12, 8, 17, 7]);
-            test2Ell = ellipsoid(varargout{9}, varargout{10});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{9}, varargout{10});
             varargout{11} = [test1Ell, test2Ell];
         case 11
             varargout{1} = [3; 61; 2; 34; 3];
             varargout{2} = diag(5 * ones(1, 5));
-            test0Ell = ellipsoid(varargout{1}, varargout{2});
+            test0Ell = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
             varargout{3} = 0;
             varargout{4} = 0;
             varargout{5} = 0;
@@ -505,139 +583,139 @@ function [varargout] = createTypicalEll(flag)
         case 12
             varargout{1} = [3; 61; 2; 34; 3];
             varargout{2} = diag(5 * ones(1, 5));
-            test0Ell = ellipsoid(varargout{1}, varargout{2});
+            test0Ell = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
             varargout{3} = [31; 34; 51; 42; 3];
             varargout{4} = diag([13, 3, 22, 2, 24]);
-            test1Ell = ellipsoid(varargout{3}, varargout{4});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{3}, varargout{4});
             varargout{5} = [3; 8; 23; 12; 6];
             varargout{6} = diag([7, 6, 6, 8, 2]);
-            test2Ell = ellipsoid(varargout{5}, varargout{6});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{5}, varargout{6});
             varargout{7} = [test0Ell, test1Ell, test2Ell];
         case 13    
             varargout{1} = [32; 0; 8; 1; 23];
             varargout{2} = diag([3, 5, 6, 5, 2]);
-            test0Ell = ellipsoid(varargout{1}, varargout{2});
+            test0Ell = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
             varargout{3} = [7; 3; 5; 42; 3];
             varargout{4} = diag([32, 34, 23, 12, 21]);
-            test1Ell = ellipsoid(varargout{3}, varargout{4});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{3}, varargout{4});
             varargout{5} = [32; 81; 36; -25; -62];
             varargout{6} = diag([4, 12, 1, 1, 75]);
-            test2Ell = ellipsoid(varargout{5}, varargout{6});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{5}, varargout{6});
             varargout{7} = [test0Ell, test1Ell, test2Ell];
         case 14
-            varargout{1} = ellipsoid([0; 0], [1 0; 0 1]);
-            varargout{2} = ellipsoid([1; 0], [1 0; 0 1]);
-            varargout{3} = ellipsoid([1; 0], [2 0; 0 1]);
-            varargout{4} = ellipsoid([0; 0], [0 0; 0 0]);
-            varargout{5} = ellipsoid([0; 0; 0], [0 0 0 ;0 0 0; 0 0 0]);
-            varargout{6} = ellipsoid;
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [0; 0], [1 0; 0 1]);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [1; 0], [1 0; 0 1]);
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', [1; 0], [2 0; 0 1]);
+            varargout{4} = ellFactoryObj.createInstance('ellipsoid', [0; 0], [0 0; 0 0]);
+            varargout{5} = ellFactoryObj.createInstance('ellipsoid', [0; 0; 0], [0 0 0 ;0 0 0; 0 0 0]);
+            varargout{6} = ellFactoryObj.createInstance('ellipsoid');
         case 15
-            varargout{1} = ellipsoid(2, 1);
-            varargout{2} = ellipsoid(3, 1);
-            varargout{3} = ellipsoid(1, 1);
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', 2, 1);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', 3, 1);
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', 1, 1);
             varargout{4} = 1;
         case 16
-            varargout{1} = ellipsoid([1; 0], [2 0; 0 2]);
-            varargout{2} = ellipsoid([2; 0], [1 0; 0 1]);
-            varargout{3} = ellipsoid([0; -1], [1 0; 0 1]);
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [1; 0], [2 0; 0 2]);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [2; 0], [1 0; 0 1]);
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', [0; -1], [1 0; 0 1]);
             varargout{4} = [1; 0];
         case 17
-            varargout{1} = ellipsoid([1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
-            varargout{2} = ellipsoid([2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
-            varargout{3} = ellipsoid([0; -1; 1], [1 0 0; 0 1 0; 0 0 1]);
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', [0; -1; 1], [1 0 0; 0 1 0; 0 0 1]);
             varargout{4} = [1; 0; 0];
         case 18
-            varargout{1} = ellipsoid([1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
-            varargout{2} = ellipsoid([2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
             varargout{3} = [];
             varargout{4} = [1; 0; 0];
         case 19
             varargout{1} = [];
             varargout{2} = [];
-            varargout{3} = ellipsoid([0; -1; 1], [1 0 0; 0 1 0; 0 0 1]);
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', [0; -1; 1], [1 0 0; 0 1 0; 0 0 1]);
             varargout{4} = [1; 0; 0];
         case 20
-            varargout{1} = ellipsoid([1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
-            varargout{2} = ellipsoid([2; 0], eye(2));
-            varargout{3} = ellipsoid([0; -1; 1], [1 0 0; 0 1 0; 0 0 1]);
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [2; 0], eye(2));
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', [0; -1; 1], [1 0 0; 0 1 0; 0 0 1]);
             varargout{4} = [1; 0; 0];
         case 21
-            varargout{1} = ellipsoid([1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
-            varargout{2} = ellipsoid([2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
-            varargout{3} = ellipsoid([2; 0], eye(2));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', [2; 0], eye(2));
             varargout{4} = [1; 0; 0];
         case 22
-            varargout{1} = ellipsoid([1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
-            varargout{2} = ellipsoid([2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
-            varargout{3} = ellipsoid([2; 0; 0], eye(3));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', [2; 0; 0], eye(3));
             varargout{4} = [1; 0];
         otherwise
     end
 end
 
-function [varargout] = createTypicalHighDimEll(flag)
+function [varargout] = createTypicalHighDimEll(ellFactoryObj, flag)
     switch flag
         case 1
-            varargout{1} = ellipsoid(4*eye(12));
-            varargout{2} = ellipsoid(eye(12));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', 4*eye(12));
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', eye(12));
             varargout{3} = [1 zeros(1, 11)]';
         case 2
-            varargout{1} = ellipsoid(4*eye(20));
-            varargout{2} = ellipsoid(eye(20));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', 4*eye(20));
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', eye(20));
             varargout{3} = [1 zeros(1, 19)]';
         case 3
-            varargout{1} = ellipsoid(4*eye(100));
-            varargout{2} = ellipsoid(eye(100));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', 4*eye(100));
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', eye(100));
             varargout{3} = [1 zeros(1, 99)]';
         case 4
-            varargout{1} = ellipsoid(eye(12));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', eye(12));
             varargout{2} = [1 zeros(1, 11)]';
         case 5
-            varargout{1} = ellipsoid(eye(20));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', eye(20));
             varargout{2} = [1 zeros(1, 19)]';
         case 6
-            varargout{1} = ellipsoid(eye(100));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', eye(100));
             varargout{2} = [1 zeros(1, 99)]';
         case 7
-            varargout{1} = ellipsoid( zeros(100, 1), diag([5 * ones(1, 50), 2 * ones(1, 50)]));
-            varargout{2} = ellipsoid( ones(100, 1), diag([0.2 * ones(1, 50), 0.5 * ones(1, 50)]));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', zeros(100, 1), diag([5 * ones(1, 50), 2 * ones(1, 50)]));
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', ones(100, 1), diag([0.2 * ones(1, 50), 0.5 * ones(1, 50)]));
         case 8
-            varargout{1} = ellipsoid( zeros(100, 1), diag([5 * ones(1, 50), 2 * ones(1, 50)]));
-            varargout{2} = ellipsoid( ones(100, 1), diag([0.2 * ones(1, 50), 0.5 * ones(1, 50)]));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', zeros(100, 1), diag([5 * ones(1, 50), 2 * ones(1, 50)]));
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', ones(100, 1), diag([0.2 * ones(1, 50), 0.5 * ones(1, 50)]));
             varargout{3} = eye(100, 50);
             varargout{4} = [zeros(50); eye(50)];        
         case 9
             varargout{1} = rand(100, 1);
             varargout{2} = diag([5 * ones(1, 50), 2 * ones(1, 50)]);
-            varargout{3} = ellipsoid(varargout{1}, varargout{2});
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
             varargout{4} = rand(100, 1);
             varargout{5} = diag([0.5 * ones(1, 50), 0.2 * ones(1, 50)]);
-            varargout{6} = ellipsoid(varargout{4}, varargout{5});
+            varargout{6} = ellFactoryObj.createInstance('ellipsoid', varargout{4}, varargout{5});
             varargout{7} = rand(100, 1);
             varargout{8} = diag(10 * rand(1, 100) + 0.5);
-            test1Ell = ellipsoid(varargout{7}, varargout{8});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{7}, varargout{8});
             varargout{9} = rand(100, 1);
             varargout{10} = diag(10 * rand(1, 100) + 0.5);
-            test2Ell = ellipsoid(varargout{9}, varargout{10});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{9}, varargout{10});
             varargout{11} = [test1Ell, test2Ell];
         case 10
             varargout{1} = rand(100, 1);
             varargout{2} = diag(10 * rand(1, 100) + 0.3);
-            test0Ell = ellipsoid(varargout{1}, varargout{2});
+            test0Ell = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
             varargout{3} = rand(100, 1);
             varargout{4} = diag(10 * rand(1, 100) + 0.3);
-            test1Ell = ellipsoid(varargout{3}, varargout{4});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{3}, varargout{4});
             varargout{5} = rand(100, 1);
             varargout{6} = diag(10 * rand(1, 100) + 0.3);
-            test2Ell = ellipsoid(varargout{5}, varargout{6});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{5}, varargout{6});
             varargout{7} = [test0Ell, test1Ell, test2Ell];    
         otherwise
     end
 end
-function analyticResEllVec = calcExpMinkMp(isExtApx, nDirs, aMat,...
+function analyticResEllVec = calcExpMinkMp(ellFactoryObj, isExtApx, nDirs, aMat,...
     e0Vec, e0Mat, e1Vec, e1Mat, e2Vec, e2Mat, qVec, qMat)
     analyticResVec = e0Vec - qVec + e1Vec + e2Vec;
-    analyticResEllVec(nDirs) = ellipsoid;
+    analyticResEllVec(nDirs) = ellFactoryObj.createInstance('ellipsoid');
     for iDir = 1 : nDirs
         lVec = aMat(:, iDir);
         if (isExtApx == 1) % minkmp_ea
@@ -685,14 +763,14 @@ function analyticResEllVec = calcExpMinkMp(isExtApx, nDirs, aMat,...
             qStarMat = supp1Mat + s2Mat * supp2Mat + s3Mat * supp3Mat;
             analyticResMat = qStarMat' * qStarMat;
         end
-            analyticResEllVec(1, iDir) = ellipsoid(analyticResVec, ...
-                analyticResMat);
+        analyticResEllVec(1, iDir) = ellFactoryObj.createInstance(...
+            'ellipsoid', analyticResVec, analyticResMat);
     end
 end
-function analyticResEllVec = calcExpMinkSum(isExtApx, nDirs, aMat, ...
+function analyticResEllVec = calcExpMinkSum(ellFactoryObj, isExtApx, nDirs, aMat, ...
     e0Vec, e0Mat, e1Vec, e1Mat, e2Vec, e2Mat)
     analyticResVec = e0Vec + e1Vec + e2Vec;
-    analyticResEllVec(nDirs) = ellipsoid;
+    analyticResEllVec(nDirs) = ellFactoryObj.createInstance('ellipsoid');
     for iDir = 1 : nDirs
         lVec = aMat(:, iDir);
         if isExtApx % minksum_ea
@@ -721,7 +799,8 @@ function analyticResEllVec = calcExpMinkSum(isExtApx, nDirs, aMat, ...
             qStarMat = supp1Mat + s2Mat * supp2Mat + s3Mat * supp3Mat;
             analyticResMat = qStarMat.' * qStarMat;
         end 
-        analyticResEllVec(1, iDir) = ellipsoid(analyticResVec, analyticResMat);
+        analyticResEllVec(1, iDir) = ellFactoryObj.createInstance(...
+            'ellipsoid', analyticResVec, analyticResMat);
     end
 end
 function compareForIsCII(test1EllVec, test2EllVec, myString, myResult)
@@ -740,14 +819,16 @@ function compareExpForIsBadDir(test1Ell, test2Ell, a1Mat, a2Mat,absTol)
     isTestRes = any(isTestResVec);
     mlunitext.assert_equals(false, isTestRes);
 end
-function compareAnalyticForMinkMp(isEA, isHighDim, indTypicalExample, ...
+function compareAnalyticForMinkMp(ellFactoryObj, isEA, isHighDim, indTypicalExample, ...
     nDirs, nGoodDirs, myResult)
     if isHighDim % createTypicalHighDimEll
         [e0Vec, e0Mat, test0Ell, qVec, qMat, qEll, e1Vec, e1Mat, e2Vec, ...
-            e2Mat, aEllVec] = createTypicalHighDimEll(indTypicalExample);
+            e2Mat, aEllVec] = createTypicalHighDimEll(ellFactoryObj, ...
+            indTypicalExample);
     else % createTypicalEll
         [e0Vec, e0Mat, test0Ell, qVec, qMat, qEll, e1Vec, e1Mat, ...
-            e2Vec, e2Mat, aEllVec] = createTypicalEll(indTypicalExample);
+            e2Vec, e2Mat, aEllVec] = createTypicalEll(ellFactoryObj, ...
+            indTypicalExample);
     end
     aMat = diag(ones(1, nDirs));
     if isEA % minkmp_ea
@@ -756,7 +837,7 @@ function compareAnalyticForMinkMp(isEA, isHighDim, indTypicalExample, ...
         testRes = minkmp_ia(test0Ell, qEll, aEllVec, aMat);
     end
     if ~isempty(myResult)
-        analyticResEllVec = calcExpMinkMp(isEA, nGoodDirs, aMat, e0Vec, ...
+        analyticResEllVec = calcExpMinkMp(ellFactoryObj, isEA, nGoodDirs, aMat, e0Vec, ...
             e0Mat, e1Vec, e1Mat, e2Vec, e2Mat, qVec, qMat);
         [isEqVec, reportStr] = isEqual(analyticResEllVec, testRes);
         isEq = all(isEqVec);
@@ -765,14 +846,14 @@ function compareAnalyticForMinkMp(isEA, isHighDim, indTypicalExample, ...
         mlunitext.assert_equals(myResult, testRes);
     end
 end
-function compareAnalyticForMinkSum(isEA, isHighDim, indTypicalExample, ...
+function compareAnalyticForMinkSum(ellFactoryObj, isEA, isHighDim, indTypicalExample, ...
     nDirs, nGoodDirs, myResult)
     if isHighDim % createTypicalHighDimEll
         [e0Vec, e0Mat, e1Vec, e1Mat, e2Vec, e2Mat, aEllVec] = ...
-            createTypicalHighDimEll(indTypicalExample);
+            createTypicalHighDimEll(ellFactoryObj, indTypicalExample);
     else % createTypicalEll
         [e0Vec, e0Mat, e1Vec, e1Mat, e2Vec, e2Mat, aEllVec] = ...
-            createTypicalEll(indTypicalExample);
+            createTypicalEll(ellFactoryObj, indTypicalExample);
     end
     aMat = diag(ones(1, nDirs));
     if isEA % minksum_ea
@@ -781,14 +862,14 @@ function compareAnalyticForMinkSum(isEA, isHighDim, indTypicalExample, ...
         testRes = minksum_ia(aEllVec, aMat);
     end
     if ~isHighDim && (indTypicalExample == 11)
-        test0Ell = ellipsoid(e0Vec, e0Mat);
+        test0Ell = ellFactoryObj.createInstance('ellipsoid', e0Vec, e0Mat);
         analyticResEllVec = [test0Ell, test0Ell, test0Ell, test0Ell, ...
             test0Ell];
         [isEqVec, reportStr] = isEqual(analyticResEllVec, testRes);
         isEq = all(isEqVec);
         mlunitext.assert_equals(true, isEq, reportStr);
    else
-        analyticResEllVec = calcExpMinkSum(isEA, nGoodDirs, aMat, e0Vec,...
+        analyticResEllVec = calcExpMinkSum(ellFactoryObj,  isEA, nGoodDirs, aMat, e0Vec,...
             e0Mat, e1Vec, e1Mat, e2Vec, e2Mat);
         [isEqVec, reportStr] = isEqual(analyticResEllVec, testRes);
         isEq = all(isEqVec);
