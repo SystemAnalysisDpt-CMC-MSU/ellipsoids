@@ -33,7 +33,7 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             
         end
         
-        function self = testGetRhoBoundary(self)
+        function self = DISABLED_testGetRhoBoundary(self)
             [testEllCVec testNumPointsCVec]  = getEllParams(2);
             
             [bpMatCArr fMatCArr supCVec lGridCMat] = cellfun(@(x, y)getRhoBoundary(x, y(1))...
