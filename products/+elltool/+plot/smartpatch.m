@@ -1,19 +1,22 @@
 function hPatch = smartpatch(isShowLegend, extraPropCVec, varargin)
 % SMARTPATCH patch-wrapper for patch allowing to pass it extra arguments
-%
-% Usage:
-%   hPatch = smartpatch(isShowLegend, extraPropCVec, patchArgs)
-%
-% input:
-%       regular:
-%           isShowLegend: logical[1, 1] - display or not legend annotation for
-%               this object
-%           extraPropCVec: cell[1, ] - cell array of extra patch properties
-%           patchArgs: - arguments to pass directly to patch ('help patch'
-%               for details)
-% output:
-%       regular:
-%           hPatch: matlab.graphics.primitive.Patch[1, 1] - patch handle
+
+% Input:
+%     regular:
+%         isShowLegend: logical[1, 1] - display or not legend annotation for
+%             this object
+%         extraPropCVec: cell[1, ] - cell array of extra patch properties
+%     Note: All other input arguments immediately following after
+%         extraPropCVec are passed to patch function (see its help for details)
+% Output:
+%     regular:
+%         hPatch: matlab.graphics.primitive.Patch[1, 1] - patch handle
+% 
+% 
+% $Author: Stanislav Mologin <stas.mologin@gmail.com> $ $Date: 2017-12-24 $
+% $Copyright: Lomonosov Moscow State University,
+% The Faculty of Computational Mathematics and Cybernetics,
+% System Analysis Department 2017 $
 
 hPatch = patch(varargin{:});
 if (~isempty(extraPropCVec))
