@@ -16,12 +16,18 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
         relTol
         regTol
         ellFactoryObj
+        testReachObjFactory
     end
     %
     methods
         function ellObj = ellipsoid(self, varargin)
             ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
                 varargin{:});            
+        end
+        %
+        function reachObj = reachDiscrete(self, varargin)
+            reachObj = self.testReachObjFactory.createInstance(...
+                'reachDiscrete', varargin{:});            
         end
     end
     %
@@ -51,6 +57,8 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
         %
         function self = set_up_param(self, confName, crm, crmSys)
             self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+            self.testReachObjFactory = ...
+                    elltool.reach.test.mlunit.TReachObjFactory();
             %
             self.crm = crm;
             self.crmSys = crmSys;
@@ -100,7 +108,7 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
             linSys = elltool.linsys.LinSysDiscrete(...
                 atDefCMat, btDefCMat, ControlBounds);
             self.runAndCheckError(...
-                ['elltool.reach.ReachDiscrete(linSys, x0Ell,',...
+                ['elltool.reach.test.mlunit.TReachDiscrete(linSys, x0Ell,',...
                 'l0Mat, timeVec, ''isRegEnabled'', true, ',...
                 '''isJustCheck'', true, ''regTol'', regTol)'],...
                 'MAKEELLTUBEREL:wrongInput:regProblem:onlyCheckIsEnabled');
@@ -126,7 +134,7 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
                     vVec);
                 x0Ell=self.ellipsoid(diag([0 1 1 1]));
                 %
-                elltool.reach.ReachDiscrete(linSys, x0Ell,...
+                self.reachDiscrete(linSys, x0Ell,...
                     l0Mat, timeVec);
             end
                 %
@@ -136,7 +144,7 @@ classdef DiscreteReachRegTestCase < mlunitext.test_case
                 ControlBoundsTest = self.ellipsoid(eye(2));
                 linSys = elltool.linsys.LinSysDiscrete(...
                     atDefCMat, btDefCMat, ControlBounds);
-                elltool.reach.ReachDiscrete(linSys, x0Ell,...
+                self.reachDiscrete(linSys, x0Ell,...
                     l0Mat, timeVec, 'isRegEnabled', false,...
                     'isJustCheck', false, 'regTol', 1e-5);
             end

@@ -6,7 +6,16 @@ classdef DiscrReachTestNTimeGridPoints < mlunitext.test_case
         tIntervalVec
         x0Ell
         l0Mat
+        testReachObjFactory
     end
+    %
+    methods
+        function reachObj = reachDiscrete(self, varargin)
+            reachObj = self.testReachObjFactory.createInstance(...
+                'reachDiscrete', varargin{:});            
+        end
+    end
+    %
     methods
         function self = DiscrReachTestNTimeGridPoints(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -27,6 +36,9 @@ classdef DiscrReachTestNTimeGridPoints < mlunitext.test_case
         end
         %
         function self = set_up_param(self, reachFactObj)
+            self.testReachObjFactory = ...
+                    elltool.reach.test.mlunit.TReachObjFactory();
+            %
             self.linSys = reachFactObj.getLinSys();
             self.tIntervalVec = reachFactObj.getTVec();
             self.x0Ell = reachFactObj.getX0Ell();
@@ -45,7 +57,7 @@ classdef DiscrReachTestNTimeGridPoints < mlunitext.test_case
             else
                 tVec = k0:k1;
             end
-            reachSetObj = elltool.reach.ReachDiscrete(self.linSys,...
+            reachSetObj = self.reachDiscrete(self.linSys,...
                 self.x0Ell, self.l0Mat, self.tIntervalVec);
             [~, timeVec] = reachSetObj.get_goodcurves();
             mlunitext.assert_equals(numel(tVec), numel(timeVec));

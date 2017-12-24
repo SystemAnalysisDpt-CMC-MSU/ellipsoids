@@ -12,6 +12,14 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
         timeVec
         l0Mat
         ellFactoryObj
+        testReachObjFactory
+    end
+    %
+    methods
+        function reachObj = reachContinuous(self, varargin)
+            reachObj = self.testReachObjFactory.createInstance(...
+                'reachContinuous', varargin{:});            
+        end
     end
     %
     methods
@@ -41,6 +49,9 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
         end
         %
         function self = set_up_param(self, confName, crm, crmSys)
+            self.testReachObjFactory = ...
+                    elltool.reach.test.mlunit.TReachObjFactory();
+            %
             self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
             %
             self.crm = crm;
@@ -78,7 +89,7 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             %
             self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat,...
                 btDefCMat, ControlBounds, ctDefCMat, DistBounds);
-            self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
+            self.reachObj = self.reachContinuous(self.linSys,...
                 self.ellipsoid(x0DefVec, x0DefMat), self.l0Mat, self.timeVec,...
                 'isRegEnabled', isRegEnabled,...
                 'isJustCheck', isJustCheck,...
@@ -129,9 +140,9 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
                 eaEllAtT1 = iaCutAtT1EllVec(iElem);
                 iaEllAtT1 = eaCutAtT1EllVec(iElem);
                 
-                backReachEaObj = elltool.reach.ReachContinuous(self.linSys,...
+                backReachEaObj = self.reachContinuous(self.linSys,...
                     eaEllAtT1, l1Mat, [t1 t0]);
-                backReachIaObj = elltool.reach.ReachContinuous(self.linSys,...
+                backReachIaObj = self.reachContinuous(self.linSys,...
                     iaEllAtT1, l1Mat, [t1 t0]);
                 
                 solvEaCutAtT0EllVec = getEllCut(backReachEaObj, t0, 'ea');

@@ -148,7 +148,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
                     l0Mat, timeVec,'isRegEnabled',isRegEnabled,...
                     'isJustCheck',isJustCheck,'regTol',regTol}; %#ok<NASGU>
                 %
-                evalStr='elltool.reach.ReachContinuous(inpArgList{:})';
+                evalStr='elltool.reach.test.mlunit.TReachContinuous(inpArgList{:})';
                 if isNeg
                     self.runAndCheckError(evalStr,expErrTag);
                 else

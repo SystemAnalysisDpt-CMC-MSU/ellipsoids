@@ -11,6 +11,14 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
         x0Ell
         l0Mat
         reachFactObj
+        testReachObjFactory
+    end
+    %
+    methods
+        function reachObj = reachContinuous(self, varargin)
+            reachObj = self.testReachObjFactory.createInstance(...
+                'reachContinuous', varargin{:});            
+        end
     end
     %
     methods (Access = private, Static)
@@ -27,6 +35,9 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
         end
         %
         function self = set_up_param(self, reachFactObj)
+            self.testReachObjFactory = ...
+                    elltool.reach.test.mlunit.TReachObjFactory();
+            %
             self.reachFactObj = reachFactObj;
             self.reachObj = reachFactObj.createInstance();
             self.linSys = reachFactObj.getLinSys();
@@ -47,7 +58,7 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             % finish time differs
             newTimeVec = self.timeVec;
             newTimeVec(2) = (newTimeVec(2) + newTimeVec(1))/2;
-            smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
+            smallerReachObj = self.reachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, newTimeVec);
             [isEqual, reportStr] = self.reachObj.isEqual(smallerReachObj,...
 				'areTimeBoundsCompared', true);
@@ -55,7 +66,7 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             % start time differs
             newTimeVec = self.timeVec;
             newTimeVec(1) = (newTimeVec(2) + newTimeVec(1))/2;
-            smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
+            smallerReachObj = self.reachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, newTimeVec);
             [isEqual, reportStr] = self.reachObj.isEqual(smallerReachObj,...
 				'areTimeBoundsCompared', true);
@@ -67,9 +78,9 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             newTimeVec = self.timeVec;
             newTimeVec(2) = newTimeVec(1) + ...
                 (newTimeVec(2) - newTimeVec(1))/2;
-            smallerReachObj = elltool.reach.ReachContinuous(self.linSys,...
+            smallerReachObj = self.reachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, self.timeVec);
-            biggerReachObj = elltool.reach.ReachContinuous(self.linSys,...
+            biggerReachObj = self.reachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, newTimeVec);
             newBiggerReachObj = ...
                 biggerReachObj.evolve(self.timeVec(2), self.linSys);
@@ -86,7 +97,7 @@ classdef ContinuousIsEqualTestCase < mlunitext.test_case
             newTimeVec = self.timeVec;
             newTimeVec(2) = newTimeVec(1) + ...
                 (newTimeVec(2) - newTimeVec(1))/pi;
-            biggerReachObj = elltool.reach.ReachContinuous(self.linSys,...
+            biggerReachObj = self.reachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, newTimeVec);
             newBiggerReachObj = ...
                 biggerReachObj.evolve(self.timeVec(2), self.linSys);

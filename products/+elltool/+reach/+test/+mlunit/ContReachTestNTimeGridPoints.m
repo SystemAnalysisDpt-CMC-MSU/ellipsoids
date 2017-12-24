@@ -6,7 +6,16 @@ classdef ContReachTestNTimeGridPoints < mlunitext.test_case
         tVec
         x0Ell
         l0Mat
+        testReachObjFactory
     end
+    %
+    methods
+        function reachObj = reachContinuous(self, varargin)
+            reachObj = self.testReachObjFactory.createInstance(...
+                'reachContinuous', varargin{:});            
+        end
+    end
+    %
     methods
         function self = ContReachTestNTimeGridPoints(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -27,6 +36,9 @@ classdef ContReachTestNTimeGridPoints < mlunitext.test_case
         end
         %
         function self = set_up_param(self, reachFactObj)
+            self.testReachObjFactory = ...
+                    elltool.reach.test.mlunit.TReachObjFactory();
+            %
             self.linSys = reachFactObj.getLinSys();
             self.tVec = reachFactObj.getTVec();
             self.x0Ell = reachFactObj.getX0Ell();
@@ -37,7 +49,7 @@ classdef ContReachTestNTimeGridPoints < mlunitext.test_case
             import elltool.conf.Properties;
             N_TIME_POINTS = 135;
             Properties.setNTimeGridPoints(N_TIME_POINTS);
-            reachObj = elltool.reach.ReachContinuous(self.linSys,...
+            reachObj = self.reachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, self.tVec);
             [~, timeVec] = reachObj.get_goodcurves();
             mlunitext.assert_equals(N_TIME_POINTS, numel(timeVec));
@@ -45,7 +57,7 @@ classdef ContReachTestNTimeGridPoints < mlunitext.test_case
         %
         function self = testSetMatchesGetNTimeGridPoints(self)
             import elltool.conf.Properties;
-            reachObj = elltool.reach.ReachContinuous(self.linSys,...
+            reachObj = self.reachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, self.tVec);
             [~, timeVec] = reachObj.get_goodcurves();
             currentNTimeGridPoints = Properties.getNTimeGridPoints();
@@ -55,7 +67,7 @@ classdef ContReachTestNTimeGridPoints < mlunitext.test_case
         function self = testPassedIntoConstNTimeGridPoints(self)
             import elltool.conf.Properties;
             N_TIME_POINTS = 155;
-            reachObj = elltool.reach.ReachContinuous(self.linSys,...
+            reachObj = self.reachContinuous(self.linSys,...
                 self.x0Ell, self.l0Mat, self.tVec, 'nTimeGridPoints',...
                 N_TIME_POINTS);
             [~, timeVec] = reachObj.get_goodcurves();

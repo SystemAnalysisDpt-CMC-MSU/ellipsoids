@@ -7,11 +7,14 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
     %
     properties (Access = private)
         ellFactoryObj;
+        testReachObjFactory;
     end
     %
     methods
         function set_up_param(self)
             self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+            self.testReachObjFactory = ...
+                    elltool.reach.test.mlunit.TReachObjFactory();
         end
     end
     methods
@@ -22,6 +25,11 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
         function ellObj = ell_unitball(self, varargin)
             ellObj = elltool.core.test.mlunit.tell_unitball(...
                 self.ellFactoryObj, varargin{:});
+        end
+        %
+        function reachObj = reachDiscrete(self, varargin)
+            reachObj = self.testReachObjFactory.createInstance(...
+                'reachDiscrete', varargin{:});            
         end
     end
     %
@@ -35,7 +43,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             nDim = 3;
             x0Ell = self.ellipsoid(zeros(nDim, 1), eye(nDim));
             % used in @evalc
-            rs = createReach(eye(nDim), eye(nDim,4), self.ell_unitball(4),...
+            rs = createReach(self.testReachObjFactory, eye(nDim), eye(nDim,4), self.ell_unitball(4),...
                 x0Ell, eye(nDim), [0, 5]);
             resStr = evalc('display(rs)');
             isOk = ~isempty(strfind(resStr,'Reach set'));
@@ -52,7 +60,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             nSystemDimension = 4;
             x0Ell = self.ellipsoid(zeros(nSystemDimension, 1), eye(nSystemDimension));
             lMat = eye(nSystemDimension);
-            rs = createReach( eye(nSystemDimension), ...
+            rs = createReach(self.testReachObjFactory,  eye(nSystemDimension), ...
                 eye(nSystemDimension,2), self.ell_unitball(2), ...
                 x0Ell, lMat, [0, 5]);
             [nObtainedReachDimension, nObtainedSystemDimension] = rs.dimension();
@@ -74,13 +82,13 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
                 eye(3,4), self.ell_unitball(4), ...
                 eye(3), self.ell_unitball(3), ...
                 eye(3), self.ell_unitball(3), 'd');
-            rsVec(1) = elltool.reach.ReachDiscrete(lsVec(1), ...
+            rsVec(1) = self.reachDiscrete(lsVec(1), ...
                 self.ellipsoid(zeros(3, 1), eye(3)), ...
                 eye(3), [0, 5]);
             lsVec(2) = elltool.linsys.LinSysFactory.create(eye(4), ...
                 eye(4, 2), self.ell_unitball(2), ...
                 [], [], [], [], 'd');
-            rsVec(2) = elltool.reach.ReachDiscrete(lsVec(2), ...
+            rsVec(2) = self.reachDiscrete(lsVec(2), ...
                 self.ellipsoid(ones(4, 1), eye(4)), ...
                 eye(4), [0, 3]);
             isOk = true;
@@ -96,7 +104,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             bMat = [3; 2];
             pEll = 2 * self.ell_unitball(1);
             x0Ell = self.ellipsoid([0; 0], [3 1; 1 2]);
-            rsVec(1) = createReach(aMat, bMat, pEll, x0Ell, eye(2), [0,5]);
+            rsVec(1) = createReach(self.testReachObjFactory, aMat, bMat, pEll, x0Ell, eye(2), [0,5]);
             rsVec(2) = rsVec(1).cut([2, 3]);
             rsVec(3) = rsVec(1).cut(3);
             isExpectedVec = [false, true, true];
@@ -111,7 +119,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             bMat = [1 0; 0 1; 1 1];
             pEll = self.ell_unitball(2);
             x0Ell = self.ellipsoid([0; 1; 0], eye(nDim));
-            rsVec(1) = createReach(eye(nDim), bMat, pEll, x0Ell, eye(nDim),...
+            rsVec(1) = createReach(self.testReachObjFactory, eye(nDim), bMat, pEll, x0Ell, eye(nDim),...
                 [0, 5]);
             rsVec(2) = rsVec(1).projection([1 0 0; 0 1 0]');
             isExpectedVec = [false, true];
@@ -128,8 +136,8 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             pEll = self.ell_unitball(nDim);
             x0Ell = self.ell_unitball(nDim);
                     
-            rsVec = [createReach([], [], [], x0Ell, eye(nDim), [0,5]),...
-                     createReach(aMat, bMat, pEll, x0Ell, eye(nDim), [0, 5])];
+            rsVec = [createReach(self.testReachObjFactory, [], [], [], x0Ell, eye(nDim), [0,5]),...
+                     createReach(self.testReachObjFactory, aMat, bMat, pEll, x0Ell, eye(nDim), [0, 5])];
             isObtainedVec = arrayfun(@isempty, rsVec);
             isExpectedVec = [true, false];
             isEqVec = isObtainedVec == isExpectedVec;
@@ -165,9 +173,9 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             
             function auxTestGetDirections(self)
                 if (isFixedSystem)
-                    rs = createReach(aMat, bMat, pEll, x0Ell, lMat, tVec);
+                    rs = createReach(self.testReachObjFactory, aMat, bMat, pEll, x0Ell, lMat, tVec);
                 else
-                    rs = createReach(aCMat, bMat, pEll, x0Ell, lMat, tVec);
+                    rs = createReach(self.testReachObjFactory, aCMat, bMat, pEll, x0Ell, lMat, tVec);
                 end
                 expectedDirectionsCVec = cell(1, 3);
                 expectedDirectionsCVec{1} = zeros(nDim, 15);
@@ -228,9 +236,9 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             
             function auxTestGetCenter()
                 if (isFixedSystem)
-                    rs = createReach(aMat, bMat, pEll, x0Ell, lMat, tVec);
+                    rs = createReach(self.testReachObjFactory, aMat, bMat, pEll, x0Ell, lMat, tVec);
                 else
-                    rs = createReach(aCMat, bMat, pEll, x0Ell, lMat, tVec);
+                    rs = createReach(self.testReachObjFactory, aCMat, bMat, pEll, x0Ell, lMat, tVec);
                 end
                 observedCenterMat = rs.get_center();
 
@@ -287,9 +295,9 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             
             function auxTestCut()
                 if (isFixedSystem)
-                    rs = createReach(aMat, bMat, pEll, x0Ell, lMat, tVec);
+                    rs = createReach(self.testReachObjFactory, aMat, bMat, pEll, x0Ell, lMat, tVec);
                 else
-                    rs = createReach(aCMat, bMat, pEll, x0Ell, lMat, tVec);
+                    rs = createReach(self.testReachObjFactory, aCMat, bMat, pEll, x0Ell, lMat, tVec);
                 end
                 rs2 = rs.cut(cutTVec);
                 
@@ -346,9 +354,9 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             
             function auxTestGoodCurves()
                 if (isFixedSystem)
-                    rs = createReach(aMat, bMat, pEll, x0Ell, lMat, tVec);
+                    rs = createReach(self.testReachObjFactory, aMat, bMat, pEll, x0Ell, lMat, tVec);
                 else
-                    rs = createReach(aCMat, bMat, pEll, x0Ell, lMat, tVec);
+                    rs = createReach(self.testReachObjFactory, aCMat, bMat, pEll, x0Ell, lMat, tVec);
                 end
                 goodDirectionsCVec = rs.get_directions();
                 eaEllMat = rs.get_ea();
@@ -408,9 +416,9 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             
             function auxTestGetIa()
                 if (isFixedSystem)
-                    rs = createReach(aMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
+                    rs = createReach(self.testReachObjFactory, aMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
                 else
-                    rs = createReach(aCMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
+                    rs = createReach(self.testReachObjFactory, aCMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
                 end
                 if (isFixedSystem)
                     phiArray = repmat(eye(nDim), [1, 1, t1, t1]);
@@ -532,9 +540,9 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             
             function auxTestGetEa()
                 if (isFixedSystem)
-                    rs = createReach(aMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
+                    rs = createReach(self.testReachObjFactory, aMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
                 else
-                    rs = createReach(aCMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
+                    rs = createReach(self.testReachObjFactory, aCMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
                 end
                 if (isFixedSystem)
                     phiArray = zeros(nDim, nDim, t1, t1);
@@ -659,9 +667,9 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             
             function auxTestProjection(self)
                 if (isFixedSystem)
-                    rs = createReach(aMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
+                    rs = createReach(self.testReachObjFactory, aMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
                 else
-                    rs = createReach(aCMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
+                    rs = createReach(self.testReachObjFactory, aCMat, bMat, pEll, x0Ell, lMat, [t0, t1]);
                 end
                 projectedRs = rs.projection(projectionMatrix);
 
@@ -711,7 +719,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             pMat = eye(nDim);
             pVec = [1 0 1]';
             pEll = self.ellipsoid(pVec, pMat);
-            rs = createReach(aMat, bMat, pEll, x0Ell, eye(3), [t0, t1]);          
+            rs = createReach(self.testReachObjFactory, aMat, bMat, pEll, x0Ell, eye(3), [t0, t1]);          
             rs = rs.projection([1 0 0; 0 1 0]');
             
             ellCVec{1} = self.ellipsoid([-200, -120]', 200*eye(2));
@@ -782,13 +790,13 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             
             function auxTestEvolve()
                 if (~isWithAnotherSystem)
-                    rs = createReach(a1Mat, b1Mat, p1Ell, x01Ell, lMat, [t0, t1]);
+                    rs = createReach(self.testReachObjFactory, a1Mat, b1Mat, p1Ell, x01Ell, lMat, [t0, t1]);
                     obtainedRs = rs.evolve(t2);
 
-                    expectedRs = createReach(a1Mat, b1Mat, p1Ell, x01Ell,...
+                    expectedRs = createReach(self.testReachObjFactory, a1Mat, b1Mat, p1Ell, x01Ell,...
                                              lMat, [t0, t2]);
                 else
-                    rs = createReach(a1Mat, b1Mat, p1Ell, x01Ell, lMat, [t0, t1]);
+                    rs = createReach(self.testReachObjFactory, a1Mat, b1Mat, p1Ell, x01Ell, lMat, [t0, t1]);
                     obtainedRs = rs.evolve(t2, ls2);
                 end
                 
@@ -815,7 +823,7 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
                         initApproxEllMat = rs.(getApproxMethod)();
                         expectedApproxEllMat = obtainedApproxEllMat;
                         for iDirection = 1 : 3
-                            evolvingRs = elltool.reach.ReachDiscrete(ls2, ...
+                            evolvingRs = self.reachDiscrete(ls2, ...
                                 initApproxEllMat(iDirection, t1), ...
                                 lMat(:, iDirection), [t1 t2]);
                             expectedApproxEllMat(iDirection, :) =...
@@ -845,14 +853,16 @@ classdef ReachDiscrLogicalTestCase < mlunitext.test_case
             self.runAndCheckError(@check,{'complexResult','wrongInput'});
             function check()
                 % is ok. Object is created but is not used.
-                rs = createReach(argumentList{:});
+                rs = createReach(self.testReachObjFactory, argumentList{:});
             end         
         end
     end
 end
 
-function rs = createReach(aMat, bMat, pEll, x0Ell, lMat, tVec)
+function rs = createReach(testReachObjFactory, aMat, bMat, pEll, x0Ell, ...
+        lMat, tVec)
     ls = elltool.linsys.LinSysFactory.create( aMat, bMat, ...
                 pEll, [], [], [], [], 'd');
-    rs = elltool.reach.ReachDiscrete(ls, x0Ell, lMat, tVec);
+    rs = testReachObjFactory.createInstance('reachDiscrete', ls, x0Ell, ...
+        lMat, tVec);
 end
