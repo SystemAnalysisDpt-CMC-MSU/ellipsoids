@@ -537,13 +537,13 @@ Define
 
 -  :math:`l` - length of the rod :math:`OA`,
 -  :math:`r` - radius of the disc,
--  :math:`a` - distance from point O to point C (the center of mass of the rod),
+-  :math:`a` - distance from point :math:`O` to point :math:`C` (the center of mass of the rod),
 -  :math:`\theta` - angle of deviation of the rod from horizontal,
 -  :math:`\phi` - angle of rotation of the flywheel relative to the rod,
--  :math:`J_1` -  moment of inertia of rod, rotating about point C,
--  :math:`J_2` - moment of inertia of disk, rotating about point A,
--  :math:`k_1` - coefficient of friction at point O.
--  :math:`k_2` - coefficient of friction at point A.
+-  :math:`J_1` -  moment of inertia of rod, rotating about point :math:`C`,
+-  :math:`J_2` - moment of inertia of disk, rotating about point :math:`A`,
+-  :math:`k_1, k_2`  - coefficients of friction forces acting in the hinges,
+-  :math:`u` - rotational force: :math:`u = u(t), |u(t)| \leqslant {u}_{max}`.
 
 .. _forcesfig:
 
@@ -558,46 +558,46 @@ The mechanical system presented in :num:`figure #forcesfig` is described by the 
 .. math:: 
    :label: forces
    
-    \left\{
-   \begin{aligned}
-   & m_1 \ddot{x}_{C} = F^{01}_{x} - F^{12}_{x},\\
-   & m_1 \ddot{y}_{C} = F^{01}_{y} - F^{12}_{x} - m_1g,\\
-   & J_1 \ddot{\theta} = F^{01}_{x}a \sin \theta - F^{01}_{y}a \cos \theta + F^{12}_{x}a \sin \theta - F^{12}_{y}a \cos \theta - M - k_1 \dot{\theta} + k_2 \dot{\phi},\\
-   & m_2 \ddot{x}_{A} = F^{12}_{x},\\
-   & m_2 \ddot{y}_{A} = F^{12}_{y} - m_2 g,\\
-   & J_2 (\ddot{\theta} + \ddot{\phi}) = M - k_2 \dot{\phi}.\\
-   \end{aligned}
-   \right.
+	 \left\{
+	\begin{aligned}
+	& m_1 \ddot{x}_{C} = F^{01}_{x} - F^{12}_{x},\\
+	& m_1 \ddot{y}_{C} = F^{01}_{y} - F^{12}_{x} - m_1g,\\
+	& J_1 \ddot{\theta} = F^{01}_{x}a \sin \theta - F^{01}_{y}a \cos \theta + F^{12}_{x}a \sin \theta - F^{12}_{y}a \cos \theta - u - k_1 \dot{\theta} + k_2 \dot{\phi},\\
+	& m_2 \ddot{x}_{A} = F^{12}_{x},\\
+	& m_2 \ddot{y}_{A} = F^{12}_{y} - m_2 g,\\
+	& J_2 (\ddot{\theta} + \ddot{\phi}) = u - k_2 \dot{\phi}.\\
+	\end{aligned}
+	\right.
 
 In order to obtain a closed system we add four relating equations:
 
 .. math:: 
    
-    \left\{
-   \begin{aligned}
-   & x_{C} = a \cos \theta,\\
-   & y_{C} = a \sin \theta,\\
-   \end{aligned}
+	 \left\{
+	\begin{aligned}
+	& x_{C} = a \cos \theta,\\
+	& y_{C} = a \sin \theta,\\
+	\end{aligned}
     \right.
-   \;\;\;
+	\;\;\;
     \left\{
     \begin{aligned} 
-   & x_{A} = l \cos \theta,\\
-   & y_{A} = l \sin \theta.\\
-   \end{aligned}
-   \right.
+	& x_{A} = l \cos \theta,\\
+	& y_{A} = l \sin \theta.\\
+	\end{aligned}
+	\right.
 
 Remembering that :math:`l = 2a`, we get:
 
 .. math:: 
    :label: system
    
-    \left\{
-   \begin{aligned}
-   & (J_1 + J_2 + m_1 a^2 + m_2 l^2)\ddot{\theta} + J_2 \ddot{\phi} =k_2 \dot{\phi} - k_1 \dot{\theta} -(m_1a + m_2 l) g \cos\theta,\\
-   & J_2 (\ddot{\theta} + \ddot{\phi}) = M - k_2 \dot{\phi}.\\
-   \end{aligned}
-   \right.
+	 \left\{
+	\begin{aligned}
+	& (J_1 + J_2 + m_1 a^2 + m_2 l^2)\ddot{\theta} + J_2 \ddot{\phi} =k_2 \dot{\phi} - k_1 \dot{\theta} -(m_1a + m_2 l) g \cos\theta,\\
+	& J_2 (\ddot{\theta} + \ddot{\phi}) = u - k_2 \dot{\phi}.\\
+	\end{aligned}
+	\right.
 
 Let's linearize system :eq:`system`, supposing that the system is in a small neighborhood of unstable 
 equilibrium :math:`\theta \sim \frac{\pi}{2}`. Linearization gives:
@@ -605,26 +605,26 @@ equilibrium :math:`\theta \sim \frac{\pi}{2}`. Linearization gives:
 .. math:: 
    :label: lineariztheta
    
-    \left\{
-   \begin{aligned}
-   & (J_1 + J_2 + m_1 a^2 + m_2 l^2)\ddot{\theta} + J_2 \ddot{\phi} =k_2 \dot{\phi} - k_1 \dot{\theta} - (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right),\\
-   & J_2 (\ddot{\theta} + \ddot{\phi}) = M - k_2 \dot{\phi}.\\
-   \end{aligned}
-   \right.
+	 \left\{
+	\begin{aligned}
+	& (J_1 + J_2 + m_1 a^2 + m_2 l^2)\ddot{\theta} + J_2 \ddot{\phi} =k_2 \dot{\phi} - k_1 \dot{\theta} - (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right),\\
+	& J_2 (\ddot{\theta} + \ddot{\phi}) = u - k_2 \dot{\phi}.\\
+	\end{aligned}
+	\right.
 
-Defining :math:`\dot{\theta} = \omega_1` and :math:`\dot{\phi} = \omega_2`, we can rewrite :eq:`lineariztheta` in standard form: 
+Defining :math:`\dot{\theta} = \omega_1` and :math:`\dot{\phi} = \omega_2`, we can rewrite :eq:`lineariztheta` in standard form:	
 
 .. math:: 
    :label: standform
    
-    \left\{
-   \begin{aligned}
-   & \dot{\theta} = \omega_1, \\
-   & \dot{\phi} = \omega_2, \\
-   & \dot{\omega}_1 = \frac{2 k_2 \omega_2 - k_1 \omega_1 - M - (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right)}{J_1 + m_1 a^2 + m_2 l^2},\\
-   & \dot{\omega}_2 = \frac{M - k_2 \omega_2}{J_2} - \frac{2 k_2 \omega_2 - k_1 \omega_1 - M- (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right)}{J_1 + m_1 a^2 + m_2 l^2}.\\
-   \end{aligned}
-   \right.
+	 \left\{
+	\begin{aligned}
+	& \dot{\theta} = \omega_1, \\
+	& \dot{\phi} = \omega_2, \\
+	& \dot{\omega}_1 = \frac{2 k_2 \omega_2 - k_1 \omega_1 - u - (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right)}{J_1 + m_1 a^2 + m_2 l^2},\\
+	& \dot{\omega}_2 = \frac{u - k_2 \omega_2}{J_2} - \frac{2 k_2 \omega_2 - k_1 \omega_1 - u- (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right)}{J_1 + m_1 a^2 + m_2 l^2}.\\
+	\end{aligned}
+	\right.
 
 .. raw:: html
 
