@@ -10,9 +10,11 @@ classdef TEllipsoid < ellipsoid & gras.test.mlunit.TolCounter
     %             System Analysis Department 2017$
     methods (Access = protected)
         function beforeGetAbsTol(self)
+            beforeGetAbsTol@ellipsoid(self);
             self.incAbsTolCount();
         end
         function beforeGetRelTol(self)
+            beforeGetRelTol@ellipsoid(self);
             self.incRelTolCount();
         end
     end

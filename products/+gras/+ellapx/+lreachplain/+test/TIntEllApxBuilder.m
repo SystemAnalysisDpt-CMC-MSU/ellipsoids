@@ -11,9 +11,11 @@ classdef TIntEllApxBuilder < gras.test.mlunit.TolCounter & ...
     %             System Analysis Department 2017$
     methods (Access = protected)
         function beforeGetAbsTol(self)
+            beforeGetAbsTol@gras.ellapx.lreachplain.IntEllApxBuilder(self);
             self.incAbsTolCount();
         end
         function beforeGetRelTol(self)
+            beforeGetRelTol@gras.ellapx.lreachplain.IntEllApxBuilder(self);
             self.incRelTolCount();
         end
     end

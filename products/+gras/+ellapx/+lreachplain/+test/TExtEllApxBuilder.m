@@ -11,9 +11,11 @@ classdef TExtEllApxBuilder < gras.ellapx.lreachplain.ExtEllApxBuilder & ...
     %             System Analysis Department 2017$
     methods (Access = protected)
         function beforeGetAbsTol(self)
+            beforeGetAbsTol@gras.ellapx.lreachplain.ExtEllApxBuilder(self);
             self.incAbsTolCount();
         end
         function beforeGetRelTol(self)
+            beforeGetRelTol@gras.ellapx.lreachplain.ExtEllApxBuilder(self);
             self.incRelTolCount();
         end
     end

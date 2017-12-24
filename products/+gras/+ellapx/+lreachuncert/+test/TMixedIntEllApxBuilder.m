@@ -11,9 +11,11 @@ classdef TMixedIntEllApxBuilder < gras.test.mlunit.TolCounter & ...
     %             System Analysis Department 2017$
     methods (Access = protected)
         function beforeGetAbsTol(self)
+            beforeGetAbsTol@gras.ellapx.lreachuncert.MixedIntEllApxBuilder(self);
             self.incAbsTolCount();
         end
         function beforeGetRelTol(self)
+            beforeGetRelTol@gras.ellapx.lreachuncert.MixedIntEllApxBuilder(self);
             self.incRelTolCount();
         end
     end

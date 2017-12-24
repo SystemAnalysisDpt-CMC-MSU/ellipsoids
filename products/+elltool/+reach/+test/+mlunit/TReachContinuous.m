@@ -11,9 +11,11 @@ classdef TReachContinuous < elltool.reach.ReachContinuous & ...
     %             System Analysis Department 2017$
     methods (Access=protected)
         function beforeGetAbsTol(self)
+            beforeGetAbsTol@elltool.reach.ReachContinuous(self);
             self.incAbsTolCount();
         end
         function beforeGetRelTol(self)
+            beforeGetRelTol@elltool.reach.ReachContinuous(self);
             self.incRelTolCount();
         end
     end

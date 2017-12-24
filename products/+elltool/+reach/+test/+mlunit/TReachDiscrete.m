@@ -11,9 +11,11 @@ classdef TReachDiscrete < elltool.reach.ReachDiscrete & ...
     %             System Analysis Department 2017$
     methods (Access=protected)
         function beforeGetAbsTol(self)
+            beforeGetAbsTol@elltool.reach.ReachDiscrete(self);
             self.incAbsTolCount();
         end
         function beforeGetRelTol(self)
+            beforeGetRelTol@elltool.reach.ReachDiscrete(self);
             self.incRelTolCount();
         end
     end

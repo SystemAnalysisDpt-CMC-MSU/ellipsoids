@@ -11,9 +11,11 @@ classdef TGenEllipsoid < elltool.core.GenEllipsoid & ...
     %             System Analysis Department 2017$
     methods (Access = protected)
         function beforeGetAbsTol(self)
+            beforeGetAbsTol@elltool.core.GenEllipsoid(self);
             self.incAbsTolCount();
         end
         function beforeGetRelTol(self)
+            beforeGetRelTol@elltool.core.GenEllipsoid(self);
             self.incRelTolCount();
         end
     end
