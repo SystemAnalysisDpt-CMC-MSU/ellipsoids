@@ -67,7 +67,8 @@ if mSize~=nDimSpace
 end
 %
 resCenterVec=ellObj1.centerVec-ellObj2.centerVec;
-resEllVec(nDirs)=GenEllipsoid();
+className=class(ellObj1);
+resEllVec(nDirs)=feval(className);
 isInf1Vec=ell1DiagVec==Inf;
 for iDir=1:nDirs
     curDirVec=dirMat(:,iDir);
@@ -77,9 +78,9 @@ for iDir=1:nDirs
             @GenEllipsoid.findDiffEaND,ellObj1,ellObj2,...
             curDirVec,isInf1Vec,true,absTol);
         if isempty(resEllMat)
-            resEllVec(iDir)=GenEllipsoid();
+            resEllVec(iDir)=feval(className);
         else
-            resEllVec(iDir)=GenEllipsoid(resCenterVec,diagQVec,...
+            resEllVec(iDir)=feval(className,resCenterVec,diagQVec,...
                 resEllMat);
         end
     else
@@ -91,9 +92,9 @@ for iDir=1:nDirs
             curDirVec,absTol);
         resEllMat=0.5*(resEllMat+resEllMat.');
         if isempty(resEllMat)
-            resEllVec(iDir)=GenEllipsoid();
+            resEllVec(iDir)=feval(className);
         else
-            resEllVec(iDir)=GenEllipsoid(resCenterVec,resEllMat);
+            resEllVec(iDir)=feval(className,resCenterVec,resEllMat);
         end
     end
 end

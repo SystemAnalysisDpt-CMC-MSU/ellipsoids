@@ -32,7 +32,7 @@ function copyEllObj = getSingleCopy(ellObj)
 %
 import elltool.core.GenEllipsoid;
 GenEllipsoid.checkIsMe(ellObj);
-copyEllObj=GenEllipsoid();
+copyEllObj=feval(class(ellObj));
 copyEllObj.centerVec=ellObj.centerVec;
 copyEllObj.diagMat=ellObj.diagMat;
 copyEllObj.eigvMat=ellObj.eigvMat;

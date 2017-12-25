@@ -11,7 +11,24 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
         reachObj
         timeVec
         l0Mat
+        ellFactoryObj
+        testReachObjFactory
     end
+    %
+    methods
+        function reachObj = reachContinuous(self, varargin)
+            reachObj = self.testReachObjFactory.createInstance(...
+                'reachContinuous', varargin{:});            
+        end
+    end
+    %
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+        end
+    %
     methods (Access=private, Static)
         function checkIntersection(reachObj, ellVec)
             mlunitext.assert_equals(false,reachObj.intersect(ellVec(1),'e'));
@@ -32,6 +49,11 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
         end
         %
         function self = set_up_param(self, confName, crm, crmSys)
+            self.testReachObjFactory = ...
+                    elltool.reach.test.mlunit.TReachObjFactory();
+            %
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+            %
             self.crm = crm;
             self.crmSys = crmSys;
             self.confName = confName;
@@ -67,8 +89,8 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             %
             self.linSys = elltool.linsys.LinSysFactory.create(atDefCMat,...
                 btDefCMat, ControlBounds, ctDefCMat, DistBounds);
-            self.reachObj = elltool.reach.ReachContinuous(self.linSys,...
-                ellipsoid(x0DefVec, x0DefMat), self.l0Mat, self.timeVec,...
+            self.reachObj = self.reachContinuous(self.linSys,...
+                self.ellipsoid(x0DefVec, x0DefMat), self.l0Mat, self.timeVec,...
                 'isRegEnabled', isRegEnabled,...
                 'isJustCheck', isJustCheck,...
                 'regTol', regTol);
@@ -83,12 +105,12 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
             cut2ReachObj = cutIntReachObj.cut(newTimeVec(2));
             evolveReachObj = self.reachObj.evolve(self.timeVec(2) + 1);
             cutEvolveReachObj = evolveReachObj.cut(self.timeVec(2) + 1);
-            ell1 = ellipsoid([-2.5;1], 1.2 * eye(2));
-            ell2 = ellipsoid([-2.5;1], 1.25 * eye(2));
-            ell3 = ellipsoid([-2.5;1], 1.3 * eye(2));
-            ell4 = ellipsoid([-2.5;1], 0.8 * eye(2));
-            ell5 = ellipsoid([-2.5;1], 1.2 * eye(2));
-            ell6 = ellipsoid([-2.5;1], 1.6 * eye(2));
+            ell1 = self.ellipsoid([-2.5;1], 1.2 * eye(2));
+            ell2 = self.ellipsoid([-2.5;1], 1.25 * eye(2));
+            ell3 = self.ellipsoid([-2.5;1], 1.3 * eye(2));
+            ell4 = self.ellipsoid([-2.5;1], 0.8 * eye(2));
+            ell5 = self.ellipsoid([-2.5;1], 1.2 * eye(2));
+            ell6 = self.ellipsoid([-2.5;1], 1.6 * eye(2));
             %
             self.checkIntersection(cutReachObj, [ell1, ell2, ell3]);
             self.checkIntersection(projCutReachObj, [ell1, ell2, ell3]);
@@ -118,9 +140,9 @@ classdef ContinuousReachFirstTestCase < mlunitext.test_case
                 eaEllAtT1 = iaCutAtT1EllVec(iElem);
                 iaEllAtT1 = eaCutAtT1EllVec(iElem);
                 
-                backReachEaObj = elltool.reach.ReachContinuous(self.linSys,...
+                backReachEaObj = self.reachContinuous(self.linSys,...
                     eaEllAtT1, l1Mat, [t1 t0]);
-                backReachIaObj = elltool.reach.ReachContinuous(self.linSys,...
+                backReachIaObj = self.reachContinuous(self.linSys,...
                     iaEllAtT1, l1Mat, [t1 t0]);
                 
                 solvEaCutAtT0EllVec = getEllCut(backReachEaObj, t0, 'ea');

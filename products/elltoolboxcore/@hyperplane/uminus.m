@@ -44,7 +44,7 @@ hyperplane.checkIsMe(inpHypArr);
 
 sizeVec = size(inpHypArr);
 nElems = numel(inpHypArr);
-outHypArr(nElems)=hyperplane();
+outHypArr(nElems)=feval(class(inpHypArr));
 outHypArr = reshape(outHypArr, sizeVec);
 indArr = reshape(1:nElems, sizeVec);
 arrayfun(@(x) setProp(x), indArr);

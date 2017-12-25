@@ -32,7 +32,8 @@ classdef GenEllipsoid < elltool.core.AEllipsoid
             %        1
             %
             import elltool.core.GenEllipsoid;
-            absTol=GenEllipsoid().getAbsTol();
+            ellObj=feval(class(ellObj1));
+            absTol=ellObj.getAbsTol();
             eigv1Mat=ellObj1.getEigvMat();
             eigv2Mat=ellObj2.getEigvMat();
             diag1Vec=diag(ellObj1.getDiagMat());

@@ -1,4 +1,15 @@
 classdef AReachProjTestCase < mlunitext.test_case
+    properties (Access = private)
+        ellFactoryObj;
+    end
+    %
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     properties (Access = protected, Constant)
         FIELDS_NOT_TO_COMPARE={'LT_GOOD_DIR_MAT';'LT_GOOD_DIR_NORM_VEC';...
             'LS_GOOD_DIR_NORM';'LS_GOOD_DIR_VEC'};
@@ -46,6 +57,8 @@ classdef AReachProjTestCase < mlunitext.test_case
         end
         %
         function self = set_up_param(self, confName, crm, crmSys)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+            %
             self.crm = crm;
             self.crmSys = crmSys;
             self.confName = confName;
@@ -85,7 +98,7 @@ classdef AReachProjTestCase < mlunitext.test_case
             self.linSys = self.linSysFactory.create(atDefCMat, btDefCMat,...
                 ControlBounds, ctDefCMat, DistBounds);
             self.reachObj = self.reachObfFactory.create(self.linSys,...
-                ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec,...
+                self.ellipsoid(x0DefVec, x0DefMat), l0Mat, self.timeVec,...
                 self.addArgList{:});
         end
         %
@@ -124,7 +137,7 @@ classdef AReachProjTestCase < mlunitext.test_case
             %
             reachClassName=class(self.reachObj);
             oldDim = self.reachObj.dimension();
-            x0Ell=ellipsoid(newX0Vec, newX0Mat);
+            x0Ell=self.ellipsoid(newX0Vec, newX0Mat);
             timeVec=self.timeVec;
             %
             newLinSys = self.linSysFactory.create(newAtCMat, ...

@@ -46,4 +46,4 @@ isFinNZVec=(~isInfVec) | (~isZeroVec);
 diagVec(isFinNZVec)=1./diagVec(isFinNZVec);
 diagVec(isInfVec)=0;
 diagVec(isZeroVec)=Inf;
-ellInvObj=GenEllipsoid(ellObj.centerVec,diagVec,ellObj.eigvMat);
+ellInvObj=feval(class(ellObj),ellObj.centerVec,diagVec,ellObj.eigvMat);

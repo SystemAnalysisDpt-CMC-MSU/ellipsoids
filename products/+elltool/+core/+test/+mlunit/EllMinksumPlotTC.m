@@ -6,6 +6,22 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
 %            Faculty of Computational Mathematics
 %            and Computer Science,
 %            System Analysis Department 2013 $
+    properties (Access = private)
+        ellFactoryObj;
+    end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     methods
         function self = EllMinksumPlotTC(varargin)
             self = ...
@@ -19,8 +35,8 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
             close all;
         end
         function self = test2d(self)
-            testFirEll = ellipsoid( [9 2;2 4]);
-            testSecEll = ellipsoid(eye(2));
+            testFirEll = self.ellipsoid( [9 2;2 4]);
+            testSecEll = self.ellipsoid(eye(2));
             check(testFirEll,testSecEll);
             check2(testFirEll,testSecEll);
             function check(testFirEll,testSecEll)
@@ -42,10 +58,10 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
                     -sin(rotAngle) cos(rotAngle)];
                 firstMat = rotMat.'*testFirEll.double*rotMat;
                 firstMat(1,2) = firstMat(2,1);
-                testThirdEll = ellipsoid(firstMat);
+                testThirdEll = self.ellipsoid(firstMat);
                 secMat = rotMat*testSecEll.double*rotMat.';
                 secMat(1,2) = secMat(2,1);
-                testForthEll = ellipsoid(secMat);
+                testForthEll = self.ellipsoid(secMat);
                 [~,boundPoints1Mat] = minksum(testFirEll,testSecEll);
                 [~,boundPoints2Mat] = minksum(testThirdEll,testForthEll);
                 boundPoints2Mat = (boundPoints2Mat.'*rotMat.').';
@@ -55,8 +71,8 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
             end
         end
         function self = test3d(self)
-            testFirEll = ellipsoid([9 2 0 ;2 4 0; 0 0 4]);
-            testSecEll = ellipsoid(eye(3));
+            testFirEll = self.ellipsoid([9 2 0 ;2 4 0; 0 0 4]);
+            testSecEll = self.ellipsoid(eye(3));
             check(testFirEll,testSecEll);
             function check(testFirEll,testSecEll)
                 ABS_TOL = 10^(-1);
@@ -68,12 +84,12 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
                 firstMat(1,2) = firstMat(2,1);
                 firstMat(1,3) = firstMat(3,1);
                 firstMat(2,3) = firstMat(3,2);
-                testThirdEll = ellipsoid(firstMat);
+                testThirdEll = self.ellipsoid(firstMat);
                 secondMat = rotMat*testSecEll.double*rotMat.';
                 secondMat(1,2) = secondMat(2,1);
                 secondMat(1,3) = secondMat(3,1);
                 secondMat(2,3) = secondMat(3,2);
-                testForthEll = ellipsoid(secondMat);
+                testForthEll = self.ellipsoid(secondMat);
                 [~,boundPoints1Mat] = minksum(testFirEll,testSecEll);
                 [~,boundPoints2Mat] = minksum(testThirdEll,testForthEll);
                 boundPoints2Mat = (boundPoints2Mat.'*rotMat.').';

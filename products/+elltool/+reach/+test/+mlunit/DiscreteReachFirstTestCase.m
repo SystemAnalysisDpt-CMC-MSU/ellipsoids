@@ -4,7 +4,21 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
     end
     properties (Access=private)
         testDataRootDir
+        testReachObjFactory
     end
+    %
+    methods
+        function set_up_param(self, varargin)
+            self.testReachObjFactory = ...
+                    elltool.reach.test.mlunit.TReachObjFactory();
+        end
+        %
+        function reachObj = reachDiscrete(self, varargin)
+            reachObj = self.testReachObjFactory.createInstance(...
+                'reachDiscrete', varargin{:});            
+        end
+    end
+    %
     methods
         function self = DiscreteReachFirstTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -22,7 +36,7 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
             linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
                 ControlBounds,[],[], 'd');
             %timeVec = [0, 3];
-            reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
+            reachSetObj = self.reachDiscrete(linSysObj,...
                 x0Ell, l0Mat, timeVec);
             evalc('reachSetObj.display();');
             firstCutReachObj =...
@@ -56,7 +70,7 @@ classdef DiscreteReachFirstTestCase < mlunitext.test_case
                 'gMat', 'DistorbBounds', 'x0Ell', 'l0Mat', 'timeVec');
             linSysObj = elltool.linsys.LinSysFactory.create(aMat, bMat,...
                 ControlBounds, gMat, DistorbBounds,'d');
-            reachSetObj = elltool.reach.ReachDiscrete(linSysObj,...
+            reachSetObj = self.reachDiscrete(linSysObj,...
                 x0Ell, l0Mat, timeVec);
             evalc('reachSetObj.display();');
             firstCutReachObj =...

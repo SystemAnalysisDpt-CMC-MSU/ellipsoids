@@ -4,6 +4,25 @@ classdef ABasicEllipsoid < handle
         relTol 
     end
     %
+    methods
+        function property = get.absTol(self)
+            self.beforeGetAbsTol();
+            property = self.absTol;
+        end
+        function property = get.relTol(self)
+            self.beforeGetRelTol();
+            property = self.relTol;
+        end
+    end
+    methods (Access = protected)
+        function beforeGetAbsTol(self) %#ok<MANU>
+            % may be overridden in subclass
+        end
+        function beforeGetRelTol(self) %#ok<MANU>
+            % may be overridden in subclass
+        end
+    end
+    %
     methods(Abstract)
         [dimArr,rankArr]=dimension(myEllArr)
         [SDataArr,SFieldNiceNames,SFieldDescr,SFieldTransformFunc]=...

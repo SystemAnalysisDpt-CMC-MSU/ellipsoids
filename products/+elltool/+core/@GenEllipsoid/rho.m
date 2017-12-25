@@ -20,7 +20,8 @@ function [resRho, bndPVec] = rho(ellObj,dirVec)
 %			System Analysis Department 2012 $
 %
 import elltool.core.GenEllipsoid;
-absTol=GenEllipsoid().getAbsTol();
+emptyEllObj=feval(class(ellObj));
+absTol=emptyEllObj.getAbsTol();
 eigvMat=ellObj.getEigvMat();
 diagMat=ellObj.getDiagMat();
 diagVec=diag(diagMat);

@@ -15,6 +15,24 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
         absTol
         relTol
         regTol
+        ellFactoryObj
+        testReachObjFactory
+    end
+    %
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+        function ellObj = ell_unitball(self, varargin)
+            ellObj = elltool.core.test.mlunit.tell_unitball(...
+                self.ellFactoryObj, varargin{:});
+        end
+        %
+        function reachObj = reachContinuous(self, varargin)
+            reachObj = self.testReachObjFactory.createInstance(...
+                'reachContinuous', varargin{:});            
+        end
     end
     %
     methods (Access = private)
@@ -42,6 +60,10 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
         end
         %
         function self = set_up_param(self, confName, crm, crmSys)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+            self.testReachObjFactory = ...
+                    elltool.reach.test.mlunit.TReachObjFactory();
+            %
             self.crm = crm;
             self.crmSys = crmSys;
             self.confName = confName;
@@ -56,7 +78,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
                 ptDefCVec, qtDefCMat, qtDefCVec,...
                 x0DefMat, x0DefVec, self.l0Mat] = self.getSysParams();
             %
-            self.x0Ell = ellipsoid(x0DefVec, x0DefMat);
+            self.x0Ell = self.ellipsoid(x0DefVec, x0DefMat);
             self.timeVec = [self.crmSys.getParam('time_interval.t0'),...
                 self.crmSys.getParam('time_interval.t1')];
             self.absTol =...
@@ -92,7 +114,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
                 ['MAKEELLTUBEREL:wrongInput:regProblem:RegIsDisabled:',...
                 'degenerateControlBounds']);
             %%
-%            ControlBoundsTest = 100 * ellipsoid(eye(2));            
+%            ControlBoundsTest = 100 * self.ellipsoid(eye(2));            
 %            linSys = elltool.linsys.LinSysFactory.create(...
 %                atDefCMat, btDefCMat, ControlBoundsTest);
             %
@@ -107,7 +129,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
             check(true,true,regTol,...
                 'MAKEELLTUBEREL:wrongInput:regProblem:onlyCheckIsEnabled');              
             %%
-            x0Ell = 1e-2 * ell_unitball(2);
+            x0Ell = 1e-2 * self.ell_unitball(2);
             badRegTol = 1e-1;
             check(true,false,badRegTol,'',false);
             %
@@ -119,7 +141,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
 %            check(true,false,badODE45RegTol,...
 %                'MAKEELLTUBEREL:wrongInput:regProblem:regTolIsTooLow:Ode45Failed');              
             %%
-            x0Ell = 0* ell_unitball(2);
+            x0Ell = 0* self.ell_unitball(2);
             check(false,false,regTol,...
                 'MAKEELLTUBEREL:wrongInput:BadInitSet');              
             %%
@@ -134,7 +156,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
                     l0Mat, timeVec,'isRegEnabled',isRegEnabled,...
                     'isJustCheck',isJustCheck,'regTol',regTol}; %#ok<NASGU>
                 %
-                evalStr='elltool.reach.ReachContinuous(inpArgList{:})';
+                evalStr='self.reachContinuous(inpArgList{:})';
                 if isNeg
                     self.runAndCheckError(evalStr,expErrTag);
                 else

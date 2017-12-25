@@ -89,7 +89,8 @@ else
     nAmount = numel(myHypArr);
     sizeCVec = num2cell(size(myHypArr));
 end
-intEllArr(sizeCVec{:}) = ellipsoid;
+className = class(myEllArr);
+intEllArr(sizeCVec{:}) = feval(className);
 isnIntersectedArr = false(sizeCVec{:});
 indexVec = 1:nAmount;
 
@@ -118,7 +119,7 @@ end
         myHyp = myHypArr(hypIndex);
         index = max(ellIndex,hypIndex);
         if distance(myEll, myHyp) > absTol
-           intEllArr(index) = ellipsoid;
+           intEllArr(index) = feval(className);
            isnIntersectedArr(index) = true;
         else
             intEllArr(index) = l_compute1intersection(myEll,myHyp,...
@@ -191,6 +192,6 @@ intEllCentVec   = myEllCentVec + myEllCentVec(1, 1)*...
     [-1; invMyEllShMat*invShMatrixVec];
 intEllShMat   = (1 - hCoefficient) * [0 zeros(1, maxEllDim-1); ...
     zeros(maxEllDim-1, 1) invMyEllShMat];
-intEll   = ellipsoid(intEllCentVec, intEllShMat);
+intEll   = feval(class(myEll), intEllCentVec, intEllShMat);
 intEll   = invmat(tMat)*(intEll + rotVec);
 end

@@ -5,7 +5,23 @@ classdef PolarIllCondTC < mlunitext.test_case
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2015 $
-
+    properties (Access=private)
+        ABS_TOL = 1e-8;
+        ellFactoryObj;
+    end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     methods (Access=private)
         function testEllObj = getTest(~)
             testEllObj = elltool.core.test.mlunit.aux.TestPolarEllipsoid();
@@ -29,7 +45,7 @@ classdef PolarIllCondTC < mlunitext.test_case
                 N_DIMS = dimVec(iElem);
                 shMat = hilb(N_DIMS);
                 expShMat = invhilb(N_DIMS);
-                ell1 = ellipsoid(shMat);
+                ell1 = self.ellipsoid(shMat);
                 [sh1Mat, sh2Mat] = self.auxGetTestPolars(ell1);
                 isRobustBetterVec(iElem)=...
                     norm(expShMat-sh1Mat)<=norm(expShMat-sh2Mat);
@@ -57,7 +73,7 @@ classdef PolarIllCondTC < mlunitext.test_case
             self.runAndCheckError(@run,'degenerateEllipsoid');
             %
             function run()
-                ell1 = ellipsoid(ones(2,1),eye(2));
+                ell1 = self.ellipsoid(ones(2,1),eye(2));
                 testEllObj = self.getTest();
                 testEllObj.getScalarPolarTest(ell1,false);
             end

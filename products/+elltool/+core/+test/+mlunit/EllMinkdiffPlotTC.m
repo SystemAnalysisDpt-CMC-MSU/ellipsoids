@@ -5,6 +5,22 @@ classdef EllMinkdiffPlotTC < elltool.core.test.mlunit.EllMinkBTC
 %            Faculty of Computational Mathematics
 %            and Computer Science,
 %            System Analysis Department 2013 $
+    properties (Access = private)
+        ellFactoryObj;
+    end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     methods
         function self = EllMinkdiffPlotTC(varargin)
             self =...
@@ -15,10 +31,10 @@ classdef EllMinkdiffPlotTC < elltool.core.test.mlunit.EllMinkBTC
             close all;
         end
         function self = test2d(self)
-            testFirEll = ellipsoid([1, 0].', [9 2;2 4]);
-            testSecEll = ellipsoid(eye(2));
-            testThirdEll=ellipsoid(diag([1 2]));
-            testForthEll=ellipsoid(diag([0.8 0.1]));
+            testFirEll = self.ellipsoid([1, 0].', [9 2;2 4]);
+            testSecEll = self.ellipsoid(eye(2));
+            testThirdEll=self.ellipsoid(diag([1 2]));
+            testForthEll=self.ellipsoid(diag([0.8 0.1]));
             check(testFirEll,testSecEll);
             check(testThirdEll,testForthEll);
             
@@ -36,10 +52,10 @@ classdef EllMinkdiffPlotTC < elltool.core.test.mlunit.EllMinkBTC
             end
         end
         function self = test3d(self)
-            testFirEll = ellipsoid([1, 0, 0].', [9 2 0 ;2 4 0; 0 0 4]);
-            testSecEll = ellipsoid(eye(3));
-            testThirdEll=ellipsoid(diag([1 2 1 ]));
-            testForthEll=ellipsoid(diag([0.8 0.1 0.1]));
+            testFirEll = self.ellipsoid([1, 0, 0].', [9 2 0 ;2 4 0; 0 0 4]);
+            testSecEll = self.ellipsoid(eye(3));
+            testThirdEll = self.ellipsoid(diag([1 2 1 ]));
+            testForthEll = self.ellipsoid(diag([0.8 0.1 0.1]));
             check(testFirEll,testSecEll);
             check(testThirdEll,testForthEll);
             function check(testFirEll,testSecEll)

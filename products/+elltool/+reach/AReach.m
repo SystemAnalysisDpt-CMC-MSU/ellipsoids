@@ -85,6 +85,14 @@ classdef AReach < elltool.reach.IReach
     end
     %
     methods
+        function property = get.absTol(self)
+            self.beforeGetAbsTol();
+            property = self.absTol;
+        end
+        function property = get.relTol(self)
+            self.beforeGetRelTol();
+            property = self.relTol;
+        end
         function set.ellTubeRel(self,rel)
             self.checkIndSTime(rel);
             self.ellTubeRel=rel;
@@ -181,6 +189,12 @@ classdef AReach < elltool.reach.IReach
             if nargout == 2
                 propVal = fPropFun(propArr(:));
             end
+        end
+        function beforeGetAbsTol(self) %#ok<MANU>
+            % count references to absTol in subclasses
+        end
+        function beforeGetRelTol(self) %#ok<MANU>
+            % count references to relTol in subclasses
         end
     end
     methods

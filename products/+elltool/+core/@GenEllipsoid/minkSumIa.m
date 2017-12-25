@@ -87,7 +87,8 @@ if (mSize==1) && (kSize==1)
     ellResVec=ellObjVec;
 else
     nEllObj=length(ellObjVec);
-    ellResVec(nDirSize)=GenEllipsoid(1);
+    className=class(ellObjVec);
+    ellResVec(nDirSize)=feval(className,1);
     for iDir=1:nDirSize
         curDirVec=dirMat(:,iDir);
         %find all Inf directions
@@ -99,7 +100,7 @@ else
         allInfDirMat=cell2mat(allInfDirCMat);
         if all(all(isInfMat==1))
             %all are infinite
-            ellResVec(iDir)=GenEllipsoid(Inf*ones(dimSpace,1));
+            ellResVec(iDir)=feval(className,Inf*ones(dimSpace,1));
         elseif ~all(isInfMat(:)==0)
             %Infinite eigenvalues present
             %Construnct orthogonal basis
@@ -108,7 +109,7 @@ else
             projCurDirVec=nonInfBasMat.'*curDirVec;
             if all(abs(projCurDirVec)<absTol)
                 %direction lies in the space of infinite directions
-                ellResVec(iDir)=GenEllipsoid(Inf*ones(dimSpace,1));
+                ellResVec(iDir)=feval(className,Inf*ones(dimSpace,1));
             else
                 %find projection of all ellipsoids on this
                 isBeenFirst=false;
@@ -164,7 +165,7 @@ else
                 qCenVec=zeros(dimSpace,1);
                 qCenVec(finIndVec)=qNICenVec;
                 resEllMat=0.5*(resEllMat+resEllMat);
-                ellResVec(iDir)=GenEllipsoid(qCenVec,...
+                ellResVec(iDir)=feval(className,qCenVec,...
                     resDiagVec,resEllMat);
             end
         else %finite case, degenerate included
@@ -201,7 +202,7 @@ else
             end
             sumMat=sumMat.'*sumMat;
             sumMat=0.5*(sumMat+sumMat.');
-            ellResVec(iDir)=GenEllipsoid(qCenVec,sumMat);
+            ellResVec(iDir)=feval(className,qCenVec,sumMat);
         end
     end
 end

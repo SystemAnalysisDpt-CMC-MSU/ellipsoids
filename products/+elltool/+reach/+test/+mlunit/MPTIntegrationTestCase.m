@@ -5,6 +5,22 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
     % Faculty of Computational Mathematics and 
     % Computer Science, System Analysis Department <2013> $
     %
+    properties (Access=private)
+        ellFactoryObj;
+    end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     methods
         function self = MPTIntegrationTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
@@ -56,7 +72,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             linSys = elltool.linsys.LinSysFactory.create(atDefCMat, ...
                 btDefCMat,ControlBounds, ctDefCMat, DistBounds);
             fullReachObj = elltool.reach.ReachContinuous(linSys,...
-                ellipsoid(x0DefVec, x0DefMat), l0Mat, timeVec);
+                self.ellipsoid(x0DefVec, x0DefMat), l0Mat, timeVec);
             reachObj = fullReachObj.cut(timeVec(2));
         end
     end

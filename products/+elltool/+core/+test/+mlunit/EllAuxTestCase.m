@@ -1,7 +1,21 @@
 classdef EllAuxTestCase < mlunitext.test_case
     properties (Access=private)
         ABS_TOL = 1e-8;
+        ellFactoryObj;
     end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     methods
         function self=EllAuxTestCase(varargin)
             self=self@mlunitext.test_case(varargin{:});
@@ -25,7 +39,7 @@ classdef EllAuxTestCase < mlunitext.test_case
             shRegMat=gras.la.regposdefmat(shMat,absTol);
             masterCheckIsPos(shRegMat);
             %
-            ell=ellipsoid(shMat,'absTol',absTol);
+            ell = self.ellipsoid(shMat,'absTol',absTol);
             mlunitext.assert(isequal(ell.getShapeMat(),shMat));
             %
             checkApxReg(@minksum_ia);
@@ -59,7 +73,8 @@ classdef EllAuxTestCase < mlunitext.test_case
                     isSemPosDef=false;
                 end
                 if ~isSemPosDef
-                    ell=ellipsoid(inpMat,'absTol',absTol+delta);
+                    ell = self.ellipsoid(inpMat, 'absTol', ...
+                        absTol+delta);
                     isOk=~ell.isdegenerate();
                     mlunitext.assert_equals(isOk,isExpOk);
                 end

@@ -46,7 +46,7 @@ if isRobustMethod
     normConst=quadmat(shMat,cVec,0,'inv');
     polarCVec=-(shMat\cVec)/(1-normConst);
     polarShMat=invShMat/(1-normConst)+polarCVec*polarCVec.';
-    polarObj=ellipsoid(polarCVec,polarShMat);
+    polarObj=feval(class(self),polarCVec,polarShMat);
 else
     import modgen.common.throwerror;
     [cVec,shMat]=double(self);
@@ -59,7 +59,7 @@ else
         auxMat = 0.5 * (mMat + mMat.');
         polarCVec=-auxMat*cVec;
         polarShMat=(1+quadmat(auxMat,cVec,0,'plain'))*auxMat;
-        polarObj=ellipsoid(polarCVec,polarShMat);
+        polarObj=feval(class(self),polarCVec,polarShMat);
     else
         modgen.common.throwerror('degenerateEllipsoid',...
             'The resulting ellipsoid is not bounded');

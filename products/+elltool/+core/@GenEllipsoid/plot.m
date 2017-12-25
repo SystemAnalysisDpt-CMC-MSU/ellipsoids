@@ -134,7 +134,7 @@ end
             qVec = plotEll.getCenterVec();
             diagMat = plotEll.getDiagMat();
             eigvMat = plotEll.getEigvMat();
-            ell = GenEllipsoid(diagMat);
+            ell = feval(class(plotEll),diagMat);
             
             [xMat, fMat] = ellPoints(ell, nDim);
             nPoints = size(xMat, 2);
@@ -185,7 +185,7 @@ nDim = 2;
         ellCenVec = ell.getCenterVec();
         ellEigMat = ell.getEigvMat();
         ellDiagMat = ell.getDiagMat();
-        ellTwoDim = GenEllipsoid([ellCenVec, 0].', ...
+        ellTwoDim = feval(class(ellsArr),[ellCenVec, 0].', ...
             diag([ellDiagMat, 0]), diag([ellEigMat, 0]));
     end
 end
@@ -215,7 +215,7 @@ end
             import elltool.core.GenEllipsoid;
             qCenVec = ell.getCenterVec();
             dMat = ell.getDiagMat();
-            ell = GenEllipsoid(qCenVec, dMat);
+            ell = feval(class(ellVec),qCenVec, dMat);
             minVal = Inf;
             maxVal = -Inf;
             

@@ -1,17 +1,33 @@
 classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
+    properties (Access=private)
+        ellFactoryObj;
+    end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = genEllipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('GenEllipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     methods(Access=protected)
-        function [plObj,numObj] = getInstance(varargin)
+        function [plObj,numObj] = getInstance(self, varargin)
             import elltool.core.GenEllipsoid;
-            if numel(varargin)==2
-                plObj = GenEllipsoid(varargin{2});
-                if size(varargin{2},1) == 2
+            if numel(varargin)==1
+                plObj = self.genEllipsoid(varargin{1});
+                if size(varargin{1},1) == 2
                     numObj = 2;
                 else
                     numObj = 4;
                 end
             else
-                plObj = GenEllipsoid(varargin{2},varargin{3});
-                if size(varargin{3},1) == 2
+                plObj = self.genEllipsoid(varargin{1},varargin{2});
+                if size(varargin{2},1) == 2
                     numObj = 2;
                 else
                     numObj = 4;
@@ -28,15 +44,6 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
         function self = tear_down(self,varargin)
             close all;
         end
-        
-        
-        
-        
-        
-        
-        
-        
-        
         function self = testPlot1d(self)
             import elltool.core.GenEllipsoid;
             nDims = 1;
@@ -44,12 +51,12 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
             inpCenCList = {1, 2, 3, 4, 5, -5, -4, -3, -2, -1, 0};
             nElem = numel(inpArgCList);
             for iElem = 1:nElem
-                testEll=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem});
+                testEll=self.genEllipsoid(inpCenCList{iElem}, inpArgCList{iElem});
                 check(testEll, nDims);
             end
-            testEllArr(1) = GenEllipsoid(inpCenCList{1}, inpArgCList{1});
-            testEllArr(2) = GenEllipsoid(inpCenCList{2}, inpArgCList{2});
-            testEllArr(3) = GenEllipsoid(inpCenCList{3}, inpArgCList{3});
+            testEllArr(1) = self.genEllipsoid(inpCenCList{1}, inpArgCList{1});
+            testEllArr(2) = self.genEllipsoid(inpCenCList{2}, inpArgCList{2});
+            testEllArr(3) = self.genEllipsoid(inpCenCList{3}, inpArgCList{3});
             check(testEllArr, nDims);
             
         end
@@ -64,16 +71,16 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 [0, 0].', [-10, -10].'};
             nElem = numel(inpArgCList);
             for iElem = 1:nElem
-                testEll=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem});
+                testEll=self.genEllipsoid(inpCenCList{iElem}, inpArgCList{iElem});
                 check(testEll, nDims);
             end
             
-            testEllArr(1) = GenEllipsoid(inpCenCList{1}, inpArgCList{1});
-            testEllArr(2) = GenEllipsoid(inpCenCList{2}, inpArgCList{2});
+            testEllArr(1) = self.genEllipsoid(inpCenCList{1}, inpArgCList{1});
+            testEllArr(2) = self.genEllipsoid(inpCenCList{2}, inpArgCList{2});
             check(testEllArr, nDims);
             
             for iElem = 1:nElem
-                testEllArr(iElem) = GenEllipsoid(inpCenCList{iElem},...
+                testEllArr(iElem) = self.genEllipsoid(inpCenCList{iElem},...
                     inpArgCList{iElem});
             end
             check(testEllArr, nDims);
@@ -93,13 +100,13 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 [1, -5].', [10, 7].', [1, -5].'};
             nElem = numel(inpCenCList);
             for iElem = 1:nElem
-                testEll=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                testEll=self.genEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
                     inpRotCList{iElem});
                 check(testEll, nDims);
             end
             
             for iElem = 1:nElem
-                testEllArr(iElem)=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                testEllArr(iElem)=self.genEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
                     inpRotCList{iElem});
             end
             check(testEllArr, nDims);
@@ -119,13 +126,13 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 eye(3),[0 0 1;0 1 0; 1 0 0]};
             nElem = numel(inpArgCList);
             for iElem = 1:nElem
-                testEll=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                testEll=self.genEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
                     inpRotCList{iElem});
                 check(testEll, nDims);
             end
             
             for iElem = 1:nElem
-                testEllArr(iElem)=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                testEllArr(iElem)=self.genEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
                     inpRotCList{iElem});
             end
             check(testEllArr, nDims);
@@ -165,19 +172,19 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 sin(pi/3), cos(pi/3), 0; 0, 0, 1]};
             nElem = numel(inpArgCList);
             for iElem = 1:nElem
-                testEll=GenEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
+                testEll=self.genEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
                     inpRotCList{iElem});
                 check(testEll, nDims);
             end
             
             for iElem = 1:5
-                testEllArr(iElem)=GenEllipsoid(inpCenCList{iElem}, ...
+                testEllArr(iElem)=self.genEllipsoid(inpCenCList{iElem}, ...
                     inpArgCList{iElem}, inpRotCList{iElem});
             end
             check(testEllArr, nDims);
             
             for iElem = 1:nElem
-                testEllArr(iElem)=GenEllipsoid(inpCenCList{iElem}, ...
+                testEllArr(iElem)=self.genEllipsoid(inpCenCList{iElem}, ...
                     inpArgCList{iElem}, inpRotCList{iElem});
             end
             check(testEllArr, nDims);

@@ -86,7 +86,7 @@ absTol=ellObjVec(1).absTol;
 if (mSize==1) && (kSize==1)
     ellResVec=ellObjVec;
 else
-    ellResVec(nDirSize)=GenEllipsoid();
+    ellResVec(nDirSize)=feval(class(ellObjVec));
     for iDir=1:nDirSize;
         curDirVec=dirMat(:,iDir);
         ellObjCVec=num2cell(ellObjVec);
@@ -120,9 +120,10 @@ end
 function resEllObj=findINF(ellObjVec,curDirVec,dimSpace,areAllInf,...
     allInfDirMat,absTol)
 import elltool.core.GenEllipsoid;
+className=class(ellObjVec);
 if areAllInf
     %all are infinite
-    resEllObj=GenEllipsoid(Inf*ones(dimSpace,1));
+    resEllObj=feval(className,Inf*ones(dimSpace,1));
 else
     %Infinite eigenvalues present
     [ infBasMat,  finBasMat, infIndVec, finIndVec] = ...
@@ -130,7 +131,7 @@ else
     projCurDirVec=finBasMat.'*curDirVec;
     if all(abs(projCurDirVec)<absTol)
         %direction lies in the space of infinite directions
-        resEllObj=GenEllipsoid(Inf*ones(dimSpace,1));
+        resEllObj=feval(className,Inf*ones(dimSpace,1));
     else
         %Find those directions for with eg.vl. is zero and
         %Ql=0 and they are not equal to infinite
@@ -181,7 +182,7 @@ else
         qCenVec=zeros(dimSpace,1);
         qCenVec(finIndVec)=cenVec;
         resFinMat=0.5*(resFinMat+resFinMat);
-        resEllObj=GenEllipsoid(qCenVec,resDiagVec,resFinMat);
+        resEllObj=feval(className,qCenVec,resDiagVec,resFinMat);
     end
 end
 end
@@ -205,7 +206,7 @@ for iEll=1:nEllObj;
     end
 end
 resEllMat=0.5*sumPNum*(sumMat+sumMat.');
-resEllObj=GenEllipsoid(cenVec,resEllMat);
+resEllObj=feval(class(ellObjVec),cenVec,resEllMat);
 end
 %
 function resEllObj=findFD(ellObjVec,curDirVec,dimSpace,isDirInKerVec,...
@@ -255,7 +256,7 @@ resFinMat=resFinMat/norm(resFinMat);
 qCenVec=zeros(dimSpace,1);
 qCenVec(zeroIndVec)=cenVec;
 resFinMat=0.5*(resFinMat+resFinMat);
-resEllObj=GenEllipsoid(qCenVec,resDiagVec,resFinMat);
+resEllObj=feval(class(ellObjVec),qCenVec,resDiagVec,resFinMat);
 end
 function [isZeroVec zeroDirEigMat] = findAllZeroDir(ellObj,absTol)
 isZeroVec=(abs(diag(ellObj.diagMat))<absTol);

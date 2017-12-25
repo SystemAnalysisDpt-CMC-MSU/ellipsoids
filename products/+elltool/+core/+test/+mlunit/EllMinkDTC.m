@@ -5,6 +5,22 @@ classdef EllMinkDTC <   elltool.core.test.mlunit.EllMinkATC
     %            Faculty of Computational Mathematics
     %            and Computer Science,
     %            System Analysis Department 2013 $
+    properties (Access=private)
+        ellFactoryObj;
+    end
+    %
+    methods
+        function set_up_param(self)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+        end
+    end
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     properties (Access=protected)
         fRhoDiff2d,fRhoDiff3d
     end
@@ -13,11 +29,11 @@ classdef EllMinkDTC <   elltool.core.test.mlunit.EllMinkATC
             self = self@ elltool.core.test.mlunit.EllMinkATC(varargin{:});
         end
         function self = testMink2d(self)
-            testFirEll = ellipsoid([1, 0].', [9 2;2 4]);
-            testSecEll = ellipsoid(eye(2));
-            testThirdEll = ellipsoid([2 1;1 2]);
-            testForthEll=ellipsoid(diag([0.8 0.1]));
-            testFifthEll=ellipsoid(diag([1 2]));
+            testFirEll = self.ellipsoid([1, 0].', [9 2;2 4]);
+            testSecEll = self.ellipsoid(eye(2));
+            testThirdEll = self.ellipsoid([2 1;1 2]);
+            testForthEll=self.ellipsoid(diag([0.8 0.1]));
+            testFifthEll=self.ellipsoid(diag([1 2]));
             
             if self.isInv
                 check(testFirEll, testThirdEll, testSecEll);
@@ -43,11 +59,11 @@ classdef EllMinkDTC <   elltool.core.test.mlunit.EllMinkATC
             end
         end
         function self = testMink3d(self)
-            testFirEll = ellipsoid([1, 0, 0].', [9 2 0 ;2 4 0; 0 0 4]);
-            testSecEll = ellipsoid(eye(3));
-            testForthEll = ellipsoid(diag([1 2 1 ]));
-            testFifthEll = ellipsoid(diag([0.8 0.1 0.1]));
-            testThirdEll = ellipsoid([2 1 0 ;1 2 0;0 0 1]);
+            testFirEll = self.ellipsoid([1, 0, 0].', [9 2 0 ;2 4 0; 0 0 4]);
+            testSecEll = self.ellipsoid(eye(3));
+            testForthEll = self.ellipsoid(diag([1 2 1 ]));
+            testFifthEll = self.ellipsoid(diag([0.8 0.1 0.1]));
+            testThirdEll = self.ellipsoid([2 1 0 ;1 2 0;0 0 1]);
             if self.isInv
                 check(testFirEll, testSecEll, testThirdEll);
                 check(testForthEll,testFifthEll,testSecEll);

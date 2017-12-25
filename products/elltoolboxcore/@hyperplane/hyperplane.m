@@ -1,4 +1,4 @@
-classdef hyperplane < elltool.core.ABasicEllipsoid
+classdef hyperplane < elltool.core.ABasicEllipsoid & modgen.reflection.ReflectionHelper
     %HYPERPLANE - a class for hyperplanes
     properties (Access=private)
         normal
@@ -119,8 +119,12 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
             import modgen.common.checkvar;
             import modgen.common.checkmultvar;
             
+            metaClassBoxedObj=modgen.containers.ValueBox();
+            hypObjArr=hypObjArr@modgen.reflection.ReflectionHelper(...
+                metaClassBoxedObj);
+            metaClass=metaClassBoxedObj.getValue();
             if nargin == 0
-                hypObjArr = hyperplane(0, 0);
+                hypObjArr = feval(metaClass.Name, 0, 0);
             else
                 neededPropNameList = {'absTol', 'relTol'};
                 %                 absTolVal = elltool.conf.Properties.parseProp(varargin,...
@@ -210,7 +214,7 @@ classdef hyperplane < elltool.core.ABasicEllipsoid
             %
             function build()
                 indArr = reshape(1:nElems, outSizeVec);
-                hypObjArr(nElems) = hyperplane();
+                hypObjArr(nElems) = feval(metaClass.Name);
                 hypObjArr = reshape(hypObjArr, outSizeVec);
             end
             %

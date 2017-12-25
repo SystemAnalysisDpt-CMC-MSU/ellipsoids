@@ -1,14 +1,22 @@
 classdef SuiteBasic < mlunitext.test_case
-    properties
+    properties (Access=private)
+        ellFactoryObj;
     end
-    
+    %
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     methods
         function self = SuiteBasic(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
         %
         function self = set_up_param(self,varargin)
-            
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
         end
         %
         function testSupGeomDiff2dNegative(self)
@@ -27,13 +35,13 @@ classdef SuiteBasic < mlunitext.test_case
             end
             
         end
-        function testSupGeomDiff3d(~)
+        function testSupGeomDiff3d(self, ~)
             import gras.geom.sup.supgeomdiff3d;
             import gras.geom.sup.supgeomdiff2d;
             ABS_TOL = 1e-10;
             POINTS_NUMBER = 200;
-            testFirEll=ellipsoid(diag([1 2 1]));
-            testSecEll=ellipsoid(diag([0.8 0.1 0.1]));
+            testFirEll=self.ellipsoid(diag([1 2 1]));
+            testSecEll=self.ellipsoid(diag([0.8 0.1 0.1]));
             [lGridMat,~] = gras.geom.tri.spheretri(3);
             [supp1Mat,~] = rho(testFirEll,lGridMat.');
             [supp2Mat,~] = rho(testSecEll,lGridMat.');
@@ -46,7 +54,7 @@ classdef SuiteBasic < mlunitext.test_case
                 ones(1,size(rhoDiffVec,2)));   
             
             firBoundMat = gras.geom.circlepart(POINTS_NUMBER).';
-            testFirEll=ellipsoid(diag([0.1 0.2]));
+            testFirEll=self.ellipsoid(diag([0.1 0.2]));
             secBoundMat =  testFirEll.getBoundary(POINTS_NUMBER).';
             thirdBoundMat =...
                 [repmat(firBoundMat,1,10);floor((0:1999)./POINTS_NUMBER)];

@@ -1,4 +1,15 @@
 classdef AReachProjAdvTestCase < mlunitext.test_case
+    properties (Access = private)
+        ellFactoryObj;
+    end
+    %
+    methods
+        function ellObj = ellipsoid(self, varargin)
+            ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
+                varargin{:});            
+        end
+    end
+    %
     properties (Access=private, Constant)
         CMP_PREC_FACTOR=10;%we increase comp precision to account
         %for errors introduced during projecting
@@ -99,7 +110,7 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
             newLinSys = self.linSysFactory.create(newAtMat,...
                 newBtMat, ControlBounds, newCtMat, DistBounds);
             newReachObj = self.reachObfFactory.create(newLinSys,...
-                ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.timeVec);
+                self.ellipsoid(newX0Vec, newX0Mat), newL0Mat, self.timeVec);
             %
             secondProjReachObj =...
                 newReachObj.projection(invProjMat(indVec,:)');
@@ -144,6 +155,8 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
         end
         %
         function self = set_up_param(self, confName, crm, crmSys, inpModeList)
+            self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+            %
             self.crm = crm;
             self.crmSys = crmSys;
             self.confName = confName;
@@ -174,7 +187,7 @@ classdef AReachProjAdvTestCase < mlunitext.test_case
                 self.SysParam.btCMat, ControlBounds,...
                 self.SysParam.ctCMat, DistBounds);
             self.reachObj = self.reachObfFactory.create(self.linSys,...
-                ellipsoid(self.SysParam.x0Vec, self.SysParam.x0Mat),...
+                self.ellipsoid(self.SysParam.x0Vec, self.SysParam.x0Mat),...
                 self.SysParam.l0Mat, self.timeVec);
         end
         %

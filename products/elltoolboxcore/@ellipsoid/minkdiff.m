@@ -107,6 +107,8 @@ end
         if isa(ellsArr, 'ellipsoid')
             cnt    = numel(ellsArr);
             ellsVec = reshape(ellsArr, cnt, 1);
+        else
+            ellsVec = [];
         end
     end
 
@@ -181,7 +183,7 @@ end
         nDim = 2;
         function ellTwoDim = oneDim2TwoDim(ell)
             [ellCenVec, qMat] = ell.double();
-            ellTwoDim = ellipsoid([ellCenVec, 0].', ...
+            ellTwoDim = feval(class(elssArr),[ellCenVec, 0].', ...
                 diag([qMat, 0]));
         end
     end
