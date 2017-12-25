@@ -16,6 +16,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
         relTol
         regTol
         ellFactoryObj
+        testReachObjFactory
     end
     %
     methods
@@ -26,6 +27,11 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
         function ellObj = ell_unitball(self, varargin)
             ellObj = elltool.core.test.mlunit.tell_unitball(...
                 self.ellFactoryObj, varargin{:});
+        end
+        %
+        function reachObj = reachContinuous(self, varargin)
+            reachObj = self.testReachObjFactory.createInstance(...
+                'reachContinuous', varargin{:});            
         end
     end
     %
@@ -55,6 +61,8 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
         %
         function self = set_up_param(self, confName, crm, crmSys)
             self.ellFactoryObj = elltool.core.test.mlunit.TEllipsoidFactory();
+            self.testReachObjFactory = ...
+                    elltool.reach.test.mlunit.TReachObjFactory();
             %
             self.crm = crm;
             self.crmSys = crmSys;
@@ -148,7 +156,7 @@ classdef ContinuousReachRegTestCase < mlunitext.test_case
                     l0Mat, timeVec,'isRegEnabled',isRegEnabled,...
                     'isJustCheck',isJustCheck,'regTol',regTol}; %#ok<NASGU>
                 %
-                evalStr='elltool.reach.test.mlunit.TReachContinuous(inpArgList{:})';
+                evalStr='self.reachContinuous(inpArgList{:})';
                 if isNeg
                     self.runAndCheckError(evalStr,expErrTag);
                 else

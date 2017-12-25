@@ -22,12 +22,16 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
                 varargin{:});            
         end
         function ellObj = ell_unitball(self, varargin)
-            ellObj = elltool.core.test.mlunit.tell_unitball(...
+            ellObj = tell_unitball(...
                 self.ellFactoryObj, varargin{:});
         end
         function ellObj = ell_enclose(self, varargin)
             ellObj = elltool.core.test.mlunit.tell_enclose(...
                 self.ellFactoryObj, varargin{:});
+        end
+        function hpObj = hyperplane(self, varargin)
+            hpObj = self.ellFactoryObj.createInstance('hyperplane', ...
+                varargin{:});            
         end
     end
     %
@@ -140,9 +144,9 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             testNormArr=zeros(arrSizeVec);
             testNormArr(1,:)=1;
             testNormArr(2,:)=0;
-            testHypArr=hyperplane(testNormArr,2);
+            testHypArr=self.hyperplane(testNormArr,2);
             %
-            testHyp=hyperplane([1;0],1);
+            testHyp=self.hyperplane([1;0],1);
             %
             isParrArr=isparallel(testHypArr,testHyp);
             isParr2Arr=isparallel(testHyp,testHypArr);
@@ -459,7 +463,7 @@ classdef EllipsoidSecTestCase < mlunitext.test_case
             self.runAndCheckError('isInside(badEllVec,ell1Arr(1))',...
                 'wrongInput');
             %
-            self.runAndCheckError('isInside(ell1Arr,hyperplane())',...
+            self.runAndCheckError('isInside(ell1Arr,self.hyperplane())',...
                 'wrongInput');
         end
     end
@@ -498,83 +502,96 @@ function myTestIsInside(ell1Arr,ell2Arr, expResVec)
 end
 
 function [varargout] = createTypicalEll(ellFactoryObj, flag)
+    import elltool.core.test.mlunit.*;
     switch flag
         case 1
             varargout{1} = ellFactoryObj.createInstance('ellipsoid', [2; 1], [4, 1; 1, 1]);
-            varargout{2} = elltool.core.test.mlunit.tell_unitball(...
-                ellFactoryObj, 2);
+            varargout{2} = tell_unitball(ellFactoryObj, 2);
         case 2
             varargout{1} = ellFactoryObj.createInstance('ellipsoid', [2; 1; 0], ...
                 [4, 1, 1; 1, 2, 1; 1, 1, 5]);
-            varargout{2} = elltool.core.test.mlunit.tell_unitball(...
-                ellFactoryObj, 3);
+            varargout{2} = tell_unitball(ellFactoryObj, 3);
         case 3
             varargout{1} = ellFactoryObj.createInstance('ellipsoid', [5; 5; 5], ...
                 [4, 1, 1; 1, 2, 1; 1, 1, 5]);
-            varargout{2} = elltool.core.test.mlunit.tell_unitball(...
-                ellFactoryObj, 3);
+            varargout{2} = tell_unitball(ellFactoryObj, 3);
         case 4
             varargout{1} = ellFactoryObj.createInstance('ellipsoid', [5; 5; 5; 5], ...
                 [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6]);
-            varargout{2} = elltool.core.test.mlunit.tell_unitball(...
-                ellFactoryObj, 4);    
+            varargout{2} = tell_unitball(ellFactoryObj, 4);    
         case 5
-            varargout{1} = elltool.core.test.mlunit.tell_unitball(...
-                ellFactoryObj, 6);
-            varargout{2} = ellFactoryObj.createInstance('ellipsoid', zeros(6, 1), diag(0.5 * ones(6, 1)));
+            varargout{1} = tell_unitball(ellFactoryObj, 6);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', ...
+                zeros(6, 1), diag(0.5 * ones(6, 1)));
         case 6
-            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [5; 0], diag([4, 1]));
-            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [0; 0], diag([1 / 8, 1/ 2]));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', ...
+                [5; 0], diag([4, 1]));
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', ...
+                [0; 0], diag([1 / 8, 1/ 2]));
         case 7
-            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [0; 0; 0], diag([4, 1, 1]));
-            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [0; 0; 0], ...
-                diag([1 / 8, 1/ 2, 1 / 2]));
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', ...
+                [0; 0; 0], diag([4, 1, 1]));
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', ...
+                [0; 0; 0], diag([1 / 8, 1/ 2, 1 / 2]));
         case 8
             varargout{1} = [3; 3; 8; 3; 23];
             varargout{2} = diag(ones(1, 5));
-            varargout{3} = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{1}, varargout{2});
             varargout{4} = [6.5; 1; 1; 1; 1];
             varargout{5} = diag([5, 2, 2, 2, 2]);
-            varargout{6} = ellFactoryObj.createInstance('ellipsoid', varargout{4}, varargout{5});
+            varargout{6} = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{4}, varargout{5});
             varargout{7} = [3; 3; 65; 4; 23];
             varargout{8} = diag([13, 3, 2, 2, 2]);
-            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{7}, varargout{8});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{7}, varargout{8});
             varargout{9} = [3; 8; 3; 2; 6];
             varargout{10} = diag([7, 2, 6, 2, 2]);
-            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{9}, varargout{10});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{9}, varargout{10});
             varargout{11} = [test1Ell, test2Ell];
         case 9
             varargout{1} = [3; 3; 8; 3; 23];
             varargout{2} = diag(ones(1, 5));
-            varargout{3} = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{1}, varargout{2});
             varargout{4} = [6.5; 1; 1; 1; 1];
             varargout{5} = diag([0.25, 0.25, 0.25, 0.25, 0.25]);
-            varargout{6} = ellFactoryObj.createInstance('ellipsoid', varargout{4}, varargout{5});
+            varargout{6} = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{4}, varargout{5});
             varargout{7} = [3; 3; 65; 4; 23];
             varargout{8} = diag([13, 3, 2, 2, 2]);
-            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{7}, varargout{8});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{7}, varargout{8});
             varargout{9} = [3; 8; 3; 2; 6];
             varargout{10} = diag([7, 2, 6, 2, 2]);
-            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{9}, varargout{10});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{9}, varargout{10});
             varargout{11} = [test1Ell, test2Ell];
         case 10
             varargout{1} = [3; 76; 8; 3; 23];
             varargout{2} = diag([3, 5, 6, 2, 7]);
-            varargout{3} = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{1}, varargout{2});
             varargout{4} = [6.5; 1.345; 1.234; 114; 241];
             varargout{5} = diag([2, 3, 1.5, 0.6, 2]);
-            varargout{6} = ellFactoryObj.createInstance('ellipsoid', varargout{4}, varargout{5});
+            varargout{6} = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{4}, varargout{5});
             varargout{7} = [7; 33; 45; 42; 3];
             varargout{8} = diag([3, 34, 23, 22, 21]);
-            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{7}, varargout{8});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{7}, varargout{8});
             varargout{9} = [32; 81; 36; -2325; -6];
             varargout{10} = diag([34, 12, 8, 17, 7]);
-            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{9}, varargout{10});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{9}, varargout{10});
             varargout{11} = [test1Ell, test2Ell];
         case 11
             varargout{1} = [3; 61; 2; 34; 3];
             varargout{2} = diag(5 * ones(1, 5));
-            test0Ell = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
+            test0Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{1}, varargout{2});
             varargout{3} = 0;
             varargout{4} = 0;
             varargout{5} = 0;
@@ -583,24 +600,30 @@ function [varargout] = createTypicalEll(ellFactoryObj, flag)
         case 12
             varargout{1} = [3; 61; 2; 34; 3];
             varargout{2} = diag(5 * ones(1, 5));
-            test0Ell = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
+            test0Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{1}, varargout{2});
             varargout{3} = [31; 34; 51; 42; 3];
             varargout{4} = diag([13, 3, 22, 2, 24]);
-            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{3}, varargout{4});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{3}, varargout{4});
             varargout{5} = [3; 8; 23; 12; 6];
             varargout{6} = diag([7, 6, 6, 8, 2]);
-            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{5}, varargout{6});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{5}, varargout{6});
             varargout{7} = [test0Ell, test1Ell, test2Ell];
         case 13    
             varargout{1} = [32; 0; 8; 1; 23];
             varargout{2} = diag([3, 5, 6, 5, 2]);
-            test0Ell = ellFactoryObj.createInstance('ellipsoid', varargout{1}, varargout{2});
+            test0Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{1}, varargout{2});
             varargout{3} = [7; 3; 5; 42; 3];
             varargout{4} = diag([32, 34, 23, 12, 21]);
-            test1Ell = ellFactoryObj.createInstance('ellipsoid', varargout{3}, varargout{4});
+            test1Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{3}, varargout{4});
             varargout{5} = [32; 81; 36; -25; -62];
             varargout{6} = diag([4, 12, 1, 1, 75]);
-            test2Ell = ellFactoryObj.createInstance('ellipsoid', varargout{5}, varargout{6});
+            test2Ell = ellFactoryObj.createInstance('ellipsoid', ...
+                varargout{5}, varargout{6});
             varargout{7} = [test0Ell, test1Ell, test2Ell];
         case 14
             varargout{1} = ellFactoryObj.createInstance('ellipsoid', [0; 0], [1 0; 0 1]);
@@ -620,13 +643,18 @@ function [varargout] = createTypicalEll(ellFactoryObj, flag)
             varargout{3} = ellFactoryObj.createInstance('ellipsoid', [0; -1], [1 0; 0 1]);
             varargout{4} = [1; 0];
         case 17
-            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
-            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
-            varargout{3} = ellFactoryObj.createInstance('ellipsoid', [0; -1; 1], [1 0 0; 0 1 0; 0 0 1]);
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', ...
+                [1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', ...
+                [2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
+            varargout{3} = ellFactoryObj.createInstance('ellipsoid', ...
+                [0; -1; 1], [1 0 0; 0 1 0; 0 0 1]);
             varargout{4} = [1; 0; 0];
         case 18
-            varargout{1} = ellFactoryObj.createInstance('ellipsoid', [1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
-            varargout{2} = ellFactoryObj.createInstance('ellipsoid', [2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
+            varargout{1} = ellFactoryObj.createInstance('ellipsoid', ...
+                [1; 0; -1], [2 0 0; 0 2 0; 0 0 2]);
+            varargout{2} = ellFactoryObj.createInstance('ellipsoid', ...
+                [2; 0; 2], [1 0 0; 0 1 0; 0 0 1]);
             varargout{3} = [];
             varargout{4} = [1; 0; 0];
         case 19

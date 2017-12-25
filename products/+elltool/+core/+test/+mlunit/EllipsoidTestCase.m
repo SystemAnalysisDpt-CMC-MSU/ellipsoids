@@ -14,6 +14,10 @@ classdef EllipsoidTestCase < mlunitext.test_case
             ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
                 varargin{:});            
         end
+        function hpObj = hyperplane(self, varargin)
+            hpObj = self.ellFactoryObj.createInstance('hyperplane', ...
+                varargin{:});            
+        end
     end
     %
     methods
@@ -314,7 +318,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testHypVVec=testOrth2Mat*[0;1];
             testHypC=0;
             testEllipsoid=self.ellipsoid(testEllCenterVec,testEllMat);
-            testHyp=hyperplane(testHypVVec,testHypC);
+            testHyp=self.hyperplane(testHypVVec,testHypC);
             testRes=distance(testEllipsoid,testHyp);
             mlunitext.assert_equals(true,abs(testRes-3)<absTol);
             %
@@ -326,7 +330,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testHypVVec=testOrth3Mat*[0;1;0];
             testHypC=10;
             testEllipsoid=self.ellipsoid(testEllMat);
-            testHyp=hyperplane(testHypVVec,testHypC);
+            testHyp=self.hyperplane(testHypVVec,testHypC);
             testRes=distance(testEllipsoid,testHyp);
             mlunitext.assert_equals(true,abs(testRes-5)<absTol);
             %
@@ -345,7 +349,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testHypC=0;
             testEllipsoid=[self.ellipsoid(testEll1CenterVec,testEll1Mat),...
                 self.ellipsoid(testEll2CenterVec,testEll2Mat)];
-            testHyp=hyperplane(testHypVVec,testHypC);
+            testHyp=self.hyperplane(testHypVVec,testHypC);
             testRes=distance(testEllipsoid,testHyp);
             mlunitext.assert_equals(true,abs(testRes(1)-7)<absTol&&...
                 abs(testRes(2)-5)<absTol);
@@ -357,7 +361,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunitext.assert_equals(true,abs(testRes)<elltool.conf.Properties.getAbsTol());
             %negative test: self.ellipsoid and hyperplane have different dimensions
             testEll = self.ellipsoid(eye(2));
-            testHyp = hyperplane(eye(3));
+            testHyp = self.hyperplane(eye(3));
             self.runAndCheckError('distance(testEll, testHyp)',...
                 'wrongInput');
             %

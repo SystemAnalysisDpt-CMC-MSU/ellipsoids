@@ -19,6 +19,15 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
                 varargin{:});            
         end
+        function hpObj = hyperplane(self, varargin)
+            hpObj = self.ellFactoryObj.createInstance('hyperplane', ...
+                varargin{:});            
+        end
+        function hpObj = polytope2hyperplane(self, varargin)
+            [normVec, hypScal] = double(polytope2hyperplane(varargin{:}));
+            hpObj = self.ellFactoryObj.createInstance('hyperplane', ...
+                normVec, hypScal);
+        end
     end
     %
     methods
@@ -198,17 +207,17 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             polyConstMat = [-1 2 3; 3 4 2; 0 1 2];
             polyKVec = [1; 2; 3];
             testPoly = Polyhedron(polyConstMat,polyKVec);
-            testHyp = hyperplane(polyConstMat',polyKVec');
-            hyp = polytope2hyperplane(testPoly);
+            testHyp = self.hyperplane(polyConstMat',polyKVec');
+            hyp = self.polytope2hyperplane(testPoly);
             mlunitext.assert(eq(testHyp,hyp));
             poly = hyperplane2polytope(hyp);
             mlunitext.assert(eq(poly,testPoly));
             self.runAndCheckError('hyperplane2polytope(poly)',...
                 'wrongInput:class');
-            hyp2 = [testHyp, hyperplane([1 2 3 4], 1)];
+            hyp2 = [testHyp, self.hyperplane([1 2 3 4], 1)];
             self.runAndCheckError('hyperplane2polytope(hyp2)',...
                 'wrongInput:dimensions');
-            self.runAndCheckError('polytope2hyperplane(hyp)',...
+            self.runAndCheckError('self.polytope2hyperplane(hyp)',...
                 'wrongInput:class');
             
         end
@@ -379,7 +388,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             %ellipsoid lies in halfspace
             my1Ell = self.ellipsoid(eye(2));
-            my1Hyper = hyperplane([1;1], 3);
+            my1Hyper = self.hyperplane([1;1], 3);
             my1EllHyperIAObj = my1Ell.intersection_ia(my1Hyper);
             [isOk, reportStr] = my1Ell.isEqual(my1EllHyperIAObj);
             mlunitext.assert(isOk, reportStr)
@@ -387,14 +396,14 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %test if internal approximation is an empty ellipsoid, when
             %ellipsoid doesn't lie in the halfspace
             my2Ell = self.ellipsoid(eye(2));
-            my2Hyper = hyperplane([-1;-1], -3);
+            my2Hyper = self.hyperplane([-1;-1], -3);
             my2EllHyperIAObj = intersection_ia(my2Ell, my2Hyper);
             [~,my2EllHyperIAObjMat] = double(my2EllHyperIAObj);
             mlunitext.assert(my2EllHyperIAObjMat == [])
             %
             %halfspace intersects an ellpsoid
             my3Ell = self.ellipsoid(eye(3));
-            my3Hyper = hyperplane([-1;1;1], 1);
+            my3Hyper = self.hyperplane([-1;1;1], 1);
             my3EllHyperIAObj = my3Ell.intersection_ia(my3Hyper);
             mlunitext.assert(my3Ell.doesIntersectionContain(my3EllHyperIAObj));
             %
@@ -402,7 +411,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             nDims=10;
             my4Vec = ones(nDims, 1);
             my4Ell = self.ellipsoid(2*eye(nDims));
-            my4Hyper = hyperplane(my4Vec, 1);
+            my4Hyper = self.hyperplane(my4Vec, 1);
             myEllHyperIAObj=intersection_ia(my4Ell, my4Hyper);
             mlunitext.assert(my4Ell.doesIntersectionContain(myEllHyperIAObj));
             %
@@ -418,7 +427,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 %checks if the intersection of multi-dimensional ellipsoid
                 %and hyperplane is really internal
                 [myMultiDimEllArray, mCount, ~] = self.constructEllForTests(dimsShMatArrayVec);
-                myHyper = hyperplane((-1)*ones(mCount,1), 1);
+                myHyper = self.hyperplane((-1)*ones(mCount,1), 1);
                 myMultiDimEllArrayHyperIAObj = myMultiDimEllArray.intersection_ia(myHyper);
                 mlunitext.assert(myMultiDimEllArrayHyperIAObj.isInside(myMultiDimEllArray));
             end
@@ -426,7 +435,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 %checks if the intersection of array of ellipsoids
                 %and hyperplane is really internal
                 myEllArray=self.constructEllArrayForTests(dimsEllArrayVec);
-                myHyper=hyperplane(ones([2,dimsEllArrayVec]));
+                myHyper=self.hyperplane(ones([2,dimsEllArrayVec]));
                 myEllHyperArrayIAObj = myEllArray.intersection_ia(myHyper);
                 mlunitext.assert(myEllHyperArrayIAObj.isInside(myEllArray));
             end
@@ -592,14 +601,14 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             %
             %ellipsoid lies in halfspace
             my1Ell = self.ellipsoid([-5;2;1],eye(3));
-            my1Hyper = hyperplane([1;1;0], 1);
+            my1Hyper = self.hyperplane([1;1;0], 1);
             my1EllHyperEAObj = my1Ell.intersection_ea(my1Hyper);
             [isOk, reportStr] = my1Ell.isEqual(my1EllHyperEAObj);
             mlunitext.assert(isOk, reportStr)
             %analitically proved, that minimal volume ellipsoid, covering
             %intersection of ell3 and hyp3 is ell3.
             my2Ell = self.ellipsoid([-2;2],eye(2));
-            my2Hyper = hyperplane([1;1], 1);
+            my2Hyper = self.hyperplane([1;1], 1);
             my2EllHyperEAObj = my2Ell.intersection_ea(my2Hyper);
             [isOk, reportStr] = my2Ell.isEqual(my2EllHyperEAObj);
             mlunitext.assert(isOk, reportStr)
@@ -608,7 +617,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             nDims=10;
             my3Vec = ones(nDims, 1);
             my3Ell = self.ellipsoid(eye(nDims));
-            my3Hyper = hyperplane(my3Vec, 1);
+            my3Hyper = self.hyperplane(my3Vec, 1);
             my3EllHyperEAObj = my3Ell.intersection_ea(my3Hyper);
             [isOk, reportStr] = my3Ell.isEqual(my3EllHyperEAObj);
             mlunitext.assert(isOk, reportStr)
@@ -625,7 +634,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 %checks if an intersection of multi-dimensional ellipsoid
                 %and hyperplane is empty
                 [myMultiDimEllArray, mCount, ~] = self.constructEllForTests(dimsShMatArrayVec);
-                myHyper = hyperplane([1;zeros(mCount-1,1)], -5);
+                myHyper = self.hyperplane([1;zeros(mCount-1,1)], -5);
                 myMultiDimEllArrayHyperEAObj = myMultiDimEllArray.intersection_ea(myHyper);
                 mlunitext.assert(isEmpty(myMultiDimEllArrayHyperEAObj))
             end
@@ -633,7 +642,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 %checks if the intersection of array of ellipsoids
                 %and hyperplane is equal to the array
                 myEllArray=self.constructEllArrayForTests(dimsEllArrayVec);
-                myHyper=hyperplane(ones([2,dimsEllArrayVec]), 3);
+                myHyper=self.hyperplane(ones([2,dimsEllArrayVec]), 3);
                 myEllHyperArrayEAObj = myEllArray.intersection_ea(myHyper);
                 [isOk, reportStr] = myEllArray.isEqual(myEllHyperArrayEAObj);
                 mlunitext.assert(isOk, reportStr);

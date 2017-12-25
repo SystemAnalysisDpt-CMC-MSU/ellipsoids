@@ -41,7 +41,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
             test1EllArray = createObjectArray(array1Size, @self.ellipsoid, ...
                 [2; 1], [4, 1; 1, 1], 2);
             array2Size = [1, 1];
-            test2EllArray = createObjectArray(array2Size, @(varargin) elltool.core.test.mlunit.tell_unitball(self.ellFactoryObj, varargin{:}), ...
+            test2EllArray = createObjectArray(array2Size, @self.ell_unitball, ...
                 2, 1, 1);
             testIncorrect(0);
             testCorrect(1, 'i', 0);
@@ -50,7 +50,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
             test1EllArray = createObjectArray(array1Size, @self.ellipsoid, ...
                 [2; 1; 0], myMat, 2);
             array2Size = [1, 2, 1, 1, 1, 3, 1];
-            test2EllArray = createObjectArray(array2Size, @(varargin) elltool.core.test.mlunit.tell_unitball(self.ellFactoryObj, varargin{:}), ...
+            test2EllArray = createObjectArray(array2Size, @self.ell_unitball, ...
                 3, 1, 1);
             test2EllArray(1, 2, 1, 1, 1, 3, 1) = self.ellipsoid([2; 1; 0], ...
                 myMat);
@@ -60,7 +60,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
             test1EllArray = createObjectArray(array1Size, @self.ellipsoid, ...
                 [5; 5; 5], myMat, 2);
             array2Size = [1, 2, 1, 1, 1, 1, 1];
-            test2EllArray = createObjectArray(array2Size, @(varargin) elltool.core.test.mlunit.tell_unitball(self.ellFactoryObj, varargin{:}), ...
+            test2EllArray = createObjectArray(array2Size, @self.ell_unitball, ...
                 3, 1, 1);
             test2EllArray(1, 2, 1, 1, 1, 1, 1) = self.ellipsoid([5; 5; 5], ...
                 myMat, 2);
@@ -71,7 +71,7 @@ classdef EllSecTCMultiDim < mlunitext.test_case
                 [5; 5; 5; 5], ...
                 [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6], 2);
             array2Size = [2, 2, 1, 1, 1, 1, 1];
-            test2EllArray = createObjectArray(array2Size, @(varargin) elltool.core.test.mlunit.tell_unitball(self.ellFactoryObj, varargin{:}), ...
+            test2EllArray = createObjectArray(array2Size, @self.ell_unitball, ...
                 4, 1, 1);
             test2EllArray(1, 2, 1, 1, 1, 1, 1) = self.ellipsoid([5; 5; 5; 5], ...
                 [4, 1, 1, 1; 1, 2, 1, 1; 1, 1, 5, 1; 1, 1, 1, 6], 2);
@@ -399,12 +399,13 @@ classdef EllSecTCMultiDim < mlunitext.test_case
     end
 end
 function [varargout] = createTypicalArray(ellFactoryObj, flag)
+import elltool.core.test.mlunit.*;
 switch flag
     case 1
         arraySize = [2, 1, 3, 1, 1, 1, 2];
         my1Ell = ellFactoryObj.createInstance('ellipsoid', diag( 4 * ones(1, 10)));
-        my2Ell = elltool.core.test.mlunit.tell_unitball(ellFactoryObj, 10);
-        myEllArray = createObjectArray(arraySize, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        my2Ell = tell_unitball(ellFactoryObj, 10);
+        myEllArray = createObjectArray(arraySize, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             10, 1, 1);
         myMat = eye(10);
         ansEllMat = diag(13 ^ 2 * ones(1, 10));
@@ -419,7 +420,7 @@ switch flag
         arraySize = [1, 2, 1, 3, 2, 1];
         my1Ell = ellFactoryObj.createInstance('ellipsoid', 10 * ones(7, 1), diag(9 * ones(1, 7)));
         my2Ell = ellFactoryObj.createInstance('ellipsoid', -3 * ones(7, 1), diag([4, ones(1, 6)]));
-        myEllArray = createObjectArray(arraySize, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        myEllArray = createObjectArray(arraySize, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             7, 1, 1);
         myMat = [eye(7), -eye(7)];
         ansEaEllMat = diag([13 ^ 2, 13 * 16 * ones(1, 6)]);
@@ -436,9 +437,9 @@ switch flag
         varargout{6} = ansIaEllVec;
     case 3
         arraySize = [1, 1, 1, 1, 1, 3, 1, 1, 2];
-        my1Ell = elltool.core.test.mlunit.tell_unitball(ellFactoryObj, 1);
+        my1Ell = tell_unitball(ellFactoryObj, 1);
         my2Ell = ellFactoryObj.createInstance('ellipsoid', 1, 0.25);
-        myEllArray = createObjectArray(arraySize, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        myEllArray = createObjectArray(arraySize, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             1, 1, 1);
         myMat = [1, -1];
         ansEllMat = diag(6.5 ^ 2);
@@ -451,7 +452,7 @@ switch flag
         varargout{5} = ansEllVec;
     case 4
         arraySize = [2, 1, 3, 1, 1, 1, 2];
-        myEllArray = createObjectArray(arraySize, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        myEllArray = createObjectArray(arraySize, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             10, 1, 1);
         myMat = eye(10);
         ansEllMat = diag(12 ^ 2 * ones(1, 10));
@@ -462,7 +463,7 @@ switch flag
         varargout{3} = ansEllVec;
     case 5
         arraySize = [1, 2, 1, 3, 2, 1];
-        myEllArray = createObjectArray(arraySize, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        myEllArray = createObjectArray(arraySize, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             7, 1, 1);
         myEllArray(1, 2, 1, 3, 2, 1) = ellFactoryObj.createInstance('ellipsoid', 5 * ones(7, 1), ...
             diag(9 * ones(1, 7)));
@@ -475,7 +476,7 @@ switch flag
         varargout{3} = ansEllVec;
     case 6
         arraySize = [1, 1, 1, 1, 1, 3, 1, 1, 2];
-        myEllArray = createObjectArray(arraySize, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        myEllArray = createObjectArray(arraySize, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             1, 1, 1);
         myEllArray(1, 1, 1, 1, 1, 2, 1, 1, 1) = ellFactoryObj.createInstance('ellipsoid', -1, 0.25);
         myMat = [1, -1];
@@ -487,7 +488,7 @@ switch flag
         varargout{3} = ansEllVec;
     case 7
         arraySize = [2, 1, 3, 1, 1, 1, 2];
-        myEllArray = createObjectArray(arraySize, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        myEllArray = createObjectArray(arraySize, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             10, 1, 1);
         myEll = ellFactoryObj.createInstance('ellipsoid', diag( 4 * ones(1, 10)));
         myMat = eye(10);
@@ -522,7 +523,7 @@ switch flag
     case 9
         arraySize = [1, 1, 1, 1, 1, 2, 1, 1, 2];
         myEll = ellFactoryObj.createInstance('ellipsoid', 1, 0.25);
-        myEllArray = createObjectArray(arraySize, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        myEllArray = createObjectArray(arraySize, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             1, 1, 1);
         myMat = [1, -1];
         ansEllMat = diag(12.25);
@@ -536,7 +537,7 @@ switch flag
         arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
         ellObj = ellFactoryObj.createInstance('ellipsoid');
         testEllArray = ellObj.empty(1, 0, 0, 1, 5);
-        test2EllArray = createObjectArray(arraySizeVec, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        test2EllArray = createObjectArray(arraySizeVec, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             3, 1, 1);
         errorStr = 'wrongInput:emptyArray';
         varargout{1} = testEllArray;
@@ -544,10 +545,10 @@ switch flag
         varargout{3} = errorStr;
     case 11
         arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
-        testEllArray = createObjectArray(arraySizeVec, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        testEllArray = createObjectArray(arraySizeVec, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             3, 1, 1);
         testEllArray(2, 1, 1, 2, 1, 3, 1) = ellFactoryObj.createInstance('ellipsoid');
-        test2EllArray = createObjectArray(arraySizeVec, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        test2EllArray = createObjectArray(arraySizeVec, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             3, 1, 1);
         errorStr = 'wrongInput:emptyEllipsoid';
         varargout{1} = testEllArray;
@@ -557,7 +558,7 @@ switch flag
         arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
         testEllArray = createObjectArray(arraySizeVec, @(x) ellFactoryObj.createInstance('ellipsoid'), ...
             3, 1, 1);
-        test2EllArray = createObjectArray(arraySizeVec, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        test2EllArray = createObjectArray(arraySizeVec, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             3, 1, 1);
         errorStr = 'wrongInput:emptyEllipsoid';
         varargout{1} = testEllArray;
@@ -565,10 +566,10 @@ switch flag
         varargout{3} = errorStr;
     case 13
         arraySizeVec = [2, 1, 1, 2, 1, 3, 1];
-        testEllArray = createObjectArray(arraySizeVec, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        testEllArray = createObjectArray(arraySizeVec, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             3, 1, 1);
-        testEllArray(2, 1, 1, 1, 1, 1, 1) = elltool.core.test.mlunit.tell_unitball(ellFactoryObj, 7);
-        test2EllArray = createObjectArray(arraySizeVec, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        testEllArray(2, 1, 1, 1, 1, 1, 1) = tell_unitball(ellFactoryObj, 7);
+        test2EllArray = createObjectArray(arraySizeVec, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             3, 1, 1);
         errorStr = 'wrongSizes';
         varargout{1} = testEllArray;
@@ -578,12 +579,13 @@ switch flag
 end
 end
 function [varargout] = createTypicalHighDimArray(ellFactoryObj, flag)
+import elltool.core.test.mlunit.*;
 switch flag
     case 1
         arraySize = [1, 1, 1, 1, 1, 3, 1, 1, 3, 1];
-        my1Ell = elltool.core.test.mlunit.tell_unitball(ellFactoryObj, 100);
+        my1Ell = tell_unitball(ellFactoryObj, 100);
         my2Ell = ellFactoryObj.createInstance('ellipsoid', ones(100, 1), diag( 0.25 * ones(1, 100)));
-        myEllArray = createObjectArray(arraySize, @(varargin) elltool.core.test.mlunit.tell_unitball(ellFactoryObj, varargin{:}), ...
+        myEllArray = createObjectArray(arraySize, @(varargin) tell_unitball(ellFactoryObj, varargin{:}), ...
             100, 1, 1);
         myMat = [eye(5); zeros(95, 5)];
         ansEllMat = diag(9.5 ^ 2 * ones(1, 100));
@@ -609,7 +611,7 @@ switch flag
         arraySize = [1, 1, 1, 2, 1, 3, 1, 1, 3, 1];
         myEllArray = createObjectArray(arraySize, @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ...
             ones(100, 1), diag( 0.25 * ones(1, 100)), 2);
-        myEll = elltool.core.test.mlunit.tell_unitball(ellFactoryObj, 100);
+        myEll = tell_unitball(ellFactoryObj, 100);
         myMat = [eye(5); zeros(95, 5)];
         ansEllMat = diag(64 * ones(1, 100));
         ansEllVec = createObjectArray([1, 5], @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ...

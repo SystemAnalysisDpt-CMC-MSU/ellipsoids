@@ -19,7 +19,6 @@ classdef EllAuxTestCase < mlunitext.test_case
     methods
         function self=EllAuxTestCase(varargin)
             self=self@mlunitext.test_case(varargin{:});
-            self.set_up_param();
         end
         %
         function testEllRegularize(self)

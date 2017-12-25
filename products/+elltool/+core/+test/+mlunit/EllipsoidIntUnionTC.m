@@ -30,6 +30,10 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             ellObj = elltool.core.test.mlunit.tell_enclose(...
                 self.ellFactoryObj, varargin{:});
         end
+        function hpObj = hyperplane(self, varargin)
+            hpObj = self.ellFactoryObj.createInstance('hyperplane', ...
+                varargin{:});            
+        end
     end
     %
     methods
@@ -305,7 +309,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             nDim = 2;
             testEllVec(1) = self.ellipsoid(eye(nDim));
             testEllVec(2) = self.ellipsoid([2, 2].', eye(nDim));
-            testHyperplane = hyperplane([1, 0].', 10);
+            testHyperplane = self.hyperplane([1, 0].', 10);
             testResVec = intersect(testEllVec, testHyperplane, 'i');
             self.flexAssert(-1, testResVec);
             
@@ -340,7 +344,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             nDim = 2;
             testEllVec = self.ellipsoid([1000, -1000].', eye(nDim));
-            testHyperPlane = hyperplane([1, 0].', 10);
+            testHyperPlane = self.hyperplane([1, 0].', 10);
             testResVec = intersect(testEllVec, testHyperPlane);
             self.flexAssert(0, testResVec);
             
@@ -389,7 +393,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             nDim = 2;
             testEllVec(1) = self.ellipsoid(eye(nDim));
             testEllVec(2) = self.ellipsoid([2, 0].', eye(nDim));
-            testHp = hyperplane([1, 0].', 1);
+            testHp = self.hyperplane([1, 0].', 1);
             testResVec = intersect(testEllVec, testHp, 'i');
             self.flexAssert(1, testResVec);
             testResVec = intersect(testEllVec, testHp, 'u');
@@ -647,49 +651,49 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             %empty intersection
             nDim = 2;
             testEllVec = self.ellipsoid([100, -100]', eye(nDim));
-            testHpVec = hyperplane([0 -1]', 1);
+            testHpVec = self.hyperplane([0 -1]', 1);
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllVec = self.ellipsoid;
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 2;
             testEllVec = self.ellipsoid(eye(nDim));
-            testHpVec = hyperplane([1, 0].', 0);
+            testHpVec = self.hyperplane([1, 0].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllVec = self.ellipsoid([0, 0; 0, 1]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 2;
             testEllVec = self.ellipsoid(eye(nDim));
-            testHpVec = hyperplane([0, 1].', 0);
+            testHpVec = self.hyperplane([0, 1].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllVec = self.ellipsoid([1, 0; 0, 0]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 2;
             testEllVec = self.ellipsoid(eye(nDim));
-            testHpVec = hyperplane([1, 1].', 0);
+            testHpVec = self.hyperplane([1, 1].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllVec = self.ellipsoid([0.5, -0.5; -0.5, 0.5]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 2;
             testEllVec = self.ellipsoid(eye(nDim));
-            testHpVec = hyperplane([1, 0].', 1);
+            testHpVec = self.hyperplane([1, 0].', 1);
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllVec = self.ellipsoid([1, 0].', [0, 0; 0, 0]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 3;
             testEllVec = self.ellipsoid(eye(nDim));
-            testHpVec = hyperplane([0, 0, 1].', 0);
+            testHpVec = self.hyperplane([0, 0, 1].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllVec = self.ellipsoid([1, 0, 0; 0, 1, 0; 0, 0, 0]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
             
             nDim = 3;
             testEllVec = self.ellipsoid([3, 0, 0; 0, 2, 0; 0, 0, 4]);
-            testHpVec = hyperplane([0, 1, 0].', 0);
+            testHpVec = self.hyperplane([0, 1, 0].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllVec = self.ellipsoid([3, 0, 0; 0, 0, 0; 0, 0, 4]);
             self.flexAssert(true, eq(resEllVec, ansEllVec));
@@ -697,7 +701,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             nDim = 3;
             testEllVec = self.ellipsoid(eye(3));
-            testHpVec = hyperplane([1, 1, 1].', 0);
+            testHpVec = self.hyperplane([1, 1, 1].', 0);
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllVec = self.ellipsoid([2/3, -1/3, -1/3; -1/3, 2/3, -1/3; ...
                 -1/3, -1/3, 2/3]);
@@ -707,7 +711,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             nDim = 3;
             testEllVec = self.ellipsoid([1, 0, 0; 0, 1, 0; 0, 0, 4]);
-            testHpVec = hyperplane([0, 0, 1].', 2);
+            testHpVec = self.hyperplane([0, 0, 1].', 2);
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllVec = self.ellipsoid([0, 0, 2].', ...
                 [0, 0, 0; 0, 0, 0; 0, 0, 0]);
@@ -717,7 +721,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             testEllVec = self.ellipsoid(eye(nDim));
             PlaneNorm = zeros(nDim, 1);
             PlaneNorm(1) = 1;
-            testHpVec = hyperplane(PlaneNorm, 0);
+            testHpVec = self.hyperplane(PlaneNorm, 0);
             
             resEllVec = hpintersection(testEllVec, testHpVec);
             ansEllMat = eye(nDim);
@@ -729,7 +733,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             %two output arguments
             nDim = 2;
             testEllVec = self.ellipsoid([100, -100].', eye(nDim));
-            testHpVec = hyperplane([0 -1].', 1);
+            testHpVec = self.hyperplane([0 -1].', 1);
             [resEllVec, isnIntersected] = hpintersection(testEllVec, ...
                 testHpVec);
             ansEllVec = self.ellipsoid;
@@ -738,13 +742,13 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             
             nDim = 2;
             testEllMat(1, 1) = self.ellipsoid([100, -100].', eye(nDim));
-            testHpMat(1, 1) = hyperplane([0 -1].', 1);
+            testHpMat(1, 1) = self.hyperplane([0 -1].', 1);
             testEllMat(2, 2) = self.ellipsoid([100, -100].', eye(nDim));
-            testHpMat(2, 2) = hyperplane([0 -1].', 1);
+            testHpMat(2, 2) = self.hyperplane([0 -1].', 1);
             testEllMat(1, 2) = self.ellipsoid(eye(nDim));
-            testHpMat(1, 2) = hyperplane([0, 1].', 0);
+            testHpMat(1, 2) = self.hyperplane([0, 1].', 0);
             testEllMat(2, 1) = self.ellipsoid(eye(nDim));
-            testHpMat(2, 1) = hyperplane([0, 1].', 0);
+            testHpMat(2, 1) = self.hyperplane([0, 1].', 0);
             [resEllMat, isnIntersected] = hpintersection(testEllMat, ...
                 testHpMat);
             
@@ -768,7 +772,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             arrayfun(@(x)fCopyEll(x,testEll1),1:prod(arrSizeVec));
             ellArr=reshape(ellArr,arrSizeVec);
             
-            testHp = hyperplane([1, 1, 1].', 0);
+            testHp = self.hyperplane([1, 1, 1].', 0);
             resEllArr = hpintersection(ellArr, testHp);
             ellArr(nElem)=self.ellipsoid();
             ellArr=reshape(ellArr,arrSizeVec);
@@ -777,7 +781,7 @@ classdef EllipsoidIntUnionTC < mlunitext.test_case
             isEqArr = eq(resEllArr, ellArr);
             self.flexAssert(true, all(isEqArr(:)));
             
-            testHpArr = repmat(hyperplane([0, 0, 1].', 2),[2,2,2]);
+            testHpArr = repmat(self.hyperplane([0, 0, 1].', 2),[2,2,2]);
             testEll = self.ellipsoid(eye(3));
             [resEllArr, isnIntersecArr] = ...
                 hpintersection(testEll, testHpArr);

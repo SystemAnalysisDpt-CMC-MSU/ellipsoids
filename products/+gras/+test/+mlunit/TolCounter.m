@@ -45,35 +45,44 @@ classdef TolCounter < handle
     %
     methods (Access = protected)
         function startTolTest(self)
-           self.absTolCount = 0;
-           self.relTolCount = 0;
-           self.isTesting = true;
+            for iElem = 1:numel(self)
+                self(iElem).absTolCount = 0;
+                self(iElem).relTolCount = 0;
+                self(iElem).isTesting = true;
+            end
         end
         function finishTolTest(self)
-           self.isTesting = false;
+            for iElem = 1:numel(self)
+                self(iElem).isTesting = false;
+            end
         end
         function incAbsTolCount(self)
-            self.absTolCount = self.absTolCount + 1;
-            if self.isTesting
-                self.checkMentions();
+            for iElem = 1:numel(self)
+                self(iElem).absTolCount = self(iElem).absTolCount + 1;
+                if self(iElem).isTesting
+                    self(iElem).checkMentions();
+                end
             end
         end
         function incRelTolCount(self)
-            self.relTolCount = self.relTolCount + 1;
-            if self.isTesting
-                self.checkMentions();
+            for iElem = 1:numel(self)
+                self(iElem).relTolCount = self(iElem).relTolCount + 1;
+                if self(iElem).isTesting
+                    self(iElem).checkMentions();
+                end
             end
         end
         function checkMentions(self)
-           if self.absTolCount > 0 || self.relTolCount > 0
-               if self.absTolCount > 0
-                   msgID = 'TolCounter:absTol';
-               else
-                   msgID = 'TolCounter:relTol';
-               end
-               modgen.common.throwerror('Tol counter is positive', ...
-                   '%s', msgID);
-           end
+            for iElem = 1:numel(self)
+                if self(iElem).absTolCount > 0 || self(iElem).relTolCount > 0
+                    if self(iElem).absTolCount > 0
+                        msgID = 'TolCounter:absTol';
+                    else
+                        msgID = 'TolCounter:relTol';
+                    end
+                    modgen.common.throwerror(msgID, 'Tol counter is positive');
+                end
+            end
         end
     end
 end

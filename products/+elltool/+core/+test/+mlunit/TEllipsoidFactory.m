@@ -7,6 +7,8 @@ classdef TEllipsoidFactory
                    resObjVec = TEllipsoid(varargin{:});
                case 'GenEllipsoid'
                    resObjVec = TGenEllipsoid(varargin{:});
+               case 'hyperplane'
+                   resObjVec = THyperplane(varargin{:});
                otherwise
                    modgen.common.throwerror('wrongInput', ...
                        'Class name is unknown: %s', className);

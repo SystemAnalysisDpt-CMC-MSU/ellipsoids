@@ -25,6 +25,10 @@ classdef EllTCMultiDim < mlunitext.test_case
             ellObj = elltool.core.test.mlunit.tell_unitball(...
                 self.ellFactoryObj, varargin{:});
         end
+        function hpObj = hyperplane(self, varargin)
+            hpObj = self.ellFactoryObj.createInstance('hyperplane', ...
+                varargin{:});            
+        end
     end
     %
     methods
@@ -84,7 +88,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             testNormArray=zeros(arrSize2Vec);
             testNormArray(1,:)=1;
             testNormArray(2,:)=0;
-            testHpArray=hyperplane(testNormArray,2);
+            testHpArray=self.hyperplane(testNormArray,2);
             %
             checkMultyInput(testEllArray,testHpArray,false);
             checkCommonErrors('testHpArray');

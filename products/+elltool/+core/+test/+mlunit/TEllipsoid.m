@@ -98,6 +98,19 @@ classdef TEllipsoid < ellipsoid & gras.test.mlunit.TolCounter
     end
     %
     methods
+        function varargout = toStruct(ellArr, varargin)
+            varargout = cell(1, nargout);
+            if nargin == 2
+                ellArr.startTolTest();
+                [varargout{:}] = toStruct@ellipsoid(ellArr, varargin{:});
+                ellArr.finishTolTest();
+            else
+                [varargout{:}] = toStruct@ellipsoid(ellArr, varargin{:});
+            end
+        end
+    end
+    %
+    methods
         function self = TEllipsoid(varargin)
             self = self@gras.test.mlunit.TolCounter();
             self = self@ellipsoid(varargin{:});
