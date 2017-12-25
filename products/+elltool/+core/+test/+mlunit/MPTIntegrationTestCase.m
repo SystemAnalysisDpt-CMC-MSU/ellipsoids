@@ -24,9 +24,14 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 varargin{:});            
         end
         function hpObj = polytope2hyperplane(self, varargin)
-            [normVec, hypScal] = double(polytope2hyperplane(varargin{:}));
-            hpObj = self.ellFactoryObj.createInstance('hyperplane', ...
-                normVec, hypScal);
+            hpObj = polytope2hyperplane(varargin{:});
+            hpObjCVec = cell(size(hpObj));
+            for iElem = 1:numel(hpObj)
+                [normVec, hypScal] = double(hpObj(iElem));
+                hpObjCVec{iElem} = self.ellFactoryObj.createInstance('hyperplane', ...
+                    normVec, hypScal);
+            end
+            hpObj = reshape(vertcat(hpObjCVec{:}), size(hpObj));
         end
     end
     %
