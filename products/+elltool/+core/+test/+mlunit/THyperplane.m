@@ -55,7 +55,7 @@ classdef THyperplane < hyperplane & gras.test.mlunit.TolCounter
     methods
         function varargout = toStruct(hpArr, varargin)
             varargout = cell(1, nargout);
-            if nargin == 2
+            if nargin == 3
                 %hpArr.startTolTest();
                 [varargout{:}] = toStruct@hyperplane(hpArr, varargin{:});
                 %hpArr.finishTolTest();

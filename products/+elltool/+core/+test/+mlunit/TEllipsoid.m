@@ -100,7 +100,7 @@ classdef TEllipsoid < ellipsoid & gras.test.mlunit.TolCounter
     methods
         function varargout = toStruct(ellArr, varargin)
             varargout = cell(1, nargout);
-            if nargin == 2
+            if nargin == 3
                 ellArr.startTolTest();
                 [varargout{:}] = toStruct@ellipsoid(ellArr, varargin{:});
                 ellArr.finishTolTest();
