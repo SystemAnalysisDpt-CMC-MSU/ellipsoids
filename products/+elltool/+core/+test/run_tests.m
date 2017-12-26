@@ -43,6 +43,6 @@ suiteObj=mlunitext.test_suite.fromSuites(suite,suite1Obj,...
 
 result=runner.run(suiteObj);
     function h = hyp(hypNormArr,hypConstArr,varargin)
-        h = hyperplane(hypNormArr, hypConstArr(1),varargin{:});
+        h = elltool.core.test.mlunit.THyperplane(hypNormArr, hypConstArr(1),varargin{:});
     end
 end
