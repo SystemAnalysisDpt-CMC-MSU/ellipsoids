@@ -581,9 +581,7 @@ Defining :math:`x_1 = x, x_2=\dot{x}_1, x_3 = \theta` and :math:`x_4=\dot{x}_3`,
    0 \\
    \frac{1}{m_1} \\
    0 \\
-   0 \end{array}\right]\left[\begin{array}{c}
-   u\\
-   1\end{array}\right].   
+   0 \end{array}\right]u.   
 
 Now we can compute the reach set of system :eq:`invpend1`-:eq:`invpend2` for given time by computing the reach set of the linear system :eq:`invpendls`
 and taking its projection onto :math:`(x_1, x_3)` subspace. 
