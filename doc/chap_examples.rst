@@ -520,12 +520,22 @@ are shown in green. Observe that in the congested mode, the density
 the guard is not actually reached, because the state evolves according
 to the green region.
 
+.. raw:: html
+
+	<h2>References</h2>
+
+.. [SUN2003] L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
+   Estimation with the Cell Transmission Model. In *Proceedings of the
+   American Control Conference*, 3750–3755. Denver, Colorado, USA.
+   
+
 Pendulum with a flywheel
 -------------------------
 
 .. _pendulungfig:
 
 .. figure::  /pic/chapter06_section06_pendulung.png
+   :align: center   
    :alt: pendulung
    :width: 30 %
 
@@ -548,13 +558,14 @@ Define
 .. _forcesfig:
 
 .. figure::  /pic/chapter06_section06_forces.png
+   :align: center
    :alt: forces
    :width: 60 %
 
    Forces and moments.
 
 The mechanical system presented in :num:`figure #forcesfig` is described by the following system of equations:
-
+ 
 .. math:: 
    :label: forces
    
@@ -624,15 +635,10 @@ Defining :math:`\dot{\theta} = \omega_1` and :math:`\dot{\phi} = \omega_2`, we c
 	& \dot{\omega}_1 = \frac{2 k_2 \omega_2 - k_1 \omega_1 - u - (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right)}{J_1 + m_1 a^2 + m_2 l^2},\\
 	& \dot{\omega}_2 = \frac{u - k_2 \omega_2}{J_2} - \frac{2 k_2 \omega_2 - k_1 \omega_1 - u- (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right)}{J_1 + m_1 a^2 + m_2 l^2}.\\
 	\end{aligned}
-	\right.
+	\right. 
 
-.. raw:: html
+Consider some final time instant :math:`t_1` and final position of the system: :math:`\theta(t_1) = \frac{\pi}{2}`, :math:`\phi(t_1) = \phi_1`, :math:`\omega_1(t_1) = 0`, :math:`\omega_2(t_1) = 0`. Required to calculate the backward reachability sets (tube) for the linearized system :eq:`standform` emanating from the given final position. Also required to invistigate whether it's possible to reach the final position from a given initial position :math:`\theta(t_0) = \theta_0`, :math:`\phi(t_0) = \phi_0`, :math:`\omega_1(t_0) = \omega_{1,0}`, :math:`\omega_2(t_0) = \omega_{2,0}` using some admissible control function.   
 
-	<h2>References</h2>
-
-.. [SUN2003] L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
-   Estimation with the Cell Transmission Model. In *Proceedings of the
-   American Control Conference*, 3750–3755. Denver, Colorado, USA.
 
 
 LMI-based three-vehicle platoon
