@@ -531,7 +531,57 @@ Inverted Pendulum On a Cart
 
    Inverted pendulum
 
-The mechanical system presented in :num:`figure #invpendfig` is described by the following system of equations:
+Consider a mechanical system consisting of a cart (body 1) and a rod (body 2) attached to the cart with a joint. We assume that movement of the bodies is plane. The system represents an inverted pendulum with unstable equilibrium at :math:`\theta = \frac{\pi}{2}.` There is a control :math:`u(t)` that presents a force applied to the cart along the axis OX. 
+
+Therefore we define
+
+-  :math:`\theta` - angle between axis OX and the rod;
+
+-  :math:`m_1` and :math:`m_2` - weights of the bodies 1 and 2 respectively;
+
+-  :math:`L` - length of the rod;
+
+-  :math:`k_1, k_2` - the coefficient of dynamic viscosity for the bodies 1 and 2 respectively;
+
+-  :math:`J_c` - inertia moment of the second body relative to its center of mass;
+
+-  :math:`u` - the force applied to cart and we assume :math:`|u| \leqslant \alpha`. 
+
+
+Firstly we consider the system without any control. Writing down expressions for kinetic and potential energies of the bodies 1 and 2 we obtain:
+
+.. math::
+   :label: invpend_energy
+
+   \begin{aligned}
+   T_1 &= \frac{m_1v^2}{2}, \\
+   T_2 &= \frac{J_c\omega^2}{2}, \\
+   \Pi_1 &= 0, \\
+   \Pi_2 &= m_2g\frac{L}{2}\sin(\theta). 
+   \end{aligned}
+
+Here :math:`T_1` and :math:`T_2` stand for kinetic energy of cart and rod respectively, :math:`\Pi_1` and :math:`\Pi_2` stand for potential energy, :math:`v` is a speed of a cart and :math:`\omega` is an angular velocity of the rod. Further we will replace :math:`v` with :math:`\dot x`, :math:`\omega` with :math:`\dot \theta`. 
+
+As there is viscosity, we write down generalized forces:
+
+.. math::
+   :label: invpend_forces
+
+   \begin{aligned}
+   Q_1 &= k_1\dot x, \\
+   Q_2 &= k_2L\dot \theta.
+   \end{aligned}
+
+Writing down the Langrange equations in case of potential and nonpotential forces we obtain:
+
+.. math::
+   :label: invpend_lagrange
+
+   \frac{d}{dt}(\frac{\partial T}{\partial \dot q_i}) - \frac{\partial T}{\partial q_i} + \frac{\partial \Pi}{\partial q_i} = Q_i.
+
+Here the Lagrange coordinates :math:`q_1 = x, q_2 = \theta`.
+
+Applying previously obtained values to the equations and adding the control to the first equation, we get:
 
 .. math:: 
    :label: invpend1
@@ -543,19 +593,9 @@ The mechanical system presented in :num:`figure #invpendfig` is described by the
    
    (J_c + \frac{m_2L^2}{4})\ddot{\theta}+\frac{m_2gL\cos(\theta)}{2} + k_2\dot{\theta}L = 0 . 
 
-Here :math:`k_1, k_2` are the coefficient of dynamic viscosity for the bodies 1 and 2, with masses :math:`m_1` and :math:`m_2` respectively, 
-
-:math:`J_c` is inertia moment of the second body relatively to its center of mass, 
-
-:math:`u` is the force applied to cart and we shall assume
-:math:`|u| \leqslant \alpha`. 
-
-The initial conditions can
-be taken as :math:`x(0)=0`, :math:`x_2(0)=\pi/2 - \varepsilon`, where :math:`\varepsilon=10^{-3}`. 
 
 After linerarization in the neighbourhood of :math:`\frac{\pi}{2}` we have :math:`\cos(\theta) \approx \frac{\pi}{2} - \theta`.
-Defining :math:`x_1 = x, x_2=\dot{x}_1, x_3 = \theta` and :math:`x_4=\dot{x}_3`, we can rewrite
-:eq:`invpend1`-:eq:`invpend2` as a linear system in standard form:
+Defining :math:`x_1 = x, x_2=\dot{x}_1, x_3 = \theta` and :math:`x_4=\dot{x}_3`, we can rewrite :eq:`invpend1`-:eq:`invpend2` as a linear system in standard form:
 
 .. math::
    :label: invpendls
@@ -575,16 +615,15 @@ Defining :math:`x_1 = x, x_2=\dot{x}_1, x_3 = \theta` and :math:`x_4=\dot{x}_3`,
    x_3 \\
    x_4 \end{array}\right] + \left[\begin{array}{cc}
    0 \\
-   0 \\
-   0 \\
-   -\frac{m_2Lg\pi}{4J_c+m_2L^2} \end{array}\right] + \left[\begin{array}{cc}
-   0 \\
    \frac{1}{m_1} \\
    0 \\
-   0 \end{array}\right]u.   
+   0 \end{array}\right]u + \left[\begin{array}{cc}
+   0 \\
+   0 \\
+   0 \\
+   -\frac{m_2Lg\pi}{4J_c+m_2L^2} \end{array}\right].   
 
-Now we can compute the reach set of system :eq:`invpend1`-:eq:`invpend2` for given time by computing the reach set of the linear system :eq:`invpendls`
-and taking its projection onto :math:`(x_1, x_3)` subspace. 
+Consider some moment of time :math:`t_1` and final position :math:`x_1(t_1) = x_1, x_2(t_1) = 0, x_3(t_1) = \frac{\pi}{2}, x_4(t_1) = 0`. It is required to calculate the backward reachability sets (tube) for the linearized system :eq:`invpendls` emanating from the given final position and project it onto :math:`(x_1, x_3)` subspace. It is also required to identify whether it’s possible to reach the final position from a given initial position :math:`x_1(t_1) = x_1, x_2(t_1) = v_1, x_3(t_1) = \theta_1, x_4(t_1) = \omega_1` using some admissible control function.
 
 .. raw:: html
 
