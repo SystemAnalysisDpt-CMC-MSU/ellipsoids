@@ -579,7 +579,7 @@ Writing down the Langrange equations in case of potential and nonpotential force
 
    \frac{d}{dt}(\frac{\partial T}{\partial \dot q_i}) - \frac{\partial T}{\partial q_i} + \frac{\partial \Pi}{\partial q_i} = Q_i.
 
-Here the Lagrange coordinates :math:`q_1 = x, q_2 = \theta`.
+Here the Lagrange coordinates :math:`q_1 = x, q_2 = \theta`, :math:`T = T_1 + T_2, \Pi = \Pi_1 + \Pi_2`.
 
 Applying previously obtained values to the equations and adding the control to the first equation, we get:
 
