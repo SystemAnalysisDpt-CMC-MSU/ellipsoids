@@ -199,6 +199,7 @@ plotObj = plot(testEllArr);
 SPlotStructure = plotObj.getPlotStructure;
 SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
 num = SHPlot.figure_g1;
+checkAxesLabels(SPlotStructure);
 [xDataCell, yDataCell, zDataCell] = arrayfun(@(x) getData(num.ax(x)), ...
     1:numel(num.ax), 'UniformOutput', false);
 if iscell(xDataCell)
@@ -349,6 +350,14 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
         isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
             (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints) ;
         
+    end
+
+    function checkAxesLabels(SPlotStructure)
+        SFigure = SPlotStructure.figHMap.toStruct();
+        children = SFigure.figure_g1.Children;
+        mlunitext.assert_equals(children.XLabel.String, 'x_1');
+        mlunitext.assert_equals(children.YLabel.String, 'x_2');
+        mlunitext.assert_equals(children.ZLabel.String, 'x_3');
     end
 end
 
