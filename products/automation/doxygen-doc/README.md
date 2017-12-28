@@ -18,7 +18,7 @@ Getting Started with Ellipsoidal Toolbox
 
 You're going to need:
 
-- **Matlab, version 2015b or newer** — older versions may work, but are unsupported. Ellipsoidal toolbox has 100% compatibility with Linux, Windows and Mac OS X (tested on Linux Mint 17.3 "Rosa", Windows 10, macOS Sierra 10.12.6, macOS High Sierra 10.13.1)
+- **Matlab, version 2015b or newer** — older versions may work, but are unsupported. Ellipsoidal toolbox has 100% compatibility with Linux, Windows and Mac OS X (tested on Linux Mint 17.3 "Rosa", Windows 10, macOS Sierra 10.12.6, macOS High Sierra 10.13.1).
 
 Also the following toolboxes are required:
 
