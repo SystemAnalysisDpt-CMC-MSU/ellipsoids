@@ -22,7 +22,7 @@ endTime=0.1;
 diagMat = diag(uVec);
 uEllObj = ellipsoid(diagMat);
 % Defining linear system
-linSysDataMat=elltool.linsys.LinSysContinuous(aMat, bMat, uEllObj);
+linSysObj=elltool.linsys.LinSysContinuous(aMat, bMat, uEllObj);
 % Initializing direction matrix
 nShape = 4;
 mSize = 10;
@@ -35,19 +35,19 @@ end;
 x0EllObj = 1E-3 * ell_unitball(4) + x0Vec; 
 % Calculating solvability set
 timeVec = [endTime, 0];
-solvDataMat = elltool.reach.ReachContinuous(linSysDataMat, x0EllObj, dirMat, ...
+solvObj = elltool.reach.ReachContinuous(linSysObj, x0EllObj, dirMat, ...
     timeVec, 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-3);
 % Creating projection matrix and draw projection on axis (x_3, x_4)
 velBasisMat = [0 0 1 0 ; 0 0 0 1]';
-prTubeDataMat = solvDataMat.projection(velBasisMat);
-prTubeDataMat.plotByIa();
+prTubeObj = solvObj.projection(velBasisMat);
+prTubeObj.plotByIa();
 hold on;
 ylabel('x_3'); zlabel('x_4');
 rotate3d on;
 % Creating projection matrix and draw projection on axis (x_1, x_1)
 condBasisMat = [1 0 0 0 ; 0 1 0 0]';
-prTubeDataMat = solvDataMat.projection(condBasisMat);
-prTubeDataMat.plotByIa();
+prTubeObj = solvObj.projection(condBasisMat);
+prTubeObj.plotByIa();
 hold on;
 ylabel('x_1'); zlabel('x_2');
 rotate3d on;
