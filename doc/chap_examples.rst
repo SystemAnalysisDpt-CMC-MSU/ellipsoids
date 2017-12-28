@@ -520,6 +520,15 @@ are shown in green. Observe that in the congested mode, the density
 the guard is not actually reached, because the state evolves according
 to the green region.
 
+
+.. raw:: html
+
+	<h2>References</h2>
+
+.. [SUN2003] L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
+   Estimation with the Cell Transmission Model. In *Proceedings of the
+   American Control Conference*, 3750–3755. Denver, Colorado, USA.
+      
 Inverted Pendulum On a Cart
 ---------------------------
 
@@ -1004,6 +1013,8 @@ Solving collision problem:
    robust longitudinal guidance. Proceedings of the 17th World Congress
    The International Federation of Automatic Control
    Seoul, Korea, July 6-11, 2008
+=======
+Consider some moment of time :math:`t_1` and final position :math:`x_1(t_1) = x^1_1, x_2(t_1) = 0, x_3(t_1) = \frac{\pi}{2}, x_4(t_1) = 0`. It is required to calculate the backward reachability sets (tube) for the linearized system :eq:`invpendls` emanating from the given final position and project it onto :math:`(x_1, x_3)` subspace. It is also required to identify whether it’s possible to reach the final position from a given initial position :math:`x_1(t_0) = x^0_1, x_2(t_0) = v_1, x_3(t_0) = \theta_1, x_4(t_0) = \omega_1` using some admissible control function.
 
 Blending tank with delay
 ------------------------
