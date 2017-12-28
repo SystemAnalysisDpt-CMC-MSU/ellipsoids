@@ -11,20 +11,20 @@ piecewise affine systems. Forward and backward reach sets can be also computed f
 ith disturbances. It can be verified if computed reach sets intersect with given ellipsoids, hyperplanes, 
 or polytopes. 
 
-Getting Started with MatrixBerry-Core
+Getting Started with Ellipsoidal Toolbox
 ------------------------------
 
 ### Prerequisites
 
 You're going to need:
 
-- **Matlab, version 2015b or newer** — older versions may work, but are unsupported.
+- **Matlab, version 2015b or newer** — older versions may work, but are unsupported. Ellipsoidal toolbox has 100% compatibility with Linux, Windows and Mac OS X (tested on Linux Mint 17.3 "Rosa", Windows 10, macOS Sierra 10.12.6, macOS High Sierra 10.13.1)
 
 Also the following toolboxes are required:
 
 - **Matlab Optimization Toolbox**. This toolbox is used by MPT (see below) for solving the quadratic programming problems.
 - **Matlab Curve Fitting Toolbox**
-- **CVX 2.1 build 1116** and **MPT 3.1.2** (100% compatibility with Linux, Windows and Mac OS X (tested on Linux Mint 17.3 "Rosa", Windows 10 Home, macOS Sierra 10.12.6)). No need to download these toolboxes manually, just let the installation script to download them.
+- **CVX 2.1 build 1116** and **MPT 3.1.2**. No need to download these toolboxes manually, just let the installation script to download them.
 
 **For more information please refer to [Ellipsoidal Toolbox website](http://systemanalysisdpt-cmc-msu.github.io/ellipsoids)**
 

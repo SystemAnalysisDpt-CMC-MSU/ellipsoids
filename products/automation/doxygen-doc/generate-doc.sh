@@ -10,7 +10,7 @@ cp -f "$locDir/README.md" "$locDir/../../../README.md"
 python $locDir/prep4doxymat.py $locDir/../..  $locDir/../../../TTD/elltool-doxygen-prep   $locDir/../../../TTD/elltool-doxygen-garbage
 
 cd $locDir
-doxygen
+doxygen Doxyfile_sh
 
 echo "">../../../doc/docs/.nojekyll
 cd $curDir

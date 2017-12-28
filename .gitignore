@@ -35,6 +35,7 @@ products/+elltool/+control/+test/+conf/+sysdef/confrepo/
 products/+elltool/+control/+test/+conf/confrepo
 !products/+elltool/+control/+test/+conf/confrepo/_templates
 products/+elltool/+control/+test/+mlunit/TestData
+/TTD/*
 
 
 /products/+elltool/+doc/+picgen/+test/+mlunit/**/*.png
