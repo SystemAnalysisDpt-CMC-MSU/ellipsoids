@@ -3,7 +3,7 @@
 firstSysObj = elltool.linsys.LinSysContinuous(firstAMat, firstBMat,...
     firstUBoundsEllObj);
 
-x0EllObj = ellipsoid(VecIn',eye(9));
+x0EllObj = ellipsoid(inVec',eye(9));
 
 % columns of L specify the directions
 dirsMat = ...
