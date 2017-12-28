@@ -24,22 +24,18 @@ uEllObj = ellipsoid(diagMat);
 % Defining linear system
 linSysObj=elltool.linsys.LinSysContinuous(aMat, bMat, uEllObj);
 % Initializing directions matrix
-nShape = 4;
-mSize = 2;
-dirMeshVec = 0:(2*pi/mSize):2*pi;
-dirNum = length(dirMeshVec)^4;
-%dirMat = [dirMeshVec;fliplr(dirMeshVec);fliplr(dirMeshVec);dirMeshVec];
-[x1, x2, x3, x4] = ndgrid(dirMeshVec,dirMeshVec,...
-    dirMeshVec,dirMeshVec);
-lineDirMat1 = reshape( x1, [1, dirNum]);
-lineDirMat2 = reshape( x2, [1, dirNum]);
-lineDirMat3 = reshape( x3, [1, dirNum]);
-lineDirMat4 = reshape( x4, [1, dirNum]);
-dirMat = [lineDirMat1; lineDirMat2; lineDirMat3; lineDirMat4];
+nDims = 4;
+nDirs = 1;
+dirMeshVec = 0:(2*pi/nDirs):2*pi;
+dirNum = length(dirMeshVec)^nDims;
+[x1, x2, x3, x4] = ndgrid(dirMeshVec,dirMeshVec,dirMeshVec,dirMeshVec);
+lineDir1Mat = reshape( x1, [1, dirNum]);
+lineDir2Mat = reshape( x2, [1, dirNum]);
+lineDir3Mat = reshape( x3, [1, dirNum]);
+lineDir4Mat = reshape( x4, [1, dirNum]);
+dirMat = [lineDir1Mat; lineDir2Mat; lineDir3Mat; lineDir4Mat];
 dirMat = dirMat(:,2:end);
-for iElem = 1 : mSize
-    dirMat(:, iElem) = dirMat(:, iElem) ./ norm(dirMat(:, iElem));
-end;
+dirMat = dirMat ./ sqrt(repmat(sum(dirMat.^2,1), nDims, 1));
 % Set of final states
 x1EllObj = 1E-3 * ell_unitball(4) + x1Vec; 
 % Calculating solvability set
