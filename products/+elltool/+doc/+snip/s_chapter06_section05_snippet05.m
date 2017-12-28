@@ -1,9 +1,9 @@
 %%
 %found the global maximum
-disp(GlobalMax);
+disp(globalMax);
 %time is reached
-disp(TimeVec(GlobalMaxNum));
+disp(timeVec(globalMaxNum));
 %found the global maximum sum(e_i)
-disp(PlatoonDist);
+disp(platoonDist);
 %time is reached
-disp(TimeVec(PlatoonDistNumber));
+disp(timeVec(platoonDistNumber));

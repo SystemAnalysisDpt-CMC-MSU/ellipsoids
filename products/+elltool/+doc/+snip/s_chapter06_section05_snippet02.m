@@ -1,50 +1,52 @@
 %%
-% programm
 
-firstSys = elltool.linsys.LinSysContinuous(firstAMat, firstBMat,firstUBoundsEllObj);
+firstSysObj = elltool.linsys.LinSysContinuous(firstAMat, firstBMat,...
+    firstUBoundsEllObj);
 
-x0EllObj = ellipsoid(VecIn',eye(9)); 
+x0EllObj = ellipsoid(VecIn',eye(9));
 
-% columns of L specify the directions 
-dirsMat = [1 0 0 0 0 0 0 0 0
-           0 1 0 0 0 0 0 0 0
-           0 0 1 0 0 0 0 0 0
-           0 0 0 1 0 0 0 0 0
-           0 0 0 0 1 0 0 0 0
-           0 0 0 0 0 1 0 0 0
-           0 0 0 0 0 0 1 0 0 
-           0 0 0 0 0 0 0 1 0
-           0 0 0 0 0 0 0 0 1]'; 
-                     firstRsObj = elltool.reach.ReachContinuous(firstSys, x0EllObj, dirsMat,...
-                                                                [0 switchTimeFirst], 'isRegEnabled', true, 'isJustCheck',false,...
-                                                                'regTol', 1e-5,'absTol',1e-6,'relTol',1e-7); 
+% columns of L specify the directions
+dirsMat = ...
+   [1 0 0 0 0 0 0 0 0
+    0 1 0 0 0 0 0 0 0
+    0 0 1 0 0 0 0 0 0
+    0 0 0 1 0 0 0 0 0
+    0 0 0 0 1 0 0 0 0
+    0 0 0 0 0 1 0 0 0
+    0 0 0 0 0 0 1 0 0
+    0 0 0 0 0 0 0 1 0
+    0 0 0 0 0 0 0 0 1]';
+firstRsObj = elltool.reach.ReachContinuous(firstSysObj, x0EllObj, dirsMat,...
+    [0 switchTimeFirst], 'isRegEnabled', true, 'isJustCheck',false,...
+    'regTol', 1e-5,'absTol',1e-6,'relTol',1e-7);
 
 % solve collision with same times
-secSys = elltool.linsys.LinSysContinuous(secAMat, secBMat,secUBoundsEllObj);
- if switchTimeSec == switchTimeFirst
-     thRsObj = firstRsObj.evolve(T, firstSys);
- else
-     secRsObj = firstRsObj.evolve(switchTimeSec, secSys);
-     thRsObj = secRsObj.evolve(T, firstSys);
- end
- 
+secSysObj = elltool.linsys.LinSysContinuous(secAMat,...
+    secBMat,secUBoundsEllObj);
+if switchTimeSec == switchTimeFirst
+    thRsObj = firstRsObj.evolve(maxTime, firstSysObj);
+else
+    secRsObj = firstRsObj.evolve(switchTimeSec, secSysObj);
+    thRsObj = secRsObj.evolve(maxTime, firstSysObj);
+end
 
-basisMat1 = [1 0 0 0 0 0 0 0 0
-             0 0 0 1 0 0 0 0 0]';
-        
-basisMat2 = [1 0 0 0 0 0 0 0 0
-             0 0 0 0 0 0 1 0 0]'; 
 
-basisMat3 = [0 0 0 1 0 0 0 0 0
-             0 0 0 0 0 0 1 0 0]';
+basis1Mat = [1 0 0 0 0 0 0 0 0
+    0 0 0 1 0 0 0 0 0]';
 
-thPsObj1 = thRsObj.projection(basisMat1);
-thPsObj2 = thRsObj.projection(basisMat2);
-thPsObj3 = thRsObj.projection(basisMat3);
+basis2Mat = [1 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 1 0 0]';
+
+basis3Mat = [0 0 0 1 0 0 0 0 0
+    0 0 0 0 0 0 1 0 0]';
+
+thPs1Obj = thRsObj.projection(basis1Mat);
+thPs2Obj = thRsObj.projection(basis2Mat);
+thPs3Obj = thRsObj.projection(basis3Mat);
 
 % external approximation
 plObj=smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc', ...
     @(x)sprintf('_forward_reach_set_proj%d',x));
-thPsObj1.plotByEa('r',plObj);
+thPs1Obj.plotByEa('r',plObj);
 
 %%
