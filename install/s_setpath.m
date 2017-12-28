@@ -2,7 +2,7 @@ repoPath=rmlastnpathparts(fileparts(which(mfilename)),1);
 deploymentPath=[repoPath,filesep,'install'];
 %
 rootPathList{1}=repoPath;
-pathPatternToExclude='\.git|\externals';
+pathPatternToExclude='\.git|\externals|\TTD';
 pathList=genpathexclusive(rootPathList,pathPatternToExclude);
 extPath=[repoPath,filesep,'externals'];
 extRootPathList={[extPath,filesep,'all'],...
