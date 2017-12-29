@@ -544,7 +544,7 @@ Fig.1).
 
 .. _platoonfig1:
 
-.. figure:: /pic/chapter06_section05_platoon.png
+.. figure:: /pic/chapter06_section08_platoon.png
    :alt: platoon
    :width: 50 %
 
@@ -648,7 +648,7 @@ has continuous states.
 
 .. _platoonfig2:
 
-.. figure:: /pic/chapter06_section05_automat.png
+.. figure:: /pic/chapter06_section08_automat.png
    :alt: automat
    :width: 50 %
 
@@ -675,27 +675,27 @@ Then we project the reach tube to the previously defined hyperplanes.
 To test the system for a collision, we will follow the intersection of the tube and the hyperplane :math:`l_{1},\; l_{2},\; l_{3}`. 
 That is, if there is a crossing, then a collision is inevitable.
 
-.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet01.m
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section08_snippet01.m
    :language: matlab
    :linenos:
 
 to demonstrate a qualitatively different situation in the further consideration of the collision problem, 
 let us set the other parameters of the system:
 
-.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet03.m
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section08_snippet03.m
    :language: matlab
    :linenos:
 
 Construction of reachability tube:
 
-.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet02.m
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section08_snippet02.m
    :language: matlab
    :linenos:
 
 
 .. _tubefig1:
 
-.. figure:: /pic/chapter06_section05_tube1.png
+.. figure:: /pic/chapter06_section08_tube1.png
    :alt: tube1
    :width: 50 %
 
@@ -704,7 +704,7 @@ Construction of reachability tube:
 
 .. _tubefig2:
 
-.. figure:: /pic/chapter06_section05_tube2.png
+.. figure:: /pic/chapter06_section08_tube2.png
    :alt: tube2
    :width: 50 %
 
@@ -712,18 +712,18 @@ Construction of reachability tube:
 
 Solving collision problem:
 
-.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet06.m
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section08_snippet06.m
    :language: matlab
    :linenos:
 
 
-.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet04.m
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section08_snippet04.m
    :language: matlab
    :linenos:
 
 .. _colfig1:
 
-.. figure:: /pic/chapter06_section05_col1.png
+.. figure:: /pic/chapter06_section08_col1.png
    :alt: col1
    :width: 50 %
 
@@ -734,13 +734,13 @@ Solving collision problem:
 .. raw:: html
 	<h2>References</h2>
 
-.. [1] Ibtissem Ben Makhlouf, Hilal Diab, Stefan Kowalewsk. Safety Verification of a Controlled
+.. [1] Ibtissem Ben Makhlouf, Hilal Diab, Stefan Kowalewski. Safety Verification of a Controlled
    Cooperative Platoon Under Loss of
    Communication Using Zonotopes. Proceedings of the 4th IFAC Conference on
    Analysis and Design of Hybrid Systems (ADHS 12)
    June 6-8, 2012
 
-.. [2] Jan P. Maschuw, Gun¨ ter C. Keßler, D. Abe. LMI-based control of vehicle platoons for
+.. [2] Jan P. Maschuw, Günter C. Keßler, D. Abel. LMI-based control of vehicle platoons for
    robust longitudinal guidance. Proceedings of the 17th World Congress
    The International Federation of Automatic Control
    Seoul, Korea, July 6-11, 2008
