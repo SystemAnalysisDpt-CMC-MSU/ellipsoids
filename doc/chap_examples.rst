@@ -1,4 +1,4 @@
-Examples
+﻿Examples
 ========
 
 Ellipsoids vs. Polytopes
@@ -521,12 +521,228 @@ the guard is not actually reached, because the state evolves according
 to the green region.
 
 .. raw:: html
-
 	<h2>References</h2>
 
 .. [SUN2003] L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
    Estimation with the Cell Transmission Model. In *Proceedings of the
    American Control Conference*, 3750–3755. Denver, Colorado, USA.
-      
+
+
+LMI-based three-vehicle platoon
+-------------------------------
+
+A platoon of vehicles includes typically a leader and a number
+of followers. In a controlled platoon the controllers are
+designed to maintain constant relative distances between
+autonomous vehicles by tracking the trajectory of the
+leader. The latter is manually driven and can be considered
+as a reference input to the whole system. We are concerned
+with the longitudinal control of a platoon of vehicles engaged
+in following each other longitudinally by exchanging
+information via a wireless local area network (WLAN) (see
+Fig.1).
+
+.. _platoonfig1:
+
+.. figure:: /pic/chapter06_section05_platoon.png
+   :alt: platoon
+   :width: 50 %
+
+   Platoon struture and notations.
+
+The spacing errors :math:`e_i` are defined as the difference
+between the actual distance to the predecessor and a
+(fixed) reference distance:
+:math:`e_i(t) = d_i(t) - dref_i.`
+Bounds for these reference distances will be stipulated by the result of
+our safety verification. The effective acceleration ai of each
+vehicle within the platoon is governed by the drivetrain
+dynamics.According to Fig. 1 and with
+the further approximation the resulting platoon model is
+given by:
+
+.. math::
+   :label: platoon1
+
+   \ddot{e}_i & = a_{i-1} - a_i.
+
+.. math::
+   :label: platoon2
+
+   a_i & = -\frac{a_i}{\tau_i} + \frac{v_i}{\tau_i}
+
+where :math:`\tau_i` is the time constant of the drivetrain considered
+here to be constant and vi the input signal. The
+dynamics of the whole platoon with a state vector
+:math:`x =[. . . e_i, \dot{e}_i, a_i . . .]^T`
+can be expressed in state space form as
+follows:
+
+.. math::
+   :label: platoon3
+
+   \dot{x} & = A_sx+B_1a_L+B_2v.
+
+where the leading vehicle’s acceleration aL enters the dynamics
+as a disturbance. The goal thereby is to stabilize
+the platoon and realize a good disturbance rejection in
+terms of small spacing errors at reasonable control effort.
+These constraints comprise in particular maximum (absolute)
+spacing errors to prevent collisions among platoon
+members but also maximum amplification of velocity or
+acceleration values to account for the existing saturation
+effects that arise due to force limitation between road
+and tire. This optimal control problem is applied to a
+state feedback structure assuming that each vehicle has
+information access to all other vehicles states. We obtain
+as result an optimal matrix K verifying:
+
+
+.. math::
+   :label: platoon4
+
+   v & = K x
+
+The closed loop system is hence given by:
+
+.. math::
+   :label: platoon5
+
+   \dot{x} & = Ax + Bu.
+
+where :math:`A = (A_s + B_2K), B = B_1` and  :math:`u = a_L`.
+
+The main goal of this work, is to investigate the impact
+of disturbances of the communication network on the performance
+of the cooperative platoon. We are particularly
+interested in worst cases, in which a loss of communication
+between two/many or all vehicles occurs. The theory of
+hybrid systems offers a convenient framework to model this
+kind of systems. A hybrid automaton consists of states described
+by continuous dynamics and discrete events which
+trigger transitions between these states. Our application
+can be modeled by a hybrid automaton. The controlled
+platoon dynamics constitute thereby the continuous states
+and the communication breakdowns trigger the discrete
+switches from one continuous state to another. The interconnection
+topology within the platoon is modeled with
+a directed graph :math:`G = (V,E)`, defined by vertices V and
+edges :math:`E`. The ith vertex represents the ith vehicle and
+the edge (i, j) indicates that vehicle j receives information
+from vehicle i. This graph is represented by the adjacent
+matrix :math:`R = [r_{ij}]` referred to as the communication matrix
+of the platoon.
+
+To take into account the communication failures in the
+controller design, the loss of information is expressed by
+forcing zeros in :math:`K`. Depending on the topology and the configuration
+of the communication between vehicles given by
+the matrix :math:`R`, many communication scenarios are possible.
+Consequently, the hybrid automaton modeling this kind
+of system will be complex. We focus our study on safetycritical
+worst case scenarios.We consider the worst case in
+Fig.2, in which the system switches from a full to a total
+dropout of the communication between the vehicles within
+the platoon. In general, our controlled hybrid automaton
+has continuous states.
+
+.. _platoonfig2:
+
+.. figure:: /pic/chapter06_section05_automat.png
+   :alt: automat
+   :width: 50 %
+
+   Hybrid automata modeling the worst case scenario.
+
+To each continuous state :math:`q` corresponds a new :math:`K_q` and consequently new
+matrices :math:`A_q` and :math:`B_q` verifying the equation
+
+.. math::
+   :label: platoon6
+
+   \dot{x}(t) = A_qx(t) + B_qu(t)
+
+where :math:`x(t) \in R^9` denotes the state vector,  :math:`u(t) = a_L \in R` is
+
+the input vector and  :math:`q \in {1, 2}` is the mode described
+by  :math:`(A_q,B_q) \in R^{9 \times 9} \times  R^9.`
+
+Next, we give the brief description of the algorithm of the program and the program code itself. 
+First, we define the matrices and parameters of the linearized system (matrices, vectors, intervals). 
+Next, we solve the resulting system by methods of the Ellipsoidal Toolbox. 
+We build a tube of reachability, and simultaneously evolve the system where the situation requires. 
+Then we project the reach tube to the previously defined hyperplanes. 
+To test the system for a collision, we will follow the intersection of the tube and the hyperplane :math:`l_{1},\; l_{2},\; l_{3}`. 
+That is, if there is a crossing, then a collision is inevitable.
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet01.m
+   :language: matlab
+   :linenos:
+
+to demonstrate a qualitatively different situation in the further consideration of the collision problem, 
+let us set the other parameters of the system:
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet03.m
+   :language: matlab
+   :linenos:
+
+Construction of reachability tube:
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet02.m
+   :language: matlab
+   :linenos:
+
+
+.. _tubefig1:
+
+.. figure:: /pic/chapter06_section05_tube1.png
+   :alt: tube1
+   :width: 50 %
+
+   Reach set for the first block of parameters.
+
+
+.. _tubefig2:
+
+.. figure:: /pic/chapter06_section05_tube2.png
+   :alt: tube2
+   :width: 50 %
+
+   Reach set for the second block of parameters.
+
+Solving collision problem:
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet06.m
+   :language: matlab
+   :linenos:
+
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section05_snippet04.m
+   :language: matlab
+   :linenos:
+
+.. _colfig1:
+
+.. figure:: /pic/chapter06_section05_col1.png
+   :alt: col1
+   :width: 50 %
+
+   Result of solving collision problem. There are 3 intersections of planes of :math:`(e_1,e_2),\; (e_2,e_3),\; (e_3,e_1)` (red color) and our 
+   reach set of system (blue color). According to geometrical interpretation of system this intersections means the conclisions. 
+
+
+.. raw:: html
+	<h2>References</h2>
+
+.. [1] Ibtissem Ben Makhlouf, Hilal Diab, Stefan Kowalewsk. Safety Verification of a Controlled
+   Cooperative Platoon Under Loss of
+   Communication Using Zonotopes. Proceedings of the 4th IFAC Conference on
+   Analysis and Design of Hybrid Systems (ADHS 12)
+   June 6-8, 2012
+
+.. [2] Jan P. Maschuw, Gun¨ ter C. Keßler, D. Abe. LMI-based control of vehicle platoons for
+   robust longitudinal guidance. Proceedings of the 17th World Congress
+   The International Federation of Automatic Control
+   Seoul, Korea, July 6-11, 2008
 
 

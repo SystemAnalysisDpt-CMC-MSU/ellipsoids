@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
-<root version="6" xml_tb_version="2.0" type="struct" >
+<root version="9" xml_tb_version="2.0" type="struct" >
 <valueObj type="struct" >
 	<version type="char" >2.1</version>
 	<isVerbose type="boolean" >0</isVerbose>
-	<absTol type="double" >1e-05</absTol>
+	<absTol type="double" >1e-06</absTol>
 	<relTol type="double" >1e-05</relTol>
-	<nTimeGridPoints type="double" >200</nTimeGridPoints>
+	<nTimeGridPoints type="double" >250</nTimeGridPoints>
 	<ODESolverName type="char" >ode45</ODESolverName>
 	<isODENormControl type="char" >on</isODENormControl>
 	<isEnabledOdeSolverOptions type="boolean" >0</isEnabledOdeSolverOptions>

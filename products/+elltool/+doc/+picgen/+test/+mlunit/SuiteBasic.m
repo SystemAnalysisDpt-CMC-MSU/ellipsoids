@@ -1,5 +1,6 @@
 classdef SuiteBasic < mlunitext.test_case
     properties
+        originalNTimeGridPoints
     end
     
     methods
@@ -7,6 +8,16 @@ classdef SuiteBasic < mlunitext.test_case
             self = self@mlunitext.test_case(varargin{:});
         end
         %
+        
+        function set_up(self)
+            import elltool.conf.Properties;
+            self.originalNTimeGridPoints = Properties.getNTimeGridPoints();
+        end
+        %
+        function tear_down(self)
+            import elltool.conf.Properties;
+            Properties.setNTimeGridPoints(self.originalNTimeGridPoints);
+        end
         
         function testPicGen(~)
             import modgen.io.TmpDataManager;
