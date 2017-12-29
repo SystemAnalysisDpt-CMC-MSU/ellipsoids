@@ -14,7 +14,11 @@ classdef ParameterizedPlotTC < mlunitext.test_case
             self.fCreateObjCVec = fCrObjCVec;
             self.nGraphObjCVec = nGrObjCVec;
         end
-
+        
+        function tear_down(self)
+            close all;
+        end
+        
         function self = testLegendDisplay(self)
             import modgen.common.throwerror;
             centCVec={[0;1], [1;0]};
@@ -25,14 +29,11 @@ classdef ParameterizedPlotTC < mlunitext.test_case
             legend('show');
             hFigure = gcf();
             childVec = hFigure.Children;
-            mlunitext.assert_equals(length(childVec), 2);
-            for iObj = 1:2
+            for iObj = 1:length(childVec)
                 if (strcmp(childVec(iObj).Type, 'legend'))
                     hLegend = childVec(iObj);
                 elseif (strcmp(childVec(iObj).Type, 'axes'))
                     hAxes = childVec(iObj);
-                else
-                    throwerror('wtf', 'Unknown object type');
                 end
             end
             graphicalObjectsVec = hAxes.Children;
@@ -57,7 +58,7 @@ classdef ParameterizedPlotTC < mlunitext.test_case
                             isCheckedObjVec...
                         );
                     else
-                        throwerror('wtf', 'too much graphical objects');
+                        throwerror('wronginput', 'too many graphical objects');
                     end
                 end
             end
