@@ -92,7 +92,8 @@ if ~isRelPlotterSpec
         plObj=smartdb.disp.RelationDataPlotter();
     else
         plObj=smartdb.disp.RelationDataPlotter('figureGetNewHandleFunc',...
-            @(varargin)gcf,'axesGetNewHandleFunc',@(varargin)gca);
+            @(varargin)gcf,'axesGetNewHandleFunc',@axesGetNewHandleFunc,...
+            'axesRearrangeFunc',@axesRearrangeFunc);
     end
 end
 %
@@ -415,6 +416,27 @@ end
             end
         end
     end
+end
+%
+function hAxes=axesGetNewHandleFunc(~,...
+            nSurfaceRows,nSurfaceColumns,...
+            indAxes,hFigureParent,~)
+hAxesVec=findobj(get(hFigureParent,'Children'),'Type','axes');
+if numel(hAxesVec)==1
+    if nSurfaceRows==1&&nSurfaceColumns==1
+        hAxes=hAxesVec;
+        return;
+    end
+end
+hAxes=subplot(nSurfaceRows,nSurfaceColumns,...
+    indAxes,'Parent',hFigureParent);
+end
+%
+function axesRearrangeFunc(hAxes,~,...
+    nSurfaceRows,nSurfaceColumns,...
+    indAxes,hFigureParent,~)
+subplot(nSurfaceRows,nSurfaceColumns,...
+    indAxes,hAxes,'Parent',hFigureParent);
 end
 %
 function hVec=plotCreateFillPlotFunc(hAxes,X,faces,clrVec,isFill,...

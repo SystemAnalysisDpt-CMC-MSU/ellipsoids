@@ -1,14 +1,17 @@
 classdef RelationDataPlotter<handle
     properties (Access=private)
         figHMap
+        figGrpNameToFigNameMap
         figToAxesToHMap
         figToAxesToPlotHMap
+        figToAxesNamesMap
         nMaxAxesRows
         nMaxAxesCols
         figureGroupKeySuffFunc
         %
         figureGetNewHandleFunc
         axesGetNewHandleFunc
+        axesRearrangeFunc
     end
     properties (Constant,GetAccess=private)
         DEF_N_MAX_AXES_ROWS=2;
@@ -19,12 +22,18 @@ classdef RelationDataPlotter<handle
             indAxes,hFigureParent,figureKey)...
             subplot(nSurfaceRows,nSurfaceColumns,...
             indAxes,'Parent',hFigureParent);
+        DEF_AXES_REARRANGE_FUNC=@(hAxes,axesKey,...
+            nSurfaceRows,nSurfaceColumns,...
+            indAxes,hFigureParent,figureKey)...
+            subplot(nSurfaceRows,nSurfaceColumns,...
+            indAxes,hAxes,'Parent',hFigureParent);
         %
         DEF_FIGURE_GET_NEW_HANDLE_FUNC=@(varargin)figure();
     end
     methods
         function SProps=getPlotStructure(self)
             SProps.figHMap=self.figHMap.getCopy();
+            SProps.figGrpNameToFigNameMap=self.figGrpNameToFigNameMap.getCopy();
             SProps.figToAxesToHMap=self.figToAxesToHMap.getCopy();
             SProps.figToAxesToPlotHMap=self.figToAxesToPlotHMap.getCopy();
         end
@@ -84,6 +93,27 @@ classdef RelationDataPlotter<handle
             %                   indAxes,'Parent',hFigure);
             %               call is used to generate a new axis handle.
             %
+            %      axesRearrageFunc: function_handle[1,1] - function
+            %       responsible for rearranging already existing axes
+            %       into a new position (due to newly appreared
+            %       axes on the same figure) based on the following input
+            %       arguments:
+            %               hAxes: double[1,1] - handle of the axes
+            %               axesKey: char[1,] - axes key
+            %               nSurfaceRows: double[1,1] - number of rows in
+            %                   the axis matrix.
+            %               nSurfaceColumns: double[1,1] - number of rows
+            %                   in the axis matrix
+            %               indAxes: double[1,1] - linear index of axis
+            %                   within an axes matrix
+            %               hFigureParent: double[1,1] - handle of the
+            %                   parent figure
+            %               figureKey: double[1,1] - figure key
+            %
+            %           Note: if this property is not specified,
+            %               subplot(nSurfaceRows,nSurfaceColumns,...
+            %                   indAxes,hAxes,'Parent',hFigure);
+            %               call is used to rearrange axes.
             %
             % $Author: Peter Gagarinov  <pgagarinov@gmail.com> $	$Date: 2012-01-12 $
             % $Copyright: Moscow State University,
@@ -91,20 +121,25 @@ classdef RelationDataPlotter<handle
             %            System Analysis Department 2012 $
             %
             self.figHMap=modgen.containers.MapExtended();
+            self.figGrpNameToFigNameMap=modgen.containers.MapExtended();
             self.figToAxesToHMap=modgen.containers.MapExtended();
             self.figToAxesToPlotHMap=modgen.containers.MapExtended();
+            self.figToAxesNamesMap=modgen.containers.MapExtended();
             %
             [~,~,self.nMaxAxesRows,self.nMaxAxesCols,...
                 self.figureGroupKeySuffFunc,self.figureGetNewHandleFunc,...
-                self.axesGetNewHandleFunc]=...
+                self.axesGetNewHandleFunc,self.axesRearrangeFunc]=...
                 modgen.common.parseparext(varargin,...
                 {'nMaxAxesRows','nMaxAxesCols','figureGroupKeySuffFunc',...
-                'figureGetNewHandleFunc','axesGetNewHandleFunc';...
+                'figureGetNewHandleFunc','axesGetNewHandleFunc',...
+                'axesRearrangeFunc';...
                 self.DEF_N_MAX_AXES_ROWS,self.DEF_N_MAX_AXES_COLS,...
                 self.DEF_FIGURE_GROUP_SUFF_FUNC,...
                 self.DEF_FIGURE_GET_NEW_HANDLE_FUNC,...
-                self.DEF_AXES_GET_NEW_HANDLE_FUNC;...
+                self.DEF_AXES_GET_NEW_HANDLE_FUNC,...
+                self.DEF_AXES_REARRANGE_FUNC;...
                 'isnumeric(x)&&isscalar(x)','isnumeric(x)&&isscalar(x)',...
+                'isfunction(x)&&isscalar(x)',...
                 'isfunction(x)&&isscalar(x)',...
                 'isfunction(x)&&isscalar(x)',...
                 'isfunction(x)&&isscalar(x)'},0);
@@ -283,6 +318,10 @@ classdef RelationDataPlotter<handle
                 axesGetKeyFunc,axesGetKeyFieldNameList);
             %
             figureGroupKeyList=figureGroupKeyCMat(:);
+            [uniqueFigureGroupKeyList,~,indUniqueFigureGroupVec]=...
+                unique(figureGroupKeyList);
+            prevAxesKeyList=cellfun(@self.getAxesKeyList,...
+                uniqueFigureGroupKeyList,'UniformOutput',false);
             SData.figureGroupKey=figureGroupKeyList;
             SData.axesKey=axesKeyCMat(:);
             figAxesMapRel=smartdb.relations.DynamicRelation(SData);
@@ -295,7 +334,16 @@ classdef RelationDataPlotter<handle
             axesPropCMat=rel.toMat('fieldNameList',axesSetPropFieldNameList);
             plotPropCMat=rel.toMat('fieldNameList',plotCreateFieldNameList);
             %
+            prevAxesUnqCMat=reshape(...
+                prevAxesKeyList(indUniqueFigureGroupVec),nEntries,nFuncs);
             axesUnqCMat=reshape(figAxesMapRel.axesKey,nEntries,nFuncs);
+            isPrevAxesMat=~cellfun('isempty',prevAxesUnqCMat);
+            if any(isPrevAxesMat(:))
+                axesUnqCMat(isPrevAxesMat)=cellfun(...
+                    @(x,y)[x(:);reshape(y(~ismember(y,x)),[],1)],...
+                    prevAxesUnqCMat(isPrevAxesMat),...
+                    axesUnqCMat(isPrevAxesMat),'UniformOutput',false);
+            end
             %
             if nEntries>0
                 %
@@ -315,7 +363,37 @@ classdef RelationDataPlotter<handle
                         %
                     end
                 end
-                
+                % fill names of axes for each figure preserving their order
+                % in axesUnqCMat
+                [uniqueFigureKeyList,indForwardVec,indBackwardVec]=...
+                    unique(figureKeyCMat(:));
+                nUniqueFigureKeys=numel(uniqueFigureKeyList);
+                for iUniqueFigureKey=1:nUniqueFigureKeys
+                    figureKey=uniqueFigureKeyList{iUniqueFigureKey};
+                    isFigureKeyVec=indBackwardVec==iUniqueFigureKey;
+                    axesKeyList=unique(reshape(...
+                        axesKeyCMat(isFigureKeyVec),[],1));
+                    curInd=indForwardVec(iUniqueFigureKey);
+                    allAxesKeyList=reshape(axesUnqCMat{curInd},[],1);
+                    if isPrevAxesMat(curInd)
+                        allAxesKeyList(ismember(allAxesKeyList,...
+                            prevAxesUnqCMat{curInd}))=[];
+                        if isempty(allAxesKeyList)
+                            continue;
+                        end
+                        if self.figToAxesNamesMap.isKey(figureKey)
+                            prevAxesKeyList=reshape(...
+                                self.figToAxesNamesMap(figureKey),[],1);
+                        else
+                            prevAxesKeyList={};
+                        end
+                    else
+                        prevAxesKeyList={};
+                    end
+                    self.figToAxesNamesMap(figureKey)=vertcat(...
+                        prevAxesKeyList,allAxesKeyList(ismember(...
+                        allAxesKeyList,axesKeyList)));
+                end
                 %% fill figToAxesToPlotHMap with the plot handles
                 %  not registered in the RelationDataPlotter
                 %
@@ -471,6 +549,7 @@ classdef RelationDataPlotter<handle
             import modgen.common.type.simple.checkcelloffunc;
             import modgen.common.throwerror;
             nElemVec=zeros(1,nargin);
+            varargout=cell(1,nargin);
             for iArg=1:nargin
                 varargout{iArg}=checkcelloffunc(varargin{iArg});
                 nElemVec(iArg)=numel(varargout{iArg});
@@ -515,6 +594,7 @@ classdef RelationDataPlotter<handle
                 logger.debug(['Figure ',figureKey,...
                     ' is created, hFigure=',num2str(double(hFigure))]);
                 mp(figureKey)=hFigure;
+                self.figGrpNameToFigNameMap(figureKey)=figureGroupKey;
                 
                 self.checkIfValueUnique(mp,'wrongFigureHandle',...
                     ['handles returned by figureGetNewHandleFunc ',...
@@ -528,6 +608,7 @@ classdef RelationDataPlotter<handle
                 axesKeyList,axesKey)
             import modgen.logging.log4j.Log4jConfigurator;
             import modgen.common.checkvar;
+            import modgen.common.throwerror;
             persistent logger;
             if isempty(logger)
                 logger=Log4jConfigurator.getLogger();
@@ -568,6 +649,30 @@ classdef RelationDataPlotter<handle
                     ',size: ',mat2str([nSurfaceRows,nSurfaceColumns]),...
                     ',position: ',num2str(indAxes)]);
                 %
+                fanm=self.figToAxesNamesMap;
+                if fanm.isKey(figureKey)
+                    prevAxesKeyList=fanm(figureKey);
+                    nPrevAxes=numel(prevAxesKeyList);
+                    if numel(prevAxesKeyList)>=indAxes
+                        throwerror('badFigToAxesNamesMap',[...
+                            'number of axes registered in '...
+                            'figToAxesNamesMap is not consistent with '...
+                            'index of newly added axes']);
+                    end
+                    for iPrevAxes=1:nPrevAxes
+                        prevAxesKey=prevAxesKeyList{iPrevAxes};
+                        if ~mp.isKey(prevAxesKey)
+                            throwerror('badFigToAxesNamesMap',[...
+                                'can not find handles for some axes '...
+                                'registered in figToAxesNamesMap for '...
+                                'given figure']);
+                        end
+                        hPrevAxes=mp(prevAxesKey);
+                        self.axesRearrangeFunc(hPrevAxes,prevAxesKey,...
+                            nSurfaceRows,nSurfaceColumns,iPrevAxes,...
+                            hFigure,figureKey);
+                    end
+                end
                 hAxes=self.axesGetNewHandleFunc(axesKey,nSurfaceRows,...
                     nSurfaceColumns,indAxes,hFigure,figureKey);
                 checkvar(hAxes,@(x)isscalar(x)&&ishandle(x)&&...
@@ -577,6 +682,7 @@ classdef RelationDataPlotter<handle
                     'is expected to be an axes handle with ',...
                     'both a proper parent ',...
                     'and a correct type']);
+                
                 %
                 mp(axesKey)=hAxes;
                 self.checkIfValueUnique(mp,'wrongAxesHandle',...
@@ -599,6 +705,28 @@ classdef RelationDataPlotter<handle
             end
         end
         %%
+        function axesKeyList=getAxesKeyList(self,figureGroupKey)
+            fnm=self.figGrpNameToFigNameMap;
+            isFigureGroupVec=strcmp(fnm.values,figureGroupKey);
+            if any(isFigureGroupVec)
+                figureKeyList=fnm.keys;
+                figureKeyList(~isFigureGroupVec)=[];
+            else
+                axesKeyList={};
+                return;
+            end
+            nFigureKeys=numel(figureKeyList);
+            axesKeyListCVec=cell(nFigureKeys);
+            fanm=self.figToAxesNamesMap;
+            for iFigureKey=1:nFigureKeys
+                figureKey=figureKeyList{iFigureKey};
+                if fanm.isKey(figureKey)
+                    axesKeyListCVec{iFigureKey}=fanm(figureKey);
+                end
+            end
+            axesKeyList=vertcat(axesKeyListCVec{:});
+        end
+        %%
         function res=getAxesHandleMap(self,figureKey)
             fm=self.figToAxesToHMap;
             if ~fm.isKey(figureKey)
@@ -610,9 +738,14 @@ classdef RelationDataPlotter<handle
             res=am;
         end
         %%
+
+        %%
         function clearGraphicHandleMaps(self)
             mp=self.figHMap;
             mp.remove(mp.keys);
+            %
+            fnm=self.figGrpNameToFigNameMap;
+            fnm.remove(fnm.keys);
             %
             fm=self.figToAxesToHMap;
             fm.remove(fm.keys);
@@ -620,6 +753,8 @@ classdef RelationDataPlotter<handle
             pm=self.figToAxesToPlotHMap;
             pm.remove(pm.keys);
             %
+            fanm=self.figToAxesNamesMap;
+            fanm.remove(fanm.keys);
         end
     end
 end
