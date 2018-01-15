@@ -102,7 +102,8 @@ if isCharColor && isColorVec
     isColorVec = false;
 end
 %
-nDim = max(fDim(bodyArr));
+dimVec = fDim(bodyArr);
+nDim = max(dimVec);
 if nDim == 3 && isLineWidth
     throwerror('wrongProperty', 'LineWidth is not supported by 3D objects');
 end
@@ -147,8 +148,11 @@ end
 %
 if isObj
     rel=smartdb.relations.DynamicRelation(SData);
-    if (nDim==2)||(nDim == 1)
-        plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
+    isDimLEQ2Vec = strcmp(rel.axesNameCMat,'ax2D');
+    isDimGEQ3Vec = strcmp(rel.axesNameCMat,'ax3D');
+    if any(isDimLEQ2Vec)
+        plObj.plotGeneric(rel.getTuples(isDimLEQ2Vec),...
+            @figureGetGroupNameFunc,{'figureNameCMat'},...
             @figureSetPropFunc,{},...
             @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
             @axesSetPropDoNothingFunc,{},...
@@ -157,8 +161,10 @@ if isObj
             'widVec','plotPatch'},...
             'axesPostPlotFunc',postFun,...
             'isAutoHoldOn',false);
-    elseif (nDim==3)
-        plObj.plotGeneric(rel,@figureGetGroupNameFunc,{'figureNameCMat'},...
+    end
+    if any(isDimGEQ3Vec)
+        plObj.plotGeneric(rel.getTuples(isDimGEQ3Vec),...
+            @figureGetGroupNameFunc,{'figureNameCMat'},...
             @figureSetPropFunc,{},...
             @axesGetNameSurfFunc,{'axesNameCMat','axesNumCMat'},...
             @axesSetPropDoNothingFunc,{},...
@@ -189,7 +195,9 @@ end
                     'UniformOutput', false);
             else
                 SData.figureNameCMat=repmat({'figure'},bodyPlotNum,1);
-                SData.axesNameCMat = repmat({'ax'},bodyPlotNum,1);
+                SData.axesNameCMat = cell(bodyPlotNum,1);
+                SData.axesNameCMat(dimVec >= 3) = {'ax3D'};
+                SData.axesNameCMat(dimVec < 3) = {'ax2D'};
             end
             %
             clrCVec = cellfun(@(x, y, z) getColor(x, y, z),...
@@ -236,13 +244,8 @@ end
     function checkDimensions()
         import elltool.conf.Properties;
         import modgen.common.throwerror;
-        ellsArrDims = fDim(bodyArr);
-        mDim    = min(ellsArrDims);
-        nDim    = max(ellsArrDims);
-        if mDim ~= nDim
-            throwerror('dimMismatch', ...
-                'Objects must have the same dimensions.');
-        end
+        mDim = min(dimVec);
+        nDim = max(dimVec);
         if (mDim < 1) || (nDim > 3)
             throwerror('wrongDim','object dimension can be 1, 2 or 3');
         end
@@ -383,13 +386,13 @@ end
         end
         isCharColor = false;
         [ellsCMat, uColorCMat, vColorCMat] = ...
-            cellfun(@(x, y, z)getParams(x, y, z),...
+            cellfun(@(x, y, z)getParamsInternal(x, y, z),...
             reg, {reg{2:end}, []}, isnLastElemCMat, 'UniformOutput', false);
         uColorVec = vertcat(uColorCMat{:});
         vColorVec = vertcat(vColorCMat{:});
         ellsArr = vertcat(ellsCMat{:});
         %
-        function [ellVec, uColorVec, vColorVec] = getParams(ellArr, ...
+        function [ellVec, uColorVec, vColorVec] = getParamsInternal(ellArr, ...
                 nextObjArr, isnLastElem)
             import modgen.common.throwerror;
             if fIsObjClassName(ellArr)

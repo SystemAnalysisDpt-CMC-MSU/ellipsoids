@@ -1,8 +1,10 @@
-function hPatch = smartpatch(isShowLegend, extraPropCVec, varargin)
+function hPatch = smartpatch(ellTypeObj, isShowLegend, extraPropCVec, varargin)
 % SMARTPATCH patch-wrapper for patch allowing to pass it extra arguments
 
 % Input:
 %   regular:
+%		ellTypeObj: elltool.plotGraphObjTypeEnum[1, 1] - graphical object
+%             type
 %       isShowLegend: logical[1, 1] - display or not legend annotation for
 %           this object
 %       extraPropCVec: cell[1, ] - cell array of extra patch properties
@@ -18,7 +20,9 @@ function hPatch = smartpatch(isShowLegend, extraPropCVec, varargin)
 %       Faculty of Computational Mathematics and Computer Science,
 %       System Analysis Department 2017 $
 
+import elltool.plot.setgraphobjtype;
 hPatch = patch(varargin{:});
+setgraphobjtype(hPatch,ellTypeObj);
 if (~isempty(extraPropCVec))
     set(hPatch, extraPropCVec{:});
 end
