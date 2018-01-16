@@ -20,23 +20,12 @@ classdef ParameterizedPlotTC < mlunitext.test_case
         end
         
         function self = testLegendDisplay(self)
-            import modgen.common.throwerror;
-            centCVec={[0;1], [1;0]};
+            centCVec = {[0;1], [1;0]};
             objCMat = self.createObjCMat(centCVec);
-            for iCol = 1:size(objCMat, 2)
-                plot(objCMat{:, iCol});
-            end
+            plotSimultaneously(objCMat);
             legend('show');
-            hFigure = gcf();
-            childVec = hFigure.Children;
-            for iObj = 1:length(childVec)
-                if (strcmp(childVec(iObj).Type, 'legend'))
-                    hLegend = childVec(iObj);
-                elseif (strcmp(childVec(iObj).Type, 'axes'))
-                    hAxes = childVec(iObj);
-                end
-            end
-            graphicalObjectsVec = hAxes.Children;
+            [hLegend, graphicalObjectsVec] =...
+                getLegendAndGraphicalObjects(gcf());
             nGraphicalObjects = length(graphicalObjectsVec);
             mlunitext.assert_equals(nGraphicalObjects,...
                 sum(vertcat(self.nGraphObjCVec{:})) * size(objCMat, 1));
@@ -58,12 +47,35 @@ classdef ParameterizedPlotTC < mlunitext.test_case
                             isCheckedObjVec...
                         );
                     else
-                        throwerror('wronginput', 'too many graphical objects');
+                        mlunitext.fail('Too many graphical objects');
                     end
                 end
             end
             mlunitext.assert_equals(all(isCheckedObjVec), 1);
             mlunitext.assert_equals(curLegInd, length(hLegend.String) + 1);
+        end
+
+        function testSequentialAndSimultaneousDisplay(self)
+            centCVec = {[0;1], [1;0]};
+            objCMat = self.createObjCMat(centCVec);
+            plotSimultaneously(objCMat);
+            legend('show');
+            [hLegendSimultaneous, ~] = getLegendAndGraphicalObjects(gcf());
+            legSimultStrCVec = hLegendSimultaneous.String;
+            legendLength = length(legSimultStrCVec);
+
+            figure;
+            hold on;
+            plotSequentially(objCMat);
+            legend('show');
+            [hLegendSequential, ~] = getLegendAndGraphicalObjects(gcf());
+            legSequentStrCVec = hLegendSequential.String;
+            mlunitext.assert_equals(legendLength, length(legSequentStrCVec));
+            for iStr = 1:legendLength
+                mlunitext.assert_equals(...
+                    legSequentStrCVec{iStr}, legSimultStrCVec{iStr}...
+                );
+            end
         end
     end
     methods (Access=private)
@@ -124,4 +136,30 @@ function [isChk, legInd] =...
     isChecked(curObjInd) = 1;
     isChk = isChecked;
     legInd = curLegInd + 1;
+end
+
+function [hLegend, graphicalObjectsVec] = getLegendAndGraphicalObjects(hFigure)
+    childVec = hFigure.Children;
+    for iObj = 1:length(childVec)
+        if (strcmp(childVec(iObj).Type, 'legend'))
+            hLegend = childVec(iObj);
+        elseif (strcmp(childVec(iObj).Type, 'axes'))
+            hAxes = childVec(iObj);
+        end
+    end
+    graphicalObjectsVec = hAxes.Children;
+end
+
+function plotSimultaneously(objCMat)
+    for iCol = 1:size(objCMat, 2)
+        plot(objCMat{:, iCol});
+    end
+end
+
+function plotSequentially(objCMat)
+    for iRow = 1:size(objCMat, 1)
+        for iCol = 1:size(objCMat, 2)
+            plot(objCMat{iRow, iCol});
+        end
+    end
 end
