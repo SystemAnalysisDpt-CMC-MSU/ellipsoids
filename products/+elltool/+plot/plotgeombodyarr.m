@@ -148,8 +148,8 @@ end
 %
 if isObj
     rel=smartdb.relations.DynamicRelation(SData);
-    isDimLEQ2Vec = strcmp(rel.axesNameCMat,'ax2D');
-    isDimGEQ3Vec = strcmp(rel.axesNameCMat,'ax3D');
+    isDimLEQ2Vec = dimVec <= 2;
+    isDimGEQ3Vec = dimVec >= 3;
     if any(isDimLEQ2Vec)
         plObj.plotGeneric(rel.getTuples(isDimLEQ2Vec),...
             @figureGetGroupNameFunc,{'figureNameCMat'},...

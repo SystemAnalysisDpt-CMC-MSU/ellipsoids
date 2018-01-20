@@ -200,8 +200,16 @@ SPlotStructure = plotObj.getPlotStructure;
 SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
 num = SHPlot.figure_g1;
 checkAxesLabels(SPlotStructure);
-[xDataCell, yDataCell, zDataCell] = arrayfun(@(x) getData(num.ax(x)), ...
-    1:numel(num.ax), 'UniformOutput', false);
+import elltool.plot.common.AxesNames;
+if nDims >= 3
+    [xDataCell, yDataCell, zDataCell] = arrayfun(...
+        @(x) getData(num.(AxesNames.AXES_3D_KEY)(x)), ...
+        1:numel(num.(AxesNames.AXES_3D_KEY)), 'UniformOutput', false);
+else
+    [xDataCell, yDataCell, zDataCell] = arrayfun(...
+        @(x) getData(num.(AxesNames.AXES_2D_KEY)(x)), ...
+        1:numel(num.(AxesNames.AXES_2D_KEY)), 'UniformOutput', false);    
+end
 if iscell(xDataCell)
     xDataArr = horzcat(xDataCell{:});
 else
