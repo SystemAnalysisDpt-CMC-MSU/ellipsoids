@@ -62,7 +62,8 @@ import elltool.plot.smartpatch;
     @(x)isa(x,'double'),...
     @(x)isa(x,'double')});
 if (isempty(reg))
-    modgen.common.throwerror('emptyArr', 'varargin must not be empty');
+    modgen.common.throwerror('wrongInput:emptyArray',...
+        'Hyperplanes to display must be given as input');
 end
 nDim = max(dimension(reg{1}));
 if (nDim < 3)

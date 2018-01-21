@@ -62,8 +62,9 @@
 %
 import elltool.plot.plotgeombodyarr;
 import elltool.plot.smartpatch;
-if (isempty(varargin))
-    modgen.common.throwerror('emptyArr', 'varargin must not be empty');
+if (nargin == 0)
+    modgen.common.throwerror('wrongInput:emptyArray',...
+        'Ellipsoids to display must be given as input');
 end
 nDim = max(dimension(varargin{1}));
 %

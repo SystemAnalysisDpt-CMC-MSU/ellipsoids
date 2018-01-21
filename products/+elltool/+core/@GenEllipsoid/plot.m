@@ -79,8 +79,9 @@ import elltool.plot.smartpatch;
 %
 logger=Log4jConfigurator.getLogger();
 
-if (isempty(varargin))
-    modgen.common.throwerror('emptyArr', 'varargin must not be empty');
+if (nargin == 0)
+    throwerror('wrongInput:emptyArray',...
+        'Generic ellipsoids to display must be given as input');
 end
 nDim = max(dimension(varargin{1}));
 

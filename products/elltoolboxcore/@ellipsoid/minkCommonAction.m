@@ -53,7 +53,8 @@ if (nargout == 1)||(nargout == 0)
         false;
         @(x)isa(x,'logical')});
     if (isempty(reg))
-        modgen.common.throwerror('emptyArr', 'varargin must not be empty');
+        modgen.common.throwerror('wrongInput:emptyArray',...
+            'Ellipsoids to display must be given as input');
     end
     nDim = max(dimension(reg{1}));
     if ~strcmp(charColor,'empty')
