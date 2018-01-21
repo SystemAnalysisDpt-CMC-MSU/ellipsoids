@@ -45,14 +45,23 @@ if nargin < 4
     end
 end
 if size(dirsMat,2) == 1
-    sq  = gras.gen.sqrtpos(dirsMat'*ellShapeMat*dirsMat,absTol);
-    supArr = ellCenterVec'*dirsMat + sq;
-    bpMat = ((ellShapeMat*dirsMat)/sq) + ellCenterVec;
+    sq  = gras.gen.sqrtpos(dirsMat.'*ellShapeMat*dirsMat,absTol);
+    supArr = ellCenterVec.'*dirsMat + sq;
+    if sq < eps
+        bpMat = ellCenterVec;
+    else
+        bpMat = ((ellShapeMat*dirsMat)/sq) + ellCenterVec;
+    end
 else
-    tempMat  = gras.gen.sqrtpos(sum(dirsMat'*ellShapeMat.*dirsMat',2),...
-        absTol);
-    supArr = ellCenterVec'*dirsMat + tempMat';
-    bpMat = ((ellShapeMat*dirsMat)./repmat(tempMat',...
-        size(ellShapeMat,1),1))...
-        + repmat(ellCenterVec,1,size(dirsMat,2));
+    tempMat  = transpose(gras.gen.sqrtpos(...
+        sum(dirsMat.'*ellShapeMat.*dirsMat.',2),...
+        absTol));
+    supArr = ellCenterVec.'*dirsMat + tempMat;
+    isZeroMat = tempMat < eps;
+    if any(isZeroMat(:))
+        tempMat(isZeroMat)=1;
+    end
+    bpMat = ((ellShapeMat*dirsMat)./repmat(tempMat,...
+        size(ellShapeMat,1),1)) + ...
+        repmat(ellCenterVec,1,size(dirsMat,2));
 end

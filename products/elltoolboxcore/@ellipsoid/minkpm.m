@@ -111,7 +111,7 @@ end
         end
     end
 
-    function [qSumDifMat,fMat] = fCalcCenterTriArr(ellsArr)
+    function [qSumDifMat,fMat,nDimMat] = fCalcCenterTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
             [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
@@ -129,9 +129,10 @@ end
             qSumDifMat = {qSum - inpEll.centerVec};
             fMat = {[1 1]};
         end
+        nDimMat = repmat(nDim, size(qSumDifMat));
     end
 
-    function [xSumDiffCell,fMat] = fCalcBodyTriArr(ellsArr)
+    function [xSumDiffCell,fMat,nDimMat] = fCalcBodyTriArr(ellsArr)
         import modgen.common.throwerror;
         nDims = dimension(ellsArr(1));
         if nDims == 1
@@ -139,31 +140,32 @@ end
         end
         inpEllArr = ellsArr(1:end-1);
         inpEll = ellsArr(end);
-        elltool.conf.Properties.setIsVerbose(false)
+        elltool.conf.Properties.setIsVerbose(false);
         [dirMat, fMat] =getGridByFactor(inpEllArr(1));
         dirMat = dirMat';
         extApproxEllVec = minksum_ea(inpEllArr, dirMat);
         centVec= extApproxEllVec(1).centerVec - inpEll.centerVec;
         nCols = size(dirMat, 2);
-
-                extApprEllVec(1,nCols) = feval(class(ellsArr));
-                arrayfun(@(x) fCase2extAppr(x),1:nCols);
-                
-                mValVec=zeros(1, nCols);
-                arrayfun(@(x) fCase2(x),find(~extApprEllVec.isEmpty()));
-                
-                isPosVec=mValVec>0;
-                nPos=sum(isPosVec);
-                mValMultVec = 1./sqrt(mValVec(isPosVec));
-                bpMat=dirMat(:,isPosVec).* ...
-                    mValMultVec(ones(1,nDims),:)+centVec(:,ones(1,nPos));
-                if isempty(bpMat)
-                    bpMat = centVec;
-                end
-                xSumDiffCell = {[bpMat bpMat(:, 1)]};
-                fMat = {fMat};
-                
-                
+        
+        extApprEllVec(1,nCols) = feval(class(ellsArr));
+        arrayfun(@(x) fCase2extAppr(x),1:nCols);
+        
+        mValVec=zeros(1, nCols);
+        arrayfun(@(x) fCase2(x),find(~extApprEllVec.isEmpty()));
+        
+        isPosVec=mValVec>0;
+        nPos=sum(isPosVec);
+        mValMultVec = 1./sqrt(mValVec(isPosVec));
+        bpMat=dirMat(:,isPosVec).* ...
+            mValMultVec(ones(1,nDims),:)+centVec(:,ones(1,nPos));
+        if isempty(bpMat)
+            bpMat = centVec;
+        end
+        xSumDiffCell = {[bpMat bpMat(:, 1)]};
+        fMat = {fMat};
+        nDimMat = repmat(nDims, size(xSumDiffCell));
+        
+        
         function fCase2extAppr(index)
             dirVec = dirMat(:, index);
             absTolVal=min(extApproxEllVec(index).absTol, inpEll.absTol);
@@ -180,7 +182,7 @@ end
             valVec = sum((invShMat*dirMat).*dirMat,1);
             mValVec = max(valVec, mValVec);
         end
-
+        
     end
 
 

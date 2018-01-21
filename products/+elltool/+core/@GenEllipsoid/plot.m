@@ -92,13 +92,14 @@ if (nDim < 3)
         @(varargin)patch(varargin{:},'marker','*'),reg{:},...
         'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
 end
-    function [xMat,fMat] = fCalcCenterTriArr(ellsArr)
+    function [xMat,fMat,nDimMat] = fCalcCenterTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
             [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
         [xMat, fMat] = arrayfun(@(x) fCalcCenterTri(x), ellsArr, ...
             'UniformOutput', false);
+        nDimMat = repmat(nDim, size(xMat));
         function [xMat, fMat] = fCalcCenterTri(plotEll)
             import elltool.core.GenEllipsoid;
             xMat = plotEll.getCenterVec();
@@ -116,7 +117,7 @@ end
         lGetGrid(lGetGrid == 0) = eps;
     end
     %
-    function [xMat,fMat] = fCalcBodyTriArr(ellsArr)
+    function [xMat,fMat,nDimMat] = fCalcBodyTriArr(ellsArr)
         import elltool.core.GenEllipsoid;
         [minValVec, maxValVec] = findMinAndMaxInEachDim(ellsArr);
         minValVec = reshape(minValVec, numel(minValVec), 1);
@@ -128,6 +129,7 @@ end
         [lGetGridMat, fGetGridMat] = calcGrid(nDim,ellsArr);
         [xMat, fMat] = arrayfun(@(x) fCalcBodyTri(x), ellsArr, ...
             'UniformOutput', false);
+        nDimMat = repmat(nDim, size(xMat));
         %
         function [xMat, fMat] = fCalcBodyTri(plotEll)
             import elltool.core.GenEllipsoid;

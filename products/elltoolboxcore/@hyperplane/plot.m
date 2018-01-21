@@ -64,7 +64,7 @@ import elltool.plot.plotgeombodyarr;
 [plObj]= plotgeombodyarr(@(x)isa(x,'hyperplane'),...
     @(x)dimension(x),@fCalcBodyTriArr,@patch,reg{:});
 %
-    function [xMat,fMat] = fCalcBodyTriArr(hypArr)
+    function [xMat,fMat,nDimMat] = fCalcBodyTriArr(hypArr)
         import modgen.common.throwerror;
         hypNum = numel(hypArr);
         nDim = dimension(hypArr(1));
@@ -86,9 +86,10 @@ import elltool.plot.plotgeombodyarr;
                 'sizeVec must be greater than 0 and finite');
         end
         %
-        [xMat,fMat] = arrayfun(@(x,y,z) fCalcBodyTri(x,y,z, nDim),...
+        [xMat,fMat,nDimCMat] = arrayfun(@(x,y,z) fCalcBodyTri(x,y,z, nDim),...
             hypArr,num2cell(centerVec,2),sizeVec, ...
             'UniformOutput', false);
+        nDimMat = reshape(vertcat(nDimCMat{:}),size(xMat));
         %
         function outParamVec = getPlotInitParam(inParamArr, ...
                 isFilledParam, multConst)
@@ -109,7 +110,7 @@ import elltool.plot.plotgeombodyarr;
                 end
             end
         end
-        function [xMat, fMat] = fCalcBodyTri(hyp,centerCell,plotWidth,...
+        function [xMat, fMat, nDim] = fCalcBodyTri(hyp,centerCell,plotWidth,...
                 nDim)
             centerVec = centerCell{1};
             normalVec = hyp.normal;
@@ -125,6 +126,7 @@ import elltool.plot.plotgeombodyarr;
             if nDim == 1
                 xMat = [centerVec ;0];
                 fMat = [1 1];
+                nDim = 2;
             else
                 sideWidth = plotWidth/2;
                 %

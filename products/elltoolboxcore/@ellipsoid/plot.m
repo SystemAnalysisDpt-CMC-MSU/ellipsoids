@@ -78,19 +78,26 @@ if (nDim < 3)
         'relDataPlotter',plObj, 'priorHold',true,'postHold',isHold);
 end
     %
-    function [xMatCArr, fMatCArr] = fCalcBodyTriArr(bodyArr,varargin)
+    function [xMatCArr, fMatCArr, nDimArr] = fCalcBodyTriArr(bodyArr,varargin)
+        nDim = dimension(bodyArr(1));
+        if nDim == 1
+            [bodyArr,nDim] = rebuildOneDim2TwoDim(bodyArr);
+        end
         [xMatCArr, fMatCArr] = arrayfun(@(x)getRhoBoundary(x), bodyArr,...
             'UniformOutput', false);
         xMatCArr = cellfun(@(x) x.', xMatCArr, 'UniformOutput', false);
+        nDimArr = repmat(nDim, size(xMatCArr));
     end
     %
-    function [xCMat,fCMat] = fCalcCenterTriArr(bodyArr,varargin)
+    function [xCMat,fCMat,nDimArr] = fCalcCenterTriArr(bodyArr,varargin)
+        nDim = dimension(bodyArr(1));
+        if nDim == 1
+            [bodyArr,nDim] = rebuildOneDim2TwoDim(bodyArr);
+        end
         [xCMat,fCMat] = arrayfun(@(x)fCalcCenterTri(x),bodyArr,...
             'UniformOutput',false);
+        nDimArr = repmat(nDim, size(xCMat));
         function [vCenterMat, fCenterMat] = fCalcCenterTri(plotEll)
-            if nDim == 1
-                [plotEll,nDim] = rebuildOneDim2TwoDim(plotEll);
-            end
             vCenterMat = plotEll.centerVec;
             fCenterMat = [1 1];
         end

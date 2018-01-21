@@ -171,7 +171,7 @@ if isObj
 end
     function prepareForPlot()
         %
-        [xCMat,fCMat] = calcBodyPoints(bodyArr);
+        [xCMat,fCMat,nDimMat] = calcBodyPoints(bodyArr);
         %
         if numel(cell2mat(xCMat)) > 0
             %
@@ -201,6 +201,7 @@ end
             SData.xCMat = xCMat;
             SData.faceCMat = fCMat;
             SData.clrVec = clrCVec;
+            SData.nDimMat = nDimMat;
             colCMat = cellfun(@(x) getColCMat(x), clrCVec, ...
                 'UniformOutput', false);
             SData.faceVertexCDataCMat = colCMat;

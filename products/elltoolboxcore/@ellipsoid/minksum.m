@@ -79,11 +79,11 @@ end
             ellsVec = [];
         end
     end
-    function [xCenterCMat,fCMat] = fCalcCenterTriArr(ellsArr)
+    function [xCenterCMat,fCMat,nDim] = fCalcCenterTriArr(ellsArr)
         qSumMat = 0;
         nDim = dimension(ellsArr(1));
         if nDim == 1
-            [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
+            [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
         qMat = arrayfun(@(x) {x.centerVec}, ellsArr);
         for iQMat=1:numel(qMat)
@@ -92,10 +92,10 @@ end
         xCenterCMat = {qSumMat};
         fCMat = {[1 1]};
     end
-    function [xSumCMat, fMatCArr] = fCalcBodyTriArr(ellsArr)
+    function [xSumCMat, fMatCArr,nDim] = fCalcBodyTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
-            [ellsArr, ~] = rebuildOneDim2TwoDim(ellsArr);
+            [ellsArr, nDim] = rebuildOneDim2TwoDim(ellsArr);
         end
         [lGridMat, ~] = getGridByFactor(ellsArr(1));
         [xMatCArr, fMatCArr] = arrayfun(@(x) getRhoBoundary(x, size(lGridMat, 1)),...

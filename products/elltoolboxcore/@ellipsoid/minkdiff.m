@@ -112,7 +112,7 @@ end
         end
     end
 
-    function [qDifMat,fMat] = fCalcCenterTriArr(ellsArr)
+    function [qDifMat,fMat,nDimMat] = fCalcCenterTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
             [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
@@ -128,8 +128,9 @@ end
             qDifMat = {boundPointMat};
             fMat = {[1 1]};
         end
+        nDimMat = repmat(nDim, size(qDifMat));
     end
-    function [xDifMat,fMat] = fCalcBodyTriArr(ellsArr)
+    function [xDifMat,fMat,nDimMat] = fCalcBodyTriArr(ellsArr)
         import modgen.common.throwerror;
 %         import calcdiffonedir;
         nDim = dimension(ellsArr(1));
@@ -174,6 +175,7 @@ end
             
             xDifMat = {boundPointMat};
         end
+        nDimMat = repmat(nDim, size(xDifMat));
     end
 
     function [ellsArr,nDim] = rebuildOneDim2TwoDim(ellsArr)

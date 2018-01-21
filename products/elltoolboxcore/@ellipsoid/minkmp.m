@@ -109,7 +109,7 @@ else
         varargout(2) = {boundMat};
     end
 end
-    function [qSumDifCMat,fCMat] = fCalcCenterTriArr(ellsArr)
+    function [qSumDifCMat,fCMat,nDimMat] = fCalcCenterTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         if nDim == 1
             [ellsArr,~] = rebuildOneDim2TwoDim(ellsArr);
@@ -126,9 +126,9 @@ end
             qSumDifCMat = {centerSum + centerDif};
             fCMat = {[1 1]};
         end
-        
+        nDimMat = repmat(nDim, size(qSumDifCMat));
     end
-    function [xSumDifMat,fMat] = fCalcBodyTriArr(ellsArr)
+    function [xSumDifMat,fMat,nDimMat] = fCalcBodyTriArr(ellsArr)
         nDim = dimension(ellsArr(1));
         [lDirsMat, fGridMat] = getGridByFactor(ellsArr(1));
         lDirsMat = lDirsMat';
@@ -175,6 +175,7 @@ end
             
             xSumDifMat = {boundPointMat};
         end
+        nDimMat = repmat(nDim, size(xSumDifMat));
         
         function [xMat] = fCalcSumTri(ell, nDim)
             nPoints = size(lDirsMat, 2);

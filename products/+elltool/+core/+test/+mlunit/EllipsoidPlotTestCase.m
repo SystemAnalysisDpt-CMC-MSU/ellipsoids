@@ -150,6 +150,12 @@ classdef EllipsoidPlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
         function self = tear_down(self,varargin)
             close all;
         end
+        function self = testPlot1d(self)
+            nDims = 1;
+            inpArgCList = {1, 2, 1e-5, 0.1, 10000, 1e-5, 0};
+            inpCenCList = {0, 100, 0, 4, 0, -10, 0};
+            self = plotND(self,nDims,inpCenCList,inpArgCList);
+        end
         function self = testPlot2d(self)
             nDims = 2;
             inpArgCList = {[cos(pi/4), sin(pi/4); -sin(pi/4),...
