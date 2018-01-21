@@ -148,8 +148,8 @@ end
 %
 if isObj
     rel=smartdb.relations.DynamicRelation(SData);
-    isDimLEQ2Vec = dimVec <= 2;
-    isDimGEQ3Vec = dimVec >= 3;
+    isDimLEQ2Vec = rel.nDimMat <= 2;
+    isDimGEQ3Vec = rel.nDimMat >= 3;
     if any(isDimLEQ2Vec)
         plObj.plotGeneric(rel.getTuples(isDimLEQ2Vec),...
             @figureGetGroupNameFunc,{'figureNameCMat'},...
@@ -195,9 +195,10 @@ end
                     'UniformOutput', false);
             else
                 SData.figureNameCMat=repmat({'figure'},bodyPlotNum,1);
+                import elltool.plot.common.AxesNames;
                 SData.axesNameCMat = cell(bodyPlotNum,1);
-                SData.axesNameCMat(dimVec >= 3) = {'ax3D'};
-                SData.axesNameCMat(dimVec < 3) = {'ax2D'};
+                SData.axesNameCMat(nDimMat >= 3) = {AxesNames.AXES_3D_KEY};
+                SData.axesNameCMat(nDimMat < 3) = {AxesNames.AXES_2D_KEY};
             end
             %
             clrCVec = cellfun(@(x, y, z) getColor(x, y, z),...

@@ -86,16 +86,15 @@ if (nargin == 0)
 end
 dimsMatCVec = cellfun(@getEllDims, varargin, 'UniformOutput', false);
 isObjVec = ~cellfun('isempty', dimsMatCVec);
-mDim = min(cellfun(@(x)min(x(:)), dimsMatCVec(isObjVec)));
-nDim = max(cellfun(@(x)max(x(:)), dimsMatCVec(isObjVec)));
-maxDim = nDim;
+minDim = min(cellfun(@(x)min(x(:)), dimsMatCVec(isObjVec)));
+maxDim = max(cellfun(@(x)max(x(:)), dimsMatCVec(isObjVec)));
 ell2DVarargin = cellfun(@selectEll2D, varargin, dimsMatCVec, ...
                         'UniformOutput', false);
 ell3DVarargin = cellfun(@selectEll3D, varargin, dimsMatCVec, ...
                         'UniformOutput', false);
 %
 extraArgCVec = cell(0);
-if (mDim <= 2)
+if (minDim <= 2)
     [plObj,~,isHold]= plotgeombodyarr(...
         @(x)isa(x,'elltool.core.GenEllipsoid'), @(x)dimension(x), @fCalcBodyTriArr,...
         @(varargin)smartpatch(GraphObjTypeEnum.EllBoundary2D,true,...
