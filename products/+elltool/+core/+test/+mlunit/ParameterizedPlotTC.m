@@ -9,8 +9,6 @@ classdef ParameterizedPlotTC < mlunitext.test_case
         end
 
         function set_up_param(self, fCrObjCVec, nGrObjCVec)
-            close all;
-            hold on;
             self.fCreateObjCVec = fCrObjCVec;
             self.nGraphObjCVec = nGrObjCVec;
         end
@@ -22,10 +20,9 @@ classdef ParameterizedPlotTC < mlunitext.test_case
         function self = testLegendDisplay(self)
             centCVec = {[0;1], [1;0]};
             objCMat = self.createObjCMat(centCVec);
-            plotSimultaneously(objCMat);
-            legend('show');
+            plObj = plotSimultaneously(objCMat);
             [hLegend, graphicalObjectsVec] =...
-                getLegendAndGraphicalObjects(gcf());
+                getLegendAndGraphicalObjects(plObj);
             nGraphicalObjects = length(graphicalObjectsVec);
             mlunitext.assert_equals(nGraphicalObjects,...
                 sum(vertcat(self.nGraphObjCVec{:})) * size(objCMat, 1));
@@ -58,17 +55,13 @@ classdef ParameterizedPlotTC < mlunitext.test_case
         function testSequentialAndSimultaneousDisplay(self)
             centCVec = {[0;1], [1;0]};
             objCMat = self.createObjCMat(centCVec);
-            plotSimultaneously(objCMat);
-            legend('show');
-            [hLegendSimultaneous, ~] = getLegendAndGraphicalObjects(gcf());
+            plObj = plotSimultaneously(objCMat);
+            [hLegendSimultaneous, ~] = getLegendAndGraphicalObjects(plObj);
             legSimultStrCVec = hLegendSimultaneous.String;
             legendLength = length(legSimultStrCVec);
 
-            figure;
-            hold on;
-            plotSequentially(objCMat);
-            legend('show');
-            [hLegendSequential, ~] = getLegendAndGraphicalObjects(gcf());
+            plObj = plotSequentially(objCMat);
+            [hLegendSequential, ~] = getLegendAndGraphicalObjects(plObj);
             legSequentStrCVec = hLegendSequential.String;
             mlunitext.assert_equals(legendLength, length(legSequentStrCVec));
             for iStr = 1:legendLength
@@ -138,28 +131,39 @@ function [isChk, legInd] =...
     legInd = curLegInd + 1;
 end
 
-function [hLegend, graphicalObjectsVec] = getLegendAndGraphicalObjects(hFigure)
-    childVec = hFigure.Children;
-    for iObj = 1:length(childVec)
-        if (strcmp(childVec(iObj).Type, 'legend'))
-            hLegend = childVec(iObj);
-        elseif (strcmp(childVec(iObj).Type, 'axes'))
-            hAxes = childVec(iObj);
-        end
-    end
-    graphicalObjectsVec = hAxes.Children;
+function [hLegend, graphicalObjectsVec] = getLegendAndGraphicalObjects(plObj)
+    SProps = plObj.getPlotStructure();
+    %getting figure handle
+    SFigure = SProps.figHMap.toStruct();
+    figureKeyCVec = fieldnames(SFigure);
+    mlunitext.assert_equals(1, numel(figureKeyCVec));
+    figureKey = figureKeyCVec{:};
+    hFigure = SFigure.(figureKey);
+    %getting axes handle
+    SAxes = SProps.figToAxesToHMap(figureKey).toStruct();
+    axesKeyCVec = fieldnames(SAxes);
+    mlunitext.assert_equals(1, numel(axesKeyCVec));
+    axesKey = axesKeyCVec{:};
+    hAxes = SAxes.(axesKey);
+    %getting legend
+    hLegend = legend(hAxes, 'show');
+    %getting graphical objects
+    SHPlot = SProps.figToAxesToPlotHMap(figureKey).toStruct();
+    graphicalObjectsVec = SHPlot.(axesKey);
 end
 
-function plotSimultaneously(objCMat)
+function plObj = plotSimultaneously(objCMat)
+    plObj = smartdb.disp.RelationDataPlotter();
     for iCol = 1:size(objCMat, 2)
-        plot(objCMat{:, iCol});
+        plot(objCMat{:, iCol}, 'relDataPlotter', plObj);
     end
 end
 
-function plotSequentially(objCMat)
+function plObj = plotSequentially(objCMat)
+    plObj = smartdb.disp.RelationDataPlotter();
     for iRow = 1:size(objCMat, 1)
         for iCol = 1:size(objCMat, 2)
-            plot(objCMat{iRow, iCol});
+            plot(objCMat{iRow, iCol}, 'relDataPlotter', plObj);
         end
     end
 end
