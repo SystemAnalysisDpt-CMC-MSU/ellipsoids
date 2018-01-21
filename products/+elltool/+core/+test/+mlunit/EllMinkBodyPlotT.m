@@ -30,7 +30,9 @@ classdef EllMinkBodyPlotT < handle
                 colMat = repmat(colMat,numObj,1);
                 SHPlot =  ...
                     plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                import elltool.plot.common.AxesNames;
+                plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_2D_KEY),...
+                                  'Children');
                 plEllColCMat = get(plEllObjVec, 'EdgeColor');
                 if iscell(plEllColCMat)
                     plEllColMat = vertcat(plEllColCMat{:});
@@ -43,7 +45,8 @@ classdef EllMinkBodyPlotT < handle
                 colMat = repmat(colMat,numObj,1);
                 SHPlot = ...
                     plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                import elltool.plot.common.AxesNames;
+                plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_3D_KEY), 'Children');
                 plEllColCMat = arrayfun(@(x) getColVec(x), plEllObjVec, ...
                     'UniformOutput', false);
                 plEllColMat = vertcat(plEllColCMat{:});
@@ -72,10 +75,11 @@ classdef EllMinkBodyPlotT < handle
         end
         function minkProperties(self,firstEllMat,secEllMat)
             fMinkOp = self.fMink;
-            if dimension(firstEllMat(1)) == 2
+            dim = dimension(firstEllMat(1));
+            if dim == 2
                 plObj = fMinkOp(firstEllMat,secEllMat, 'linewidth', 4, ...
                     'fill', true, 'shade', 0.8);
-                checkParams(plObj, 4, 1, 0.8, []);
+                checkParams(plObj, dim, 4, 1, 0.8, []);
             else
                 strErr = strcat('fMinkOp(firstEllMat,secEllMat,',...
                     '''linewidth'', 4',...
@@ -85,10 +89,17 @@ classdef EllMinkBodyPlotT < handle
             plObj = fMinkOp(firstEllMat,secEllMat, ...
                 'fill', true, 'shade', 0.1, ...
                 'color', [0, 1, 1]);
-            checkParams(plObj, [], 1, 0.1, [0, 1, 1]);
-            function checkParams(plObj, linewidth, fill, shade, colorVec)
+            checkParams(plObj, dim, [], 1, 0.1, [0, 1, 1]);
+            function checkParams(plObj, dim, linewidth, fill, shade, colorVec)
                 SHPlot=plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                import elltool.plot.common.AxesNames
+                if dim >= 3
+                    plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_3D_KEY),...
+                                      'Children');
+                else
+                    plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_2D_KEY),...
+                                      'Children');
+                end
                 isEqVec = arrayfun(@(x) checkEllParams(x), plEllObjVec);
                 mlunitext.assert_equals(isEqVec, ones(size(isEqVec)));
                 isFillVec = arrayfun(@(x) checkIsFill(x), plEllObjVec, ...
