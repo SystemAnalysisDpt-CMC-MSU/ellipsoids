@@ -58,13 +58,13 @@ classdef ParameterizedPlotTC < mlunitext.test_case
             plObj = plotSimultaneously(objCMat);
             [hLegendSimultaneous, ~] = getLegendAndGraphicalObjects(plObj);
             legSimultStrCVec = hLegendSimultaneous.String;
-            legendLength = length(legSimultStrCVec);
+            nLegends = length(legSimultStrCVec);
 
             plObj = plotSequentially(objCMat);
             [hLegendSequential, ~] = getLegendAndGraphicalObjects(plObj);
             legSequentStrCVec = hLegendSequential.String;
-            mlunitext.assert_equals(legendLength, length(legSequentStrCVec));
-            for iStr = 1:legendLength
+            mlunitext.assert_equals(nLegends, length(legSequentStrCVec));
+            for iStr = 1:nLegends
                 mlunitext.assert_equals(...
                     legSequentStrCVec{iStr}, legSimultStrCVec{iStr}...
                 );
@@ -88,10 +88,10 @@ classdef ParameterizedPlotTC < mlunitext.test_case
     end
 end
 
-function isChk = handleCenter(graphicalObjectsVec, isChecked)
-    for objInd = 1:length(isChecked)
+function isChkVec = handleCenter(graphicalObjectsVec, isCheckedVec)
+    for objInd = 1:length(isCheckedVec)
         if (strcmp(graphicalObjectsVec(objInd).Marker, '*')...
-            && ~isChecked(objInd)...
+            && ~isCheckedVec(objInd)...
         )
             curObjInd = objInd;
             break;
@@ -101,20 +101,20 @@ function isChk = handleCenter(graphicalObjectsVec, isChecked)
     mlunitext.assert_equals(hCenter.Type, 'patch');
     mlunitext.assert_equals(...
         hCenter.Annotation.LegendInformation.IconDisplayStyle, 'off');
-    isChecked(curObjInd) = 1;
-    isChk = isChecked;
+    isCheckedVec(curObjInd) = 1;
+    isChkVec = isCheckedVec;
 end
 
 
-function [isChk, legInd] =...
-    handleBound(graphicalObjectsVec, hLegend, curLegInd, isChecked)
+function [isChkVec, legInd] =...
+    handleBound(graphicalObjectsVec, hLegend, curLegInd, isCheckedVec)
 
     str = hLegend.String{curLegInd};
     mlunitext.assert_equals(str, num2str(curLegInd));
     curObjInd = zeros(0);
-    for objInd = 1:length(isChecked)
+    for objInd = 1:length(isCheckedVec)
         if (strcmp(graphicalObjectsVec(objInd).DisplayName, str)...
-            && ~isChecked(objInd)...
+            && ~isCheckedVec(objInd)...
         )
             curObjInd = [curObjInd, objInd];
         end
@@ -126,8 +126,8 @@ function [isChk, legInd] =...
     mlunitext.assert_equals(hBound.FaceColor, 'none');
     mlunitext.assert_equals(...
         hBound.Annotation.LegendInformation.IconDisplayStyle, 'on');
-    isChecked(curObjInd) = 1;
-    isChk = isChecked;
+    isCheckedVec(curObjInd) = 1;
+    isChkVec = isCheckedVec;
     legInd = curLegInd + 1;
 end
 
