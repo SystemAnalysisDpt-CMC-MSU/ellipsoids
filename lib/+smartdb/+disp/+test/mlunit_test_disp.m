@@ -221,10 +221,10 @@ classdef mlunit_test_disp < mlunitext.test_case
             plSepObj=process(false);
             SSep=plSepObj.getPlotStructure();
             %
-            [isOk,repStr]=SJoint.figGrpNameToFigNameMap.isEqual(...
-                SSep.figGrpNameToFigNameMap);
+            [isOk,repStr]=SJoint.figToFigGrpKeyMap.isEqual(...
+                SSep.figToFigGrpKeyMap);
             mlunitext.assert_equals(true,isOk,repStr);
-            figureKeyList=SJoint.figGrpNameToFigNameMap.keys;
+            figureKeyList=SJoint.figToFigGrpKeyMap.keys;
             nFigures=numel(figureKeyList);
             %
             mlunitext.assert_equals(true,isequal(...
