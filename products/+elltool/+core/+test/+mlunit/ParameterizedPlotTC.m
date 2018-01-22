@@ -1,48 +1,51 @@
 classdef ParameterizedPlotTC < mlunitext.test_case
     properties (Access=private)
+        nDims
         fCreateObjCVec;
-        nGraphObjCVec;
+        nGraphObjVec;
     end
     methods
         function self = ParameterizedPlotTC(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
 
-        function set_up_param(self, fCrObjCVec, nGrObjCVec)
+        function set_up_param(self, nDims, fCrObjCVec, nGrObjVec)
+            self.nDims = nDims;
             self.fCreateObjCVec = fCrObjCVec;
-            self.nGraphObjCVec = nGrObjCVec;
+            self.nGraphObjVec = nGrObjVec;
         end
         
-        function tear_down(self)
+        function tear_down(~)
             close all;
         end
         
         function self = testLegendDisplay(self)
-            centCVec = {[0;1], [1;0]};
+            if self.nDims < 3
+                centCVec = {[0;1], [1;0]};
+            else
+                centCVec = {[0;1;1], [1;1;0]};
+            end
             objCMat = self.createObjCMat(centCVec);
             plObj = plotSimultaneously(objCMat);
             [hLegend, graphicalObjectsVec] =...
                 getLegendAndGraphicalObjects(plObj);
             nGraphicalObjects = length(graphicalObjectsVec);
             mlunitext.assert_equals(nGraphicalObjects,...
-                sum(vertcat(self.nGraphObjCVec{:})) * size(objCMat, 1));
+                sum(self.nGraphObjVec) * size(objCMat, 1));
             isCheckedObjVec = zeros(size(graphicalObjectsVec));
             curLegInd = 1;
             for iCol = 1:size(objCMat, 2)
                 for iRow = 1:size(objCMat, 1)
-                    if (self.nGraphObjCVec{iCol} == 2)
+                    if (self.nGraphObjVec(iCol) == 2)
                         [isCheckedObjVec, curLegInd] = handleBound(...
                             graphicalObjectsVec, hLegend, curLegInd,...
-                            isCheckedObjVec...
-                        );
+                            isCheckedObjVec, self.nDims);
                         isCheckedObjVec = handleCenter(...
-                            graphicalObjectsVec, isCheckedObjVec...
-                        );
-                    elseif (self.nGraphObjCVec{iCol} == 1)
+                            graphicalObjectsVec, isCheckedObjVec);
+                    elseif (self.nGraphObjVec(iCol) == 1)
                         [isCheckedObjVec, curLegInd] = handleBound(...
                             graphicalObjectsVec, hLegend, curLegInd,...
-                            isCheckedObjVec...
-                        );
+                            isCheckedObjVec, self.nDims);
                     else
                         mlunitext.fail('Too many graphical objects');
                     end
@@ -53,22 +56,21 @@ classdef ParameterizedPlotTC < mlunitext.test_case
         end
 
         function testSequentialAndSimultaneousDisplay(self)
-            centCVec = {[0;1], [1;0]};
+            if self.nDims < 3
+                centCVec = {[0;1], [1;0]};
+            else
+                centCVec = {[0;1;1], [1;1;0]};
+            end
             objCMat = self.createObjCMat(centCVec);
             plObj = plotSimultaneously(objCMat);
             [hLegendSimultaneous, ~] = getLegendAndGraphicalObjects(plObj);
             legSimultStrCVec = hLegendSimultaneous.String;
-            nLegends = length(legSimultStrCVec);
 
             plObj = plotSequentially(objCMat);
             [hLegendSequential, ~] = getLegendAndGraphicalObjects(plObj);
             legSequentStrCVec = hLegendSequential.String;
-            mlunitext.assert_equals(nLegends, length(legSequentStrCVec));
-            for iStr = 1:nLegends
-                mlunitext.assert_equals(...
-                    legSequentStrCVec{iStr}, legSimultStrCVec{iStr}...
-                );
-            end
+            mlunitext.assert_equals(true, ...
+                isequal(legSequentStrCVec, legSimultStrCVec));
         end
     end
     methods (Access=private)
@@ -81,7 +83,8 @@ classdef ParameterizedPlotTC < mlunitext.test_case
                     centDim = numel(centCVec{iCent});
                     shMat = eye(centDim);
                     curFunc = self.fCreateObjCVec{iFunc};
-                    objCMat{iCent, iFunc} = curFunc(centCVec{iCent}, shMat);
+                    objCMat{iCent, iFunc} = curFunc(...
+                        centCVec{iCent}, shMat);
                 end
             end
         end
@@ -91,8 +94,7 @@ end
 function isChkVec = handleCenter(graphicalObjectsVec, isCheckedVec)
     for objInd = 1:length(isCheckedVec)
         if (strcmp(graphicalObjectsVec(objInd).Marker, '*')...
-            && ~isCheckedVec(objInd)...
-        )
+            && ~isCheckedVec(objInd))
             curObjInd = objInd;
             break;
         end
@@ -106,24 +108,25 @@ function isChkVec = handleCenter(graphicalObjectsVec, isCheckedVec)
 end
 
 
-function [isChkVec, legInd] =...
-    handleBound(graphicalObjectsVec, hLegend, curLegInd, isCheckedVec)
+function [isChkVec, legInd] = handleBound(graphicalObjectsVec, ...
+    hLegend, curLegInd, isCheckedVec, nDims)
 
     str = hLegend.String{curLegInd};
     mlunitext.assert_equals(str, num2str(curLegInd));
     curObjInd = zeros(0);
     for objInd = 1:length(isCheckedVec)
         if (strcmp(graphicalObjectsVec(objInd).DisplayName, str)...
-            && ~isCheckedVec(objInd)...
-        )
-            curObjInd = [curObjInd, objInd];
+            && ~isCheckedVec(objInd))
+            curObjInd = [curObjInd, objInd]; %#ok<AGROW>
         end
     end
     mlunitext.assert_equals(numel(curObjInd), 1);
     hBound = graphicalObjectsVec(curObjInd);
     mlunitext.assert_equals(hBound.Type, 'patch');
     mlunitext.assert_equals(hBound.Marker, 'none');
-    mlunitext.assert_equals(hBound.FaceColor, 'none');
+    if nDims == 2
+        mlunitext.assert_equals(hBound.FaceColor, 'none');
+    end
     mlunitext.assert_equals(...
         hBound.Annotation.LegendInformation.IconDisplayStyle, 'on');
     isCheckedVec(curObjInd) = 1;
@@ -131,14 +134,13 @@ function [isChkVec, legInd] =...
     legInd = curLegInd + 1;
 end
 
-function [hLegend, graphicalObjectsVec] = getLegendAndGraphicalObjects(plObj)
+function [hLegend, graphicalObjVec] = getLegendAndGraphicalObjects(plObj)
     SProps = plObj.getPlotStructure();
     %getting figure handle
     SFigure = SProps.figHMap.toStruct();
     figureKeyCVec = fieldnames(SFigure);
     mlunitext.assert_equals(1, numel(figureKeyCVec));
     figureKey = figureKeyCVec{:};
-    hFigure = SFigure.(figureKey);
     %getting axes handle
     SAxes = SProps.figToAxesToHMap(figureKey).toStruct();
     axesKeyCVec = fieldnames(SAxes);
@@ -149,7 +151,11 @@ function [hLegend, graphicalObjectsVec] = getLegendAndGraphicalObjects(plObj)
     hLegend = legend(hAxes, 'show');
     %getting graphical objects
     SHPlot = SProps.figToAxesToPlotHMap(figureKey).toStruct();
-    graphicalObjectsVec = SHPlot.(axesKey);
+    graphicalObjVec = SHPlot.(axesKey);
+    typeCVec = cellfun(@(x)x.Type, num2cell(graphicalObjVec),...
+        'UniformOutput',false);
+    isnTypeVec=ismember(typeCVec,{'light','text'});
+    graphicalObjVec(isnTypeVec)=[];
 end
 
 function plObj = plotSimultaneously(objCMat)
