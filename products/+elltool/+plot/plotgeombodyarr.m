@@ -445,10 +445,9 @@ function hVec=plotCreateFillPlotFunc(hAxes,X,faces,clrVec,isFill,...
 if ~isFill
     shade = 0;
 end
-h1 = plotPatch('Vertices',X','Faces',faces,'Parent',hAxes);
-set(h1, 'EdgeColor', clrVec, 'LineWidth', widVec,'FaceAlpha',shade,...
-    'FaceColor',clrVec,'DisplayName','1');
-hVec = h1;
+hVec = plotPatch('Vertices',X','Faces',faces,'Parent',hAxes,...
+    'EdgeColor', clrVec, 'LineWidth', widVec,'FaceAlpha',shade,...
+    'FaceColor',clrVec);
 view(hAxes,2);
 end
 %
@@ -461,19 +460,49 @@ figureGroupName=figureName;
 end
 %
 function hVec=axesSetPropDoNothingFunc(hAxes,~)
+if (isempty(hAxes.UserData))
+    initializeUserData(hAxes);
+end
 axis(hAxes,'on');
 axis(hAxes,'auto');
 grid(hAxes,'on');
 hold(hAxes,'on');
+setDisplayName(hAxes);
 hVec=[];
 end
 %
 function hVec=axesSetPropDoNothing2Func(hAxes,~)
+if (isempty(hAxes.UserData))
+    initializeUserData(hAxes);
+end
 axis(hAxes,'on');
 axis(hAxes,'auto');
 grid(hAxes,'on');
 hold(hAxes,'off');
+setDisplayName(hAxes);
 hVec=[];
+end
+%
+function initializeUserData(hAxes)
+    hAxes.UserData = struct('counter', 0);
+end
+%
+function setDisplayName(hAxes)
+childVec=get(hAxes,'Children');
+for ind = length(childVec):-1:1
+    if (~isprop(childVec(ind),'Annotation'))
+        continue;
+    end
+    isAnnotation=childVec(ind).Annotation.LegendInformation.IconDisplayStyle;
+    if (strcmp(isAnnotation,'on'))
+        if (isempty(childVec(ind).DisplayName))
+            newCounter=hAxes.UserData.counter+1;
+            childVec(ind).DisplayName=num2str(newCounter);
+            hAxes.UserData.counter=newCounter;
+        end
+    end
+end
+set(hAxes, 'Children', childVec);
 end
 %
 function axesName=axesGetNameSurfFunc(name,~)
@@ -486,8 +515,7 @@ import modgen.graphics.camlight;
 LIGHT_TYPE_LIST={{'left'},{40,-65},{-20,25}};
 hVec = plotPatch('Vertices',vertices', 'Faces', faces, ...
     'FaceVertexCData', faceVertexCData, 'FaceColor','flat', ...
-    'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes,...
-    'DisplayName','1');
+    'FaceAlpha', faceAlpha,'EdgeColor',clrVec,'Parent',hAxes);
 hLightList=cellfun(@(x)camlight(hAxes,x{:}),LIGHT_TYPE_LIST,...
     'UniformOutput',false);
 hVec=[hVec,hLightList{:}];

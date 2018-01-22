@@ -1,17 +1,17 @@
 function plObj = plot(varargin)
-% PLOT - plots hyperplaces in 2D or 3D.
+% PLOT - plots hyperplanes in 2D or 3D.
 %
 %
 % Usage:
-%       plot(hyp) - plots hyperplace hyp in default (red) color.
-%       plot(hypArr) - plots an array of hyperplaces.
+%       plot(hyp) - plots hyperplane hyp in default (red) color.
+%       plot(hypArr) - plots an array of hyperplanes.
 %       plot(hypArr, 'Property',PropValue,...) - plots hypArr with setting
 %                                                properties.
 %
 % Input:
 %   regular:
-%       hypArr:  Hyperplace: [dim11Size,dim12Size,...,dim1kSize] -
-%                array of 2D or 3D hyperplace objects. All hyperplaces in hypArr
+%       hypArr:  Hyperplane: [dim11Size,dim12Size,...,dim1kSize] -
+%                array of 2D or 3D hyperplane objects. All hyperplanes in hypArr
 %                must be either 2D or 3D simutaneously.
 %   optional:
 %       color1Spec: char[1,1] - color specification code, can be 'r','g',
@@ -53,6 +53,7 @@ function plObj = plot(varargin)
 %            System Analysis Department 2013 $
 
 import elltool.plot.plotgeombodyarr;
+import elltool.plot.smartpatch;
 [reg,~,centerVec,sizeVec,...
     isCenterVec,isSizeVec]=...
     modgen.common.parseparext(varargin,...
@@ -60,9 +61,23 @@ import elltool.plot.plotgeombodyarr;
     [],0;
     @(x)isa(x,'double'),...
     @(x)isa(x,'double')});
-
-[plObj]= plotgeombodyarr(@(x)isa(x,'hyperplane'),...
-    @(x)dimension(x),@fCalcBodyTriArr,@patch,reg{:});
+if (isempty(reg))
+    modgen.common.throwerror('wrongInput:emptyArray',...
+        'Hyperplanes to display must be given as input');
+end
+nDim = max(dimension(reg{1}));
+if (nDim < 3)
+    [plObj]= plotgeombodyarr(...
+        @(x)isa(x, 'hyperplane'), @(x)dimension(x), @fCalcBodyTriArr,...
+        @(varargin)smartpatch(true, {'FaceColor', 'none'}, varargin{:}),...
+        reg{:}...
+    );
+else
+    [plObj]= plotgeombodyarr(...
+        @(x)isa(x, 'hyperplane'), @(x)dimension(x), @fCalcBodyTriArr,...
+        @(varargin)smartpatch(true, {}, varargin{:}), reg{:}...
+    );
+end
 %
     function [xMat,fMat,nDimMat] = fCalcBodyTriArr(hypArr)
         import modgen.common.throwerror;
