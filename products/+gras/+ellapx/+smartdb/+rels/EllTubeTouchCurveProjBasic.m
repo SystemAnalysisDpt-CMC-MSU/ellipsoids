@@ -223,12 +223,15 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             % axis(hAxes,'vis3d');
             function hVec=dispDirCurve(ltGoodDirMat,lsGoodDirOrigVec,cMat)
                 import modgen.graphics.plot3adv;
+                import elltool.plot.GraphObjTypeEnum;
+                import elltool.plot.setgraphobjtype;
                 goodDirStr=self.goodDirProp2Str(lsGoodDirOrigVec,...
                     sTime);
                 plotName=['Good directions curve: ',goodDirStr];
                 vMat=ltGoodDirMat;
                 hVec=plot3adv(timeVec.',vMat(1,:).',vMat(2,:).',cMat,...
                     'lineWidth', lineWidth,'Parent',hAxes,'DisplayName',plotName);
+                setgraphobjtype(hVec,GraphObjTypeEnum.GoodCurve);
             end
         end
         function hVec=plotCreateTubeTouchCurveFunc(self,...
@@ -248,12 +251,15 @@ classdef EllTubeTouchCurveProjBasic<gras.ellapx.smartdb.rels.EllTubeTouchCurveBa
             %
             function hVec=dispTouchCurve(xTouchCurveMat,lsGoodDirOrigVec,cMat)
                 import modgen.graphics.plot3adv;
+                import elltool.plot.GraphObjTypeEnum;
+                import elltool.plot.setgraphobjtype;
                 plotName=['Good curve: ',...
                     self.goodDirProp2Str(lsGoodDirOrigVec,sTime)];
                 propList={'lineWidth', lineWidth,...
                     'Parent',hAxes,'DisplayName',plotName};
                 hVec=plot3adv(timeVec.',xTouchCurveMat(1,:).',...
                     xTouchCurveMat(2,:).',cMat,propList{:});
+                setgraphobjtype(hVec,GraphObjTypeEnum.TouchCurve);
             end
         end
         %
