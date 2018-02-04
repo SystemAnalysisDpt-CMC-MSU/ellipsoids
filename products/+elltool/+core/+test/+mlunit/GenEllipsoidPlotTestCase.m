@@ -189,6 +189,28 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
             end
             check(testEllArr, nDims);
         end
+        function testPlot2d3d(~)
+            import elltool.core.GenEllipsoid;
+            ellV = [GenEllipsoid(eye(2)), GenEllipsoid(eye(3)),... 
+                    GenEllipsoid(eye(2).*2), GenEllipsoid(eye(3).*2)];
+            plot(ellV);         
+        end
+        function testGraphObjType(~)
+            import elltool.plot.GraphObjTypeEnum;
+            import elltool.plot.common.AxesNames;
+            import elltool.core.GenEllipsoid;
+            ellV = [GenEllipsoid(eye(2)), GenEllipsoid(eye(3))];
+            rdp = plot(ellV);
+            axesStruct = rdp.getPlotStructure().figToAxesToHMap.toStruct();
+            ell2DPatchV = axesStruct.figure_g1.(AxesNames.AXES_2D_KEY).Children;
+            ell3DPatchV = axesStruct.figure_g1.(AxesNames.AXES_3D_KEY).Children;
+            mlunitext.assert_equals(GraphObjTypeEnum.EllCenter2D,...
+                                    ell2DPatchV(1).UserData.graphObjType);
+            mlunitext.assert_equals(GraphObjTypeEnum.EllBoundary2D,...
+                                    ell2DPatchV(2).UserData.graphObjType);
+            mlunitext.assert_equals(GraphObjTypeEnum.EllBoundary3D,...
+                                    ell3DPatchV(4).UserData.graphObjType);
+        end
     end
 end
 

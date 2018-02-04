@@ -187,6 +187,15 @@ classdef EllTubePlotTestCase < mlunitext.test_case
                 'approxType', approxType);
             self.checkPoints(rel2,plObj,3,fRight);
         end
+        function testGraphObjType(self)
+            import gras.ellapx.smartdb.rels.EllUnionTube;
+            rel = self.createTube(1);
+            projSpaceList = {[1 0; 0 1].'};
+            projType = gras.ellapx.enums.EProjType.Static;
+            relStatProj = ...
+                rel.project(projType,projSpaceList,@fGetProjMat);
+            plObj = relStatProj.plot();
+        end
         %
     end
     

@@ -101,6 +101,14 @@ classdef HyperplanePlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
             plot(testFirstHyp,testSecondHyp,'size',100);
             plot(testFirstHyp,testSecondHyp,'size',[100;2]);
         end
-        
+        function testGraphObjType(~)
+            import elltool.plot.GraphObjTypeEnum;
+            hyp = hyperplane([1;1]);
+            rdp = plot(hyp);
+            figStruct = rdp.getPlotStructure().figHMap.toStruct();
+            graphObjType = figStruct.figure_g1.Children.Children.UserData.graphObjType;
+            mlunitext.assert_equals(GraphObjTypeEnum.Hyperplane,...
+                                    graphObjType);
+        end
     end
 end

@@ -91,14 +91,21 @@ classdef EllMinkBodyPlotT < handle
                 'color', [0, 1, 1]);
             checkParams(plObj, dim, [], 1, 0.1, [0, 1, 1]);
             function checkParams(plObj, dim, linewidth, fill, shade, colorVec)
+                import elltool.plot.common.AxesNames;
+                import elltool.plot.GraphObjTypeEnum;
                 SHPlot=plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                import elltool.plot.common.AxesNames
                 if dim >= 3
                     plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_3D_KEY),...
                                       'Children');
+                    mlunitext.assert_equals(GraphObjTypeEnum.MinkOpBoundary,...
+                                    plEllObjVec(4).UserData.graphObjType);              
                 else
                     plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_2D_KEY),...
                                       'Children');
+                    mlunitext.assert_equals(GraphObjTypeEnum.MinkOpCenter,...
+                                    plEllObjVec(1).UserData.graphObjType);
+                    mlunitext.assert_equals(GraphObjTypeEnum.MinkOpBoundary,...
+                                    plEllObjVec(2).UserData.graphObjType);              
                 end
                 isEqVec = arrayfun(@(x) checkEllParams(x), plEllObjVec);
                 mlunitext.assert_equals(isEqVec, ones(size(isEqVec)));
