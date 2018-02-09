@@ -189,12 +189,45 @@ classdef EllTubePlotTestCase < mlunitext.test_case
         end
         function testGraphObjType(self)
             import gras.ellapx.smartdb.rels.EllUnionTube;
+            import elltool.plot.GraphObjTypeEnum;
+            rel = self.createTube(2);
+            projSpaceList = {[1 0; 0 1].'};
+            projType = gras.ellapx.enums.EProjType.Static;
+            relStatProj = ...
+                rel.project(projType,projSpaceList,@fGetProjMat);
+            plObj = relStatProj.plot();
+            figStruct = plObj.getPlotStructure().figHMap.toStruct();
+            typeGoodCurve = figStruct.reachTube_static_sp0x5B100x3B0_2192adb8ef686f846be6609d103819e2.Children(1).Children(1).UserData.graphObjType;
+            typeEllSetBoundary = figStruct.reachTube_static_sp0x5B100x3B0_2192adb8ef686f846be6609d103819e2.Children(2).Children(1).UserData.graphObjType;
+            typeTouchCurve = figStruct.reachTube_static_sp0x5B100x3B0_2192adb8ef686f846be6609d103819e2.Children(2).Children(2).UserData.graphObjType;
+            mlunitext.assert_equals(GraphObjTypeEnum.GoodCurve,...
+                                    typeGoodCurve);
+            mlunitext.assert_equals(GraphObjTypeEnum.TouchCurve,...
+                                    typeTouchCurve);
+            mlunitext.assert_equals(GraphObjTypeEnum.EllSetBoundary,...
+                                    typeEllSetBoundary);
+            %
             rel = self.createTube(1);
             projSpaceList = {[1 0; 0 1].'};
             projType = gras.ellapx.enums.EProjType.Static;
             relStatProj = ...
                 rel.project(projType,projSpaceList,@fGetProjMat);
             plObj = relStatProj.plot();
+            figStruct = plObj.getPlotStructure().figHMap.toStruct();
+            typeEllTubeBoundary = figStruct.reachTube_static_sp0x5B100x3B0_7cfad2e42d50e6aa44cfee2ad9df8fc5.Children(2).Children(1).UserData.graphObjType;
+            mlunitext.assert_equals(GraphObjTypeEnum.EllTubeBoundary, typeEllTubeBoundary);
+            %
+            plObj = rel.plot();
+            figStruct = plObj.getPlotStructure().figHMap.toStruct();
+            typeTrace = figStruct.EllipsoidalTubeCharacteristi_c46ac4fe86a6fe9f1565b762374b9379.Children(1).Children(1).UserData.graphObjType;
+            typeMinEig = figStruct.EllipsoidalTubeCharacteristi_c46ac4fe86a6fe9f1565b762374b9379.Children(2).Children(1).UserData.graphObjType;
+            typeMaxEig = figStruct.EllipsoidalTubeCharacteristi_c46ac4fe86a6fe9f1565b762374b9379.Children(2).Children(2).UserData.graphObjType;
+            mlunitext.assert_equals(GraphObjTypeEnum.MaxEig,...
+                                    typeMaxEig);
+            mlunitext.assert_equals(GraphObjTypeEnum.MinEig,...
+                                    typeMinEig);
+            mlunitext.assert_equals(GraphObjTypeEnum.Trace,...
+                                    typeTrace);
         end
         %
     end
