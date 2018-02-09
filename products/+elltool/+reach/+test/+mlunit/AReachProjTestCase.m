@@ -6,7 +6,7 @@ classdef AReachProjTestCase < mlunitext.test_case
     methods
         function ellObj = ellipsoid(self, varargin)
             ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
-                varargin{:});            
+                varargin{:});
         end
     end
     %
@@ -138,15 +138,14 @@ classdef AReachProjTestCase < mlunitext.test_case
             reachClassName=class(self.reachObj);
             oldDim = self.reachObj.dimension();
             x0Ell=self.ellipsoid(newX0Vec, newX0Mat);
-            timeVec=self.timeVec;
             %
             newLinSys = self.linSysFactory.create(newAtCMat, ...
                 newBtCMat, ControlBounds, newCtCMat, DistBounds);
             %
             firstNewReachObj = feval(reachClassName, newLinSys,...
-                x0Ell, new1L0Mat, timeVec,self.addArgList{:});
+                x0Ell, new1L0Mat, self.timeVec,self.addArgList{:});
             secondNewReachObj = feval(reachClassName, newLinSys,...
-                x0Ell, new2L0Mat, timeVec,self.addArgList{:});
+                x0Ell, new2L0Mat, self.timeVec,self.addArgList{:});
             firstProjReachObj =...
                 firstNewReachObj.projection([eye(oldDim); zeros(oldDim)]);
             secondProjReachObj =...

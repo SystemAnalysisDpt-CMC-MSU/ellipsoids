@@ -5,7 +5,7 @@ classdef DiscreteSecReachTestCase < elltool.reach.test.mlunit.ATestDynGettersBas
         end
     end
     methods(Access = protected)
-        function bpbMat = bpbFunc(self,pDynBPBMat,probDynObj,curTime)
+        function bpbMat = bpbFunc(~,pDynBPBMat,probDynObj,curTime)
             aInvMat=probDynObj.getAtInvDynamics().evaluate(curTime);
             bpbMat=aInvMat*pDynBPBMat*(aInvMat)';
         end

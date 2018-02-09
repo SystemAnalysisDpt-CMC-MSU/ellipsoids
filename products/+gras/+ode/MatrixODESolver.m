@@ -12,7 +12,7 @@ classdef MatrixODESolver
         end
         function [timeVec,xResArray]=solve(self,fDerivFunc,timeVec,initVal)
             import modgen.common.throwerror;
-            sizeVec = self.sizeVec;
+            sizeVec = self.sizeVec; %#ok<*PROPLC>
             reshapeSizeVec = [sizeVec, ones(1, max(0, ...
                 2 - length(sizeVec)))];
             if ~isequal(reshapeSizeVec, size(initVal))

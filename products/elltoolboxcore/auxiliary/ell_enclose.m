@@ -43,7 +43,7 @@ if nargin < 1
   return;
 end
 
-[m, n] = size(V);
+[m, n] = size(V); %#ok<ASGLU>
 
 if Properties.getIsVerbose()
   if isempty(logger)
@@ -59,9 +59,9 @@ cvx_begin sdp
     variable cvxEllCenterVec(m)
     maximize( det_rootn( cvxEllMat ) )
     subject to
-        cvxEllMat >= 0
+        cvxEllMat >= 0; %#ok<VUNUS>
         for i = 1:n
-            norm(cvxEllMat*V(:, i)+cvxEllCenterVec)<=1
+            norm(cvxEllMat*V(:, i)+cvxEllCenterVec)<=1; %#ok<VUNUS>
         end
 cvx_end
 

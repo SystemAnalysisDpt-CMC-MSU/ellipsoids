@@ -110,8 +110,8 @@ while true
         nNewVerts=size(vNewMat,1);
         %% Collect stats
         if isStatCollected
-            nEdgesToShrinkVec=[nEdgesToShrinkVec;sum(isE2PartVec)];
-            maxEdgeLengthVec=[maxEdgeLengthVec;max(eLengthVec)];
+            nEdgesToShrinkVec=[nEdgesToShrinkVec;sum(isE2PartVec)]; %#ok<AGROW>
+            maxEdgeLengthVec=[maxEdgeLengthVec;max(eLengthVec)]; %#ok<AGROW>
         end
         %% Find new faces, edges and vertices
         nShrinkedFaces=sum(isF2PartVec);
@@ -206,24 +206,24 @@ while true
             vNewMat=fVertAdjustFunc(vNewMat);
         end
         %% Update edges, faces, vertices and f2eMap
-        vMat=[vMat;vNewMat];
-        eMat=[eMat;e1NewMat;e2NewMat];
-        fMat=[fMat;f1NewMat;f2NewMat;f3NewMat];
-        f2eMat=[f2eMat;f2e1NewMat;f2e2NewMat;f2e3NewMat];
+        vMat=[vMat;vNewMat]; %#ok<AGROW>
+        eMat=[eMat;e1NewMat;e2NewMat]; %#ok<AGROW>
+        fMat=[fMat;f1NewMat;f2NewMat;f3NewMat]; %#ok<AGROW>
+        f2eMat=[f2eMat;f2e1NewMat;f2e2NewMat;f2e3NewMat]; %#ok<AGROW>
         f2eIsDirMat=[f2eIsDirMat;f2e1IsDirNewMat;f2e2IsDirNewMat;...
-            f2e3IsDirNewMat];
+            f2e3IsDirNewMat]; %#ok<AGROW>
         %% Update edge length vec
         dMat=vMat(eMat(nEdges+1:1:end,1),:)-vMat(eMat(nEdges+1:1:end,2),:);
-        eLengthVec=[eLengthVec;realsqrt(sum(dMat.*dMat,2))];
+        eLengthVec=[eLengthVec;realsqrt(sum(dMat.*dMat,2))]; %#ok<AGROW>
         %% Update number of entities
         nVerts=size(vMat,1);
         nEdges=size(eMat,1);
         nFaces=size(fMat,1);
         %% Collect stats
         if isStatCollected
-            nVertVec=[nVertVec;nVerts];
-            nEdgeVec=[nEdgeVec;nEdges];
-            nFaceVec=[nFaceVec;nFaces];
+            nVertVec=[nVertVec;nVerts]; %#ok<AGROW>
+            nEdgeVec=[nEdgeVec;nEdges]; %#ok<AGROW>
+            nFaceVec=[nFaceVec;nFaces]; %#ok<AGROW>
         end
         iStep=iStep+1;        
     else

@@ -93,7 +93,7 @@ classdef MatVector
             import modgen.common.throwerror;
             if nargin < 3
                 useSparseMatrix = true;
-			end
+            end
             if ~ismatrix(bMat)
                 throwerror('wrongInput',...
                     'bMat is expected to be 2-dimensional array');

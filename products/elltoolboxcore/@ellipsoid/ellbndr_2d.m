@@ -31,7 +31,7 @@ function [bpMat, fVec] = ellbndr_2d(myEll,nPoints)
 if nargin<2
     nPoints = myEll.nPlot2dPoints;
 end
-[cenVec qMat]=double(myEll);
+[cenVec, qMat]=double(myEll);
 absTol=myEll.getAbsTol();
 if nargout>1
     [bpMat, fVec]=ellipsoid.ellbndr_2dmat(nPoints,cenVec,qMat,absTol);

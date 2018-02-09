@@ -81,7 +81,7 @@ classdef IReach < handle
         %   sSdim = 
         %           [ 2  2 ]
         %
-        [rSdimArr sSdimArr] = dimension(self)
+        [rSdimArr, sSdimArr] = dimension(self)
         %
         % DISPLAY - displays the reach set object.
         %
@@ -215,7 +215,7 @@ classdef IReach < handle
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
         %   [trCenterMat timeVec] = rsObj.get_center();
         %
-        [trCenterMat timeVec] = get_center(self)
+        [trCenterMat, timeVec] = get_center(self)
         %
         % GET_DIRECTIONS - returns the values of direction vectors for time grid 
         %                  values.
@@ -244,7 +244,7 @@ classdef IReach < handle
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
         %   [directionsCVec timeVec] = rsObj.get_directions();
         %
-        [directionsCVec timeVec] = get_directions(self)
+        [directionsCVec, timeVec] = get_directions(self)
         %
         % GET_EA - returns array of ellipsoid objects representing external 
         %          approximation of the reach  tube.
@@ -277,7 +277,7 @@ classdef IReach < handle
         %   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
         %   [eaEllMat timeVec] = dRsObj.get_ea();
         %
-        [eaEllMat timeVec] = get_ea(self)  
+        [eaEllMat, timeVec] = get_ea(self)  
         % GET_GOODCURVES - returns the 'good curve' trajectories of the reach set.
         %
         % Input:
@@ -306,7 +306,7 @@ classdef IReach < handle
         %   dRsObj = elltool.reach.ReachDiscrete(sys, x0EllObj, dirsMat, timeVec);
         %   [goodCurvesCVec timeVec] = dRsObj.get_goodcurves(); 
         %
-        [goodCurvesCVec timeVec] = get_goodcurves(self)
+        [goodCurvesCVec, timeVec] = get_goodcurves(self)
         %
         % GET_IA - returns array of ellipsoid objects representing internal 
         %          approximation of the  reach tube.
@@ -334,7 +334,7 @@ classdef IReach < handle
         %   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec);
         %   [iaEllMat timeVec] = rsObj.get_ia();
         %
-        [iaEllMat timeVec] = get_ia(self)
+        [iaEllMat, timeVec] = get_ia(self)
         %
         % GET_SYSTEM - returns the linear system for which the reach set is 
         %              computed.

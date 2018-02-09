@@ -1,4 +1,4 @@
-function [isInfVec infDirEigMat] = findAllInfDir(ellObj)
+function [isInfVec, infDirEigMat] = findAllInfDir(ellObj)
 % FINDALLINFDIR - find all infinite directions of generalized ellipsoid
 %
 % Input:

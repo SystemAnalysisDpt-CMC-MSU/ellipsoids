@@ -77,7 +77,7 @@ isPoly = isa(objArr, 'Polyhedron');
 
 nDimsArr  = dimension(myEllArr);
 if isPoly
-    [nRows nCols] = size(objArr);
+    [nRows, nCols] = size(objArr);
     nObjDimsArr = zeros(nRows,nCols);
     for iCols = 1:nCols
         nObjDimsArr(iCols) = objArr(iCols).Dim;
@@ -178,10 +178,10 @@ if isa(secObj, 'hyperplane')
         return;
     end
     hEig  = 2*realsqrt(maxeig(fstEll));
-    qSecVec = hypScalar*normHypVec + hEig*normHypVec;
+    qSecVec = hypScalar*normHypVec + hEig*normHypVec; %#ok<NASGU>
     seqQMat = (normHypVec*normHypVec')/(hEig^2);
    
-    [qCenterVec, shQMat] = parameters(hpintersection(fstEll, secObj));
+    [qCenterVec, shQMat] = parameters(hpintersection(fstEll, secObj)); %#ok<ASGLU>
     qSecVec     = qCenterVec + hEig*normHypVec;
 else
     if fstEll == secObj

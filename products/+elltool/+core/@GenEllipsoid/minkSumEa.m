@@ -72,7 +72,7 @@ if (minDimSpace~=maxDimSpace)
 end
 dimSpace=maxDimSpace;
 %
-[mDirSize nDirSize]=size(dirMat);
+[mDirSize, nDirSize]=size(dirMat);
 if (mDirSize~=dimSpace)
     msgStr=sprintf(...
         'second argument must be vector(s) in R^%d',...
@@ -82,7 +82,7 @@ end
 %
 absTol=ellObjVec(1).absTol;
 %
-[mSize kSize]=size(ellObjVec);
+[mSize, kSize]=size(ellObjVec);
 if (mSize==1) && (kSize==1)
     ellResVec=ellObjVec;
 else
@@ -90,7 +90,7 @@ else
     for iDir=1:nDirSize;
         curDirVec=dirMat(:,iDir);
         ellObjCVec=num2cell(ellObjVec);
-        [isInfCMat allInfDirCMat]=cellfun(...
+        [isInfCMat, allInfDirCMat]=cellfun(...
             @GenEllipsoid.findAllInfDir,ellObjCVec,...
             'UniformOutput', false);
         isInfMat=cell2mat(isInfCMat);
@@ -258,7 +258,7 @@ qCenVec(zeroIndVec)=cenVec;
 resFinMat=0.5*(resFinMat+resFinMat);
 resEllObj=feval(class(ellObjVec),qCenVec,resDiagVec,resFinMat);
 end
-function [isZeroVec zeroDirEigMat] = findAllZeroDir(ellObj,absTol)
+function [isZeroVec, zeroDirEigMat] = findAllZeroDir(ellObj,absTol)
 isZeroVec=(abs(diag(ellObj.diagMat))<absTol);
 eigvMat=ellObj.eigvMat;
 zeroDirEigMat=eigvMat(:,isZeroVec);

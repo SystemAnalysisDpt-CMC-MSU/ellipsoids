@@ -12,14 +12,14 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
     methods
         function ellObj = ellipsoid(self, varargin)
             ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
-                varargin{:});            
+                varargin{:});
         end
     end
     %
     methods
         function self = testGetBoundary(self)
-            [testEllCVec testNumPointsCVec]  = self.getEllParams(1);
-            [bpCMat fCMat] = cellfun(@(x,y)getBoundary(x,y),testEllCVec,...
+            [testEllCVec, testNumPointsCVec]  = self.getEllParams(1);
+            [bpCMat, fCMat] = cellfun(@(x,y)getBoundary(x,y),testEllCVec,...
                 testNumPointsCVec, 'UniformOutput', false);
             bpRightCMat = {[1 0; 0.5 sqrt(3) / 2; -0.5 sqrt(3) / 2; -1 0;...
                 -0.5 -sqrt(3) / 2; 0.5 -sqrt(3) / 2],...
@@ -31,9 +31,9 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             fRightCMat = repmat({[1 2; 2 3; 3 4; 4 5; 5 6; 6 1]}, 1, 4);
             isOk = compareCells(bpCMat, fCMat, bpRightCMat, fRightCMat);
             mlunitext.assert(isOk);
-            
+
         end
-        
+
         function self = testGetBoundaryByFactor(self)
             [testEllCVec, testNumPointsCVec]  = self.getEllParams(1);
             [bpCMat, fCMat] = cellfun(@(x, y)getBoundaryByFactor(x, y),testEllCVec,...
@@ -44,47 +44,47 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
                 testEllCVec, testNumRightPointsCVec, 'UniformOutput', false);
             isOk = compareCells(bpCMat, fCMat, bpRightCMat, fRightCMat);
             mlunitext.assert(isOk);
-            
+
         end
-        
+
         function self = DISABLED_testGetRhoBoundary(self)
-            [testEllCVec testNumPointsCVec]  = self.getEllParams(2);
-            
-            [bpMatCArr fMatCArr supCVec lGridCMat] = cellfun(@(x, y)getRhoBoundary(x, y(1))...
+            [testEllCVec, testNumPointsCVec]  = self.getEllParams(2);
+
+            [bpMatCArr, fMatCArr, supCVec, lGridCMat] = cellfun(@(x, y)getRhoBoundary(x, y(1))...
                 ,testEllCVec, testNumPointsCVec, 'UniformOutput', false);
-            
-            [bpRightMatCArr fRightMatCArr] = cellfun(@(x, y)getBoundary(x, y(1)),...
+
+            [bpRightMatCArr, fRightMatCArr] = cellfun(@(x, y)getBoundary(x, y(1)),...
                 testEllCVec, testNumPointsCVec, 'UniformOutput', false);
-            
+
             bpRightMatCArr = {[bpRightMatCArr{1, 1}; bpRightMatCArr{1, 1}(1, :)],...
                 [bpRightMatCArr{1, 2}; bpRightMatCArr{1, 2}(1, :)],...
                 [bpRightMatCArr{1, 3}; bpRightMatCArr{1, 3}(1, :)],...
                 [bpRightMatCArr{1, 4}; bpRightMatCArr{1, 4}(1, :)]};
-            
-            [supRightCVec lGridRightCMat] = cellfun(@(x, y)rhofun(x, y),...
+
+            [supRightCVec, lGridRightCMat] = cellfun(@(x, y)rhofun(x, y),...
                 testEllCVec, bpRightMatCArr, 'UniformOutput', false);
-            
+
             isOk = isequal([bpMatCArr fMatCArr supCVec lGridCMat],...
                 [bpRightMatCArr fRightMatCArr supRightCVec lGridRightCMat]);
             mlunitext.assert(isOk);
-            
-            function [supRightVec lGridRightMat] = rhofun(testEll, bpRightMat)
+
+            function [supRightVec, lGridRightMat] = rhofun(testEll, bpRightMat)
                 [cenMat, ~] = double(testEll);
                 cenMat = repmat(cenMat.', size(bpRightMat, 1), 1);
                 lGridRightMat = bpRightMat - cenMat;
                 supRightVec = (rho(testEll, lGridRightMat.')).';
             end
-            
+
         end
-        
+
         function self = testGetRhoBoundaryByFactor(self)
-            [testEllCVec testNumPointsCVec]  = self.getEllParams(2);
-            
-            [bpMatCArr fMatCArr supCVec lGridCMat] = cellfun(@(x, y)getRhoBoundaryByFactor(x, y),...
+            [testEllCVec, testNumPointsCVec]  = self.getEllParams(2);
+
+            [bpMatCArr, fMatCArr, supCVec, lGridCMat] = cellfun(@(x, y)getRhoBoundaryByFactor(x, y),...
                 testEllCVec, testNumPointsCVec, 'UniformOutput', false);
             testNumRightPointsCVec = cellfun(@getNumPoints,...
                 testEllCVec, testNumPointsCVec,'UniformOutput',false);
-            
+
             [bpRightMatCArr,fRightMatCArr,supRightCVec, lGridRightCMat] = ...
                 cellfun(@(x, y)getRhoBoundary(x, y), testEllCVec, testNumRightPointsCVec,...
                 'UniformOutput', false);
@@ -104,13 +104,13 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         function self = testNegBoundary(self)
             checkDim(self);
             checkScal(self);
-            
+
             function checkDim (self)
                 self.runAndCheckError(@checkDimGB, 'wrongDim');
                 self.runAndCheckError(@checkDimGBBF, 'wrongDim');
                 self.runAndCheckError(@checkDimGRB, 'wrongDim');
                 self.runAndCheckError(@checkDimGRBBF, 'wrongDim');
-                
+
                 function checkDimGB()
                     ellObj = self.ellipsoid(eye(4));
                     getBoundary(ellObj);
@@ -127,15 +127,15 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
                     ellObj = self.ellipsoid(eye(4));
                     getRhoBoundaryByFactor(ellObj);
                 end
-                
+
             end
-            
+
             function checkScal(self)
                 self.runAndCheckError(@checkScalGB, 'wrongInput');
                 self.runAndCheckError(@checkScalGBBF, 'wrongInput');
                 self.runAndCheckError(@checkScalGRB, 'wrongInput');
                 self.runAndCheckError(@checkScalGRBBF, 'wrongInput');
-                
+
                 function checkScalGB()
                     ellVec = [self.ellipsoid([1; 3], eye(2))...
                         self.ellipsoid([2; 5], [4 1; 1 1])];
@@ -158,8 +158,8 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
                 end
             end
         end
-        
-        
+
+
         function self=EllipsoidBasicSecondTC(varargin)
             self=self@mlunitext.test_case(varargin{:});
             [~,className]=modgen.common.getcallernameext(1);
@@ -217,8 +217,8 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         function self = testPlus(self)
             testEllCenterVec = 5;
             testEllMat = 3;
-            testEll = self.ellipsoid(testEllCenterVec, testEllMat);
-            testVec = 'a';
+            testEll = self.ellipsoid(testEllCenterVec, testEllMat); %#ok<NASGU>
+            testVec = 'a'; %#ok<NASGU>
             self.runAndCheckError('plus(testEll, testVec)','wrongInput');
             %
             test1EllCenterVec = [5; 7];
@@ -227,8 +227,8 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             test2EllMat = 4;
             test1Ell = self.ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = self.ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllVec = [test1Ell, test2Ell];
-            testVec = [2; 4];
+            testEllVec = [test1Ell, test2Ell]; %#ok<NASGU>
+            testVec = [2; 4]; %#ok<NASGU>
             self.runAndCheckError('plus(testEllVec, testVec)','wrongInput');
             %
             test1EllCenterVec = [1; 0];
@@ -237,8 +237,8 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             test2EllMat = [3 0; 0 2];
             test1Ell = self.ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = self.ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllVec = [test1Ell, test2Ell];
-            testVec = [2; 4; 1];
+            testEllVec = [test1Ell, test2Ell]; %#ok<NASGU>
+            testVec = [2; 4; 1]; %#ok<NASGU>
             self.runAndCheckError('plus(testEllVec, testVec)','wrongInput');
             %
             testEllCenterVec = [-1; 5];
@@ -296,8 +296,8 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         function self = testMinus(self)
             testEllCenterVec = 5;
             testEllMat = 1;
-            testEll = self.ellipsoid(testEllCenterVec, testEllMat);
-            testWrongVec = [0; 'a'];
+            testEll = self.ellipsoid(testEllCenterVec, testEllMat); %#ok<NASGU>
+            testWrongVec = [0; 'a']; %#ok<NASGU>
             self.runAndCheckError('minus(testEll, testWrongVec)','wrongInput');
             %
             test1EllCenterVec = [1; 0];
@@ -306,8 +306,8 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             test2EllMat = 2;
             test1Ell = self.ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = self.ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllVec = [test1Ell, test2Ell];
-            testVec = [1; 2];
+            testEllVec = [test1Ell, test2Ell]; %#ok<NASGU>
+            testVec = [1; 2]; %#ok<NASGU>
             self.runAndCheckError('minus(testEllVec, testVec)','wrongInput');
             %
             test1EllCenterVec = [2; 3];
@@ -316,8 +316,8 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             test2EllMat = [1 0; 0 1];
             test1Ell = self.ellipsoid(test1EllCenterVec, test1EllMat);
             test2Ell = self.ellipsoid(test2EllCenterVec, test2EllMat);
-            testEllVec = [test1Ell, test2Ell];
-            testVec = [1; 2; 3];
+            testEllVec = [test1Ell, test2Ell]; %#ok<NASGU>
+            testVec = [1; 2; 3]; %#ok<NASGU>
             self.runAndCheckError('minus(testEllVec, testVec)','wrongInput');
             %
             test1EllCenterVec = [1; 2];
@@ -437,8 +437,8 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
         function self = testShape(self)
             testEllCenterVec = [1; 0];
             testEllMat = eye(2);
-            testEll = self.ellipsoid(testEllCenterVec, testEllMat);
-            testVec = [0, 'a'];
+            testEll = self.ellipsoid(testEllCenterVec, testEllMat); %#ok<NASGU>
+            testVec = [0, 'a']; %#ok<NASGU>
             self.runAndCheckError('shape(testEll, testVec)','wrongInput');
             %
             testEllCenterVec = 4;
@@ -479,17 +479,17 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             ellVec=[ellObj, ellObj, ellObj];
             %
             %Check one ell - one dirs
-            [supVal bpVec]=rho(ellObj,dirMat(:,1));
+            [supVal, bpVec]=rho(ellObj,dirMat(:,1));
             checkRhoRes(supVal,bpVec);
             checkRhoSize(supVal,bpVec,ones(2,1),[1 1]);
             %
             %Check one ell - multiple dirs
-            [supArr bpMat]=rho(ellObj,dirMat);
+            [supArr, bpMat]=rho(ellObj,dirMat);
             checkRhoRes(supArr,bpMat);
             checkRhoSize(supArr,bpMat,dirMat,[1 2]);
             %
             %Check multiple ell - one dir
-            [supArr bpMat]=rho(ellVec,dirMat(:,1));
+            [supArr, bpMat]=rho(ellVec,dirMat(:,1));
             checkRhoRes(supArr,bpMat);
             checkRhoSize(supArr,bpMat,ones(2,3),[1 3]);
             %
@@ -499,43 +499,43 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             dirArr(1,:)=1;
             testEll = self.ellipsoid(ellObjCenVec,ellObjMat);
             ellArr = testEll.repMat(arrSizeVec);
-            [supArr bpArr]=rho(ellArr,dirArr);
+            [supArr, bpArr]=rho(ellArr,dirArr);
             checkRhoRes(supArr,bpArr);
             checkRhoSize(supArr,bpArr,dirArr,arrSizeVec);
             %
             %Check array ell - one dir
-            [supArr bpArr]=rho(ellArr,dirMat(:,1));
+            [supArr, bpArr]=rho(ellArr,dirMat(:,1));
             checkRhoRes(supArr,bpArr);
             checkRhoSize(supArr,bpArr,dirArr,arrSizeVec);
             %
             %Check one ell - array dir
-            [supArr bpArr]=rho(ellObj,dirArr);
+            [supArr, bpArr]=rho(ellObj,dirArr);
             checkRhoRes(supArr,bpArr);
             checkRhoSize(supArr,bpArr,dirArr,arrSizeVec);
             %
             % Negative tests for input
             arr2SizeVec=[2,2,4];
-            dir2Arr=ones([2,arr2SizeVec]);
+            dir2Arr=ones([2,arr2SizeVec]); %#ok<NASGU>
             testEll = self.ellipsoid(ellObjCenVec, ellObjMat);
-            ell2Arr=testEll.repMat(arr2SizeVec);
+            ell2Arr=testEll.repMat(arr2SizeVec); %#ok<NASGU>
             self.runAndCheckError('rho(ell2Arr,dirArr)',...
                 'wrongInput:wrongSizes');
             self.runAndCheckError('rho(ellArr,dir2Arr)',...
                 'wrongInput:wrongSizes');
-            ellVec=[ellObj, ellObj, ellObj];
-            dirMat=eye(2);
+            ellVec=[ellObj, ellObj, ellObj]; %#ok<NASGU>
+            dirMat=eye(2); %#ok<NASGU>
             self.runAndCheckError('rho(ellVec,dirMat)',...
                 'wrongInput:wrongSizes');
-            ellVec=[ellObj, ellObj, ellObj]';
-            dirMat=eye(2);
+            ellVec=[ellObj, ellObj, ellObj]'; %#ok<NASGU>
+            dirMat=eye(2); %#ok<NASGU>
             self.runAndCheckError('rho(ellVec,dirMat)',...
                 'wrongInput:wrongSizes');
-            ellEmptArr = self.ellipsoid.empty([0,0,2,0]);
+            ellEmptArr = self.ellipsoid.empty([0,0,2,0]); %#ok<NASGU>
             self.runAndCheckError('rho(ellEmptArr,dirMat)',...
                 'wrongInput:wrongSizes');
         end
         function self = testDisplay(self)
-            ellEmptArr = self.ellipsoid.empty([0,0,2,0]);
+            ellEmptArr = self.ellipsoid.empty([0,0,2,0]); %#ok<NASGU>
             evalc('display(ellEmptArr)');
             %
             centVec = [1;1];
@@ -543,10 +543,10 @@ classdef EllipsoidBasicSecondTC < mlunitext.test_case
             ellObj = self.ellipsoid(centVec,shapeMat);
             evalc('display(ellObj)');
             %
-            ellMat = ellObj.repMat([2,2]);
+            ellMat = ellObj.repMat([2,2]); %#ok<NASGU>
             evalc('display(ellMat)');
             %
-            ellArr = ellObj.repMat([2,2,3,4,5]);
+            ellArr = ellObj.repMat([2,2,3,4,5]); %#ok<NASGU>
             evalc('display(ellArr)');
         end
         function self = testProjection(self)
@@ -695,7 +695,7 @@ else
     throwerror('wrongInput:badMethodName',...
         'Allowed method names: %s. Input name: %s',...
         cellstr2expression({VEC_COMP_METHODS_LIST{:}, ...
-        MAT_COMP_METHODS_LIST{:}}), operation);
+        MAT_COMP_METHODS_LIST{:}}), operation); %#ok<CCAT>
 end
 testIsRight = all(eqArr(:)==1);
 mlunitext.assert_equals(testIsRight, 1);
@@ -739,7 +739,7 @@ else
     throwerror('wrongInput:badMethodName',...
         'Allowed method names: %s. Input name: %s',...
         cellstr2expression({INP_OBJ_MODIF_LIST{:}, ...
-        INP_OBJ_NOT_MODIF_LIST{:}}), methodName);
+        INP_OBJ_NOT_MODIF_LIST{:}}), methodName); %#ok<CCAT>
 end
 if nargin < 6
     projEllObj = ellObj.(methodName)(projMat);

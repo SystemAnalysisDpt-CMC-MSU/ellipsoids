@@ -109,8 +109,8 @@ classdef PropertiesTestCase < mlunitext.test_case
             %Negative test
             args{2} = -absTol;
             self.runAndCheckError('elltool.conf.Properties.parseProp(args,neededProp)','wrongInput');
-            args{2} = absTol;
-            neededProp{2} = 'notAProperty';
+            args{2} = absTol; %#ok<NASGU>
+            neededProp{2} = 'notAProperty'; %#ok<NASGU>
             self.runAndCheckError('elltool.conf.Properties.parseProp(args,neededProp)','wrongInput');
         end
     end

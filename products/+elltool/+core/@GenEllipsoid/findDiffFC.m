@@ -23,7 +23,7 @@ function [ resEllMat ] = findDiffFC( fMethod, ellQ1Mat, ellQ2Mat,...
 %            System Analysis Department 2012 $
 %
 import elltool.core.GenEllipsoid;
-[eigv1Mat dia1Mat]=eig(ellQ1Mat);
+[eigv1Mat, dia1Mat]=eig(ellQ1Mat);
 ell1DiagVec=diag(dia1Mat);
 if min(ell1DiagVec)>absTol
     resEllMat=fMethod(ellQ1Mat,ellQ2Mat,curDirVec,absTol);

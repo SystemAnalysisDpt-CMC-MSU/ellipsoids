@@ -104,7 +104,7 @@ classdef AMatrixCubicSpline<gras.mat.IMatrixFunction
     methods (Access=protected)
         function initialize(self,ppFormList,mSizeVec,timeVec)
             mSizeLen=length(mSizeVec);
-            nDims=2-(any(mSizeVec == 1) || (mSizeLen < 2));
+            nDims=2-(any(mSizeVec == 1) || (mSizeLen < 2)); %#ok<*PROPLC>
             nRows=mSizeVec(1);
             nTimePoints=length(timeVec);
             %

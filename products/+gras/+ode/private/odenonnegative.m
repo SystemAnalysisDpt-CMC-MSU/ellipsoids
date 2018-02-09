@@ -9,7 +9,7 @@ function [odeFcn,thresholdNonNegative] = odenonnegative(ode,y0,threshold,idxNonN
 %   $Revision: 1.1.6.3 $  $Date: 2010/11/17 11:26:44 $
 
 neq = numel(y0);
-thresholdNonNegative = [];
+thresholdNonNegative = []; %#ok<NASGU>
 if any( (idxNonNegative < 1) | (idxNonNegative > neq) )
   error(message('MATLAB:odenonnegative:NonNegativeIndicesInvalid'));
 end
@@ -29,7 +29,7 @@ odeFcn = @local_odeFcn_nonnegative;
 %
   function yp = local_odeFcn_nonnegative(t,y,varargin)
     yp = feval(ode,t,y,varargin{:}); 
-    ndx = idxNonNegative( find(y(idxNonNegative) <= 0) );
+    ndx = idxNonNegative( find(y(idxNonNegative) <= 0) ); %#ok<FNDSB>
     yp(ndx) = max(yp(ndx),0);
   end  % local_odeFcn_nonnegative
 % -----------------------------------------------------------

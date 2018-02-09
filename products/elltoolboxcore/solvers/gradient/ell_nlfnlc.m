@@ -76,11 +76,11 @@ function [X, FVAL] = ell_nlfnlc(objf, x0, nlcf, Options, varargin)
     error('ELL_NLFNLC: function requires at least four input arguments.');
   end
   
-  if (nargin < 4) | ~(isstruct(Options))
+  if (nargin < 4) || ~(isstruct(Options))
     Options = [];
   end
 
-  lenVarIn          = length(varargin);
+  lenVarIn          = length(varargin); %#ok<NASGU>
   XOUT              = x0(:);
   X                 = x0;
   numberOfVariables = length(XOUT);
@@ -94,7 +94,7 @@ function [X, FVAL] = ell_nlfnlc(objf, x0, nlcf, Options, varargin)
 
   % Convert to inline function as needed
   if ~isempty(objf)
-    [funfcn, msg] = fcnchk(objf, length(varargin));
+    [funfcn, msg] = fcnchk(objf, length(varargin)); %#ok<*DFCNCHK>
     if ~(isempty(msg))
       error(msg);
     end
@@ -134,7 +134,7 @@ function [X, FVAL] = ell_nlfnlc(objf, x0, nlcf, Options, varargin)
       try
         [f, GRAD(:)] = feval(funfcn{3}, X, varargin{:});
       catch
-        error(sprintf('ELL_NLFNLC: error in the objective function: %s', lasterr));
+        error(sprintf('ELL_NLFNLC: error in the objective function: %s', lasterr)); %#ok<*LERR,*SPERR>
       end
 
     otherwise, 
@@ -175,10 +175,10 @@ function [X, FVAL] = ell_nlfnlc(objf, x0, nlcf, Options, varargin)
   ineq               = length(c);
   eq                 = length(ceq);
 
-  if (cgrow ~= numberOfVariables) & (cgcol ~= ineq)
+  if (cgrow ~= numberOfVariables) && (cgcol ~= ineq)
     error('ELL_NLFNLC: gradient of the nonlinear inequality constraints is the wrong size.')
   end
-  if (ceqgrow ~= numberOfVariables) & (ceqgcol ~= eq)
+  if (ceqgrow ~= numberOfVariables) && (ceqgcol ~= eq)
     error('ELL_NLFNLC: gradient of the nonlinear equality constraints is the wrong size.')
   end
 

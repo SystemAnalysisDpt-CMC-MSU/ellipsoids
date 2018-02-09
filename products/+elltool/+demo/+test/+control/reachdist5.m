@@ -1,6 +1,5 @@
 function reachdist5(varargin)
   timeVec  = [1 5];
-  w  = 2;
   aCMat  = {'0' '1' '0' '0' '0'
         '-2' '0' '0' '0' '0'
 	'0' '0' '-cos(2*t)' '0' '0'

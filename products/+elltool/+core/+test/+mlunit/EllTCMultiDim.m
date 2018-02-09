@@ -5,7 +5,7 @@ classdef EllTCMultiDim < mlunitext.test_case
 %            Faculty of Computational Mathematics
 %            and Computer Science,
 %            System Analysis Department 2013 $
-    
+
     properties (Access=private)
         testDataRootDir
         ellFactoryObj
@@ -19,7 +19,7 @@ classdef EllTCMultiDim < mlunitext.test_case
     methods
         function ellObj = ellipsoid(self, varargin)
             ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
-                varargin{:});            
+                varargin{:});
         end
         function ellObj = ell_unitball(self, varargin)
             ellObj = elltool.core.test.mlunit.tell_unitball(...
@@ -27,7 +27,7 @@ classdef EllTCMultiDim < mlunitext.test_case
         end
         function hpObj = hyperplane(self, varargin)
             hpObj = self.ellFactoryObj.createInstance('hyperplane', ...
-                varargin{:});            
+                varargin{:});
         end
     end
     %
@@ -45,32 +45,32 @@ classdef EllTCMultiDim < mlunitext.test_case
             %
             % Test input of distance().
             arrSizeVec=[1, 2, 3];
-            testFirstArr=ones(arrSizeVec);
-            testSecArr=self.ellipsoid(1);
+            testFirstArr=ones(arrSizeVec); %#ok<NASGU>
+            testSecArr=self.ellipsoid(1); %#ok<NASGU>
             %
             % Create Data for tests
             arrSizeVec=[2, 3, 2, 2];
-            testEllArray=createObjectArray(arrSizeVec, @self.ell_unitball,2,1,1);
-            nEll=numel(testEllArray);
+            testEllArray=createObjectArray(arrSizeVec,@self.ell_unitball,2,1,1);
+            nEll=numel(testEllArray); %#ok<NASGU>
             %vecMat=repmat([2;0],1,nEll);
             vecArrSizeVec=[2, arrSizeVec];
             vecArray=zeros(vecArrSizeVec);
             vecArray(1,:)=2;
             ansArray=ones(arrSizeVec);
-            testEll3Array=testEllArray(:,:,:,1);
+            testEll3Array=testEllArray(:,:,:,1); %#ok<NASGU>
             testEll2Array=testEllArray;
-            testEll2Array(1) = self.ell_unitball(3);
+            testEll2Array(1)=self.ell_unitball(3); %#ok<NASGU>
             %
             % Test self.ellipsoid-vector distance
             checkCommonErrors('vecArray');
             checkMultyInput(testEllArray,vecArray,true);
             % Wrong dimension of vectors
             %vecArrSizeVec=[3, arrSizeVec];
-            vec3Array=zeros([3,arrSizeVec]);%repmat([1;0;0],1,nEll);
+            vec3Array=zeros([3,arrSizeVec]);%#ok<NASGU>
             self.runAndCheckError('testEllArray.distance(vec3Array)',...
-                'wrongInput');           
+                'wrongInput');
             %
-            % Test self.ellipsoid-self.ellipsoids distance 
+            % Test self.ellipsoid-self.ellipsoids distance
             testEll4Array=createObjectArray(arrSizeVec,@self.ellipsoid,[3;0],...
                 diag([1,1]),2);
             %
@@ -78,11 +78,11 @@ classdef EllTCMultiDim < mlunitext.test_case
             checkCommonErrors('testEllArray');
             % wrong number of one of dims
             testEll4Array=createObjectArray(arrSizeVec(end:-1:1),...
-                @self.ell_unitball,2,1,1);
+                @self.ell_unitball,2,1,1); %#ok<NASGU>
             self.runAndCheckError('testEllArray.distance(testEll4Array)',...
                 'wrongInput');
             %
-            % Test self.ellipsoid-hiperplane distance 
+            % Test self.ellipsoid-hiperplane distance
             % Create data.
             arrSize2Vec=[2 arrSizeVec];
             testNormArray=zeros(arrSize2Vec);
@@ -93,7 +93,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             checkMultyInput(testEllArray,testHpArray,false);
             checkCommonErrors('testHpArray');
             %
-            % Test self.ellipsoid-Polyhedron distance 
+            % Test self.ellipsoid-Polyhedron distance
             % Create data.
             hMat=-eye(2);
             kVec=[-2 1]';
@@ -148,13 +148,13 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect(true, false, 16);
             function testCorrect(isTwoArg, isnRankParam, flag)
                 if isTwoArg
-                    [testEllArray ansNumArray, ~] = self.createTypicalArray(flag);
+                    [testEllArray, ansNumArray, ~] = self.createTypicalArray(flag);
                     if isnRankParam
                         testRes = dimension(testEllArray);
                         mlunitext.assert_equals(ansNumArray, testRes);
                         if (flag == 16)
                            mlunitext.assert_equals(class(ansNumArray), ...
-                               class(testRes)); 
+                               class(testRes));
                         end
                     else
                         [testDim, testRank] = dimension(testEllArray);
@@ -162,13 +162,13 @@ classdef EllTCMultiDim < mlunitext.test_case
                         mlunitext.assert_equals(ansNumArray, testRank);
                         if (flag == 16)
                            mlunitext.assert_equals(class(ansNumArray), ...
-                               class(testDim)); 
+                               class(testDim));
                            mlunitext.assert_equals(class(ansNumArray), ...
-                               class(testRank)); 
+                               class(testRank));
                         end
                     end
                 else
-                    [testEllArray ansDimNumArray ansRankNumArray, ~] = ...
+                    [testEllArray, ansDimNumArray, ansRankNumArray, ~] = ...
                         self.createTypicalArray(flag);
                     test2Correct();
                 end
@@ -178,11 +178,11 @@ classdef EllTCMultiDim < mlunitext.test_case
                 mlunitext.assert_equals(ansDimNumArray, testDim);
                 mlunitext.assert_equals(ansRankNumArray, testRank);
             end
-            
+
         end
         function self = testIsDegenerate(self)
             %Not degerate self.ellipsoid
-            [testEllArray isAnsArray] = self.createTypicalArray(5);
+            [testEllArray, isAnsArray] = self.createTypicalArray(5);
             testCorrect()
             %Degenerate self.ellipsoids
             arraySizeVec = [2, 1, 1, 1, 3, 1, 1];
@@ -197,10 +197,10 @@ classdef EllTCMultiDim < mlunitext.test_case
             isAnsArray = createObjectArray(arraySizeVec, @true, ...
                 1, 1, 1);
             testCorrect()
-            mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
+            mlunitext.assert_equals(class(isAnsArray), class(isTestRes));
             [testEllArray, ~, isAnsArray] = self.createTypicalArray(16);
             testCorrect()
-            mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
+            mlunitext.assert_equals(class(isAnsArray), class(isTestRes));
             %Empty self.ellipsoid
             testError(1);
             testError(14);
@@ -221,14 +221,14 @@ classdef EllTCMultiDim < mlunitext.test_case
            end
         end
         function self = testIsEmpty(self)
-            %Chek realy empty self.ellipsoid            
+            %Check really empty self.ellipsoid
             arraySizeVec = [2, 1, 1, 1, 1, 3, 1, 1];
             testEllArray(2, 1, 1, 1, 1, 3, 1, 1) = self.ellipsoid;
             isAnsArray = createObjectArray(arraySizeVec, @true, ...
                 1, 1, 1);
             testCorrect()
-            %Chek not empty self.ellipsoid
-            [testEllArray isAnsArray] = self.createTypicalArray(5);
+            %Check not empty self.ellipsoid
+            [testEllArray, isAnsArray] = self.createTypicalArray(5);
             testCorrect()
             arraySizeVec = [1, 1, 1, 1, 1, 4, 1, 1, 3];
             testEllArray = createObjectArray(arraySizeVec, @self.ellipsoid, ...
@@ -240,7 +240,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect()
             [testEllArray, ~, isAnsArray] = self.createTypicalArray(16);
             testCorrect()
-            mlunitext.assert_equals(class(isAnsArray), class(isTestRes)); 
+            mlunitext.assert_equals(class(isAnsArray), class(isTestRes));
             function testCorrect()
                 isTestRes = testEllArray.isEmpty();
                 mlunitext.assert_equals(isAnsArray, isTestRes);
@@ -259,14 +259,14 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect(7);
             testCorrect(8);
             testCorrect(16);
-            mlunitext.assert_equals(class(ansNumArray), class(testNumArray)); 
+            mlunitext.assert_equals(class(ansNumArray), class(testNumArray));
             %Empty self.ellipsoid
             testError(1);
             testError(14);
             testError(15);
             function testCorrect(flag)
                 if (flag == 2) || (flag == 6) || (flag == 16)
-                    [testEllArray ansNumArray] = self.createTypicalArray(flag);
+                    [testEllArray, ansNumArray] = self.createTypicalArray(flag);
                 else
                     [testEllArray, ~, ~, ansNumArray] = self.createTypicalArray(flag);
                 end
@@ -274,7 +274,7 @@ classdef EllTCMultiDim < mlunitext.test_case
                 mlunitext.assert_equals(ansNumArray, testNumArray);
             end
             function testError(flag)
-                [testEllArray, ~, errorStr] = self.createTypicalArray(flag);
+                [testEllArray, ~, errorStr] = self.createTypicalArray(flag); %#ok<ASGLU>
                 if (flag == 1)
                     self.runAndCheckError('testEllArray.trace()','wrongInput:emptyEllipsoid');
                 else
@@ -290,7 +290,7 @@ classdef EllTCMultiDim < mlunitext.test_case
             testCorrect(3);
             testCorrect(16);
             mlunitext.assert_equals(class(ansDoubleArray), ...
-                class(testDoubleArray)); 
+                class(testDoubleArray));
             %Empty self.ellipsoid
             testError(1);
             testError(14);
@@ -307,7 +307,7 @@ classdef EllTCMultiDim < mlunitext.test_case
                 mlunitext.assert_equals(ansDoubleArray, testDoubleArray);
             end
             function testError(flag)
-                [testEllArray, ~, errorStr] = self.createTypicalArray(flag);
+                [testEllArray, ~, errorStr] = self.createTypicalArray(flag); %#ok<ASGLU>
                 if (flag == 1)
                     self.runAndCheckError('testEllArray.volume()','wrongInput:emptyEllipsoid');
                 else
@@ -323,7 +323,7 @@ classdef EllTCMultiDim < mlunitext.test_case
         end
         function self = testGe(self)
             checkGeAndGtAndLeAndLt(self, true, true);
-        end 
+        end
         function self = testGt(self)
             checkGeAndGtAndLeAndLt(self, true, false);
         end
@@ -349,13 +349,13 @@ classdef EllTCMultiDim < mlunitext.test_case
             testEllArray(1, 1, 1, 1, 1, 1, 1, 1, 2, 1) = self.ellipsoid(args{:});
             testEllArray(1, 1, 2, 1, 1, 1, 1, 1, 1, 1) = self.ellipsoid(args{:});
             testEllArray(1, 1, 2, 1, 1, 1, 1, 1, 2, 1) = self.ellipsoid(args{:});
-            testAbsTolArray = createObjectArray(arraySizeVec, @repmat, ... 
+            testAbsTolArray = createObjectArray(arraySizeVec, @repmat, ...
                 testAbsTol, 1, 2);
-            testRelTolArray = createObjectArray(arraySizeVec, @repmat, ... 
+            testRelTolArray = createObjectArray(arraySizeVec, @repmat, ...
                 testRelTol, 1, 2);
-            testNPlot2dPointsArray = createObjectArray(arraySizeVec, @repmat, ... 
+            testNPlot2dPointsArray = createObjectArray(arraySizeVec, @repmat, ...
                 testNPlot2dPoints, 1, 2);
-            testNPlot3dPointsArray = createObjectArray(arraySizeVec, @repmat, ... 
+            testNPlot3dPointsArray = createObjectArray(arraySizeVec, @repmat, ...
                 testNPlot3dPoints, 1, 2);
             mlunitext.assert_equals(testAbsTolArray, testEllArray.getAbsTol());
             mlunitext.assert_equals(testRelTolArray, testEllArray.getRelTol());
@@ -493,7 +493,7 @@ function [varargout] = createTypicalArray(ellFactoryObj, flag)
                 @(varargin) elltool.core.test.mlunit.tell_unitball(...
                 ellFactoryObj, varargin{:}), 2, 1, 1);
             my2EllArray = createObjectArray(arraySizeVec, ...
-               @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ... 
+               @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ...
                 diag([1 + MAX_TOL, 1 + MAX_TOL]) , 1, 1);
             isAnsArray = true(arraySizeVec);
             varargout{1} = my1EllArray;
@@ -507,7 +507,7 @@ function [varargout] = createTypicalArray(ellFactoryObj, flag)
                 @(varargin) elltool.core.test.mlunit.tell_unitball(...
                 ellFactoryObj, varargin{:}), 5, 1, 1);
             my2EllArray = createObjectArray(arraySizeVec, ...
-                @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ... 
+                @(varargin) ellFactoryObj.createInstance('ellipsoid', varargin{:}), ...
                 diag(repmat(1 + 100 * MAX_TOL, 1, 5)), 1, 1);
             isAnsArray = false(arraySizeVec);
             varargout{1} = my1EllArray;
@@ -592,7 +592,7 @@ function objectArray = createObjectArray(arraySizeVec, func, firstArg, ...
     secondArg, nArg)
     nElems = prod(arraySizeVec, 2);
     switch nArg
-        case 0 
+        case 0
             objectCArray = cellfun(func, ...
                 'UniformOutput', false);
         case 1
@@ -615,19 +615,19 @@ function checkMaxeigAndMineig(self, isMaxeigCheck)
     testCorrect(7);
     testCorrect(8);
     testCorrect(16);
-    mlunitext.assert_equals(class(ansNumArray), class(testNumArray)); 
+    mlunitext.assert_equals(class(ansNumArray), class(testNumArray));
     %Check empty self.ellipsoid
     testError(1);
     testError(14);
     testError(15);
     function testCorrect(flag)
         if isMaxeigCheck
-            [testEllArray ansNumArray] = createTypicalArray(...
+            [testEllArray, ansNumArray] = createTypicalArray(...
                 self.ellFactoryObj, flag);
             [testNumArray] = maxeig(testEllArray);
         else
             if (flag == 2) || (flag == 6) || (flag == 16)
-                [testEllArray ansNumArray] = createTypicalArray(...
+                [testEllArray, ansNumArray] = createTypicalArray(...
                     self.ellFactoryObj, flag);
             else
                 [testEllArray, ~, ansNumArray] = createTypicalArray(...
@@ -639,7 +639,7 @@ function checkMaxeigAndMineig(self, isMaxeigCheck)
     end
     function testError(flag)
         [testEllArray, ~, errorStr] = createTypicalArray(...
-            self.ellFactoryObj, flag);
+            self.ellFactoryObj, flag); %#ok<ASGLU>
         if isMaxeigCheck
             if (flag == 1)
                 self.runAndCheckError('testEllArray.maxeig()','wrongInput:emptyEllipsoid');
@@ -670,12 +670,12 @@ function checkEqAndNq(self, isEqCheck)
     if isEqCheck
         self.runAndCheckError('eq(test1EllArray, test2EllArray)', ...
             errorStr);
-        self.runAndCheckError('eq(test2EllArray, test1EllArray)', ... 
+        self.runAndCheckError('eq(test2EllArray, test1EllArray)', ...
             errorStr);
     else
         self.runAndCheckError('ne(test1EllArray, test2EllArray)', ...
             errorStr);
-        self.runAndCheckError('ne(test2EllArray, test1EllArray)', ... 
+        self.runAndCheckError('ne(test2EllArray, test1EllArray)', ...
             errorStr);
     end
     function testCheckCorrect()

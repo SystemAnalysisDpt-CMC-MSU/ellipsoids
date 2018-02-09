@@ -1,4 +1,4 @@
-import gras.ellapx.uncertmixcalc.test.conf.MixTubeFortData
+import gras.ellapx.uncertmixcalc.test.conf.MixTubeFortData;
 %
 [~,currentDir] = fileparts(fileparts(mfilename('fullpath')));
 %

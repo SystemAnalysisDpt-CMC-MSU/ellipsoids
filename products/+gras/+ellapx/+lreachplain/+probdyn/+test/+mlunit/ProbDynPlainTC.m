@@ -31,7 +31,7 @@ classdef ProbDynPlainTC < mlunitext.test_case
             t1 = self.pDynObj.gett1();
             mlunitext.assert_equals(tLimsVec(1), t0);
             mlunitext.assert_equals(tLimsVec(2), t1);
-            tVec = self.pDynObj.getTimeVec();
+            tVec = self.pDynObj.getTimeVec(); %#ok<*PROP>
             mlunitext.assert_equals(tVec(1), t0);
             mlunitext.assert_equals(tVec(end), t1);
             
@@ -78,7 +78,7 @@ classdef ProbDynPlainTC < mlunitext.test_case
             import modgen.common.absrelcompare;
             TOL_MULT = 10e1;
             
-            tVec = self.tVec;
+            tVec = self.tVec; %#ok<*PROPLC>
             for iTime=1:numel(tVec)-1
                 t0 = tVec(iTime);
                 t1 = tVec(iTime+1);

@@ -1,4 +1,4 @@
-function display(hpArr)
+function display(hpArr) %#ok<DISPLAY>
 %
 % DISPLAY - Displays hyperplane object.
 %

@@ -60,7 +60,7 @@ function nDim = singDimension(myHyp)
 
 subDim = size(myHyp.normal, 1);
 if subDim < 2
-    if (abs(myHyp.normal) <= myHyp.absTol) & ...
+    if (abs(myHyp.normal) <= myHyp.absTol) && ...
             (abs(myHyp.shift) <= myHyp.absTol)
         nDim = 0;
     else

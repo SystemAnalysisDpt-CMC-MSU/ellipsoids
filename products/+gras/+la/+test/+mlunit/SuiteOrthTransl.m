@@ -16,7 +16,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
         %
         function testOrthTransl(self)
             import gras.la.orthtransl;
-            srcVec=[0 0];
+            srcVec=[0 0]; %#ok<*NASGU>
             dstVec=[1 0];
             check('wrongInput:srcZero');
             srcVec=[1 0];
@@ -212,7 +212,7 @@ classdef SuiteOrthTransl < mlunitext.test_case
             end
         end
         function aux_checkOrthPlain(self,oMat,funcName)
-            mlunitext.assert_equals(true,ndims(oMat)==2);
+            mlunitext.assert_equals(true,ismatrix(oMat));
             mlunitext.assert_equals(true,size(oMat,1)==size(oMat,2));
             %
             self.aux_checkEye(oMat.'*oMat,'oMat.''*oMat',funcName);

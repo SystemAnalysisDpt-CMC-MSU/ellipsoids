@@ -22,7 +22,7 @@ function dtreach(varargin)
   
   ea2EllArr = (aMat^nSteps) * x0EllObj;
   for iSteps = 1:nSteps
-    ea2EllArr = [ea2EllArr (aMat^(nSteps-iSteps))*bVec*pEllObj];
+    ea2EllArr = [ea2EllArr (aMat^(nSteps-iSteps))*bVec*pEllObj]; %#ok<AGROW>
   end
 
 end

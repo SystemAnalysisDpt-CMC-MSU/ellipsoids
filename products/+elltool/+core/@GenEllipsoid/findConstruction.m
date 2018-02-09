@@ -22,7 +22,7 @@ function [diagQVec, resQMat]=findConstruction(firstEllMat,firstBasMat,...
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-[eigPMat diaPMat]=eig(firstEllMat);
+[eigPMat, diaPMat]=eig(firstEllMat);
 nDimSpace=size(firstBasMat,1);
 resQMat=zeros(nDimSpace);
 basMat=firstBasMat*eigPMat;

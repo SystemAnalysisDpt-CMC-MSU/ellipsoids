@@ -60,17 +60,14 @@ logger.info(sprintf('%d element(s) collected',nHelpElems));
 funcNameCell=FuncData.funcName;
 helpCell=FuncData.help;
 sectionNameCell = FuncData.sectionName;
-classNameCell = FuncData.className;
 numberOfFunctions = FuncData.numbOfFunc;
 numberOfClassInSection = FuncData.numbOfClass;
 defClassNameCell = FuncData.defClassName;
 inhFuncNameCell = FuncData.inhFuncNameList;
 indOfClasses = FuncData.numberOfInhClass;
 numberOfInheritedFunctions = FuncData.infoOfInhClass;
-numberOfInheritedClasses = FuncData.numbOfInhClasses;
 % update funcNameCell (delete '.m')
 funcNameCell=cellfun(@(x) x(1:end),funcNameCell,'UniformOutput',false);
-classNameCell=cellfun(@(x) x(1:end),classNameCell,'UniformOutput',false);
 %% prepare data for output (for tex doc)
 % obtain helpCellNew
 %
@@ -124,22 +121,17 @@ funcOutputCell=funcNameCell;
 symbListHelp={};
 substListHelp={};
 
-%funcOutputCell=makeNewName(funcOutputCell);
-%funcNameCell=makeNewName(funcNameCell);
-
 for iSymb=1:length(symbListHelp)
     finalHelpCell=cellfun(@(x) strrep(x,symbListHelp{iSymb},...
         substListHelp{iSymb}),finalHelpCell,'UniformOutput',false);
 end
 
-labelFuncCell = cellfun(@(x)fDeleteSymbols(x),funcOutputCell, ...
-    'UniformOutput', false);
 
 for iElem = 1 : numel(finalHelpCell)
     if ~isempty(finalHelpCell{iElem})
         string = [sprintf('\t'), strrep(helpCellNew{iElem},sprintf('\n'),sprintf('\n\t'))];
         string = strrep(string, sprintf('\t%%'), sprintf('\t'));
-        [string remain] = strtok(string, '$');
+        [string , ~] = strtok(string, '$');
         string = strrep(string, sprintf('%%'), sprintf(''));
         finalHelpCell{iElem}= string;
     end
@@ -151,7 +143,6 @@ indFunc = 1;
 indMethod = 1;
 flag = 0;
 indInhClass = 1;
-iClass = 1;
 indClass = 1;
 fprintf(fid, '%s\n\n', ':tocdepth: 2');
 fprintf(fid, '%s\n', 'Function Reference');
@@ -159,10 +150,9 @@ fprintf(fid, '%s\n\n', '==================');
 for iSect=1:length(sectionNameCell)
     underline = '';
     for jSym = 1:numel(sectionNameCell{iSect})
-        underline = [underline '-'];
+        underline = [underline '-']; %#ok<AGROW>
     end
     fprintf(fid,'%s\n%s\n\n', sectionNameCell{iSect}, underline);
-    numbFunc = indFunc + numberOfFunctions(iSect) -1;
     for jClass = indClass:numberOfClassInSection(iSect) + indClass -1
         if ismember(jClass,indOfClasses)
             flag = 1;
@@ -176,7 +166,7 @@ for iSect=1:length(sectionNameCell)
     for iFunc = indFunc: numbFunc
         underline = '';
         for jSym = 1:numel([sectionNameCell{iSect} '.' funcOutputCell{iFunc}])
-            underline = [underline '~'];
+            underline = [underline '~']; %#ok<AGROW>
         end
         fprintf(fid, '%s\n%s\n\n',[sectionNameCell{iSect}, '.',funcOutputCell{iFunc}], underline);
         % print function help
@@ -212,7 +202,7 @@ result = regexprep(str, '(\%)', '');
 end
 
 function result = fDeleteEmptyStr(str)
-[m startInd] = regexp(str, '(\n){2,}','match', 'start');
+[~, startInd] = regexp(str, '(\n){2,}','match', 'start');
 result = str(1:(max(startInd)-1));
 end
 
@@ -242,17 +232,4 @@ end
 nl = repmat({'\n'}, 1, nLines);
 lines = [lines; nl];
 result = sprintf(strcat(lines{:}));
-end
-
-function result = fDeleteSymbols(str)
-result = regexprep(str, '(\\_)', '');
-end
-function nameList=makeNewName(nameList)
-%% substitutions (for TeX requirements)
-symbList={'\','_','&'};
-substList={'/','\_','\&'};
-%
-for iSymb=1:length(symbList)
-    nameList=strrep(nameList,symbList{iSymb},substList{iSymb});
-end
 end

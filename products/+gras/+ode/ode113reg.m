@@ -26,14 +26,12 @@ nfevals = 0;
     isRegAbsTolSpec]=modgen.common.parseparext(varargin,...
     {'regMaxStepTol','regAbsTol','nMaxRegSteps';...
     [],[],N_MAX_REG_STEPS_DEFAULT;...
-    'isnumeric(x)','isnumeric(x)','isnumeric(x)'});
+    'isnumeric(x)','isnumeric(x)','isnumeric(x)'}); %#ok<ASGLU>
 options=odeset(options,opts{:});
 
 checkgen(fOdeDeriv,'isfunction(x)');
 checkgen(fOdeReg,'isfunction(x)');
 %checkvar!!!
-
-sol = []; klastvec = []; phi3d = []; psi2d = [];
 
 % Handle solver arguments
 [neq, tspan, ntspan, next, t0, tfinal, y0, f0, ...
@@ -526,7 +524,7 @@ while ~isDone
                     break;
                 end
                 nout_new = nout_new + 1;
-                tout_new = [tout_new, tspan(next)];
+                tout_new = [tout_new, tspan(next)]; %#ok<*AGROW>
                 if tspan(next) == t
                     yout_new = [yout_new, y];
                 else
@@ -549,7 +547,6 @@ while ~isDone
             dyRegMat = [dyRegMat, zeros(neq,chunk,dataType)];
         end
         idx = oldnout+1:nout;
-        rind = oldnout+2:nout+1;
         tout(idx) = tout_new;
         yout(:,idx) = yout_new;
 

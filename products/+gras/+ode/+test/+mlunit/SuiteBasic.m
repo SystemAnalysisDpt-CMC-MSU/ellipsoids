@@ -42,7 +42,7 @@ classdef SuiteBasic < mlunitext.test_case
                     @(t,y)fOdeDerivReg(t,y,fReg),...
                     @(t,y)fReg(y),...
                     [tStart,tEnd],initVec,odeset(odePropList{:}),...
-                    odeRegPropList{:});
+                    odeRegPropList{:}); %#ok<ASGLU>
             catch meObj;
                 warning(s);
                 rethrow(meObj);
@@ -57,7 +57,7 @@ classdef SuiteBasic < mlunitext.test_case
                     y=nan(size(y));
                 end
             end
-            function yp=fOdeDerivCpl(t,y,fReg)
+            function yp=fOdeDerivCpl(~,y,fReg)
                 import modgen.common.throwerror;
                 isStrict=fReg(y);
                 if isStrict
@@ -201,7 +201,7 @@ classdef SuiteBasic < mlunitext.test_case
             end
         end
         function self=testReg(self)
-            function f=fDeriv(t,y)
+            function f=fDeriv(~,y)
                 f=zeros(size(y));
             end
             function [isStrictViolVec,yRegMat]=fReg(~,yMat)
@@ -222,7 +222,7 @@ classdef SuiteBasic < mlunitext.test_case
                 tSpanVec=[tStart,tEnd];
                 nTimePoints=length(tVec);
                 initVec=[0 1 2 3];
-                nEqs=length(initVec);
+                nEqs=length(initVec); %#ok<NASGU>
                 regMaxStepTol=0.001;
                 absTol=0.001;
                 odeRegPropList={'regMaxStepTol',regMaxStepTol};
@@ -242,7 +242,7 @@ classdef SuiteBasic < mlunitext.test_case
                 [ttVec,yMat,mMat]=...
                     feval(self.odeSolver, @fDeriv,@fReg,tVec,initVec,...
                     odePropList{:});
-                [~,yyMat]=feval(self.odeSolverNonReg, @(t,y)cos(y),tVec,initVec,...
+                [~,~]=feval(self.odeSolverNonReg, @(t,y)cos(y),tVec,initVec,...
                     odeset(odePropList{:}));
                 isOk=isequal(yMat,repmat(initVec,nTimePoints,1));
                 mlunitext.assert_equals(true,isOk);
@@ -332,7 +332,7 @@ classdef SuiteBasic < mlunitext.test_case
                 nEqs=length(varargin);
                 varargout{1}=false;
                 for iEq=1:nEqs
-                    varargout{iEq+1}=max(varargin{iEq},0);
+                    varargout{iEq+1}=max(varargin{iEq},0); %#ok<*AGROW>
                 end
             end
             %

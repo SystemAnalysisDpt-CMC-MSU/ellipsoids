@@ -9,12 +9,12 @@ classdef GoodDirsContinuousLTI<gras.ellapx.lreachplain.AGoodDirs
     methods (Access = protected)
         function [XstDynamics, RstDynamics, XstNormDynamics] = ...
                 calcTransMatDynamics(self, matOpFactory, STimeData, ...
-                AtDynamics, relTol, absTol)
+                AtDynamics, relTol, absTol) %#ok<INUSD>
             %
             import gras.mat.MatrixOperationsFactory;
             import gras.ellapx.uncertcalc.log.Log4jConfigurator;
             %
-            logger=Log4jConfigurator.getLogger();                
+            logger=Log4jConfigurator.getLogger();
             %
             tStart=tic;
             %

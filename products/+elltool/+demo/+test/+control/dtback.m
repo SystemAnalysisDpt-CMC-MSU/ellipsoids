@@ -21,8 +21,7 @@ function dtback(varargin)
   ea2EllObj  = (aMat^(-nSteps)) * mEllObj;
   for iSteps = 1:nSteps
     fMat  = aMat^(nSteps-iSteps);
-    invFMat = inv(fMat);
-    ea2EllObj = [ea2EllObj invFMat*inv(aMat)*bVec*pEllObj];
+    ea2EllObj = [ea2EllObj (aMat*fMat)\bVec*pEllObj];  %#ok<AGROW>
   end
 
 end

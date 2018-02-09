@@ -12,11 +12,11 @@ classdef EllipsoidTestCase < mlunitext.test_case
     methods
         function ellObj = ellipsoid(self, varargin)
             ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
-                varargin{:});            
+                varargin{:});
         end
         function hpObj = hyperplane(self, varargin)
             hpObj = self.ellFactoryObj.createInstance('hyperplane', ...
-                varargin{:});            
+                varargin{:});
         end
     end
     %
@@ -129,7 +129,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
         end
         %
         function self = testDistance(self)
-            
+
             import elltool.conf.Properties;
             load(strcat(self.testDataRootDir,filesep,'testEllEllRMat.mat'),...
                 'testOrth50Mat','testOrth100Mat','testOrth3Mat','testOrth2Mat');
@@ -169,8 +169,8 @@ classdef EllipsoidTestCase < mlunitext.test_case
             %
             %negative test: matrix shapeMat of self.ellipsoid has very large
             %eigenvalues.
-            testEllipsoid = self.ellipsoid([1e+15,0;0,1e+15]);
-            testPointVec = [3e+15,0].';
+            testEllipsoid = self.ellipsoid([1e+15,0;0,1e+15]); %#ok<NASGU>
+            testPointVec = [3e+15,0].'; %#ok<NASGU>
             self.runAndCheckError('distance(testEllipsoid, testPointVec)',...
                 'notSecant');
             %
@@ -193,7 +193,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testPoint=testOrth50Mat*[zeros(nDim-1,1);10];
             testRes=distance(testEllipsoid, testPoint);
             mlunitext.assert_equals(true,abs(testRes-9)<absTol);
-            
+
             %distance between two self.ellipsoids with random matrices and two vectors
             testEll1Mat=[5,2,0;2,5,0;0,0,1];
             testEll1Mat=testOrth3Mat*testEll1Mat*testOrth3Mat.';
@@ -360,8 +360,8 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testRes=distance(testEll1,testEll2);
             mlunitext.assert_equals(true,abs(testRes)<elltool.conf.Properties.getAbsTol());
             %negative test: self.ellipsoid and hyperplane have different dimensions
-            testEll = self.ellipsoid(eye(2));
-            testHyp = self.hyperplane(eye(3));
+            testEll = self.ellipsoid(eye(2)); %#ok<NASGU>
+            testHyp = self.hyperplane(eye(3)); %#ok<NASGU>
             self.runAndCheckError('distance(testEll, testHyp)',...
                 'wrongInput');
             %
@@ -531,7 +531,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             [testCenterVec, testShapeMat]=double(testEllipsoid);
             isTestRes=isempty(testCenterVec)&&isempty(testShapeMat);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %One argument
             testEllipsoid=self.ellipsoid(diag([1 4 9 16]));
             [testCenterVec, testShapeMat]=double(testEllipsoid);
@@ -543,19 +543,19 @@ classdef EllipsoidTestCase < mlunitext.test_case
             self.fCheckForTestEllipsoidAndDouble([1; 2; -1],...
                 [2.5 -1.5 0; -1.5 2.5 0; 0 0 9]);
             self.fCheckForTestEllipsoidAndDouble(-2*ones(5,1),9*eye(5,5));
-            
+
             %High-dimensional self.ellipsoids
             self.fCheckForTestEllipsoidAndDouble(diag(1:12));
             self.fCheckForTestEllipsoidAndDouble((0:0.1:2).',diag(0:10:200));
             self.fCheckForTestEllipsoidAndDouble(10*rand(100,1), ...
                 diag(50*rand(1,100)));
-            
+
             %Check wrong inputs
             self.runAndCheckError('self.ellipsoid([1 1],eye(2,2))','wrongInput');
             self.runAndCheckError('self.ellipsoid([1 1;0 1])','wrongInput');
             self.runAndCheckError('self.ellipsoid([-1 0;0 -1])','wrongInput');
             self.runAndCheckError('self.ellipsoid([1;1],eye(3,3))','wrongInput');
-            
+
             self.runAndCheckError('self.ellipsoid([1 -i;-i 1])', ...
                 'wrongInput:inpMat');
             self.runAndCheckError('self.ellipsoid([1+i;1],eye(2,2))',...
@@ -570,17 +570,17 @@ classdef EllipsoidTestCase < mlunitext.test_case
             [testCenterVec, testShapeMat]=double(testEllipsoid);
             isTestRes=isempty(testCenterVec)&&isempty(testShapeMat);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Chek for one output argument
             testEllipsoid=self.ellipsoid(-ones(5,1),eye(5,5));
             testShapeMat=double(testEllipsoid);
             isTestEyeMat=testShapeMat==eye(5,5);
             isTestRes=all(isTestEyeMat(:));
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Chek for two output arguments
             self.fCheckForTestEllipsoidAndDouble(-(1:10)',eye(10,10));
-            
+
             %High-dimensional self.ellipsoids
             self.fCheckForTestEllipsoidAndDouble(diag(1:12));
             self.fCheckForTestEllipsoidAndDouble((0:0.1:2).', diag(0:0.01:0.2));
@@ -593,17 +593,17 @@ classdef EllipsoidTestCase < mlunitext.test_case
             [testCenterVec, testShapeMat]=parameters(testEllipsoid);
             isTestRes=isempty(testCenterVec)&&isempty(testShapeMat);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Chek for one output argument
             testEllipsoid=self.ellipsoid(-ones(5,1),eye(5,5));
             testShapeMat=parameters(testEllipsoid);
             isTestEyeMat=testShapeMat==eye(5,5);
             isTestRes=all(isTestEyeMat(:));
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Chek for two output arguments
             self.fCheckForTestParameters( -(1:10)',eye(10,10));
-            
+
             %High-dimensional self.ellipsoids
             self.fCheckForTestParameters( diag(1:12));
             self.fCheckForTestParameters( (0:0.1:2).', diag(0:0.01:0.2));
@@ -620,37 +620,37 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllipsoid=self.ellipsoid(0);
             testRes = dimension(testEllipsoid);
             mlunitext.assert_equals(true, testRes);
-            
+
             testEllipsoid=self.ellipsoid(eye(5,5));
             testRes = dimension(testEllipsoid);
             mlunitext.assert_equals(5, testRes);
-            
+
             %Chek for two output arguments
             %Case 1: Empty self.ellipsoid
             testEllipsoid=self.ellipsoid;
             [testDim, testRank]= dimension(testEllipsoid);
             isTestRes=(testDim==0)&&(testRank==0);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Case 2: Not empty self.ellipsoid
             testEllipsoid=self.ellipsoid(ones(4,1), eye(4,4));
             [testDim, testRank]= dimension(testEllipsoid);
             isTestRes=(testDim==4)&&(testRank==4);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             testAMat=[ 3 1;0 1; -2 1];
             testEllipsoid=self.ellipsoid(testAMat*(testAMat'));
             [testDim, testRank]= dimension(testEllipsoid);
             isTestRes=(testDim==3)&&(testRank==2);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %High-dimensional self.ellipsoids
             testEllVec = [self.ellipsoid(diag(1:12)), self.ellipsoid((0:0.1:1.4).',diag(1:15)), ...
                 self.ellipsoid(rand(20,1),diag(1:20))];
             testDimsVec = dimension(testEllVec);
             isTestRes = all( testDimsVec == [12 15 20] );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             testEllMat= [self.ellipsoid((0:0.1:2).',diag(0:0.01:0.2)), self.ellipsoid, self.ellipsoid(rand(50,1),9*eye(50,50));
                 self.ellipsoid, self.ellipsoid(repmat([diag(0:0.1:5) diag(0:0.1:5)],2,1)), self.ellipsoid(zeros(30,30))];
             [testDimMat, testRankMat] = dimension(testEllMat);
@@ -663,29 +663,29 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testIsDegenerate(self)
             %Empty self.ellipsoid
             self.runAndCheckError('isdegenerate(self.ellipsoid)','wrongInput:emptyEllipsoid');
-            
+
             %Not degerate self.ellipsoid
             testEllipsoid=self.ellipsoid(ones(6,1),eye(6,6));
             isTestRes = isdegenerate(testEllipsoid);
             mlunitext.assert_equals(false, isTestRes);
-            
+
             %Degenerate self.ellipsoids
             testEllipsoid=self.ellipsoid(ones(6,1),zeros(6,6));
             isTestRes = isdegenerate(testEllipsoid);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             testAMat=[ 3 1;0 1; -2 1];
             testEllipsoid=self.ellipsoid(testAMat*(testAMat.'));
             isTestRes=isdegenerate(testEllipsoid);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %High-dimensional self.ellipsoids
             testEllVec = [self.ellipsoid(diag(1:22)), self.ellipsoid((0:0.1:1.4).',diag(1:15)), ...
                 self.ellipsoid(rand(21,1),diag(0:20))];
             isTestDegVec = isdegenerate(testEllVec);
             isTestRes = all( isTestDegVec == [false false true] );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             testEllMat= [self.ellipsoid((0:0.1:2).',diag(0:0.01:0.2)), self.ellipsoid(eye(40,40)), self.ellipsoid(rand(50,1),9*eye(50,50));
                 self.ellipsoid(diag(10:2:40)), self.ellipsoid(repmat([diag(0:0.1:5) diag(0:0.1:5)],2,1)), self.ellipsoid(zeros(30,30))];
             isTestDegMat = isdegenerate(testEllMat);
@@ -699,19 +699,19 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testEllipsoid=self.ellipsoid;
             isTestRes = testEllipsoid.isEmpty();
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Chek not empty self.ellipsoid
             testEllipsoid=self.ellipsoid(eye(10,1),eye(10,10));
             isTestRes =testEllipsoid.isEmpty();
             mlunitext.assert_equals(false, isTestRes);
-            
+
             %High-dimensional self.ellipsoids
             testEllVec = [self.ellipsoid(diag(1:22)), self.ellipsoid((0:0.1:1.4).',diag(1:15)), ...
                 self.ellipsoid(rand(21,1),diag(0:20)), self.ellipsoid, self.ellipsoid, self.ellipsoid(zeros(40,40))];
             isTestEmpVec = testEllVec.isEmpty();
             isTestRes = all( isTestEmpVec == [false false false true true false] );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             testEllMat= [self.ellipsoid((0:0.1:2).',diag(0:0.01:0.2)), self.ellipsoid(eye(40,40)), self.ellipsoid;
                 self.ellipsoid, self.ellipsoid(repmat([diag(0:0.1:5) diag(0:0.1:5)],2,1)), self.ellipsoid(zeros(30,30))];
             isTestEmpMat = testEllMat.isEmpty();
@@ -723,30 +723,30 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testMaxEig(self)
             %Check empty self.ellipsoid
             self.runAndCheckError('maxeig(self.ellipsoid)','wrongInput:emptyEllipsoid');
-            
+
             %Check degenerate matrix
             testEllipsoid1=self.ellipsoid([1; 1], zeros(2,2));
             testEllipsoid2=self.ellipsoid(zeros(2,2));
             isTestRes=(maxeig(testEllipsoid1)==0)&&(maxeig(testEllipsoid2)==0);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Check on diaganal matrix
             testEllipsoid=self.ellipsoid(diag(1:0.2:5.2));
             isTestRes=(maxeig(testEllipsoid)==5.2);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Check on not diaganal matrix
             testEllipsoid=self.ellipsoid([1 1 -1; 1 4 -3; -1 -3 9]);
             isTestRes=( (maxeig(testEllipsoid)-max(eig([1 1 -1; 1 4 -3; -1 -3 9])))<=eps );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %High-dimensional self.ellipsoids
             testEllVec = [self.ellipsoid(diag(1:12)), self.ellipsoid((0:0.1:1.4).',diag(0.1:0.1:1.5)), ...
                 self.ellipsoid(rand(20,1),diag(1:20))];
             testMaxEigVec = maxeig(testEllVec);
             isTestRes = all( testMaxEigVec == [12 1.5 20] );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             testEllMat= [self.ellipsoid((0:0.1:2).',diag(0:0.01:0.2)), self.ellipsoid(-10*ones(41,1),diag(20:10:420)), self.ellipsoid(rand(50,1),9*eye(50,50));
                 self.ellipsoid(5*eye(10,10)), self.ellipsoid(diag(0:0.0001:0.01)), self.ellipsoid(zeros(30,30))];
             testMaxEigMat = maxeig(testEllMat);
@@ -758,30 +758,30 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testMinEig(self)
             %Check empty self.ellipsoid
             self.runAndCheckError('mineig(self.ellipsoid)','wrongInput:emptyEllipsoid');
-            
+
             %Check degenerate matrix
             testEllipsoid1=self.ellipsoid([-2; -2], zeros(2,2));
             testEllipsoid2=self.ellipsoid(zeros(2,2));
             isTestRes=(mineig(testEllipsoid1)==0)&&(mineig(testEllipsoid2)==0);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Check on diaganal matrix
             testEllipsoid=self.ellipsoid(diag(4:-0.2:1.2));
             isTestRes=(mineig(testEllipsoid)==1.2);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Check on not diaganal matrix
             testEllipsoid=self.ellipsoid([1 1 -1; 1 4 -4; -1 -4 9]);
             isTestRes=( (mineig(testEllipsoid)-min(eig([1 1 -1; 1 4 -3; -1 -3 9])))<=eps );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %High-dimensional self.ellipsoids
             testEllVec = [self.ellipsoid(diag(1:12)), self.ellipsoid((0:0.1:1.4).',diag(0.1:0.1:1.5)), ...
                 self.ellipsoid(rand(21,1),diag(0:20))];
             testMinEigVec = mineig(testEllVec);
             isTestRes = all( testMinEigVec == [1 0.1 0] );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             testEllMat= [self.ellipsoid((0.1:0.1:2).',diag(0.01:0.01:0.2)), self.ellipsoid(-10*ones(41,1),diag(20:10:420)), self.ellipsoid(rand(50,1),9*eye(50,50));
                 self.ellipsoid(repmat(diag(1:20),2,2)), self.ellipsoid(diag(0.0001:0.0001:0.01)), self.ellipsoid(zeros(30,30))];
             testMinEigMat = mineig(testEllMat);
@@ -793,23 +793,23 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testTrace(self)
             %Empty self.ellipsoid
             self.runAndCheckError('trace(self.ellipsoid)','wrongInput:emptyEllipsoid');
-            
+
             %Not empty self.ellipsoid
             testEllipsoid=self.ellipsoid(zeros(10,1),eye(10,10));
             isTestRes=trace(testEllipsoid)==10;
             mlunitext.assert_equals(true, isTestRes);
-            
+
             testEllipsoid=self.ellipsoid(-eye(3,1),[1 0 1; 0 0 0; 1 0 2 ]);
             isTestRes=trace(testEllipsoid)==3;
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %High-dimensional self.ellipsoids
             testEllVec = [self.ellipsoid(diag(1:12)), self.ellipsoid((0:0.1:1.4).',diag(0.1:0.1:1.5)), ...
                 self.ellipsoid(rand(21,1),diag(0:20))];
             testTraceVec = trace(testEllVec);
             isTestRes = all( testTraceVec == [78 12 210] );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             testEllMat= [self.ellipsoid((0.1:0.1:2).',diag(0.01:0.01:0.2)), self.ellipsoid(-10*ones(41,1),diag(20:10:420)),...
                 self.ellipsoid(rand(50,1),9*eye(50,50));   self.ellipsoid(repmat(diag(1:20),2,2)),...
                 self.ellipsoid(diag(0.0001:0.0001:0.01)), self.ellipsoid(zeros(30,30))];
@@ -824,39 +824,39 @@ classdef EllipsoidTestCase < mlunitext.test_case
             absTol = Properties.getAbsTol();
             %Check empty self.ellipsoid
             self.runAndCheckError('volume(self.ellipsoid)','wrongInput:emptyEllipsoid');
-            
+
             %Check degenerate self.ellipsoid
             testEllipsoid=self.ellipsoid([1 0 0;0 1 0;0 0 0]);
             isTestRes=volume(testEllipsoid)==0;
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Check dim=1 with two different centers
             testEllipsoid1=self.ellipsoid(2,1);
             testEllipsoid2=self.ellipsoid(1);
             isTestRes=(volume(testEllipsoid1)==2)&&(volume(testEllipsoid2)==2);
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Check dim=2 with two different centers
             testEllipsoid1=self.ellipsoid([1; -1],eye(2,2));
             testEllipsoid2=self.ellipsoid(eye(2,2));
             isTestRes=( (volume(testEllipsoid1)-pi)<=absTol )&&( (volume(testEllipsoid2)-pi)<=absTol );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Chek dim=3 with not diaganal matrix
             testEllipsoid=self.ellipsoid([1 1 -1; 1 4 -3; -1 -3 9]);
             isTestRes=( (volume(testEllipsoid)-(8*realsqrt(5)*pi/3)<=absTol ) );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Check dim=5
             testEllipsoid=self.ellipsoid(4*ones(5,1),eye(5,5));
             isTestRes=( (volume(testEllipsoid)-(8*pi*pi/15)<=absTol ) );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %Check dim=6
             testEllipsoid=self.ellipsoid(-ones(6,1),diag([1, 4, 9, 16,1, 25]));
             isTestRes=( (volume(testEllipsoid)-(20*pi*pi*pi)<=absTol ) );
             mlunitext.assert_equals(true, isTestRes);
-            
+
             %High-dimensional self.ellipsoids
             testEllMat= [self.ellipsoid((0.1:0.1:2).',diag(0.01:0.01:0.2)), self.ellipsoid(-10*ones(13,1),diag(0.1:0.1:1.3));
                 self.ellipsoid(rand(20,1),9*diag(0:19)), self.ellipsoid(diag(1:21));
@@ -865,7 +865,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             testRightVolMat = [(pi^6)*realsqrt(prod(0.01:0.01:0.2))/prod(1:6), (pi^6)*(2^7)*realsqrt(prod(0.1:0.1:1.3))/prod(1:2:13);
                 0,                                          (pi^10)*(2^11)*realsqrt(prod(1:21))/prod(1:2:21);
                 (pi^50)*realsqrt(prod(0.1:0.1:10))/prod(1:50), 0];
-            
+
             isTestEqMat = (testVolMat-testRightVolMat)<=absTol;
             isTestRes = all(isTestEqMat(:));
             mlunitext.assert_equals(true, isTestRes);
@@ -874,18 +874,18 @@ classdef EllipsoidTestCase < mlunitext.test_case
         function self = testEq(self)
             import elltool.conf.Properties;
             MAX_TOL = Properties.getAbsTol();
-            
+
             testMat = eye(2);
             checkEllEqual(self.ellipsoid(testMat), self.ellipsoid(testMat), true, '');
-            
+
             test1Mat = eye(2);
             test2Mat = eye(2) + MAX_TOL;
             checkEllEqual(self.ellipsoid(test1Mat), self.ellipsoid(test2Mat), true, '');
-            
+
             test1Mat = eye(2);
             test2Mat = eye(2) - 0.99*MAX_TOL;
             checkEllEqual(self.ellipsoid(test1Mat), self.ellipsoid(test2Mat), true, '');
-            
+
             test1Mat = 100*eye(2);
             test2Mat = 100*eye(2) - 0.99*MAX_TOL;
             checkEllEqual(self.ellipsoid(test1Mat), self.ellipsoid(test2Mat), true, '');
@@ -894,7 +894,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
             firstMat = eye(2);
             secMat = eye(2)+1;
             secVec = [1;0];
-            maxTol = 1;
+            maxTol = 1; %#ok<NASGU>
             ell1 = self.ellipsoid(firstMat);
             ell2 = self.ellipsoid(secVec,secMat);
             [isOk,reportStr]=ell1.isEqual(ell2);
@@ -912,122 +912,122 @@ classdef EllipsoidTestCase < mlunitext.test_case
             mlunitext.assert_equals(isEqualArr, testEllArr.eq(testEll));
             mlunitext.assert_equals(isnEqualArr, testEll2.eq(testEllArr));
             mlunitext.assert_equals(isnEqualArr, testEllArr.eq(testEll2));
-            
+
             testEll2Arr = repmat(testEll2, mDim, nDim);
             mlunitext.assert_equals(isEqualArr, testEllArr.eq(testEllArr));
             mlunitext.assert_equals(isnEqualArr, testEll2Arr.eq(testEllArr));
-            
+
             self.runAndCheckError...
                 ('eq([testEll, testEll2], [testEll; testEll2])','wrongSizes');
-            
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testEllipsoidZeros2 ...
-                testEllipsoidZeros3 testEllipsoidEmpty] = self.createTypicalEll(1);
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(1);
-            
-            
+
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testEllipsoidZeros2, ...
+                testEllipsoidZeros3, testEllipsoidEmpty] = self.createTypicalEll(1);
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(1);
+
+
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
-            
+
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
                 '\(1).QSqrt-->.*\(1.07335.*).*tolerance.\(1.00000.*e\-05)');
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(2);
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(2);
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
-            
-            
+
+
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
                 '\(1).QSqrt-->.*\(1.07335.*).*tolerance.\(1.00000.*e\-05)');
-            
+
             [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(3);
             checkEllEqual(testEllHighDim1, testEllHighDim1, true, '');
-            
+
             checkEllEqual(testEllHighDim1, testEllHighDim2, false, ...
                 '\(1).QSqrt-->.*\(1.07335.*).*tolerance.\(1.00000.*e\-05)');
-            
-            
+
+
             checkEllEqual(testEllipsoid1, testEllipsoid1, true, '');
-            
+
             checkEllEqual(testEllipsoid2, testEllipsoid1, false, ...
                 '\(1).q-->.*\(2.*).*tolerance.\(1.00000.*e\-05)');
-            
+
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
                 '\(1).QSqrt-->.*\(3.4314.*e\-01).*tolerance.\(1.00000.*e\-05)',...
                 '\(1).QSqrt-->.*\(0.34314.*).*tolerance.\(1.00000.*e\-05)');
-            
-            
+
+
             checkEllEqual(testEllipsoid3, testEllipsoid2, false, ...
                 '\(1).QSqrt-->.*\(3.4314.*e\-01).*tolerance.\(1.00000.*e\-05)',...
                 '\(1).QSqrt-->.*\(0.34314.*).*tolerance.\(1.00000.*e\-05)');
-            
+
             ansStr = sprintf('(1).QSqrt-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidZeros3, false, ansStr);
-            
-            
+
+
             ansStr = sprintf('(1).QSqrt-->Different sizes (left: [2 2], right: [0 0])\n(1).q-->Different sizes (left: [2 1], right: [0 0])');
             checkEllEqual(testEllipsoidZeros2, testEllipsoidEmpty, false, ansStr);
-            
-            
+
+
             checkEllEqual(testEllipsoidEmpty, testEllipsoidEmpty, true, '');
-            
-            testNotEllipsoid = [];
+
+            testNotEllipsoid = []; %#ok<NASGU>
             %'==: both arguments must be self.ellipsoids.'
             self.runAndCheckError('eq(testEllipsoidEmpty, testNotEllipsoid)','wrongInput:emptyArray');
-            
+
             %'==: sizes of self.ellipsoidal arrays do not match.'
             self.runAndCheckError('eq([testEllipsoidEmpty testEllipsoidEmpty], [testEllipsoidEmpty; testEllipsoidEmpty])','wrongSizes');
-            
-            
-            
+
+
+
             ansStr = sprintf('(1).QSqrt-->Different sizes (left: [2 2], right: [3 3])\n(1).q-->Different sizes (left: [2 1], right: [3 1])');
             checkEllEqual([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3], [false, true], ansStr);
         end
 %         %
         function self = testNe(self)
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testEllipsoidZeros2 testEllipsoidZeros3 ...
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testEllipsoidZeros2, testEllipsoidZeros3, ...
                 testEllipsoidEmpty] = self.createTypicalEll(1);
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(1);
-            
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(1);
+
             testRes = ne(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(false, testRes);
-            
+
             testRes = ne(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(true, testRes);
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(2);
-            
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(2);
+
             testRes = ne(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(false, testRes);
-            
+
             testRes = ne(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(true, testRes);
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(3);
-            
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(3);
+
             testRes = ne(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(false, testRes);
-            
+
             testRes = ne(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = ne(testEllipsoid1, testEllipsoid1);
             mlunitext.assert_equals(false, testRes);
-            
+
             testRes = ne(testEllipsoid2, testEllipsoid1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = ne(testEllipsoid3, testEllipsoid2);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = ne(testEllipsoidZeros2, testEllipsoidZeros3);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = ne(testEllipsoidZeros2, testEllipsoidEmpty);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = ne(testEllipsoidEmpty, testEllipsoidEmpty);
             mlunitext.assert_equals(false, testRes);
-            
+
             testRes = ne([testEllipsoidZeros2 testEllipsoidZeros3], [testEllipsoidZeros3 testEllipsoidZeros3]);
-            if (testRes == [1 0])
+            if (testRes == [1 0]) %#ok<BDSCA>
                 testRes = 1;
             else
                 testRes = 0;
@@ -1036,42 +1036,42 @@ classdef EllipsoidTestCase < mlunitext.test_case
         end
         %
         function self = testGe(self)
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testEllipsoidEmpty] = self.createTypicalEll(2);
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(1);
-            
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3 , ~] = self.createTypicalEll(2);
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(1);
+
             testRes = ge(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = ge(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(false, testRes);
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(2);
-            
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(2);
+
             testRes = ge(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = ge(testEllHighDim2, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(3);
-            
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(3);
+
             testRes = ge(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = ge(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(false, testRes);
-            
+
             testRes = ge(testEllipsoid1, testEllipsoid1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = ge(testEllipsoid2, testEllipsoid1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = ge(testEllipsoid2, testEllipsoid3);
             mlunitext.assert_equals(false, testRes);
-            
+
             testRes = ge([testEllipsoid2 testEllipsoid1], [testEllipsoid1 testEllipsoid2]);
-            if (testRes == [1 0])
+            if (testRes == [1 0]) %#ok<BDSCA>
                 testRes = 1;
             else
                 testRes = 0;
@@ -1080,49 +1080,49 @@ classdef EllipsoidTestCase < mlunitext.test_case
         end
         %
         function self = testGt(self)
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testEllipsoidEmpty] = self.createTypicalEll(2);
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(1);
-            
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testEllipsoidEmpty] = self.createTypicalEll(2); %#ok<ASGLU>
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(1);
+
             testRes = gt(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = gt(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(false, testRes);
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(2);
-            
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(2);
+
             testRes = gt(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = gt(testEllHighDim2, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(3);
-            
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(3);
+
             testRes = gt(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = gt(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(false, testRes);
-            
+
             testRes = gt(testEllipsoid1, testEllipsoid1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = gt(testEllipsoid2, testEllipsoid1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = gt(testEllipsoid2, testEllipsoid3);
             mlunitext.assert_equals(false, testRes);
-            
-            testNotEllipsoid = [];
+
+            testNotEllipsoid = []; %#ok<NASGU>
             %'both arguments must be self.ellipsoids.'
             self.runAndCheckError('gt(testEllipsoidEmpty, testNotEllipsoid)','wrongInput');
-            
+
             %'sizes of self.ellipsoidal arrays do not match.'
             self.runAndCheckError('gt([testEllipsoidEmpty testEllipsoidEmpty], [testEllipsoidEmpty; testEllipsoidEmpty])','wrongInput:emptyEllipsoid');
-            
+
             testRes = gt([testEllipsoid2 testEllipsoid1], [testEllipsoid1 testEllipsoid2]);
-            if (testRes == [1 0])
+            if (testRes == [1 0]) %#ok<BDSCA>
                 testRes = 1;
             else
                 testRes = 0;
@@ -1131,42 +1131,42 @@ classdef EllipsoidTestCase < mlunitext.test_case
         end
         %
         function self = testLt(self)
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testEllipsoidEmpty] = self.createTypicalEll(2);
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(1);
-            
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testEllipsoidEmpty] = self.createTypicalEll(2); %#ok<ASGLU>
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(1);
+
             testRes = lt(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = lt(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(true, testRes);
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(2);
-            
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(2);
+
             testRes = lt(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = lt(testEllHighDim2, testEllHighDim1);
             mlunitext.assert_equals(false, testRes);
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(3);
-            
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(3);
+
             testRes = lt(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = lt(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = lt(testEllipsoid1, testEllipsoid1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = lt(testEllipsoid2, testEllipsoid1);
             mlunitext.assert_equals(false, testRes);
-            
+
             testRes = lt(testEllipsoid2, testEllipsoid3);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = lt([testEllipsoid2 testEllipsoid1], [testEllipsoid1 testEllipsoid2]);
-            if (testRes == [0 1])
+            if (testRes == [0 1]) %#ok<BDSCA>
                 testRes = 1;
             else
                 testRes = 0;
@@ -1175,42 +1175,42 @@ classdef EllipsoidTestCase < mlunitext.test_case
         end
         %
         function self = testLe(self)
-            [testEllipsoid1 testEllipsoid2 testEllipsoid3 testEllipsoidEmpty] = self.createTypicalEll(2);
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(1);
-            
+            [testEllipsoid1, testEllipsoid2, testEllipsoid3, testEllipsoidEmpty] = self.createTypicalEll(2); %#ok<ASGLU>
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(1);
+
             testRes = le(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = le(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(true, testRes);
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(2);
-            
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(2);
+
             testRes = le(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = le(testEllHighDim2, testEllHighDim1);
             mlunitext.assert_equals(false, testRes);
-            
-            [testEllHighDim1 testEllHighDim2] = self.createTypicalHighDimEll(3);
-            
+
+            [testEllHighDim1, testEllHighDim2] = self.createTypicalHighDimEll(3);
+
             testRes = le(testEllHighDim1, testEllHighDim1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = le(testEllHighDim1, testEllHighDim2);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = le(testEllipsoid1, testEllipsoid1);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = le(testEllipsoid2, testEllipsoid1);
             mlunitext.assert_equals(false, testRes);
-            
+
             testRes = le(testEllipsoid2, testEllipsoid3);
             mlunitext.assert_equals(true, testRes);
-            
+
             testRes = le([testEllipsoid2 testEllipsoid1], [testEllipsoid1 testEllipsoid2]);
-            if (testRes == [0 1])
+            if (testRes == [0 1]) %#ok<BDSCA>
                 testRes = 1;
             else
                 testRes = 0;
@@ -1220,31 +1220,31 @@ classdef EllipsoidTestCase < mlunitext.test_case
         %
         function self = testMtimes(self)
             testEllipsoid1 = self.ellipsoid([1; 1], eye(2));
-            
-            [testHighDimShapeMat testHighDimMat] = self.createTypicalHighDimEll(4);
+
+            [testHighDimShapeMat, testHighDimMat] = self.createTypicalHighDimEll(4);
             testEllHighDim = self.ellipsoid(testHighDimShapeMat);
-            
+
             resEll = mtimes(testHighDimMat, testEllHighDim);
             ansEll = self.ellipsoid(zeros(12, 1), testHighDimMat*testHighDimShapeMat*testHighDimMat');
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
-            
-            [testHighDimShapeMat testHighDimMat] = self.createTypicalHighDimEll(5);
+
+            [testHighDimShapeMat, testHighDimMat] = self.createTypicalHighDimEll(5);
             testEllHighDim = self.ellipsoid(testHighDimShapeMat);
-            
+
             resEll = mtimes(testHighDimMat, testEllHighDim);
             ansEll = self.ellipsoid(zeros(20, 1), testHighDimMat*testHighDimShapeMat*testHighDimMat');
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
-            
-            [testHighDimShapeMat testHighDimMat] = self.createTypicalHighDimEll(6);
+
+            [testHighDimShapeMat, testHighDimMat] = self.createTypicalHighDimEll(6);
             testEllHighDim = self.ellipsoid(testHighDimShapeMat);
-            
+
             resEll = mtimes(testHighDimMat, testEllHighDim);
             ansEll = self.ellipsoid(zeros(100, 1), testHighDimMat*testHighDimShapeMat*testHighDimMat');
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
-            
+
             % [~, AMat] = eig(rand(4,4)); fixed case
             AMat = [2.13269424734606 + 0.00000000000000i 0.00000000000000 + 0.00000000000000i 0.00000000000000 + 0.00000000000000i ...
                 0.00000000000000 + 0.00000000000000i;0.00000000000000 + 0.00000000000000i -0.511574704257189 + 0.00000000000000i ...
@@ -1257,33 +1257,33 @@ classdef EllipsoidTestCase < mlunitext.test_case
             ansEll = self.ellipsoid(zeros(4, 1), AMat*diag(1:1:4)*AMat');
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
-            
+
             AMat = 2*eye(2);
             resEll = mtimes(AMat, testEllipsoid1);
             ansEll = self.ellipsoid([2; 2], 4*eye(2));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
-            
-            AMat = eye(3);
+
+            AMat = eye(3); %#ok<NASGU>
             %'MTIMES: dimensions do not match.'
             self.runAndCheckError('mtimes(AMat, testEllipsoid1)','wrongSizes');
-            
-            AMat = cell(2);
+
+            AMat = cell(2); %#ok<PREALL>
             %'MTIMES: first multiplier is expected to be a matrix or a scalar,\n        and second multiplier - an self.ellipsoid.'
             self.runAndCheckError('mtimes(AMat, testEllipsoid1)','wrongInput');
-            
+
             AMat = zeros(2);
             resEll = mtimes(AMat, testEllipsoid1);
             ansEll = self.ellipsoid(zeros(2));
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
-            
+
             AMat = [1 2; 3 4; 5 6];
             resEll = mtimes(AMat, testEllipsoid1);
             ansEll = self.ellipsoid([3; 7; 11], [5 11 17; 11 25 39; 17 39 61]);
             [isEq, reportStr] = isEqual(resEll, ansEll);
             mlunitext.assert_equals(true, isEq, reportStr);
-            
+
             testEllipsoid1 = self.ellipsoid([0; 0], zeros(2));
             resEll = mtimes(AMat, testEllipsoid1);
             ansEll = self.ellipsoid(zeros(3));
@@ -1337,7 +1337,7 @@ classdef EllipsoidTestCase < mlunitext.test_case
                 '([1; 1], eye(2), [2; 2; 3.5])'),...
                 'wrongInput');
             %
-            sizeArr = [2, 3 + 1i*eps*2, 3, 5];
+            sizeArr = [2, 3 + 1i*eps*2, 3, 5]; %#ok<NASGU>
             self.runAndCheckError('self.ellipsoid.fromRepMat (sizeArr)', ...
                 'wrongInput:inpMat');
         end
@@ -1431,8 +1431,8 @@ classdef EllipsoidTestCase < mlunitext.test_case
             centerCVec{4} = [1 0 0 0];
             shapeMatCVec{4} = diag([3 2 1 0]);
             for iElem = 1 : 4
-                ellVec(iElem) = self.ellipsoid(centerCVec{iElem}', shapeMatCVec{iElem});
-                transposedCenterCVec{iElem} = centerCVec{iElem}';
+                ellVec(iElem) = self.ellipsoid(centerCVec{iElem}', shapeMatCVec{iElem}); %#ok<AGROW>
+                transposedCenterCVec{iElem} = centerCVec{iElem}'; %#ok<AGROW>
             end
             SEllVec = struct('centerVec', transposedCenterCVec, 'shapeMat', shapeMatCVec);
             ObtainedEllStruct = ellVec(1).toStruct();
@@ -1485,7 +1485,7 @@ try
     isTestCVec  = testCenterVec == qCenterVec;
     isTestEyeMat = testShapeMat == qShapeMat;
 catch
-    isTestRes = false;
+    isTestRes = false; %#ok<NASGU>
 end
 isTestRes = all(isTestCVec(:)) && all(isTestEyeMat(:));
 mlunitext.assert_equals(true, isTestRes);
@@ -1506,14 +1506,14 @@ try
     isTestCVec  = testCenterVec == qCenterVec;
     isTestEyeMat = testShapeMat == qShapeMat;
 catch
-    isTestRes = false;
+    isTestRes = false; %#ok<NASGU>
 end
 isTestRes = all(isTestCVec(:)) && all(isTestEyeMat(:));
 mlunitext.assert_equals(true, isTestRes);
 end
 %
-function fCheckBallsForTestMinkMP(nDim,minEll,subEll,sumEllMat,centerVec,rad,tol)
-[testCenterVec testPointsMat]=minkmp(minEll,subEll,sumEllMat);
+function fCheckBallsForTestMinkMP(nDim,minEll,subEll,sumEllMat,centerVec,rad,tol) %#ok<DEFNU>
+[testCenterVec, testPointsMat]=minkmp(minEll,subEll,sumEllMat);
 switch nDim
     case 1
         isTestRes = (testCenterVec==centerVec) && all( (abs(testPointsMat-centerVec)-rad) <= tol);
@@ -1531,11 +1531,11 @@ mlunitext.assert(isTestRes);
 end
 %
 function distEll=ellVecDistanceCVX(ellObj,vectorVec,isFlagOn)
-[ellCenVec ellshapeMatMat]=double(ellObj);
+[ellCenVec, ellshapeMatMat]=double(ellObj);
 ellshapeMatMat=ellshapeMatMat\eye(size(ellshapeMatMat));
 ellshapeMatMat=0.5*(ellshapeMatMat+ellshapeMatMat.');
 ellDims = dimension(ellObj);
-maxDim   = max(max(ellDims));
+maxDim   = max(max(ellDims)); %#ok<NASGU>
 cvx_begin sdp
 variable x(maxDim, 1)
 if isFlagOn
@@ -1545,7 +1545,7 @@ else
 end
 minimize(fDist)
 subject to
-x'*ellshapeMatMat*x + 2*(-ellshapeMatMat*ellCenVec)'*x + (ellCenVec'*ellshapeMatMat*ellCenVec - 1) <= 0
+x'*ellshapeMatMat*x + 2*(-ellshapeMatMat*ellCenVec)'*x + (ellCenVec'*ellshapeMatMat*ellCenVec - 1) <= 0; %#ok<VUNUS>
 cvx_end
 distEll = sqrt(fDist);
 end
@@ -1554,7 +1554,7 @@ function distEllEll=ellEllDistanceCVX(ellObj1,ellObj2,flag)
 import gras.geom.ell.invmat;
 dims1Mat = dimension(ellObj1);
 %dims2Mat = dimension(ellObj2);
-maxDim   = max(max(dims1Mat));
+maxDim   = max(max(dims1Mat)); %#ok<NASGU>
 %maxDim2   = max(max(dims2Mat));
 [cen1Vec, q1Mat] = double(ellObj1);
 [cen2Vec, q2Mat] = double(ellObj2);
@@ -1572,8 +1572,8 @@ else
 end
 minimize(fDist)
 subject to
-x'*qi1Mat*x + 2*(-qi1Mat*cen1Vec)'*x + (cen1Vec'*qi1Mat*cen1Vec - 1) <= 0
-y'*qi2Mat*y + 2*(-qi2Mat*cen2Vec)'*y + (cen2Vec'*qi2Mat*cen2Vec - 1) <= 0
+x'*qi1Mat*x + 2*(-qi1Mat*cen1Vec)'*x + (cen1Vec'*qi1Mat*cen1Vec - 1) <= 0; %#ok<VUNUS>
+y'*qi2Mat*y + 2*(-qi2Mat*cen2Vec)'*y + (cen2Vec'*qi2Mat*cen2Vec - 1) <= 0; %#ok<VUNUS>
 cvx_end
 distEllEll = sqrt(fDist);
 end

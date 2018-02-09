@@ -1,5 +1,5 @@
 function [res, status] = doesIntersectionContain(fstEllArr, secObjArr,...
-    varargin)
+    varargin) %#ok<STOUT>
 % DOESINTERSECTIONCONTAIN - checks if the intersection of ellipsoids
 %                           contains the union or intersection of given
 %                           ellipsoids or Polyhedrons.
@@ -106,7 +106,6 @@ import elltool.conf.Properties;
 import elltool.logging.Log4jConfigurator;
 import modgen.common.throwerror;
 import modgen.common.checkmultvar;
-persistent logger;
 %
 checkDoesContainArgs(fstEllArr,secObjArr);
 %
@@ -181,7 +180,7 @@ else
 end
 end
 %
-function [res, status] = qcqp(secEllArr, fstEll)
+function [res, status] = qcqp(secEllArr, fstEll) %#ok<DEFNU>
 % QCQP - formulate quadratically constrained quadratic programming
 %        problem and invoke external solver.
 %

@@ -148,5 +148,7 @@ convertConf2Text(SSysDefConf,sysDefFileName);
 end
 function convertConf2Text(SConf,varargin)
 import modgen.struct.strucdisp;
-strucdisp(SConf,varargin{:},'depth',-1,'maxArrayLength',1000);
+import gras.ellapx.uncertcalc.log.Log4jConfigurator;
+logger=Log4jConfigurator.getLogger();
+logger.info(strucdisp(SConf,varargin{:},'depth',-1,'maxArrayLength',1000));
 end

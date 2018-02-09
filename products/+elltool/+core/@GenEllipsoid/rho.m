@@ -27,12 +27,11 @@ diagMat=ellObj.getDiagMat();
 diagVec=diag(diagMat);
 cenVec=ellObj.getCenterVec();
 isInfVec=diagVec==Inf;
-sDirVec = dirVec;
 dirInfProjVec=0;
 if ~all(~isInfVec)
     nDimSpace=length(diagVec);
     allInfDirMat=eigvMat(:,isInfVec);
-    [orthBasMat rankInf]=ellObj.findBasRank(allInfDirMat,absTol);
+    [orthBasMat, rankInf]=ellObj.findBasRank(allInfDirMat,absTol);
     infIndVec=1:rankInf;
     finIndVec=(rankInf+1):nDimSpace;
     infBasMat = orthBasMat(:,infIndVec);

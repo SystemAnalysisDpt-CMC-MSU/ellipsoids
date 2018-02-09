@@ -22,7 +22,7 @@ function [eMat,f2eMat,f2eIsDirMat] = mapface2edge(vMat,fMat)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2011 $
 %
-trObj = TriRep(fMat,vMat);
+trObj = triangulation(fMat,vMat);
 eMat=trObj.edges;
 nEdges=size(eMat,1);
 nFaces=size(fMat,1);

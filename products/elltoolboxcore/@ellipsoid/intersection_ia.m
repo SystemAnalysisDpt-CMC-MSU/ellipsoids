@@ -32,13 +32,13 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %   Vol.32, No.4, pp.430-442, 2002. For more information, visit
 %   http://www-iri.upc.es/people/ros/ellipsoids.html
 %
-%   The method used to compute maximum volume ellipsoid inscribed in 
-%   intersection of ellipsoid and Polyhedron, is modified version of 
-%   algorithm of finding maximum volume ellipsoid inscribed in intersection 
+%   The method used to compute maximum volume ellipsoid inscribed in
+%   intersection of ellipsoid and Polyhedron, is modified version of
+%   algorithm of finding maximum volume ellipsoid inscribed in intersection
 %   of ellipsoids discribed in Stephen Boyd and Lieven Vandenberghe "Convex
 %   Optimization". It works properly for nondegenerate ellipsoid, but for
 %   degenerate ellipsoid result would not lie in this ellipsoid. The result
-%   considered as empty ellipsoid, when maximum absolute velue of element 
+%   considered as empty ellipsoid, when maximum absolute velue of element
 %   in its matrix is less than myEllipsoid.getAbsTol().
 %
 % Input:
@@ -60,16 +60,16 @@ function outEllArr = intersection_ia(myEllArr, objArr)
 %   ellVec = [firstEllObj secEllObj];
 %   thirdEllObj  = ell_unitball(2);
 %   internalEllVec = ellVec.intersection_ia(thirdEllObj)
-% 
+%
 %   internalEllVec =
 %   1x2 array of ellipsoids.
-% 
+%
 %
 % $Author: Alex Kurzhanskiy <akurzhan@eecs.berkeley.edu>
-% $Copyright:  The Regents of the University of California 
+% $Copyright:  The Regents of the University of California
 %              2004-2008 $
 %
-% $Author: Guliev Rustam <glvrst@gmail.com> $   
+% $Author: Guliev Rustam <glvrst@gmail.com> $
 % $Date: Dec-2012$
 % $Copyright: Moscow State University,
 %            Faculty of Computational Mathematics and Computer Science,
@@ -281,12 +281,12 @@ else
         variable d(n)
         variable l(1)
         maximize( det_rootn( B ) )
-        subject to    
+        subject to
             [-l - ellConst + (ellShift)'*(invEllMat\ellShift), zeros(1,n),  (d+invEllMat\ellShift)';...
                 zeros(n,1), l.*eye(n), B;...
-                d+ invEllMat\ellShift, B, inv(invEllMat)] >= 0;
+                d+ invEllMat\ellShift, B, inv(invEllMat)] >= 0; %#ok<VUNUS>
             for i = 1:polyCSize
-                norm(B*polyMat(i,:)',2) + polyMat(i,:)*d <= polyVec(i);
+                norm(B*polyMat(i,:)',2) + polyMat(i,:)*d <= polyVec(i); %#ok<VUNUS>
             end
 
     cvx_end
@@ -307,23 +307,23 @@ function E = getInnerEllipsoid(className,Pset,E,Options)
 % ---------------------------------------------------------------------------
 % DESCRIPTION
 % ---------------------------------------------------------------------------
-% This function computes the largest ellipsoid inscribed in a Polyhedron. 
-% It is also possible to pass an ellipsoid (x-x0) E (x - x0) <= rho and 
+% This function computes the largest ellipsoid inscribed in a Polyhedron.
+% It is also possible to pass an ellipsoid (x-x0) E (x - x0) <= rho and
 % to compute the maximum rho such that the scaled ellipsoid is still contained
 % in the Polyhedron.
 %
 % ---------------------------------------------------------------------------
 % INPUT
-% ---------------------------------------------------------------------------  
+% ---------------------------------------------------------------------------
 %   className - Name of class for ellipsoid
 %   Pset    -   Polyhedron object constraining the ellipsoid
 %   E,x0    -   Optional: input ellipsoid with center x0, i.e.
-%                           (x-x0) E^(-1) (x - x0) <= rho 
+%                           (x-x0) E^(-1) (x - x0) <= rho
 %               given as an ELLIPSOID object
-%               The function then computes the maximum rho such that the 
+%               The function then computes the maximum rho such that the
 %               ellipsoid is still contained in Pset.
 %   Options
-%     .plotresult    - If problem is in 2D and flag is set to 1, the result 
+%     .plotresult    - If problem is in 2D and flag is set to 1, the result
 %                      will be plotted (Default: 0).
 % ---------------------------------------------------------------------------
 % OUTPUT
@@ -355,18 +355,18 @@ function E = getInnerEllipsoid(className,Pset,E,Options)
 %          but WITHOUT ANY WARRANTY; without even the implied warranty of
 %          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 %          General Public License for more details.
-% 
+%
 %          You should have received a copy of the GNU General Public
-%          License along with this library; if not, write to the 
-%          Free Software Foundation, Inc., 
-%          59 Temple Place, Suite 330, 
+%          License along with this library; if not, write to the
+%          Free Software Foundation, Inc.,
+%          59 Temple Place, Suite 330,
 %          Boston, MA  02111-1307  USA
 %
 % ---------------------------------------------------------------------------
 
-global MPTOPTIONS
+global MPTOPTIONS %#ok<NUSED>
 
-error(nargchk(1,4,nargin));
+narginchk(1,4);
 
 if nargin < 4,
     Options = [];
@@ -386,33 +386,33 @@ if(nargin>2)
     aux=zeros(size(K));
     for i=1:length(K);
         Ai=H(i,:);
-        aux(i)=(K(i)-Ai*x0)^2/(Ai*iL*Ai');
+        aux(i)=(K(i)-Ai*x0)^2/(Ai*iL*Ai'); %#ok<MINV>
     end
     rho=min(aux);
     E=E/rho';
 else
     m = size(H,1);
     yalmip('clear' ) ;
-    
+
     B = sdpvar(nx,nx);
     d = sdpvar(nx,1);
-    
+
     myprog = lmi;
     for i=1:m
         myprog = myprog + set('||B*H(i,:)''||+H(i,:)*d<K(i,:)') ;
     end
     myprog=myprog+set('B>0');
     % Ellipsoid E = {Bu+d | ||u||_2 <=1}
-    solution = solvesdp(myprog,-logdet(B));
+    solution = solvesdp(myprog,-logdet(B)); %#ok<NASGU>
     E   = double(B);
     x0  = double(d);
     E=inv(E)'*inv(E);
 end
 
-if nx==2 & Options.plotresult
+if nx==2 && Options.plotresult
     plot(Pset)
     hold on
-    [xe,ye]=mpt_plotellip(E,x0);
+    [xe,ye]=mpt_plotellip(E,x0); %#ok<*ASGLU>
 end
 
 E = inv(E);

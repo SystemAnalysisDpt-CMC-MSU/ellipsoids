@@ -127,7 +127,7 @@ convertConf2Text(SSysDefConf,sysDefFileName);
         import gras.ellapx.uncertcalc.log.Log4jConfigurator;
         logger=Log4jConfigurator.getLogger();
         [SConf,confVersion]=confRepoMgr.getCurConf();
-        inpArgList={struct('conf',SConf,'version',confVersion)};
+        inpArgList={struct('conf',SConf,'version',confVersion)}; %#ok<NASGU>
         confStr=evalc('convertConf2Text(inpArgList{:})');
         logger.info(['Loaded configuration for ',confType,': ',confStr]);
         confRepoMgr.copyConfFile([resDir,filesep,confType,filesep]);
@@ -135,5 +135,7 @@ convertConf2Text(SSysDefConf,sysDefFileName);
 end
 function convertConf2Text(SConf,varargin)
 import modgen.struct.strucdisp;
-strucdisp(SConf,varargin{:},'depth',-1,'maxArrayLength',1000);
+import gras.ellapx.uncertcalc.log.Log4jConfigurator;
+logger=Log4jConfigurator.getLogger();
+logger.info(strucdisp(SConf,varargin{:},'depth',-1,'maxArrayLength',1000));
 end

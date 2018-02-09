@@ -197,7 +197,7 @@ classdef SuiteOp < mlunitext.test_case
             isRSqrtBTestEnabled = false;
             if isRSqrtBTestEnabled
                 self.isOpEqual({}, 'abs(t)', [], @factory.realsqrt,...
-                    't^2');
+                    't^2'); %#ok<UNRCH>
             end 
             
             aMat = ones(4);

@@ -43,14 +43,14 @@ classdef SuiteBasic < mlunitext.test_case
                     (SPicgenFilesArray(iElem).name, '.', 'first');
                 picFileName = strcat(modgen.string.splitpart(...
                     picgenFileName, '_gen', 1), '.png');
-                picFileNameVec = [picFileNameVec picFileName];
+                picFileNameVec = [picFileNameVec picFileName]; %#ok<AGROW>
                 picgenFunctionName =  strcat('elltool.doc.picgen.',...
                     picgenFileName);
                 fPicGen = str2func(picgenFunctionName);
                 fPicGen();
                 isFileExistVec(iElem) = ...
                     modgen.system.ExistanceChecker.isFile(...
-                    [testDirPath filesep picFileName]);
+                    [testDirPath filesep picFileName]); %#ok<AGROW>
             end
             close all;
             PicGenController.flush();

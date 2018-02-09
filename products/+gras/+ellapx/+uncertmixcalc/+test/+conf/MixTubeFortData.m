@@ -92,7 +92,7 @@ classdef MixTubeFortData < handle
             curPath = fileparts(mfilename('fullpath'));
             fullPath = [curPath filesep '..' filesep '+mlunit' filesep...
                 'TestData' filesep fileName];
-            ellTubeRel = self.ellTubeRel;
+            ellTubeRel = self.ellTubeRel; %#ok<NASGU,PROPLC>
             save(fullPath, 'ellTubeRel');
         end
         %

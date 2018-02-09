@@ -1,2 +1,2 @@
-function SInput=patch_add_logging_001(~,SInput)
+function SInput=patch_001_dummy_patch(~,SInput)
 end

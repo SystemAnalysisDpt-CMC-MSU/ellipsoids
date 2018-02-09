@@ -44,11 +44,11 @@ classdef SuiteBasic < mlunitext.test_case
             end
         end
         %
-        function testProgressCmdDisplayer(self)
+        function testProgressCmdDisplayer(~)
             tStart=1;
             tEnd=16;
             nDots=5;
-            obj=gras.gen.ProgressCmdDisplayer(tStart,tEnd,nDots);
+            obj=gras.gen.ProgressCmdDisplayer(tStart,tEnd,nDots); %#ok<NASGU>
             iCur=1;
             res{iCur}=evalc('obj.start()');
             for t=tStart:0.4:tEnd-1
@@ -63,7 +63,7 @@ classdef SuiteBasic < mlunitext.test_case
             resStrFiltered=resStr(ismember(resStr,'.[]'));
             mlunitext.assert_equals(true,isequal(resStrFiltered,resExpStr));
         end
-        function testRMultiplySimple(self)
+        function testRMultiplySimple(~)
             MAX_TOL=1e-11;
             aMat=rand(2,2);
             bMat=rand(2,2);
@@ -82,7 +82,7 @@ classdef SuiteBasic < mlunitext.test_case
                 'TestData', filesep, 'matvector_data.mat']);
             aArray = SData.aArray;
             bMat = aArray(:,:,1);
-            bArray = aArray(:,:,2:end);
+            bArray = aArray(:,:,2:end); %#ok<NASGU>
             %
             % 10x10x100 by 10x10x100
             %
@@ -113,7 +113,7 @@ classdef SuiteBasic < mlunitext.test_case
             end
         end
         %
-        function testSortrowstol(self)
+        function testSortrowstol(~)
             inpMat=[1 2;1+1e-14 1];
             check([1;2],1e-16);
             %
@@ -168,7 +168,7 @@ classdef SuiteBasic < mlunitext.test_case
             
         end
         %
-        function testCompareMatVectorMultiply(self)
+        function testCompareMatVectorMultiply(~)
             import gras.gen.MatVector;
             %
             CALC_PRECISION = 1e-5;
@@ -202,7 +202,7 @@ classdef SuiteBasic < mlunitext.test_case
                 mlunitext.assert(max(abs(rArray(:))) < CALC_PRECISION);
             end
         end
-        function testMatDot(self)
+        function testMatDot(~)
             import gras.gen.matdot;
             Amat = magic(4);
             Bmat = eye(4);
@@ -223,7 +223,7 @@ classdef SuiteBasic < mlunitext.test_case
             end
         end
 
-        function testSymmetricOp(self)
+        function testSymmetricOp(~)
             import gras.gen.SymmetricMatVector;
             %
             MAX_TOL=1e-10;

@@ -25,7 +25,7 @@ classdef MatrixNearestInterp<gras.mat.IMatrixFunction
             sizeVec=size(self.dataArray(:,:,1));
         end
         function resArray=evaluate(self,newTimeVec)
-            dataArray=self.dataArray;
+            dataArray=self.dataArray; %#ok<*PROPLC>
             timeVec=self.timeVec;
             if isempty(timeVec)
                 resArray=dataArray;
@@ -35,7 +35,7 @@ classdef MatrixNearestInterp<gras.mat.IMatrixFunction
                 resArray=dataArray(:,:,indInterpVec);
             end
         end
-        function nDims=getDimensionality(self)
+        function nDims=getDimensionality(~)
             nDims=2;
         end
         function nCols=getNCols(self)

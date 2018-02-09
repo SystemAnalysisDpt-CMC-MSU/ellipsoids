@@ -122,7 +122,7 @@ end
 function [vMat,fMat] = calcPoints(nPlotPoints, timeVec,qArr, aMat)
 %
 nDims = 2;
-[lGridMat, fMat] = gras.geom.tri.spheretriext(nDims, nPlotPoints);
+[lGridMat, ~] = gras.geom.tri.spheretriext(nDims, nPlotPoints);
 lGridMat = lGridMat';
 nDir = size(lGridMat, 2);
 nTimePoints = size(timeVec, 2);

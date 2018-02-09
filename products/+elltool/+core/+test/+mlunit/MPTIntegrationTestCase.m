@@ -17,11 +17,11 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
     methods
         function ellObj = ellipsoid(self, varargin)
             ellObj = self.ellFactoryObj.createInstance('ellipsoid', ...
-                varargin{:});            
+                varargin{:});
         end
         function hpObj = hyperplane(self, varargin)
             hpObj = self.ellFactoryObj.createInstance('hyperplane', ...
-                varargin{:});            
+                varargin{:});
         end
         function hpObj = polytope2hyperplane(self, varargin)
             hpObj = polytope2hyperplane(varargin{:});
@@ -36,7 +36,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
     end
     %
     methods
-        
+
         function self = MPTIntegrationTestCase(varargin)
             self = self@mlunitext.test_case(varargin{:});
         end
@@ -160,7 +160,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             poly4 = Polyhedron(polyConstrMat,polyK4Vec);
             poly5 = Polyhedron(polyConstrMat,polyK5Vec);
             poly6 = Polyhedron(polyConstrMat,polyK6Vec);
-            poly3D = Polyhedron(polyConstr3DMat,polyK3DVec);
+            poly3D = Polyhedron(polyConstr3DMat,polyK3DVec); %#ok<NASGU>
             poly14D = Polyhedron(polyConstr15DMat,polyK15DVec);
             %
             isExpVec = [1, 0, 1, 1, 1, 0, 1, 0, -1, 0, 1, 0];
@@ -219,12 +219,12 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             mlunitext.assert(eq(poly,testPoly));
             self.runAndCheckError('hyperplane2polytope(poly)',...
                 'wrongInput:class');
-            hyp2 = [testHyp, self.hyperplane([1 2 3 4], 1)];
+            hyp2 = [testHyp, self.hyperplane([1 2 3 4], 1)]; %#ok<NASGU>
             self.runAndCheckError('hyperplane2polytope(hyp2)',...
                 'wrongInput:dimensions');
             self.runAndCheckError('self.polytope2hyperplane(hyp)',...
                 'wrongInput:class');
-            
+
         end
         %
         %
@@ -285,31 +285,31 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         %
         %
         function self = testNegativeIntersectionIA(self)
-            my1Ell = self.ellipsoid(zeros(2));
-            my2Ell = self.ellipsoid(eye(2));
+            my1Ell = self.ellipsoid(zeros(2)); %#ok<NASGU>
+            my2Ell = self.ellipsoid(eye(2)); %#ok<NASGU>
             self.runAndCheckError('my1Ell.intersection_ia(my2Ell)',...
                 'wrongInput:shapeMat');
-            my3Ell = self.ellipsoid([2 1; 1 0.5]);
+            my3Ell = self.ellipsoid([2 1; 1 0.5]); %#ok<NASGU>
             self.runAndCheckError('my3Ell.intersection_ia(my2Ell)',...
                 'wrongInput:shapeMat');
-            my4Ell = ellipsoid;
+            my4Ell = ellipsoid; %#ok<NASGU>
             self.runAndCheckError('my2Ell.intersection_ia(my4Ell)',...
                 'wrongSizes');
             self.runAndCheckError('my4Ell.intersection_ia(my2Ell)',...
                 'wrongSizes');
         end
-        
-        
+
+
         function self = testNegativeIntersectionEA(self)
-            my1Ell = self.ellipsoid(eye(2));
-            my2Ell = ellipsoid;
+            my1Ell = self.ellipsoid(eye(2)); %#ok<NASGU>
+            my2Ell = ellipsoid; %#ok<NASGU>
             self.runAndCheckError('my1Ell.intersection_ea(my2Ell)',...
                 'wrongSizes');
             self.runAndCheckError('my2Ell.intersection_ea(my1Ell)',...
                 'wrongSizes');
         end
-        
-        
+
+
         function self = testIntersectionIAForEll(self)
             %test for internal approximation of intersection
             %of two ellipsoids
@@ -596,7 +596,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 [isOk, reportStr] = my2EllArray.isEqual(myEllEllArrayEAObj);
                 mlunitext.assert(isOk, reportStr);
             end
-            
+
         end
         %
         %
@@ -652,7 +652,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
                 [isOk, reportStr] = myEllArray.isEqual(myEllHyperArrayEAObj);
                 mlunitext.assert(isOk, reportStr);
             end
-            
+
         end
         %
         %
@@ -695,7 +695,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             transfVec = [1; -2; 0];
             v2Mat = vMat*transfMat' + repmat(transfVec',[size(vMat,1),1]);
             poly2 = tri2poly(v2Mat,fMat);
-            
+
             expPoly2 = transfMat*expPoly1 + transfVec;
             mlunitext.assert(poly2 == expPoly2);
             %
@@ -787,7 +787,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
             shiftVec = [0.05; 0];
             ell3ConstrMat = eye(3);
             ell3ShiftVec = [0.05; -0.1; 0];
-            
+
             ell1 = self.ellipsoid(ellConstrMat);
             ell2 = self.ellipsoid(shiftVec, ellConstrMat);
             ell3 = self.ellipsoid(ell3ShiftVec, ell3ConstrMat);
@@ -817,7 +817,7 @@ classdef MPTIntegrationTestCase < mlunitext.test_case
         %
         function myTestIsCII(ellVec,polyVec,letter,isCIIExpVec,checkBoth,...
                 timeCompare)
-            
+
             if checkBoth
                 tStart = tic;
                 isCIIVec = doesIntersectionContain(ellVec,polyVec,...

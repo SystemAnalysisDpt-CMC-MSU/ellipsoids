@@ -59,7 +59,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                     projReachObj = reachObj.getCopy();
                 end
                 plotter = projReachObj.plotEa();
-                scaleFactor = reachObj.getEaScaleFactor();
+                scaleFactor = reachObj.getEaScaleFactor(); %#ok<*NASGU>
             elseif approxType == EApproxType.Internal
                 ellArray = reachObj.get_ia();
                 dim = ellArray(1, 1).dimension;
@@ -230,7 +230,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
             cutDim = cutReachObj.dimension();
             projReachObj =...
                 self.reachObj.projection(eye(self.reachObj.dimension(), 1));
-            [rsDim ssDim] = projReachObj.dimension();
+            [rsDim, ssDim] = projReachObj.dimension();
             isOk = (rsDim == self.expDim) && (ssDim == 1) &&...
                 (cutDim == self.expDim);
             mlunitext.assert_equals(true, isOk);
@@ -634,7 +634,7 @@ classdef ContinuousReachTestCase < mlunitext.test_case
                 repmat(realsqrt(dot(expL0Mat,expL0Mat,1)),nDims,1);
             %
             reachObj=self.reachFactoryObj.createInstance('l0Mat',...
-                expL0Mat,'isRegEnabled',true);
+                expL0Mat,'isRegEnabled',true); %#ok<*PROP>
             checkApxFilter(reachObj,[true,false]);
             checkApxFilter(reachObj,[false,true]);
             %

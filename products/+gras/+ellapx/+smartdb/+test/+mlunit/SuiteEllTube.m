@@ -319,12 +319,14 @@ classdef SuiteEllTube < mlunitext.test_case
                 end
                 %%
                 function check(errorTag,cmdStr)
+                    import elltool.logging.Log4jConfigurator;
+                    logger=Log4jConfigurator.getLogger();
                     CMD_STR='rel1.getCopy().unionWith(rel2)';
                     if nargin<2
                         cmdStr=CMD_STR;
                     end
                     if nargin==0
-                        eval(cmdStr);
+                        logger.info(evalc(cmdStr));
                     else
                         self.runAndCheckError(cmdStr,errorTag);
                     end
@@ -483,13 +485,15 @@ classdef SuiteEllTube < mlunitext.test_case
                     approxSchemaDescr,ABS_TOL, REL_TOL);
             end
             function check(errorTag,cmdStr)
+                import elltool.logging.Log4jConfigurator;
+                logger=Log4jConfigurator.getLogger();
                 CMD_STR='rel1.getCopy().unionWith(rel2)';
                 if nargin<2
                     cmdStr=CMD_STR;
                 end
                 if nargin==0
                     if ischar(cmdStr)
-                        eval(cmdStr);
+                        logger.info(evalc(cmdStr));
                     else
                         feval(cmdStr);
                     end
@@ -747,6 +751,8 @@ classdef SuiteEllTube < mlunitext.test_case
             end
         end
         function aux_testSimpleCreate(self,isApproxSchemaUniform)
+            import elltool.logging.Log4jConfigurator;
+            logger=Log4jConfigurator.getLogger();
             nPoints=3;
             ABS_TOL = 10^(-3);
             REL_TOL = 10^(-3);
@@ -781,7 +787,7 @@ classdef SuiteEllTube < mlunitext.test_case
             function check(errorTag)
                 CMD_STR='rel1.getCopy().unionWith(rel2)';
                 if nargin==0
-                    eval(CMD_STR);
+                    logger.info(evalc(CMD_STR));
                 else
                     self.runAndCheckError(CMD_STR,...
                         errorTag);

@@ -16,5 +16,5 @@ if qMatDimM ~= qMatDimN
     error('ELL_INV: matrix must be square.');
 end
 bMat = inv(qMat);
-iMat = inv(bMat*qMat)*bMat;
+iMat = inv(bMat*qMat)*bMat; %#ok<MINV>
 end

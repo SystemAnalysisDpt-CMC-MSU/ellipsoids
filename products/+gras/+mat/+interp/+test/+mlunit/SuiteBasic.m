@@ -291,7 +291,7 @@ classdef SuiteBasic < mlunitext.test_case
             end
         end
         %
-        function testMatrixCubicSplineSinglePoint(self)
+        function testMatrixCubicSplineSinglePoint(~)
             nRows = 10;
             nCols = 11;
             nTimePoints = 1000;

@@ -26,7 +26,7 @@ function coll(varargin)
   bcDirsMat = [];
   for i = 1:nDirs
     d  = dirsArray{i};
-    bcDirsMat = [bcDirsMat d(:,end)];
+    bcDirsMat = [bcDirsMat d(:,end)]; %#ok<AGROW>
   end
   brsObj      = elltool.reach.ReachContinuous(sys, mEllObj, bcDirsMat,...
       [endTime 0],  'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-4);
@@ -61,9 +61,9 @@ function coll(varargin)
  fgcCVec = ctObj.get_goodcurves(); 
  fgcVec = fgcCVec{1};
  dst = ebEllMat.distance(fgcVec);
- fgcId = find(dst == max(dst));
+ isFgcId = dst == max(dst);
  bgcCVec = bctObj.get_goodcurves(); 
- bgcVec = bgcCVec{fgcId};
+ bgcVec = bgcCVec{isFgcId};
  bCenter = bctObj.get_center();
  bgcVec = -(bgcVec - bCenter) + bCenter;
  ctObj.plotByEa(); hold on;

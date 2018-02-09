@@ -15,4 +15,6 @@ resList{13}=modgen.graphics.test.run_tests(varargin{:});
 resList{14}=modgen.io.test.run_tests(varargin{:});
 resList{15}=modgen.algo.test.run_tests();
 resList{16}=modgen.system.test.run_tests();
+resList{17}=modgen.selfmnt.test.mlunit.run_tests();
+resList{18}=modgen.dev.test.mlunit.run_tests();
 results=[resList{:}];
