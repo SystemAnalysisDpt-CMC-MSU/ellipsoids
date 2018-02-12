@@ -196,10 +196,13 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             relStatProj = ...
                 rel.project(projType,projSpaceList,@fGetProjMat);
             plObj = relStatProj.plot();
-            figStruct = plObj.getPlotStructure().figHMap.toStruct();
-            typeGoodCurve = figStruct.reachTube_static_sp0x5B100x3B0_2192adb8ef686f846be6609d103819e2.Children(1).Children(1).UserData.graphObjType;
-            typeEllSetBoundary = figStruct.reachTube_static_sp0x5B100x3B0_2192adb8ef686f846be6609d103819e2.Children(2).Children(1).UserData.graphObjType;
-            typeTouchCurve = figStruct.reachTube_static_sp0x5B100x3B0_2192adb8ef686f846be6609d103819e2.Children(2).Children(2).UserData.graphObjType;
+            SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+            [~, handleVecList] = modgen.struct.getleavelist(SHPlot);
+            handleVec = [handleVecList{:}];
+            plEllObjVec = get(handleVec, 'Children');
+            typeGoodCurve = plEllObjVec{2}(1).UserData.graphObjType;
+            typeEllSetBoundary = plEllObjVec{1}(1).UserData.graphObjType;
+            typeTouchCurve = plEllObjVec{1}(2).UserData.graphObjType;
             mlunitext.assert_equals(GraphObjTypeEnum.GoodCurve,...
                                     typeGoodCurve);
             mlunitext.assert_equals(GraphObjTypeEnum.TouchCurve,...
@@ -213,15 +216,22 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             relStatProj = ...
                 rel.project(projType,projSpaceList,@fGetProjMat);
             plObj = relStatProj.plot();
-            figStruct = plObj.getPlotStructure().figHMap.toStruct();
-            typeEllTubeBoundary = figStruct.reachTube_static_sp0x5B100x3B0_7cfad2e42d50e6aa44cfee2ad9df8fc5.Children(2).Children(1).UserData.graphObjType;
-            mlunitext.assert_equals(GraphObjTypeEnum.EllTubeBoundary, typeEllTubeBoundary);
+            SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+            [~, handleVecList] = modgen.struct.getleavelist(SHPlot);
+            handleVec = [handleVecList{:}];
+            plEllObjVec = get(handleVec, 'Children');
+            typeEllTubeBoundary = plEllObjVec{1}(1).UserData.graphObjType;
+            mlunitext.assert_equals(GraphObjTypeEnum.EllTubeBoundary,...
+                                    typeEllTubeBoundary);
             %
             plObj = rel.plot();
-            figStruct = plObj.getPlotStructure().figHMap.toStruct();
-            typeTrace = figStruct.EllipsoidalTubeCharacteristi_c46ac4fe86a6fe9f1565b762374b9379.Children(1).Children(1).UserData.graphObjType;
-            typeMinEig = figStruct.EllipsoidalTubeCharacteristi_c46ac4fe86a6fe9f1565b762374b9379.Children(2).Children(1).UserData.graphObjType;
-            typeMaxEig = figStruct.EllipsoidalTubeCharacteristi_c46ac4fe86a6fe9f1565b762374b9379.Children(2).Children(2).UserData.graphObjType;
+            SHPlot =  plObj.getPlotStructure().figToAxesToHMap.toStruct();
+            [~, handleVecList] = modgen.struct.getleavelist(SHPlot);
+            handleVec = [handleVecList{:}];
+            plEllObjVec = get(handleVec, 'Children');
+            typeTrace = plEllObjVec{2}(1).UserData.graphObjType;
+            typeMinEig = plEllObjVec{1}(1).UserData.graphObjType;
+            typeMaxEig = plEllObjVec{1}(2).UserData.graphObjType;
             mlunitext.assert_equals(GraphObjTypeEnum.MaxEig,...
                                     typeMaxEig);
             mlunitext.assert_equals(GraphObjTypeEnum.MinEig,...
