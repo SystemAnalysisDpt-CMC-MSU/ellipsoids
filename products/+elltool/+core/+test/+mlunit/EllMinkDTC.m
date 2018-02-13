@@ -43,8 +43,9 @@ classdef EllMinkDTC <   elltool.core.test.mlunit.EllMinkATC
                 check(testFifthEll, testSecEll, testForthEll);
             end
             function check(testFirEll,testSecEll,testThirdEll)
+                import elltool.conf.Properties;
                 ABS_TOL = 10^(-2);
-                POINTS_NUMBER = 200;
+                POINTS_NUMBER = Properties.getNPlot2dPoints;
                 [~,boundPoints] = ...
                     self.fMink(testFirEll,testSecEll,testThirdEll);
                 [lGridMat] = gras.geom.circlepart(POINTS_NUMBER);

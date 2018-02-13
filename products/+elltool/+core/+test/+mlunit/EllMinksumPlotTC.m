@@ -40,26 +40,26 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
             check(testFirEll,testSecEll);
             check2(testFirEll,testSecEll);
             function check(testFirEll,testSecEll)
+                import elltool.conf.Properties;
                 ABS_TOL = 10^(-10);
                 [~,boundPointsMat] = minksum(testFirEll,testSecEll);
-                [lGridMat] = gras.geom.circlepart(200);
+                [lGridMat] = gras.geom.circlepart(...
+                    Properties.getNPlot2dPoints);
                 [supp1Mat,~] = rho(testFirEll,lGridMat.');
                 [supp2Mat,~] = rho(testSecEll,lGridMat.');
                 rhoDiffVec = supp1Mat+supp2Mat;
                 sup = max(lGridMat*boundPointsMat(:,1:end-1),[],2);
                 absDiff = max(abs(sup'-rhoDiffVec));
-                if absDiff >= ABS_TOL
-                    save([fileparts(mfilename('fullpath')) filesep...
-                        'test2d.mat']);
-                end
                 mlunitext.assert_equals(true,absDiff < ABS_TOL,...
                     sprintf(['absolute difference (%.17g) is greater'...
                     ' than the specified tolerance (%.17g)'],...
                     absDiff,ABS_TOL));
             end
             function check2(testFirEll,testSecEll)
+                import elltool.conf.Properties;
                 ABS_TOL = 10^(-10);
-                [lGridMat] = gras.geom.circlepart(200);
+                [lGridMat] = gras.geom.circlepart(...
+                    Properties.getNPlot2dPoints);
                 rotAngle = pi/4;
                 rotMat = [cos(rotAngle) sin(rotAngle) ;...
                     -sin(rotAngle) cos(rotAngle)];

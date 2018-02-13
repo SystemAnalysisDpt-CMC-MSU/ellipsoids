@@ -39,9 +39,11 @@ classdef EllMinkdiffPlotTC < elltool.core.test.mlunit.EllMinkBTC
             check(testThirdEll,testForthEll);
             
             function check(testFirEll,testSecEll)
+                import elltool.conf.Properties;
                 ABS_TOL = 10^(-3);
                 [~,boundPoints] = minkdiff(testFirEll,testSecEll);
-                [lGridMat] = gras.geom.circlepart(200);
+                [lGridMat] = gras.geom.circlepart(...
+                    Properties.getNPlot2dPoints);
                 [supp1Arr,~] = rho(testFirEll,lGridMat.');
                 [supp2Arr,~] = rho(testSecEll,lGridMat.');
                 rhoDiffVec = gras.geom.sup.supgeomdiff2d(supp1Arr,...
