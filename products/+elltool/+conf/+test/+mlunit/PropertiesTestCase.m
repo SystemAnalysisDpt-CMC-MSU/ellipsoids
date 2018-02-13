@@ -77,10 +77,12 @@ classdef PropertiesTestCase < mlunitext.test_case
             %testing setters
             Properties.setIsVerbose(~verbose);
             Properties.setNPlot2dPoints(plot2dGrid - 1);
+            Properties.setNPlot3dPoints(plot3dGrid + 2);
             Properties.setNTimeGridPoints(timeGrid + 1);
             %
             mlunitext.assert_equals(~verbose,Properties.getIsVerbose());
             mlunitext.assert_equals(plot2dGrid-1,Properties.getNPlot2dPoints());
+            mlunitext.assert_equals(plot3dGrid+2,Properties.getNPlot3dPoints());
             mlunitext.assert_equals(timeGrid+1,Properties.getNTimeGridPoints());
 %             %%
 %             %negative test, trying to access one of properties, before
