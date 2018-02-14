@@ -34,11 +34,26 @@ classdef BGeomBodyTC < elltool.plot.test.AGeomBodyPlotTestCase
             end
             check(testEl2Mat, nDims);
             
-            function check(testEllMat, nDims)
+            function check(testEllMat,nDims)
                 plotObj = plot(testEllMat);
                 SPlotStructure = plotObj.getPlotStructure;
                 SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
                 num = SHPlot.figure_g1;
+                if nDims == 0
+                    dimVec = dimension(testEllMat);
+                    isDimLEQ2Vec = dimVec <= 2;
+                    isDimGEQ3Vec = dimVec >= 3;
+                    if any(isDimGEQ3Vec)
+                        check_inner(testEllMat(isDimGEQ3Vec),num,3);
+                    end
+                    if any(isDimLEQ2Vec)
+                        check_inner(testEllMat(isDimLEQ2Vec),num,2);
+                    end
+                else
+                    check_inner(testEllMat,num,nDims);
+                end
+            end
+            function check_inner(testEllMat, num, nDims)
                 import elltool.plot.common.AxesNames;
                 if nDims >= 3
                     [xDataCell, yDataCell, zDataCell] =...

@@ -178,10 +178,11 @@ classdef EllipsoidPlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
                 diag([1, 100, 0.1]), [1 0 0;0 1 0; 0 0 0]};
             self = plotND(self,nDims,inpCenCList,inpQMatCList);
         end
-        function testPlot2d3d(~)
-            ellV = [ellipsoid(eye(2)), ellipsoid(eye(3)),... 
-                    ellipsoid(eye(2).*2), ellipsoid(eye(3).*2)];
-            plot(ellV);         
+        function self = testPlot2d3d(self)
+            nDims = 0;
+            inpCenCList = {[0, 0].', [0, 0, 0].', [0, 0].', [0, 0, 0].'};
+            inpQMatCList = {eye(2), eye(3), eye(2) .* 2, eye(3) .*2};
+            self = plotND(self,nDims,inpCenCList,inpQMatCList);         
         end
         function testGraphObjType(~)
             import elltool.plot.GraphObjTypeEnum;

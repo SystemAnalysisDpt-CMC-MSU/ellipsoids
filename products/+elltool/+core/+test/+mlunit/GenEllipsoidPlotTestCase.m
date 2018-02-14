@@ -193,7 +193,7 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
             import elltool.core.GenEllipsoid;
             ellV = [GenEllipsoid(eye(2)), GenEllipsoid(eye(3)),... 
                     GenEllipsoid(eye(2).*2), GenEllipsoid(eye(3).*2)];
-            plot(ellV);         
+            check(ellV, 0);
         end
         function testGraphObjType(~)
             import elltool.plot.GraphObjTypeEnum;
@@ -216,13 +216,31 @@ end
 
 function check(testEllArr, nDims)
 import elltool.core.GenEllipsoid;
-isBoundVec = 0;
 plotObj = plot(testEllArr);
 SPlotStructure = plotObj.getPlotStructure;
 SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
 num = SHPlot.figure_g1;
 checkAxesLabels(SPlotStructure);
+if nDims == 0
+    dimVec = dimension(testEllArr);
+    check_inner(testEllArr(dimVec >= 3),num,3);
+    check_inner(testEllArr(dimVec <= 2),num,2);
+else
+    check_inner(testEllArr, num, nDims);
+end
+    function checkAxesLabels(SPlotStructure)
+        SFigure = SPlotStructure.figHMap.toStruct();
+        children = SFigure.figure_g1.Children(1);
+        mlunitext.assert_equals(children.XLabel.String, 'x_1');
+        mlunitext.assert_equals(children.YLabel.String, 'x_2');
+        mlunitext.assert_equals(children.ZLabel.String, 'x_3');
+    end
+end
+
+function check_inner(testEllArr, num, nDims)
+import elltool.core.GenEllipsoid;
 import elltool.plot.common.AxesNames;
+isBoundVec = 0;
 if nDims >= 3
     [xDataCell, yDataCell, zDataCell] = arrayfun(...
         @(x) getData(num.(AxesNames.AXES_3D_KEY)(x)), ...
@@ -380,14 +398,6 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
         isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
             (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints) ;
         
-    end
-
-    function checkAxesLabels(SPlotStructure)
-        SFigure = SPlotStructure.figHMap.toStruct();
-        children = SFigure.figure_g1.Children;
-        mlunitext.assert_equals(children.XLabel.String, 'x_1');
-        mlunitext.assert_equals(children.YLabel.String, 'x_2');
-        mlunitext.assert_equals(children.ZLabel.String, 'x_3');
     end
 end
 
