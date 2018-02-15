@@ -157,12 +157,15 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
                 import modgen.common.throwerror;
                 import gras.gen.SquareMatVector;
                 import gras.geom.ell.ellvolume;
+                import elltool.plot.GraphObjTypeEnum;
+                import elltool.plot.setgraphobjtype;
                 %
                 traceVec=SquareMatVector.evalMFunc(@trace,InpArray);
                 hVec=plot(hAxes,timeVec,traceVec,lineSpec,...
                     varargin{:},...
                     'DisplayName',...
                     [namePrefix,', trace, ',char(approxType)]);
+                setgraphobjtype(hVec,GraphObjTypeEnum.Trace);
             end
         end
         function hVec=plotTubeDiamFunc(~,hAxes,...
@@ -192,6 +195,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
             hold(hAxes,'on');
             function hVec=plotEig(InpArray,namePrefix,lineSpec,varargin)
                 import modgen.common.throwerror;
+                import elltool.plot.GraphObjTypeEnum;
+                import elltool.plot.setgraphobjtype;
                 nTimePoints=size(InpArray,3);
                 eMat=zeros(size(InpArray,1),nTimePoints);
                 oArray=get(hAxes,'UserData');
@@ -228,6 +233,8 @@ classdef EllTube<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&...
                     'DisplayName',...
                     sprintf('%s_eig_min_%s',namePrefix,...
                     char(approxType)));
+                setgraphobjtype(hVec(1),GraphObjTypeEnum.MinEig);
+                setgraphobjtype(hVec(2),GraphObjTypeEnum.MaxEig);
             end
         end
     end

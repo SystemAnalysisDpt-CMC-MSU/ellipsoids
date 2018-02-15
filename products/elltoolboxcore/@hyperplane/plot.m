@@ -11,8 +11,7 @@ function plObj = plot(varargin)
 % Input:
 %   regular:
 %       hypArr:  Hyperplane: [dim11Size,dim12Size,...,dim1kSize] -
-%                array of 2D or 3D hyperplane objects. All hyperplanes in hypArr
-%                must be either 2D or 3D simutaneously.
+%                array of 2D or 3D hyperplane objects.
 %   optional:
 %       color1Spec: char[1,1] - color specification code, can be 'r','g',
 %                               etc (any code supported by built-in Matlab function).
@@ -54,6 +53,7 @@ function plObj = plot(varargin)
 
 import elltool.plot.plotgeombodyarr;
 import elltool.plot.smartpatch;
+import elltool.plot.GraphObjTypeEnum;
 [reg,~,centerVec,sizeVec,...
     isCenterVec,isSizeVec]=...
     modgen.common.parseparext(varargin,...
@@ -65,20 +65,53 @@ if (isempty(reg))
     modgen.common.throwerror('wrongInput:emptyArray',...
         'Hyperplanes to display must be given as input');
 end
-nDim = max(dimension(reg{1}));
-if (nDim < 3)
+dimsMatCVec = cellfun(@getHypDims, reg, 'UniformOutput', false);
+isObjVec = ~cellfun('isempty', dimsMatCVec);
+minDim = min(cellfun(@(x)min(x(:)), dimsMatCVec(isObjVec)));
+maxDim = max(cellfun(@(x)max(x(:)), dimsMatCVec(isObjVec)));
+hyp2DVarargin = cellfun(@selectHyp2D, reg, dimsMatCVec, ...
+                        'UniformOutput', false);
+hyp3DVarargin = cellfun(@selectHyp3D, reg, dimsMatCVec, ...
+                        'UniformOutput', false);
+extraArgCVec = cell(0);
+if (minDim <= 2)
     [plObj]= plotgeombodyarr(...
         @(x)isa(x, 'hyperplane'), @(x)dimension(x), @fCalcBodyTriArr,...
-        @(varargin)smartpatch(true, {'FaceColor', 'none'}, varargin{:}),...
-        reg{:}...
+        @(varargin)smartpatch(GraphObjTypeEnum.Hyperplane,true,...
+                              {'FaceColor', 'none'}, varargin{:}),...
+        hyp2DVarargin{:}...
     );
-else
+    extraArgCVec = {'relDataPlotter',plObj};
+end
+if (maxDim >= 3)
     [plObj]= plotgeombodyarr(...
         @(x)isa(x, 'hyperplane'), @(x)dimension(x), @fCalcBodyTriArr,...
-        @(varargin)smartpatch(true, {}, varargin{:}), reg{:}...
+        @(varargin)smartpatch(GraphObjTypeEnum.Hyperplane,true,...
+                              {},varargin{:}),...
+        hyp3DVarargin{:}, extraArgCVec{:}...
     );
 end
 %
+    function dimsVec = getHypDims(arg)
+        dimsVec = [];
+        if (isa(arg, 'hyperplane'))
+            dimsVec = reshape(dimension(arg),[],1);
+        end
+    end
+    function hyp2D = selectHyp2D(arg, dimsVec)
+        if (isa(arg, 'hyperplane'))
+            hyp2D = arg(dimsVec < 3);
+        else
+            hyp2D = arg;
+        end
+    end
+    function hyp3D = selectHyp3D(arg,dimsVec)
+        if (isa(arg, 'hyperplane'))
+            hyp3D = arg(dimsVec >= 3);
+        else
+            hyp3D = arg;
+        end
+    end
     function [xMat,fMat,nDimMat] = fCalcBodyTriArr(hypArr)
         import modgen.common.throwerror;
         hypNum = numel(hypArr);

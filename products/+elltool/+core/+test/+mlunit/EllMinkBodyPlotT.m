@@ -30,7 +30,9 @@ classdef EllMinkBodyPlotT < handle
                 colMat = repmat(colMat,numObj,1);
                 SHPlot =  ...
                     plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                import elltool.plot.common.AxesNames;
+                plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_2D_KEY),...
+                                  'Children');
                 plEllColCMat = get(plEllObjVec, 'EdgeColor');
                 if iscell(plEllColCMat)
                     plEllColMat = vertcat(plEllColCMat{:});
@@ -43,7 +45,8 @@ classdef EllMinkBodyPlotT < handle
                 colMat = repmat(colMat,numObj,1);
                 SHPlot = ...
                     plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                import elltool.plot.common.AxesNames;
+                plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_3D_KEY), 'Children');
                 plEllColCMat = arrayfun(@(x) getColVec(x), plEllObjVec, ...
                     'UniformOutput', false);
                 plEllColMat = vertcat(plEllColCMat{:});
@@ -72,10 +75,11 @@ classdef EllMinkBodyPlotT < handle
         end
         function minkProperties(self,firstEllMat,secEllMat)
             fMinkOp = self.fMink;
-            if dimension(firstEllMat(1)) == 2
+            dim = dimension(firstEllMat(1));
+            if dim == 2
                 plObj = fMinkOp(firstEllMat,secEllMat, 'linewidth', 4, ...
                     'fill', true, 'shade', 0.8);
-                checkParams(plObj, 4, 1, 0.8, []);
+                checkParams(plObj, dim, 4, 1, 0.8, []);
             else
                 strErr = strcat('fMinkOp(firstEllMat,secEllMat,',...
                     '''linewidth'', 4',...
@@ -85,15 +89,42 @@ classdef EllMinkBodyPlotT < handle
             plObj = fMinkOp(firstEllMat,secEllMat, ...
                 'fill', true, 'shade', 0.1, ...
                 'color', [0, 1, 1]);
-            checkParams(plObj, [], 1, 0.1, [0, 1, 1]);
-            function checkParams(plObj, linewidth, fill, shade, colorVec)
+            checkParams(plObj, dim, [], 1, 0.1, [0, 1, 1]);
+            function checkParams(plObj, dim, linewidth, fill, shade, colorVec)
+                import elltool.plot.common.AxesNames;
+                import elltool.plot.GraphObjTypeEnum;
                 SHPlot=plObj.getPlotStructure().figToAxesToHMap.toStruct();
-                plEllObjVec = get(SHPlot.figure_g1.ax, 'Children');
+                checkAxesLabels(plObj);
+                if dim >= 3
+                    plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_3D_KEY),...
+                                      'Children');
+                    mlunitext.assert_equals(GraphObjTypeEnum.MinkOpBoundary,...
+                                    plEllObjVec(4).UserData.graphObjType);              
+                else
+                    plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_2D_KEY),...
+                                      'Children');
+                    mlunitext.assert_equals(GraphObjTypeEnum.MinkOpCenter,...
+                                    plEllObjVec(1).UserData.graphObjType);
+                    mlunitext.assert_equals(GraphObjTypeEnum.MinkOpBoundary,...
+                                    plEllObjVec(2).UserData.graphObjType);              
+                end
                 isEqVec = arrayfun(@(x) checkEllParams(x), plEllObjVec);
                 mlunitext.assert_equals(isEqVec, ones(size(isEqVec)));
                 isFillVec = arrayfun(@(x) checkIsFill(x), plEllObjVec, ...
                     'UniformOutput', false);
                 mlunitext.assert_equals(numel(isFillVec) > 0, fill);
+                function checkAxesLabels(plObj)
+                    SFigure = plObj.getPlotStructure.figHMap.toStruct();
+                    children = SFigure.figure_g1.Children;
+                    for i=1:size(children,1);
+                        mlunitext.assert_equals('x_1',...
+                                                children(i).XLabel.String);
+                        mlunitext.assert_equals('x_2',...
+                                                children(i).YLabel.String);
+                        mlunitext.assert_equals('x_3',...
+                                                children(i).ZLabel.String);
+                    end
+                end
                 function isFill = checkIsFill(plObj)
                     if strcmp(get(plObj, 'type'), 'patch')
                         if get(plObj, 'FaceAlpha') > 0

@@ -34,14 +34,51 @@ classdef BGeomBodyTC < elltool.plot.test.AGeomBodyPlotTestCase
             end
             check(testEl2Mat, nDims);
             
-            function check(testEllMat, nDims)
+            function check(testEllMat,nDims)
                 plotObj = plot(testEllMat);
+                checkAxesLabels(plotObj);
                 SPlotStructure = plotObj.getPlotStructure;
                 SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
                 num = SHPlot.figure_g1;
-                [xDataCell, yDataCell, zDataCell] =...
-                    arrayfun(@(x) getData(num.ax(x)), ...
-                    1:numel(num.ax), 'UniformOutput', false);
+                if nDims == 0
+                    dimVec = dimension(testEllMat);
+                    isDimLEQ2Vec = dimVec <= 2;
+                    isDimGEQ3Vec = dimVec >= 3;
+                    if any(isDimGEQ3Vec)
+                        check_inner(testEllMat(isDimGEQ3Vec),num,3);
+                    end
+                    if any(isDimLEQ2Vec)
+                        check_inner(testEllMat(isDimLEQ2Vec),num,2);
+                    end
+                else
+                    check_inner(testEllMat,num,nDims);
+                end
+                function checkAxesLabels(plObj)
+                    SFigure = plObj.getPlotStructure.figHMap.toStruct();
+                    children = SFigure.figure_g1.Children;
+                    for i=1:size(children,1);
+                        mlunitext.assert_equals('x_1',...
+                                                children(i).XLabel.String);
+                        mlunitext.assert_equals('x_2',...
+                                                children(i).YLabel.String);
+                        mlunitext.assert_equals('x_3',...
+                                                children(i).ZLabel.String);
+                    end
+                end
+            end
+            function check_inner(testEllMat, num, nDims)
+                import elltool.plot.common.AxesNames;
+                if nDims >= 3
+                    [xDataCell, yDataCell, zDataCell] =...
+                        arrayfun(@(x) getData(num.(AxesNames.AXES_3D_KEY)(x)), ...
+                        1:numel(num.(AxesNames.AXES_3D_KEY)), ...
+                        'UniformOutput', false);
+                else
+                    [xDataCell, yDataCell, zDataCell] =...
+                        arrayfun(@(x) getData(num.(AxesNames.AXES_2D_KEY)(x)), ...
+                        1:numel(num.(AxesNames.AXES_2D_KEY)), ...
+                        'UniformOutput', false);
+                end
                 if iscell(xDataCell)
                     xDataArr = horzcat(xDataCell{:});
                 else

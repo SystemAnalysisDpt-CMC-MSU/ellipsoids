@@ -3,6 +3,8 @@ classdef TouchTestCase < mlunitext.test_case
         nDirs
         funcName
         originalNTimeGridPoints
+        originalNPlot2dPoints
+        originalNPlot3dPoints
     end
     methods
         function self = TouchTestCase(varargin)
@@ -12,11 +14,15 @@ classdef TouchTestCase < mlunitext.test_case
         function set_up(self)
             import elltool.conf.Properties;
             self.originalNTimeGridPoints = Properties.getNTimeGridPoints();
+            self.originalNPlot2dPoints = Properties.getNPlot2dPoints();
+            self.originalNPlot3dPoints = Properties.getNPlot3dPoints();
         end
         %
         function tear_down(self)
             import elltool.conf.Properties;
             Properties.setNTimeGridPoints(self.originalNTimeGridPoints);
+            Properties.setNPlot2dPoints(self.originalNPlot2dPoints);
+            Properties.setNPlot3dPoints(self.originalNPlot3dPoints);
         end
         %
         function self = testControl(self)

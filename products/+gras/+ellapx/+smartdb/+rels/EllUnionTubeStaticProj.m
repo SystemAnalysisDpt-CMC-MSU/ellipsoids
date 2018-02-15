@@ -258,6 +258,8 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
             import gras.ellapx.enums.EApproxType;
             import gras.ellapx.smartdb.rels.EllUnionTubeStaticProj;
             import gras.mat.interp.MatrixInterpolantFactory;
+            import elltool.plot.GraphObjTypeEnum;
+            import elltool.plot.setgraphobjtype;
             nDims=size(aMat,1);
             if nDims~=2
                 throwerror('wrongDimensionality',...
@@ -368,6 +370,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
                     'FaceVertexCData',repmat(patchColorVec,size(vMat,1),1),...
                     'Faces',fMat,'Vertices',vMat,'Parent',hAxes,...
                     'EdgeColor',patchColorVec);
+                setgraphobjtype(hVec,GraphObjTypeEnum.EllSetBoundary);
                 view(hAxes, [90 0 0]);
             else
                 hVec=patch('FaceColor','interp','EdgeColor','none',...
@@ -376,6 +379,7 @@ classdef EllUnionTubeStaticProj<gras.ellapx.smartdb.rels.ATypifiedAdjustedRel&..
                     'FaceVertexCData',repmat(patchColorVec,size(vMat,1),1),...
                     'Faces',fMat,'Vertices',vMat,'Parent',hAxes,...
                     'EdgeLighting','phong','FaceLighting','phong');
+                setgraphobjtype(hVec,GraphObjTypeEnum.EllTubeBoundary);
                 material('metal');
                 axis(hAxes,'tight');
                 axis(hAxes,'normal');

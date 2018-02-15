@@ -87,6 +87,12 @@ classdef HyperplanePlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
             inpScalCList = {1,3,0,0};
             self = plotND(self,nDims,inpNormCList,inpScalCList);
         end
+        function self = testPlot2d3d(self)
+            nDims = 0;
+            inpNormCList = {[1;1;1],[2;1],[0;0;0],[1;0]};
+            inpScalCList = {1,3,0,0};
+            self = plotND(self,nDims,inpNormCList,inpScalCList);
+        end
         function testWrongCenterSize(self)
             testFirstHyp = self.hyperplane([2;1],-1);
             testSecondHyp = self.hyperplane([3;1],1);
@@ -101,6 +107,14 @@ classdef HyperplanePlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
             plot(testFirstHyp,testSecondHyp,'size',100);
             plot(testFirstHyp,testSecondHyp,'size',[100;2]);
         end
-        
+        function testGraphObjType(~)
+            import elltool.plot.GraphObjTypeEnum;
+            hyp = hyperplane([1;1]);
+            rdp = plot(hyp);
+            figStruct = rdp.getPlotStructure().figHMap.toStruct();
+            graphObjType = figStruct.figure_g1.Children.Children.UserData.graphObjType;
+            mlunitext.assert_equals(GraphObjTypeEnum.Hyperplane,...
+                                    graphObjType);
+        end
     end
 end

@@ -198,6 +198,14 @@ classdef Properties<modgen.common.obj.StaticPropStorage
                 nPlot2dPoints);
         end
         %
+        function setNPlot3dPoints(nPlot3dPoints)
+            % Example:
+            %   elltool.conf.Properties.setNPlot3dPoints(300);
+            %
+            elltool.conf.Properties.setOption('nPlot3dPoints',...
+                nPlot3dPoints);
+        end
+        %
         function setNTimeGridPoints(nTimeGridPoints)
             % Example:
             %   elltool.conf.Properties.setNTimeGridPoints(300);

@@ -40,9 +40,11 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
             check(testFirEll,testSecEll);
             check2(testFirEll,testSecEll);
             function check(testFirEll,testSecEll)
+                import elltool.conf.Properties;
                 ABS_TOL = 10^(-10);
                 [~,boundPointsMat] = minksum(testFirEll,testSecEll);
-                [lGridMat] = gras.geom.circlepart(200);
+                [lGridMat] = gras.geom.circlepart(...
+                    Properties.getNPlot2dPoints);
                 [supp1Mat,~] = rho(testFirEll,lGridMat.');
                 [supp2Mat,~] = rho(testSecEll,lGridMat.');
                 rhoDiffVec = supp1Mat+supp2Mat;
@@ -54,8 +56,10 @@ classdef EllMinksumPlotTC < elltool.core.test.mlunit.EllMinkATC&...
                     absDiff,ABS_TOL));
             end
             function check2(testFirEll,testSecEll)
+                import elltool.conf.Properties;
                 ABS_TOL = 10^(-10);
-                [lGridMat] = gras.geom.circlepart(200);
+                [lGridMat] = gras.geom.circlepart(...
+                    Properties.getNPlot2dPoints);
                 rotAngle = pi/4;
                 rotMat = [cos(rotAngle) sin(rotAngle) ;...
                     -sin(rotAngle) cos(rotAngle)];

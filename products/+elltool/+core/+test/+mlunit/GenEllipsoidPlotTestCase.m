@@ -189,18 +189,72 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
             end
             check(testEllArr, nDims);
         end
+        function testPlot2d3d(~)
+            import elltool.core.GenEllipsoid;
+            ellV = [GenEllipsoid(eye(2)), GenEllipsoid(eye(3)),... 
+                    GenEllipsoid(eye(2).*2), GenEllipsoid(eye(3).*2)];
+            check(ellV, 0);
+        end
+        function testGraphObjType(~)
+            import elltool.plot.GraphObjTypeEnum;
+            import elltool.plot.common.AxesNames;
+            import elltool.core.GenEllipsoid;
+            ellV = [GenEllipsoid(eye(2)), GenEllipsoid(eye(3))];
+            rdp = plot(ellV);
+            axesStruct = rdp.getPlotStructure().figToAxesToHMap.toStruct();
+            ell2DPatchV = axesStruct.figure_g1.(AxesNames.AXES_2D_KEY).Children;
+            ell3DPatchV = axesStruct.figure_g1.(AxesNames.AXES_3D_KEY).Children;
+            mlunitext.assert_equals(GraphObjTypeEnum.EllCenter2D,...
+                                    ell2DPatchV(1).UserData.graphObjType);
+            mlunitext.assert_equals(GraphObjTypeEnum.EllBoundary2D,...
+                                    ell2DPatchV(2).UserData.graphObjType);
+            mlunitext.assert_equals(GraphObjTypeEnum.EllBoundary3D,...
+                                    ell3DPatchV(4).UserData.graphObjType);
+        end
     end
 end
 
 function check(testEllArr, nDims)
 import elltool.core.GenEllipsoid;
-isBoundVec = 0;
 plotObj = plot(testEllArr);
 SPlotStructure = plotObj.getPlotStructure;
 SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
 num = SHPlot.figure_g1;
-[xDataCell, yDataCell, zDataCell] = arrayfun(@(x) getData(num.ax(x)), ...
-    1:numel(num.ax), 'UniformOutput', false);
+checkAxesLabels(plotObj);
+if nDims == 0
+    dimVec = dimension(testEllArr);
+    check_inner(testEllArr(dimVec >= 3),num,3);
+    check_inner(testEllArr(dimVec <= 2),num,2);
+else
+    check_inner(testEllArr, num, nDims);
+end
+    function checkAxesLabels(plObj)
+        SFigure = plObj.getPlotStructure.figHMap.toStruct();
+        children = SFigure.figure_g1.Children;
+        for i=1:size(children,1);
+            mlunitext.assert_equals('x_1',...
+                                    children(i).XLabel.String);
+            mlunitext.assert_equals('x_2',...
+                                    children(i).YLabel.String);
+            mlunitext.assert_equals('x_3',...
+                                    children(i).ZLabel.String);
+        end
+    end
+end
+
+function check_inner(testEllArr, num, nDims)
+import elltool.core.GenEllipsoid;
+import elltool.plot.common.AxesNames;
+isBoundVec = 0;
+if nDims >= 3
+    [xDataCell, yDataCell, zDataCell] = arrayfun(...
+        @(x) getData(num.(AxesNames.AXES_3D_KEY)(x)), ...
+        1:numel(num.(AxesNames.AXES_3D_KEY)), 'UniformOutput', false);
+else
+    [xDataCell, yDataCell, zDataCell] = arrayfun(...
+        @(x) getData(num.(AxesNames.AXES_2D_KEY)(x)), ...
+        1:numel(num.(AxesNames.AXES_2D_KEY)), 'UniformOutput', false);    
+end
 if iscell(xDataCell)
     xDataArr = horzcat(xDataCell{:});
 else
