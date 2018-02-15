@@ -11,8 +11,7 @@ function plObj = plot(varargin)
 % Input:
 %   regular:
 %       hypArr:  Hyperplane: [dim11Size,dim12Size,...,dim1kSize] -
-%                array of 2D or 3D hyperplane objects. All hyperplanes in hypArr
-%                must be either 2D or 3D simutaneously.
+%                array of 2D or 3D hyperplane objects.
 %   optional:
 %       color1Spec: char[1,1] - color specification code, can be 'r','g',
 %                               etc (any code supported by built-in Matlab function).
@@ -66,13 +65,13 @@ if (isempty(reg))
     modgen.common.throwerror('wrongInput:emptyArray',...
         'Hyperplanes to display must be given as input');
 end
-dimsMatCVec = cellfun(@getHypDims, varargin, 'UniformOutput', false);
+dimsMatCVec = cellfun(@getHypDims, reg, 'UniformOutput', false);
 isObjVec = ~cellfun('isempty', dimsMatCVec);
 minDim = min(cellfun(@(x)min(x(:)), dimsMatCVec(isObjVec)));
 maxDim = max(cellfun(@(x)max(x(:)), dimsMatCVec(isObjVec)));
-hyp2DVarargin = cellfun(@selectHyp2D, varargin, dimsMatCVec, ...
+hyp2DVarargin = cellfun(@selectHyp2D, reg, dimsMatCVec, ...
                         'UniformOutput', false);
-hyp3DVarargin = cellfun(@selectHyp3D, varargin, dimsMatCVec, ...
+hyp3DVarargin = cellfun(@selectHyp3D, reg, dimsMatCVec, ...
                         'UniformOutput', false);
 extraArgCVec = cell(0);
 if (minDim <= 2)
