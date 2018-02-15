@@ -220,7 +220,7 @@ plotObj = plot(testEllArr);
 SPlotStructure = plotObj.getPlotStructure;
 SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
 num = SHPlot.figure_g1;
-checkAxesLabels(SPlotStructure);
+checkAxesLabels(plotObj);
 if nDims == 0
     dimVec = dimension(testEllArr);
     check_inner(testEllArr(dimVec >= 3),num,3);
@@ -228,12 +228,17 @@ if nDims == 0
 else
     check_inner(testEllArr, num, nDims);
 end
-    function checkAxesLabels(SPlotStructure)
-        SFigure = SPlotStructure.figHMap.toStruct();
-        children = SFigure.figure_g1.Children(1);
-        mlunitext.assert_equals(children.XLabel.String, 'x_1');
-        mlunitext.assert_equals(children.YLabel.String, 'x_2');
-        mlunitext.assert_equals(children.ZLabel.String, 'x_3');
+    function checkAxesLabels(plObj)
+        SFigure = plObj.getPlotStructure.figHMap.toStruct();
+        children = SFigure.figure_g1.Children;
+        for i=1:size(children,1);
+            mlunitext.assert_equals('x_1',...
+                                    children(i).XLabel.String);
+            mlunitext.assert_equals('x_2',...
+                                    children(i).YLabel.String);
+            mlunitext.assert_equals('x_3',...
+                                    children(i).ZLabel.String);
+        end
     end
 end
 

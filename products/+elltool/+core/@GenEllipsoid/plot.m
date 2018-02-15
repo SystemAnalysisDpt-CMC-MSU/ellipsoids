@@ -12,8 +12,6 @@ function plObj = plot(varargin)
 %   regular:
 %       ellArr:  elltool.core.GenEllipsoid: [dim11Size,dim12Size,...,
 %                dim1kSize] - array of 2D or 3D GenEllipsoids objects.
-%                All ellipsoids in ellArr  must be either 2D or 3D
-%                simutaneously.
 %   optional:
 %       color1Spec: char[1,1] - color specification code, can be 'r','g',
 %                               etc (any code supported by built-in Matlab

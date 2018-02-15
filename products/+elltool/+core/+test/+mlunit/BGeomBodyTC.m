@@ -36,6 +36,7 @@ classdef BGeomBodyTC < elltool.plot.test.AGeomBodyPlotTestCase
             
             function check(testEllMat,nDims)
                 plotObj = plot(testEllMat);
+                checkAxesLabels(plotObj);
                 SPlotStructure = plotObj.getPlotStructure;
                 SHPlot =  toStruct(SPlotStructure.figToAxesToPlotHMap);
                 num = SHPlot.figure_g1;
@@ -51,6 +52,18 @@ classdef BGeomBodyTC < elltool.plot.test.AGeomBodyPlotTestCase
                     end
                 else
                     check_inner(testEllMat,num,nDims);
+                end
+                function checkAxesLabels(plObj)
+                    SFigure = plObj.getPlotStructure.figHMap.toStruct();
+                    children = SFigure.figure_g1.Children;
+                    for i=1:size(children,1);
+                        mlunitext.assert_equals('x_1',...
+                                                children(i).XLabel.String);
+                        mlunitext.assert_equals('x_2',...
+                                                children(i).YLabel.String);
+                        mlunitext.assert_equals('x_3',...
+                                                children(i).ZLabel.String);
+                    end
                 end
             end
             function check_inner(testEllMat, num, nDims)

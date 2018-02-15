@@ -12,8 +12,7 @@
 % Input:
 %   regular:
 %       ellArr:  Ellipsoid: [dim11Size,dim12Size,...,dim1kSize] -
-%                array of 2D or 3D Ellipsoids objects. All ellipsoids in ellArr
-%                must be either 2D or 3D simutaneously.
+%                array of 2D or 3D Ellipsoids objects.
 %   optional:
 %       color1Spec: char[1,1] - color specification code, can be 'r','g',
 %                               etc (any code supported by built-in Matlab function).

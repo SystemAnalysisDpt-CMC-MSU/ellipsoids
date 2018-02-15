@@ -94,6 +94,7 @@ classdef EllMinkBodyPlotT < handle
                 import elltool.plot.common.AxesNames;
                 import elltool.plot.GraphObjTypeEnum;
                 SHPlot=plObj.getPlotStructure().figToAxesToHMap.toStruct();
+                checkAxesLabels(plObj);
                 if dim >= 3
                     plEllObjVec = get(SHPlot.figure_g1.(AxesNames.AXES_3D_KEY),...
                                       'Children');
@@ -112,6 +113,18 @@ classdef EllMinkBodyPlotT < handle
                 isFillVec = arrayfun(@(x) checkIsFill(x), plEllObjVec, ...
                     'UniformOutput', false);
                 mlunitext.assert_equals(numel(isFillVec) > 0, fill);
+                function checkAxesLabels(plObj)
+                    SFigure = plObj.getPlotStructure.figHMap.toStruct();
+                    children = SFigure.figure_g1.Children;
+                    for i=1:size(children,1);
+                        mlunitext.assert_equals('x_1',...
+                                                children(i).XLabel.String);
+                        mlunitext.assert_equals('x_2',...
+                                                children(i).YLabel.String);
+                        mlunitext.assert_equals('x_3',...
+                                                children(i).ZLabel.String);
+                    end
+                end
                 function isFill = checkIsFill(plObj)
                     if strcmp(get(plObj, 'type'), 'patch')
                         if get(plObj, 'FaceAlpha') > 0

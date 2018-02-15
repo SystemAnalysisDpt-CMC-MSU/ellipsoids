@@ -66,23 +66,53 @@ if (isempty(reg))
     modgen.common.throwerror('wrongInput:emptyArray',...
         'Hyperplanes to display must be given as input');
 end
-nDim = max(dimension(reg{1}));
-if (nDim < 3)
+dimsMatCVec = cellfun(@getHypDims, varargin, 'UniformOutput', false);
+isObjVec = ~cellfun('isempty', dimsMatCVec);
+minDim = min(cellfun(@(x)min(x(:)), dimsMatCVec(isObjVec)));
+maxDim = max(cellfun(@(x)max(x(:)), dimsMatCVec(isObjVec)));
+hyp2DVarargin = cellfun(@selectHyp2D, varargin, dimsMatCVec, ...
+                        'UniformOutput', false);
+hyp3DVarargin = cellfun(@selectHyp3D, varargin, dimsMatCVec, ...
+                        'UniformOutput', false);
+extraArgCVec = cell(0);
+if (minDim <= 2)
     [plObj]= plotgeombodyarr(...
         @(x)isa(x, 'hyperplane'), @(x)dimension(x), @fCalcBodyTriArr,...
         @(varargin)smartpatch(GraphObjTypeEnum.Hyperplane,true,...
                               {'FaceColor', 'none'}, varargin{:}),...
-        reg{:}...
+        hyp2DVarargin{:}...
     );
-else
+    extraArgCVec = {'relDataPlotter',plObj};
+end
+if (maxDim >= 3)
     [plObj]= plotgeombodyarr(...
         @(x)isa(x, 'hyperplane'), @(x)dimension(x), @fCalcBodyTriArr,...
         @(varargin)smartpatch(GraphObjTypeEnum.Hyperplane,true,...
                               {},varargin{:}),...
-        reg{:}...
+        hyp3DVarargin{:}, extraArgCVec{:}...
     );
 end
 %
+    function dimsVec = getHypDims(arg)
+        dimsVec = [];
+        if (isa(arg, 'hyperplane'))
+            dimsVec = reshape(dimension(arg),[],1);
+        end
+    end
+    function hyp2D = selectHyp2D(arg, dimsVec)
+        if (isa(arg, 'hyperplane'))
+            hyp2D = arg(dimsVec < 3);
+        else
+            hyp2D = arg;
+        end
+    end
+    function hyp3D = selectHyp3D(arg,dimsVec)
+        if (isa(arg, 'hyperplane'))
+            hyp3D = arg(dimsVec >= 3);
+        else
+            hyp3D = arg;
+        end
+    end
     function [xMat,fMat,nDimMat] = fCalcBodyTriArr(hypArr)
         import modgen.common.throwerror;
         hypNum = numel(hypArr);

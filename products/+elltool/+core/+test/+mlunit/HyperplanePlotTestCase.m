@@ -87,6 +87,12 @@ classdef HyperplanePlotTestCase < elltool.core.test.mlunit.BGeomBodyTC
             inpScalCList = {1,3,0,0};
             self = plotND(self,nDims,inpNormCList,inpScalCList);
         end
+        function self = testPlot2d3d(self)
+            nDims = 0;
+            inpNormCList = {[1;1;1],[2;1],[0;0;0],[1;0]};
+            inpScalCList = {1,3,0,0};
+            self = plotND(self,nDims,inpNormCList,inpScalCList);
+        end
         function testWrongCenterSize(self)
             testFirstHyp = self.hyperplane([2;1],-1);
             testSecondHyp = self.hyperplane([3;1],1);
