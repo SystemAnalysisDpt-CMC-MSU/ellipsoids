@@ -26,11 +26,9 @@ vEllObj = ellipsoid(1, 0); %known disturbance
 lsys = elltool.linsys.LinSysContinuous(aMat, bMat, uBoundsEllObj,...
     gMat, vEllObj);
 timeVec = [t1, 0];
-% initial directions (some random vectors in R^4):
+% initial directions:
 dirsMat = [1 0 1 0; 1 -1 0 0; 0 -1 0 1; 1 1 -1 1; -1 1 1 0; -2 0 1 1].';
-% x1EllObj = ellipsoid([x1; v1; theta1; omega1], eps*eye(4)); %known final point
 x1EllObj = ellipsoid([x1; v1; theta1; omega1], zeros(4)); %known final point
-
 
 %backward reach set
 brsObj = elltool.reach.ReachContinuous(lsys, x1EllObj, dirsMat, timeVec,...
