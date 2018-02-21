@@ -521,6 +521,7 @@ the guard is not actually reached, because the state evolves according
 to the green region.
 
 .. raw:: html
+
 	<h2>References</h2>
 
 .. [SUN2003] L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
@@ -744,5 +745,90 @@ Solving collision problem:
    robust longitudinal guidance. Proceedings of the 17th World Congress
    The International Federation of Automatic Control
    Seoul, Korea, July 6-11, 2008
+
+
+Blending tank with delay
+------------------------
+
+There is tank, that is filled with two streams. Each stream contains a soluble 
+substance with constant concentrations :math:`c_1` and :math:`c_2`. Streams 
+have flow rates :math:`F_1(t)` and :math:`F_2(t)`. But streams don't immediately 
+pour into the tank, first they blend in a tube, and then substance get into the tank.
+Substance in the tank is blended and flows out with flow rate :math:`F_(t)`.
+
+At the initial time flow rates of streams are :math:`F_{10}` and :math:`F_{20}`; 
+flow out rate is :math:`F_0`; volume of substance is :math:`V_0`; concentration 
+of substanse in tank is :math:`c_0`. Then we add some small deviations:
+
+.. math::
+   F_1(t) = F_{10} + \mu_1(t), \\
+   F_2(t) = F_{20} + \mu_2(t), \\
+   V(t) = V_0 + \xi_1(t), \\
+   c(t) = c_0 + \xi_2(t),
+
+where :math:`\mu_1(t)` and :math:`\mu_2(t)` are input variables, and :math:`\xi_1(t)` 
+and :math:`\xi_2(t)` are state variables. Under assuming that these four parameters are small, 
+the linearization leads to the following equations:
+
+.. math::
+   :label: tank_continuous
+
+   \dot{\xi_1} (t) = -\frac{1}{2\theta} \xi_1(t) + \mu_1(t) + \mu_2(t), \\
+   \dot{\xi_2} (t) = -\frac{1}{\theta} \xi_2(t) + \frac{c_1 - c_0}{V_0} \mu_1(t - \tau) + \frac{c_2 - c_0}{V_0} \mu_2(t - \tau),
+
+where :math:`\theta = \frac{V_0}{F_0}`. Write in vector form:
+
+.. math::
+   :label: tank_continuous_vec
+
+   \dot{x} (t) = \begin{bmatrix} -\frac{1}{2\theta} & 0 \\ 0 & -\frac{1}{\theta} \end{bmatrix} x(t) + 
+   \begin{bmatrix} 1 & 1 \\ 0 & 0 \end{bmatrix} u(t) + 
+   \begin{bmatrix} 0 & 0 \\ \frac{c_1 - c_0}{V_0} & \frac{c_2 - c_0}{V_0} \end{bmatrix} u(t - \tau),
+
+where :math:`x(t) = [\xi_1(t), \xi_2(t)]^T`, :math:`u(t) = [\mu_1(t), \mu_2(t)]^T`.
+
+Now we will make of this system a discrete system. We assume that the adjustment of 
+the valves occurs at times separated by an interval :math:`\Delta` and time delay is 
+:math:`k\Delta`. Then the system takes the form: 
+
+.. math::
+   :label: tank_discrete
+
+   x^+(i+1) = A x^+(i) + B_1 u^+ (i) + B_2 u^+ (i - k), 
+
+where matrix :math:`A`, :math:`B_1` and :math:`B_2` means the same as in the previous formula. 
+
+Finally we will exclude the delay by using the extended state vector: 
+
+.. math::
+   x'(i) = \begin{bmatrix} \xi_1^+(i) \\ \xi_2^+(i) \\ \mu_1^+(i-1) \\ 
+   \mu_2^+(i-1) \\ \mu_1^+(i-2) \\ \mu_2^+(i-2) \\ \dots \\ \mu_1^+(i-k) \\\mu_2^+(i-k) \end{bmatrix} 
+   \in \mathbb{R}^{2k+2}
+
+Matrices take form:
+
+.. math::
+   A' = \begin{bmatrix} 
+   A & \Theta & \Theta & \Theta & \dots & \Theta & B_2 \\ 
+   \Theta & \Theta & \Theta & \Theta & \dots & \Theta & \Theta \\
+   \Theta & I & \Theta & \Theta & \dots & \Theta & \Theta \\
+   \Theta & \Theta & I & \Theta & \dots & \Theta & \Theta \\
+   & & & \dots \\
+   \Theta & \Theta & \Theta & \dots & \Theta & I & \Theta 
+   \end{bmatrix} \in \mathbb{R}^{(2k+2) \times (2k+2)} \;\;\;\;
+   B' = \begin{bmatrix} 
+   B_1 \\ 
+   I \\
+   \Theta \\
+   \dots \\
+   \Theta 
+   \end{bmatrix} \in \mathbb{R}^{(2k+2) \times 2}
+
+And the final system takes form:
+
+.. math::
+   :label: tank_discrete_fin
+
+   x'(i+1) = A' x'(i) + B' u^+(i)
 
 
