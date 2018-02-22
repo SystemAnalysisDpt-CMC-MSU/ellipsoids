@@ -753,8 +753,8 @@ Blending tank with delay
 There is tank, that is filled with two streams. Each stream contains a soluble 
 substance with constant concentrations :math:`c_1` and :math:`c_2`. Streams 
 have flow rates :math:`F_1(t)` and :math:`F_2(t)`. But streams don't immediately 
-pour into the tank, first they blend in a tube, and then substance get into the tank.
-Substance in the tank is blended and flows out with flow rate :math:`F_(t)`.
+pour into the tank, first they blend in a tube, and then substance gets into the tank.
+Substance in the tank is blended and flows out with flow rate :math:`F(t)`.
 
 At the initial time flow rates of streams are :math:`F_{10}` and :math:`F_{20}`; 
 flow out rate is :math:`F_0`; volume of substance is :math:`V_0`; concentration 
@@ -768,7 +768,7 @@ of substanse in tank is :math:`c_0`. Then we add some small deviations:
 
 where :math:`\mu_1(t)` and :math:`\mu_2(t)` are input variables, and :math:`\xi_1(t)` 
 and :math:`\xi_2(t)` are state variables. Under assuming that these four parameters are small, 
-the linearization leads to the following equations:
+the linearization leads to the following equations (derivation of the equations can be found in [1]_):
 
 .. math::
    :label: tank_continuous
@@ -830,5 +830,11 @@ And the final system takes form:
    :label: tank_discrete_fin
 
    x'(i+1) = A' x'(i) + B' u^+(i)
+
+Now we need to write formulation of the problem. Initial concentration :math:`c_0`, volume 
+:math:`V_0` are given. The problem is to know is it possible to reach certain volume :math:`V`
+and concentration :math:`c` within a specified time.
+
+.. [1] H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
 
 
