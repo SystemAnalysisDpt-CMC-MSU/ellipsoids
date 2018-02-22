@@ -527,8 +527,6 @@ to the green region.
 .. [SUN2003] L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
    Estimation with the Cell Transmission Model. In *Proceedings of the
    American Control Conference*, 3750–3755. Denver, Colorado, USA.
-   
-
 Pendulum with a flywheel
 -------------------------
 
@@ -639,7 +637,50 @@ Defining :math:`\dot{\theta} = \omega_1` and :math:`\dot{\phi} = \omega_2`, we c
 
 Consider some final time instant :math:`t_1` and final position of the system: :math:`\theta(t_1) = \frac{\pi}{2}`, :math:`\phi(t_1) = \phi_1`, :math:`\omega_1(t_1) = 0`, :math:`\omega_2(t_1) = 0`. Required to calculate the backward reachability sets (tube) for the linearized system :eq:`standform` emanating from the given final position. Also required to invistigate whether it's possible to reach the final position from a given initial position :math:`\theta(t_0) = \theta_0`, :math:`\phi(t_0) = \phi_0`, :math:`\omega_1(t_0) = \omega_{1,0}`, :math:`\omega_2(t_0) = \omega_{2,0}` using some admissible control function.   
 
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section06_snippet01.m
+   :language: matlab
+   :linenos:
 
+Now compute the solvability set of the linear system and take its projection onto the subspace :math:`(x_1,x_2)`.
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section06_snippet03.m
+   :language: matlab
+   :linenos:
+
+
+.. _coordpr:
+
+.. figure:: /pic/chapter06_section06_coordpr.png
+   :align: center
+   :alt: rlc
+   :width: 100 %
+
+   Figure shows solvability set projection onto the subspace :math:`(x_1,x_2)`. 
+
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section06_snippet02.m
+   :language: matlab
+   :linenos:
+
+Now look how the system evolves in the projection onto speed axes. For this purpose we should take a projection onto the subspace :math:`(x_3,x_4)`. 
+
+.. _speedpr:
+
+.. figure:: /pic/chapter06_section06_speedpr.png
+   :align: center
+   :alt: rlc
+   :width: 100 %
+
+   Figure shows solvability set projection onto the subspace :math:`(x_3,x_4)`.
+
+:num:`Figure #coordpr` and :num:`Figure #speedpr` show the initial amplitude and speed of the system in order to reach a small neighborhood of unstable 
+equilibrium :math:`\theta \sim \frac{\pi}{2}`. Thus, in order to reach a neighborhood of this point in a rather short time, it is necessary to initially be near this position.
+
+.. raw:: html
+
+	<h2>References</h2>
+
+.. [1] H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
 
 LMI-based three-vehicle platoon
 -------------------------------

@@ -42,17 +42,3 @@ x1EllObj = 1E-3 * ell_unitball(4) + x1Vec;
 timeVec = [endTime, 0];
 solvObj = elltool.reach.ReachContinuous(linSysObj, x1EllObj, dirMat, ...
     timeVec, 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-3);
-% Creating projection matrix and draw projection on axis (x_3, x_4)
-velBasisMat = [0 0 1 0 ; 0 0 0 1]';
-prTubeObj = solvObj.projection(velBasisMat);
-prTubeObj.plotByIa();
-hold on;
-ylabel('x_3'); zlabel('x_4');
-rotate3d on;
-% Creating projection matrix and draw projection on axis (x_1, x_2)
-condBasisMat = [1 0 0 0 ; 0 1 0 0]';
-prTubeObj = solvObj.projection(condBasisMat);
-prTubeObj.plotByIa();
-hold on;
-ylabel('x_1'); zlabel('x_2');
-rotate3d on;
