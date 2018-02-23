@@ -1,2 +1,3 @@
 -Xmx512m
 -Djava.net.preferIPv4Stack=true
+-Dhttps.protocols=TLSv1,TLSv1.1,TLSv1.2
