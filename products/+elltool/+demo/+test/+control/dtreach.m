@@ -17,8 +17,8 @@ function dtreach(varargin)
   rsObj.plotByIa();
 
 
-  eaEllArr  = rsObj.get_ea();
-  iaEllArr  = rsObj.get_ia();
+  eaEllArr  = rsObj.get_ea(); %#ok<NASGU>
+  iaEllArr  = rsObj.get_ia(); %#ok<NASGU>
   
   ea2EllArr = (aMat^nSteps) * x0EllObj;
   for iSteps = 1:nSteps

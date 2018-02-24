@@ -34,4 +34,4 @@ x0EllObj = ell_unitball(n);
 dirsMat = randn(n, nDirs);
 elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, [-10 0],'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-4);
 
-disp(sprintf('Passed test for N = %d: %.1f s', N, (now-time0)*86400));
+disp(sprintf('Passed test for N = %d: %.1f s', N, (now-time0)*86400)); %#ok<DSPS>

@@ -18,7 +18,7 @@ startTime  = 5;
   phiVec = linspace(0,pi,nDirs);
   dirsMat = [sin(phiVec);cos(phiVec)];
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat,...
-      [startTime 0], 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
+      [startTime 0], 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3); %#ok<NASGU>
 
   
 end

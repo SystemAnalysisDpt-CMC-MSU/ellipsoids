@@ -13,7 +13,7 @@ function ctreach3D(varargin)
   rsObj       = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat,...
       timeVec, 'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-3);
 
-  eaEllMat        = rsObj.get_ea();
-  iaEllMat        = rsObj.get_ia();
+  eaEllMat        = rsObj.get_ea(); %#ok<NASGU>
+  iaEllMat        = rsObj.get_ia(); %#ok<NASGU>
 
 end

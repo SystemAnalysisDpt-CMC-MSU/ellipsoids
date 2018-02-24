@@ -56,7 +56,7 @@ function coll(varargin)
   
  ctObj = rsObj.cut(critTime);
  bctObj = brsObj.cut(critTime);
- efEllMat = ctObj.get_ea();
+ efEllMat = ctObj.get_ea(); %#ok<NASGU>
  ebEllMat = bctObj.get_ea();
  fgcCVec = ctObj.get_goodcurves(); 
  fgcVec = fgcCVec{1};

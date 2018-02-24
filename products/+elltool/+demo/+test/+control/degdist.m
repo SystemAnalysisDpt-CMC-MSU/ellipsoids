@@ -17,6 +17,6 @@ function degdist(varargin)
   phiVec = linspace(0,pi,nDirs);
   dirsMat = [sin(phiVec); cos(phiVec)];
   rsObj = elltool.reach.ReachContinuous(sys, x0EllObj, dirsMat, timeVec,...
-      'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-5);
+      'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-5); %#ok<NASGU>
 
 end
