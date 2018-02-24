@@ -89,7 +89,7 @@ prTubeObj.plotByEa('r',plObj);
 hold on;
 plot3(maxTime, v, c, 'b*');
 ylabel('V'); zlabel('c');
-title('Ellipsoidal reach tube, proj. on subspace [V, c]');
+title('Ellipsoidal reach tube, proj. on subspace [v, c]');
 rotate3d on;
 %%
 %check whether the point belongs to the reachability tube
