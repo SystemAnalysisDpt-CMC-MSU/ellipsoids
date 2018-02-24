@@ -756,8 +756,16 @@ have flow rates :math:`F_1(t)` and :math:`F_2(t)`. But streams don't immediately
 pour into the tank, first they blend in a tube, and then substance gets into the tank.
 Substance in the tank is blended and flows out with flow rate :math:`F(t)`.
 
+.. _tankfig:
+
+.. figure:: /pic/chapter06_section09_tank.png
+   :alt: tank
+   :width: 50 %
+
+   Blending tank with delay.
+
 At the initial time flow rates of streams are :math:`F_{10}` and :math:`F_{20}`; 
-flow out rate is :math:`F_0`; volume of substance is :math:`V_0`; concentration 
+output flow rate is :math:`F_0`; volume of substance is :math:`V_0`; concentration 
 of substanse in tank is :math:`c_0`. Then we add some small deviations:
 
 .. math::
@@ -767,8 +775,11 @@ of substanse in tank is :math:`c_0`. Then we add some small deviations:
    c(t) = c_0 + \xi_2(t),
 
 where :math:`\mu_1(t)` and :math:`\mu_2(t)` are input variables, and :math:`\xi_1(t)` 
-and :math:`\xi_2(t)` are state variables. Under assuming that these four parameters are small, 
-the linearization leads to the following equations (derivation of the equations can be found in [1]_):
+and :math:`\xi_2(t)` are state variables. So :math:`\xi_1(t)` means change in volume, 
+:math:`\xi_2(t)` means change in concentration; :math:`\mu_1(t)` and :math:`\mu_2(t)` 
+mean changes in flow rates of input streams (we can control them).
+Under assuming that these four parameters are small, 
+the linearization leads to the following equations (derivation of the equations can be found in [Kwakernaak]_):
 
 .. math::
    :label: tank_continuous
@@ -835,6 +846,9 @@ Now we need to write formulation of the problem. Initial concentration :math:`c_
 :math:`V_0` are given. The problem is to know is it possible to reach certain volume :math:`V`
 and concentration :math:`c` within a specified time.
 
-.. [1] H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
+.. raw:: html
+   <h2>References</h2>
+
+.. [Kwakernaak] H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
 
 
