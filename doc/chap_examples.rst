@@ -845,7 +845,7 @@ Now we will consider the  problem statement. The initial concentration :math:`c_
 :math:`V_0` are given. The problem is to specify whether it is possible to reach certain volume :math:`V`
 and concentration :math:`c` at a certain time instant.
 
-The following is the code that defines a linear discrete system. It takes initial conditions on input and then transforms system with delay into linear system according to the theoretical calculations, which were held above. Using ellipsoidal toolbox this program constructs reach tube and calculates a projection of this ellipsoidal reach tube on subcpace :math:`(V, c)`: 
+The following is the code that defines a linear discrete system. It takes initial conditions on input and then transforms system with delay into linear system according to the theoretical calculations, which were held above. Using ellipsoidal toolbox this program constructs reach tube and calculates a projection of it on subspace :math:`(V, c)`: 
 
 .. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section09_snippet01.m
    :language: matlab
@@ -857,7 +857,7 @@ As a result of this programm's calculations, we will have an illustration of rea
 
 .. figure:: /pic/chapter06_section09_pic1.png
    :alt: pic1
-   :width: 75 %
+   :width: 100 %
 
    Ellipsoidal reach tube, projection on subspace  :math:`(V, c)`.
 
@@ -870,6 +870,6 @@ This code below helps us to identify the possibility of this system to reach cer
 .. raw:: html
    <h2>References</h2>
 
-.. [Kwakernaak] H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
+.. [Kwakernaak] \H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
 
 
