@@ -30,7 +30,7 @@ x1Vec = zeros(2*k+2, 1);
 x1Vec(1) = 0;
 x1Vec(2) = 0;
 
-%define the matrixes A_ext and B_ext for equation x' = A_ext*x + B_ext*u
+%define the matrixes A_ext and B_ext for equation x_ext = A_ext x + B_ext u
 firstAMat = [...
     exp(-delta/(2*theta)) 0;
     0                     exp(-delta/theta)];
@@ -91,9 +91,3 @@ plot3(maxTime, v, c, 'b*');
 ylabel('V'); zlabel('c');
 title('Ellipsoidal reach tube, proj. on subspace [v, c]');
 rotate3d on;
-%%
-%check whether the point belongs to the reachability tube
-[iaEllMat, timeVec] = prTubeObj.get_ia();
-x2Vec = [v, c]';
-firstEllObj = x1Vec + ellipsoid(qMat);
-iaEllMat.isinternal(x2Vec, 'u')

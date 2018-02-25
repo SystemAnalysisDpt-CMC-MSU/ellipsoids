@@ -765,7 +765,7 @@ Substance in the tank is blended and after that it flows out with a flow rate :m
    Blending tank with delay.
 
 At the initial time flow rates of streams are :math:`F_{10}` and :math:`F_{20}`; 
-output flow rate is :math:`F_0`; substance volume is :math:`V_0`; substanse concentration in the tank is :math:`c_0`. Then we add some small deviations:
+output flow rate is :math:`F_0`; substance volume is :math:`V_0`; substance concentration in the tank is :math:`c_0`. Then we add some small deviations:
 
 .. math::
    F_1(t) = F_{10} + \mu_1(t), \\
@@ -797,7 +797,7 @@ where :math:`\theta = \frac{V_0}{F_0}`. Write in vector form:
 
 where :math:`x(t) = [\xi_1(t), \xi_2(t)]^T`, :math:`u(t) = [\mu_1(t), \mu_2(t)]^T`.
 
-Now we will make of this system a discrete system. We assume that the adjustment of 
+Now we will discretize this system. We assume that the adjustment of 
 the valves occurs at time instants (by a certain interval :math:`\Delta`) and time delay is 
 :math:`k\Delta`. Then the system takes form: 
 
@@ -806,7 +806,7 @@ the valves occurs at time instants (by a certain interval :math:`\Delta`) and ti
 
    x^+(i+1) = A x^+(i) + B_1 u^+ (i) + B_2 u^+ (i - k), 
 
-where matrix :math:`A`, :math:`B_1` and :math:`B_2` means the same as in the previous formula. 
+where matrices :math:`A`, :math:`B_1` and :math:`B_2` mean the same as in the previous formula. 
 
 Finally we will exclude the delay by using the extended state vector: 
 
@@ -841,23 +841,31 @@ And the final system takes form:
 
    x'(i+1) = A_{ext} x'(i) + B_{ext} u^+(i)
 
-Now we need to write problem's statement. The initial concentration :math:`c_0` and volume 
+Now we will consider the  problem statement. The initial concentration :math:`c_0` and volume 
 :math:`V_0` are given. The problem is to specify whether it is possible to reach certain volume :math:`V`
-and concentration :math:`c` at a specified time instant.
+and concentration :math:`c` at a certain time instant.
 
-The following is the code that solves the problem: 
+The following is the code that defines a linear discrete system of differential equations. It takes initial conditions on input and then transform system with delay into linear system according to the theoretical calclations, which were held above. With using of ellipsoidal toolbox this program constructs reach tube and calculates a projection of this ellipsoidal reach tube on subcpace (V, c). : 
 
 .. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section09_snippet01.m
    :language: matlab
    :linenos:
 
-Ellipsoidal reach tube, projection on subspace [v, c].
+As a result of this programm's calculations, we will have an illustration of reach tube's projection on subspace (V, c).
 
 .. _pic1fig:
 
 .. figure:: /pic/chapter06_section09_pic1.png
-   :alt: ellpoly
-   :width: 50 %
+   :alt: pic1
+   :width: 75 %
+
+   Ellipsoidal reach tube, projection on subspace (V, c).
+
+This code below helps us to identify the possibility of this system to reach certain volume and concentration at a certain time instant. If we set up initial conditions in the way we made it above, it gives us the positive answer, which means that the problem is solvable and the system reachs required condition.
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section09_snippet02.m
+   :language: matlab
+   :linenos:
 
 .. raw:: html
    <h2>References</h2>
