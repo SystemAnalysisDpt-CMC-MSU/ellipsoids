@@ -495,7 +495,7 @@ classdef SuiteEllTube < mlunitext.test_case
                     if ischar(cmdStr)
                         logger.info(evalc(cmdStr));
                     else
-                        feval(cmdStr);
+                        logger.info(evalc(func2str(cmdStr)));
                     end
                 else
                     self.runAndCheckError(cmdStr,errorTag);
