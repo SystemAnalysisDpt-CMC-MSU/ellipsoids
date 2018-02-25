@@ -845,7 +845,7 @@ Now we will consider the  problem statement. The initial concentration :math:`c_
 :math:`V_0` are given. The problem is to specify whether it is possible to reach certain volume :math:`V`
 and concentration :math:`c` at a certain time instant.
 
-The following is the code that defines a linear discrete system of differential equations. It takes initial conditions on input and then transform system with delay into linear system according to the theoretical calclations, which were held above. With using of ellipsoidal toolbox this program constructs reach tube and calculates a projection of this ellipsoidal reach tube on subcpace (V, c). : 
+The following is the code that defines a linear discrete system. It takes initial conditions on input and then transforms system with delay into linear system according to the theoretical calculations, which were held above. Using ellipsoidal toolbox this program constructs reach tube and calculates a projection of this ellipsoidal reach tube on subcpace (V, c). : 
 
 .. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section09_snippet01.m
    :language: matlab
@@ -861,7 +861,7 @@ As a result of this programm's calculations, we will have an illustration of rea
 
    Ellipsoidal reach tube, projection on subspace (V, c).
 
-This code below helps us to identify the possibility of this system to reach certain volume and concentration at a certain time instant. If we set up initial conditions in the way we made it above, it gives us the positive answer, which means that the problem is solvable and the system reachs required condition.
+This code below helps us to identify the possibility of this system to reach certain volume and concentration at a certain time instant. If we set up initial conditions in the way we made it above, it gives us the positive answer, which means that the problem is solvable and the system reaches required condition.
 
 .. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section09_snippet02.m
    :language: matlab
