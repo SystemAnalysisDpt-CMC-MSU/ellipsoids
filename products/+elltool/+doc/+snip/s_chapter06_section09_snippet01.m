@@ -30,7 +30,7 @@ x1Vec = zeros(2*k+2, 1);
 x1Vec(1) = 0;
 x1Vec(2) = 0;
 
-%define the matrixes A' and B' for equation x' = A'x + B'u
+%define the matrixes A_ext and B_ext for equation x' = A_ext*x + B_ext*u
 firstAMat = [...
     exp(-delta/(2*theta)) 0;
     0                     exp(-delta/theta)];
@@ -42,7 +42,8 @@ firstBMat = [...
 
 secondBMat = [...
     0                                                               0;
-    ((theta*(c1 - c0)) / v0) * (1 - exp(-delta/(theta))) ((theta*(c2 - c0)) / v0) * (1 - exp(-delta/(theta)))
+    ((theta*(c1 - c0)) / v0) * (1 - exp(-delta/(theta))) ...
+    ((theta*(c2 - c0)) / v0) * (1 - exp(-delta/(theta)))
     ];
 
 finalCAMat = zeros(2*k+2);
@@ -77,7 +78,6 @@ dirMat = eye(2*k+2);
 solvObj = elltool.reach.ReachDiscrete(linSysObj, x0EllObj, dirMat, ...
     timeVec, 'isRegEnabled', true, 'isJustCheck', false, 'regTol', 1e-1);
 
-%%
 %define the basis on which we project our tube
 condBasisMat = zeros(2*k+2, 2);
 condBasisMat(1:2, 1:2) = eye(2);

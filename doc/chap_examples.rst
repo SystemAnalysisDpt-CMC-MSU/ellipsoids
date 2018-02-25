@@ -750,11 +750,11 @@ Solving collision problem:
 Blending tank with delay
 ------------------------
 
-There is tank, that is filled with two streams. Each stream contains a soluble 
-substance with constant concentrations :math:`c_1` and :math:`c_2`. Streams 
-have flow rates :math:`F_1(t)` and :math:`F_2(t)`. But streams don't immediately 
-pour into the tank, first they blend in a tube, and then substance gets into the tank.
-Substance in the tank is blended and flows out with flow rate :math:`F(t)`.
+There is a tank, that is being filled with two streams. Each stream contains a soluble 
+substance with constant concentration :math:`c_1` and :math:`c_2`. Streams 
+have flow rates :math:`F_1(t)` and :math:`F_2(t)`. But streams don't pour into
+the tank immediately. Firstly, they blend in a tube, and then substance gets into the tank.
+Substance in the tank is blended and after that it flows out with a flow rate :math:`F(t)`.
 
 .. _tankfig:
 
@@ -765,8 +765,7 @@ Substance in the tank is blended and flows out with flow rate :math:`F(t)`.
    Blending tank with delay.
 
 At the initial time flow rates of streams are :math:`F_{10}` and :math:`F_{20}`; 
-output flow rate is :math:`F_0`; volume of substance is :math:`V_0`; concentration 
-of substanse in tank is :math:`c_0`. Then we add some small deviations:
+output flow rate is :math:`F_0`; substance volume is :math:`V_0`; substanse concentration in the tank is :math:`c_0`. Then we add some small deviations:
 
 .. math::
    F_1(t) = F_{10} + \mu_1(t), \\
@@ -799,8 +798,8 @@ where :math:`\theta = \frac{V_0}{F_0}`. Write in vector form:
 where :math:`x(t) = [\xi_1(t), \xi_2(t)]^T`, :math:`u(t) = [\mu_1(t), \mu_2(t)]^T`.
 
 Now we will make of this system a discrete system. We assume that the adjustment of 
-the valves occurs at times separated by an interval :math:`\Delta` and time delay is 
-:math:`k\Delta`. Then the system takes the form: 
+the valves occurs at time instants (by a certain interval :math:`\Delta`) and time delay is 
+:math:`k\Delta`. Then the system takes form: 
 
 .. math::
    :label: tank_discrete
@@ -819,7 +818,7 @@ Finally we will exclude the delay by using the extended state vector:
 Matrices take form:
 
 .. math::
-   A' = \begin{bmatrix} 
+   A_{ext} = \begin{bmatrix} 
    A & \Theta & \Theta & \Theta & \dots & \Theta & B_2 \\ 
    \Theta & \Theta & \Theta & \Theta & \dots & \Theta & \Theta \\
    \Theta & I & \Theta & \Theta & \dots & \Theta & \Theta \\
@@ -827,7 +826,7 @@ Matrices take form:
    & & & \dots \\
    \Theta & \Theta & \Theta & \dots & \Theta & I & \Theta 
    \end{bmatrix} \in \mathbb{R}^{(2k+2) \times (2k+2)} \;\;\;\;
-   B' = \begin{bmatrix} 
+   B_{ext} = \begin{bmatrix} 
    B_1 \\ 
    I \\
    \Theta \\
@@ -840,11 +839,25 @@ And the final system takes form:
 .. math::
    :label: tank_discrete_fin
 
-   x'(i+1) = A' x'(i) + B' u^+(i)
+   x'(i+1) = A_{ext} x'(i) + B_{ext} u^+(i)
 
-Now we need to write formulation of the problem. Initial concentration :math:`c_0`, volume 
-:math:`V_0` are given. The problem is to know is it possible to reach certain volume :math:`V`
-and concentration :math:`c` within a specified time.
+Now we need to write problem's statement. The initial concentration :math:`c_0` and volume 
+:math:`V_0` are given. The problem is to specify whether it is possible to reach certain volume :math:`V`
+and concentration :math:`c` at a specified time instant.
+
+The following is the code that solves the problem: 
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section09_snippet01.m
+   :language: matlab
+   :linenos:
+
+Ellipsoidal reach tube, projection on subspace [v, c].
+
+.. _pic1fig:
+
+.. figure:: /pic/chapter06_section09_pic1.png
+   :alt: ellpoly
+   :width: 50 %
 
 .. raw:: html
    <h2>References</h2>
