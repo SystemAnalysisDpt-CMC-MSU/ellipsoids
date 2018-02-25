@@ -839,7 +839,7 @@ And the final system takes form:
 .. math::
    :label: tank_discrete_fin
 
-   x'(i+1) = A_{ext} x'(i) + B_{ext} u^+(i)
+   x_{ext}(i+1) = A_{ext} x_{ext}(i) + B_{ext} u^+(i)
 
 Now we will consider the  problem statement. The initial concentration :math:`c_0` and volume 
 :math:`V_0` are given. The problem is to specify whether it is possible to reach certain volume :math:`V`
