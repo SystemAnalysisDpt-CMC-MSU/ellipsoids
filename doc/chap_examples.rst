@@ -811,7 +811,7 @@ where matrices :math:`A`, :math:`B_1` and :math:`B_2` mean the same as in the pr
 Finally we will exclude the delay by using the extended state vector: 
 
 .. math::
-   x'(i) = \begin{bmatrix} \xi_1^+(i) \\ \xi_2^+(i) \\ \mu_1^+(i-1) \\ 
+   x_{ext}(i) = \begin{bmatrix} \xi_1^+(i) \\ \xi_2^+(i) \\ \mu_1^+(i-1) \\ 
    \mu_2^+(i-1) \\ \mu_1^+(i-2) \\ \mu_2^+(i-2) \\ \dots \\ \mu_1^+(i-k) \\\mu_2^+(i-k) \end{bmatrix} 
    \in \mathbb{R}^{2k+2}
 
@@ -845,13 +845,13 @@ Now we will consider the  problem statement. The initial concentration :math:`c_
 :math:`V_0` are given. The problem is to specify whether it is possible to reach certain volume :math:`V`
 and concentration :math:`c` at a certain time instant.
 
-The following is the code that defines a linear discrete system. It takes initial conditions on input and then transforms system with delay into linear system according to the theoretical calculations, which were held above. Using ellipsoidal toolbox this program constructs reach tube and calculates a projection of this ellipsoidal reach tube on subcpace (V, c). : 
+The following is the code that defines a linear discrete system. It takes initial conditions on input and then transforms system with delay into linear system according to the theoretical calculations, which were held above. Using ellipsoidal toolbox this program constructs reach tube and calculates a projection of this ellipsoidal reach tube on subcpace :math:`(V, c)`: 
 
 .. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section09_snippet01.m
    :language: matlab
    :linenos:
 
-As a result of this programm's calculations, we will have an illustration of reach tube's projection on subspace (V, c).
+As a result of this programm's calculations, we will have an illustration of reach tube's projection on subspace :math:`(V, c)`.
 
 .. _pic1fig:
 
@@ -859,7 +859,7 @@ As a result of this programm's calculations, we will have an illustration of rea
    :alt: pic1
    :width: 75 %
 
-   Ellipsoidal reach tube, projection on subspace (V, c).
+   Ellipsoidal reach tube, projection on subspace  :math:`(V, c)`.
 
 This code below helps us to identify the possibility of this system to reach certain volume and concentration at a certain time instant. If we set up initial conditions in the way we made it above, it gives us the positive answer, which means that the problem is solvable and the system reaches required condition.
 
