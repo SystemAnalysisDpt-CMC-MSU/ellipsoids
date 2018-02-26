@@ -27,7 +27,7 @@ lsysObj = elltool.linsys.LinSysContinuous(aMat, bMat, uBoundsEllObj,...
     gMat, vEllObj);
 timeVec = [t1, 0];
 % initial directions:
-nDirs = 2;
+nDirs = 5;
 paramVec = linspace(0, 2*pi, nDirs);
 [param1Arr, param2Arr, param3Arr] = meshgrid(paramVec);
 dirsMat = [...
