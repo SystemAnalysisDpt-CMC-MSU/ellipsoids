@@ -521,6 +521,7 @@ the guard is not actually reached, because the state evolves according
 to the green region.
 
 .. raw:: html
+
 	<h2>References</h2>
 
 .. [SUN2003] L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
@@ -744,5 +745,131 @@ Solving collision problem:
    robust longitudinal guidance. Proceedings of the 17th World Congress
    The International Federation of Automatic Control
    Seoul, Korea, July 6-11, 2008
+
+
+Blending tank with delay
+------------------------
+
+There is a tank, that is being filled with two streams. Each stream contains a soluble 
+substance with constant concentration :math:`c_1` and :math:`c_2`. Streams 
+have flow rates :math:`F_1(t)` and :math:`F_2(t)`. But streams don't pour into
+the tank immediately. Firstly, they blend in a tube, and then substance gets into the tank.
+Substance in the tank is blended and after that it flows out with a flow rate :math:`F(t)`.
+
+.. _tankfig:
+
+.. figure:: /pic/chapter06_section09_tank.png
+   :alt: tank
+   :width: 50 %
+
+   Blending tank with delay.
+
+At the initial time flow rates of streams are :math:`F_{10}` and :math:`F_{20}`; 
+output flow rate is :math:`F_0`; substance volume is :math:`V_0`; substance concentration in the tank is :math:`c_0`. Then we add some small deviations:
+
+.. math::
+   F_1(t) = F_{10} + \mu_1(t), \\
+   F_2(t) = F_{20} + \mu_2(t), \\
+   V(t) = V_0 + \xi_1(t), \\
+   c(t) = c_0 + \xi_2(t),
+
+where :math:`\mu_1(t)` and :math:`\mu_2(t)` are input variables, and :math:`\xi_1(t)` 
+and :math:`\xi_2(t)` are state variables. So :math:`\xi_1(t)` means change in volume, 
+:math:`\xi_2(t)` means change in concentration; :math:`\mu_1(t)` and :math:`\mu_2(t)` 
+mean changes in flow rates of input streams (we can control them).
+Under assuming that these four parameters are small, 
+the linearization leads to the following equations (derivation of the equations can be found in [Kwakernaak]_):
+
+.. math::
+   :label: tank_continuous
+
+   \dot{\xi_1} (t) = -\frac{1}{2\theta} \xi_1(t) + \mu_1(t) + \mu_2(t), \\
+   \dot{\xi_2} (t) = -\frac{1}{\theta} \xi_2(t) + \frac{c_1 - c_0}{V_0} \mu_1(t - \tau) + \frac{c_2 - c_0}{V_0} \mu_2(t - \tau),
+
+where :math:`\theta = \frac{V_0}{F_0}`. Write in vector form:
+
+.. math::
+   :label: tank_continuous_vec
+
+   \dot{x} (t) = \begin{bmatrix} -\frac{1}{2\theta} & 0 \\ 0 & -\frac{1}{\theta} \end{bmatrix} x(t) + 
+   \begin{bmatrix} 1 & 1 \\ 0 & 0 \end{bmatrix} u(t) + 
+   \begin{bmatrix} 0 & 0 \\ \frac{c_1 - c_0}{V_0} & \frac{c_2 - c_0}{V_0} \end{bmatrix} u(t - \tau),
+
+where :math:`x(t) = [\xi_1(t), \xi_2(t)]^T`, :math:`u(t) = [\mu_1(t), \mu_2(t)]^T`.
+
+Now we will discretize this system. We assume that the adjustment of 
+the valves occurs at time instants (by a certain interval :math:`\Delta`) and time delay is 
+:math:`k\Delta`. Then the system takes form: 
+
+.. math::
+   :label: tank_discrete
+
+   x^+(i+1) = A x^+(i) + B_1 u^+ (i) + B_2 u^+ (i - k), 
+
+where matrices :math:`A`, :math:`B_1` and :math:`B_2` mean the same as in the previous formula. 
+
+Finally we will exclude the delay by using the extended state vector: 
+
+.. math::
+   x_{ext}(i) = \begin{bmatrix} \xi_1^+(i) \\ \xi_2^+(i) \\ \mu_1^+(i-1) \\ 
+   \mu_2^+(i-1) \\ \mu_1^+(i-2) \\ \mu_2^+(i-2) \\ \dots \\ \mu_1^+(i-k) \\\mu_2^+(i-k) \end{bmatrix} 
+   \in \mathbb{R}^{2k+2}
+
+Matrices take form:
+
+.. math::
+   A_{ext} = \begin{bmatrix} 
+   A & \Theta & \Theta & \Theta & \dots & \Theta & B_2 \\ 
+   \Theta & \Theta & \Theta & \Theta & \dots & \Theta & \Theta \\
+   \Theta & I & \Theta & \Theta & \dots & \Theta & \Theta \\
+   \Theta & \Theta & I & \Theta & \dots & \Theta & \Theta \\
+   & & & \dots \\
+   \Theta & \Theta & \Theta & \dots & \Theta & I & \Theta 
+   \end{bmatrix} \in \mathbb{R}^{(2k+2) \times (2k+2)} \;\;\;\;
+   B_{ext} = \begin{bmatrix} 
+   B_1 \\ 
+   I \\
+   \Theta \\
+   \dots \\
+   \Theta 
+   \end{bmatrix} \in \mathbb{R}^{(2k+2) \times 2}
+
+And the final system takes form:
+
+.. math::
+   :label: tank_discrete_fin
+
+   x_{ext}(i+1) = A_{ext} x_{ext}(i) + B_{ext} u^+(i)
+
+Now we will consider the  problem statement. The initial concentration :math:`c_0` and volume 
+:math:`V_0` are given. The problem is to specify whether it is possible to reach certain volume :math:`V`
+and concentration :math:`c` at a certain time instant.
+
+The following is the code that defines a linear discrete system. It takes initial conditions on input and then transforms system with delay into linear system according to the theoretical calculations, which were held above. Using ellipsoidal toolbox this program constructs reach tube and calculates a projection of it on subspace :math:`(V, c)`: 
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section09_snippet01.m
+   :language: matlab
+   :linenos:
+
+As a result of this programm's calculations, we will have an illustration of reach tube's projection on subspace :math:`(V, c)`.
+
+.. _pic1fig:
+
+.. figure:: /pic/chapter06_section09_pic1.png
+   :alt: pic1
+   :width: 100 %
+
+   Ellipsoidal reach tube, projection on subspace  :math:`(V, c)`.
+
+This code below helps us to identify the possibility of this system to reach certain volume and concentration at a certain time instant. If we set up initial conditions in the way we made it above, it gives us the positive answer, which means that the problem is solvable and the system reaches required condition.
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section09_snippet02.m
+   :language: matlab
+   :linenos:
+
+.. raw:: html
+   <h2>References</h2>
+
+.. [Kwakernaak] \H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
 
 
