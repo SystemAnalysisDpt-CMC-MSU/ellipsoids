@@ -1,4 +1,4 @@
-% Creating projection matrix and draw projection on axis (x_3, x_4)
+% Creating projection matrix and drawing projection on axis (x_3, x_4)
 velBasisMat = [0 0 1 0 ; 0 0 0 1]';
 prTubeObj = solvObj.projection(velBasisMat);
 plObj = smartdb.disp.RelationDataPlotter('figureGroupKeySuffFunc', ...

@@ -16,7 +16,7 @@ aMat = [0 0 -1 0; 0 0 0 1;...
     sysConst2/sysConst1 0 kVec(1)/sysConst1 ...
     -(kVec(2)/jVec(2) + 2*kVec(2)/sysConst1)];
 bMat = [0 0; 0 0; -1/sysConst1 0; 0 (1/jVec(2))+1/sysConst1];
-x1Vec = [0; cos(pi/8); 0; 0];
+x1Vec = [pi/2; 0; 0; 0];
 endTime=0.05;
 % Creating ellipsoid for pointwise restrictions on control
 diagMat = diag(uVec);
@@ -24,18 +24,19 @@ uEllObj = ellipsoid(diagMat);
 % Defining linear system
 linSysObj=elltool.linsys.LinSysContinuous(aMat, bMat, uEllObj);
 % Initializing directions matrix
-nDims = 4;
-nDirs = 1;
-dirMeshVec = 0:(2*pi/nDirs):2*pi;
-dirNum = length(dirMeshVec)^nDims;
-[x1, x2, x3, x4] = ndgrid(dirMeshVec,dirMeshVec,dirMeshVec,dirMeshVec);
-lineDir1Mat = reshape( x1, [1, dirNum]);
-lineDir2Mat = reshape( x2, [1, dirNum]);
-lineDir3Mat = reshape( x3, [1, dirNum]);
-lineDir4Mat = reshape( x4, [1, dirNum]);
+nDims = 3;
+nDirs = 3;
+dirMesh1Vec = 0:(2*pi/nDirs):2*pi;%phi
+dirMesh2Vec = 0:(pi/nDirs):pi;%psi
+dirMesh3Vec = 0:(pi/nDirs):pi;%theta
+[phiMat, psiMat, zetaMat] = ndgrid(dirMesh1Vec,dirMesh2Vec,dirMesh3Vec);
+lineDir1Mat = reshape( cos(phiMat), 1, []);
+lineDir2Mat = reshape( sin(phiMat).*cos(psiMat), 1, []);
+lineDir3Mat = reshape( sin(phiMat).*sin(psiMat).*cos(zetaMat), 1, []);
+lineDir4Mat = reshape( sin(phiMat).*sin(psiMat).*sin(zetaMat), 1, []);
 dirMat = [lineDir1Mat; lineDir2Mat; lineDir3Mat; lineDir4Mat];
 dirMat = dirMat(:,2:end);
-dirMat = dirMat ./ sqrt(repmat(sum(dirMat.^2,1), nDims, 1));
+dirMat = dirMat ./ sqrt(repmat(sum(dirMat.^2,1), nDims+1, 1));
 % Set of final states
 x1EllObj = 1E-3 * ell_unitball(4) + x1Vec; 
 % Calculating solvability set
