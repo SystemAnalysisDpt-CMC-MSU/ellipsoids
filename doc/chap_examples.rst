@@ -872,93 +872,150 @@ Here :math:`u_3, u_4` --- fictitious variables for right size,
 :math:`|u_1| \leqslant \alpha_1, |u_2| \leqslant \alpha_2`.
 
 
-Now compute the solvability set of the linear system
-and taking its projection onto :math:`(z_1, z_2)` subspace.
+Now let's compute some solvability tubes of linear systems
+and take their projections onto different subspaces. 
 
+Firstly we initialize our linear system.
+
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet01.m
+   :language: matlab
+   :linenos:
+
+Also we should initialize restrictions of control  
+
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet02.m
+   :language: matlab
+   :linenos:
+   
+and our final position.
+   
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet04.m
+   :language: matlab
+   :linenos:
+   
+After that we can calculate solvability tube for our system.
+
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet06.m
+   :language: matlab
+   :linenos: 
+   
+And finaly we can take its projection onto different subspaces. 
+
+For example onto (:math:`z_3, z_4`):
+
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet07.m
+   :language: matlab
+   :linenos:
 
 .. figure:: /pic/chapter06_section07_pic1.png
    :width: 100 %
    
-   Figure shows solvability set projection onto (:math:`z_3, z_4`) of system
-   ( evolves in time from t=0 to t=5, end position is
-   :math:`z_1=0, z_2=0,z_3=0,z_4=0`)
+   Figure shows solvability tube projection onto (:math:`z_3, z_4`) of system
+   ( evolves in time from t=0 to t=5, final position is
+   :math:`z_1=0, z_2=0,z_3=0,z_4=0`) 
    
+   
+Analogically for other subspaces:    
+
 
 .. figure:: /pic/chapter06_section07_pic2.png
    :width: 100 %
    
-   Figure shows solvability set projection onto (:math:`z_1, z_2`) of system
-   ( evolves in time from t=0 to t=5, end position is
-   :math:`z_1=0, z_2=0,z_3=0,z_4=0`)
+   Figure shows solvability tube projection onto (:math:`z_1, z_2`) of system
+   (evolves in time from t=0 to t=5, final position is
+   :math:`z_1=0, z_2=0, z_3=0, z_4=0`)
    
 
 .. figure:: /pic/chapter06_section07_pic3.png
    :width: 100 %
    
-   Figure shows solvability set projection onto (:math:`z_1, z_3`) of system
-   ( evolves in time from t=0 to t=5, end position is
-   :math:`z_1=0, z_2=0,z_3=0,z_4=0`)
+   Figure shows solvability tube projection onto (:math:`z_1, z_3`) of system
+   (evolves in time from t=0 to t=5, final position is
+   :math:`z_1=0, z_2=0, z_3=0, z_4=0`)
    
 
 .. figure:: /pic/chapter06_section07_pic4.png
    :width: 100 %
    
-   Figure shows solvability set projection onto (:math:`z_2, z_4`) of system
-   ( evolves in time from t=0 to t=5, end position is
-	:math:`z_1=0, z_2=0,z_3=0,z_4=0`)
+   Figure shows solvability tube projection onto (:math:`z_2, z_4`) of system
+   (evolves in time from t=0 to t=5, final position is
+   :math:`z_1=0, z_2=0, z_3=0, z_4=0`)
    
+ 
+Now let's change our final position 
+
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet05.m
+   :language: matlab
+   :linenos:
+   
+   
+and analogically compute the solvability tube and see how our projections change:
+ 
 
 .. figure:: /pic/chapter06_section07_pic5.png
    :width: 100 %
    
-   Figure shows solvability set projection onto (:math:`z_3, z_4`) of system
-   ( evolves in time from t=0 to t=5, end position is
+   Figure shows solvability tube projection onto (:math:`z_3, z_4`) of system
+   (evolves in time from t=0 to t=5, final position is
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
    
 
 .. figure:: /pic/chapter06_section07_pic6.png
    :width: 100 %
    
-   Figure shows solvability set projection onto (:math:`z_1, z_2`) of system
-   ( evolves in time from t=0 to t=5, end position is
+   Figure shows solvability tube projection onto (:math:`z_1, z_2`) of system
+   (evolves in time from t=0 to t=5, final position is
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
   
 
 .. figure:: /pic/chapter06_section07_pic7.png
    :width: 100 %
    
-   Figure shows solvability set projection onto (:math:`z_1, z_3`) of system
-   ( evolves in time from t=0 to t=5, end position is
+   Figure shows solvability tube projection onto (:math:`z_1, z_3`) of system
+   (evolves in time from t=0 to t=5, final position is
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
   
 
 .. figure:: /pic/chapter06_section07_pic8.png
    :width: 100 %
    
-   Figure shows solvability set projection onto (:math:`z_2, z_4`) of system
-   ( evolves in time from t=0 to t=5, end position is
+   Figure shows solvability tube projection onto (:math:`z_2, z_4`) of system
+   (evolves in time from t=0 to t=5, final position is
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
+   
+   
+This time we want to change restrictions of control
+
+.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet03.m
+   :language: matlab
+   :linenos: 
+   
+and to do the same steps as early. Let's look at the results:
 
 
 .. figure:: /pic/chapter06_section07_pic9.png
    :width: 100 %
    
    Now set control restrictions on :math:`\alpha_1 = 10, \alpha_2 = 10`.
-   Figure shows solvability set projection onto (:math:`z_1, z_2`) of system
-   ( evolves in time from t=0 to t=5, end position is
+   Figure shows solvability tube projection onto (:math:`z_1, z_2`) of system
+   (evolves in time from t=0 to t=5, final position is
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
    
 
 .. figure:: /pic/chapter06_section07_pic10.png
    :width: 100 %
    
-   Figure shows solvability set projection onto (:math:`z_3, z_4`) of system
-   ( evolves in time from t=0 to t=5, end position is
+   Figure shows solvability tube projection onto (:math:`z_3, z_4`) of system
+   (evolves in time from t=0 to t=5, tube position is
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`, control limits:
-   :math:`\alpha_1 = 10, \alpha_2 = 10`)
-
-	
+   :math:`\alpha_1 = 10, \alpha_2 = 10`) 
    
+.. raw:: html
+	<h2>References</h2>
+
+.. [1] H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons, 1972.
+
+
 .. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet01.m
    :language: matlab
    :linenos:
