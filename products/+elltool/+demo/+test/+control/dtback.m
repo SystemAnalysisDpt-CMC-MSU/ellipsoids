@@ -15,14 +15,13 @@ function dtback(varargin)
   nSteps = 10;
   dSys  = elltool.linsys.LinSysDiscrete(aMat, bVec, pEllObj, [], [], [], [], 'd');
   rsObj  = elltool.reach.ReachDiscrete(dSys, mEllObj, dirsMat, [nSteps 0]);
-  eaEllObj   = rsObj.get_ea();
-  iaEllObj   = rsObj.get_ia();
+  eaEllObj   = rsObj.get_ea(); %#ok<NASGU>
+  iaEllObj   = rsObj.get_ia(); %#ok<NASGU>
   
   ea2EllObj  = (aMat^(-nSteps)) * mEllObj;
   for iSteps = 1:nSteps
     fMat  = aMat^(nSteps-iSteps);
-    invFMat = inv(fMat);
-    ea2EllObj = [ea2EllObj invFMat*inv(aMat)*bVec*pEllObj];
+    ea2EllObj = [ea2EllObj (aMat*fMat)\bVec*pEllObj];  %#ok<AGROW>
   end
 
 end

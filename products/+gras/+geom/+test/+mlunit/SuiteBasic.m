@@ -11,7 +11,7 @@ classdef SuiteBasic < mlunitext.test_case
         %
         end
         %
-        function testSpherePart(self)
+        function testSpherePart(~)
             CALC_PRECISION = 1e-14;
             %
             numPointsVec = [1,2,3,20,21,22,41,42,43,100];

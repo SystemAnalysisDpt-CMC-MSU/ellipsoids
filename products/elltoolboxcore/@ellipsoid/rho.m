@@ -99,14 +99,14 @@ if isOneEll % one ellipsoid, multiple directions
     [~, absTol] = getAbsTol(ellArr);
     dirsMat=reshape(dirsArr,nDim,nDirs);
     %
-    [supArr bpArr] = gras.geom.ell.rhomat(ellMat, dirsMat,absTol, cenVec);
+    [supArr, bpArr] = gras.geom.ell.rhomat(ellMat, dirsMat,absTol, cenVec);
     if length(dirSizeVec)>2
         supArr=reshape(supArr,dirSizeVec(2:end));
         bpArr=reshape(bpArr,dirSizeVec);
     end
 elseif isOneDir % multiple ellipsoids, one direction
     fComposite=@(ellObj)fRhoForDir(ellObj,dirsArr);
-    [resCArr xCArr]=arrayfun(fComposite,ellArr,...
+    [resCArr, xCArr]=arrayfun(fComposite,ellArr,...
         'UniformOutput',false);
     supArr = cell2mat(resCArr);
     bpArr = horzcat(xCArr{:});
@@ -119,17 +119,17 @@ else % multiple ellipsoids, multiple directions
     dirCArr=reshape(augxCArr(1,:),ellSizeVec);
     %
     fComposite=@(ellObj,lVec)fRhoForDir(ellObj,lVec{1});
-    [resCArr xCArr]=arrayfun(fComposite,ellArr,dirCArr,...
+    [resCArr, xCArr]=arrayfun(fComposite,ellArr,dirCArr,...
         'UniformOutput',false);
     supArr = cell2mat(resCArr);
     bpArr= horzcat(xCArr{:});
     bpArr=reshape(bpArr,dirSizeVec);
 end
 %
-    function [supFun xVec] = fRhoForDir(ellObj,dirVec)
-        [cenVec ellMat]=double(ellObj);
+    function [supFun, xVec] = fRhoForDir(ellObj,dirVec)
+        [cenVec, ellMat]=double(ellObj);
         absTol=ellObj.getAbsTol();
-        [supFun xVec] = gras.geom.ell.rhomat(ellMat, dirVec,absTol,...
+        [supFun, xVec] = gras.geom.ell.rhomat(ellMat, dirVec,absTol,...
             cenVec);
     end
 end

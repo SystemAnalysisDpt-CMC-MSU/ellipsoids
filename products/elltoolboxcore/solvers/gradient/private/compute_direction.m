@@ -1,4 +1,4 @@
-function [sd, dirType] = compute_direction(Z, H, gf, nvars, f)
+function [sd, dirType] = compute_direction(Z, H, gf, ~, ~)
 %
 % COMPUTE_DIRECTION - computes a search direction in a 
 %                     subspace defined by Z.
@@ -14,8 +14,8 @@ function [sd, dirType] = compute_direction(Z, H, gf, nvars, f)
     sd      = - Z*(R \ ( R'\(Z'*gf)));
     dirType = Newton;
   else
-    [L, sn] = choltr(projH);
-    if ~isempty(sn) & (sn'*projH*sn < -realsqrt(eps))
+    [~, sn] = choltr(projH);
+    if ~isempty(sn) && (sn'*projH*sn < -realsqrt(eps))
       sd      = Z*sn;
       dirType = NegCurv;
     else

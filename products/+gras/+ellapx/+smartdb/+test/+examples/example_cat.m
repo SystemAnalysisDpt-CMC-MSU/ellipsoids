@@ -16,7 +16,7 @@ secondEllTubeObj =...
 % Concatenating firstEllTube and secondEllTube on [timeBeg1, timeEnd2]
 % vector of time.
 %
-resEllTubeObj = firstEllTubeObj.cat(secondEllTubeObj);
+resEllTubeObj = firstEllTubeObj.cat(secondEllTubeObj); %#ok<*NASGU>
 %
 % Concatenating the same firstEllTube and secondEllTube on [timeBeg1,timeEnd2]
 % vector of time, but the sTime and values of properties corresponding to 

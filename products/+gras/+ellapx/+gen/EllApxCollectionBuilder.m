@@ -22,7 +22,7 @@ classdef EllApxCollectionBuilder<gras.ellapx.gen.IEllApxBuilder
         function apxType=getApxType(~)
             apxType=gras.ellapx.enums.EApproxType.NotDefined;
         end
-        function [apxSchemaName,apxSchemaDescr]=getApxSchemaNameAndDescr(self)
+        function [apxSchemaName,apxSchemaDescr]=getApxSchemaNameAndDescr(self) %#ok<MANU>
             apxSchemaName='Mixed';
             apxSchemaDescr=['Different schemas based on content ',...
                 'of collection of ellApxBuilders'];

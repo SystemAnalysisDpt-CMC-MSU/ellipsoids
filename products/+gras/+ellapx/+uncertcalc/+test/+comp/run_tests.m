@@ -18,7 +18,7 @@ for iConf=nConfs:-1:1
         % add lti and not-lti pair test
         suiteList{end+1}=loader.load_tests_from_test_case(...
             'gras.ellapx.uncertcalc.test.comp.mlunit.SuiteCompare',...
-            {confName,confNameLti},crm,crmSys,'marker',confName);
+            {confName,confNameLti},crm,crmSys,'marker',confName); %#ok<AGROW>
     else
         % if system is lti, skip
         continue;

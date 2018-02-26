@@ -361,7 +361,7 @@ while ~isDone
                     break;
                 end
                 nout_new = nout_new + 1;
-                tout_new = [tout_new, tSpanVec(next)];
+                tout_new = [tout_new, tSpanVec(next)]; %#ok<*AGROW>
                 if tSpanVec(next) == tnew
                     yout_new = [yout_new, ynew];
                 else

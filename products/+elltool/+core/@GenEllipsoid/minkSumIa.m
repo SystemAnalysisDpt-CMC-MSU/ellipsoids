@@ -72,7 +72,7 @@ if (minDimSpace~=maxDimSpace)
 end
 dimSpace=maxDimSpace;
 %
-[mDirSize nDirSize]=size(dirMat);
+[mDirSize, nDirSize]=size(dirMat);
 if (mDirSize~=dimSpace)
     msgStr=sprintf(...
         'second argument must be vector(s) in R^%d',...
@@ -82,7 +82,7 @@ end
 %
 absTol=ellObjVec.absTol;
 %
-[mSize kSize]=size(ellObjVec);
+[mSize, kSize]=size(ellObjVec);
 if (mSize==1) && (kSize==1)
     ellResVec=ellObjVec;
 else
@@ -93,7 +93,7 @@ else
         curDirVec=dirMat(:,iDir);
         %find all Inf directions
         ellObjCVec=num2cell(ellObjVec);
-        [isInfCMat allInfDirCMat]=cellfun(...
+        [isInfCMat, allInfDirCMat]=cellfun(...
             @GenEllipsoid.findAllInfDir,ellObjCVec,...
             'UniformOutput', false);
         isInfMat=cell2mat(isInfCMat);

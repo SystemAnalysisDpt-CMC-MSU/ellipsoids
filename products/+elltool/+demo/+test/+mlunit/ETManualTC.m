@@ -24,6 +24,8 @@ classdef ETManualTC < mlunitext.test_case
         end
         %
         function self = testBasic(self)
+            import elltool.logging.Log4jConfigurator;
+            logger=Log4jConfigurator.getLogger();
             currentDir = fileparts(which(mfilename('class')));
             rootDir = modgen.path.rmlastnpathparts(currentDir, 5);
             snippetsDir = [rootDir, filesep, 'products', filesep,...
@@ -31,7 +33,7 @@ classdef ETManualTC < mlunitext.test_case
             snippetsPattern = [snippetsDir, filesep, '*.m'];
             fileList = dir(snippetsPattern);
             nFiles = length(fileList);
-            BAD_SNIPPET_NAMES = {};
+            BAD_SNIPPET_NAMES = {'s_chapter04_section01_snippet01.m'};
             oldFolder = cd([rootDir, filesep, 'products']);
             for iFile = 1 : nFiles
                 isBad = false;
@@ -43,7 +45,7 @@ classdef ETManualTC < mlunitext.test_case
                 end
                 if ~isBad
                     [~, fileName] = fileparts(nameStr);
-                    eval(['elltool.doc.snip.' fileName]);
+                    logger.info(evalc(['elltool.doc.snip.' fileName]));
                 end
             end
             cd(oldFolder);

@@ -22,7 +22,7 @@ for iSuiteElem=1:numel(suiteDefList)
         
         suiteList{end+1} = loader.load_tests_from_test_case(testCase,... 
             fDynConstr, fReader, REL_TOL, ABS_TOL,...
-            'marker', sprintf('suite=%d_conf=%s',iSuiteElem,confName));
+            'marker', sprintf('suite=%d_conf=%s',iSuiteElem,confName)); %#ok<AGROW>
 	end
 end
 

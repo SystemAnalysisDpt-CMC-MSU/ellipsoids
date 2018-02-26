@@ -66,7 +66,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             checkEvRef(1);
             checkEvRef(2);
             %
-            [lDirMat l1DirMat l2DirMat] = setDir(1);
+            [lDirMat, l1DirMat, l2DirMat] = setDir(1);
             %Check Refine direct time
             timeVec=[0 1];
             reachSetObj=buildRS(l1DirMat,timeVec);
@@ -107,7 +107,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
             projReachSetObj=reachSetObj.projection(projMat);
             checkRes(ellTubeProjRelNew,projReachSetObj);
             %
-            function [lDirMat l1DirMat l2DirMat] = setDir(typeVal)
+            function [lDirMat, l1DirMat, l2DirMat] = setDir(typeVal)
                 switch typeVal
                     case 1
                         lDirMat=[1,-1,0,1;
@@ -130,7 +130,7 @@ classdef ContinuousReachRefineTestCase < mlunitext.test_case
                 checkRes(reachObjNew,reachSetObj);
             end
             function checkEvRef(typeVal)
-                [lDirMat l1DirMat l2DirMat] = setDir(typeVal);
+                [lDirMat, l1DirMat, l2DirMat] = setDir(typeVal);
                 timeVec=[0 1];
                 reachObjNew=buildRS(l1DirMat,timeVec);
                 reachObjNew = reachObjNew.refine(l2DirMat);
@@ -224,18 +224,18 @@ NON_OBJ_OUT_METHOD_LIST = {'dimension','iscut','isprojection','isEmpty'};
 OBJ_OUT_METHOD_LIST = {'getCopy','repMat'};
 switch methodName
     case NON_OBJ_OUT_METHOD_LIST
-        [isEq failMsg] = checkSimpleEq(initMat,compMat,methodName);
+        [isEq, failMsg] = checkSimpleEq(initMat,compMat,methodName);
     case OBJ_OUT_METHOD_LIST
-        [isEq failMsg] = checkObjEq(initMat,compMat,methodName);
+        [isEq, failMsg] = checkObjEq(initMat,compMat,methodName);
     otherwise
         throwerror('wrongInput:unknownMethod',...
             'Unexpected method: %s. Allowed methods: %s,%s',...
             methodName,...
-            cellstr2expression({NON_OBJ_OUT_METHOD_LIST{:}, OBJ_OUT_METHOD_LIST{:}}));
+            cellstr2expression({NON_OBJ_OUT_METHOD_LIST{:}, OBJ_OUT_METHOD_LIST{:}})); %#ok<CCAT>
 end
 mlunitext.assert_equals(true,isEq,failMsg);
 %
-    function [isEq failMsg] = checkSimpleEq(initMat,compMat,methodName)
+    function [isEq, failMsg] = checkSimpleEq(initMat,compMat,methodName)
         failMsg = [];
         isEq = isequal(initMat, compMat.(methodName));
         if ~isEq
@@ -243,7 +243,7 @@ mlunitext.assert_equals(true,isEq,failMsg);
         end
     end
 %
-    function [isEq failMsg] = checkObjEq(initMat,compMat,methodName)
+    function [isEq, failMsg] = checkObjEq(initMat,compMat,methodName)
         isEq = arrayfun(@(x,y) x.isEqual(y), initMat, compMat);
         if ~isEq
             failMsg = sprintf('failure for %s() method;',methodName);

@@ -31,7 +31,7 @@ if tol<0
     modgen.common.throwerror('wrongInput',...
         'tol is expected to be a positive number');
 end
-if ~(ndims(inpMat)==2&&isnumeric(inpMat))
+if ~(ismatrix(inpMat)&&isnumeric(inpMat))
     modgen.common.throwerror('wrongInput',...
         'input is expected to be a numeric matrix');
 end

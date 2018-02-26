@@ -11,7 +11,7 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
     methods
         function ellObj = genEllipsoid(self, varargin)
             ellObj = self.ellFactoryObj.createInstance('GenEllipsoid', ...
-                varargin{:});            
+                varargin{:});
         end
     end
     %
@@ -37,7 +37,7 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
     end
     methods
         function self=GenEllipsoidPlotTestCase(varargin)
-            
+
             self=self@elltool.plot.test.AGeomBodyPlotTestCase(varargin{:});
             import elltool.core.GenEllipsoid;
         end
@@ -58,7 +58,7 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
             testEllArr(2) = self.genEllipsoid(inpCenCList{2}, inpArgCList{2});
             testEllArr(3) = self.genEllipsoid(inpCenCList{3}, inpArgCList{3});
             check(testEllArr, nDims);
-            
+
         end
         function self = testOrdinaryPlot2d(self)
             import elltool.core.GenEllipsoid;
@@ -74,19 +74,19 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                 testEll=self.genEllipsoid(inpCenCList{iElem}, inpArgCList{iElem});
                 check(testEll, nDims);
             end
-            
+
             testEllArr(1) = self.genEllipsoid(inpCenCList{1}, inpArgCList{1});
             testEllArr(2) = self.genEllipsoid(inpCenCList{2}, inpArgCList{2});
             check(testEllArr, nDims);
-            
+
             for iElem = 1:nElem
                 testEllArr(iElem) = self.genEllipsoid(inpCenCList{iElem},...
                     inpArgCList{iElem});
             end
             check(testEllArr, nDims);
-            
+
         end
-        
+
         function self = testDegeneratePlot2d(self)
             import elltool.core.GenEllipsoid;
             nDims = 2;
@@ -104,15 +104,15 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                     inpRotCList{iElem});
                 check(testEll, nDims);
             end
-            
+
             for iElem = 1:nElem
                 testEllArr(iElem)=self.genEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
-                    inpRotCList{iElem});
+                    inpRotCList{iElem}); %#ok<AGROW>
             end
             check(testEllArr, nDims);
-            
+
         end
-        
+
         function self = testOrdinaryPlot3d(self)
             import elltool.core.GenEllipsoid;
             nDims = 3;
@@ -130,14 +130,14 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                     inpRotCList{iElem});
                 check(testEll, nDims);
             end
-            
+
             for iElem = 1:nElem
                 testEllArr(iElem)=self.genEllipsoid(inpCenCList{iElem}, inpArgCList{iElem}, ...
-                    inpRotCList{iElem});
+                    inpRotCList{iElem}); %#ok<AGROW>
             end
             check(testEllArr, nDims);
         end
-        
+
         function self = testDegeneratePlot3d(self)
             import elltool.core.GenEllipsoid;
             nDims = 3;
@@ -176,13 +176,13 @@ classdef GenEllipsoidPlotTestCase < elltool.plot.test.AGeomBodyPlotTestCase
                     inpRotCList{iElem});
                 check(testEll, nDims);
             end
-            
+
             for iElem = 1:5
                 testEllArr(iElem)=self.genEllipsoid(inpCenCList{iElem}, ...
-                    inpArgCList{iElem}, inpRotCList{iElem});
+                    inpArgCList{iElem}, inpRotCList{iElem}); %#ok<AGROW>
             end
             check(testEllArr, nDims);
-            
+
             for iElem = 1:nElem
                 testEllArr(iElem)=self.genEllipsoid(inpCenCList{iElem}, ...
                     inpArgCList{iElem}, inpRotCList{iElem});
@@ -280,7 +280,7 @@ if nDims == 3
 elseif nDims == 2
     pointsMat = [xDataArr; yDataArr];
 else
-    pointsMat = [xDataArr];
+    pointsMat = xDataArr;
 end
 cellPoints = num2cell(pointsMat(:, :), 1);
 
@@ -295,7 +295,7 @@ for iEll = 1:nEll
             isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 1);
         elseif dMat(2, 2) == 0
             isBoundEllVec = check2dDimZero(testEllVec(iEll), cellPoints, 2);
-            
+
         elseif max(dMat(:)) == Inf
             isBoundEllVec = checkDimInf(testEllVec(iEll), cellPoints);
         else
@@ -344,7 +344,7 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
             absTol, cellPoints);
         isBoundEllVec = isBoundEllVec | cellfun(@(x) norm(x - qCenVec) < ...
             absTol, cellPoints);
-        
+
     end
 
     function isBoundEllVec = check1d(testEll, cellPoints)
@@ -367,7 +367,7 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
         qCenVec = qCenVec(3-dim);
         isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'/dMat(3-dim, 3-dim))*...
             (eigPoint(x) - qCenVec)) < 1 +  absTol, cellPoints);
-        
+
     end
 
     function isBoundEllVec = check3dDimZero(testEll, cellPoints, dim)
@@ -389,7 +389,7 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
         qCenVec = secDim(qCenVec);
         isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
             (eigPoint(x) - qCenVec)) < 1 +  absTol, cellPoints);
-        
+
     end
 
 
@@ -402,8 +402,6 @@ mlunitext.assert_equals(isBoundVec, ones(size(isBoundVec)));
         invMat = diag(1./diag(dMat));
         isBoundEllVec = cellfun(@(x) abs(((eigPoint(x) - qCenVec).'*invMat)*...
             (eigPoint(x) - qCenVec)) < 1 + absTol, cellPoints) ;
-        
+
     end
 end
-
-

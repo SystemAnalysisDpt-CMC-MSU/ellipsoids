@@ -9,7 +9,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             close all;
         end
 		
-        function test_getPlotStructure(self)
+        function test_getPlotStructure(~)
             import gras.ellapx.smartdb.RelDispConfigurator;
             import gras.ellapx.smartdb.rels.EllUnionTube;
             import gras.ellapx.proj.EllTubeStaticSpaceProjector;
@@ -21,7 +21,7 @@ classdef EllTubePlotTestCase < mlunitext.test_case
             sTime =1;
             timeVec = 1:T;
             for iHandleVec= 0:n
-                ltGDir = [ltGDir ([1 0]*q11(iHandleVec))'];
+                ltGDir = [ltGDir ([1 0]*q11(iHandleVec))']; %#ok<AGROW>
                 QArrListTemp = repmat(q11(iHandleVec)'*diag([1 4])*q11(iHandleVec),[1,1,T]);
                 QArrList{iHandleVec+1} = QArrListTemp;
             end

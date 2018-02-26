@@ -7,7 +7,7 @@ classdef ContinuousSecReachTestCase < elltool.reach.test.mlunit.ATestDynGettersB
     end
     
     methods(Access = protected)
-        function bpbMat = bpbFunc(self,pDynBPBMat,probDynObj,curTime)
+        function bpbMat = bpbFunc(self,pDynBPBMat,probDynObj,curTime) %#ok<INUSD,INUSL>
             bpbMat=pDynBPBMat;
         end
     end

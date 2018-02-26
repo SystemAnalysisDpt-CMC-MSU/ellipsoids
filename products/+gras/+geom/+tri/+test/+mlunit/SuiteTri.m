@@ -27,7 +27,7 @@ classdef SuiteTri < mlunitext.test_case
             S=load([self.getDataDir,filesep,fileName]);
         end
         %
-        function S=saveData(self,fileName,SInp)
+        function saveData(self,fileName,~)
             save([self.getDataDir,filesep,fileName],'-struct','SInp');
         end
         %
@@ -81,7 +81,7 @@ classdef SuiteTri < mlunitext.test_case
             isFaceThereVec=isface(v1Mat,f1Mat,[1 6 2;1 7 3]);
             mlunitext.assert_equals(true,all(isFaceThereVec));
             %
-            [v2Mat,f2Mat]=self.aux_shrinkfacetri(v1Mat,f1Mat,0,...
+            [~,~]=self.aux_shrinkfacetri(v1Mat,f1Mat,0,...
                 3,@(x)(x+repmat([0 0 0.2],size(x,1),1)));            
         end
         %
@@ -119,7 +119,7 @@ classdef SuiteTri < mlunitext.test_case
                 isOldVertsKept=all(ismember(v0Mat,v1Mat,'rows'));
                 mlunitext.assert_equals(true,isOldVertsKept);
                 %% check that all edges are short enough
-                tr=TriRep(f1Mat,v1Mat);
+                tr=triangulation(f1Mat,v1Mat);
                 e1Mat=tr.edges();
                 dMat=v1Mat(e1Mat(:,1),:)-v1Mat(e1Mat(:,2),:);
                 maxEdgeLength=max(realsqrt(sum(dMat.*dMat,2)));
@@ -154,9 +154,9 @@ classdef SuiteTri < mlunitext.test_case
                     fInpMat,maxTol,varargin{:});
                 nSteps=SStat.nSteps;
                 if nSteps>1
-                    [v1Mat,f1Mat,S1Stat]=self.aux_shrinkfacetri(vInpMat,...
+                    [v1Mat,f1Mat,~]=self.aux_shrinkfacetri(vInpMat,...
                         fInpMat,maxTol,nSteps-1);
-                    [v2Mat,f2Mat,S2Stat]=self.aux_shrinkfacetri(v1Mat,...
+                    [v2Mat,f2Mat,~]=self.aux_shrinkfacetri(v1Mat,...
                         f1Mat,maxTol,1);
                     [isPos,reportStr]=istriequal(vResMat,fResMat,...
                         v2Mat,f2Mat,MAX_TOL);
@@ -219,10 +219,10 @@ classdef SuiteTri < mlunitext.test_case
             dim = 2;
             N_POINTS = 500;
             RIGHT_POINTS_3D = 642;
-            [vMat ~] = spheretriext(dim, N_POINTS);
+            [vMat, ~] = spheretriext(dim, N_POINTS);
             mlunitext.assert_equals(size(vMat,1),N_POINTS);
             dim = 3;
-            [vMat ~] = spheretriext(dim, N_POINTS);
+            [vMat, ~] = spheretriext(dim, N_POINTS);
             mlunitext.assert_equals(size(vMat,1),RIGHT_POINTS_3D);
         end
         function testEllTube2Tri(~)

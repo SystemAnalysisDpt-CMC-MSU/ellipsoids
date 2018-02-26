@@ -33,7 +33,7 @@ type = ellUnionObj.getFieldTypeList();
 % the top level and going down into the nested content of a field (for a 
 % field having a complex type).
 %
-typeSpec = ellUnionObj.getFieldTypeSpecList();
+typeSpec = ellUnionObj.getFieldTypeSpecList(); %#ok<NASGU>
 % or
 typeSpec = ellUnionObj.getFieldTypeSpecList(nameList);
 %
@@ -70,7 +70,7 @@ nTuples = ellUnionObj.getNTuples();
 % get sort index for all tuples of given relation with respect to some of 
 % its fields
 %
-sortIndex = ellUnionObj.getSortIndex(nameList);
+sortIndex = ellUnionObj.getSortIndex(nameList); %#ok<NASGU>
 % also we can specify the direction of sorting ('asc' or 'desc')
 sortIndex = ellUnionObj.getSortIndex(nameList,'Direction','asc');
 %

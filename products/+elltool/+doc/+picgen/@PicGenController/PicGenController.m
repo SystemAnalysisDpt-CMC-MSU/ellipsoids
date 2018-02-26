@@ -66,7 +66,7 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
             labelPropVec = ['X' 'Y' 'Z'];
             %
             for iElem = 1:nFigRows*nFigCols
-                axesVec(iElem) = subplot(nFigRows, nFigCols, iElem);
+                axesVec(iElem) = subplot(nFigRows, nFigCols, iElem); %#ok<AGROW>
                 grid on
                 title(axesVec(iElem), axesTitlesVec(iElem));
                 if   ~isempty(viewAngleList{iElem})
@@ -86,7 +86,7 @@ classdef PicGenController<modgen.common.obj.StaticPropStorage
                     for kElem = 1:3
                         labelNameVec(kElem) = copyobj(get(findobj(...
                             hFigVec(jElem), 'Type','axes'),...
-                            [labelPropVec(kElem) 'Label']), axesVec(iElem));
+                            [labelPropVec(kElem) 'Label']), axesVec(iElem)); %#ok<AGROW>
                         set(axesVec(iElem), [labelPropVec(kElem) 'Label'],...
                             labelNameVec(kElem));
                     end

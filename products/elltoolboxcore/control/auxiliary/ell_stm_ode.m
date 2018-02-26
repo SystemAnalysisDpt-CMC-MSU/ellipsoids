@@ -13,7 +13,7 @@ AA = A;
 ZZ = Z;
 
 for i = 1:(n - 1)
-    AA = [AA ZZ; ZZ' A];
+    AA = [AA ZZ; ZZ' A]; %#ok<*AGROW>
     ZZ = [ZZ; Z];
 end
 

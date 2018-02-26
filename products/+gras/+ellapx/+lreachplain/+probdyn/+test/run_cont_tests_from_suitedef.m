@@ -25,7 +25,7 @@ for iSuiteElem=1:numel(suiteDefList)
             
             suiteList{end+1} = loader.load_tests_from_test_case(testCase,... 
                 fConstr, fReader, REL_TOL, ABS_TOL,...
-                'marker', num2str(numel(suiteList)+1));
+                'marker', num2str(numel(suiteList)+1)); %#ok<AGROW>
         end
     end
 end

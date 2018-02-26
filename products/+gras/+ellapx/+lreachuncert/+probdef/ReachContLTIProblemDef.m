@@ -1,7 +1,7 @@
 classdef ReachContLTIProblemDef<gras.ellapx.lreachuncert.probdef.AReachContProblemDef
     methods(Static,Access=protected)
         function isOk=isPartialCompatible(aCMat,bCMat,pCMat,pCVec,cCMat,...
-                qCMat,qCVec,x0Mat,x0Vec,tLims)
+                qCMat,qCVec,x0Mat,x0Vec,tLims) %#ok<INUSD>
             import gras.sym.isdependent;
             isOk = ...
                 isdependent(aCMat)&&...
@@ -12,7 +12,7 @@ classdef ReachContLTIProblemDef<gras.ellapx.lreachuncert.probdef.AReachContProbl
                 isdependent(qCMat)&&...
                 isdependent(qCVec);
         end
-    end     
+    end
     methods(Static)
         function isOk=isCompatible(aCMat,bCMat,pCMat,pCVec,cCMat,...
                 qCMat,qCVec,x0Mat,x0Vec,tLims)

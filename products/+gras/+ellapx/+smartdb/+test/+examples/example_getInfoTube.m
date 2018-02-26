@@ -39,7 +39,7 @@ type = ellTubeObj.getFieldTypeList();
 % the top level and going down into the nested content of a field (for a 
 % field having a complex type).
 %
-typeSpec = ellTubeObj.getFieldTypeSpecList();
+typeSpec = ellTubeObj.getFieldTypeSpecList(); %#ok<NASGU>
 % or
 typeSpec = ellTubeObj.getFieldTypeSpecList(nameList);
 %
@@ -76,7 +76,7 @@ nTuples = ellTubeObj.getNTuples();
 % get sort index for all tuples of given relation with respect to some of 
 % its fields
 %
-sortIndex = ellTubeObj.getSortIndex(nameList);
+sortIndex = ellTubeObj.getSortIndex(nameList); %#ok<NASGU>
 % also we can specify the direction of sorting ('asc' or 'desc')
 sortIndex = ellTubeObj.getSortIndex(nameList,'Direction','asc');
 %

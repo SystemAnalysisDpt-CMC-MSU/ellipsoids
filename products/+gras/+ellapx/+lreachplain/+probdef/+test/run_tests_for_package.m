@@ -30,7 +30,7 @@ for iClassElem=1:numel(classList)
         
         suiteList{end+1} = loader.load_tests_from_test_case(testCase,... 
             fPDefConstr, fConfReader,...
-            'marker', ['conf=' confName '_class=' num2str(iClassElem)]);
+            'marker', ['conf=' confName '_class=' num2str(iClassElem)]); %#ok<AGROW>
     end
 end
 

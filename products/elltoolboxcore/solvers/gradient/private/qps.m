@@ -13,7 +13,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
   SteepDescent = 3;
   ZeroStep     = 4;
   Conls        = 'lsqlin';
-  Lp           = 'linprog';
+  Lp           = 'linprog'; %#ok<*NASGU>
   Qp           = 'quadprog';
   Qpsub        = 'qps';
   Nlconst      = 'nlc';
@@ -28,7 +28,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
 
   lb  = lb(:);
   ub  = ub(:);
-  msg = nargchk(12, 12, nargin);
+  msg = nargchk(12, 12, nargin); %#ok<NCHKI>
   if isempty(neqcstr)
     neqcstr = 0;
   end
@@ -36,7 +36,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
   LLS = 0;
   if strcmp(caller, Conls)
     LLS               = 1;
-    [rowH, colH]      = size(H);
+    [rowH, colH]      = size(H); %#ok<*ASGLU>
     numberOfVariables = colH;
   end
   if strcmp(caller, Qpsub)
@@ -46,7 +46,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
   end
 
   simplex_iter = 0;
-  if (norm(H, 'inf') == 0) | isempty(H)
+  if (norm(H, 'inf') == 0) || isempty(H)
     is_qp = 0;
   else
     is_qp = 1;
@@ -58,7 +58,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
 
   normf = 1;
   if normalize > 0
-    if ~is_qp & ~LLS
+    if ~is_qp && ~LLS
       normf = norm(f);
       if normf > 0
         f = f./normf;
@@ -112,8 +112,8 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
   if isempty(ACTIND)
     ACTIND = eqix;
   elseif neqcstr > 0
-    i = max(find(ACTIND <= neqcstr));
-    if isempty(i) | (i > neqcstr)
+    i = find(ACTIND <= neqcstr, 1, 'last');
+    if isempty(i) || (i > neqcstr)
       ACTIND = eqix;
     elseif i < neqcstr
       numremoved                          = neqcstr - i;
@@ -128,7 +128,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
 
   indepInd = 1:ncstr;
   remove   = [];
-  if ACTCNT > 0 & (normalize ~= -1)
+  if ACTCNT > 0 && (normalize ~= -1)
     [Q, R, A, B, X, Z, how, ACTSET, ACTIND, ACTCNT, aix, eqix, ...
      neqcstr, ncstr, remove, exitflag] = ...
        consolve(A, B, eqix, neqcstr, ncstr, numberOfVariables, LLS, H, X, f, ...
@@ -198,7 +198,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
   end
   if mc > eps
     quiet   = -2;
-    ACTIND2 = [1:neqcstr];
+    ACTIND2 = 1:neqcstr;
     A2      = [[A; zeros(1, numberOfVariables)], [zeros(neqcstr, 1); -ones(ncstr+1-neqcstr, 1)]];
     [XS, lambdaS, exitflagS, outputS, howS, ACTIND2] = ...
        qps([], [zeros(numberOfVariables,1); 1], A2, [B;1e-5], [], [], ...
@@ -259,7 +259,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
         depInd = find(abs(diag(RHZ)) < tolDep);
       end  
     end
-    if mm >= nn & isempty(depInd)
+    if mm >= nn && isempty(depInd)
       SD      = - Z*(RHZ(1:nn, 1:nn) \ Pd(1:nn, :));
       dirType = NewtonStep;
     else
@@ -270,7 +270,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
     gf      = f;
     SD      = -Z*Z'*gf;
     dirType = SteepDescent; 
-    if (norm(SD) < 1e-10) & neqcstr
+    if (norm(SD) < 1e-10) && neqcstr
       actlambda                = -R\(Q'*(gf));
       lambda(indepInd(ACTIND)) = normf * (actlambda ./ normA(ACTIND));
       ACTIND                   = indepInd(ACTIND);
@@ -295,13 +295,13 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
     else
       dist           = abs(cstr(indf)./GSD(indf));
       [STEPMIN,ind2] = min(dist);
-      ind2           = find(dist == STEPMIN);
+      ind2           = find(dist == STEPMIN); %#ok<MXFND>
       ind            = indf(min(ind2));
     end
     
     delete_constr = 0;   
     
-    if ~isempty(indf) & isfinite(STEPMIN)
+    if ~isempty(indf) && isfinite(STEPMIN)
       if dirType == NewtonStep
         if STEPMIN > 1
           STEPMIN       = 1;
@@ -317,7 +317,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
         X             = X + SD;
         delete_constr = 1;
       else
-        if (~is_qp & ~LLS) | (dirType == NegCurv)
+        if (~is_qp && ~LLS) || (dirType == NegCurv)
           if norm(SD) > errnorm
             if normalize < 0
               STEPMIN = abs((X(numberOfVariables)+1e-5)/(SD(numberOfVariables)+eps));
@@ -379,7 +379,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
             else
               dist            = abs(cstr(indf)./GSD(indf));
               [STEPMIN, ind2] = min(dist);
-              ind2            = find(dist == STEPMIN);
+              ind2            = find(dist == STEPMIN); %#ok<MXFND>
               ind             = indf(min(ind2));
             end
             if STEPMIN > 1
@@ -421,7 +421,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
         actlambda       = rlambda;
         actlambda(eqix) = abs(rlambda(eqix));
         indlam          = find(actlambda < 0);
-        if (~length(indlam)) 
+        if (isempty(indlam)) 
           lambda(indepInd(ACTIND)) = normf * (rlambda./normA(ACTIND));
           ACTIND                   = indepInd(ACTIND);
           output.iterations        = iterations;
@@ -484,14 +484,14 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
       oldind = 0; 
     else
       rlambda = -R\(Q'*gf);
-      if isinf(rlambda(1)) & (rlambda(1) < 0)
+      if isinf(rlambda(1)) && (rlambda(1) < 0)
         [m, n]  = size(ACTSET);
         rlambda = -(ACTSET + realsqrt(eps)*randn(m,n))'\gf;
       end
       actlambda       = rlambda;
       actlambda(eqix) = abs(actlambda(eqix));
       indlam          = find(actlambda < 0);
-      if length(indlam)
+      if ~isempty(indlam)
         if STEPMIN > errnorm
           [minl, lind] = min(actlambda);
         else
@@ -515,7 +515,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
     
     if (is_qp)
       Zgf = Z'*gf; 
-      if ~isempty(Zgf) & (norm(Zgf) < 1e-15)
+      if ~isempty(Zgf) && (norm(Zgf) < 1e-15)
         SD      = zeros(numberOfVariables,1); 
         dirType = ZeroStep;
       else
@@ -540,7 +540,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
             depInd = find(abs(diag(RHZ)) < tolDep);
           end  
         end
-        if (mm >= nn) & isempty(depInd)
+        if (mm >= nn) && isempty(depInd)
           SD      = - Z*(RHZ(1:nn, 1:nn) \ Pd(1:nn,:));
           dirType = NewtonStep;
         else
@@ -576,7 +576,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
         actlambda(1:neqcstr)        = abs(actlambda(1:neqcstr));
         indlam                      = find(actlambda < errnorm);
         lambda(indepInd(ACTINDtmp)) = normf * (rlambda./normA(ACTINDtmp));
-        if ~length(indlam)
+        if isempty(indlam)
           ACTIND            = indepInd(ACTIND);
           output.iterations = iterations;
           return;
@@ -584,7 +584,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
         cindmax = length(indlam);
         cindcnt = 0;
         m       = length(ACTINDtmp);
-        while (abs(gradsd) < 1e-10) & (cindcnt < cindmax)
+        while (abs(gradsd) < 1e-10) && (cindcnt < cindmax)
           cindcnt = cindcnt + 1;
           lind    = indlam(cindcnt);
           [Q, R]  = qrdelete(Qtmp, Rtmp, lind);
@@ -636,7 +636,7 @@ function [X, lambda, output, exitflag, how, ACTIND] = ...
 function [Q, R, A, B, X, Z, how, ACTSET, ACTIND, ACTCNT, aix, eqix, neqcstr, ...
           ncstr, remove, exitflag] = ...
             consolve(A, B, eqix, neqcstr, ncstr, numberOfVariables, LLS, H, ...
-                     X, f, normf, normA, aix, ACTSET, ACTIND, ACTCNT, how, exitflag)
+                     X, f, normf, normA, aix, ACTSET, ACTIND, ACTCNT, how, exitflag) %#ok<*INUSL>
 %
 % CONSOLVE - remove redundant constraints, find feasible point.
 %
@@ -702,8 +702,8 @@ function [Q, R, A, B, X, Z, how, ACTSET, ACTIND, ACTCNT, aix, eqix, neqcstr, ...
     if ~isempty(depInd)
       [i, j]     = find(Eat);
       remove2    = i(depInd);
-      removeEq   = remove2(find(remove2 <= neqcstr));
-      removeIneq = remove2(find(remove2 > neqcstr));
+      removeEq   = remove2(find(remove2 <= neqcstr)); %#ok<FNDSB>
+      removeIneq = remove2(find(remove2 > neqcstr)); %#ok<FNDSB>
       if ~isempty(removeEq)
         ACTIND = 1:neqcstr; 
       else
@@ -719,7 +719,7 @@ function [Q, R, A, B, X, Z, how, ACTSET, ACTIND, ACTCNT, aix, eqix, neqcstr, ...
   [Q, R] = qr(ACTSET');
   Z      = Q(:, ACTCNT+1:numberOfVariables);
 
-  if ~strcmp(how, 'infeasible') & (ACTCNT > 0)
+  if ~strcmp(how, 'infeasible') && (ACTCNT > 0)
     minnormstep = Q(:, 1:ACTCNT) * ((R(1:ACTCNT,1:ACTCNT)') \ (B(ACTIND) - ACTSET*X));
     X           = X + minnormstep; 
     err         = A*X - B;

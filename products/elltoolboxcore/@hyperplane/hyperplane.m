@@ -129,7 +129,7 @@ classdef hyperplane < elltool.core.ABasicEllipsoid & modgen.reflection.Reflectio
                 neededPropNameList = {'absTol', 'relTol'};
                 %                 absTolVal = elltool.conf.Properties.parseProp(varargin,...
                 %                     neededPropNameList);
-                [regParamList,propNameValList]=modgen.common.parseparams(...
+                [~,propNameValList]=modgen.common.parseparams(...
                     varargin, neededPropNameList);
                 [absTolVal, relTolVal] =...
                     elltool.conf.Properties.parseProp(propNameValList,...
@@ -185,19 +185,19 @@ classdef hyperplane < elltool.core.ABasicEllipsoid & modgen.reflection.Reflectio
                         [fstErrStr secErrStr]);
                     %
                     if isSingleNormVec
-                        [nElems outSizeVec] = setSizes(hypConstArr);
+                        [nElems, outSizeVec] = setSizes(hypConstArr);
                         build();
                         arrayfun(@(x, y) setProp(x, hypNormArr, y, ...
                             absTolVal, relTolVal), indArr, hypConstArr);
                     elseif isConstScal
                         cellBuild();
-                        [nElems outSizeVec] = setSizes(hypNormCArr);
+                        [nElems, outSizeVec] = setSizes(hypNormCArr);
                         build();
                         arrayfun(@(x, y) setProp(x, y{1}, ...
                             hypConstArr, absTolVal, relTolVal), indArr, hypNormCArr);
                     else
                         cellBuild();
-                        [nElems outSizeVec] = setSizes(hypNormCArr);
+                        [nElems, outSizeVec] = setSizes(hypNormCArr);
                         build();
                         arrayfun(@(x, y, z) setProp(x, y{1}, z, ...
                             absTolVal, relTolVal), indArr, hypNormCArr, hypConstArr);
@@ -243,7 +243,7 @@ classdef hyperplane < elltool.core.ABasicEllipsoid & modgen.reflection.Reflectio
     end
 end
 %
-function [nElems outSizeVec] = setSizes(inpObjArr)
+function [nElems, outSizeVec] = setSizes(inpObjArr)
 nElems = numel(inpObjArr);
 outSizeVec = size(inpObjArr);
 end

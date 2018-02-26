@@ -8,7 +8,7 @@ function res = ell_value_extract(X, t, dims)
     res = reshape(ppval(X, t), dims(1), dims(2));
   else
     [m, n] = size(X);
-    if (dims(1) == m) & (dims(2) == n)
+    if (dims(1) == m) && (dims(2) == n)
       res = X;
     else
       res = reshape(X(:, t), dims(1), dims(2));

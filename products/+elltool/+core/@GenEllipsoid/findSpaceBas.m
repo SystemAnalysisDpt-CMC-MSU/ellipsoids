@@ -21,7 +21,7 @@ function [ spaceBasMat,  oSpaceBasMat, spaceIndVec, oSpaceIndVec] = ...
 %
 import elltool.core.GenEllipsoid;
 nDimSpace=size(dirMat,1);
-[orthBasMat rankL]=GenEllipsoid.findBasRank(dirMat,absTol);
+[orthBasMat, rankL]=GenEllipsoid.findBasRank(dirMat,absTol);
 spaceIndVec=1:rankL;
 oSpaceIndVec=(rankL+1):nDimSpace;
 spaceBasMat=orthBasMat(:,spaceIndVec);

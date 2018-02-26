@@ -1,6 +1,6 @@
 classdef AMatrixOperations<gras.mat.IMatrixOperations
     methods(Access=private)
-        function isOk = isMatFuncConst(self,varargin)
+        function isOk = isMatFuncConst(~,varargin)
             isOk = true;
             for iArg = 1:length(varargin)
                 if ~isa(varargin{iArg}, 'gras.mat.AConstMatrixFunction')
@@ -9,13 +9,13 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                 end
             end
         end
-        function obj = constUnaryOperation(self,fHandle,mMatFunc,varargin)
+        function obj = constUnaryOperation(~,fHandle,mMatFunc,varargin)
             import gras.mat.ConstMatrixFunctionFactory;
             mMat = mMatFunc.evaluate(0);
             obj = ConstMatrixFunctionFactory.createInstance(...
                 fHandle(mMat, varargin{:}));
         end
-        function obj = constBinaryOperation(self,fHandle,lMatFunc,...
+        function obj = constBinaryOperation(~,fHandle,lMatFunc,...
                 rMatFunc,varargin)
             import gras.mat.ConstMatrixFunctionFactory;
             %
@@ -24,7 +24,7 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
             obj = ConstMatrixFunctionFactory.createInstance(...
                 fHandle(lMat, rMat, varargin{:}));
         end
-        function obj = constTernaryOperation(self,fHandle,lMatFunc,...
+        function obj = constTernaryOperation(~,fHandle,lMatFunc,...
                 mMatFunc,rMatFunc,varargin)
             import gras.mat.ConstMatrixFunctionFactory;
             %
@@ -99,7 +99,7 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                 obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
             end
         end
-        function obj=expmt(self,mMatFunc,t0)
+        function obj=expmt(~,mMatFunc,t0) %#ok<*INUSD>
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
         end
         function obj=matdot(self,lMatFunc,rMatFunc)
@@ -176,10 +176,10 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
                 obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
             end
         end
-        function obj=quadraticFormSqrt(self,mMatFunc,xColFunc)
+        function obj=quadraticFormSqrt(~,mMatFunc,xColFunc)
             obj=gras.mat.ConstMatrixFunctionFactory.createEmptyInstance();
         end
-        function obj = rSymbMultiply(self, lCMat, mCMat, rCMat)
+        function obj = rSymbMultiply(~, lCMat, mCMat, rCMat)
             import gras.mat.fcnlib.MatrixSFTripleProd;
             import gras.mat.fcnlib.MatrixSFBinaryProd;
             import gras.mat.ConstMatrixFunctionFactory;
@@ -187,7 +187,7 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
             import gras.gen.MatVector;
             %
             if nargin > 3
-                if isdependent({lCMat{:},mCMat{:},rCMat{:}})
+                if isdependent({lCMat{:},mCMat{:},rCMat{:}}) %#ok<*CCAT>
                     lMat = MatVector.fromFormulaMat(lCMat,0);
                     mMat = MatVector.fromFormulaMat(mCMat,0);
                     rMat = MatVector.fromFormulaMat(rCMat,0);
@@ -208,7 +208,7 @@ classdef AMatrixOperations<gras.mat.IMatrixOperations
             end
         end
         %
-        function obj = rSymbMultiplyByVec(self, mCMat, vCVec)
+        function obj = rSymbMultiplyByVec(~, mCMat, vCVec)
             import gras.mat.fcnlib.MatrixSFBinaryProdByVec;
             import gras.mat.ConstMatrixFunctionFactory;
             import gras.sym.isdependent;

@@ -46,7 +46,7 @@ modgen.common.type.simple.checkgenext('isscalar(x1)&&isscalar(x2)',...
     2,ellObj1,ellObj2);
 %
 ell1DiagVec=diag(ellObj1.diagMat);
-[mSize nDirs]=size(dirMat);
+[mSize, nDirs]=size(dirMat);
 nDimSpace=length(ell1DiagVec);
 %Check whether one ellipsoid is bigger then the other
 absTol=ellObj1.absTol;
@@ -70,7 +70,7 @@ for iDir=1:nDirs
     curDirVec=dirMat(:,iDir);
     isInf1Vec=ell1DiagVec==Inf;
     if ~all(~isInf1Vec)
-        [ resQMat diagQVec ] = GenEllipsoid.findDiffINFC(...
+        [ resQMat, diagQVec ] = GenEllipsoid.findDiffINFC(...
             @GenEllipsoid.findDiffIaND, ellObj1,ellObj2,curDirVec,...
             isInf1Vec,false,absTol);
         %

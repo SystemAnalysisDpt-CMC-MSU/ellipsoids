@@ -1,6 +1,6 @@
 function [x, FVAL, EXITFLAG] = ...
          nlcp_solve(funfcn, x, confcn, OPTIONS, meritFunctionType, ...
-                    CHG, fval, gval, ncineqval, nceqval, gncval, gnceqval, varargin);
+                    CHG, fval, gval, ncineqval, nceqval, gncval, gnceqval, varargin)
 %
 % NLCP_SOLVE - nonlinear function minimizer under nonlinear
 %              constraints.
@@ -14,7 +14,7 @@ function [x, FVAL, EXITFLAG] = ...
   gradconstflag     = OPTIONS.congrad;
   numberOfVariables = length(XOUT);
   bestf             = Inf;
-  FVAL              = [];
+  FVAL              = []; %#ok<*NASGU>
   lambda            = [];
   lambdaNLP         = [];
   lb                = -Inf*ones(numberOfVariables, 1);
@@ -58,8 +58,8 @@ function [x, FVAL, EXITFLAG] = ...
   c                = [Aeq*XOUT-Beq; nceq; A*XOUT-B; ncineq];
   non_eq           = length(nceq);
   non_ineq         = length(ncineq);
-  [lin_eq, Aeqcol] = size(Aeq);
-  [lin_ineq, Acol] = size(A);
+  [lin_eq, ~] = size(Aeq);
+  [lin_ineq, ~] = size(A);
   eq               = non_eq + lin_eq;
   ineq             = non_ineq + lin_ineq;
   ncstr            = ineq + eq;
@@ -72,7 +72,7 @@ function [x, FVAL, EXITFLAG] = ...
   end
 
   % Evaluate initial analytic gradients and check size
-  if gradflag | gradconstflag
+  if gradflag || gradconstflag
     if gradflag
       gf_user = gval;
     end
@@ -81,7 +81,7 @@ function [x, FVAL, EXITFLAG] = ...
     else
       gnc_user = [];
     end
-    if isempty(gnc_user) & isempty(nc)
+    if isempty(gnc_user) && isempty(nc)
       gnc      = nc';
       gnc_user = nc';
     end
@@ -102,7 +102,7 @@ function [x, FVAL, EXITFLAG] = ...
   % Main loop
   while status ~= 1
     % Gradients
-    if ~gradconstflag | ~gradflag | DerivativeCheck
+    if ~gradconstflag || ~gradflag || DerivativeCheck
       oldf   = f;
       oldnc  = nc;
       len_nc = length(nc);
@@ -114,11 +114,11 @@ function [x, FVAL, EXITFLAG] = ...
         temp       = XOUT(gcnt);
         XOUT(gcnt) = temp + CHG(gcnt);
         x(:)       = XOUT; 
-        if ~gradflag | DerivativeCheck
+        if ~gradflag || DerivativeCheck
           f           = feval(funfcn{3}, x, varargin{:});
           gf(gcnt, 1) = (f - oldf)/CHG(gcnt);
         end
-        if ~gradconstflag | DerivativeCheck
+        if ~gradconstflag || DerivativeCheck
           [nctmp, nceqtmp] = feval(confcn{3}, x, varargin{:});
           nc               = [nceqtmp(:); nctmp(:)];
           if ~isempty(nc)
@@ -129,7 +129,7 @@ function [x, FVAL, EXITFLAG] = ...
       end
       
       % Gradient check
-      if DerivativeCheck == 1 & (gradflag | gradconstflag) % analytic exists
+      if DerivativeCheck == 1 && (gradflag || gradconstflag) % analytic exists
         if gradflag
           gfFD = gf;
           gf   = gf_user;
@@ -149,7 +149,7 @@ function [x, FVAL, EXITFLAG] = ...
           end
         end         
         DerivativeCheck = 0;
-      elseif gradflag | gradconstflag
+      elseif gradflag || gradconstflag
         if gradflag
           gf = gf_user;
         end
@@ -168,7 +168,7 @@ function [x, FVAL, EXITFLAG] = ...
    % Add in Aeq and A
    if ~isempty(gnc)
      gc = [Aeq', gnc(:, 1:non_eq), A', gnc(:, non_eq+1:non_ineq+non_eq)];
-   elseif ~isempty(Aeq) | ~isempty(A)
+   elseif ~isempty(Aeq) || ~isempty(A)
      gc = [Aeq', A'];
    else
      gc = zeros(numberOfVariables, 0);
@@ -181,7 +181,7 @@ function [x, FVAL, EXITFLAG] = ...
      else
        normgradLag = norm(gf + AN'*lambdaNLP, inf);
        normcomp    = norm(lambdaNLP(eq+1:ncstr).*c(eq+1:ncstr), inf);
-       if isfinite(normgradLag) & isfinite(normcomp)
+       if isfinite(normgradLag) && isfinite(normcomp)
          optimError = max(normgradLag, normcomp);
        else
          optimError = inf;
@@ -192,25 +192,25 @@ function [x, FVAL, EXITFLAG] = ...
      feasScal   = 1; 
 
      % Test convergence
-     if (optimError < tolFun*optimScal) & (feasError < tolCon*feasScal)
+     if (optimError < tolFun*optimScal) && (feasError < tolCon*feasScal)
        EXITFLAG     = 1;
        status       = 1;
        active_const = find(LAMBDA > 0);
-     elseif ((max(abs(SD)) < 2*tolX) | (abs(gf'*SD) < 2*tolFun)) & ...
-             ((mg < tolCon) | (strncmp(howqp,'i',1) & (mg > 0)))
+     elseif ((max(abs(SD)) < 2*tolX) || (abs(gf'*SD) < 2*tolFun)) && ...
+             ((mg < tolCon) || (strncmp(howqp,'i',1) && (mg > 0)))
        if ~strncmp(howqp, 'i', 1) 
          if meritFunctionType == 1
                  optimError = inf;
          else
            lambdaNLP(:, 1)       = 0;
            [Q, R]                = qr(AN(ACTIND, :)');
-           ws                    = warning('off');
+           ws                    = warning('off'); %#ok<WNOFF>
            lambdaNLP(ACTIND)     = -R\Q'*gf;
            warning(ws);
            lambdaNLP(eq+1:ncstr) = max(0,lambdaNLP(eq+1:ncstr));
            normgradLag           = norm(gf + AN'*lambdaNLP, inf);
            normcomp              = norm(lambdaNLP(eq+1:ncstr).*c(eq+1:ncstr), inf);
-           if isfinite(normgradLag) & isfinite(normcomp)
+           if isfinite(normgradLag) && isfinite(normcomp)
              optimError = max(normgradLag, normcomp);
            else
              optimError = inf;
@@ -220,12 +220,12 @@ function [x, FVAL, EXITFLAG] = ...
 	 EXITFLAG     = 1;
          active_const = find(LAMBDA > 0);
        end
-       if strncmp(howqp, 'i', 1) & (mg > 0)
+       if strncmp(howqp, 'i', 1) && (mg > 0)
          EXITFLAG = -1;   
        end
        status = 1;
      else
-       if (numFunEvals > maxFunEvals) | (iter > maxIter)
+       if (numFunEvals > maxFunEvals) || (iter > maxIter)
          XOUT     = MATX;
          f        = OLDF;
          EXITFLAG = 0;
@@ -244,7 +244,7 @@ function [x, FVAL, EXITFLAG] = ...
      end
      if numGradEvals > 1
        NEWLAMBDA = LAMBDA; 
-       [ma, na]  = size(AN);
+       [ma, na]  = size(AN); %#ok<*ASGLU>
        GNEW      = gf + AN'*NEWLAMBDA;
        GOLD      = OLDgf + OLDAN'*LAMBDA;
        YL        = GNEW - GOLD;
@@ -261,7 +261,7 @@ function [x, FVAL, EXITFLAG] = ...
            if max(abs(FACTOR)) == 0
              FACTOR = 1e-5*sign(sdiff);
            end
-           while (YL'*sdiff < (eps*norm(HESS, 'fro'))) & (WT < 1/eps)
+           while (YL'*sdiff < (eps*norm(HESS, 'fro'))) && (WT < 1/eps)
              YL = YL + WT*FACTOR;
              WT = WT*2;
            end
@@ -327,13 +327,13 @@ function [x, FVAL, EXITFLAG] = ...
        else 
          MATL2 = 0;
        end
-       if ~infeas & (f < 0)
+       if ~infeas && (f < 0)
          MATL2 = MATL2 + f - 1;
        end
      else
        MATL2 = mg + f;
      end
-     if (mg < eps) & (f < bestf)
+     if (mg < eps) && (f < bestf)
        bestf      = f;
        bestx      = XOUT;
        bestHess   = HESS;
@@ -343,7 +343,7 @@ function [x, FVAL, EXITFLAG] = ...
      MERIT    = MATL + 1;
      MERIT2   = MATL2 + 1; 
      stepsize = 2;
-     while (MERIT2 > MATL2) & (MERIT > MATL) & ...
+     while (MERIT2 > MATL2) && (MERIT > MATL) && ...
            (numFunEvals < maxFunEvals)
        stepsize = stepsize/2;
        if stepsize < 1e-4,  
@@ -375,7 +375,7 @@ function [x, FVAL, EXITFLAG] = ...
          else 
            MERIT2 = 0;
          end
-         if ~infeas & (f < 0)
+         if ~infeas && (f < 0)
            MERIT2 = MERIT2 + f - 1;
          end
        else
@@ -392,7 +392,6 @@ function [x, FVAL, EXITFLAG] = ...
          gf_user      = gf_user(:);
          numGradEvals = numGradEvals + 1;
        otherwise,
-         ;
      end
      numFunEvals = numFunEvals + 1;
    

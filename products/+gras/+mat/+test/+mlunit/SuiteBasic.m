@@ -58,11 +58,8 @@ classdef SuiteBasic < mlunitext.test_case
                 testNumGetNColsCVec, testEvalCVec, aExpectedCMat,...
                 'UniformOutput', false);
             
-            try
-                gras.mat.ConstRowFunction([]);
-            catch meObj
-                disp(meObj.identifier);
-            end
+            self.runAndCheckError(...
+                'gras.mat.fcnlib.ConstRowFunction([]);','wrongInput');
             %
             argCVec={'[]','zeros(2)','zeros(2,1)','zeros([2 2 2])','{}',...
                 '{1,2;3,4}'};

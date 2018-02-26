@@ -14,7 +14,7 @@ function sqMat=findSqrtOfMatrix(qMat,absTol)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2012 $
 %
-[eigvMat diagMat]=eig(qMat);
+[eigvMat, diagMat]=eig(qMat);
 isZeroVec=diag(abs(diagMat)<absTol);
 diagMat(isZeroVec,isZeroVec)=0;
 sqMat=eigvMat*realsqrt(diagMat)*eigvMat.';

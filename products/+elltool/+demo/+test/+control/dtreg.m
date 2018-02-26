@@ -19,7 +19,7 @@ function dtreg(varargin)
   
   rsObj = elltool.reach.ReachDiscrete(dSys, x0EllObj, dirsMat,...
       [0 nSteps],'isRegEnabled',true, 'isJustCheck', false ,'regTol',1e-6);
-  eaEllMat  = rsObj.get_ea();
-  iaEllMat  = rsObj.get_ia();
+  eaEllMat  = rsObj.get_ea(); %#ok<NASGU>
+  iaEllMat  = rsObj.get_ia(); %#ok<NASGU>
   
 end

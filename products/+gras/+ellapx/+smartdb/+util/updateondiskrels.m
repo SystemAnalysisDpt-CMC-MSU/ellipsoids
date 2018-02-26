@@ -14,6 +14,8 @@ function updateondiskrels(dirName)
 %            Faculty of Computational Mathematics and Computer Science,
 %            System Analysis Department 2015 $
 %
+import elltool.logging.Log4jConfigurator;
+logger=Log4jConfigurator.getLogger();
 if ~strcmp(dirName(end),filesep)
     dirName=[dirName,filesep];
 end
@@ -27,7 +29,7 @@ for iFile=1:nFiles
     nVars=numel(varNameList);
     for iVar=1:nVars
         varName=varNameList{iVar};
-        eval([varName,'=SRes.',varName,';']);
+        logger.info(evalc([varName,'=SRes.',varName,';']));
     end
     save(fullFileName,varNameList{:});
 end

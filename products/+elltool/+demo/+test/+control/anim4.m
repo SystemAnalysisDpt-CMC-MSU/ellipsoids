@@ -38,7 +38,7 @@ for iDirs = 1:nDirs
         end
     end
     normDirVec = dirVec/realsqrt(maxVal);
-    aprEndTime = [aprEndTime normDirVec];
+    aprEndTime = [aprEndTime normDirVec]; %#ok<AGROW>
 end
 aprEndTime = [timeVec(end)*ones(1, nDirs); aprEndTime];
 
@@ -60,7 +60,7 @@ for iGc = 1:(size(gcVec,2)-1)
     firstDirsMat = [];
     for iApprox = 1:nApprox
         secondDirsMat = dirsCVec{iApprox};
-        firstDirsMat = [firstDirsMat secondDirsMat(:, iGc)];
+        firstDirsMat = [firstDirsMat secondDirsMat(:, iGc)]; %#ok<AGROW>
     end
     endTime = timeVec(end);
     RsObj = elltool.reach.ReachContinuous(sys, x0EllObj, firstDirsMat,...

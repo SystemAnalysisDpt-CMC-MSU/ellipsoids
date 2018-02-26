@@ -17,12 +17,12 @@ function dtreach(varargin)
   rsObj.plotByIa();
 
 
-  eaEllArr  = rsObj.get_ea();
-  iaEllArr  = rsObj.get_ia();
+  eaEllArr  = rsObj.get_ea(); %#ok<NASGU>
+  iaEllArr  = rsObj.get_ia(); %#ok<NASGU>
   
   ea2EllArr = (aMat^nSteps) * x0EllObj;
   for iSteps = 1:nSteps
-    ea2EllArr = [ea2EllArr (aMat^(nSteps-iSteps))*bVec*pEllObj];
+    ea2EllArr = [ea2EllArr (aMat^(nSteps-iSteps))*bVec*pEllObj]; %#ok<AGROW>
   end
 
 end

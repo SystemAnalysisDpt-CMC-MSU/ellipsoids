@@ -28,6 +28,8 @@ classdef SuiteBasic < mlunitext.test_case
         function testPicGen(~)
             import modgen.io.TmpDataManager;
             import elltool.doc.picgen.PicGenController;
+            import elltool.logging.Log4jConfigurator;
+            logger=Log4jConfigurator.getLogger();
             testFileName = modgen.common.getcallername(1);
             [pathstrVec, ~, ~] = fileparts(which(testFileName));
             TmpDataManager.setRootDir(pathstrVec);
@@ -43,14 +45,13 @@ classdef SuiteBasic < mlunitext.test_case
                     (SPicgenFilesArray(iElem).name, '.', 'first');
                 picFileName = strcat(modgen.string.splitpart(...
                     picgenFileName, '_gen', 1), '.png');
-                picFileNameVec = [picFileNameVec picFileName];
+                picFileNameVec = [picFileNameVec picFileName]; %#ok<AGROW>
                 picgenFunctionName =  strcat('elltool.doc.picgen.',...
                     picgenFileName);
-                fPicGen = str2func(picgenFunctionName);
-                fPicGen();
+                logger.info(evalc(picgenFunctionName));
                 isFileExistVec(iElem) = ...
                     modgen.system.ExistanceChecker.isFile(...
-                    [testDirPath filesep picFileName]);
+                    [testDirPath filesep picFileName]); %#ok<AGROW>
             end
             close all;
             PicGenController.flush();

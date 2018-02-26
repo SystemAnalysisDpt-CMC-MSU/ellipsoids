@@ -181,7 +181,7 @@ classdef ALinSys < elltool.linsys.ILinSys
     end
     %
     methods
-        function display(self)
+        function display(self) %#ok<DISPLAY>
             %
             % DISPLAY - displays the details of linear system object.
             %
@@ -371,8 +371,7 @@ classdef ALinSys < elltool.linsys.ILinSys
                             'is not scalar'],setName);                    
                 end
                 %
-                if ~isempty(setMultMat)&&~isempty(setMultMat)
-                    setEll = setEll;
+                if ~isempty(setMultMat)
                     [dRows, ~] = dimension(setEll);
                     if dRows ~= lCols
                         throwerror(errDimTag,...

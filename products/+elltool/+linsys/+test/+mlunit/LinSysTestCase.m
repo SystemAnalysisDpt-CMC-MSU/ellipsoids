@@ -197,7 +197,6 @@ classdef LinSysTestCase < mlunitext.test_case
                 {'t', '1', 'cos(t)'; '1' '0' 't'; 'sin(t)', 't', '2'}, ...
                 {'t', 'cos(t)'; 'sin(t)', 't'; 'cos(t)', 'sin(t)'}, ...
                 UEll, eye(3,5),ell_unitball(5),eye(2,3),ell_unitball(2));
-            evalc('system.display();');
             resStr = evalc('display(system)');
             isOk = ~isempty(strfind(resStr,'A'));
             isOk = ~isempty(strfind(resStr,'B')) && isOk;
@@ -319,11 +318,11 @@ end
 
 function UOrVEllStructTest(centerMat, shapeMat, fArg, sArg,...
     self, flag, VOrUMat)
-    ell2d = ell_unitball(2);
+    ell2d = ell_unitball(2); %#ok<*NASGU>
     ell3d = ell_unitball(3);
     if(flag == 1)
         UEllStruct.center = centerMat;
-        UEllStruct.shape = shapeMat;
+        UEllStruct.shape = shapeMat; %#ok<*STRNU>
         self.runAndCheckError(fArg, sArg);
     elseif(flag == 2)
         VEllStruct.center = centerMat;
@@ -367,7 +366,6 @@ function isOk = compareTestDispEmp(flag)
     else
         system = elltool.linsys.LinSysDiscrete.empty(2, 0, 5);
     end
-    system.display();
     resStr = evalc('system.display()');
     isOk = ~isempty(strfind(resStr, ...
         'Empty linear system object.'));

@@ -56,7 +56,7 @@ function P = hyperplane2polytope(HA)
   for i = 1:m
     for j = 1:n
       [v, c] = parameters(HA(i, j));
-      A      = [A; v'];
+      A      = [A; v']; %#ok<*AGROW>
       b      = [b; c];
     end
   end

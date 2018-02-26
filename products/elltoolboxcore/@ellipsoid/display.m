@@ -1,4 +1,4 @@
-function display(ellArr)
+function display(ellArr) %#ok<DISPLAY>
 %
 % DISPLAY - Displays the details of the ellipsoid object.
 %

@@ -40,7 +40,7 @@ import elltool.doc.collecthelp;
 FuncData = [];
 scriptNamePattern = 's_\w+\.m';
 
-[classList defClassList] = fMakeList(classNames);
+[classList, defClassList] = fMakeList(classNames);
 SfuncInfo = extractHelpFromClass(classList, defClassList);
 SfuncInfo = fTransformData(SfuncInfo);
 FuncData=modgen.struct.unionstructsalongdim(1,FuncData,SfuncInfo);
@@ -61,9 +61,7 @@ for iElem = 1:dirLength
        SfuncInfo = extractHelpFromClass(myClassList');
     end
     FuncData=modgen.struct.unionstructsalongdim(1,FuncData,SfuncInfo);
-    if isempty(mp.PackageList)
-        SfuncInfo=struct();
-    else
+    if ~isempty(mp.PackageList)
         pLength = length(mp.PackageList);
         myPack = mp.PackageList;
         for iPack = 1:pLength
@@ -71,8 +69,8 @@ for iElem = 1:dirLength
             myClassList = arrayfun(@(x)x.Name,classVec,'UniformOutput',...
                 false);
             packVec = myPack(iPack).PackageList;
-            myPackList = arrayfun(@(x)x.Name,packVec,'UniformOutput',false)
-            ignorClassList = union(ignorClassList, classNames)
+            myPackList = arrayfun(@(x)x.Name,packVec,'UniformOutput',false);
+            ignorClassList = union(ignorClassList, classNames);
             ignorPackFlag = regexp(myPackList, ignorClassList);
             ignorClassFlag = regexp(myClassList, ignorClassList);
             newPackList = myPackList;
@@ -112,9 +110,7 @@ for iClass = 1:nLength
         dynamicpropsClassMethodNameList=arrayfun(@(x)x.Name,...
         meta.class.fromName('dynamicprops').MethodList,'UniformOutput',...
         false);
-        if isempty(mc)
-            bufFuncInfo=struct();
-        else
+        if ~isempty(mc)
             methodVec=mc.MethodList;
             curClassMethodNameList=arrayfun(@(x)x.Name,...
                         methodVec,'UniformOutput',false);
@@ -211,7 +207,7 @@ end
 
 function SFuncInfo=extractHelpFromFunc(mPack)
    funcVec = mPack.FunctionList;
-   funcNameList=arrayfun(@(x)x.Name,funcVec,'UniformOutput',false);
+   funcNameList=arrayfun(@(x)x.Name,funcVec,'UniformOutput',false); %#ok<NASGU> 
    funcVec = funcVec(~ignorMethodFlag);
    newFuncNameList=arrayfun(@(x)x.Name,funcVec,'UniformOutput',false);
    funcNameList = strcat(mPack.Name,'.',newFuncNameList);
@@ -227,15 +223,15 @@ end
 
 end
 
-function [classList defClassList] = fMakeList(classNames)
+function [classList, defClassList] = fMakeList(classNames)
 nLength = length(classNames);
 iQuantity = 1;
 iDefQuantity = 1;
 for iClass = 1:nLength
     if iscell(classNames{iClass})
         for jElem = 1:length(classNames{iClass})
-          classList{iQuantity} = classNames{iClass}{jElem};
-          defClassList{iDefQuantity} = classNames{iClass}{jElem};
+          classList{iQuantity} = classNames{iClass}{jElem}; %#ok<AGROW>
+          defClassList{iDefQuantity} = classNames{iClass}{jElem}; %#ok<AGROW>
           iQuantity = iQuantity + 1;
           iDefQuantity = iDefQuantity + 1;
         end
@@ -271,29 +267,29 @@ for iElem = 1:length(classNameCell)
        if defFlag
            iSection = iSection + 1;
            iClass = iClass + 1;
-           sectionNameCell{iSection} = classNameCell{iElem};
-           bufDefClassNameCell{iClass} = classNameCell{iElem};
+           sectionNameCell{iSection} = classNameCell{iElem}; %#ok<AGROW>
+           bufDefClassNameCell{iClass} = classNameCell{iElem}; %#ok<AGROW>
            defFlag = 0;
        end
    else 
-      if (iElem ~= 1) & count
-         nClass(iSection) = count;
-         numberFunc(iSection) = countFunctions;
+      if (iElem ~= 1) && count
+         nClass(iSection) = count; %#ok<AGROW>
+         numberFunc(iSection) = countFunctions; %#ok<AGROW>
          count =0;
          countFunctions = 0;
       end
     defFlag = 1; 
     iSection = iSection + 1;
-    sectionNameCell{iSection} = classNameCell{iElem};
-    nClass(iSection) = 1;
-    numberFunc(iSection) = numberOfFunctions(iElem);
+    sectionNameCell{iSection} = classNameCell{iElem}; %#ok<AGROW>
+    nClass(iSection) = 1; %#ok<AGROW>
+    numberFunc(iSection) = numberOfFunctions(iElem); %#ok<AGROW>
     end
 end
 iIgnor = 1;
 for iClass = 1:length(classNameCell)
     isConstructor =ismember(classNameCell{iClass}, sectionNameCell);
     if ~isConstructor
-        ignorMethodList{iIgnor} = classNameCell{iClass};
+        ignorMethodList{iIgnor} = classNameCell{iClass}; %#ok<AGROW>
         iIgnor = iIgnor + 1;
     end
 end
@@ -302,7 +298,7 @@ for iMethod = 1:length(ignorMethodList)
     quantityDots =strfind(ignorMethodList{iMethod}, '.');
     str = ignorMethodList{iMethod};
     for iElem = 1:length(quantityDots)+1
-      [startStr finishStr]= strtok(str, '.');
+      [startStr, finishStr]= strtok(str, '.');
       str = finishStr;
     end
     ignorMethodList{iMethod} = startStr;
@@ -312,7 +308,7 @@ jBuf = 1;
 for iClass = 1:length(bufDefClassNameCell)
     ind = find(strcmp(bufDefClassNameCell{iClass}, defClassNameCell));
     for jInd = 1:size(ind)
-        finalDefClassNamecell{jBuf} = bufDefClassNameCell{iClass};
+        finalDefClassNamecell{jBuf} = bufDefClassNameCell{iClass}; %#ok<AGROW>
         jBuf = jBuf + 1;
     end
 end
@@ -322,8 +318,8 @@ flag = 0;
 for iClass = 1:size(numberOfInheritedClasses)
     quantity = numberOfInheritedClasses(iClass);
     if quantity > 1
-        inhFuncbuf{iClass} = inhFuncNameCell{indClass};
-        infoBuf(iClass) = infoOfInheritedFunctions(indClass);
+        inhFuncbuf{iClass} = inhFuncNameCell{indClass}; %#ok<AGROW>
+        infoBuf(iClass) = infoOfInheritedFunctions(indClass); %#ok<AGROW>
         for jClass = indClass+1:indClass+quantity-1;
             inhFuncbuf{iClass} = union(inhFuncbuf{iClass},...
                 inhFuncNameCell{jClass}); 
@@ -334,13 +330,13 @@ for iClass = 1:size(numberOfInheritedClasses)
         indClass = jClass + 1;
     else
         if flag
-            indClass = jClass + 1;
+            indClass = jClass + 1; %#ok<NODEF>
         else
             indClass = indClass + 1;
         end
         flag = 0;
-        inhFuncbuf{iClass} = inhFuncNameCell{indClass};
-        infoBuf(iClass) = infoOfInheritedFunctions(indClass);
+        inhFuncbuf{iClass} = inhFuncNameCell{indClass}; %#ok<AGROW>
+        infoBuf(iClass) = infoOfInheritedFunctions(indClass); %#ok<AGROW>
     end
 
 end
@@ -354,7 +350,7 @@ for jNumb = 2:length(numberFunc)
         unique(funcNameCell(indFunc: numberFunc(jNumb)+ indFunc - 1));
     bufFuncNameCell = bufFuncNameCell(~ismember(bufFuncNameCell,...
                ignorMethodList));
-    finalFuncNameCell = [finalFuncNameCell; bufFuncNameCell];
+    finalFuncNameCell = [finalFuncNameCell; bufFuncNameCell]; %#ok<AGROW>
     finalNumberFunc(jNumb) = length(bufFuncNameCell);
     indFunc = indFunc + numberFunc(jNumb);
 end
@@ -363,7 +359,7 @@ end
 iHelp = 1;
 helpCell = cell(length(finalFuncNameCell), 1);
 indFunc = 1;
-fullFuncName =  [sectionNameCell{1}, '.', finalFuncNameCell{1}];
+fullFuncName =  [sectionNameCell{1}, '.', finalFuncNameCell{1}]; %#ok<NASGU>
 for iSect = 1:length(sectionNameCell);
     className = sectionNameCell{iSect};
         for jFunc = indFunc:indFunc + finalNumberFunc(iSect) - 1

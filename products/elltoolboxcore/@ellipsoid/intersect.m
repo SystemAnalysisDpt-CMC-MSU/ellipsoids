@@ -164,7 +164,7 @@ elseif isa(objArr, 'ellipsoid')
         logger.info('Invoking CVX...\n');
     end
    
-    [resArr statusArr] = arrayfun(@(x) qcqp(myEllArr, x), objArr);
+    [resArr, statusArr] = arrayfun(@(x) qcqp(myEllArr, x), objArr);
 elseif isa(objArr, 'hyperplane')
    
     fCheckDims(dimension(myEllArr),dimension(objArr));
@@ -173,7 +173,7 @@ elseif isa(objArr, 'hyperplane')
         logger.info('Invoking CVX...\n');
     end
    
-    [resArr statusArr] = arrayfun(@(x) lqcqp(myEllArr, x), objArr);
+    [resArr, statusArr] = arrayfun(@(x) lqcqp(myEllArr, x), objArr);
 else
     nDimsArr = zeros(size(objArr));
     [~, nCols] = size(objArr);
@@ -189,7 +189,7 @@ else
     resArr = zeros(size(objArr));
     statusArr = zeros(size(objArr));
     for iCols = 1:nCols
-        [resArr(iCols) statusArr(iCols)] = lqcqp2(myEllArr, objArr(iCols));
+        [resArr(iCols), statusArr(iCols)] = lqcqp2(myEllArr, objArr(iCols));
     end
 end
 
@@ -283,7 +283,7 @@ for iCount = 1:nNumel
         invSecEllShMat = 0.5*(invSecEllShMat + invSecEllShMat');
         cvxExprVec'*invSecEllShMat*cvxExprVec +...
             2*(-invSecEllShMat*secEllCentVec)'*cvxExprVec + ...
-            (secEllCentVec'*invSecEllShMat*secEllCentVec - 1) <= 0;
+            (secEllCentVec'*invSecEllShMat*secEllCentVec - 1) <= 0; %#ok<VUNUS>
 end
 
 cvx_end
@@ -356,7 +356,7 @@ for iCount = 1:nNumel
         invEllShMat  = invmat(ellShMat);
         cvxExprVec'*invEllShMat*cvxExprVec - ...
             2*ellCentVec'*invEllShMat*cvxExprVec + ...
-            (ellCentVec'*invEllShMat*ellCentVec - 1) <= 0;
+            (ellCentVec'*invEllShMat*ellCentVec - 1) <= 0; %#ok<VUNUS>
 end
 
 cvx_end
@@ -424,7 +424,7 @@ for iCount = 1:nNumel
         invEllShMat  = 0.5*(invEllShMat + invEllShMat');
         cvxExprVec'*invEllShMat*cvxExprVec - ...
             2*ellCentVec'*invEllShMat*cvxExprVec + ...
-            (ellCentVec'*invEllShMat*ellCentVec - 1) <= 0;
+            (ellCentVec'*invEllShMat*ellCentVec - 1) <= 0; %#ok<VUNUS>
 end
 
 cvx_end

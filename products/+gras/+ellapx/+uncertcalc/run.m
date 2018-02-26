@@ -138,7 +138,7 @@ sysDefFileName=[resDir,filesep,'sysdef.txt'];
 convertConf2Text(SSysDefConf,sysDefFileName);
     function SConf=getSmartConfInternal(confRepoMgr,confType)
         import gras.ellapx.uncertcalc.log.Log4jConfigurator;
-        logger=Log4jConfigurator.getLogger();
+        logger=Log4jConfigurator.getLogger('saveConf',true);
         [SConf,confVersion]=confRepoMgr.getCurConf();
         inpArgList={struct('conf',SConf,'version',confVersion)}; %#ok<NASGU>
         confStr=evalc('convertConf2Text(inpArgList{:})');
@@ -148,5 +148,7 @@ convertConf2Text(SSysDefConf,sysDefFileName);
 end
 function convertConf2Text(SConf,varargin)
 import modgen.struct.strucdisp;
-strucdisp(SConf,varargin{:},'depth',-1,'maxArrayLength',1000);
+import gras.ellapx.uncertcalc.log.Log4jConfigurator;
+logger=Log4jConfigurator.getLogger('saveConf',true);
+logger.info(strucdisp(SConf,varargin{:},'depth',-1,'maxArrayLength',1000));
 end

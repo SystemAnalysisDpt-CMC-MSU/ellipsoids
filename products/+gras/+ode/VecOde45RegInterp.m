@@ -165,7 +165,7 @@ classdef VecOde45RegInterp < gras.ode.IVecOdeRegInterp
                         break;
                     end
                     nOutNew = nOutNew + 1;
-                    tNewOutVec = [tNewOutVec, timeVec(iNext)];
+                    tNewOutVec = [tNewOutVec, timeVec(iNext)]; %#ok<*AGROW>
                     if timeVec(iNext) == self.tVec(iIter);
                         yNewOutMat = [yNewOutMat, self.yCVec{iIter}];
                     else

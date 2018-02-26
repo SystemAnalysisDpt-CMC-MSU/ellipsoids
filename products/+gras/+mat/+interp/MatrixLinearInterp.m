@@ -26,7 +26,7 @@ classdef MatrixLinearInterp<gras.mat.IMatrixFunction
         end
         function resArray=evaluate(self,newTimeVec)
             sizeVec=self.getMatrixSize();
-            dataArray=self.dataArray;
+            dataArray=self.dataArray; %#ok<*PROPLC>
             nTimes=numel(newTimeVec);
             resArray=zeros([sizeVec,nTimes]);
             timeVec=self.timeVec;
@@ -71,7 +71,7 @@ classdef MatrixLinearInterp<gras.mat.IMatrixFunction
                 end
             end
         end
-        function nDims=getDimensionality(self)
+        function nDims=getDimensionality(~)
             nDims=2;
         end
         function nCols=getNCols(self)
