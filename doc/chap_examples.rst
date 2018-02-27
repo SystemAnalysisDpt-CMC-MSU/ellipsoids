@@ -527,7 +527,160 @@ to the green region.
 .. [SUN2003] L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
    Estimation with the Cell Transmission Model. In *Proceedings of the
    American Control Conference*, 3750–3755. Denver, Colorado, USA.
+Pendulum with a flywheel
+-------------------------
 
+.. _pendulungfig:
+
+.. figure::  /pic/chapter06_section06_pendulung.png
+   :align: center   
+   :alt: pendulung
+   :width: 30 %
+
+   Pendulum with a flywheel.
+
+Consider a system consisting of a rod weight :math:`{m}_1` attached to the fixed base at the point :math:`O`
+and to the flywheel at the point :math:`A`. The flywheel is a disk of weight :math:`{m}_2`.
+Define
+
+-  :math:`l` - length of the rod :math:`OA`,
+-  :math:`r` - radius of the disc,
+-  :math:`a` - distance from point :math:`O` to point :math:`C` (the center of mass of the rod),
+-  :math:`\theta` - angle of deviation of the rod from horizontal,
+-  :math:`\phi` - angle of rotation of the flywheel relative to the rod,
+-  :math:`J_1` -  moment of inertia of rod, rotating about point :math:`C`,
+-  :math:`J_2` - moment of inertia of disk, rotating about point :math:`A`,
+-  :math:`k_1, k_2`  - coefficients of friction forces acting in the hinges,
+-  :math:`u` - rotational force: :math:`u = u(t), |u(t)| \leqslant {u}_{max}`.
+
+.. _forcesfig:
+
+.. figure::  /pic/chapter06_section06_forces.png
+   :align: center
+   :alt: forces
+   :width: 60 %
+
+   Forces and moments.
+
+The mechanical system presented in :num:`figure #forcesfig` is described by the following system of equations:
+ 
+.. math:: 
+   :label: forces
+   
+	 \left\{
+	\begin{aligned}
+	& m_1 \ddot{x}_{C} = F^{01}_{x} - F^{12}_{x},\\
+	& m_1 \ddot{y}_{C} = F^{01}_{y} - F^{12}_{x} - m_1g,\\
+	& J_1 \ddot{\theta} = F^{01}_{x}a \sin \theta - F^{01}_{y}a \cos \theta + F^{12}_{x}a \sin \theta - F^{12}_{y}a \cos \theta - u - k_1 \dot{\theta} + k_2 \dot{\phi},\\
+	& m_2 \ddot{x}_{A} = F^{12}_{x},\\
+	& m_2 \ddot{y}_{A} = F^{12}_{y} - m_2 g,\\
+	& J_2 (\ddot{\theta} + \ddot{\phi}) = u - k_2 \dot{\phi}.\\
+	\end{aligned}
+	\right.
+
+In order to obtain a closed system we add four relating equations:
+
+.. math:: 
+   
+	 \left\{
+	\begin{aligned}
+	& x_{C} = a \cos \theta,\\
+	& y_{C} = a \sin \theta,\\
+	\end{aligned}
+    \right.
+	\;\;\;
+    \left\{
+    \begin{aligned} 
+	& x_{A} = l \cos \theta,\\
+	& y_{A} = l \sin \theta.\\
+	\end{aligned}
+	\right.
+
+Remembering that :math:`l = 2a`, we get:
+
+.. math:: 
+   :label: system
+   
+	 \left\{
+	\begin{aligned}
+	& (J_1 + J_2 + m_1 a^2 + m_2 l^2)\ddot{\theta} + J_2 \ddot{\phi} =k_2 \dot{\phi} - k_1 \dot{\theta} -(m_1a + m_2 l) g \cos\theta,\\
+	& J_2 (\ddot{\theta} + \ddot{\phi}) = u - k_2 \dot{\phi}.\\
+	\end{aligned}
+	\right.
+
+Let's linearize system :eq:`system`, supposing that the system is in a small neighborhood of unstable 
+equilibrium :math:`\theta \sim \frac{\pi}{2}`. Linearization gives:
+
+.. math:: 
+   :label: lineariztheta
+   
+	 \left\{
+	\begin{aligned}
+	& (J_1 + J_2 + m_1 a^2 + m_2 l^2)\ddot{\theta} + J_2 \ddot{\phi} =k_2 \dot{\phi} - k_1 \dot{\theta} - (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right),\\
+	& J_2 (\ddot{\theta} + \ddot{\phi}) = u - k_2 \dot{\phi}.\\
+	\end{aligned}
+	\right.
+
+Defining :math:`\dot{\theta} = \omega_1` and :math:`\dot{\phi} = \omega_2`, we can rewrite :eq:`lineariztheta` in standard form:	
+
+.. math:: 
+   :label: standform
+   
+	 \left\{
+	\begin{aligned}
+	& \dot{\theta} = \omega_1, \\
+	& \dot{\phi} = \omega_2, \\
+	& \dot{\omega}_1 = \frac{2 k_2 \omega_2 - k_1 \omega_1 - u - (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right)}{J_1 + m_1 a^2 + m_2 l^2},\\
+	& \dot{\omega}_2 = \frac{u - k_2 \omega_2}{J_2} - \frac{2 k_2 \omega_2 - k_1 \omega_1 - u- (m_1a + m_2 l) g \left(\frac{\pi}{2} - \theta \right)}{J_1 + m_1 a^2 + m_2 l^2}.\\
+	\end{aligned}
+	\right. 
+
+Consider some final time instant :math:`t_1` and final position of the system: :math:`\theta(t_1) = \frac{\pi}{2}`, :math:`\phi(t_1) = 0`, :math:`\omega_1(t_1) = 0`, :math:`\omega_2(t_1) = 0`. Required to calculate the backward reachability sets (tube) for the linearized system :eq:`standform` emanating from the given final position. Also required to invistigate whether it's possible to reach the final position from a given initial position :math:`\theta(t_0) = \theta_0`, :math:`\phi(t_0) = \phi_0`, :math:`\omega_1(t_0) = \omega_{1,0}`, :math:`\omega_2(t_0) = \omega_{2,0}` using some admissible control function.   
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section06_snippet01.m
+   :language: matlab
+   :linenos:
+
+Now compute the solvability tube of the linear system and take its projection onto the subspace :math:`(x_1,x_2)`.
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section06_snippet03.m
+   :language: matlab
+   :linenos:
+
+
+.. _coordpr:
+
+.. figure:: /pic/chapter06_section06_coordpr.png
+   :align: center
+   :alt: rlc
+   :width: 100 %
+
+   Figure shows solvability sets projection onto the subspace :math:`(x_1,x_2)`. 
+
+
+.. literalinclude:: ../products/+elltool/+doc/+snip//s_chapter06_section06_snippet02.m
+   :language: matlab
+   :linenos:
+
+Now look how the system evolves in the projection onto speed axes. For this purpose we should take a projection onto the subspace :math:`(x_3,x_4)`. 
+
+.. _speedpr:
+
+.. figure:: /pic/chapter06_section06_speedpr.png
+   :align: center
+   :alt: rlc
+   :width: 100 %
+
+   Figure shows solvability sets projection onto the subspace :math:`(x_3,x_4)`.
+
+:num:`Figure #coordpr` and :num:`Figure #speedpr` show the initial amplitude and speed of the system in order to reach a small neighborhood of unstable 
+equilibrium :math:`\theta \sim \frac{\pi}{2}`. Thus, in order to reach a neighborhood of this point in a rather short time, it is necessary to initially be near this position.
+
+.. raw:: html
+
+	<h2>References</h2>
+
+.. [1] H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
 
 LMI-based three-vehicle platoon
 -------------------------------
