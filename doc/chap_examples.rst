@@ -527,6 +527,7 @@ to the green region.
 .. [SUN2003] L.Muñoz, X.Sun, R.Horowitz, and L.Alvarez. 2003. Traffic Density
    Estimation with the Cell Transmission Model. In *Proceedings of the
    American Control Conference*, 3750–3755. Denver, Colorado, USA.
+
 Pendulum with a flywheel
 -------------------------
 
@@ -899,7 +900,6 @@ Solving collision problem:
    The International Federation of Automatic Control
    Seoul, Korea, July 6-11, 2008
 
-
 Blending tank with delay
 ------------------------
 
@@ -1024,5 +1024,3 @@ This code below helps us to identify the possibility of this system to reach cer
    <h2>References</h2>
 
 .. [Kwakernaak] \H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
-
-
