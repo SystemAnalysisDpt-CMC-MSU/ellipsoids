@@ -881,13 +881,13 @@ Firstly we initialize our linear system.
    :language: matlab
    :linenos:
 
-Also we should initialize restrictions of control  
+Also we should initialize restrictions on control  
 
 .. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet02.m
    :language: matlab
    :linenos:
    
-and our final position.
+and our final position:
    
 .. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet04.m
    :language: matlab
@@ -911,33 +911,17 @@ For example onto (:math:`z_3, z_4`):
    :width: 100 %
    
    Figure shows solvability tube projection onto (:math:`z_3, z_4`) of system
-   ( evolves in time from t=0 to t=5, final position is
+   (evolves in time from t=0 to t=5, final position is
    :math:`z_1=0, z_2=0,z_3=0,z_4=0`) 
    
    
-Analogically for other subspaces:    
+Analogically onto (:math:`z_1, z_2`):    
 
 
 .. figure:: /pic/chapter06_section07_pic2.png
    :width: 100 %
    
    Figure shows solvability tube projection onto (:math:`z_1, z_2`) of system
-   (evolves in time from t=0 to t=5, final position is
-   :math:`z_1=0, z_2=0, z_3=0, z_4=0`)
-   
-
-.. figure:: /pic/chapter06_section07_pic3.png
-   :width: 100 %
-   
-   Figure shows solvability tube projection onto (:math:`z_1, z_3`) of system
-   (evolves in time from t=0 to t=5, final position is
-   :math:`z_1=0, z_2=0, z_3=0, z_4=0`)
-   
-
-.. figure:: /pic/chapter06_section07_pic4.png
-   :width: 100 %
-   
-   Figure shows solvability tube projection onto (:math:`z_2, z_4`) of system
    (evolves in time from t=0 to t=5, final position is
    :math:`z_1=0, z_2=0, z_3=0, z_4=0`)
    
@@ -952,7 +936,7 @@ Now let's change our final position
 and analogically compute the solvability tube and see how our projections change:
  
 
-.. figure:: /pic/chapter06_section07_pic5.png
+.. figure:: /pic/chapter06_section07_pic3.png
    :width: 100 %
    
    Figure shows solvability tube projection onto (:math:`z_3, z_4`) of system
@@ -960,55 +944,31 @@ and analogically compute the solvability tube and see how our projections change
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
    
 
-.. figure:: /pic/chapter06_section07_pic6.png
+.. figure:: /pic/chapter06_section07_pic4.png
    :width: 100 %
    
    Figure shows solvability tube projection onto (:math:`z_1, z_2`) of system
    (evolves in time from t=0 to t=5, final position is
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
-  
-
-.. figure:: /pic/chapter06_section07_pic7.png
-   :width: 100 %
-   
-   Figure shows solvability tube projection onto (:math:`z_1, z_3`) of system
-   (evolves in time from t=0 to t=5, final position is
-   :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
-  
-
-.. figure:: /pic/chapter06_section07_pic8.png
-   :width: 100 %
-   
-   Figure shows solvability tube projection onto (:math:`z_2, z_4`) of system
-   (evolves in time from t=0 to t=5, final position is
-   :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
    
    
-This time we want to change restrictions of control
+This time we want to change restrictions on control
 
 .. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet03.m
    :language: matlab
    :linenos: 
    
-and to do the same steps as early. Let's look at the results:
+and to do the same steps as earlier. Let's look at the results:
 
 
-.. figure:: /pic/chapter06_section07_pic9.png
+.. figure:: /pic/chapter06_section07_pic5.png
    :width: 100 %
    
    Now set control restrictions on :math:`\alpha_1 = 10, \alpha_2 = 10`.
    Figure shows solvability tube projection onto (:math:`z_1, z_2`) of system
    (evolves in time from t=0 to t=5, final position is
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
-   
 
-.. figure:: /pic/chapter06_section07_pic10.png
-   :width: 100 %
-   
-   Figure shows solvability tube projection onto (:math:`z_3, z_4`) of system
-   (evolves in time from t=0 to t=5, tube position is
-   :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`, control limits:
-   :math:`\alpha_1 = 10, \alpha_2 = 10`) 
    
 .. raw:: html
 	<h2>References</h2>
