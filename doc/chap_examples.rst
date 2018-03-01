@@ -531,11 +531,11 @@ to the green region.
 Pendulum with a flywheel
 -------------------------
 
-.. _pendulungfig:
+.. _pendulumfig:
 
-.. figure::  /pic/chapter06_section06_pendulung.png
+.. figure::  /pic/chapter06_section06_pendulum.png
    :align: center   
-   :alt: pendulung
+   :alt: pendulum
    :width: 30 %
 
    Pendulum with a flywheel.
@@ -677,12 +677,6 @@ Now look how the system evolves in the projection onto speed axes. For this purp
 :num:`Figure #coordpr` and :num:`Figure #speedpr` show the initial amplitude and speed of the system in order to reach a small neighborhood of unstable 
 equilibrium :math:`\theta \sim \frac{\pi}{2}`. Thus, in order to reach a neighborhood of this point in a rather short time, it is necessary to initially be near this position.
 
-.. raw:: html
-
-	<h2>References</h2>
-
-.. [1] H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons , 1972.
-
 
 Two-link planar manipulator
 -------------
@@ -697,9 +691,9 @@ Two-link planar manipulator
 	
 Consider a model of two-link planar pendulum whose hinge axes are parallel.
 Movements occur in a vertical plane. 
-Consider the problem of transposition the system in finite time into an unstable state.
-To solve this problem we construct a set of solvability for the linearized system released from a small neighborhood of the given position
-(:math:`\phi_1^0, \phi_2^0` --- angles of construction in given state).
+Consider the problem of how to transfer the system in a finite time into an unstable stationary state.
+To solve this problem we construct a solvability set for the linearized system evolved from a small neighborhood of the given position
+(:math:`\phi_1^0, \phi_2^0` --- angles of the links in the given state).
 	
 	
 	
@@ -717,7 +711,7 @@ In these equations :math:`m_1, m_2` --- masses of objects, :math:`s_1 = |O_1 C_1
 s_2 = |O_2 C_2|`, where :math:`C_1, C_2` --- centers of masses, 
 :math:`\phi_1, \phi_2` --- angles of elements' position,  :math:`l_1, l_2` --- full 
 lengths of elements, :math:`J_{c_1}, J_{c_2}` --- moments of inertia,
-:math:`\left | u_1\right | \leqslant \alpha_1,  \left | u_2\right | \leqslant \alpha_2` --- restriction of controls, which are attached to the hinges,
+:math:`\left | u_1\right | \leqslant \alpha_1,  \left | u_2\right | \leqslant \alpha_2` --- restrictions on controls, which are attached to the hinges,
 :math:`M_{tr1}, M_{tr2}` --- torques of friction force and torques are proportional to the angular speed with coefficients :math:`k_1, k_2`.
 
 Next come to Lagrange function:
@@ -788,7 +782,7 @@ The results with new variables:
 	
 Here :math:`x_5, y_5` depends on :math:`cos{\phi_1}, cos{\phi_2}`
 so write Taylor formula for :math:`\cos` function.
-Then :math:`x_5, y_5` we can imagine as:
+Then :math:`x_5, y_5` we can represent as:
 
 .. math::
 	:label: x_5_y_5
@@ -821,15 +815,15 @@ Now define new variables:
    
 
 
-where :math:`\phi_1^0, \phi_2^0` --- angles of construction in given state.
+where :math:`\phi_1^0, \phi_2^0` --- angles of the links in the given state.
    
-We have system :math:`\dot{t} = At + Bu + C`, here :math:`t` - vector with 4 coordinates,
+We have system :math:`\dot{t} = At + Bu + C`, here :math:`t` --- vector with 4 coordinates,
 where :math:`t_1 = \phi_1,\ t_2 = \phi_2,\ t_3 = \dot{\phi_3},\ t_4 = \dot{\phi_4}`,
 :math:`A, B \in \mathbb{R}^{4 \times 4}`.
 
 :math:`C` not depend on :math:`\phi_1, \phi_2`, so we can do replacement :math:`z = t + \frac{C}{A}`.
    
-As a result:
+As the result we have:
 
 .. math::
 	:label: equation_AB
@@ -868,11 +862,11 @@ As a result:
    u_2
    \end{array}\right],
 
-Here :math:`u_3, u_4` --- fictitious variables for right size, 
+Here :math:`u_3, u_4` --- fictitious variables for right-hand side, 
 :math:`|u_1| \leqslant \alpha_1, |u_2| \leqslant \alpha_2`.
 
 
-Now let's compute some solvability tubes of linear systems
+Now let us compute some solvability tubes for linear systems
 and take their projections onto different subspaces. 
 
 Firstly we initialize our linear system.
@@ -881,7 +875,7 @@ Firstly we initialize our linear system.
    :language: matlab
    :linenos:
 
-Also we should initialize restrictions on control  
+Also we should initialize restrictions on controls
 
 .. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet02.m
    :language: matlab
@@ -915,7 +909,7 @@ For example onto (:math:`z_3, z_4`):
    :math:`z_1=0, z_2=0,z_3=0,z_4=0`) 
    
    
-Analogically onto (:math:`z_1, z_2`):    
+Analogously onto (:math:`z_1, z_2`):    
 
 
 .. figure:: /pic/chapter06_section07_pic2.png
@@ -926,14 +920,14 @@ Analogically onto (:math:`z_1, z_2`):
    :math:`z_1=0, z_2=0, z_3=0, z_4=0`)
    
  
-Now let's change our final position 
+Now let us change our final position 
 
 .. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet05.m
    :language: matlab
    :linenos:
    
    
-and analogically compute the solvability tube and see how our projections change:
+and analogously compute the solvability tube and see how our projections change:
  
 
 .. figure:: /pic/chapter06_section07_pic3.png
@@ -952,34 +946,23 @@ and analogically compute the solvability tube and see how our projections change
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
    
    
-This time we want to change restrictions on control
+This time we want to change restrictions on controls
 
 .. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet03.m
    :language: matlab
    :linenos: 
    
-and to do the same steps as earlier. Let's look at the results:
+and to do the same steps as earlier. Let us look at the results:
 
 
 .. figure:: /pic/chapter06_section07_pic5.png
    :width: 100 %
    
-   Now set control restrictions on :math:`\alpha_1 = 10, \alpha_2 = 10`.
+   Now set restrictions on :math:`\alpha_1 = 10, \alpha_2 = 10`.
    Figure shows solvability tube projection onto (:math:`z_1, z_2`) of system
    (evolves in time from t=0 to t=5, final position is
    :math:`z_1=\frac{\pi}{8}, z_2=\frac{\pi}{8}, z_3=0, z_4=0`)
 
-   
-.. raw:: html
-	<h2>References</h2>
-
-.. [1] H. Kwakernaak, R. Sivan. Linear Optimal Control Systems. John Wiley & Sons, 1972.
-
-
-.. literalinclude:: ../products/+elltool/+doc/+snip/s_chapter06_section07_snippet01.m
-   :language: matlab
-   :linenos:
-   
    
 LMI-based three-vehicle platoon
 -------------------------------
