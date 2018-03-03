@@ -1,4 +1,4 @@
-function chapter06_section07_pic9
+function chapter06_section07_pic5
 close all 
 elltool.doc.snip.s_chapter06_section07_snippet01;  
 elltool.doc.snip.s_chapter06_section07_snippet03; 
