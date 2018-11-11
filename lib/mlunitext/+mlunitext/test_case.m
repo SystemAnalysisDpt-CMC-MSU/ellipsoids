@@ -389,6 +389,7 @@ classdef test_case<handle
                     feval(commandStr);
                 end
             catch meObj
+                errMsg = '';
                 [isIdentMatchVec,identPatternStr] =checkCode(meObj,...
                     'identifier',expIdentifierList);
                 [isMsgMatchVec,msgPatternStr] =checkCode(meObj,...

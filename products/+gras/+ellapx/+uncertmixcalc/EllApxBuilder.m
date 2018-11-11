@@ -20,10 +20,10 @@ classdef EllApxBuilder<gras.ellapx.uncertcalc.EllApxBuilder
     %
     methods
         function [ellTubeRel,ellUnionTubeRel]=build(self)
-            import gras.ellapx.smartdb.rels.EllUnionTubeNotTight;
+            import gras.ellapx.smartdb.rels.EllUnionTube;
             ellTubeRel=self.ellTubeBuilder.getEllTubes();
             ellTubeRel.scale(@self.getScaleFactorByApxType,{'approxType'});
-            ellUnionTubeRel=EllUnionTubeNotTight.fromEllTubes(ellTubeRel);
+            ellUnionTubeRel=EllUnionTube.fromEllTubes(ellTubeRel);
         end
         %
         function self=EllApxBuilder(confRepoMgr,pDynObj,goodDirSetObj)
