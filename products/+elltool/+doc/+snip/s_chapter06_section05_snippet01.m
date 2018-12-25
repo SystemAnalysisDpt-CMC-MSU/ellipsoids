@@ -27,7 +27,7 @@ lsysObj = elltool.linsys.LinSysContinuous(aMat, bMat, uBoundsEllObj,...
     gMat, vEllObj);
 timeVec = [t1, 0];
 % initial directions:
-nDirs = 5;
+nDirs = 3;
 param1Vec = linspace(0, pi, nDirs);
 param2Vec = linspace(0, 2*pi, nDirs);
 [param1Arr, param2Arr, param3Arr] = meshgrid(param1Vec, param1Vec, param2Vec);
@@ -46,10 +46,3 @@ brsObj = elltool.reach.ReachContinuous(lsysObj, x1EllObj, dirsMat, timeVec,...
 
 basisMat = [1 0 0 0; 0 0 1 0].'; % orthogonal basis of (x1, x3) subspace
 psObj = brsObj.projection(basisMat); % reach set projection
-
-% plot projection of reach set internal approximation:
-psObj.plotByIa('b');
-
-%plot backward reach set approximation at time t=0
-psCutObj = psObj.cut(0);
-psCutObj.plotByIa('r');
