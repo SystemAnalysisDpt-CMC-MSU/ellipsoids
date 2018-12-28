@@ -41,7 +41,7 @@ try
         end
         [Directory,file,ext]=fileparts(file);
         if isempty(ext) % add default Excel extension;
-            ext = '.xls';
+            ext = '.xlsx';
         end
         file = abspath(fullfile(Directory,[file ext]));
         [a1 a2] = fileattrib(file);
@@ -266,7 +266,7 @@ theMessage = struct('message',{''},'identifier',{''});
 % Get name of specified worksheet from workbook
 try
     TargetSheet = get(WorkSheets,'item',Sheet);
-catch exception  %#ok<NASGU>
+catch exception
     % Worksheet does not exist. Add worksheet.
     TargetSheet = addsheet(WorkSheets,Sheet);
     warning('MATLAB:xlswrite:AddSheet','Added specified worksheet.');

@@ -11,7 +11,7 @@ classdef mlunit_test_common < mlunitext.test_case
             %
         end
         %
-        function test_xlswrite(self)
+        function test_xlswrite(~)
             N_MAX_ROWS=65536;
             N_MAX_COLS=256;
             s=warning('off',...
@@ -31,12 +31,12 @@ classdef mlunit_test_common < mlunitext.test_case
                     return;
                 end
                 dirName=TmpDataManager.getDirByCallerKey();
-                filePath=[dirName,filesep,'tmp.xls'];
+                filePath=[dirName,filesep,'tmp.xlsx'];
                 try
                     h=actxserver('Excel.Application');
                     h.delete();
                     isExcelInstalled=true;
-                catch meObj
+                catch
                     isExcelInstalled=false;
                 end
                 %
@@ -55,7 +55,7 @@ classdef mlunit_test_common < mlunitext.test_case
                 else
                     mlunitext.assert_equals(true,...
                         strcmp(strrep(resFilePath,...
-                        'csv','xls'),filePath));
+                        'csv','xlsx'),filePath));
                     mlunitext.assert_equals(true,...
                         ExistanceChecker.isFile(resFilePath));
                 end
