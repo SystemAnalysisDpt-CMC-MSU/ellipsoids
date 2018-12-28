@@ -208,7 +208,16 @@ end
         end
         
         %Open file
-        ExcelWorkbook = Excel.workbooks.Open(file);
+        try
+            invoke(Excel.Workbooks,'Open',file);
+        catch
+            Excel.Quit;
+            Excel.delete;
+            clear Excel;
+            Excel = actxserver('Excel.Application');
+            invoke(Excel.Workbooks,'Open',file);
+        end
+        ExcelWorkbook = Excel.Workbooks.Open(file);
         if ExcelWorkbook.ReadOnly ~= 0
             %This means the file is probably open in another process.
             error('MATLAB:xlswrite:LockedFile', 'The file %s is not writable.  It may be locked by another process.', file);

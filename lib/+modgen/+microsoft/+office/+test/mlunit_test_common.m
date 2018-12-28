@@ -11,7 +11,7 @@ classdef mlunit_test_common < mlunitext.test_case
             %
         end
         %
-        function DISABLED_test_xlswrite(self)
+        function test_xlswrite(self)
             N_MAX_ROWS=65536;
             N_MAX_COLS=256;
             s=warning('off',...
