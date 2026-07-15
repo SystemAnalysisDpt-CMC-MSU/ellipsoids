@@ -38,6 +38,11 @@ check "paper-4 draft present"            "[ -f '$ROOT/paper-4/draft.md' ]"
 check "paper-4 reproduce.sh runs (exit 0)" "run_repro paper-4"
 check "paper-4 results present"          "ls '$ROOT'/paper-4/results/*.csv >/dev/null 2>&1"
 
+section "G-gauge Paper 5 neural gauge scheduling (novel)"
+check "paper-5 draft present"            "[ -f '$ROOT/paper-5/draft.md' ]"
+check "paper-5 reproduce.sh runs (exit 0)" "run_repro paper-5"
+check "paper-5 results present"          "ls '$ROOT'/paper-5/results/*.csv >/dev/null 2>&1"
+
 section "G4 Hygiene"
 # fake-completion scan over PROJECT sources only (exclude venv, caches, legacy
 # MATLAB tree, and the meta docs that legitimately name the markers).

@@ -19,7 +19,9 @@ case "$PID" in
   paper-3) TOPIC="conformalized ellipsoidal reach tubes for learned dynamics"
            FILES="paper-3/draft.md paper-3/cp_tubes.py python/conformal.py python/ellreach.py paper-3/results/coverage_summary.csv" ;;
   paper-4) TOPIC="certified INNER reach tubes / reachability certificates for ReLU neural feedback loops via exact PWA decomposition + KV internal ellipsoids"
-           FILES="paper-4/draft.md paper-4/inner_reach.py python/pwa_nfl.py python/ellreach.py python/oracle_tests/test_pwa_nfl.py paper-4/results/bracket.csv paper-4/results/soundness.csv paper-4/results/certificate.csv" ;;
+           FILES="paper-4/draft.md paper-4/inner_reach.py python/pwa_nfl.py python/ellreach.py python/oracle_tests/test_pwa_nfl.py paper-4/results/bracket.csv paper-4/results/soundness_exact.csv paper-4/results/certificate.csv" ;;
+  paper-5) TOPIC="neural gauge scheduling of certified ellipsoidal reach tubes: an NN learns the ellipsoid-specific continuous gauge (beta schedule) to tighten certified outer reach tubes, with soundness structural for any network output"
+           FILES="paper-5/draft.md paper-5/gauge_experiment.py python/ell_gauge.py python/ellreach.py python/oracle_tests/test_ell_gauge.py paper-5/results/gauge_gap.csv paper-5/results/amortized.csv paper-5/results/soundness.csv" ;;
   *) echo "unknown paper id: $PID"; exit 2 ;;
 esac
 

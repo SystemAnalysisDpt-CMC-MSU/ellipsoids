@@ -17,7 +17,7 @@ full = ["scipy>=1.10", "matplotlib>=3.6"]
 dev = ["scipy>=1.10", "matplotlib>=3.6", "pytest>=7"]
 
 [tool.setuptools]
-py-modules = ["ellreach", "nn_bounds", "conformal", "zonotope", "pwa_nfl"]
+py-modules = ["ellreach", "nn_bounds", "conformal", "zonotope", "pwa_nfl", "ell_gauge"]
 package-dir = { "" = "python" }
 
 [tool.pytest.ini_options]
