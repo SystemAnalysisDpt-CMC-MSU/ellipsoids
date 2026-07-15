@@ -1,0 +1,9 @@
+[PASS] ball support fn
+[PASS] KV tightness identity (200 random cases)
+[PASS] external sum is a sound outer bound (tight dir fixed, all test dirs)
+[PASS] affine map center
+[PASS] affine map shape
+[PASS] reach tube bounded (stable system)
+[PASS] reach tube contains sampled true trajectories (soundness)
+
+ALL CHECKS PASSED

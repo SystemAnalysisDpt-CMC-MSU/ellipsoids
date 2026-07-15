@@ -1,0 +1,2 @@
+metric,true_set_area_est,convex_hull_area,ellipsoid_enclosure_area,overcover_ratio,method_looseness_ratio,method_wasted_fraction,enclosure_sound_on_samples
+nonconvex_failure_regime,0.180227,7.54236,15.1771,41.8492,84.2111,0.988125,1

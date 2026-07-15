@@ -1,0 +1,7 @@
+{
+  "tool_name": "StructuredOutput",
+  "tool_input_preview": "{\"verdict\":\"revise\",\"novelty_assessment\":\"PARTIAL and currently OVERSTATED. The three ingredients are all classical/known individually: (a) KV internal (touching-from-inside) ellipsoids for forward/ba...",
+  "error": "Output does not match required schema: root: must have required property 'legitimacy_assessment', root: must have required property 'soundness_assessment', root: must have required property 'issues'",
+  "timestamp": "2026-07-15T19:42:24.411Z",
+  "retry_count": 1
+}

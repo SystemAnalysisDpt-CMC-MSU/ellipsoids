@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ellreach"
+version = "0.1.0"
+description = "Reproducible Kurzhanski-Varaiya ellipsoidal reachability kernel (Python port of the Ellipsoidal Toolbox core)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "See COPYRIGHT.txt of the parent Ellipsoidal Toolbox" }
+authors = [{ name = "Ellipsoidal Toolbox authors / ellreach port" }]
+dependencies = ["numpy>=1.23"]
+
+[project.optional-dependencies]
+full = ["scipy>=1.10", "matplotlib>=3.6"]
+dev = ["scipy>=1.10", "matplotlib>=3.6", "pytest>=7"]
+
+[tool.setuptools]
+py-modules = ["ellreach", "nn_bounds", "conformal", "zonotope", "pwa_nfl"]
+package-dir = { "" = "python" }
+
+[tool.pytest.ini_options]
+testpaths = ["python"]
+addopts = "-q"

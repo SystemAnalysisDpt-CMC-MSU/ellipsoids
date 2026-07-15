@@ -1,0 +1,2 @@
+domain,alpha,nominal,single_ellipsoid_area,single_ellipsoid_coverage,mixture_oracle_area,mixture_oracle_coverage,area_ratio_ellipsoid_over_mixture
+D_multimodal_failure_onestep,0.1,0.9,6.228911658913226,0.8905,1.2479237938686036,0.8985,4.991419900411868
